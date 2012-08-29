@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="0">
+    <data noupdate="1">
 
       <!--
       Definición de posiciones fiscales Régimen Nacional, Recargo de Equivalencia,
@@ -38,7 +38,7 @@
          Añadidas posiciones fiscales Retención de IRPF 19%, 2% :
            Jordi Esteve (Zikzakmedia) - jesteve@zikzakmedia.com 2010-02-18 -->
 
-	<!-- Fiscal Position Templates -->
+    <!-- Fiscal Position Templates -->
         <record id="fp_pymes_nacional" model="account.fiscal.position.template">
             <field name="name">Régimen Nacional</field>
             <field name="chart_template_id" ref="l10nES_chart_template_pymes"/>
@@ -90,10 +90,10 @@
         </record>
 
 
-	<!-- Fiscal Position Tax Templates -->
-	<!-- ************************************************************* -->
+    <!-- Fiscal Position Tax Templates -->
+    <!-- ************************************************************* -->
 
-	<!-- Extracomunitarios fiscal.position.tax.template-->
+    <!-- Extracomunitarios fiscal.position.tax.template-->
 
         <record id="fptt_pymes_extra_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_extra"  />
@@ -175,7 +175,7 @@
             <field name="tax_dest_id" ref="iva_pymes_X0" />
         </record>
 
-	<!-- Intracomunitarios fiscal.position.tax.template-->
+    <!-- Intracomunitarios fiscal.position.tax.template-->
 
         <record id="fptt_pymes_intra_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_intra"  />
@@ -257,7 +257,7 @@
             <field name="tax_dest_id" ref="iva_pymes_IO" />
         </record>
 
-	<!-- Recargo de equivalencia fiscal.position.tax.template-->
+    <!-- Recargo de equivalencia fiscal.position.tax.template-->
 
         <record id="fptt_pymes_recargo_16" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_recargo"  />
@@ -270,7 +270,7 @@
             <field name="tax_src_id" ref="iva_pymes_rep_16" />
             <field name="tax_dest_id" ref="re_pymes_4" />
         </record>
-	
+    
         <record id="fptt_pymes_recargo_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_recargo"  />
             <field name="tax_src_id" ref="iva_pymes_rep_18" />
@@ -294,7 +294,7 @@
             <field name="tax_src_id" ref="iva_pymes_rep_7" />
             <field name="tax_dest_id" ref="re_pymes_1" />
         </record>
-	
+    
         <record id="fptt_pymes_recargo_8" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_recargo"  />
             <field name="tax_src_id" ref="iva_pymes_rep_8" />
@@ -319,7 +319,7 @@
             <field name="tax_dest_id" ref="re_pymes_05" />
         </record>
 
-	<!-- Extracomunitarios fiscal.position.account.template-->
+    <!-- Extracomunitarios fiscal.position.account.template-->
 
         <record id="fpat_pymes_extra_acc_1" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fp_pymes_extra"  />
@@ -357,7 +357,7 @@
             <field name="account_dest_id" ref="pgc_pymes_7052" />
         </record>
 
-	<!-- Intracomunitarios fiscal.position.account.template-->
+    <!-- Intracomunitarios fiscal.position.account.template-->
 
         <record id="fpat_pymes_intra_acc_1" model="account.fiscal.position.account.template">
             <field name="position_id" ref="fp_pymes_intra"  />
@@ -396,7 +396,7 @@
         </record>
 
 
-	<!-- Retenciones IRPF 19% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 19% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf19sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf19" />
@@ -518,7 +518,7 @@
             <field name="tax_dest_id" ref="irpf_pymes_19" />
         </record>
 
-	<!-- Retenciones IRPF 18% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 18% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf18sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf18" />
@@ -640,7 +640,7 @@
             <field name="tax_dest_id" ref="irpf_pymes_18" />
         </record>
 
-	<!-- Retenciones IRPF 15% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 15% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf15sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf15" />
@@ -762,7 +762,7 @@
             <field name="tax_dest_id" ref="irpf_pymes_15" />
         </record>
 
-	<!-- Retenciones IRPF 7% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 7% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf7sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf7" />
@@ -884,7 +884,7 @@
             <field name="tax_dest_id" ref="irpf_pymes_7" />
         </record>
 
-	<!-- Retenciones IRPF 2% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 2% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf2sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf2" />
@@ -1006,7 +1006,7 @@
             <field name="tax_dest_id" ref="irpf_pymes_2" />
         </record>
 
-	<!-- Retenciones IRPF 1% fiscal.position.tax.template-->
+    <!-- Retenciones IRPF 1% fiscal.position.tax.template-->
 
         <record id="fptt_pymes_irpf1sale_18" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="fp_pymes_irpf1" />

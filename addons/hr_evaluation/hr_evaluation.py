@@ -156,18 +156,17 @@ class hr_evaluation(osv.osv):
             ('2','Meet expectations'),
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
-        ], "Appreciation", help="This is the appreciation on that summarize the evaluation"),
+        ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
             ('draft','New'),
+            ('cancel','Cancelled'),
             ('wait','Plan In Progress'),
             ('progress','Waiting Appreciation'),
             ('done','Done'),
-            ('cancel','Cancelled'),
-        ], 'State', required=True, readonly=True),
+        ], 'Status', required=True, readonly=True),
         'date_close': fields.date('Ending Date', select=True),
-        'progress': fields.float("Progress"),
     }
     _defaults = {
         'date': lambda *a: (parser.parse(datetime.now().strftime('%Y-%m-%d')) + relativedelta(months =+ 1)).strftime('%Y-%m-%d'),
@@ -241,11 +240,10 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for id in self.browse(cr, uid, ids, context=context):
             if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
-                raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state"))
+                raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
     def button_done(self,cr, uid, ids, context=None):
-        self.write(cr, uid, ids,{'progress': 1 * 100}, context=context)
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
@@ -312,9 +310,8 @@ class hr_evaluation_interview(osv.osv):
         for id in self.browse(cr, uid, ids, context=context):
             flag = False
             wating_id = 0
-            tot_done_req = 1
             if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Appraisal."))
+                raise osv.except_osv(_('Warning!'),_("You cannot start evaluation without Appraisal."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
             for child in records:
                 if child.state == "draft":
@@ -322,11 +319,8 @@ class hr_evaluation_interview(osv.osv):
                     continue
                 if child.state != "done":
                     flag = True
-                else:
-                    tot_done_req += 1
             if not flag and wating_id:
                 self.survey_req_waiting_answer(cr, uid, [wating_id], context=context)
-            hr_eval_obj.write(cr, uid, [id.evaluation_id.id], {'progress': tot_done_req * 100 / len(records)}, context=context)
         self.write(cr, uid, ids, { 'state': 'done'}, context=context)
         return True
 

@@ -1,75 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="board_sales_manager_form" model="ir.ui.view">
-            <field name="name">board.sales.manager.form</field>
-            <field name="model">board.board</field>
-            <field name="type">form</field>
+        <!-- Sales dashboard -->
+        <record id="action_quotation_for_sale" model="ir.actions.act_window">
+            <field name="name">My Quotations</field>
+            <field name="res_model">sale.order</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
+            <field name="view_id" ref="sale.view_order_tree"/>
+        </record>
+
+        <record id="view_turnover_by_month_tree" model="ir.ui.view">
+            <field name="name">turnover.by.month.tree</field>
+            <field name="model">account.invoice.report</field>
+            <field name="priority" eval="32"/>
             <field name="arch" type="xml">
-                <form string="Sales Manager Dashboard" layout="manual">
-                    <board style="2-1">
-                        <column>
-                            <action name="%(sale.action_quotation_for_sale)d" string="Quotations" creatable="true"/>
-                            <action name="%(sale.action_view_sales_by_month)d" string="Sales by Month"/>
-                        </column>
-                        <column>
-                            <action name="%(sale.action_sales_by_salesman)d" string="Sales by Salesman in last 90 days"/>
-                            <action name="%(sale.action_sales_by_partner)d" string="Sales per Customer in last 90 days"/>
-                            <action name="%(sale.action_sales_product_total_price)d" string="Sales by Product's Category in last 90 days"/>
-                        </column>
-                    </board>
-                </form>
+                <tree string="Monthly Turnover">
+                    <field name="month"/>
+                    <field name="price_total"/>
+                </tree>
             </field>
         </record>
-
-        <record id="open_board_sales_manager" model="ir.actions.act_window">
-            <field name="name">Sales Manager Dashboard</field>
-            <field name="res_model">board.board</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="board_sales_manager_form"/>
+        <record id="view_turnover_by_month_graph" model="ir.ui.view">
+            <field name="name">turnover.by.month.graph</field>
+            <field name="model">account.invoice.report</field>
+            <field name="priority" eval="32"/>
+            <field name="arch" type="xml">
+                <graph string="Monthly Turnover" type="bar">
+                    <field name="month"/>
+                    <field name="price_total" operator="+"/>
+                </graph>
+            </field>
         </record>
-
-        <menuitem id="board.menu_sales_dashboard" name="Sales" sequence="1" parent="base.menu_reporting_dashboard"/>
-        <menuitem action="open_board_sales_manager" icon="terp-graph" id="menu_board_sales_manager" parent="board.menu_sales_dashboard" sequence="0" groups="base.group_sale_manager"/>
-
-
-    <record id="action_quotation_for_sale" model="ir.actions.act_window">
-        <field name="name">My Quotations</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">tree,form</field>
-        <field name="domain">[('state','=','draft'),('user_id','=',uid)]</field>
-        <field name="view_id" ref="sale.view_order_tree"/>
-        </record>
-
-    <record id="view_turnover_by_month_tree" model="ir.ui.view">
-        <field name="name">turnover.by.month.tree</field>
-        <field name="model">account.invoice.report</field>
-        <field name="type">tree</field>
-            <!-- Lower priority to avoid conflicting with default accounting views for reports -->
-        <field name="priority" eval="32"/>
-        <field name="arch" type="xml">
-            <tree string="Monthly Turnover">
-                <field name="month"/>
-                <field name="price_total"/>
-            </tree>
-        </field>
-    </record>
-
-    <record id="view_turnover_by_month_graph" model="ir.ui.view">
-        <field name="name">turnover.by.month.graph</field>
-        <field name="model">account.invoice.report</field>
-            <!-- Lower priority to avoid conflicting with default accounting views for reports -->
-        <field name="priority" eval="32"/>
-        <field name="type">graph</field>
-        <field name="arch" type="xml">
-        <graph string="Monthly Turnover" type="bar">
-            <field name="month"/>
-            <field name="price_total" operator="+"/>
-        </graph>
-        </field>
-    </record>
 
         <record model="ir.actions.act_window" id="action_turnover_by_month">
             <field name="name">Monthly Turnover</field>
@@ -79,37 +42,19 @@
             <field name="view_id" ref="view_turnover_by_month_graph"/>
             <field name="domain">[('year','ilike',time.strftime('%Y')),('user_id','=',uid)]</field>
             <field name="context">{'group_by_no_leaf':1,'group_by':['month']}</field>
-            <field name="search_view_id" ref="account.view_account_invoice_report_search"/>
-       </record>
-
-       <record model="ir.actions.act_window.view" id="action_turnover_by_month_graph_view">
-            <field name="act_window_id" ref="action_turnover_by_month"/>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_turnover_by_month_graph"/>
-        </record>
-
-        <record model="ir.actions.act_window.view" id="action_turnover_by_month_tree_view">
-            <field name="act_window_id" ref="action_turnover_by_month"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_turnover_by_month_tree"/>
         </record>
 
         <record id="board_sales_form" model="ir.ui.view">
             <field name="name">board.sales.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Dashboard" layout="manual">
+                <form string="Sales Dashboard" version="7.0">
                     <board style="2-1">
                         <column>
-                            <action name="%(action_quotation_for_sale)d"
-                                string="My Quotations" creatable="true"/>
-                             <!--groups="base.group_sale_salesman,base.group_sale_manager,account.group_account_user,stock.group_stock_user"-->
+                            <action name="%(action_quotation_for_sale)d" string="My Quotations" creatable="true"/>
                         </column>
                         <column>
-                            <action name="%(action_turnover_by_month)d"
-                                  string="Monthly Turnover"/>
-                             <!--groups="base.group_sale_salesman,account.group_account_manager"-->
+                            <action name="%(action_turnover_by_month)d" string="Monthly Turnover"/>
                         </column>
                     </board>
                 </form>
@@ -117,16 +62,18 @@
         </record>
 
         <record id="open_board_sales" model="ir.actions.act_window">
-            <field name="name">Sales Dashboard</field>
+            <field name="name">Sales</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_sales_form"/>
         </record>
 
-        <menuitem
-            id="base.menu_base_partner" action="open_board_sales"
-            name="Sales"/>
+        <menuitem id="menu_dashboard_sales"
+                  sequence="15"
+                  parent="base.menu_reporting_dashboard"
+                  action="open_board_sales"
+                  groups="base.group_sale_salesman"/>
 
     </data>
 </openerp>

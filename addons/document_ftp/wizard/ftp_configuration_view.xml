@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
     <record model="ir.actions.url" id="action_document_browse">
@@ -10,27 +11,17 @@
     <record id="view_auto_config_form" model="ir.ui.view">
         <field name="name">FTP Server Configuration</field>
         <field name="model">document.ftp.configuration</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.res_config_view_base"/>
         <field name="arch" type="xml">
           <data>
             <form position="attributes">
               <attribute name="string">Knowledge Application Configuration</attribute>
             </form>
-             <separator string="title" position="attributes">
-            	<attribute name="string">Configure FTP Server</attribute>
-          	</separator>
-          	<xpath expr="//label[@string='description']" position="attributes">
-            <attribute name="string">Indicate the network address on which your OpenERP server should be reachable for end-users. This depends on your network topology and configuration, and will only affect the links displayed to the users. The format is HOST:PORT and the default host (localhost) is only suitable for access from the server machine itself..</attribute>
-          </xpath>
-          <xpath expr="//separator[@string=&quot;vsep&quot;]" position="attributes">
-  				<attribute name="rowspan">12</attribute>
-      			<attribute name="string"/>
-	      	</xpath>
             <group string="res_config_contents" position="replace">
+                <separator string="Configure FTP Server" />
+                <label string="Indicate the network address on which your OpenERP server should be reachable for end-users. This depends on your network topology and configuration, and will only affect the links displayed to the users. The format is HOST:PORT and the default host (localhost) is only suitable for access from the server machine itself.."/>
                 <field name="host"/>
             </group>
-           <xpath expr="//button[@name='action_skip']" position="replace"/>
           </data>
         </field>
     </record>
@@ -44,11 +35,9 @@
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>
-    
+
     <record model="ir.actions.todo" id="config_auto_directory">
         <field name="action_id" ref="action_config_auto_directory"/>
-        <field name="category_id" ref="document.category_knowledge_mgmt_config"/>
-        <field name="groups_id" eval="[(6,0,[ref('base.group_extended')])]"/>
         <field name="type">automatic</field>
     </record>
   </data>

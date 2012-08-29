@@ -14,8 +14,24 @@
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
-    <record model="ir.ui.menu" id="menu_definitions">
+    <record model="ir.ui.menu" id="base.menu_definitions">
         <field name="groups_id" eval="[(6,0,[ref('group_project_manager')])]"/>
+    </record>
+
+    <record id="group_tasks_work_on_tasks" model="res.groups">
+        <field name="name">Task's Work on Tasks</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+    
+    <record id="group_time_work_estimation_tasks" model="res.groups">
+        <field name="name">Time Estimation on Tasks</field>
+        <field name="implied_ids" eval="[(4, ref('group_tasks_work_on_tasks'))]"/>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
+    <record id="group_delegate_task" model="res.groups">
+        <field name="name">Task Delegation</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record model="ir.rule" id="project_comp_rule">
@@ -23,6 +39,13 @@
         <field name="model_id" ref="model_project_project"/>
         <field name="global" eval="True"/>
         <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
+    </record>
+
+    <record model="ir.rule" id="project_public_members_rule">
+        <field name="name">public Members</field>
+        <field name="model_id" ref="model_project_project"/>
+        <field name="global" eval="True"/>
+        <field name="domain_force">['|','|',('privacy_visibility','in',[False,'public']),('members','in',[user.id]),('followers','in',[user.id])]</field>
     </record>
 
     <record model="ir.rule" id="task_comp_rule">

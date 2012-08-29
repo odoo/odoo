@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
-"PO-Revision-Date: 2012-02-16 15:09+0000\n"
-"Last-Translator: Nicolas Réau <Unknown>\n"
+"PO-Revision-Date: 2012-05-24 17:38+0000\n"
+"Last-Translator: Numérigraphe <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-17 04:58+0000\n"
-"X-Generator: Launchpad (build 14814)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:59+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp
 #: field:mrp.bom,product_uom:0
@@ -66,7 +66,7 @@ msgstr "Occupation du poste de charge"
 #. module: mrp
 #: model:product.template,name:mrp.product_sugar_product_template
 msgid "Sugar"
-msgstr ""
+msgstr "Sucre"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -81,7 +81,7 @@ msgstr "Nombre de cycles"
 #. module: mrp
 #: model:product.uom.categ,name:mrp.product_uom_categ_fluid
 msgid "Fluid"
-msgstr ""
+msgstr "Fluide"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_minimumstockprocure0
@@ -165,7 +165,7 @@ msgstr "Produits finis"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are currently in production."
-msgstr ""
+msgstr "Les ordres de fabrications actuellement en production."
 
 #. module: mrp
 #: model:process.transition,name:mrp.process_transition_servicerfq0
@@ -204,7 +204,7 @@ msgstr "Coût horaire"
 #. module: mrp
 #: model:product.template,name:mrp.product_orange_product_template
 msgid "Orange"
-msgstr ""
+msgstr "Orange"
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_servicemts0
@@ -253,6 +253,8 @@ msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Créer un formulaire de produit pour tout ce que vous achetez ou vendez. "
+"Spécifiez un fournisseur si le produit peut être acheté."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -288,7 +290,7 @@ msgstr "Information sur la Capacité"
 #. module: mrp
 #: field:mrp.production,move_created_ids2:0
 msgid "Produced Products"
-msgstr ""
+msgstr "Produits produis"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -344,7 +346,7 @@ msgstr "Vous essayez d'affecter un lot qui n'est pas pour ce produit."
 #. module: mrp
 #: model:product.template,name:mrp.product_cloth_product_template
 msgid "Cloth"
-msgstr ""
+msgstr "Tissu"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_product_produce
@@ -354,7 +356,7 @@ msgstr "Production de produits"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "Erreur ! Vous ne pouvez pas créer de nomenclature récursive."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -375,7 +377,7 @@ msgstr "UdM par défaut"
 #: sql_constraint:mrp.production:0
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "La référence doit être unique par société !"
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:139
@@ -423,6 +425,12 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the needs."
 msgstr ""
+"Les propriétés dans OpenERP sont utilisées pour sélectionner la bonne "
+"nomenclature pour fabriquer un produit quand vous avez différentes façons de "
+"créer le même produit. Vous pouvez assigner plusieurs propriétés à chaque "
+"nomenclature. Quand un vendeur crée un bon de commande, il peut le lier à "
+"différentes propriétés qui sélectionneront la nomenclature en fonction des "
+"besoins."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -489,7 +497,7 @@ msgstr "le produit est de type Service"
 #. module: mrp
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Le nom de la société doit être unique !"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_property_group_action
@@ -574,7 +582,7 @@ msgstr "Changer la quantité"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.action_configure_workcenter
 msgid "Configure your work centers"
-msgstr ""
+msgstr "Configurer les centres de travails"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -612,11 +620,15 @@ msgstr "Prix du fournisseur par UdM"
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
+"Donner la numéro de la séquence pour afficher la liste de routage du centre "
+"de travail."
 
 #. module: mrp
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
 msgstr ""
+"Vous ne pouvez pas déplacer des produits depuis ou vers un emplacement de "
+"type \"vue\"."
 
 #. module: mrp
 #: field:mrp.bom,child_complete_ids:0
@@ -720,6 +732,8 @@ msgstr "Temps nécessaire à la réalisation d'un cycle"
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
+"la ligne de nomemclature de produit ne doit pas être la même que la "
+"nomemclature du produit."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -791,7 +805,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:762
 #, python-format
 msgid "Warning!"
-msgstr ""
+msgstr "Avertissement!"
 
 #. module: mrp
 #: report:mrp.production.order:0
@@ -938,7 +952,7 @@ msgstr "Stock minimum"
 #: code:addons/mrp/mrp.py:503
 #, python-format
 msgid "Cannot delete a manufacturing order in state '%s'"
-msgstr ""
+msgstr "Impossible de supprimer un ordre de fabrication dans l'état \"%s\""
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.menus_dash_mrp
@@ -1055,7 +1069,7 @@ msgstr "Tableau de bord de production"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Manager"
-msgstr ""
+msgstr "Responsable"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1116,12 +1130,12 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.todo.category,name:mrp.category_mrp_config
 msgid "MRP Management"
-msgstr ""
+msgstr "Gestion de production"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "Coût spécifique pour le centre de travail par heure."
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -1174,6 +1188,7 @@ msgid ""
 "Time in hours for this Work Center to achieve the operation of the specified "
 "routing."
 msgstr ""
+"Temps en heure pour ce centre de travail pour achever l'opération de routage."
 
 #. module: mrp
 #: field:mrp.workcenter,costs_journal_id:0
@@ -1228,7 +1243,7 @@ msgstr "Notes"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "Ordres de fabrication prêts à produire."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -1295,7 +1310,7 @@ msgstr "Révisions"
 #. module: mrp
 #: model:product.template,name:mrp.product_shirt_product_template
 msgid "Shirt"
-msgstr ""
+msgstr "Chemise"
 
 #. module: mrp
 #: field:mrp.production,priority:0
@@ -1333,7 +1348,7 @@ msgstr "Produit géré en Plan Directeur"
 #: code:addons/mrp/report/price.py:204
 #, python-format
 msgid "Work Cost of %s %s"
-msgstr ""
+msgstr "Centre de cout de %s %s"
 
 #. module: mrp
 #: help:res.company,manufacturing_lead:0
@@ -1343,7 +1358,7 @@ msgstr "Jours de sécurité pour chaque opération de production."
 #. module: mrp
 #: model:product.template,name:mrp.product_water_product_template
 msgid "Water"
-msgstr ""
+msgstr "Eau"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1360,7 +1375,7 @@ msgstr "Production sur stock"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "La quantité commandée ne peut pas être nulle ou négative !"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1453,7 +1468,7 @@ msgstr "En attente"
 #: code:addons/mrp/mrp.py:603
 #, python-format
 msgid "Couldn't find a bill of material for this product."
-msgstr ""
+msgstr "Impossible de trouver une nomenclature pour ce produit."
 
 #. module: mrp
 #: field:mrp.bom,active:0
@@ -1537,7 +1552,7 @@ msgstr "Non urgent"
 #. module: mrp
 #: field:mrp.production,user_id:0
 msgid "Responsible"
-msgstr ""
+msgstr "Responsable"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
@@ -1892,7 +1907,7 @@ msgstr "Arrondi de produit"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "New"
-msgstr ""
+msgstr "Nouveau"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -1955,7 +1970,7 @@ msgstr "Configuration"
 #. module: mrp
 #: view:mrp.bom:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Date de début"
 
 #. module: mrp
 #: field:mrp.workcenter,time_stop:0
@@ -2011,7 +2026,7 @@ msgstr "Temps en Heures pour la mise en place"
 #. module: mrp
 #: model:product.template,name:mrp.product_orangejuice_product_template
 msgid "Orange Juice"
-msgstr ""
+msgstr "Jus d'orange"
 
 #. module: mrp
 #: field:mrp.bom.revision,bom_id:0
@@ -2078,7 +2093,7 @@ msgstr "Structure de coût"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_user
 msgid "User"
-msgstr ""
+msgstr "Utilisateur"
 
 #. module: mrp
 #: selection:mrp.product.produce,mode:0
@@ -2109,7 +2124,7 @@ msgstr ""
 #. module: mrp
 #: model:product.uom,name:mrp.product_uom_litre
 msgid "Litre"
-msgstr ""
+msgstr "Litre"
 
 #. module: mrp
 #: code:addons/mrp/mrp.py:762
@@ -2294,7 +2309,7 @@ msgstr ""
 #: code:addons/mrp/mrp.py:954
 #, python-format
 msgid "PROD: %s"
-msgstr ""
+msgstr "PROD: %s"
 
 #. module: mrp
 #: help:mrp.workcenter,time_stop:0
@@ -2820,9 +2835,6 @@ msgstr "Produits à consommer"
 #~ msgid "An entry is being made from billing material to routing."
 #~ msgstr "Une entrée sera faite depuis la liste du matériel a assembler."
 
-#~ msgid "Product to stock rules"
-#~ msgstr "Règles de stock produit"
-
 #~ msgid "Procurement convert into the draft purchase order."
 #~ msgstr "Approvisionnement converti en commande d'achat au brouillon."
 
@@ -2857,9 +2869,8 @@ msgstr "Produits à consommer"
 #~ msgid "Stockable Product Stock"
 #~ msgstr "Stock de produit stockable"
 
-#~ msgid "From minimum stock rules, it goes for procure product."
-#~ msgstr ""
-#~ "Des règles de stock minimal, il mène à l'approvisionnement du produit."
+#~ msgid "Product to stock rules"
+#~ msgstr "Règles de stock produit"
 
 #~ msgid "Minimum Stock Procure"
 #~ msgstr "Approvisionnement de stock minimum"
@@ -3000,6 +3011,10 @@ msgstr "Produits à consommer"
 #~ msgstr ""
 #~ "Si le produit est de type \"service\" et que la méthode d'approvisionnement "
 #~ "est \"Sur stock\""
+
+#~ msgid "From minimum stock rules, it goes for procure product."
+#~ msgstr ""
+#~ "Des règles de stock minimal, il mène à l'approvisionnement du produit."
 
 #~ msgid "Service Make to Stock"
 #~ msgstr "Service sur stock"

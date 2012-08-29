@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-03-05 14:46+0000\n"
-"Last-Translator: Numérigraphe <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 18:28+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-03-06 04:48+0000\n"
-"X-Generator: Launchpad (build 14900)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:35+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: email_template
 #: field:email.template,subtype:0
@@ -55,13 +55,14 @@ msgstr "Enregistrer comme un nouveau modèle"
 #: help:email.template,subject:0
 #: help:email_template.preview,subject:0
 msgid "Subject (placeholders may be used here)"
-msgstr ""
+msgstr "Sujet (des variables peuvent être utilisées ici)"
 
 #. module: email_template
 #: help:email.template,email_cc:0
 #: help:email_template.preview,email_cc:0
 msgid "Carbon copy recipients (placeholders may be used here)"
 msgstr ""
+"Destinataires en copie carbone (des variables peuvent être utilisées ici)"
 
 #. module: email_template
 #: selection:email.template,state:0
@@ -73,7 +74,7 @@ msgstr "Reçu"
 #: view:email.template:0
 #: field:email.template,ref_ir_value:0
 #: field:email_template.preview,ref_ir_value:0
-msgid "Sidebar button"
+msgid "Sidebar Button"
 msgstr "Bouton de la barre latérale"
 
 #. module: email_template
@@ -83,6 +84,9 @@ msgid ""
 "Name to use for the generated report file (may contain placeholders)\n"
 "The extension can be omitted and will then come from the report type."
 msgstr ""
+"Nom à utiliser pour le fichier de rapport généré (peut contenir des "
+"variables)\n"
+"L'extension peut être omise: celle du rapport sera utilisée."
 
 #. module: email_template
 #: view:email.template:0
@@ -158,6 +162,8 @@ msgid ""
 "Display a button in the sidebar of related documents to open a composition "
 "wizard with this template"
 msgstr ""
+"Afficher un bouton dans la barre latérale des documents associés pour ouvrir "
+"un assistant de composition avec ce modèle"
 
 #. module: email_template
 #: field:email.template,state:0
@@ -178,11 +184,14 @@ msgid ""
 "Type of message, usually 'html' or 'plain', used to select plaintext or rich "
 "text contents accordingly"
 msgstr ""
+"Le type de message, généralement «Texte enrichi - html» ou «texte», utilisé "
+"pour respectivement sélectionner un contenu qui puisse être mis en forme ou "
+"un texte brut"
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_mail_compose_message
-msgid "E-mail composition wizard"
-msgstr "Assistant de composition de message"
+msgid "Email composition wizard"
+msgstr ""
 
 #. module: email_template
 #: view:email.template:0
@@ -192,7 +201,7 @@ msgstr "Constructeur de valeurs dynamiques"
 #. module: email_template
 #: field:email.template,res_id:0
 msgid "Related Document ID"
-msgstr ""
+msgstr "ID du document associé"
 
 #. module: email_template
 #: field:email.template,lang:0
@@ -214,7 +223,7 @@ msgstr "À"
 #. module: email_template
 #: field:email.template,model:0
 #: field:email_template.preview,model:0
-msgid "Related Document model"
+msgid "Related Document Model"
 msgstr ""
 
 #. module: email_template
@@ -225,6 +234,9 @@ msgid ""
 "If it is a relationship field you will be able to select a target field at "
 "the destination of the relationship."
 msgstr ""
+"Sélectionnez le champ cible à partir du modèle de document associé.\n"
+"S'il s'agit d'un champ de relation, vous pourrez sélectionner un champ cible "
+"dans la destination de la relation."
 
 #. module: email_template
 #: view:email.template:0
@@ -282,7 +294,7 @@ msgstr "Modèle de document associé"
 #: help:email.template,email_from:0
 #: help:email_template.preview,email_from:0
 msgid "Sender address (placeholders may be used here)"
-msgstr ""
+msgstr "Adresse de l'expéditeur (des variables peuvent être utilisées ici)"
 
 #. module: email_template
 #: help:res.partner,opt_out:0
@@ -313,13 +325,13 @@ msgstr "Ajouter une signature"
 #: help:email.template,body_text:0
 #: help:email_template.preview,body_text:0
 msgid "Plaintext version of the message (placeholders may be used here)"
-msgstr ""
+msgstr "Version texte du message (des variables peuvent être utilisées ici)"
 
 #. module: email_template
 #: help:email.template,original:0
 #: help:email_template.preview,original:0
 msgid "Original version of the message, as it was sent on the network"
-msgstr ""
+msgstr "Version originale du message, tel qu' il a été envoyé sur le réseau"
 
 #. module: email_template
 #: code:addons/email_template/email_template.py:230
@@ -361,6 +373,8 @@ msgid ""
 "When a relationship field is selected as first field, this field shows the "
 "document model the relationship goes to."
 msgstr ""
+"Quand un champ de relation est sélectionné comme premier champ, ce champ "
+"indique le modèle de document vers lequel la relation va."
 
 #. module: email_template
 #: model:ir.model,name:email_template.model_email_template
@@ -382,7 +396,7 @@ msgstr "Aperçu du modèle"
 #: field:email.template,message_id:0
 #: field:email_template.preview,message_id:0
 msgid "Message-Id"
-msgstr ""
+msgstr "ID du message"
 
 #. module: email_template
 #: view:email.template:0
@@ -409,7 +423,7 @@ msgstr "Envoyer le courriel (%s)"
 #. module: email_template
 #: field:email.template,body_html:0
 #: field:email_template.preview,body_html:0
-msgid "Rich-text contents"
+msgid "Rich-text Contents"
 msgstr ""
 
 #. module: email_template
@@ -436,6 +450,7 @@ msgid ""
 "Final placeholder expression, to be copy-pasted in the desired template "
 "field."
 msgstr ""
+"Variable d'expression finale, à copier-coller dans le champ de modèle désiré."
 
 #. module: email_template
 #: view:email.template:0
@@ -456,7 +471,7 @@ msgstr "Copie à (CC)"
 #. module: email_template
 #: field:email.template,body_text:0
 #: field:email_template.preview,body_text:0
-msgid "Text contents"
+msgid "Text Contents"
 msgstr ""
 
 #. module: email_template
@@ -489,6 +504,8 @@ msgid ""
 "You may attach files to this template, to be added to all emails created "
 "from this template"
 msgstr ""
+"Vous pouvez joindre des fichiers à ce modèle, à ajouter à tous les courriels "
+"créés sur ce modèle"
 
 #. module: email_template
 #: help:email.template,headers:0
@@ -497,6 +514,8 @@ msgid ""
 "Full message headers, e.g. SMTP session headers (usually available on "
 "inbound messages only)"
 msgstr ""
+"En-têtes complet de message, par exemple en-têtes de session SMTP "
+"(généralement disponible sur les messages entrants uniquement)"
 
 #. module: email_template
 #: field:email.template,mail_server_id:0
@@ -535,7 +554,7 @@ msgstr "Modèles"
 
 #. module: email_template
 #: field:res.partner,opt_out:0
-msgid "Opt-out"
+msgid "Opt-Out"
 msgstr ""
 
 #. module: email_template
@@ -543,6 +562,7 @@ msgstr ""
 #: help:email_template.preview,email_bcc:0
 msgid "Blind carbon copy recipients (placeholders may be used here)"
 msgstr ""
+"Destinataires en copie cachée (des variables peuvent être utilisés ici)"
 
 #. module: email_template
 #: help:email.template,lang:0
@@ -553,6 +573,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language code, e.g. "
 "${object.partner_id.lang.code}."
 msgstr ""
+"Langue de traduction facultative (code ISO) à utiliser lors de l'envoi d'un "
+"courriel. Si elle n'est pas défini, la version anglaise sera utilisée. Cela "
+"devrait normalement être une expression variable qui renvoie le code langue "
+"correct, par exemple : ${object.partner_id.lang.code} ."
 
 #. module: email_template
 #: field:email_template.preview,res_id:0
@@ -564,6 +588,8 @@ msgstr "Document exemple"
 #: help:email_template.preview,email_to:0
 msgid "Comma-separated recipient addresses (placeholders may be used here)"
 msgstr ""
+"Adresses des destinataires séparées par des virgules (des variables peuvent "
+"être utilisées ici)"
 
 #. module: email_template
 #: field:email.template,name:0
@@ -597,6 +623,12 @@ msgid ""
 "instead.\n"
 "Placeholders must be used here, as this value always needs to be unique!"
 msgstr ""
+"En-tête de l'ID du message SMTP à utiliser dans les messages sortants basées "
+"sur ce modèle. Notez que cela l'emporte sur l'option \"Suivi des "
+"ressources\", donc si vous avez simplement besoin de suivre les réponses aux "
+"courriels sortants, activer cette option à la place.\n"
+"Des variables doivent être utilisées ici, car cette valeur doit toujours "
+"être unique !"
 
 #. module: email_template
 #: field:email.template,headers:0
@@ -665,12 +697,14 @@ msgid ""
 "Optional preferred server for outgoing mails. If not set, the highest "
 "priority one will be used."
 msgstr ""
+"Option serveur préféré pour les courriels sortants. S'il n'est pas défini, "
+"la plus haute priorité sera utilisée."
 
 #. module: email_template
 #: selection:email.template,state:0
 #: selection:email_template.preview,state:0
 msgid "Delivery Failed"
-msgstr ""
+msgstr "Echec de l'envoi"
 
 #. module: email_template
 #: help:email.template,sub_model_object_field:0
@@ -679,6 +713,9 @@ msgid ""
 "When a relationship field is selected as first field, this field lets you "
 "select the target field within the destination document model (sub-model)."
 msgstr ""
+"Quand un champ de relation est sélectionné comme premier champ, ce champ "
+"vous permet de sélectionner le champ cible dans le modèle de document de "
+"destination (sous-modèle)."
 
 #. module: email_template
 #: view:email.template:0
@@ -689,22 +726,21 @@ msgstr "Joindre un rapport"
 #: field:email.template,report_template:0
 #: field:email_template.preview,report_template:0
 msgid "Optional report to print and attach"
-msgstr ""
+msgstr "Rapport facultatif à imprimer et à joindre"
 
 #. module: email_template
 #: help:email.template,body_html:0
 #: help:email_template.preview,body_html:0
 msgid "Rich-text/HTML version of the message (placeholders may be used here)"
 msgstr ""
+"Version texte riche/HTML du message (des espaces réservés peuvent être "
+"utilisés ici)"
 
 #~ msgid "Email Content  "
 #~ msgstr "Contenu du courriel  "
 
 #~ msgid "Personal Emails"
 #~ msgstr "Courriels personnels"
-
-#~ msgid "Permanently delete emails after sending"
-#~ msgstr "Supprimer déinitivement les courriels après envoi"
 
 #~ msgid "Body"
 #~ msgstr "Corps"
@@ -1426,3 +1462,24 @@ msgstr ""
 
 #~ msgid "Plain Text"
 #~ msgstr "Texte brut"
+
+#~ msgid "Sidebar button"
+#~ msgstr "Bouton de la barre latérale"
+
+#~ msgid "Opt-out"
+#~ msgstr "Opt-out"
+
+#~ msgid "Related Document model"
+#~ msgstr "Modèle du document associé"
+
+#~ msgid "Rich-text contents"
+#~ msgstr "Contenu en texte enrichi"
+
+#~ msgid "Text contents"
+#~ msgstr "Contenu du texte"
+
+#~ msgid "Permanently delete emails after sending"
+#~ msgstr "Supprimer définitivement les courriels après envoi"
+
+#~ msgid "E-mail composition wizard"
+#~ msgstr "Assistant pour la rédaction de courriels"

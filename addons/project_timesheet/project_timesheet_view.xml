@@ -1,32 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="project_invoice_form" model="ir.ui.view">
-            <field name="name">Inherit project form : Invoicing Data</field>
+
+        <record id="view_project_kanban_inherited" model="ir.ui.view">
+            <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project.edit_project"/>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
-                <field name="warn_customer" position="after">
-                    <group colspan="4" col="4">
-                        <separator colspan="4" string="Invoicing Data"/>
-                        <field name="pricelist_id" groups="product.group_sale_pricelist" domain="[('type','=','sale')]" widget="selection"/>
-                        <field name="to_invoice" widget="selection" string="Invoice Task Work"/>
-                        <field name="amount_max" groups="base.group_extended"/>
-                        <field name="amount_invoiced" groups="base.group_extended"/>
-                    </group>
+                <field name="use_tasks" position="after">
+                    <field name="use_timesheets"/>
+                    <field name="timesheet_count"/>
+                    <field name="currency_id"/>
+                    <field name="partner_id"/>
                 </field>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
+                    <a t-if="record.use_timesheets.raw_value"
+                        name="open_timesheets" type="object">Timesheets(<field name="timesheet_count"/>)</a>
+                </xpath>
+                <xpath expr="//div[contains(@class, 'oe_kanban_project_deadline')]" position="before">
+                    <div class="oe_kanban_project_fields oe_kanban_project_invoice" t-if="record.partner_id.raw_value">
+                        <div>Amount to invoice</div>
+                        <div><field name="amount_to_invoice"/> <t t-esc="record.currency_id.raw_value[1].split(' ')[1][1]"/></div>
+                        <div>Time to Invoice</div>
+                        <div><field name="time_to_invoice"/> <field name="company_uom_id"/></div>
+                    </div>
+                </xpath>
             </field>
         </record>
 
         <record id="project_invoice_form_cutomer" model="ir.ui.view">
             <field name="name">Inherit project form : Customer</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="project_invoice_form"/>
+            <field name="inherit_id" ref="analytic_contract_project.project_invoice_form"/>
             <field name="arch" type="xml">
                 <field name="partner_id" position="replace">
-                    <field colspan="4" name="partner_id" on_change="onchange_partner_id(partner_id)" select="1" string="Customer"  attrs="{'required':[('to_invoice','!=',False)]}"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)" string="Contact"  attrs="{'required':[('to_invoice','!=',False)]}"/>
                 </field>
             </field>
         </record>
@@ -34,11 +42,10 @@
         <record id="project_invoice_search" model="ir.ui.view">
             <field name="name">Inherit project search view : Invoicing Data</field>
             <field name="model">project.project</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="project.view_project_project_filter"/>
             <field name="arch" type="xml">
-                <xpath expr='//filter[@string="Member"]' position='after'>
-                    <separator orientation="vertical"/>
+                <xpath expr='//filter[@string="Project(s) Manager"]' position='after'>
+                    <separator/>
                     <filter icon="terp-camera_test" string="Billable" domain="[('to_invoice','!=', False)]" help="Billable Project"/>
                 </xpath>
             </field>
@@ -46,29 +53,26 @@
         <record id="view_account_analytic_line_search_account_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
-                     <field name="account_id" position="replace">
-                    <field name="account_id" string="Analytic account/project" />
-                </field>
+                 <field name="account_id" position="replace">
+                     <field name="account_id" string="Analytic account/project"/>
+                 </field>
             </field>
          </record>
         <record id="view_account_analytic_line_form_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.form.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
-                   <field name="account_id" string="Analytic account/project" on_change="on_change_account_id(account_id)"/>
+                   <field name="account_id" string="Analytic Account/Project" on_change="on_change_account_id(account_id)"/>
                 </field>
             </field>
         </record>
        <record id="view_account_analytic_line_tree_inherit_account_id" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.account_id</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id"  position="replace">
@@ -79,21 +83,24 @@
 
         <!-- Menus -->
         <record id="action_project_timesheet_bill_task" model="ir.actions.act_window">
-            <field name="name">Bill Tasks Works</field>
+            <field name="name">Invoice Tasks Work</field>
             <field name="res_model">account.analytic.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context">{'search_default_to_invoice': 1}</field>
             <field name="view_id" ref="view_account_analytic_line_tree_inherit_account_id"/>
-            <field name="help">You will find here all works made on tasks that you can invoice.
-In order to invoice the time spent on a project, you must define the
-pricelist and the field 'Invoice Task Work' on the tab 'Billing' of
-the project form.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a work to invoice.
+              </p><p>
+                You will find here all works made on tasks that you can
+                invoice.   
+              </p>
+            </field>
         </record>
         <menuitem action="hr_timesheet.action_hr_timesheet_sign_in"
             id="menu_hr_timesheet_sign_in"
-            groups="base.group_extended"
             parent="hr_attendance.menu_hr_attendance"
             sequence="5" />
 
@@ -115,7 +122,14 @@ the project form.</field>
             <field name="context">{}</field>
             <field name="domain">[('type','=','normal')]</field>
             <field name="search_view_id" ref="account_analytic_analysis.view_account_analytic_account_overdue_search"/>
-            <field name="help">You will find here the contracts related to your customer projects in order to track the invoicing progress.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a customer contract.
+              </p><p>
+                You will find here the contracts related to your customer
+                projects in order to track the invoicing progress.
+              </p>
+            </field>
         </record>
         <menuitem id="menu_invoicing_contracts" parent="menu_project_billing" sequence="4"
             action="account_analytic_analysis.action_account_analytic_overdue"/>

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-04-18 23:32+0000\n"
+"PO-Revision-Date: 2012-06-16 01:12+0000\n"
 "Last-Translator: Masaki Yamaya <Unknown>\n"
 "Language-Team: Japanese <ja@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-04-20 04:43+0000\n"
-"X-Generator: Launchpad (build 15120)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:23+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -351,7 +351,7 @@ msgstr "小麦色"
 #. module: hr_holidays
 #: constraint:resource.calendar.leaves:0
 msgid "Error! leave start-date must be lower then leave end-date."
-msgstr "エラー：休暇開始日は休暇終了日の前でなければいけません。"
+msgstr "エラー。休暇開始日は休暇終了日の前でなければいけません。"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/hr_holidays.py:382
@@ -394,9 +394,9 @@ msgstr "従業員あるいはカテゴリーを選んで下さい。"
 #. module: hr_holidays
 #: help:hr.holidays.status,double_validation:0
 msgid ""
-"If its True then its Allocation/Request have to be validated by second "
-"validator"
-msgstr "これが正しいならば、その割当て / 申請は第2の承認者によって承認されなければなりません。"
+"When selected, the Allocation/Leave Requests for this type require a second "
+"validation to be approved."
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
@@ -532,11 +532,6 @@ msgstr "開始日は終了日の前でなければなりません。"
 #: field:hr.holidays.status,active:0
 msgid "Active"
 msgstr "有効"
-
-#. module: hr_holidays
-#: model:ir.actions.act_window,name:hr_holidays.action_view_holiday_status_manager_board
-msgid "Leaves To Validate"
-msgstr "承認すべき休暇"
 
 #. module: hr_holidays
 #: constraint:hr.employee:0
@@ -760,9 +755,9 @@ msgstr "病欠"
 #. module: hr_holidays
 #: help:hr.holidays.status,limit:0
 msgid ""
-"If you tick this checkbox, the system will allow, for this section, the "
-"employees to take more leaves than the available ones."
-msgstr "このボックスをチェックすると、従業員はこの部分について有効な休暇よりも多くの休暇を取ることができます。"
+"If you select this checkbox, the system allows the employees to take more "
+"leaves than the available ones for this type."
+msgstr ""
 
 #. module: hr_holidays
 #: help:hr.holidays.status,leaves_taken:0
@@ -851,3 +846,16 @@ msgstr "年"
 #: view:hr.holidays:0
 msgid "To Approve"
 msgstr "承認する"
+
+#~ msgid ""
+#~ "If its True then its Allocation/Request have to be validated by second "
+#~ "validator"
+#~ msgstr "これが正しいならば、その割当て / 申請は第2の承認者によって承認されなければなりません。"
+
+#~ msgid "Leaves To Validate"
+#~ msgstr "承認すべき休暇"
+
+#~ msgid ""
+#~ "If you tick this checkbox, the system will allow, for this section, the "
+#~ "employees to take more leaves than the available ones."
+#~ msgstr "このボックスをチェックすると、従業員はこの部分について有効な休暇よりも多くの休暇を取ることができます。"

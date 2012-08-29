@@ -46,7 +46,7 @@ class pos_open_statement(osv.osv_memory):
         st_ids = []
         j_ids = journal_obj.search(cr, uid, [('journal_user','=',1)], context=context)
         if not j_ids:
-            raise osv.except_osv(_('No Cash Register Defined !'), _('You must define which payment method must be available through the point of sale by reusing existing bank and cash through "Accounting > Configuration > Financial Accounting > Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend > Configuration > Payment Methods".'))
+            raise osv.except_osv(_('No Cash Register Defined !'), _('You have to define which payment method must be available in the point of sale by reusing existing bank and cash through "Accounting / Configuration / Journals / Journals". Select a journal and check the field "PoS Payment Method" from the "Point of Sale" tab. You can also create new payment methods directly from menu "PoS Backend / Configuration / Payment Methods".'))
 
         for journal in journal_obj.browse(cr, uid, j_ids, context=context):
             ids = statement_obj.search(cr, uid, [('state', '!=', 'confirm'), ('user_id', '=', uid), ('journal_id', '=', journal.id)], context=context)
@@ -60,12 +60,12 @@ class pos_open_statement(osv.osv_memory):
                 'journal_id': journal.id,
                 'user_id': uid,
                 'state': 'draft',
-                'name': number 
+                'name': number
             })
             statement_id = statement_obj.create(cr, uid, data, context=context)
             st_ids.append(int(statement_id))
-            
-            if journal.auto_cash:
+
+            if journal.opening_control:
                 statement_obj.button_open(cr, uid, [statement_id], context)
 
         tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')
@@ -74,7 +74,7 @@ class pos_open_statement(osv.osv_memory):
         form_id = form_res and form_res[1] or False
         search_res = mod_obj.get_object_reference(cr, uid, 'account', 'view_account_bank_statement_filter')
         search_id = search_res and search_res[1] or False
-        
+
         return {
             'type': 'ir.actions.act_window',
             'name': _('List of Cash Registers'),
@@ -85,7 +85,7 @@ class pos_open_statement(osv.osv_memory):
             'views': [(tree_id, 'tree'), (form_id, 'form')],
             'search_view_id': search_id,
         }
-    
+
 pos_open_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

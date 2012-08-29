@@ -21,16 +21,15 @@
 ##############################################################################
 
 {
-    "name" : "E-Mail Templates",
-    "version" : "1.1",
-    "author" : "OpenERP,OpenLabs",
-    "website" : "http://openerp.com",
-    "category" : "Marketing",
-    'complexity': "expert",
-    "depends" : ['mail'],
-    "description": """
-Email Templating (simplified version of the original Power Email by Openlabs)
-=============================================================================
+    'name' : 'Email Templates',
+    'version' : '1.1',
+    'author' : 'OpenERP,OpenLabs',
+    'website' : 'http://openerp.com',
+    'category' : 'Marketing',
+    'depends' : ['mail'],
+    'description': """
+Email Templating (simplified version of the original Power Email by Openlabs).
+==============================================================================
 
 Lets you design complete email templates related to any OpenERP document (Sale
 Orders, Invoices and so on), including sender, recipient, subject, body (HTML and
@@ -54,23 +53,19 @@ These email templates are also at the heart of the marketing campaign system
 (see the ``marketing_campaign`` application), if you need to automate larger
 campaigns on any OpenERP document.
 
-Technical note: only the templating system of the original Power Email by
-Openlabs was kept
-
+    **Technical note:** only the templating system of the original Power Email by Openlabs was kept.
     """,
-    "data": [
+    'data': [
         'wizard/email_template_preview_view.xml',
         'email_template_view.xml',
         'res_partner_view.xml',
-        'wizard/email_compose_message_view.xml',
+        'wizard/mail_compose_message_view.xml',
         'security/ir.model.access.csv'
     ],
-    "demo": [
-        'res_partner_demo.yml',
-    ],
-    "installable": True,
-    "auto_install": False,
-    "certificate" : "00817073628967384349",
+    'demo': ['res_partner_demo.yml'],
+    'installable': True,
+    'auto_install': False,
+    'certificate' : '00817073628967384349',
     'images': ['images/1_email_account.jpeg','images/2_email_template.jpeg','images/3_emails.jpeg'],
 }
 

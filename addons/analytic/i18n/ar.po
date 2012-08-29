@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:56+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:34+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
@@ -70,11 +70,20 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"* وعندما يتم إنشاء حساب لها في الدولة \"مشروع\".\n"
+"* إذا كان أي شريك المرتبطة هناك، يمكن أن يكون في حالة 'فتح'.\n"
+"* إذا كان أي رصيد في انتظار أن هناك يمكن أن يكون في \"انتظار\".\n"
+"* وأخيرا عندما تكون جميع المعاملات قد ولت، يمكن أن يكون في حالة \"إغلاق\".\n"
+"* يمكن أن يكون المشروع في أي حال 'قالب' الدول و \"الجري\".\n"
+"إذا كان قالب ثم يمكننا أن نجعل المشاريع القائمة على مشاريع قالب. إذا في حالة "
+"\"تشغيل\" وهو مشروع طبيعي.\n"
+"إذا أريد له أن يعاد النظر بعد ذلك للحالة  هو \"معلق\".\n"
+"عندما يتم الانتهاء من المشروع تم تعيين الحالة ل\"تم\"."
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "جديد"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -119,6 +128,10 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"إذا قمت بتعيين شركة، فالعملة المختارة يجب أن تكون نفس العملة لها.  يمكنك "
+"إزالة شركة تابعة، وبالتالي تغيير العملة، إلا على حساب تحليلي من نوع \"عرض\". "
+"و لهذا يمكن أن تكون مفيدة لأغراض توحيد الرسوم البيانية للعديد من الشركات من "
+"عملات مختلفة، على سبيل المثال."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -163,7 +176,7 @@ msgstr "هرمية الحساب"
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
-msgstr ""
+msgstr "يحدد الحد الأقصي من الوقت للعمل على عقد."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -183,7 +196,7 @@ msgstr "جهة الإتصال"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "رمز/مرجع"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -194,7 +207,7 @@ msgstr "أُلغيت"
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "خطأ !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -223,12 +236,12 @@ msgstr "تاريخ الإنتهاء"
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "الوقت الأقصي"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "محاسبة تحليلية"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
@@ -244,12 +257,12 @@ msgstr "حساب تحليلي"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "العملة"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0

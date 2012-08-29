@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-        <menuitem
-            icon="terp-project" id="base.menu_main_pm"
-            name="Project" sequence="10"
-            web_icon="images/project.png"
-            web_icon_hover="images/project-hover.png"/>
+
+        <!-- Top menu item -->
+        <menuitem name="Project"
+            id="base.menu_main_pm"
+            sequence="90"/>
 
         <menuitem id="base.menu_aftersale" name="After-Sale Services" sequence="2" parent="base.menu_main_pm" />
 
-<!-- Help Desk (menu) -->
+        <!-- Help Desk (menu) -->
 
         <record model="ir.actions.act_window" id="crm_case_helpdesk_act111">
             <field name="name">Helpdesk Requests</field>
@@ -17,8 +17,19 @@
             <field name="view_mode">tree,calendar,form</field>
             <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
             <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
-            <field name="context">{"search_default_user_id":uid, 'search_default_section_id': section_id}</field>
-            <field name="help">Helpdesk and Support allow you to track your interventions. Select a customer, add notes and categorize interventions with partners if necessary. You can also assign a priority level. Use the OpenERP Issues system to manage your support activities. Issues can be connected to the email gateway: new emails may create issues, each of them automatically gets the history of the conversation with the customer.</field>
+            <field name="context">{"search_default_user_id":uid}</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new request. 
+              </p><p>
+                Helpdesk and Support allow you to track your interventions.
+              </p><p>
+                Use the OpenERP Issues system to manage your support
+                activities. Issues can be connected to the email gateway: new
+                emails may create issues, each of them automatically gets the
+                history of the conversation with the customer.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
@@ -43,7 +54,7 @@
         </record>
 
         <menuitem name="Helpdesk and Support" id="menu_help_support_main"
-            groups="base.group_extended,base.group_sale_salesman"
+            groups="base.group_sale_salesman"
             parent="base.menu_aftersale" action="crm_case_helpdesk_act111" sequence="2"/>
 
     </data>
