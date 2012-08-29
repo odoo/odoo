@@ -245,8 +245,8 @@
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action"> <field name="task_count"/> Tasks</a>
                                     </div>
                                     <table>
-                                      <tr t-if="record.date.raw_value">
-                                        <th class="oe_kanban_project_fields oe_kanban_project_deadline">Deadline</th>
+                                      <tr class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
+                                        <th>Deadline</th>
                                         <td><field name="date"/></td>
                                       </tr>
                                       <tr class="oe_kanban_project_fields oe_kanban_project_progress">
