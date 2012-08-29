@@ -2563,7 +2563,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     }
 });
 
-// jquery autocomplete tweak to allow html
+// jquery autocomplete tweak to allow html and classnames
 (function() {
     var proto = $.ui.autocomplete.prototype,
         initSource = proto._initSource;
@@ -2590,7 +2590,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
             return $( "<li></li>" )
                 .data( "item.autocomplete", item )
                 .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
-                .appendTo( ul );
+                .appendTo( ul )
+                .addClass(item.classname);
         }
     });
 })();
@@ -2630,25 +2631,36 @@ instance.web.form.CompletionFieldMixin = {
             // search more... if more results that max
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
-                values.push({label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._search_create_popup("search", data);
-                    });
-                }});
+                values.push({
+                    label: _t("Search More..."),
+                    action: function() {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', false, function(data) {
+                            self._search_create_popup("search", data);
+                        });
+                    },
+                    classname: 'oe_m2o_dropdown_option'
+                });
             }
             // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 && !_.include(raw_result, search_val)) {
-                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
-                        $('<span />').text(search_val).html()), action: function() {
-                    self._quick_create(search_val);
-                }});
+                values.push({
+                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                        $('<span />').text(search_val).html()),
+                    action: function() {
+                        self._quick_create(search_val);
+                    },
+                    classname: 'oe_m2o_dropdown_option'
+                });
             }
             // create...
-            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, self._create_context(search_val));
-            }});
+            values.push({
+                label: _t("Create and Edit..."),
+                action: function() {
+                    self._search_create_popup("form", undefined, self._create_context(search_val));
+                },
+                classname: 'oe_m2o_dropdown_option'
+            });
 
             return values;
         });
