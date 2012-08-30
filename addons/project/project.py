@@ -1217,7 +1217,7 @@ class task(base_stage, osv.osv):
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
         msg = _('Task has been set as <b>draft</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, subtype="draft", context=context)
+        return self.message_append_note(cr, uid, ids, body=msg, context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):

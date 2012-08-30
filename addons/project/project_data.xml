@@ -113,10 +113,6 @@
             <field name="model_ids" eval="[(4,ref('project.model_project_task'))]"/>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_draft" model="mail.message.subtype">
-            <field name="name">draft</field>
-            <field name="model_ids" eval="[(4,ref('project.model_project_task'))]"/>
-        </record>
         <record id="mail.mail_subtype_email" model="mail.message.subtype">
             <field name="model_ids" eval="[(4,ref('project.model_project_project')),(4,ref('project.model_project_task'))]"/>
         </record>
