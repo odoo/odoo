@@ -48,14 +48,13 @@ class account_move_reconciliation(osv.osv):
         return super(account_move_reconciliation, self).search(cr, uid, args, offset, limit,
                 order, context=context, count=count)
 
-    def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = {}
+
+    def _get_to_reconcile_partners(self, cr, uid, context=None):
         if context is None:
             context = {}
         ctx = dict(context)
         ctx['next_partner_only'] = False
         move_line_obj = self.pool.get("account.move.line")
-        
         to_reconcile_ids = move_line_obj.search(cr, uid, [
                     ('reconcile_id','=',False), 
                     ('account_id.reconcile','=',True), 
@@ -69,14 +68,30 @@ class account_move_reconciliation(osv.osv):
         for move_line in move_line_obj.browse(cr, uid, to_reconcile_ids, context=ctx):
             partner = move_line.partner_id
             if move_line.date > partner.last_reconciliation_date and partner.id not in partner_ids:
-                partner_ids.append(move_line.partner_id.id)
+                partner_ids.append(partner.id)
+        return len(partner_ids)
 
-        to_reconcile = len(partner_ids)
+    def _get_today_reconciled_partners(self, cr, uid, context=None):
+        if context is None:
+            context = {}
+        account_type = context.get("account_type", False)
+        supplier = False
+        customer = False
+        if account_type == 'payable':
+            supplier = True
+        else:
+            customer = True
         today_reconciled_ids = self.pool.get('res.partner').search(cr, uid, [
                 ('last_reconciliation_date','>=',time.strftime('%Y-%m-%d 00:00:00')),
-                ('last_reconciliation_date','<=',time.strftime('%Y-%m-%d 23:59:59'))
-            ], context=ctx)
-        today_reconciled = today_reconciled_ids and len(today_reconciled_ids) or 0 # total partners which reconciled today
+                ('last_reconciliation_date','<=',time.strftime('%Y-%m-%d 23:59:59')),
+                '|', ('supplier','=',supplier), ('customer','=',customer)
+            ], context=context)
+        return today_reconciled_ids and len(today_reconciled_ids) or 0
+        
+    def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = {}
+        to_reconcile = self._get_to_reconcile_partners(cr, uid, context=context)
+        today_reconciled = self._get_today_reconciled_partners(cr, uid, context=context)
         if to_reconcile < 0:
             reconciliation_progress = 100
         else:

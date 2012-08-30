@@ -86,7 +86,10 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     },
     
     do_update_pager: function(hide_index) {
-        var index = hide_index ? '-' : this.dataset.index + 1;
+        var index = this.dataset.index + 1
+        if (this.dataset.ids.length == 0)
+            index = 0;
+        index = hide_index ? '-' : index;
         this.$el.find('span.oe_pager_index_extend').html(index).end()
                    .find('span.oe_pager_count_extend').html(this.dataset.ids.length);
     },
