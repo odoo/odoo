@@ -870,6 +870,7 @@ class sale_order(osv.osv):
             'sale_line_id': line.id,
             'tracking_id': False,
             'state': 'draft',
+            'type':'out',
             #'state': 'waiting',
             'note': '\n'.join(line.name.split('\n')[1:]),
             'company_id': order.company_id.id,

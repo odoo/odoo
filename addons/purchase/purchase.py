@@ -543,6 +543,7 @@ class purchase_order(osv.osv):
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'move_dest_id': order_line.move_dest_id.id,
             'state': 'draft',
+            'type':'in',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': order_line.price_unit
