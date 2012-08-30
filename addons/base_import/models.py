@@ -18,6 +18,8 @@ ERROR_PREVIEW_BYTES = 200
 _logger = logging.getLogger(__name__)
 class ir_import(orm.TransientModel):
     _name = 'base_import.import'
+    # allow imports to survive for 12h in case user is slow
+    _transient_max_hours = 12.0
 
     _columns = {
         'res_model': fields.char('Model', size=64),
