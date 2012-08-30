@@ -95,9 +95,12 @@ class mail_compose_message(osv.osv_memory):
         else: # restore defaults
             values = self.default_get(cr, uid, fields, context=context)
 
-        if values.get('body_html') is not None:
+        if values.get('body_html') and not values.get('body'):
             values['body'] = values.get('body_html')
+        
         values.update(use_template=use_template, template_id=template_id)
+
+        print 'returning ', values
 
         return {'value': values}
 
@@ -105,7 +108,8 @@ class mail_compose_message(osv.osv_memory):
         """ hit toggle template mode button: calls onchange_use_template to 
             emulate an on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
-            onchange_res = self.onchange_use_template(cr, uid, ids, not record.use_template, context=context)['value']
+            onchange_res = self.onchange_use_template(cr, uid, ids, not record.use_template,
+                record.template_id, record.composition_mode, record.res_id, context=context)['value']
             record.write(onchange_res)
         return True
 

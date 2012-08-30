@@ -75,11 +75,11 @@ class mail_compose_message(osv.TransientModel):
         active_ids = context.get('active_ids')
 
         # get default values according to the composition mode
-        if composition_mode in ['reply']:
+        if composition_mode == 'reply':
             vals = self.get_message_data(cr, uid, active_id, context=context)
-        elif composition_mode in ['comment'] and model and res_id:
+        elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
-        elif composition_mode in ['mass_mail'] and model and active_ids:
+        elif composition_mode == 'mass_mail' and model and active_ids:
             vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}

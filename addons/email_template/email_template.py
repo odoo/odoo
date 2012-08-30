@@ -28,6 +28,8 @@ from osv import osv
 from osv import fields
 import tools
 from tools.translate import _
+from tools.html_sanitize import html_sanitize
+from tools import html2plaintext
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 
@@ -134,7 +136,7 @@ class email_template(osv.osv):
                                                    "This is useful for CRM leads for example"),
 
         # Overridden mail.message.common fields for technical reasons:
-        'model': fields.related('model_id','model', type='char', string='Related Document Model',
+        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
                                 size=128, select=True, store=True, readonly=True),
         # we need a separate m2m table to avoid ID collisions with the original mail.message entries
         #'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
@@ -143,7 +145,7 @@ class email_template(osv.osv):
         #                                        "emails created from this template"),
 
         # Overridden mail.message.common fields to make tooltips more appropriate:
-        #'subject':fields.char('Subject', size=512, translate=True, help="Subject (placeholders may be used here)",),
+        'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
         'email_to': fields.char('To', size=256, help="Comma-separated recipient addresses (placeholders may be used here)"),
         'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
@@ -151,13 +153,7 @@ class email_template(osv.osv):
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        #'body': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
         'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
-        #'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
-        #                                                       "Please note that this overrides the 'Resource Tracking' option, "
-        #                                                       "so if you simply need to track replies to outgoing emails, enable "
-        #                                                       "that option instead.\n"
-        #                                                       "Placeholders must be used here, as this value always needs to be unique!"),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",
@@ -300,7 +296,6 @@ class email_template(osv.osv):
             context = {}
         values = {
                   'subject': False,
-                  'body': False,
                   'body_html': False,
                   'email_from': False,
                   'email_to': False,
@@ -314,7 +309,6 @@ class email_template(osv.osv):
                   'attachment_ids': False,
                   'message_id': False,
                   'state': 'outgoing',
-                  'content_subtype': 'plain',
         }
         if not template_id:
             return values
@@ -322,15 +316,15 @@ class email_template(osv.osv):
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
 
-        for field in ['subject', 'body', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'reply_to',
-                      'message_id']:
+        for field in ['subject', 'body_html', 'email_from',
+                      'email_to', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
 
         if values['body_html']:
-            values.update(content_subtype='html')
+            values['body'] = html_sanitize(values['body_html'])
+            values['body_text'] = html2plaintext(values['body_html'])
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature

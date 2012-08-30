@@ -54,10 +54,10 @@ class mail_mail(osv.Model):
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
+        'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
-        'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
-        'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
+        'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
+        'reply_to':fields.char('Reply-To', help='Preferred response address for the message'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
     }
 
