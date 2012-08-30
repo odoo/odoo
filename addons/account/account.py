@@ -746,9 +746,11 @@ class account_journal(osv.osv):
         'profit_account_id' : fields.many2one('account.account', 'Profit Account'),
         'loss_account_id' : fields.many2one('account.account', 'Loss Account'),
         'internal_account_id' : fields.many2one('account.account', 'Internal Transfers Account', select=1),
+        'cash_control' : fields.boolean('Cash Control', help='If you want the journal should be control at opening/closing, check this option'),
     }
 
     _defaults = {
+        'cash_control' : False,
         'with_last_closing_balance' : False,
         'user_id': lambda self, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id,
