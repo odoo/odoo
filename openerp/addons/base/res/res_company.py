@@ -103,18 +103,25 @@ class res_company(osv.osv):
         return True
 
     def _format_company_footer(self, cr, uid, company, context=None):
-        """ Format the company's RML footer the right way """
+        """
+        Format the company's RML footer the right way
+
+        @param company: compny's browse record OR dict with the required data
+
+        @return: string containing the formated footer
+        """
+
         val = []
 
-        if company.phone: val.append(_('Phone: ')+company.phone)
-        if company.fax: val.append(_('Fax: ')+company.fax)
-        if company.email: val.append(_('Email: ')+company.email)
-        if company.website: val.append(_('Website: ')+company.website)
-        if company.vat: val.append(_('TIN: ')+company.vat)
-        if company.company_registry: val.append(_('Reg: ')+company.company_registry)
+        if company['phone']: val.append(_('Phone: ')+company['phone'])
+        if company['fax']: val.append(_('Fax: ')+company['fax'])
+        if company['email']: val.append(_('Email: ')+company['email'])
+        if company['website']: val.append(_('Website: ')+company['website'])
+        if company['vat']: val.append(_('TIN: ')+company['vat'])
+        if company['company_registry']: val.append(_('Reg: ')+company['company_registry'])
 
-        bank_accounts = self.browse(cr, uid, company.id, context=context).bank_ids
-        bank_account_numbers = [bank_account.acc_number for bank_account in bank_accounts if bank_account.footer]
+        bank_accounts = self.browse(cr, uid, company['id'], context=context).bank_ids
+        bank_account_numbers = [bank_account.name_get() for bank_account in bank_accounts if bank_account.footer]
         # append the account(s) in the footer and manage plural form of "account" if necessary
         if bank_account_numbers:
             val.append(_('Bank Account'+('s' if len(bank_account_numbers) > 1 else '')+': ')+', '.join(bank_account_numbers))
@@ -124,14 +131,20 @@ class res_company(osv.osv):
     def _get_rml_footer(self, cr, uid, ids, field_names, arg, context=None):
         result = {}
         for company in self.browse(cr, uid, ids, context=context):
-            if not company.customize_footer:
+            if company.customize_footer:
+                result[company.id] = company.rml_footer
+            else:
                 result[company.id] = self._format_company_footer(cr, uid, company, context)
 
         return result
 
     def _set_rml_footer(self, cr, uid, company_id, name, value, arg, context=None):
         company = self.browse(cr, uid, [company_id], context=context)[0]
-        rml_footer = self._format_company_footer(cr, uid, company, context)
+
+        if company.customize_footer:
+            rml_footer = value
+        else:
+            rml_footer = self._format_company_footer(cr, uid, company, context)
 
         return cr.execute('UPDATE res_company SET rml_footer = %s WHERE id = %s', (rml_footer, company_id))
 
@@ -170,8 +183,21 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def on_change_footer(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, company_registry=False, bank_ids=False, context=None):
-        return 'todo'
+    def on_change_footer(self, cr, uid, ids, customize_footer=None, phone=None, email=None, fax=None, website=None, vat=None, company_registry=None, bank_ids=None, context=None):
+        if not customize_footer:
+
+            company_values = {
+                'id': ids[0],
+                'customize_footer': customize_footer,
+                'phone': phone,
+                'email': email,
+                'fax': fax,
+                'website': website,
+                'vat': vat,
+                'company_registry': company_registry,
+                'bank_ids': bank_ids,
+            }
+            return {'value': {'rml_footer': self._format_company_footer(cr, uid, company_values, context)}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
