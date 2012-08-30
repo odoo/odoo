@@ -41,7 +41,7 @@ openerp.base_import = function (instance) {
         events: {
             'change input.oe_import_file': 'file_update',
             'click input.oe_import_has_header': function (e) {
-                this.$element.toggleClass(
+                this.$el.toggleClass(
                     'oe_import_noheaders', !e.target.checked);
                 this.settings_updated();
             },
@@ -93,13 +93,13 @@ openerp.base_import = function (instance) {
         file_update: function (e) {
             if (!this.$('input.oe_import_file').val()) { return; }
 
-            this.$element.removeClass('oe_import_preview oe_import_error');
-            jsonp(this.$element, {
+            this.$el.removeClass('oe_import_preview oe_import_error');
+            jsonp(this.$el, {
                 url: '/base_import/set_file'
             }, this.proxy('settings_updated'));
         },
         settings_updated: function () {
-            this.$element.addClass('oe_import_with_file');
+            this.$el.addClass('oe_import_with_file');
             // TODO: test that write // succeeded?
             this.Import.call(
                 'parse_preview', [this.id, this.import_options()])
@@ -107,11 +107,11 @@ openerp.base_import = function (instance) {
         },
         preview: function (result) {
             if (result.error) {
-                this.$element.addClass('oe_import_error');
+                this.$el.addClass('oe_import_error');
                 this.$('.oe_import_error_report').html(
                     QWeb.render('ImportView.preview.error', result));
             } else {
-                this.$element.addClass('oe_import_preview');
+                this.$el.addClass('oe_import_preview');
                 this.$('table').html(
                     QWeb.render('ImportView.preview', result));
             }
@@ -141,7 +141,7 @@ openerp.base_import = function (instance) {
             }
             // import failed (or maybe just warnings, if we ever get
             // warnings?)
-            this.$element.addClass('oe_import_error');
+            this.$el.addClass('oe_import_error');
             this.$('.oe_import_error_report').html(
                 QWeb.render('ImportView.error', {errors: errors}));
         },
