@@ -1077,14 +1077,13 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super();
-        $.when(this.languages_loaded).then(function() {
+        return $.when(this.languages_loaded).then(function() {
             self.$el.html(instance.web.qweb.render('TranslateDialog', { widget: self }));
             self.$fields_form = self.$el.find('.oe_translation_form');
             self.$fields_form.find('.oe_trad_field').change(function() {
                 $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
             });
         });
-        return this;
     },
     on_languages_loaded: function(langs) {
         this.languages = langs;
