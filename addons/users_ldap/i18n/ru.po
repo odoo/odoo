@@ -1,0 +1,180 @@
+# Russian translation for openobject-addons
+# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2011-05-12 20:26+0000\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian <ru@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:41+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Ошибка ! Нельзя создать организации рекурсивно."
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"Выбранная организация отсутствует в списке разрешённых для этого пользователя"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "Конфигурация LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: users_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Create the user if not in database"
+msgstr "Создавать пользователя при отсутствии в базе данных"
+
+#. module: users_ldap
+#: help:res.company.ldap,user:0
+msgid "Model used for user creation"
+msgstr "Модель, используемая при создании пользователя"
+
+#. module: users_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Организация"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "Адрес сервера LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "Порт сервера LDAP"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP base"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr ""
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "Организации"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Последовательность"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr ""
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr ""
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr ""
+
+#. module: users_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Не может быть двух пользователей с одинаковым именем пользователя!"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "Параметры LDAP"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "Пароль LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "Типовой пользователь"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "Фильтр LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Создать пользователя"
+
+#~ msgid "Authenticate users with ldap server"
+#~ msgstr "Аутентификация пользователей на сервере LDAP"

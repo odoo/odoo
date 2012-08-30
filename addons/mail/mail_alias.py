@@ -162,7 +162,7 @@ class mail_alias(osv.Model):
         registry = RegistryManager.get(cr.dbname)
         mail_alias = registry.get('mail.alias')
         child_class_model = registry.get(child_model_name)
-        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)])
+        no_alias_ids = child_class_model.search(cr, SUPERUSER_ID, [('alias_id', '=', False)], context={'active_test':False})
         # Use read() not browse(), to avoid prefetching uninitialized inherited fields
         for obj_data in child_class_model.read(cr, SUPERUSER_ID, no_alias_ids, [alias_key]):
             alias_vals = {'alias_name': '%s%s' % (alias_prefix, obj_data[alias_key]) }
