@@ -20,8 +20,8 @@
 ##############################################################################
 
 import re
-
 import tools
+
 from osv import osv
 from osv import fields
 from tools.safe_eval import safe_eval as eval
@@ -232,7 +232,7 @@ class mail_compose_message(osv.TransientModel):
             # default values, according to the wizard options
             subject = wizard.subject if wizard.content_subtype == 'html' else False
             partner_ids = [(4, partner.id) for partner in wizard.partner_ids]
-            body = wizard.body if wizard.content_subtype == 'html' else wizard.body_text
+            body = wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text)
 
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
             
