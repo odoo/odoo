@@ -212,10 +212,10 @@
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
                                 <div class="oe_product_img">
-                                <a type="edit"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
+                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
                                 </div>
                                 <div class="oe_product_desc">
-                                    <h4><a type="edit"><field name="name"></field></a></h4>
+                                    <h4><a type="open"><field name="name"></field></a></h4>
                                     <ul>
                                         <li t-if="record.code.raw_value">Code: <field name="code"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
