@@ -70,7 +70,9 @@
         <record id="hr_salary_rule_houserentallowancemetro_nonmetro" model="hr.salary.rule">
             <field name="code">HRAMN</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100) or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and 
+((contract.wage + DA) * contract.house_rent_allowance_metro_nonmetro / 100)
+or (contract.wage * contract.house_rent_allowance_metro_nonmetro / 100))</field>
             <field name="category_id" ref="hr_payroll.ALW"/>
             <field name="name">House Rent Allowance</field>
             <field name="register_id" ref="hr_houserent_allowance_register"/>
@@ -129,7 +131,8 @@
             <field name="condition_select">none</field>
             <field name="sequence" eval="21"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) or (contract.wage * 0.10)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and ((contract.wage + DA) * 0.10) 
+or (contract.wage * 0.10))</field>
             <field name="note">This allowance is paid to Employees who are posted in big cities. The purpose is to compensate the high cost of living in cities like Mumbai, Delhi, etc. However it is Fully Taxable.</field>
         </record>
 
@@ -348,7 +351,11 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="condition_select">python</field>
             <field name="condition_python">result = contract.wage &gt;= 3000 </field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = -200 if contract.wage &gt;= 12000 else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999)) else -0</field>
+            <field name="amount_python_compute">result = (-200 if contract.wage &gt;= 12000 
+else -150 if ((contract.wage &gt;= 9000) and (contract.wage &lt;= 11999)) 
+else -80 if ((contract.wage &gt;= 6000) and (contract.wage &lt;= 8999)) 
+else -20 if  ((contract.wage &gt;= 3000) and (contract.wage &lt;= 5999))  
+else -0)</field>
             <field name="register_id" ref="hr_professional_tax_deduction_register"/>
             <field eval="145" name="sequence"/>
             <field name="note">Workers living in states that impose the professional tax must submit a payment each half-year for the right to practice a profession or trade. It applies equally to employees who work for the national or state government, and those employed by private corporations. The professional tax uses a six-month accounting system, which divides the year into two periods, beginning on April 1 and October 1.</field>
@@ -359,7 +366,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Employee's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) 
+or - (contract.wage * 0.12))</field>
             <field name= "note">Employer contribution does not become part of employee’s income and hence income tax is not payable on this part.</field>
             <field name="register_id" ref="hr_register_provident_fund"/>
             <field name="sequence" eval="150"/>
@@ -370,7 +378,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Employee's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) 
+or - (contract.wage * 0.10))</field>
             <field name="sequence" eval="155"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
             <field name="note">Employee can claim deduction even of employer's contribution to NPS.</field>
@@ -383,7 +392,9 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="condition_select">python</field>
             <field name="condition_python">result = bool(contract.voluntary_provident_fund)</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * contract.voluntary_provident_fund / 100) or - (contract.wage * contract.voluntary_provident_fund / 100)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and 
+- ((contract.wage + DA) * contract.voluntary_provident_fund / 100) 
+or - (contract.wage * contract.voluntary_provident_fund / 100))</field>
             <field name="sequence" eval="160"/>
             <field name="register_id" ref="hr_vpf_contribution_register"/>
             <field name="note">VPF is a safe option wherein you can contribute more than the PF ceiling of 12% that has been mandated by the government.This additional amount enjoys all the benefits of PF except that the employer is not liable to contribute any extra amount apart from 12%.An added advantage is that the interest rate is equal to the interest rate of PF and he withdrawal is tax free. Please note that the maximum contribution towards VPF is 100% of your Basic.The highest rate of interest (close to 9%) makes it a very attractive saving scheme. Because of these advantages many employees chose not to close their PF account even after getting employment else where other than India.Employees also get a major tax break on their entire contribution to the fund up to a ceiling of Rs. 70,000/-</field>
@@ -488,7 +499,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Employer's NPS Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) or - (contract.wage * 0.10)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.10) 
+or - (contract.wage * 0.10))</field>
             <field name="sequence" eval="190"/>
             <field name="register_id" ref="hr_nps_contribution_register"/>
             <field name="appears_on_payslip" eval="False"/>
@@ -500,7 +512,8 @@ Now difference of income tax between payment year and actual year would be allow
             <field name="name">Employer's PF Contribution</field>
             <field name="category_id" ref="hr_payroll.DED"/>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) or - (contract.wage * 0.12)</field>
+            <field name="amount_python_compute">result = (payslip.company_id.dearness_allowance and - ((contract.wage + DA) * 0.12) 
+or - (contract.wage * 0.12))</field>
             <field name="sequence" eval="195"/>
             <field name="register_id" ref="hr_register_provident_fund"/>
             <field name="appears_on_payslip" eval="False"/>
