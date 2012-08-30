@@ -318,6 +318,31 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
+    def translate(self, cr, uid, model, id, field=None, context=None):
+        trans_model = self.pool.get(model)
+        domain = ['&', ('res_id', '=', id), ('name', 'ilike', model + ',')]
+        for f, info in trans_model._all_columns.items():
+            if info.parent_model and info.column.translate:
+                domain_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
+                domain.insert(0, '|')
+                domain.extend(['&', ('res_id', '=', domain_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+
+        action = {
+            'name': 'Translate',
+            'view_type': 'list',
+            'view_mode': 'list',
+            'res_model': 'ir.translation',
+            'type': 'ir.actions.act_window',
+            'domain': domain,
+            'views': [(False, 'list'), (False, 'form')],
+        }
+        if field:
+            info = trans_model._all_columns[field]
+            action['context'] = {
+                'search_default_name': "%s,%s" % (info.parent_model or model, field)
+            }
+        return action
+
     def _get_import_cursor(self, cr, uid, context=None):
         """ Return a cursor-like object for fast inserting translations
         """
