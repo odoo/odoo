@@ -2324,6 +2324,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     template: 'FieldText',
     initialize_content: function() {
         this.$textarea = this.$el.find('textarea');
+        this.default_height = this.$textarea.css('height');
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
                 this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
@@ -2345,9 +2346,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
         this.$textarea.val(show_value);
-        if (show_value) {
-            this.$textarea.autosize();
-        }
+        this.$textarea.autosize();
+        this.$textarea.css('height', parseInt(this.default_height)+"px");
     },
     is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
