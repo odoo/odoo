@@ -2,11 +2,11 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Warehouse Management has been installed</value>
             <value>Manage your product inventoy and stock locations.  You can control your stock moves history and planning, perform stock valuation, and trace product lots upstream and downstream (based on serial numbers.)</value>
+            <value>Module Warehouse Management has been installed</value>
         </function>
 
         <record id="stock_journal_sequence" model="ir.sequence">

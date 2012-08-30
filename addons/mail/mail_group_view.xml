@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
+        <!-- this record will be dynamically adapted to each new menu created -->
         <record id="action_mail_group_feeds" model="ir.actions.client">
             <field name="name">Discussion Group</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="{'search_view_id': ref('view_message_search_wall')}"/>
+            <field name="res_model">mail.message</field>
         </record>
 
         <!-- Group Kanban View  !-->
@@ -14,8 +15,9 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="message_follower_ids"/>
                     <field name="message_is_follower"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_summary"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">
@@ -30,13 +32,9 @@
                                 <div class="oe_group_details">
                                     <h4><a type="open"><field name="name"/></a></h4>
                                     <ul>
-                                        <!-- <li><field name="message_follower_count"/> member(s)</li> -->
-                                        <li>
-                                            <t t-raw="record.message_follower_ids.raw_value.length"/> member(s)
-                                        </li>
-                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_group_join" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.message_is_follower.raw_value"><a name="action_group_leave" string="Join" type="object" class="oe_group_leave">Following</a></li>
-                                        <li><field name="last_month_msg_nbr"/> messages last month</li>
+                                        <li><t t-raw="record.message_summary.raw_value"/></li>
+                                        <li t-if="! record.message_is_follower.raw_value"><a name="message_subscribe_users" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.message_is_follower.raw_value"><a name="message_unsubscribe_users" string="Leave" type="object" class="oe_group_leave">Following</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -80,16 +78,13 @@
                                     />
                                 <field name="group_ids" widget="many2many_tags" class="oe_inline"/>
                             </group>
-                            <group class="oe_edit_only">
-                                <field name="responsible_id" class="oe_inline"/>
-                            </group>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
+                        <field name="message_is_follower" invisible="1"/>
                         <field name="message_ids" widget="mail_thread"
                                 options='{"thread_level": 1}'/>
-                        <field name="message_follower_ids" widget="mail_followers"
-                                context="{'lapin': 'nouille'}" image="image_small"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -103,7 +98,6 @@
             <field name="arch" type="xml">
                 <tree string="Groups">
                     <field name="name" string="Group Name"/>
-                    <field name="responsible_id"/>
                 </tree>
             </field>
         </record>
@@ -116,7 +110,6 @@
             <field name="arch" type="xml">
                 <search string="Search Groups">
                     <field name="name" string="Group"/>
-                    <field name="responsible_id"/>
                 </search>
             </field>
         </record>

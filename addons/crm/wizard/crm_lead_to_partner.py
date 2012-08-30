@@ -50,20 +50,20 @@ class crm_lead2partner(osv.osv_memory):
     def _select_partner(self, cr, uid, context=None):
         if context is None:
             context = {}
-        lead = self.pool.get('crm.lead')
-        partner = self.pool.get('res.partner')
-        lead_ids = list(context and context.get('active_ids', []) or [])
-        if not len(lead_ids):
+        if not context.get('active_model') == 'crm.lead' or not context.get('active_id'):
             return False
-        this = lead.browse(cr, uid, lead_ids[0], context=context)
-        # Find partner address matches the email_from of the lead
-        res = lead.message_partner_by_email(cr, uid, this.email_from, context=context)
-        partner_id = res.get('partner_id', False)      
-        # Find partner name that matches the name of the lead
-        if not partner_id and this.partner_name:
+        partner = self.pool.get('res.partner')
+        lead = self.pool.get('crm.lead')
+        this = lead.browse(cr, uid, context.get('active_id'), context=context)
+        partner_id = False
+        if this.email_from:
+            partner_ids = partner.search(cr, uid, [('email', '=', this.email_from)], context=context)
+            if partner_ids:
+                partner_id = partner_ids[0]
+        if not this.partner_id and this.partner_name:
             partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
-            if partner_ids and len(partner_ids):
-               partner_id = partner_ids[0]
+            if partner_ids:
+                partner_id = partner_ids[0]
         return partner_id
 
     def default_get(self, cr, uid, fields, context=None):
@@ -107,15 +107,16 @@ class crm_lead2partner(osv.osv_memory):
         lead_ids = context and context.get('active_ids') or []
         data = self.browse(cr, uid, ids, context=context)[0]
         partner_id = data.partner_id and data.partner_id.id or False
-        partner_ids = lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
-        return partner_ids[lead_ids[0]]
+        return lead.convert_partner(cr, uid, lead_ids, data.action, partner_id, context=context)
 
     def make_partner(self, cr, uid, ids, context=None):
         """
         This function Makes partner based on action.
         """
-        partner_id = self._create_partner(cr, uid, ids, context=context)
-        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_id, context=context)
+        # Only called from Form view, so only meant to convert  one Lead. 
+        lead_id = context and context.get('active_id') or False
+        partner_ids_map = self._create_partner(cr, uid, ids, context=context)
+        return self.pool.get('res.partner').redirect_partner_form(cr, uid, partner_ids_map.get(lead_id, False), context=context)
 
 crm_lead2partner()
 

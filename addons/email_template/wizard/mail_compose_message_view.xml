@@ -31,14 +31,14 @@
             <field name="inherit_id" ref="mail.email_compose_message_wizard_form_chatter"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='dest_partner_ids']" position="after">
+                    <xpath expr="//field[@name='partner_ids']" position="after">
                         <field name="use_template" colspan="2" nolabel="1" invisible="1"
                             on_change="onchange_use_template(use_template, context)"/>
                         <field name="template_id" colspan="2" nolabel="1"
                             attrs="{'invisible':[('use_template','=',False)]}"
                             on_change="on_change_template(use_template, template_id, False, False, context)"/>
                     </xpath>
-                    <xpath expr="//a[@class='oe_mail_compose_message_checklist']" position="before">
+                    <xpath expr="//button[@class='oe_mail_compose_message_attachment']" position="before">
                         <button icon="/email_template/static/src/img/email_template.png"
                             type="object" name="template_toggle" string=""
                             help="Use a message template"/>

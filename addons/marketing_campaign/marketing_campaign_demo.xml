@@ -8,7 +8,7 @@
             <field name="subject">Welcome in OpenERP Partner Channel!</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_text">Hello, We are very happy to send Welcome message.</field>
+            <field name="body">Hello, We are very happy to send Welcome message.</field>
         </record>
         <record id="email_template_2" model="email.template">
             <field name="name">Template for Silver Partner</field>
@@ -16,7 +16,7 @@
             <field name="subject">Congratulation! You become now our Silver Partner.</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_text">Hello, We are happy to announce that you now become our Silver Partner.</field>
+            <field name="body">Hello, We are happy to announce that you now become our Silver Partner.</field>
         </record>
 
         <record id="email_template_3" model="email.template">
@@ -25,7 +25,7 @@
             <field name="subject">Congratulation! You become our Gold Partner.</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body_text">Hello, We are happy to announce that you become our Gold Partner.</field>
+            <field name="body">Hello, We are happy to announce that you become our Gold Partner.</field>
         </record>
 
 

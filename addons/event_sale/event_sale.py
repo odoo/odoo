@@ -88,5 +88,5 @@ class sale_order_line(osv.osv):
                 }
                 registration_id = registration_obj.create(cr, uid, dic, context=context)
                 message = _("The registration %s has been created from the Sale Order %s.") % (registration_id, order_line.order_id.name)
-                registration_obj.message_append_note(cr, uid, [registration_id], body=message, context=context)
+                registration_obj.message_post(cr, uid, [registration_id], body=message, context=context)
         return super(sale_order_line, self).button_confirm(cr, uid, ids, context=context)

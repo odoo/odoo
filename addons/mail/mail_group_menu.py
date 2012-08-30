@@ -40,11 +40,12 @@ class ir_ui_menu(osv.osv):
         """ Override to take off menu entries (mail.group) the user is not
             following. """
         ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0, limit=None, order=order, context=context, count=False)
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         follower_obj = self.pool.get('mail.followers')
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
                 sub_ids = follower_obj.search(cr, uid, [
-                    ('user_id', '=', uid), ('res_model', '=', 'mail.group'),
+                    ('partner_id', '=', partner_id), ('res_model', '=', 'mail.group'),
                     ('res_id', '=', menu.mail_group_id.id)
                     ], context=context)
                 if not sub_ids:

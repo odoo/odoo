@@ -1616,36 +1616,6 @@ class calendar_todo(osv.osv):
 
 calendar_todo()
 
-class ir_attachment(osv.osv):
-    _name = 'ir.attachment'
-    _inherit = 'ir.attachment'
-
-    def search_count(self, cr, user, args, context=None):
-        new_args = []
-        for domain_item in args:
-            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
-                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
-            else:
-                new_args.append(domain_item)
-        return super(ir_attachment, self).search_count(cr, user, new_args, context)
-
-    def create(self, cr, uid, vals, context=None):
-        if context:
-            id = context.get('default_res_id', False)
-            context.update({'default_res_id' : base_calendar_id2real_id(id)})
-        return super(ir_attachment, self).create(cr, uid, vals, context=context)
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        new_args = []
-        for domain_item in args:
-            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
-                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
-            else:
-                new_args.append(domain_item)
-        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
-                            limit=limit, order=order, context=context, count=False)
-ir_attachment()
 
 class ir_values(osv.osv):
     _inherit = 'ir.values'
