@@ -97,7 +97,8 @@ class test_mail(common.TransactionCase):
                                                    'alias_model_id': self.mail_group_model_id})
         
         # create a 'pigs' group that will be used through the various tests
-        self.group_pigs_id = self.mail_group.create(self.cr, self.uid, {'name': 'pigs'})
+        self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
+            {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
 
     def test_00_message_process(self):
         cr, uid = self.cr, self.uid
@@ -374,6 +375,26 @@ class test_mail(common.TransactionCase):
             'Wizard message has model: %s and res_id:%s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
         self.assertEqual(compose.parent_id.id, msg.id,
             'Wizard parent_id is %d; should be %d' % (compose.parent_id.id, msg.id))
+
+        # 3 - Create in mass_mail composition mode that should work with or without email_template installed
+        compose_id = mail_compose.create(cr, uid,
+            {'subject': _subject, 'body': '${object.description}'},
+            {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': -1,
+                'active_ids': [self.group_pigs_id]})
+        compose = mail_compose.browse(cr, uid, compose_id)
+
+        # Post the comment, get created message
+        mail_compose.send_mail(cr, uid, [compose_id], {'default_res_id': -1, 'active_ids': [self.group_pigs_id]})
+        group_pigs.refresh()
+        msg = group_pigs.message_ids[0]
+
+        # Test: last message on Pigs = last created message
+        test_msg = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [], limit=1))[0]
+        self.assertEqual(msg.id, test_msg.id, 'Pigs did not receive its mass mailing message')
+        # Test: mail.message: subject, body
+        self.assertEqual(msg.subject, _subject, 'mail.message subject is incorrect')
+        self.assertEqual(msg.body, group_pigs.description, 'mail.message body is incorrect')
+
 
     def test_30_message_read(self):
         """ Tests designed for message_read. """
