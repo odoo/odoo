@@ -526,9 +526,7 @@
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
+            <field name="domain">[('bom_id', '=',active_ids)]</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
