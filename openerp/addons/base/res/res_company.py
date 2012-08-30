@@ -141,7 +141,7 @@ class res_company(osv.osv):
     def _set_rml_footer(self, cr, uid, ids, footer=False, context=None):
         return self.write(cr, uid, ids, {'rml_footer': footer}, context=context)
 
-    def on_change_header(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, company_registry=False, bank_ids=False, context=None):
+    def on_change_footer(self, cr, uid, ids, customize_footer, phone, email, fax, website, vat, company_registry=False, bank_ids=False, context=None):
         val = []
         if customize_footer:
             return {}
