@@ -307,7 +307,7 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
-        if vals.get('src'):
+        if vals.get('src') or ('value' in vals and not(vals.get('value'))):
             result = vals.update({'state':'to_translate'})
         if vals.get('value'):
             result = vals.update({'state':'translated'})
