@@ -111,6 +111,7 @@ class res_company(osv.osv):
         @return: string containing the formated footer
         """
 
+        # list of values required to compose the footer
         val = []
 
         if company['phone']: val.append(_('Phone: ')+company['phone'])
@@ -120,11 +121,16 @@ class res_company(osv.osv):
         if company['vat']: val.append(_('TIN: ')+company['vat'])
         if company['company_registry']: val.append(_('Reg: ')+company['company_registry'])
 
+        # fetch the company's bank accounts
+        # todo: make it work with the onchange
         bank_accounts = self.browse(cr, uid, company['id'], context=context).bank_ids
-        bank_account_numbers = [bank_account.name_get() for bank_account in bank_accounts if bank_account.footer]
+        bank_accounts_names = [bank_account.name_get()[0][1] for bank_account in bank_accounts if bank_account.footer]
+
         # append the account(s) in the footer and manage plural form of "account" if necessary
-        if bank_account_numbers:
-            val.append(_('Bank Account'+('s' if len(bank_account_numbers) > 1 else '')+': ')+', '.join(bank_account_numbers))
+        if len(bank_accounts_names) == 1:
+            val.append(_('Bank Account: ') + ', '.join(bank_accounts_names))
+        elif len(bank_accounts_names) > 1:
+            val.append(_('Bank Accounts: ') + ', '.join(bank_accounts_names))
 
         return ' | '.join(val)
 
@@ -185,7 +191,6 @@ class res_company(osv.osv):
 
     def on_change_footer(self, cr, uid, ids, customize_footer=None, phone=None, email=None, fax=None, website=None, vat=None, company_registry=None, bank_ids=None, context=None):
         if not customize_footer:
-
             company_values = {
                 'id': ids[0],
                 'customize_footer': customize_footer,
