@@ -689,7 +689,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function(result) {            
+        return this.do_save().then(function(result) {
             self.to_view_mode();
         });
     },
@@ -759,10 +759,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Function} [success] callback on save success
-     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new record, should that record be inserted at the start of the dataset (by default, records are added at the end)
+     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new
+     * record, should that record be inserted at the start of the dataset (by
+     * default, records are added at the end)
      */
-    do_save: function(success, prepend_on_create) {
+    do_save: function(prepend_on_create) {
         var self = this;
         return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
@@ -797,21 +798,21 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 self.set({'display_invalid_fields': false});
                 var save_deferral;
                 if (!self.datarecord.id) {
-                    // console.log("FormView(", self, ") : About to create", values);
+                    // Creation save
                     save_deferral = self.dataset.create(values).pipe(function(r) {
-                        return self.on_created(r, undefined, prepend_on_create);
+                        return self.on_created(r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
-                    // console.log("FormView(", self, ") : Nothing to save");
+                    // Not dirty, noop save
                     save_deferral = $.Deferred().resolve({}).promise();
                 } else {
                     self.force_dirty = false;
-                    // console.log("FormView(", self, ") : About to save", values);
+                    // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
                         return self.on_saved(r);
                     }, null);
                 }
-                return save_deferral.then(success);
+                return save_deferral;
             }
             } catch (e) {
                 console.error(e);
@@ -830,14 +831,19 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         warnings.push('</ul>');
         this.do_warn("The following fields are invalid :", warnings.join(''));
     },
-    on_saved: function(r, success) {
+    /**
+     * Reload the form after saving
+     *
+     * @param {Object} r result of the write function.
+     */
+    on_saved: function(r) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
-                return r; })
-                    .then(success);
+                return r;
+            });
         }
     },
     /**
@@ -850,10 +856,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * * Updates the pager and sidebar displays
      *
      * @param {Object} r
-     * @param {Function} success callback to execute after having updated the dataset
-     * @param {Boolean} [prepend_on_create=false] adds the newly created record at the beginning of the dataset instead of the end
+     * @param {Boolean} [prepend_on_create=false] adds the newly created record
+     * at the beginning of the dataset instead of the end
      */
-    on_created: function(r, success, prepend_on_create) {
+    on_created: function(r, prepend_on_create) {
         if (!r.result) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
@@ -872,8 +878,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             return $.when(this.reload()).pipe(function () {
-                return _.extend(r, {created: true}); })
-                    .then(success);
+                return _.extend(r, {created: true});
+            });
         }
     },
     on_action: function (action) {
@@ -2318,6 +2324,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     template: 'FieldText',
     initialize_content: function() {
         this.$textarea = this.$el.find('textarea');
+        this.default_height = this.$textarea.css('height');
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
                 this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
@@ -2339,9 +2346,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
         this.$textarea.val(show_value);
-        if (show_value && this.view.options.resize_textareas) {
-            this.do_resize(this.view.options.resize_textareas);
-        }
+        this.$textarea.autosize();
+        this.$textarea.css('height', parseInt(this.default_height)+"px");
     },
     is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
@@ -2359,26 +2365,6 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
     },
     focus: function($el) {
         this.$textarea.focus();
-    },
-    do_resize: function(max_height) {
-        max_height = parseInt(max_height, 10);
-        var $input = this.$textarea,
-            $div = $('<div style="position: absolute; z-index: 1000; top: 0"/>').width($input.width()),
-            new_height;
-        $div.text($input.val());
-        _.each('font-family,font-size,white-space'.split(','), function(style) {
-            $div.css(style, $input.css(style));
-        });
-        $div.appendTo($('body'));
-        new_height = $div.height();
-        if (new_height < 90) {
-            new_height = 90;
-        }
-        if (!isNaN(max_height) && new_height > max_height) {
-            new_height = max_height;
-        }
-        $div.remove();
-        $input.height(new_height);
     },
 });
 
@@ -2404,7 +2390,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
             self._updating_editor = false;
             this.$textarea = this.$el.find('textarea');
             var width = ((this.node.attrs || {}).editor_width || 468);
-            var height = ((this.node.attrs || {}).editor_height || 100);
+            var height = ((this.node.attrs || {}).editor_height || 250);
             this.$textarea.cleditor({
                 width:      width, // width not including margins, borders or padding
                 height:     height, // height not including margins, borders or padding
@@ -2557,7 +2543,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
     }
 });
 
-// jquery autocomplete tweak to allow html
+// jquery autocomplete tweak to allow html and classnames
 (function() {
     var proto = $.ui.autocomplete.prototype,
         initSource = proto._initSource;
@@ -2584,7 +2570,8 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
             return $( "<li></li>" )
                 .data( "item.autocomplete", item )
                 .append( $( "<a></a>" )[ this.options.html ? "html" : "text" ]( item.label ) )
-                .appendTo( ul );
+                .appendTo( ul )
+                .addClass(item.classname);
         }
     });
 })();
@@ -2624,25 +2611,36 @@ instance.web.form.CompletionFieldMixin = {
             // search more... if more results that max
             if (values.length > self.limit) {
                 values = values.slice(0, self.limit);
-                values.push({label: _t("<em>   Search More...</em>"), action: function() {
-                    dataset.name_search(search_val, self.build_domain(), 'ilike'
-                    , false, function(data) {
-                        self._search_create_popup("search", data);
-                    });
-                }});
+                values.push({
+                    label: _t("Search More..."),
+                    action: function() {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', false, function(data) {
+                            self._search_create_popup("search", data);
+                        });
+                    },
+                    classname: 'oe_m2o_dropdown_option'
+                });
             }
             // quick create
             var raw_result = _(data.result).map(function(x) {return x[1];});
             if (search_val.length > 0 && !_.include(raw_result, search_val)) {
-                values.push({label: _.str.sprintf(_t('<em>   Create "<strong>%s</strong>"</em>'),
-                        $('<span />').text(search_val).html()), action: function() {
-                    self._quick_create(search_val);
-                }});
+                values.push({
+                    label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
+                        $('<span />').text(search_val).html()),
+                    action: function() {
+                        self._quick_create(search_val);
+                    },
+                    classname: 'oe_m2o_dropdown_option'
+                });
             }
             // create...
-            values.push({label: _t("<em>   Create and Edit...</em>"), action: function() {
-                self._search_create_popup("form", undefined, self._create_context(search_val));
-            }});
+            values.push({
+                label: _t("Create and Edit..."),
+                action: function() {
+                    self._search_create_popup("form", undefined, self._create_context(search_val));
+                },
+                classname: 'oe_m2o_dropdown_option'
+            });
 
             return values;
         });

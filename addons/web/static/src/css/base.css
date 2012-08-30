@@ -69,6 +69,7 @@
     display: none !important;
   }
 }
+
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
@@ -84,7 +85,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -1949,8 +1950,10 @@
   margin: 0 auto;
   padding: 16px 0 48px;
 }
-.openerp .oe_form div.oe_form_configuration div.oe_horizontal_separator {
-  margin: 12px 0 8px 0;
+.openerp .oe_form .oe_grey {
+  color: #aaaaaa;
+  max-width: 650px;
+  margin: 0 0 10px 0;
 }
 .openerp .oe_form div.oe_form_configuration p {
   color: #aaaaaa;
@@ -2001,7 +2004,6 @@
   padding-left: 24px;
   margin: 0;
   position: relative;
-  z-index: 10;
 }
 .openerp ul.oe_form_steps li .arrow, .openerp ul.oe_form_steps_clickable li .arrow {
   width: 17px;
@@ -2012,7 +2014,6 @@
 }
 .openerp ul.oe_form_steps li .arrow span, .openerp ul.oe_form_steps_clickable li .arrow span {
   position: relative;
-  z-index: 11;
   width: 24px;
   height: 24px;
   display: inline-block;
@@ -2187,7 +2188,7 @@
 .openerp .oe_horizontal_separator {
   font-weight: bold;
   font-size: 20px;
-  margin: 8px 0px 8px 0px;
+  margin: 15px 0px 10px 0px;
   color: #7c7bad;
 }
 .openerp .oe_horizontal_separator:empty {
@@ -2400,6 +2401,13 @@
   line-height: 14px;
   float: right;
   padding-left: 2px;
+}
+.openerp.ui-autocomplete li.oe_m2o_dropdown_option a {
+  font-style: italic;
+  padding-left: 2em;
+}
+.openerp.ui-autocomplete li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option {
+  margin-top: 10px;
 }
 .openerp .oe_form .oe_form_field_one2many > .oe_view_manager .oe_list_pager_single_page {
   display: none;

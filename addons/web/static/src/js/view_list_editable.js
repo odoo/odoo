@@ -716,7 +716,7 @@ openerp.web.list_editable = function (instance) {
         save: function () {
             var self = this;
             return this.form
-                .do_save(null, this.delegate.prepends_on_create())
+                .do_save(this.delegate.prepends_on_create())
                 .pipe(function (result) {
                     var created = result.created && !self.record.id;
                     if (created) {

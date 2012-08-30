@@ -1516,9 +1516,11 @@ $sheet-max-width: 860px
             max-width: $sheet-max-width
             margin: 0 auto
             padding: 16px 0 48px
+        .oe_grey
+            color: #aaa
+            max-width: 650px
+            margin: 0 0 10px 0
         div.oe_form_configuration
-            div.oe_horizontal_separator 
-                margin: 12px 0 8px 0
             p
                 color: #aaa
                 max-width: 650px
@@ -1554,7 +1556,6 @@ $sheet-max-width: 860px
                 padding-left: 24px
                 margin: 0
                 position: relative
-                z-index: 10
             .arrow
                 width: 17px
                 display: inline-block
@@ -1563,7 +1564,6 @@ $sheet-max-width: 860px
                 margin-left: -5px
                 span 
                     position: relative
-                    z-index: 11
                     width: 24px
                     height: 24px
                     display: inline-block
@@ -1679,7 +1679,7 @@ $sheet-max-width: 860px
     .oe_horizontal_separator
         font-weight: bold
         font-size: 20px
-        margin: 8px 0px 8px 0px
+        margin: 15px 0px 10px 0px
         color: $section-title-color
     .oe_horizontal_separator:empty
         height: 5px
@@ -1853,6 +1853,12 @@ $sheet-max-width: 860px
             line-height: 14px
             float: right
             padding-left: 2px
+    &.ui-autocomplete
+        li.oe_m2o_dropdown_option a
+            font-style: italic
+            padding-left: 2em
+        li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option
+            margin-top: 10px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
