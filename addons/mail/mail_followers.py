@@ -21,6 +21,7 @@
 
 from osv import osv
 from osv import fields
+import tools
 
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
@@ -86,24 +87,39 @@ class mail_notification(osv.Model):
         msg_obj = self.pool.get('mail.message')
         msg = msg_obj.browse(cr, uid, msg_id, context=context)
 
+        # add signature
+        body_html = msg.body
+        signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
+        insertion_point = body_html.find('</html>')
+        if insertion_point > -1:
+            insertion_point = body_html.find('</html>')
+            body_html = body_html[:insertion_point] + '<div>%s</div>' % tools.ustr(signature) + body_html[insertion_point:]
+        else:
+            body_html = body_html + '<div>%s</div>' % tools.ustr(signature)
+
         towrite = {
             'mail_message_id': msg.id,
             'email_to': [],
-            'user_signature': True,
-            'auto_delete': True,
+            'auto_delete': False,
+            'body_html': body_html,
         }
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
             # Do not send an email to the writer
-            if partner.user_id.id == uid:
+            if partner.user_ids and partner.user_ids[0].id == uid:
+                continue
+            # Do not send to partners without email address defined
+            if not partner.email:
                 continue
             # Partner does not want to receive any emails
-            if partner.notification_email_send=='none' or not partner.email:
+            if partner.notification_email_send == 'none':
                 continue
-            # Partner want to receive only emails and comments
-            if partner.notification_email_send=='comment' and msg.type not in ('email','comment'):
+            # Partner wants to receive only emails and comments
+            if partner.notification_email_send == 'comment' and msg.type not in ('email', 'comment'):
                 continue
-
+            # Partner wants to receive only emails
+            if partner.notification_email_send == 'email' and msg.type != 'email':
+                continue
             if partner.email not in towrite['email_to']:
                 towrite['email_to'].append(partner.email)
         towrite['email_to'] = ', '.join(towrite['email_to'])
