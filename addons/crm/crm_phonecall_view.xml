@@ -66,8 +66,7 @@
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
         <field name="arch" type="xml">
-            <tree fonts="bold:needaction_pending==True" colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
-                <field name="needaction_pending" invisible="1"/>
+            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
@@ -76,7 +75,6 @@
                 <field name="categ_id" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
-                <field name="needaction_pending" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
@@ -166,7 +164,7 @@
         <field name="name">CRM - Logged Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" fonts="bold:needaction_pending==True" editable="top">
+            <tree string="Phone Calls" editable="top">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
@@ -180,7 +178,6 @@
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
-                <field name="needaction_pending" invisible="1"/>
                 <button string="Schedule Other Call"
                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
@@ -219,7 +216,6 @@
             <search string="Search Phonecalls">
                <field name="name" string="Phonecalls"/>
                <field name="date"/>
-               <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                <separator/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
                <separator/>

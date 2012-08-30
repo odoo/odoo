@@ -45,7 +45,7 @@
         <field name="name">public Members</field>
         <field name="model_id" ref="model_project_project"/>
         <field name="global" eval="True"/>
-        <field name="domain_force">['|','|',('privacy_visibility','in',[False,'public']),('members','in',[user.id]),('followers','in',[user.id])]</field>
+        <field name="domain_force">['|','|',('privacy_visibility','in',[False,'public']),('members','in',[user.id]),('follower_ids','in',[user.partner_id.id])]</field>
     </record>
 
     <record model="ir.rule" id="task_comp_rule">

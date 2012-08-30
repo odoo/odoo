@@ -9,19 +9,14 @@
                     <group>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
-                        <field name='filter_id' invisible="context.get('active_model',False)"/>
-                        <field name="email_from" required="1"/>
-                        <field name="email_to" required="1"/>
-                        <field name="email_cc"/>
-                        <field name="email_bcc"/>
-                        <field name="reply_to"/>
+                        <field name="author_id"/>
+                        <field name="partner_ids"/>
                         <field name="subject" widget="char" size="512"/>
-                        <field name="references"/>
                         <field name="message_id"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Body">
-                            <field name="body_text" colspan="4" nolabel="1" height="300" width="300"/>
+                            <field name="body" colspan="4" nolabel="1" height="300" width="300"/>
                         </page>
                         <page string="Attachments">
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
@@ -43,36 +38,44 @@
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0" >
                     <group>
+                        <field name="composition_mode" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="model" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="res_id" colspan="2" nolabel="1" invisible="1"/>
+                        <field name="parent_id" colspan="2" nolabel="1" invisible="1"/>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="content_subtype" colspan="2" nolabel="1" invisible="1"/>
+                        <!-- visible wizard -->
                         <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
-                                class="oe_mail_compose_message_subject oe_mail_compose_message_invisible"/>
+                                class="oe_mail_compose_message_subject"
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                         <field name="body_text" colspan="2" nolabel="1" placeholder="What are you working on ?"
-                                class="oe_mail_compose_message_body_text"/>
-                        <field name="body_html" colspan="2" nolabel="1" placeholder="What are you working on HTML ?"
-                                class="oe_mail_compose_message_body_html oe_mail_compose_message_invisible"/>
-                        <field name="dest_partner_ids" colspan="2" nolabel="1" widget="many2many_tags"
-                                placeholder="Add contacts to notify..."
-                                class="oe_mail_compose_message_partner_ids oe_mail_compose_message_invisible"/>
+                                class="oe_mail_compose_message_body"
+                                attrs="{'invisible':[('content_subtype', '=', 'html')]}"/>
+                        <field name="body" colspan="2" nolabel="1" placeholder="What are you working on ?"
+                                class="oe_mail_compose_message_body_html"
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                        <field name="partner_ids" colspan="2" nolabel="1" widget="many2many_tags" placeholder="Add contacts to notify..."
+                                context="{'force_create':True}"
+                                on_change="onchange_partner_ids(partner_ids)"
+                                class="oe_mail_compose_message_partner_ids"/>
+                        <field name="attachment_ids" colspan="2" nolabel="1" widget="many2many_tags"
+                                placeholder="Add attachments..." invisible="1"
+                                class="oe_mail_compose_message_attachment_ids"/>
+                        <!-- void div to display attachments, Chatter-controlled -->
+                        <div colspan="2" class="oe_mail_compose_message_attachments"/>
+                        <!-- buttons, mostly Chatter-controlled -->
                         <div>
                             <button name="send_mail" string="Post" type="object"
                                 class="oe_mail_compose_message_button_send"/>
-                            or <a href="#" class="oe_mail_compose_message_email">Send an Email</a>
                         </div>
                         <div class='oe_mail_compose_message_icons'>
-<!--                             <button icon="../../../../../mail/static/src/img/checklist"
-                                type="object" name="checklist" string=""
-                                help="Add a checklist"/> -->
-                            <a href="#" class="oe_mail_compose_message_checklist">
-                                <img src='/mail/static/src/img/checklist.png/' alt='Checklist'
-                                    title='Add a checklist'/>
-                            </a>
-                            <a href="#" class="oe_mail_compose_message_attachment">
-                                <img src='/mail/static/src/img/attachment.png/' alt='Attachment'
-                                    title='Add an attachment'/>
-                            </a>
-                            <a href="#" class="oe_mail_compose_message_formatting">
-                                <img src='/mail/static/src/img/formatting.png/' alt='Formatting'
-                                    title='Switch to advanced formatting mode'/>
-                            </a>
+                            <button icon="/mail/static/src/img/attachment.png" name="dummy"
+                                class="oe_mail_compose_message_attachment" string=""
+                                help="Add an attachment"/>
+                            <button icon="/mail/static/src/img/formatting.png"
+                                class="oe_mail_compose_message_formatting" string=""
+                                type="object" name="toggle_content_subtype"
+                                help="Toggle advanced formatting mode"/>
                         </div>
                     </group>
                 </form>

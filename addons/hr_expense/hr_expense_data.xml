@@ -2,13 +2,13 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Expenses Management has been installed</value>
             <value>Manage your employee's expenses, with validations by employee manager and accountant, creation and payment of invoices.
 
 This module also uses the analytic accounting and is compatible with the invoice on timesheet module so that you will be able to automatically re-invoice your customer's expenses if your work by project.</value>
+            <value>Module Expenses Management has been installed</value>
         </function>
 
         <!-- Resource: product.uom.categ -->

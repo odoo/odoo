@@ -54,7 +54,6 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
-
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
@@ -119,19 +118,6 @@ class procurement_order(osv.osv):
                 offset += len(ids)
                 if not ids: break
             end_date = fields.datetime.now()
-            if uid:
-                # Chatter: old res.request is now a chatter on res.users, id=uid
-                summary = _("""Here is the procurement scheduling report.
-
-        Start Time: %s 
-        End Time: %s 
-        Total Procurements processed: %d 
-        Procurements with exceptions: %d 
-        Skipped Procurements (scheduled date outside of scheduler range) %d 
-
-        Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
-                summary += '\n'.join(report)
-                procurement_obj.message_append_note(cr, uid, ids, body=summary, context=context)
 
             if use_new_cursor:
                 cr.commit()

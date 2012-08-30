@@ -438,11 +438,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
             email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
-
-            def to_email(text):
-                return re.findall(r'([^ ,<@]+@[^> ,]+)', text or '')
-            emails = to_email(','.join(filter(None, emails)))
-            email_froms = to_email(email_from)
+            emails = tools.email_split(','.join(filter(None, emails)))
+            email_froms = tools.email_split(email_from)
             if email_froms:
                 self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
         return True

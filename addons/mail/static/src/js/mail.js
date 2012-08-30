@@ -17,6 +17,7 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
+        // #FIXME TODO: CHECK WITH NEW BRANCH
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
                 var record_thread = this.fields.message_ids;
@@ -30,7 +31,6 @@ openerp.mail = function(session) {
         },
     });
 
-
     /**
      * ------------------------------------------------------------
      * ChatterUtils
@@ -38,41 +38,24 @@ openerp.mail = function(session) {
      * 
      * This class holds a few tools method that will be used by
      * the various Chatter widgets.
+     *
+     * Some regular expressions not used anymore, kept because I want to
+     * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
+     *   logins that are emails
+     *      1. '(void)'
+     *      2. login@log.log
+     * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
+     *   for internal links to model ir.attachment, id=3, and with
+     *   optional label 'My Label'. Note that having a '|Label' is not
+     *   mandatory, because the regex should still be correct.
+     *      1. '(void)'
+     *      2. 'ir'
+     *      3. 'attachment'
+     *      4. '3'
+     *      5. 'My Label'
      */
 
     mail.ChatterUtils = {
-
-        /**
-        * mail_int_mapping: structure to keep a trace of internal links mapping
-        *      mail_int_mapping['model'] = {
-        *          'name_get': [[id,label], [id,label], ...]
-        *          'fetch_ids': [id, id, ...] } */
-        //var mail_int_mapping = {};
-        
-        /**
-        * mail_msg_struct: structure to orrganize chatter messages
-        */
-        //var mail_msg_struct = {}; // TODO: USE IT OR NOT :)
-
-        /* generic chatter events binding */
-        bind_events: function(widget) {
-            // event: click on an internal link to a document: model, login
-            widget.$el.delegate('a.oe_mail_internal_link', 'click', function (event) {
-                event.preventDefault();
-                // lazy implementation: fetch data and try to redirect
-                if (! event.srcElement.dataset.resModel) return false;
-                else var res_model = event.srcElement.dataset.resModel;
-                var res_login = event.srcElement.dataset.resLogin;
-                if (! res_login) return false;
-                var ds = new session.web.DataSet(widget, res_model);
-                var defer = ds.call('search', [[['login', '=', res_login]]]).pipe(function (records) {
-                    if (records[0]) {
-                        widget.do_action({ type: 'ir.actions.act_window', res_model: res_model, res_id: parseInt(records[0]), views: [[false, 'form']]});
-                    }
-                    else return false;
-                });
-            });
-        },
 
         /** get an image in /web/binary/image?... */
         get_image: function(session_prefix, session_id, model, field, id) {
@@ -84,135 +67,12 @@ openerp.mail = function(session) {
             return (widget.session && widget.session.uid != 0 && widget.session.uid == message_user_id);
         },
 
-        /**
-        * Add records to comments_structure array
-        * @param {Array} records records from mail.message sorted by date desc
-        * @returns {Object} cs comments_structure: dict
-        *       cs.model_to_root_ids = {model: [root_ids], }
-        *       cs.new_root_ids = [new_root_ids]
-        *       cs.root_ids = [root_ids]
-        *       cs.msgs = {record.id: record,}
-        *       cs.tree_struct = {record.id: {
-        *           'level': record_level in hierarchy, 0 is root,
-        *           'msg_nbr': number of childs,
-        *           'direct_childs': [msg_ids],
-        *           'all_childs': [msg_ids],
-        *           'for_thread_msgs': [records],
-        *           'ancestors': [msg_ids], } }
-        */
-        records_struct_add_records: function(cs, records, parent_id) {
-            var cur_iter = 0; var max_iter = 10; var modif = true;
-            while ( modif && (cur_iter++) < max_iter) {
-                modif = false;
-                _(records).each(function (record) {
-                    // root and not yet recorded
-                    if ( (record.parent_id == false || record.parent_id[0] == parent_id) && ! cs['msgs'][record.id]) {
-                        // add to model -> root_list ids
-                        if (! cs['model_to_root_ids'][record.model]) cs['model_to_root_ids'][record.model] = [record.id];
-                        else cs['model_to_root_ids'][record.model].push(record.id);
-                        // add root data
-                        cs['new_root_ids'].push(record.id);
-                        // add record
-                        cs['tree_struct'][record.id] = {'level': 0, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [record], 'msg_nbr': -1, 'ancestors': []};
-                        cs['msgs'][record.id] = record;
-                        modif = true;
-                    }
-                    // not yet recorded, but parent is recorded
-                    else if (! cs['msgs'][record.id] && cs['msgs'][record.parent_id[0]]) {
-                        var parent_level = cs['tree_struct'][record.parent_id[0]]['level'];
-                        // update parent structure
-                        cs['tree_struct'][record.parent_id[0]]['direct_childs'].push(record.id);
-                        cs['tree_struct'][record.parent_id[0]]['for_thread_msgs'].push(record);
-                        // update ancestors structure
-                        for (ancestor_id in cs['tree_struct'][record.parent_id[0]]['ancestors']) {
-                            cs['tree_struct'][ancestor_id]['all_childs'].push(record.id);
-                        }
-                        // add record
-                        cs['tree_struct'][record.id] = {'level': parent_level+1, 'direct_childs': [], 'all_childs': [], 'for_thread_msgs': [], 'msg_nbr': -1, 'ancestors': []};
-                        cs['msgs'][record.id] = record;
-                        modif = true;
-                    }
-                });
-            }
-            return cs;
-        },
-
-        /* copy cs.new_root_ids into cs.root_ids */
-        records_struct_update_after_display: function(cs) {
-            // update TODO
-            cs['root_ids'] = _.union(cs['root_ids'], cs['new_root_ids']);
-            cs['new_root_ids'] = [];
-            return cs;
-        },
-
-        /**
-         *    CONTENT MANIPULATION
-         * 
-         * Regular expressions
-         * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
-         *   logins that are emails
-         *      1. '(void)'
-         *      2. login@log.log
-         * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
-         *   for internal links to model ir.attachment, id=3, and with
-         *   optional label 'My Label'. Note that having a '|Label' is not
-         *   mandatory, because the regex should still be correct.
-         *      1. '(void)'
-         *      2. 'ir'
-         *      3. 'attachment'
-         *      4. '3'
-         *      5. 'My Label'
-         */
-
-        /** Removes html tags, except b, em, br, ul, li */
-        do_text_remove_html_tags: function (string) {
-            var html = $('<div/>').text(string.replace(/\s+/g, ' ')).html().replace(new RegExp('&lt;(/)?(b|em|br|br /|ul|li|div)\\s*&gt;', 'gi'), '<$1$2>');
-            return html;
-        },
-        
-        /** Replaces line breaks by html line breaks (br) */
-        do_text_nl2br: function (str, is_xhtml) {   
-            var break_tag = (is_xhtml || typeof is_xhtml === 'undefined') ? '<br />' : '<br>';    
-            return (str + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2');
-        },
-
-        /* Add a prefix before each new line of the original string */
-        do_text_quote: function (str, prefix) {
-            return str.replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1'+ break_tag +'$2' + prefix || '> ');
-        },
-
-        /**
-         * Replaces some expressions
-         * - @login - shorcut to link to a res.user, given its login
-         * - [ir.attachment,3|My Label] - shortcut to an internal
-         *   document
+        /** Replaces some expressions
          * - :name - shortcut to an image
          */
         do_replace_expressions: function (string) {
             var self = this;
             var icon_list = ['al', 'pinky']
-            /* shortcut to user: @login */
-            var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var login = regex_res[2];
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#" class="oe_mail_internal_link" data-res-model="res.users" data-res-login = ' + login + '>@' + login + '</a>');
-                regex_res = regex_login.exec(string);
-            }
-            /* shortcut for internal document */
-            var regex_login = new RegExp(/(^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]/g);
-            var regex_res = regex_login.exec(string);
-            while (regex_res != null) {
-                var res_model = regex_res[2] + '.' + regex_res[3];
-                var res_id = regex_res[4];
-                if (! regex_res[5]) {
-                    var label = res_model + ':' + res_id }
-                else {
-                    var label = regex_res[5];
-                }
-                string = string.replace(regex_res[0], regex_res[1] + '<a href="#model=' + res_model + '&id=' + res_id + '>' + label + '</a>');
-                regex_res = regex_login.exec(string);
-            }
             /* special shortcut: :name, try to find an icon if in list */
             var regex_login = new RegExp(/(^|\s):((\w)*)/g);
             var regex_res = regex_login.exec(string);
@@ -223,46 +83,6 @@ openerp.mail = function(session) {
                 regex_res = regex_login.exec(string);
             }
             return string;
-        },
-
-        /**
-         * Checks a string to find an expression that will be replaced
-         * by an internal link and requiring a name_get to replace
-         * the expression.
-         * :param mapping: structure to keep a trace of internal links mapping
-         *                  mapping['model'] = {
-         *                      name_get': [[id,label], [id,label], ...]
-         *                      'to_fetch_ids': [id, id, ...]
-         *                  }
-         * CURRENTLY NOT IMPLEMENTED */
-        do_check_for_name_get_mapping: function(string, mapping) {
-            /* shortcut to user: @login */
-            //var regex_login = new RegExp(/(^|\s)@((\w|@|\.)*)/g);
-            //var regex_res = regex_login.exec(string);
-            //while (regex_res != null) {
-                //var login = regex_res[2];
-                //if (! ('res.users' in this.map_hash)) { this.map_hash['res.users']['name'] = []; }
-                //this.map_hash['res.users']['login'].push(login);
-                //regex_res = regex_login.exec(string);
-            //}
-            /* document link with name_get: [res.model,name] */
-            /* internal link with id: [res.model,id], or [res.model,id|display_name] */
-            //var regex_intlink = new RegExp(/(^|\s)#(\w*[a-zA-Z_]+\w*)\.(\w+[a-zA-Z_]+\w*),(\w+)/g);
-            //regex_res = regex_intlink.exec(string);
-            //while (regex_res != null) {
-                //var res_model = regex_res[2] + '.' + regex_res[3];
-                //var res_name = regex_res[4];
-                //if (! (res_model in this.map_hash)) { this.map_hash[res_model]['name'] = []; }
-                //this.map_hash[res_model]['name'].push(res_name);
-                //regex_res = regex_intlink.exec(string);
-            //}
-        },
-        
-        /**
-         * Updates the mapping; check for to_fetch_ids for each recorded
-         * model, and perform a name_get to update the mapping.
-         * CURRENTLY NOT IMPLEMENTED */
-        do_update_name_get_mapping: function(mapping) {
         },
     };
 
@@ -282,96 +102,67 @@ openerp.mail = function(session) {
         
         /**
          * @param {Object} parent parent
-         * @param {Object} [params]
-         * @param {String} [params.res_model] res_model of document [REQUIRED]
-         * @param {Number} [params.res_id] res_id of record [REQUIRED]
-         * @param {Number} [params.email_mode] true/false, tells whether
-         *      we are in email sending mode
-         * @param {Number} [params.formatting] true/false, tells whether
-         *      we are in advance formatting mode
-         * @param {String} [params.model] mail.compose.message.mode (see
-         *      composition wizard)
-         * @param {Number} [params.msg_id] id of a message in case we are in
+         * @param {Object} [options] 
+         * @param {Object} [options.context] context
+         * @param {String} [context.res_model] res_model of document [REQUIRED]
+         * @param {Number} [context.res_id] res_id of record [REQUIRED]
+         * @param {String} [context.composition_mode] mail.compose.message.mode
+         *      (see composition wizard)
+         * @param {Number} [context.msg_id] id of a message in case we are in
          *      reply mode
          */
-        init: function(parent, params) {
+        init: function (parent, options) {
             var self = this;
             this._super(parent);
             // options
-            this.params = params || {};
-            this.params.context = params.context || {};
-            this.params.email_mode = params.email_mode || false;
-            this.params.formatting = params.formatting || false;
-            this.params.mode = params.mode || 'comment';
-            this.params.form_xml_id = params.form_xml_id || 'email_compose_message_wizard_form_chatter';
-            this.params.form_view_id = false;
-            if (this.params.mode == 'reply') {
-                this.params.active_id = this.params.msg_id;
-            } else {
-                this.params.active_id = this.params.res_id;
-            }
-            this.email_mode = false;
-            this.formatting = false;
+            this.options = options || {};
+            this.options.context = options.context || {};
+            this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
+            this.options.form_view_id = options.form_view_id || false;
+            // debug
+            console.groupCollapsed('New ComposeMessage: model', this.options.context.default_res_model, ', id', this.options.context.default_res_id);
+            console.log('context:', this.options.context);
+            console.groupEnd();
         },
 
-        /**
-         * Reinitialize the widget field values to the default values. The
-         * purpose is to avoid to destroy and re-build a form view. Default
-         * values are therefore given as for an onchange. */
-        reinit: function() {
-            var self = this;
-            if (! this.form_view) return;
-            var call_defer = this.ds_compose.call('default_get', [['subject', 'body_text', 'body_html', 'dest_partner_ids'], this.ds_compose.get_context()]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange({'value': result}, []);
-                });
-            return call_defer;
-        },
-
-        /**
-         * Override-hack of do_action: clean the form */
-        do_action: function(action, on_close) {
-            // this.init_comments();
-            return this._super(action, on_close);
-        },
-
-        /**
-         * Widget start function
-         * - builds and initializes the form view */
-        start: function() {
-            var self = this;
+        start: function () {
             this._super.apply(this, arguments);
             // customize display: add avatar, clean previous content
-            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix,
-                this.session.session_id, 'res.users', 'image_small', this.session.uid);
+            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
             this.$el.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$el.find('div.oe_mail_msg_content').empty();
-            // create a context for the default_get of the compose form
-            var widget_context = {
-                'active_model': this.params.res_model,
-                'active_id': this.params.active_id,
-                'mail.compose.message.mode': this.params.mode,
-            };
-            var context = _.extend({}, this.params.context, widget_context);
+            // create a context for the dataset and default_get of the wizard
+            var context = this._update_context({});
+            console.log(context);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
             var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
-            var deferred_form_id =data_ds.call('get_object_reference', ['mail', this.params.form_xml_id]).then( function (result) {
-                if (result) {
-                    self.params.form_view_id = result[1];
-                }
-            }).pipe(this.proxy('create_form_view'));
-            return deferred_form_id;
+            return data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).pipe(this.proxy('create_form_view'));
         },
 
-        /**
-         * Create a FormView, then append it to the to widget DOM. */
-        create_form_view: function () {
+        /** Update the context of the compose wizard */
+        _update_context: function (dest_context) {
+            // TDE TOCHECK: after posting, back to reply mode !
+            _.extend(dest_context, this.options.context, {
+                'mail.compose.message.mode': this.options.context.composition_mode,
+            });
+            if (this.options.context.composition_mode == 'comment') {
+                // _.extend(dest_context, {'default_res_id': this.options.res_id});
+            }
+            else if (this.options.context.composition_mode == 'reply') {
+                _.extend(dest_context, {'active_id': this.options.context.msg_id});
+            }
+            return dest_context
+        },
+
+        /** Create a FormView, then append it to the to widget DOM. */
+        create_form_view: function (form_view_id) {
+            this.options.form_view_id = form_view_id[1] || false;
             var self = this;
             // destroy previous form_view if any
             if (this.form_view) { this.form_view.destroy(); }
             // create the FormView
-            this.form_view = new session.web.FormView(this, this.ds_compose, this.params.form_view_id, {
+            this.form_view = new session.web.FormView(this, this.ds_compose, this.options.form_view_id, {
                 action_buttons: false,
                 pager: false,
                 initial_mode: 'edit',
@@ -382,13 +173,30 @@ openerp.mail = function(session) {
             return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
                 self.bind_events();
                 self.form_view.do_show();
-                if (self.params.email_mode) { self.toggle_email_mode(); }
-                if (self.params.formatting) { self.toggle_formatting_mode(); }
             });
         },
 
-        destroy: function() {
-            this._super.apply(this, arguments);
+        /**
+         * Reinitialize the widget field values to the default values. The
+         * purpose is to avoid to destroy and re-build a form view. Default
+         * values are therefore given as for an on_change. */
+        refresh: function (options_update_values) {
+            var self = this;
+            this.options.context = _.extend(this.options.context, options_update_values || {});
+            if (! this.form_view) return;
+            this.ds_compose.context = this._update_context(this.ds_compose.context);
+            return this.ds_compose.call('default_get', [
+                ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
+                    'model', 'res_id', 'parent_id', 'content_subtype'],
+                this.ds_compose.get_context(),
+            ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
+        },
+
+        /**
+         * Override-hack of do_action: clean the form */
+        do_action: function(action, on_close) {
+            console.log('compose_message do_action', action, on_close);
+            return this._super(action, on_close);
         },
 
         /**
@@ -396,86 +204,11 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            this.$el.find('button.oe_form_button').click(function (event) {
-                event.preventDefault();
-            });
-            // event: click on 'Send an Email' link that toggles the form for
-            // sending an email (partner_ids)
-            this.$el.find('a.oe_mail_compose_message_email').click(function (event) {
-                event.preventDefault();
-                self.toggle_email_mode();
-            });
-            // event: click on 'Formatting' icon-link that toggles the advanced
-            // formatting options for writing a message (subject, body_html)
-            this.$el.find('a.oe_mail_compose_message_formatting').click(function (event) {
-                event.preventDefault();
-                self.toggle_formatting_mode();
-            });
             // event: click on 'Attachment' icon-link that opens the dialog to
             // add an attachment.
-            this.$el.find('a.oe_mail_compose_message_attachment').click(function (event) {
-                event.preventDefault();
-                // not yet implemented
-                self.set_body_value('attachment', 'attachment');
+            this.$el.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
+                event.stopImmediatePropagation();
             });
-            // event: click on 'Checklist' icon-link that toggles the options
-            // for adding checklist.
-            this.$el.find('a.oe_mail_compose_message_checklist').click(function (event) {
-                event.preventDefault();
-                // not yet implemented
-                self.set_body_value('checklist', 'checklist');
-            });
-        },
-
-        /**
-         * Toggle the formatting mode. */
-        toggle_formatting_mode: function() {
-            var self = this;
-            this.formatting = ! this.formatting;
-            // calls onchange
-            var call_defer = this.ds_compose.call('onchange_formatting', [[], this.formatting, this.params.res_model, this.params.res_id]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange(result, []);
-                });
-            // update context of datasetsearch
-            this.ds_compose.context.formatting = this.formatting;
-            // toggle display
-            this.$el.find('span.oe_mail_compose_message_subject').toggleClass('oe_mail_compose_message_invisible');
-            this.$el.find('div.oe_mail_compose_message_body_text').toggleClass('oe_mail_compose_message_invisible');
-            this.$el.find('div.oe_mail_compose_message_body_html').toggleClass('oe_mail_compose_message_invisible');
-        },
-
-        /**
-         * Toggle the email mode. */
-        toggle_email_mode: function() {
-            var self = this;
-            this.email_mode = ! this.email_mode;
-            // calls onchange
-            var call_defer = this.ds_compose.call('onchange_email_mode', [[], this.email_mode, this.params.res_model, this.params.res_id]).then(
-                function (result) {
-                    self.form_view.on_processed_onchange(result, []);
-                });
-            // update context of datasetsearch
-            this.ds_compose.context.email_mode = this.email_mode;
-            // update 'Post' button -> 'Send'
-            // update 'Send an Email' link -> 'Post a comment'
-            if (this.email_mode) {
-                this.$el.find('button.oe_mail_compose_message_button_send').html('<span>Send</span>');
-                this.$el.find('a.oe_mail_compose_message_email').html('Comment');
-            } else {
-                this.$el.find('button.oe_mail_compose_message_button_send').html('<span>Post</span>');
-                this.$el.find('a.oe_mail_compose_message_email').html('Send an Email');
-            }
-            // toggle display
-            this.$el.find('div.oe_mail_compose_message_partner_ids').toggleClass('oe_mail_compose_message_invisible');
-        },
-
-        /**
-         * Update the values of the composition form; with possible different
-         * values for body_text and body_html. */
-        set_body_value: function(body_text, body_html) {
-            this.form_view.fields.body_text.set_value(body_text);
-            this.form_view.fields.body_html.set_value(body_html);
         },
     }),
 
@@ -500,95 +233,83 @@ openerp.mail = function(session) {
 
         /**
          * @param {Object} parent parent
-         * @param {Object} [params]
-         * @param {String} [params.res_model] res_model of document [REQUIRED]
-         * @param {Number} [params.res_id] res_id of record [REQUIRED]
-         * @param {Number} [params.uid] user id [REQUIRED]
-         * @param {Bool}   [params.parent_id=false] parent_id of message
-         * @param {Number} [params.thread_level=0] number of levels in the thread
+         * @param {Object} [options]
+         * @param {String} [options.res_model] res_model of document [REQUIRED]
+         * @param {Number} [options.res_id] res_id of record [REQUIRED]
+         * @param {Number} [options.uid] user id [REQUIRED]
+         * @param {Bool}   [options.parent_id=false] parent_id of message
+         * @param {Number} [options.thread_level=0] number of levels in the thread
          *      (only 0 or 1 currently)
-         * @param {Bool}   [params.is_wall=false] thread is displayed in the wall
-         * @param {Number} [params.msg_more_limit=150] number of character to
+         * @param {Bool}   [options.is_wall=false] thread is displayed in the wall
+         * @param {Number} [options.msg_more_limit=150] number of character to
          *      display before having a "show more" link; note that the text
          *      will not be truncated if it does not have 110% of the parameter
          *      (ex: 110 characters needed to be truncated and be displayed as
          *      a 100-characters message)
-         * @param {Number} [params.limit=100] maximum number of messages to fetch
-         * @param {Number} [params.offset=0] offset for fetching messages
-         * @param {Number} [params.records=null] records to show instead of fetching messages
+         * @param {Number} [options.limit=100] maximum number of messages to fetch
+         * @param {Number} [options.offset=0] offset for fetching messages
+         * @param {Number} [options.records=null] records to show instead of fetching messages
          */
-        init: function(parent, params) {
+        init: function(parent, options) {
+            console.log(parent);
             this._super(parent);
             // options
-            this.params = params;
-            this.params.parent_id = this.params.parent_id || false;
-            this.params.thread_level = this.params.thread_level || 0;
-            this.params.is_wall = this.params.is_wall || (this.params.records != undefined) || false;
-            this.params.msg_more_limit = this.params.msg_more_limit || 250;
-            this.params.limit = this.params.limit || 100;
-            // this.params.limit = 3; // tmp for testing
-            this.params.offset = this.params.offset || 0;
-            this.params.records = this.params.records || null;
+            this.options = options || {};
+            this.options.domain = options.domain || [];
+            this.options.context = options.context || {};
+            // check in parents, should not define multiple times
+            this.options.context.res_model = options.context.res_model || 'mail.thread';
+            this.options.context.res_id = options.context.res_id || false;
+            this.options.context.parent_id = options.context.parent_id || false;
+            this.options.thread_level = options.thread_level || 0;
+            this.options.composer = options.composer || false;
+            // TDE: not sure, here for testing / compatibility
+            this.options.records = options.records || null;
+            this.options.ids = options.ids || null;
             // datasets and internal vars
-            this.ds = new session.web.DataSetSearch(this, this.params.res_model);
-            this.ds_users = new session.web.DataSetSearch(this, 'res.users');
+            this.ds_post = new session.web.DataSetSearch(this, this.options.context.res_model);
+            this.ds_notif = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
             // display customization vars
             this.display = {};
-            this.display.show_post_comment = this.params.show_post_comment || false;
-            this.display.show_reply = (this.params.thread_level > 0 && this.params.is_wall);
-            this.display.show_delete = ! this.params.is_wall;
-            this.display.show_hide = this.params.is_wall;
-            this.display.show_reply_by_email = ! this.params.is_wall;
-            this.display.show_more = (this.params.thread_level == 0);
+            this.display.truncate_limit = options.truncate_limit || 250;
+            this.display.show_header_compose = options.show_header_compose || false;
+            this.display.show_reply = options.show_reply || false;
+            this.display.show_delete = options.show_delete || false;
+            this.display.show_hide = options.show_hide || false;
+            this.display.show_reply_by_email = options.show_reply_by_email || false;
+            this.display.show_more = options.show_more || false;
+            // for search view
+            this.search = {'domain': [], 'context': {}, 'groupby': {}}
+            this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
+            // debug
+            console.groupCollapsed('New Thread: model', this.options.context.res_model, 'id', this.options.context.res_id, 'parent_id', this.options.context.parent_id, 'thread level', this.options.thread_level);
+            console.log('records:', this.options.records, 'ids:', this.options.ids);
+            console.log('options:', this.options);
+            console.log('display:', this.display);
+            console.groupEnd();
         },
         
         start: function() {
             this._super.apply(this, arguments);
-            // add events
             this.bind_events();
-            // display user, fetch comments
-            this.display_current_user();
-            if (this.params.records) var display_done = this.display_comments_from_parameters(this.params.records);
-            else var display_done = this.init_comments();
+            // display messages: either given by parent, either fetch new ones
+            if (this.options.records) var display_done = this.message_display(this.options.records);
+            else var display_done = this.message_fetch();
             // customize display
-            $.when(display_done).then(this.proxy('do_customize_display'));            
+            this.display_user_avatar();
+            $.when(display_done).then(this.proxy('do_customize_display'));
             // add message composition form view
-            if (this.display.show_post_comment) {
+            if (this.display.show_header_compose && this.options.composer) {
                 var compose_done = this.instantiate_composition_form();
             }
             return display_done && compose_done;
         },
 
-        /**
-         * Override-hack of do_action: automatically reload the chatter.
-         * Normally it should be called only when clicking on 'Post/Send'
-         * in the composition form. */
-        do_action: function(action, on_close) {
-            this.init_comments();
-            if (this.compose_message_widget) {
-                this.compose_message_widget.reinit(); }
-            return this._super(action, on_close);
-        },
-
-        instantiate_composition_form: function(mode, email_mode, formatting, msg_id, context) {
-            if (this.compose_message_widget) {
-                this.compose_message_widget.destroy();
-            }
-            this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.params.uid, 'res_model': this.params.res_model,
-                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id,
-                'email_mode': email_mode || false, 'formatting': formatting || false,
-                'context': context || false } );
-            var composition_node = this.$el.find('div.oe_mail_thread_action');
-            composition_node.empty();
-            var compose_done = this.compose_message_widget.appendTo(composition_node);
-            return compose_done;
-        },
-
+        /** Customize the display
+         * - show_header_compose: show the composition form in the header */
         do_customize_display: function() {
-            if (this.display.show_post_comment) { this.$el.find('div.oe_mail_thread_action').eq(0).show(); }
+            if (this.display.show_header_compose) { this.$el.find('div.oe_mail_thread_action').eq(0).show(); }
         },
 
         /**
@@ -596,171 +317,175 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // generic events from Chatter Mixin
-            mail.ChatterUtils.bind_events(this);
             // event: click on 'more' at bottom of thread
             this.$el.find('button.oe_mail_button_more').click(function () {
-                self.do_more();
+                self.do_message_fetch();
             });
             // event: writing in basic textarea of composition form (quick reply)
             this.$el.find('textarea.oe_mail_compose_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
                 if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
-                else if (charCode == 13) { return self.do_comment(); }
+                else if (charCode == 13) { return self.message_post(); }
             });
             // event: click on 'Reply' in msg
-            this.$el.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply', 'click', function (event) {
-                var act_dom = $(this).parents('div.oe_mail_thread_display').find('div.oe_mail_thread_action:first');
-                act_dom.toggle();
+            this.$el.on('click', 'a.oe_mail_msg_reply', function (event) {
                 event.preventDefault();
+                event.stopPropagation();
+                var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
+                act_dom.toggle();
             });
             // event: click on 'attachment(s)' in msg
-            this.$el.delegate('a.oe_mail_msg_view_attachments', 'click', function (event) {
+            this.$el.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
                 act_dom.toggle();
-                event.preventDefault();
             });
             // event: click on 'Delete' in msg side menu
-            this.$el.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_delete', 'click', function (event) {
+            this.$el.on('click', 'a.oe_mail_msg_delete', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                var call_defer = self.ds_msg.unlink([parseInt(msg_id)]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-                if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
-                }
-                event.preventDefault();
-                return call_defer;
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
+                return self.ds_msg.unlink([parseInt(msg_id)]);
             });
             // event: click on 'Hide' in msg side menu
-            this.$el.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_hide', 'click', function (event) {
-                if (! confirm(_t("Do you really want to hide this thread ?"))) { return false; }
+            this.$el.on('click', 'a.oe_mail_msg_hide', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 var msg_id = event.srcElement.dataset.id;
                 if (! msg_id) return false;
-                var call_defer = self.ds.call('message_remove_pushed_notifications', [[self.params.res_id], [parseInt(msg_id)], true]);
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).hide();
-                if (self.params.thread_level > 0) {
-                    $(event.srcElement).parents('.oe_mail_thread').eq(0).hide();
-                }
-                event.preventDefault();
-                return call_defer;
+                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
+                return self.ds_notif.call('set_message_read', [parseInt(msg_id)]);
             });
-            // event: click on "Reply" in msg side menu (email style)
-            this.$el.find('div.oe_mail_thread_display').delegate('a.oe_mail_msg_reply_by_email', 'click', function (event) {
+            // event: click on "Reply by email" in msg side menu (email style)
+            this.$el.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
+                event.preventDefault();
+                event.stopPropagation();
                 var msg_id = event.srcElement.dataset.msg_id;
-                var email_mode = (event.srcElement.dataset.type == 'email');
-                var formatting = (event.srcElement.dataset.formatting == 'html');
                 if (! msg_id) return false;
-                self.instantiate_composition_form('reply', email_mode, formatting, msg_id);
-                event.preventDefault();
+                self.compose_message_widget.refresh({'composition_mode': 'reply', 'msg_id': parseInt(msg_id)});
             });
-        },
-        
-        destroy: function () {
-            this._super.apply(this, arguments);
-        },
-        
-        init_comments: function() {
-            var self = this;
-            this.params.offset = 0;
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
-            this.$el.find('div.oe_mail_thread_display').empty();
-            var domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(this.params.limit, this.params.offset, domain).then();
-        },
-        
-        fetch_comments: function (limit, offset, domain) {
-            var self = this;
-            var defer = this.ds.call('message_read', [[this.params.res_id], (this.params.thread_level > 0), (this.comments_structure['root_ids']),
-                                    (limit+1) || (this.params.limit+1), offset||this.params.offset, domain||undefined ]).then(function (records) {
-                if (records.length <= self.params.limit) self.display.show_more = false;
-                // else { self.display.show_more = true; records.pop(); }
-                // else { self.display.show_more = true; records.splice(0, 1); }
-                else { self.display.show_more = true; }
-                self.display_comments(records);
-                // TODO: move to customize display
-                if (self.display.show_more == true) self.$el.find('div.oe_mail_thread_more:last').show();
-                else  self.$el.find('div.oe_mail_thread_more:last').hide();
-            });
-            
-            return defer;
         },
 
-        display_comments_from_parameters: function (records) {
-            if (records.length > 0 && records.length < (records[0].child_ids.length+1) ) this.display.show_more = true;
-            else this.display.show_more = false;
-            var defer = this.display_comments(records);
-            // TODO: move to customize display
-            if (this.display.show_more == true) $('div.oe_mail_thread_more').eq(-2).show();
-            else $('div.oe_mail_thread_more').eq(-2).hide();
-            return defer;
+        /**
+         * Override-hack of do_action: automatically reload the chatter.
+         * Normally it should be called only when clicking on 'Post/Send'
+         * in the composition form. */
+        do_action: function(action, on_close) {
+            console.log('thread do_action', action, on_close, this);
+            this.message_clean();
+            this.message_fetch();
+            if (this.compose_message_widget) {
+                this.compose_message_widget.refresh(); }
+            return this._super(action, on_close);
         },
-        
-        display_comments: function (records) {
-            var self = this;
-            // sort the records
-            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, this.params.parent_id);
-            //build attachments download urls and compute time-relative from dates
-            for (var k in records) {
-                records[k].timerelative = $.timeago(records[k].date);
-                if (records[k].attachments) {
-                    for (var l in records[k].attachments) {
-                        var url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
-                        records[k].attachments[l].url = url;
-                    }
-                }
+
+        /** Instantiate the composition form, with parameters coming from thread parameters */
+        instantiate_composition_form: function(mode, formatting, msg_id, context) {
+            if (this.compose_message_widget) {
+                this.compose_message_widget.destroy();
             }
+            this.compose_message_widget = new mail.ComposeMessage(this, {
+                'context': {
+                    'default_model': this.options.context.res_model, 'default_res_id': this.options.context.res_id,
+                    'composition_mode': mode || 'comment', 'msg_id': msg_id }
+                });
+            var composition_node = this.$el.find('div.oe_mail_thread_action');
+            composition_node.empty();
+            var compose_done = this.compose_message_widget.appendTo(composition_node);
+            return compose_done;
+        },
+
+        /** Clean the thread */
+        message_clean: function() {
+            this.$el.find('div.oe_mail_thread_display').empty();
+        },
+
+        /** Fetch messages
+         * @param {Array} additional_domain
+         * @param {Object} additional_context
+         */
+        message_fetch: function (additional_domain, additional_context) {
+            var self = this;
+            // Update the domain and context
+            this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
+            this.search['context'] = _.extend(this.options.context, this.search_results.context);
+            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
+            else var fetch_domain = this.search['domain'];
+            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
+            else var fetch_context = this.search['context'];
+
+            // TODO first use: use IDS, otherwise set false
+
+            var read_defer = this.ds_msg.call('message_read',
+                [false, fetch_domain, this.options.thread_level, undefined, fetch_context]
+                ).then(this.proxy('message_display'));
+            return read_defer;
+        },
+
+        /* Display a list of records
+         * - */
+        message_display: function (records) {
+            var self = this;
+            var _expendable = false;
+            console.groupCollapsed('message_display');
+            console.log('records', records)
+            console.groupEnd();
             _(records).each(function (record) {
-                var sub_msgs = [];
-                if ((record.parent_id == false || record.parent_id[0] == self.params.parent_id) && self.params.thread_level > 0 ) {
-                    var sub_list = self.comments_structure['tree_struct'][record.id]['direct_childs'];
-                    _(records).each(function (record) {
-                        //if (record.parent_id == false || record.parent_id[0] == self.params.parent_id) return;
-                        if (_.indexOf(sub_list, record.id) != -1) {
-                            sub_msgs.push(record);
-                        }
+                if (record.type == 'expandable') {
+                    _expendable = true;
+                    self.update_fetch_more(true);
+                    self.fetch_more_domain = record.domain;
+                    self.fetch_more_context = record.context;
+                }
+                else {
+                    self.display_record(record);
+                    self.thread = new mail.Thread(self, {
+                        'context': { 'res_model': record.model, 'res_id': record.res_id, 'parent_id': record.id},
+                        'show_header_compose': false, 'show_reply': self.options.thread_level > 1,
+                        'show_hide': self.display.show_hide, 'show_delete': self.display.show_delete,
+                        'uid': self.options.uid, 'records': record.child_ids, 'thread_level': (self.options.thread_level-1),
                     });
-                    self.display_comment(record);
-                    self.thread = new mail.Thread(self, {'res_model': self.params.res_model, 'res_id': self.params.res_id, 'uid': self.params.uid,
-                                                            'records': sub_msgs, 'thread_level': (self.params.thread_level-1), 'parent_id': record.id,
-                                                            'is_wall': self.params.is_wall});
                     self.$el.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$el.find('div.oe_mail_thread_subthread:last'));
                 }
-                else if (self.params.thread_level == 0) {
-                    self.display_comment(record);
-                }
             });
-            mail.ChatterUtils.records_struct_update_after_display(this.comments_structure);
-            // update offset for "More" buttons
-            if (this.params.thread_level == 0) this.params.offset += records.length;
+            if (! _expendable) {
+                this.update_fetch_more(false);
+            }
         },
 
-        /** Displays a record, performs text/link formatting */
-        display_comment: function (record) {
-            record.body = mail.ChatterUtils.do_text_nl2br($.trim(record.body), true);
-            // if (record.type == 'email' && record.state == 'received') {
-            if (record.type == 'email') {
-                record.mini_url = ('/mail/static/src/img/email_icon.png');
-            } else {
-                record.mini_url = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', record.user_id[0]);
-            }
-            // body text manipulation
-            if (record.subtype == 'plain') {
-                record.body = mail.ChatterUtils.do_text_remove_html_tags(record.body);
-            }
-            record.body = mail.ChatterUtils.do_replace_expressions(record.body);
-            // format date according to the user timezone
+        /** Displays a record and performs some formatting on the record :
+         * - record.date: formatting according to the user timezone
+         * - record.timerelative: relative time givein by timeago lib
+         * - record.avatar: image url
+         * - record.attachments[].url: url of each attachment
+         * - record.is_author: is the current user the author of the record */
+        display_record: function (record) {
+            // formatting and additional fields
             record.date = session.web.format_value(record.date, {type:"datetime"});
-            // is the user the author ?
-            record.is_author = mail.ChatterUtils.is_author(this, record.user_id[0]);
-            // render
-            var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.params, 'display': this.display});
-            // expand feature
+            record.timerelative = $.timeago(record.date);
+            if (record.type == 'email') {
+                record.avatar = ('/mail/static/src/img/email_icon.png');
+            } else {
+                record.avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.partner', 'image_small', record.author_id[0]);
+            }
+            //TDE: FIX
+            if (record.attachments) {
+                for (var l in record.attachments) {
+                    var url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
+                    record.attachments[l].url = url;
+                }
+            }
+            record.is_author = mail.ChatterUtils.is_author(this, record.author_user_id[0]);
+            // render, add the expand feature
+            var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.options, 'display': this.display});
             $(rendered).appendTo(this.$el.children('div.oe_mail_thread_display:first'));
             this.$el.find('div.oe_mail_msg_record_body').expander({
-                slicePoint: this.params.msg_more_limit,
+                slicePoint: this.options.msg_more_limit,
                 expandText: 'read more',
                 userCollapseText: '[^]',
                 detailClass: 'oe_mail_msg_tail',
@@ -769,54 +494,68 @@ openerp.mail = function(session) {
                 });
         },
 
-        display_current_user: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.params.uid);
+        /** Display 'show more' button */
+        update_fetch_more: function (new_value) {
+            if (new_value) {
+                    this.$el.find('div.oe_mail_thread_more:last').show();
+            } else {
+                    this.$el.find('div.oe_mail_thread_more:last').hide();
+            }
+        },
+
+        display_user_avatar: function () {
+            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.options.uid);
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
         },
         
-        do_comment: function () {
-            var comment_node = this.$el.find('textarea');
-            var body_text = comment_node.val();
-            comment_node.val('');
-            return this.ds.call('message_append_note', [[this.params.res_id], '', body_text, this.params.parent_id, 'comment', 'plain']).then(
-                this.proxy('init_comments'));
-        },
-        
-        /**
-         * Create a domain to fetch new comments according to
-         * comment already present in comments_structure
-         * @param {Object} comments_structure (see chatter utils)
-         * @returns {Array} fetch_domain (OpenERP domain style)
-         */
-        get_fetch_domain: function (comments_structure) {
-            var domain = [];
-            var ids = comments_structure.root_ids.slice();
-            var ids2 = [];
-            // must be child of current parent
-            if (this.params.parent_id) { domain.push(['id', 'child_of', this.params.parent_id]); }
-            _(comments_structure.root_ids).each(function (id) { // each record
-                ids.push(id);
-                ids2.push(id);
-            });
-            if (this.params.parent_id != false) {
-                ids2.push(this.params.parent_id);
+        message_post: function (body) {
+            var self = this;
+            if (! body) {
+                var comment_node = this.$el.find('textarea');
+                var body = comment_node.val();
+                comment_node.val('');
             }
-            // must not be children of already fetched messages
-            if (ids.length > 0) {
-                domain.push('&');
-                domain.push('!');
-                domain.push(['id', 'child_of', ids]);
-            }
-            if (ids2.length > 0) {
-                domain.push(['id', 'not in', ids2]);
-            }
-            return domain;
+            return this.ds_post.call('message_post', [
+                [this.options.context.res_id], body, false, 'comment', this.options.context.parent_id]
+                ).then(this.proxy('message_fetch'));
         },
-        
-        do_more: function () {
-            domain = this.get_fetch_domain(this.comments_structure);
-            return this.fetch_comments(this.params.limit, this.params.offset, domain);
+
+        /** Action: 'shows more' to fetch new messages */
+        do_message_fetch: function () {
+            return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
         },
+
+        // TDE: keep currently because need something similar
+        // /**
+        //  * Create a domain to fetch new comments according to
+        //  * comment already present in comments_structure
+        //  * @param {Object} comments_structure (see chatter utils)
+        //  * @returns {Array} fetch_domain (OpenERP domain style)
+        //  */
+        // get_fetch_domain: function (comments_structure) {
+        //     var domain = [];
+        //     var ids = comments_structure.root_ids.slice();
+        //     var ids2 = [];
+        //     // must be child of current parent
+        //     if (this.options.parent_id) { domain.push(['id', 'child_of', this.options.parent_id]); }
+        //     _(comments_structure.root_ids).each(function (id) { // each record
+        //         ids.push(id);
+        //         ids2.push(id);
+        //     });
+        //     if (this.options.parent_id != false) {
+        //         ids2.push(this.options.parent_id);
+        //     }
+        //     // must not be children of already fetched messages
+        //     if (ids.length > 0) {
+        //         domain.push('&');
+        //         domain.push('!');
+        //         domain.push(['id', 'child_of', ids]);
+        //     }
+        //     if (ids2.length > 0) {
+        //         domain.push(['id', 'not in', ids2]);
+        //     }
+        //     return domain;
+        // },
     });
 
 
@@ -836,59 +575,58 @@ openerp.mail = function(session) {
         // QWeb template to use when rendering the object
         template: 'mail.record_thread',
 
-       init: function() {
+        init: function() {
             this._super.apply(this, arguments);
-            this.params = this.options;
-            this.params.thread_level = this.params.thread_level || 0;
-            this.thread = null;
-            this.ds = new session.web.DataSet(this, this.view.model);
-            this.ds_users = new session.web.DataSet(this, 'res.users');
+            this.options.domain = this.options.domain || [];
+            this.options.context = {'res_model': 'mail.thread', 'res_id': false, 'parent_id': false};
+            this.options.thread_level = this.options.thread_level || 0;
+            this.thread_list = [];
         },
 
         start: function() {
+            // this._super.apply(this, arguments);
             // NB: all the widget should be modified to check the actual_mode property on view, not use
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            mail.ChatterUtils.bind_events(this);
-            this.$el.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
-            if (! this.params.see_subscribers_options) {
-                this.$el.find('button.oe_mail_button_followers').hide(); }
-            this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); });
-            this.$el.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
-                .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
-                .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
         },
-        
+
         _check_visibility: function() {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
-        
-        destroy: function () {
+
+        destroy: function() {
+            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
             this._super.apply(this, arguments);
         },
-        
+
         set_value: function() {
+            var self = this;
             this._super.apply(this, arguments);
-            if (! this.view.datarecord.id ||
-                session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
-                this.$el.find('.oe_mail_thread').hide();
+            if (! this.view.datarecord.id || session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
+                this.$el.find('oe_mail_thread').hide();
                 return;
             }
+            // update context
+            this.options.context['res_id'] = this.view.datarecord.id;
+            this.options.context['res_model'] = this.view.model;
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
-            if (this.thread) this.thread.destroy();
-            this.thread = new mail.Thread(this, {'res_model': this.view.model, 'res_id': this.view.datarecord.id, 'uid': this.session.uid,
-                                                'thread_level': this.params.thread_level, 'show_post_comment': true, 'limit': 15});
-            var thread_done = this.thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
-            return thread_done;
+            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
+            console.log(this);
+            var thread = new mail.Thread(self, {
+                'context': this.options.context, 'uid': this.session.uid,
+                'thread_level': this.options.thread_level, 'show_header_compose': true,
+                'show_delete': true, 'composer': true });
+            this.thread_list.push(thread);
+            return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
     });
 
 
     /** 
      * ------------------------------------------------------------
-     * WallView Widget
+     * Wall Widget
      * ------------------------------------------------------------
      *
      * This widget handles the display of the Chatter on the Wall.
@@ -903,92 +641,59 @@ openerp.mail = function(session) {
 
         /**
          * @param {Object} parent parent
-         * @param {Object} [params]
-         * @param {Number} [params.limit=20] number of messages to show and fetch
-         * @param {Number} [params.search_view_id=false] search view id for messages
-         * @var {Array} comments_structure (see chatter utils)
+         * @param {Object} [options]
+         * @param {Number} [options.domain] domain on the Wall, is an array.
+         * @param {Number} [options.domain] context, is an object. It should
+         *      contain res_model, res_id, parent_id, to give it to the threads.
          */
-        init: function (parent, params) {
+        init: function (parent, options) {
             this._super(parent);
-            this.params = {};
-            this.params.limit = params.limit || 25;
-            this.params.domain = params.domain || [];
-            this.params.context = params.context || {};
-            this.params.res_model = params.res_model || false;
-            this.params.res_id = params.res_id || false;
-            this.params.search_view_id = params.search_view_id || false;
-            this.params.thread_level = params.thread_level || 1;
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
-            this.display_show_more = true;
+            this.options = options || {};
+            this.options.domain = options.domain || [];
+            this.options.context = options.context || {};
+            this.options.thread_level = options.thread_level || 1;
             this.thread_list = [];
+            this.ds_msg = new session.web.DataSet(this, 'mail.message');
+            // for search view
             this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
-            // datasets
-            this.ds_msg = new session.web.DataSet(this, 'mail.message');
-            this.ds_thread = new session.web.DataSet(this, 'mail.thread');
-            this.ds_users = new session.web.DataSet(this, 'res.users');
         },
 
         start: function () {
             this._super.apply(this, arguments);
-            this.display_current_user();
-            // add events
-            this.add_event_handlers();
-            // load mail.message search view
-            var search_view_ready = this.load_search_view(this.params.search_view_id, {}, false);
-            // load composition form
-            var compose_done = this.instantiate_composition_form();
-            // fetch first threads
-            var comments_ready = this.init_and_fetch_comments(this.params.limit, 0);
-            return (search_view_ready && comments_ready && compose_done);
+            var search_view_ready = this.load_search_view({}, false);
+            var thread_displayed = this.display_thread();
+            return (search_view_ready && thread_displayed);
+        },
+
+        destroy: function () {
+            for (var i in this.thrad_list) { this.thread_list[i].destroy(); }
+            this._super.apply(this, arguments);
         },
 
         /**
          * Override-hack of do_action: automatically reload the chatter.
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
+        //TDE: still useful ? TO CHECK
         do_action: function(action, on_close) {
-            this.init_and_fetch_comments();
+            console.log('wall do_action');
             if (this.compose_message_widget) {
-                this.compose_message_widget.reinit(); }
+                this.compose_message_widget.refresh(); }
+            this.message_clean();
+            this.display_thread();
             return this._super(action, on_close);
         },
 
-        destroy: function () {
-            this._super.apply(this, arguments);
-        },
-
-        instantiate_composition_form: function(mode, msg_id) {
-            if (this.compose_message_widget) {
-                this.compose_message_widget.destroy();
-            }
-            this.compose_message_widget = new mail.ComposeMessage(this, {
-                'extended_mode': false, 'uid': this.session.uid, 'res_model': this.params.res_model,
-                'res_id': this.params.res_id, 'mode': mode || 'comment', 'msg_id': msg_id });
-            var composition_node = this.$el.find('div.oe_mail_wall_action');
-            composition_node.empty();
-            var compose_done = this.compose_message_widget.appendTo(composition_node);
-            return compose_done;
-        },
-
-        /** Add events */
-        add_event_handlers: function () {
-            var self = this;
-            // display more threads
-            this.$el.find('button.oe_mail_wall_button_more').click(function () { return self.do_more(); });
-        },
-
         /**
-         * Loads the mail.message search view
-         * @param {Number} view_id id of the search view to load
+         * Load the mail.message search view
          * @param {Object} defaults ??
          * @param {Boolean} hidden some kind of trick we do not care here
          */
-        load_search_view: function (view_id, defaults, hidden) {
+        load_search_view: function (defaults, hidden) {
             var self = this;
-            this.searchview = new session.web.SearchView(this, this.ds_msg, view_id || false, defaults || {}, hidden || false);
-            var search_view_loaded = this.searchview.appendTo(this.$el.find('.oe_view_manager_view_search'));
-            return $.when(search_view_loaded).then(function () {
+            this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
+            return this.searchview.appendTo(this.$el.find('.oe_view_manager_view_search')).then(function () {
                 self.searchview.on_search.add(self.do_searchview_search);
             });
         },
@@ -1011,100 +716,32 @@ openerp.mail = function(session) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
                 self.search_results['groupby'] = results.group_by;
-                return self.init_and_fetch_comments();
+                self.message_clean();
+                return self.display_thread();
             });
         },
 
-        display_current_user: function () {
-            //return this.$el.find('img.oe_mail_msg_image').attr('src', this.thread_get_avatar('res.users', 'avatar', this.session.uid));
-        }, 
-
-        /**
-         * Initializes the wall and calls fetch_comments
-         * @param {Number} limit: number of notifications to fetch
-         * @param {Number} offset: offset in notifications search
-         * @param {Array} domain
-         * @param {Array} context
-         */
-        init_and_fetch_comments: function() {
-            this.search['domain'] = _.union(this.params.domain, this.search_results.domain);
-            this.search['context'] = _.extend(this.params.context, this.search_results.context);
-            this.display_show_more = true;
-            this.comments_structure = {'root_ids': [], 'new_root_ids': [], 'msgs': {}, 'tree_struct': {}, 'model_to_root_ids': {}};
+        /** Clean the wall */
+        message_clean: function() {
             this.$el.find('ul.oe_mail_wall_threads').empty();
-            return this.fetch_comments(this.params.limit, 0);
         },
 
-        /**
-         * Fetches wall messages
-         * @param {Number} limit: number of notifications to fetch
-         * @param {Number} offset: offset in notifications search
-         * @param {Array} domain
-         * @param {Array} context
+        /** Display comments
+         * @param {Array} records tree structure of records
          */
-        fetch_comments: function (limit, offset, additional_domain, additional_context) {
-            var self = this;
-            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
-            else var fetch_domain = this.search['domain'];
-            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
-            else var fetch_context = this.search['context'];
-            return this.ds_thread.call('message_get_pushed_messages', 
-                [[this.session.uid], true, [], (limit || 0), (offset || 0), fetch_domain, fetch_context]).then(this.proxy('display_comments'));
-        },
-
-        /**
-         * @param {Array} records records to show in threads
-         */
-        display_comments: function (records) {
-            var self = this;
-            this.do_update_show_more(records.length >= self.params.limit);
-            mail.ChatterUtils.records_struct_add_records(this.comments_structure, records, false);
-            _(this.comments_structure['new_root_ids']).each(function (root_id) {
-                var records = self.comments_structure.tree_struct[root_id]['for_thread_msgs'];
-                var model_name = self.comments_structure.msgs[root_id]['model'];
-                var res_id = self.comments_structure.msgs[root_id]['res_id'];
-                var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-                $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(self.$el.find('ul.oe_mail_wall_threads'));
-                var thread = new mail.Thread(self, {
-                    'res_model': model_name, 'res_id': res_id, 'uid': self.session.uid, 'records': records,
-                    'parent_id': false, 'thread_level': self.params.thread_level, 'show_hide': true, 'is_wall': true}
-                    );
-                self.thread_list.push(thread);
-                return thread.appendTo(self.$el.find('li.oe_mail_wall_thread:last'));
-            });
-            // update TODO
-            this.comments_structure['root_ids'] = _.union(this.comments_structure['root_ids'], this.comments_structure['new_root_ids']);
-            this.comments_structure['new_root_ids'] = [];
-        },
-
-        /**
-         * Create a domain to fetch new comments according to
-         * comments already present in comments_structure
-         * - for each model:
-         * -- should not be child of already displayed ids
-         * @returns {Array} fetch_domain (OpenERP domain style)
-         */
-        get_fetch_domain: function () {
-            var self = this;
-            var model_to_root = {};
-            var fetch_domain = [];
-            _(this.comments_structure['model_to_root_ids']).each(function (sc_model, model_name) {
-                fetch_domain.push('|', ['model', '!=', model_name], '!', ['id', 'child_of', sc_model]);
-            });
-            return fetch_domain;
-        },
-        
-        /** Display update: show more button */
-        do_update_show_more: function (new_value) {
-            if (new_value != undefined) this.display_show_more = new_value;
-            if (this.display_show_more) this.$el.find('div.oe_mail_wall_more:last').show();
-            else this.$el.find('div.oe_mail_wall_more:last').hide();
-        },
-        
-        /** Action: Shows more discussions */
-        do_more: function () {
-            var domain = this.get_fetch_domain();
-            return this.fetch_comments(this.params.limit, 0, domain);
+        display_thread: function () {
+            var render_res = session.web.qweb.render('mail.wall_thread_container', {});
+            $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
+            var thread = new mail.Thread(this, {
+                'domain': this.options.domain, 'context': this.options.context, 'uid': this.session.uid,
+                'thread_level': this.options.thread_level, 'composer': true,
+                // display options
+                'show_header_compose': true,  'show_reply': this.options.thread_level > 0,
+                'show_hide': true, 'show_reply_by_email': true,
+                }
+            );
+            thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
+            this.thread_list.push(thread);
         },
     });
 };

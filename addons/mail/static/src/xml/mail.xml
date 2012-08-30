@@ -17,8 +17,9 @@
                 <td colspan="2">
                     <h2 class="oe_view_title">
                         <span class="oe_view_title_text">
-                            <t t-if="! widget.params.res_model">News Feeds</t>
-                            <t t-if="widget.params.res_model" t-esc="widget.params.res_model"/>
+                            News Feed
+                            <t t-if="widget.options.res_model"> / </t>
+                            <t t-if="widget.options.res_model" t-esc="widget.options.res_model"/>
                         </span>
                     </h2>
                 </td>
@@ -26,19 +27,9 @@
             </tr>
           </tbody>
         </table>
-        <div class="oe_mail_wall_main">
-            <div class="oe_mail_wall_action">
-                <!-- call the composition form -->
-                <t t-call ="mail.compose_message"/>
-            </div>
-            <div class="oe_clear"/>
-            <ul class="oe_mail_wall_threads">
-                <!-- contains threads -->
-            </ul>
-            <div class="oe_mail_wall_more">
-                <button class="oe_mail_wall_button_more" type="button">See more...</button>
-            </div>
-        </div>
+        <ul class="oe_mail_wall_threads">
+            <!-- contains threads -->
+        </ul>
         <div class="oe_mail_wall_aside">
                 <!-- contains currently nothing -->
         </div>
@@ -60,17 +51,6 @@
         <!-- <h4>History and Comments</h4> -->
         <div class="oe_mail_recthread_main">
             <!-- contains the document thread -->
-        </div>
-        <div class="oe_mail_recthread_aside">
-            <div class="oe_mail_recthread_actions">
-                <button type="button" class="oe_mail_button_follow">Follow</button>
-                <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
-                <button type="button" class="oe_mail_button_followers">Show followers</button>
-            </div>
-            <div class="oe_mail_recthread_followers">
-                <h4>Followers</h4>
-                <ul class="oe_mail_followers_display"></ul>
-            </div>
         </div>
     </div>
 
@@ -115,20 +95,20 @@
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.avatar"/>
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
-                        <t t-if="display['show_delete']">
-                                <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                        <t t-if="record.is_author">
+                            <li t-if="display['show_delete']"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>
-                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Hide</a></li>
+                        <li t-if="display['show_hide']"><a href="#" class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
 <!--                    Uncomment when adding subtype hiding
                         <li t-if="display['show_hide']">
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                         </li> -->
-                        <li><a href="#" t-attf-data-msg_id="{record.id}" t-attf-data-type="{record.type}" t-attf-data-formatting="{record.content_subtype}" class="oe_mail_msg_reply_by_email">Reply by email</a></li>
+                        <li><a href="#" t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Quote and reply</a></li>
                         <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
                     </ul>
                 </span>
@@ -147,7 +127,7 @@
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
                       <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
-                      <li><a t-attf-href="#model=res.users&amp;id=#{record.user_id[0]}"><t t-raw="record.user_id[1]"/></a></li>
+                      <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>
                       <!-- uncomment when merging vote

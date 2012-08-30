@@ -9,13 +9,12 @@
         <div class="oe_mail_recthread_actions">
             <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
             <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
-            <button type="button" class="oe_mail_button_followers">Show followers</button>
         </div>
-        <div class="oe_mail_recthread_subtype"></div>
         <div class="oe_mail_recthread_followers">
-            <t t-if="widget.params.title">
-                <h4><t t-raw="widget.params.title"/></h4>
+            <t t-if="widget.options.title">
+                <h4><t t-raw="widget.options.title"/></h4>
             </t>
+            <ul class="oe_mail_recthread_subtype"></ul>
             <ul class="oe_mail_followers_display"></ul>
         </div>
     </div>
@@ -26,14 +25,14 @@
         -->
     <li t-name="mail.followers.partner">
         <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
-        <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
+        <a t-attf-href="#model=res.partner&amp;id=#{record.id}"><t t-raw="record.name"/></a>
     </li>\
     
     <!--
         record_thread.subtype template
         Template used to display subtype of record
     -->
-    <div t-name="mail.record_thread.subtype">
+    <li t-name="mail.record_thread.subtype">
         <table width="50%">
             <tr>
                 <td>
@@ -44,6 +43,6 @@
                 </td>
             </tr>
         </table>
-    </div>
+    </li>
 
 </template>

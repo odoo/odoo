@@ -23,7 +23,7 @@
   !python {model: mail.compose.message}: |
     lead_ids = self.pool.get('crm.lead').search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     context.update({'active_model': 'crm.lead','active_id': lead_ids[0]})
-    id = self.create(cr, uid, {'body_text': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
+    id = self.create(cr, uid, {'body': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
     try:
         self.send_mail(cr, uid, [id], context=context)
     except:
@@ -34,12 +34,6 @@
   !python {model: crm.lead}: |
     lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     self.convert_partner(cr, uid, lead_ids, context=context)
--
-  Now, I search customer in regular customer list.
--
-  !python {model: crm.lead}: |
-    partner_ids = self.message_partner_by_email(cr, uid, 'Mr. John Right <info@customer.com>')
-    assert partner_ids.get('partner_id'), "Customer is not found in regular customer list."
 -
   I convert one phonecall request as a customer and put into regular customer list. 
 -

@@ -7,7 +7,7 @@
         <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
-        <field name="body_text">
+        <field name="body">
         hello ${object.name},
 
         The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}. For any further information please contact our event department.
@@ -27,7 +27,7 @@
         <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
-        <field name="body_text">
+        <field name="body">
         hello ${object.name},
 
         We confirm you that your registration to the event ${object.event_id.name} has been recorded. You will automatically receive an email providing you more practical information (such as the schedule, the plan...) as soon as the event will be confirmed to be held.

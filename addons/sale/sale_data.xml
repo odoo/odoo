@@ -41,13 +41,13 @@
         <function eval="('default',False,'shop_id', [('sale.order', False)], sale_shop_1, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>The Sales Management application has been installed.</value>
             <value>This modules allows you to create and send easily quotations and process your sales orders; from the delivery to the invoicing.
 
 If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.</value>
+            <value>The Sales Management application has been installed.</value>
         </function>
     </data>
 </openerp>

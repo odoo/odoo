@@ -66,7 +66,7 @@ class project(osv.osv):
     _description = "Project"
     _inherits = {'account.analytic.account': "analytic_account_id",
                  "mail.alias": "alias_id"}
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def search(self, cr, user, args, offset=0, limit=None, order=None, context=None, count=False):
         if user == 1:
@@ -186,23 +186,6 @@ class project(osv.osv):
         """Overriden in project_issue to offer more options"""
         return [('project.task', "Tasks")]
 
-    def _get_followers(self, cr, uid, ids, name, arg, context=None):
-        '''
-        Functional field that computes the users that are 'following' a thread.
-        '''
-        res = {}
-        for project in self.browse(cr, uid, ids, context=context):
-            l = set()
-            for message in project.message_ids:
-                l.add(message.user_id and message.user_id.id or False)
-            res[project.id] = list(filter(None, l))
-        return res
-
-    def _search_followers(self, cr, uid, obj, name, args, context=None):
-        project_obj = self.pool.get('project.project')
-        project_ids = project_obj.search(cr, uid, [('message_ids.user_id.id', 'in', args[0][2])], context=context)
-        return [('id', 'in', project_ids)]
-
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
 
@@ -246,8 +229,6 @@ class project(osv.osv):
                                         help="The kind of document created when an email is received on this project's email alias"),
         'privacy_visibility': fields.selection([('public','Public'), ('followers','Followers Only')], 'Privacy / Visibility', required=True),
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','Pending'),('close','Closed')], 'Status', required=True,),
-        'followers': fields.function(_get_followers, method=True, fnct_search=_search_followers,
-                        type='many2many', relation='res.users', string='Followers'),
      }
 
     def _get_type_common(self, cr, uid, context):
@@ -511,11 +492,6 @@ def Project():
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' to the monitored fields """
-        res = super(project, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id']
-
     def create(self, cr, uid, vals, context=None):
         if context is None: context = {}
         # Prevent double project creation when 'use_tasks' is checked!
@@ -536,23 +512,23 @@ def Project():
         return project_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype="new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype="new", context=context)
 
     def set_open_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>opened</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, subtype="open", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="open", context=context)
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
         message = _("Project is now <b>pending</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, subtype="pending", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="pending", context=context)
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>cancelled</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, subtype="cancel", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="cancel", context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, subtype="close", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="close", context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
@@ -565,7 +541,7 @@ class task(base_stage, osv.osv):
     _name = "project.task"
     _description = "Task"
     _date_name = "date_start"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default section by checking if present in the context """
@@ -1210,19 +1186,19 @@ class task(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change", context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change", context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="new", context=context)
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
         msg = _('Task has been set as <b>draft</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
             msg = _('Task has been <b>delegated</b> to <em>%s</em>.') % (task.user_id.name)
-            self.message_append_note(cr, uid, [task.id], body=msg, context=context)
+            self.message_post(cr, uid, [task.id], body=msg, context=context)
         return True
 
 
