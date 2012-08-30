@@ -438,13 +438,17 @@ product_pricelist_item()
 
 class res_company(osv.osv):
     _inherit = 'res.company'
+    
+    def _get_default_product_pricelist(self, cr, uid, context=None):
+        model, pricelist_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'product', 'list0')
+        return [pricelist_id]
 
     def write(self, cr, uid, ids, vals, context=None):
         res = super(res_company, self).write(cr, uid, ids, vals, context)
         product_pricelist_obj = self.pool.get('product.pricelist')
         currency = product_pricelist_obj._get_currency(cr, uid, context)
-        pricelist = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'list0')
-        product_pricelist_obj.write(cr, uid, pricelist.id, {'currency_id': currency}, context=context)
+        pricelist_ids = self._get_default_product_pricelist(cr, uid, context=context)
+        product_pricelist_obj.write(cr, uid, pricelist_ids, {'currency_id': currency}, context=context)
         return res
     
 res_company()

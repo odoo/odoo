@@ -31,13 +31,10 @@ class company(osv.osv):
         'po_lead': lambda *a: 1.0,
     }
     
-    def write(self, cr, uid, ids, vals, context=None):
-        res = super(company, self).write(cr, uid, ids, vals, context)
-        product_pricelist_obj = self.pool.get('product.pricelist')
-        currency = product_pricelist_obj._get_currency(cr, uid, context)
-        pricelist = self.pool.get('ir.model.data').get_object(cr, uid, 'purchase', 'list0')
-        product_pricelist_obj.write(cr, uid, pricelist.id, {'currency_id': currency}, context=context)
-        return res
+    def _get_default_product_pricelist(self, cr, uid, context=None):
+        pricelist_ids = super(company, self)._get_default_product_pricelist(cr, uid, context=context)
+        model, pricelist_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'purchase', 'list0')
+        return pricelist_ids + [pricelist_id]
     
 company()
 
