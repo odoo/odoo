@@ -2,12 +2,14 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage your product inventoy and stock locations.  You can control your stock moves history and planning, perform stock valuation, and trace product lots upstream and downstream (based on serial numbers.)</value>
-            <value>Module Warehouse Management has been installed</value>
-        </function>
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Warehouse Management application installed!</field>
+            <field name="body">Manage your product inventoy and stock locations: you can control stock moves history and planning,
+watch your stock valuation, and track production lots upstream and downstream (based on serial numbers).</field>
+        </record>
 
         <record id="stock_journal_sequence" model="ir.sequence">
             <field name="name">Stock Journal Sequence</field>

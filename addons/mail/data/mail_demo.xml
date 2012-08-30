@@ -4,9 +4,9 @@
 
         <record id="message_blogpost0" model="mail.message">
             <field name="model">mail.group</field>
-            <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[Your monthly meal vouchers arrived. You can get them at Christine's office.
-This month you also have 250 EUR of eco-checks for all employees that worked with us since 1 year minimum.]]></field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="body">Your monthly meal vouchers arrived. You can get them at Christine's office.
+This month you also get 250 EUR of eco-vouchers if you have been in the company for more than a year.</field>
             <field name="type">comment</field>
         </record>
 
@@ -21,7 +21,7 @@ This month you also have 250 EUR of eco-checks for all employees that worked wit
         <record id="message_blogpost0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[Yes, that's a good news.]]></field>
+            <field name="body">Thanks, but where is Christine's office, if I may ask? (I'm new here)</field>
             <field name="parent_id" ref="message_blogpost0"/>
             <field name="type">comment</field>
         </record>
@@ -29,13 +29,16 @@ This month you also have 250 EUR of eco-checks for all employees that worked wit
         <record id="message_blogpost0_comment2" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="group_all_employees"/>
-            <field name="body"><![CDATA[Sure: Curabitur tempor bibendum diam, et euismod ante rutrum vel.
-
-In quis purus neque. Integer sodales dolor eu elit fringilla blandit. Maecenas lacus nisi, facilisis sit amet viverra eu, tristique vel augue.
-Donec viverra congue dui eu blandit. In lacinia molestie nulla, ut sagittis risus feugiat eu.
-
-Check the file in attachment for more information !  (third comment)]]></field>
+            <field name="body">Great news, I need to buy a new fridge, I think I can pay it with the eco-vouchers!</field>
             <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+        </record>
+
+        <record id="message_blogpost0_comment1_2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="body">Building B3, second floor on the right :-)</field>
+            <field name="parent_id" ref="message_blogpost0_comment1"/>
             <field name="type">comment</field>
         </record>
 
