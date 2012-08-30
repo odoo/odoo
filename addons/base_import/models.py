@@ -24,7 +24,7 @@ class ir_import(orm.TransientModel):
         'file': fields.binary(
             'File', help="File to check and/or import, raw binary (not base64)"),
         'file_name': fields.char('File Name', size=None),
-        'file_mime': fields.char('File Type', size=None),
+        'file_type': fields.char('File Type', size=None),
     }
 
     def get_fields(self, cr, uid, model, context=None,
