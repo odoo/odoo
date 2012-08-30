@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:50+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:28+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
 msgid "Product"
-msgstr "Бүтээгдэхүүн"
+msgstr "Бараа"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -34,26 +34,28 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"Бүх барааны тоо хэмжээ нь 0-с их байх ёстой.\n"
+"Жорд нэмэлт барааг менеж хийхийг хүсвэл mrp_subproduct модулийн суулгана."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "sub products"
-msgstr "хоёрдогч бүтээгдэхүүнүүд"
+msgstr "дэд бараанууд"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "Үйлдвэрлэлийн Захиалга"
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
-msgstr ""
+msgstr "Жорын мөр нь жорын бараатайгаа ижил байж болохгүй."
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "Sub Products"
-msgstr "Хоёрдогч бүтээгдэхүүнүүд"
+msgstr "Дэд Бараанууд"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
@@ -63,17 +65,17 @@ msgstr "Тоолох төрөл"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "Жор"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr "Бүтээгдэхүүний тоо"
+msgstr "Барааны тоо"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
 msgid "Product UOM"
-msgstr "Бүтээгдэхүүний хэмжих нэгж"
+msgstr "Барааны Х.Нэгж"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
@@ -83,7 +85,7 @@ msgstr "Материалын тооцоо"
 #. module: mrp_subproduct
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Код компаний хэмжээнд үл давхцах байх ёстой!"
 
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
@@ -98,12 +100,12 @@ msgstr "Хувьсах"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "Дэд Бараа"
 
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Захиалгын тоо ширхэг нь хасах юмуу тэг байж болохгүй!"
 
 #. module: mrp_subproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -116,11 +118,18 @@ msgid ""
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
+"Үйлдвэрлэлийн захиалгад жор ашиглан дэд барааны тоо нь хэрхэн тааруулагдахыг "
+"тодорхойлно. 'Тогтмол' гэдэг нь үүсгэгдсэн дэд барааны тоо хэмжээ нь байнга "
+"жорынхтой тэнцээ байхыг илэрхийлнэ. Энэ тохиолдолд үйлдвэрлэлийн захиалгад "
+"хэд гэж тодорхойлогдсон байх нь хамаагүй. Харин 'Хувьсах' гэдэг нь тоо "
+"хэмжээ нь тооцоологдоно. '(Жорын дэд барааны цогцын тоо/жор дахь "
+"үйлдвэрлэгдсэн дэд барааны цогцын тоо * үйлдвэрлэлийн захиалга дахь "
+"үйлдвэрлэгдсэн барааны тоо)'"
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "Алдаа ! Тойрог хамааралтай жор үүсгэж болохгүй."
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"

@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:38+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:57+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -77,7 +77,7 @@ msgstr "Номер Ревизии"
 #. module: stock
 #: view:stock.move:0
 msgid "Orders processed Today or planned for Today"
-msgstr ""
+msgstr "Заказы, обработанные сегодня или запланированные на сегодня"
 
 #. module: stock
 #: view:stock.partial.move.line:0 view:stock.partial.picking:0
@@ -89,7 +89,7 @@ msgstr "Перемещения ТМЦ"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
 msgid "UoM Categories"
-msgstr ""
+msgstr "Категории единиц"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_move_report
@@ -128,7 +128,7 @@ msgstr ""
 #: code:addons/stock/wizard/stock_change_product_qty.py:87
 #, python-format
 msgid "Quantity cannot be negative."
-msgstr ""
+msgstr "Количество не может быть отрицательным"
 
 #. module: stock
 #: view:stock.picking:0
@@ -190,13 +190,13 @@ msgstr "Складская книга"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current month"
-msgstr ""
+msgstr "Текущий месяц"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:222
 #, python-format
 msgid "Unable to assign all lots to this move!"
-msgstr ""
+msgstr "Невозможно связать все лоты к этой записи!"
 
 #. module: stock
 #: code:addons/stock/stock.py:2516
@@ -219,18 +219,18 @@ msgstr "Вы не можете удалить любую запись!"
 #. module: stock
 #: view:stock.picking:0
 msgid "Delivery orders to invoice"
-msgstr ""
+msgstr "Заказы на доставку для оплаты"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Assigned Delivery Orders"
-msgstr ""
+msgstr "Назначенные заказы на доставку"
 
 #. module: stock
 #: field:stock.partial.move.line,update_cost:0
 #: field:stock.partial.picking.line,update_cost:0
 msgid "Need cost update"
-msgstr ""
+msgstr "Необходимо обновить стоимость"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_splitinto.py:49
@@ -300,7 +300,7 @@ msgstr ""
 #. module: stock
 #: view:stock.partial.move:0 view:stock.partial.picking:0
 msgid "_Validate"
-msgstr ""
+msgstr "_Проверить"
 
 #. module: stock
 #: code:addons/stock/stock.py:1149
@@ -340,6 +340,8 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Valuation account on category of this product are same."
 msgstr ""
+"Невозможно создать запись в журнале, входящий счет, указанный к этому "
+"продукту, и проверочный счет в категории этого продукта одинаковы."
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -349,7 +351,7 @@ msgstr "Нет счета"
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that have been processed"
-msgstr ""
+msgstr "Складские перемещения, которые были обработаны"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_production_lot
@@ -371,7 +373,7 @@ msgstr "Перемещения для этой упаковки"
 #. module: stock
 #: view:stock.picking:0
 msgid "Incoming Shipments Available"
-msgstr ""
+msgstr "Поступающие грузы, доступные к обработке"
 
 #. module: stock
 #: selection:report.stock.inventory,location_type:0
@@ -386,6 +388,8 @@ msgid ""
 "filter all resources of the day for the 'From' date and 23:59:59 for the "
 "'To' date)"
 msgstr ""
+"(оставьте пустым для открытия текущей ситуации. Установите HH:MM:SS на "
+"00:00:00 для фильтрации всех ресурсов дня с"
 
 #. module: stock
 #: view:report.stock.inventory:0 field:report.stock.inventory,state:0
@@ -466,7 +470,7 @@ msgstr "Разделить на"
 #. module: stock
 #: view:stock.location:0
 msgid "Internal Locations"
-msgstr ""
+msgstr "Внутренние помещения"
 
 #. module: stock
 #: field:stock.move,price_currency_id:0
@@ -606,7 +610,7 @@ msgstr "Место / Продукция"
 #. module: stock
 #: field:stock.move,address_id:0
 msgid "Destination Address "
-msgstr ""
+msgstr "Адрес назначения "
 
 #. module: stock
 #: code:addons/stock/stock.py:1333
@@ -653,6 +657,11 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"Наши записи показывают, что следующие платежи по прежнему не оплачены.\n"
+"Если они уже были оплачены, пожалуйста проигнорируйте это сообщение. \n"
+"Тем не менее, если у Вас есть какие-либо вопросы, касающиеся вашего счета, \n"
+"пожалуйста, свяжитесь с нами.\n"
+"Спасибо заранее.\n"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -667,6 +676,10 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Поступающие грузы, это список всех заказов, которые вы ожидаете к получению "
+"от ваших поставщиков. Поступающий груз содержит список товаров, которые "
+"должны быть получены согласно заказу на поставку. Вы можете проверить груз "
+"полностью или частично."
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
@@ -742,7 +755,7 @@ msgstr "Получатель"
 #. module: stock
 #: model:stock.location,name:stock.location_refrigerator
 msgid "Refrigerator"
-msgstr ""
+msgstr "Рефрижератор"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_location_tree
@@ -777,7 +790,7 @@ msgstr "Процесс комплектования"
 #. module: stock
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка должна быть уникальна для каждой компании!"
 
 #. module: stock
 #: code:addons/stock/product.py:417
@@ -804,7 +817,7 @@ msgstr ""
 #: code:addons/stock/product.py:75
 #, python-format
 msgid "Valuation Account is not specified for Product Category: %s"
-msgstr ""
+msgstr "Переоценочный счет не указан для категории продукта: %s"
 
 #. module: stock
 #: field:stock.move,move_dest_id:0
@@ -877,7 +890,7 @@ msgstr "Изменение количества ТМЦ"
 #. module: stock
 #: field:report.stock.inventory,month:0
 msgid "unknown"
-msgstr ""
+msgstr "неизвестно"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_merge
@@ -937,7 +950,7 @@ msgstr "Искать упаковку"
 #. module: stock
 #: view:stock.picking:0
 msgid "Pickings already processed"
-msgstr ""
+msgstr "Сортировка уже осуществлена"
 
 #. module: stock
 #: field:stock.partial.move.line,currency:0
@@ -954,7 +967,7 @@ msgstr "Журнал"
 #: code:addons/stock/stock.py:1345
 #, python-format
 msgid "is scheduled %s."
-msgstr ""
+msgstr "запланировано %s."
 
 #. module: stock
 #: help:stock.picking,location_id:0
@@ -980,7 +993,7 @@ msgstr "Время исполнения (в днях)"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_move
 msgid "Partial Move Processing Wizard"
-msgstr ""
+msgstr "Мастер обработки частичного перемещения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_product_location_open
@@ -1020,7 +1033,7 @@ msgstr ""
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Pickings"
-msgstr ""
+msgstr "Подтвержденные сортировки"
 
 #. module: stock
 #: field:stock.location,stock_virtual:0
@@ -1036,7 +1049,7 @@ msgstr "Вид"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Last month"
-msgstr ""
+msgstr "Последний месяц"
 
 #. module: stock
 #: field:stock.location,parent_left:0
@@ -1052,7 +1065,7 @@ msgstr ""
 #: code:addons/stock/stock.py:1349
 #, python-format
 msgid "is waiting."
-msgstr ""
+msgstr "ожидает."
 
 #. module: stock
 #: constraint:product.product:0
@@ -1160,6 +1173,8 @@ msgid ""
 "In order to cancel this inventory, you must first unpost related journal "
 "entries."
 msgstr ""
+"В случае отмены этой инвентаризации, вам необходимо сначала удалить "
+"связанные записи в журнале"
 
 #. module: stock
 #: field:stock.picking,date_done:0
@@ -1173,11 +1188,13 @@ msgid ""
 "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
 "\"%s %s\" is accepted by the uom."
 msgstr ""
+"Округление единиц измерения не позволяет вам отправить \"%s %s\", только "
+"округление \"%s %s\" применительно к данным единицам измерения."
 
 #. module: stock
 #: view:stock.move:0
 msgid "Stock moves that are Available (Ready to process)"
-msgstr ""
+msgstr "Доступные для обработки перемещения"
 
 #. module: stock
 #: report:stock.picking.list:0
@@ -1236,7 +1253,7 @@ msgstr "Мета хранения партнера"
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
 msgid "Current year"
-msgstr ""
+msgstr "Текущий год"
 
 #. module: stock
 #: view:report.stock.inventory:0 view:report.stock.move:0
@@ -1288,7 +1305,7 @@ msgstr "Упаковочный перечень"
 #. module: stock
 #: selection:stock.move,state:0
 msgid "Waiting Another Move"
-msgstr ""
+msgstr "Ожидает другого перемещения"
 
 #. module: stock
 #: help:product.template,property_stock_production:0
@@ -1304,7 +1321,7 @@ msgstr ""
 #. module: stock
 #: view:product.product:0
 msgid "Expected Stock Variations"
-msgstr ""
+msgstr "Ожидаемые изменения запасов"
 
 #. module: stock
 #: help:stock.move,price_unit:0
@@ -1378,7 +1395,7 @@ msgstr "От"
 #. module: stock
 #: view:stock.picking:0
 msgid "Incoming Shipments already processed"
-msgstr ""
+msgstr "Поступившие грузы, которые уже обработаны"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:99
@@ -2616,7 +2633,7 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.stock_location_company
 msgid "Your Company"
-msgstr ""
+msgstr "Ваша компания"
 
 #. module: stock
 #: constraint:stock.move:0
@@ -3090,7 +3107,7 @@ msgstr "Заказ"
 #. module: stock
 #: view:product.product:0
 msgid "Cost Price :"
-msgstr ""
+msgstr "Себестоимость :"
 
 #. module: stock
 #: field:stock.tracking,name:0
@@ -3353,6 +3370,16 @@ msgid ""
 "* Fixed Location: The chained location is taken from the next field: Chained "
 "Location if Fixed."
 msgstr ""
+"Определяет, является ли это место хранения связанным с другим местом, то "
+"есть любые поступающие в это место товары\n"
+"в дальнейшем должны перемещаться в связанное место хранения. Имеются "
+"следующие типы связанных мест хранения:\n"
+"* Нет: связанные места хранения отсутствуют\n"
+"* Заказчик: связанное место хранения должно быть выбрано из поля \"Место "
+"хранения заказчика\" на форме партнера, который указан в списке получателей "
+"товара.\n"
+"* Определенное место хранения: Связанное место хранения, полученное из поля: "
+"\"Связанное место хранения, если определено\" этой же формы."
 
 #. module: stock
 #: code:addons/stock/wizard/stock_inventory_merge.py:43
@@ -4155,7 +4182,7 @@ msgstr "Физические места хранения"
 #. module: stock
 #: view:stock.picking:0 selection:stock.picking,state:0
 msgid "Ready to Process"
-msgstr ""
+msgstr "Готовые к обработке"
 
 #. module: stock
 #: help:stock.location,posx:0 help:stock.location,posy:0

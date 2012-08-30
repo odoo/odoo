@@ -28,37 +28,6 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
-
-    def _to_invoice(self, cr, uid, ids, field_name, arg, context=None):
-        account_analytic_line = self.pool.get("account.analytic.line")
-        res = {}
-        for project in self.browse(cr,uid,ids,context=context):
-            line_ids = account_analytic_line.search(cr, uid, [('account_id', '=', project.analytic_account_id.id), ('to_invoice','=',1), ('invoice_id','=',False)])
-            lines = account_analytic_line.browse(cr, uid, line_ids, context)
-            res[project.id] = {
-                'amount_to_invoice': sum(line.amount for line in lines),
-                'time_to_invoice': sum(line.unit_amount for line in lines),
-            }
-        return res
-
-    def _timesheet_count(self, cr, uid, ids, field_name, arg, context=None):
-        account_analytic_line = self.pool.get('account.analytic.line')
-        res = {}
-        for project in self.browse(cr, uid, ids, context):
-            line_ids = account_analytic_line.search(cr, uid, [('account_id', '=', project.analytic_account_id.id)])
-            res[project.id] = len(line_ids)
-        return res
-
-    _columns = {
-        'use_timesheets': fields.boolean('Timesheets', help="Check this field if this project manages timesheets"),
-        'amount_to_invoice': fields.function(_to_invoice, string="Amount to Invoice", multi="sums"),
-        'time_to_invoice': fields.function(_to_invoice, string="Time to Invoice", multi="sums"),
-        'timesheet_count': fields.function(_timesheet_count, type='integer', string="Issue"),
-    }
-    _defaults = {
-        'use_timesheets': True,
-    }
-
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
@@ -69,7 +38,11 @@ class project_project(osv.osv):
                 factor_id = data_obj.browse(cr, uid, data_id).res_id
                 res['value'].update({'to_invoice': factor_id})
         return res
-    
+
+    _defaults = {
+        'use_timesheets': True,
+    }
+
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """
         project = self.browse(cr, uid, ids[0], context)
@@ -91,7 +64,6 @@ class project_project(osv.osv):
             'context': view_context,
             'nodestroy': True,
         }
-
 project_project()
 
 class project_work(osv.osv):
@@ -104,22 +76,22 @@ class project_work(osv.osv):
         if not emp_id:
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No employee defined for user "%s". You must create one.')% (user_name,))
+                 _('Please define employee for user "%s". You must create one.')% (user_name,))
         emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No product defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+                 _('Please define product on the related employee.\nFill in the timesheet tab of the employee form.'))
 
         if not emp.journal_id:
             raise osv.except_osv(_('Bad Configuration !'),
-                 _('No journal defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+                 _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
 
         a = emp.product_id.product_tmpl_id.property_account_expense.id
         if not a:
             a = emp.product_id.categ_id.property_account_expense_categ.id
             if not a:
                 raise osv.except_osv(_('Bad Configuration !'),
-                        _('No product and product category property account defined on the related employee.\nFill in the timesheet tab of the employee form.'))
+                        _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
         res['general_account_id'] = a
@@ -131,7 +103,7 @@ class project_work(osv.osv):
         project_obj = self.pool.get('project.project')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
-        
+
         vals_line = {}
         context = kwargs.get('context', {})
         if not context.get('no_analytic_entry',False):
@@ -141,8 +113,8 @@ class project_work(osv.osv):
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
-            
-            #calculate quantity based on employee's product's uom 
+
+            #calculate quantity based on employee's product's uom
             vals_line['unit_amount'] = vals['hours']
 
             default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
@@ -179,7 +151,7 @@ class project_work(osv.osv):
         project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
         result = {}
-        
+
         if isinstance(ids, (long, int)):
             ids = [ids,]
 
@@ -194,11 +166,11 @@ class project_work(osv.osv):
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
-                result = self.get_user_related_details(cr, uid, vals['user_id'])
+                result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
                 for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
                     if result.get(fld, False):
                         vals_line[fld] = result[fld]
-                        
+
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
@@ -208,7 +180,7 @@ class project_work(osv.osv):
 
                 if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-                    
+
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
                     prod_id=prod_id, company_id=False,
@@ -218,7 +190,7 @@ class project_work(osv.osv):
                     vals_line['amount'] = amount_unit['value']['amount']
 
             self.pool.get('hr.analytic.timesheet').write(cr, uid, [line_id.id], vals_line, context=context)
-            
+
         return super(project_work,self).write(cr, uid, ids, vals, context)
 
     def unlink(self, cr, uid, ids, *args, **kwargs):
@@ -280,7 +252,7 @@ class res_partner(osv.osv):
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
-            raise osv.except_osv(_('Invalid action !'), _('You cannot delete a partner which is assigned to project, we suggest you to uncheck the active box!'))
+            raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
 res_partner()
@@ -296,7 +268,7 @@ class account_analytic_line(osv.osv):
        st = acc.to_invoice.id
        res['value']['to_invoice'] = st or False
        if acc.state == 'close' or acc.state == 'cancelled':
-           raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state'))
-       return res  
+           raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
+       return res
 account_analytic_line()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

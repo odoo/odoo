@@ -4,30 +4,20 @@
         <record id="view_voucher_filter_vendor" model="ir.ui.view">
             <field name="name">account.voucher.purchase.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
-                        <field name="partner_id" string="Supplier"/>
-                    </group>
-                    <newline/>
-                    <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                   <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Supplier"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('purchase','purchase_refund'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Supplier" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -36,30 +26,20 @@
         <record id="view_voucher_filter_sale" model="ir.ui.view">
             <field name="name">account.voucher.sale.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted')]" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
-                        <field name="partner_id" string="Customer"/>
-                    </group>
-                    <newline/>
-                    <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
-                        <field name="period_id"/>
-                    </group>
-                   <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" domain="[('type','in',('sale','sale_refund'))]"/>
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -78,60 +58,76 @@
         <record model="ir.ui.view" id="view_sale_receipt_form">
             <field name="name">account.voucher.sale.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Sales Receipt">
-                    <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('customer','=',True)]" required="1" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer': 1}"/>
-                        <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                        <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                        <field name="number"/>
-                        <field name="name" colspan="2"/>
-                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
+                <form string="Sale voucher" version="7.0">
+                <header>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
+                    <button name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
+                    <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
+                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
+                <sheet string="Sales Receipt" >
+                    <h1><label for="number" string="Sale Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="journal_id" domain="[('type','in',['sale','sale_refund'])]" widget="selection" on_change="onchange_journal(journal_id, line_cr_ids, tax_id, partner_id, date, amount, type, company_id, context)" groups="account.group_account_user"/>
+                            <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                            <field name="name"/>
+                            <field name="paid" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
                         <field name="type" invisible="True"/>
-                        <field name="currency_id"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Sales Information">
-                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_cr_ids" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Sales Lines" editable="bottom">
-                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection"/>
+                                    <field name="account_id" domain="[('user_type.report_type','=','income'),('type','!=','view')]" widget="selection" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount" sum="Total"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group col="2" colspan="3">
-                                <separator string="Internal Notes" colspan="2"/>
-                                <field name="narration" colspan="2" nolabel="1"/>
-                            </group>
-                            <group col="2" colspan="1">
-                                <group col="2" colspan="1">
-                                    <separator string="Payment Options" colspan="2"/>
+			                <group>
+                                <field name="narration" placeholder="Internal Notes" nolabel="1"/>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <field name="tax_id" 
+                                        on_change="onchange_price(line_cr_ids, tax_id, partner_id)"
+                                        widget="selection" nolabel="1"
+					placeholder="Select tax..."
+                                        domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/>
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <div class="oe_subtotal_footer_separator">
+                                        <label for="amount"/>
+                                        <button type="object" class="oe_link oe_edit_only"
+                                            name="compute_tax" string="(update)"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+			                        </div>
+                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
+                                </group>                                    
+			                    <group>
                                     <field name="pay_now" on_change="onchange_payment(pay_now, journal_id, partner_id)" required="1"/>
+                                    <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
                                     <field name="account_id"
                                          attrs="{'invisible':[('pay_now','!=','pay_now')]}"
                                           domain="[('type','=','liquidity')]"/>
-                                         <!-- should select income accounts only. Or use the journal for this ? -->
                                     <field name="reference"
-                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"
-                                    />
-                                    <field name="date_due" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                                    <field name="paid" invisible="1"/>
+                                         attrs="{'invisible':[('pay_now','!=','pay_now')]}"/>
                                 </group>
-                                <group col="4" colspan="1">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_cr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('sale','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
-                                </group>
-                            </group>
+			                </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
-                            <group col="6" colspan="4">
+                            <group col="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                            <field name="move_ids" readonly="1">
                                <tree string="Journal Items">
                                    <field name="move_id"/>
                                    <field name="ref"/>
@@ -148,16 +144,11 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="8" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
-                        <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
-                           <button icon="terp-dolar_ok!" name="%(act_pay_voucher)d" context="{'narration':narration, 'title':'Customer Payment', 'type':'receipt', 'partner_id':partner_id, 'reference':reference, 'amount':amount}" type="action" string="Pay" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                        </group>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                    </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -172,7 +163,14 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_voucher_filter_sale"/>
             <field name="target">current</field>
-            <field name="help">When you sell products to a customer, you can give him a sales receipt or an invoice. When the sales receipt is confirmed, it creates journal items automatically and you can record the customer payment related to this sales receipt.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a sale receipt.
+              </p><p>
+                When the sale receipt is confirmed, you can record the customer
+                payment related to this sales receipt.
+              </p>
+            </field>
         </record>
         <record id="action_sale_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>
@@ -204,54 +202,87 @@
         <record model="ir.ui.view" id="view_purchase_receipt_form">
             <field name="name">account.voucher.purchase.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Supplier Voucher">
-                    <group col="6" colspan="4">
-                        <field name="partner_id" domain="[('supplier','=',True)]" required="1" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
-                        <field name="date" string="Bill Date" select="1" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
-                        <field name="journal_id" domain="[('type','in',['purchase','purchase_refund'])]" widget="selection" select="1" on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"/>
-                        <field name="number"/>
-                        <field name="name" colspan="2"/>
-                        <field name="reference" select="1"/>
-                        <field name="company_id" select="1" widget="selection" groups="base.group_multi_company"/>
-                        <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
-                        <field name="type" invisible="True"/>
-                        <field name="currency_id"/>
+                <form string="Purchase Voucher" version="7.0">
+                <header>
+                    <button name="proforma_voucher" string="Validate" states="draft" class="oe_highlight"/>
+                    <button name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':['|',('pay_now','=','pay_now'),'|',('state','=','draft'), ('paid','=',True)]}" class="oe_highlight"/>
+                    <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                    <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to confirm this record ?"/>
+                    <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                </header>
+                <sheet string="Supplier Voucher">
+                    <h1><label for="number" string="Purchase Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
+
+                    <field name="pay_now" invisible="1"/>
+                    <field name="account_id" domain="[('type','=','other')]"  invisible="True"/>
+                    <field name="type" invisible="True"/>
+                    <group>
+                        <group>
+                            <field name="partner_id" domain="[('supplier','=',True)]" string="Supplier" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" context="{'default_customer': 0, 'search_default_supplier': 1, 'default_supplier': 1}" />
+                            <field name="name" colspan="2"/>
+                            <field name="reference"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date" string="Bill Date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
+                            <field name="date_due"/>
+                            <field name="paid" invisible="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="journal_id"
+                                domain="[('type','in',['purchase','purchase_refund'])]"
+                                widget="selection"
+                                on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
+                                groups="account.group_account_user"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Bill Information">
-                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_dr_ids" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" context="{'journal_id':journal_id,'partner_id':partner_id}">
                                 <tree string="Expense Lines" editable="bottom">
-                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]"/>
+                                    <field name="account_id" widget="selection" domain="[('user_type.report_type','=','expense'), ('type','!=','view')]" groups="account.group_account_user"/>
                                     <field name="name"/>
                                     <field name="amount"/>
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group col="2" colspan="3">
-                                <separator string="Internal Notes" colspan="2"/>
-                                <field name="narration" colspan="2" nolabel="1"/>
-                            </group>
-                            <group col="2" colspan="1">
-                                <group col="2" colspan="1">
-                                    <separator string="Payment Terms" colspan="2"/>
-                                    <field name="date_due"/>
-                                    <field name="paid" invisible="1"/>
-                                </group>
-                                <group col="4" colspan="1">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_dr_ids, tax_id, partner_id)" widget="selection" domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label string="" colspan="1"/><field name="amount" string="Total"/>
+                            <group>
+                                <field name="narration" placeholder="Internal Notes" nolabel="1"/>
+                                <group class="oe_subtotal_footer oe_right">
+                                    <!--
+                                    <div>
+                                        <label for="tax_id" />
+                                        <button type="object" 
+                                            icon="terp-stock_format-scientific" 
+                                            name="compute_tax"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </div>
+                                    -->
+                                    <field name="tax_id" 
+                                        on_change="onchange_price(line_dr_ids, tax_id, partner_id)"
+                                        widget="selection" nolabel="1"
+					placeholder="Select tax..."
+
+                                        domain="[('type_tax_use','in',('purchase','all')), ('parent_id', '=', False)]"
+                                        />
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <div class="oe_subtotal_footer_separator">
+                                        <label for="amount"/>
+                                        <button type="object" class="oe_link oe_edit_only"
+                                            name="compute_tax" string="(update)"
+                                            attrs="{'invisible': [('state','!=','draft')]}"/>
+			            </div>
+                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>
                             </group>
                         </page>
                         <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
-                            <group col="6" colspan="4">
+                            <group col="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                            <field name="move_ids" readonly="1">
                                <tree string="Journal Items">
                                    <field name="move_id"/>
                                    <field name="ref"/>
@@ -268,17 +299,11 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to confirm this record ?"/>
-                        <group attrs="{'invisible':['|', ('state','!=','posted'), ('paid','=',True)]}">
-                            <button icon="terp-dolar_ok!" name="%(act_pay_bills)d" context="{'narration':narration, 'title':'Bill Payment', 'type':'payment', 'partner_id': partner_id, 'reference':reference}" type="action" string="Pay Bill" attrs="{'invisible':[('pay_now','=','pay_now')]}"/>
-                        </group>
-                        <field name="pay_now" invisible="1"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                        <button name="proforma_voucher" string="Validate" states="draft" icon="gtk-go-forward"/>
-                    </group>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -291,6 +316,14 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" eval="view_voucher_filter_vendor"/>
             <field name="target">current</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a purchase receipt. 
+              </p><p>
+                When the purchase receipt is confirmed, you can record the
+                supplier payment related to this purchase receipt.
+              </p>
+            </field>
         </record>
         <record id="action_purchase_receipt_tree" model="ir.actions.act_window.view">
             <field eval="1" name="sequence"/>

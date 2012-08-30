@@ -13,53 +13,53 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:35+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:21+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: project_mrp
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_procuretasktask0
 msgid "For each product, on type service and on order"
-msgstr ""
+msgstr "لكل منتج, على نوع الخدمة وعلى النظام"
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_procuretask0
 msgid "Procurement Task"
-msgstr ""
+msgstr "مهمة المشتريات"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_sale_order
 msgid "Sales Order"
-msgstr ""
+msgstr "أمر المبيعات"
 
 #. module: project_mrp
 #: field:procurement.order,sale_line_id:0
 msgid "Sale order line"
-msgstr ""
+msgstr "سطر أمر الشراء"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_createtask0
 msgid "Product type is service, then its creates the task."
-msgstr ""
+msgstr "علامة المنتج هي خدمة, وهي تنشأ المهمة."
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_procuretask0
 msgid "if product type is 'service' then it creates the task."
-msgstr ""
+msgstr "اذا كانت علامة المنتج هي ‘خدمة‘ ثم تنشأ المهمنة."
 
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+msgstr "خطأ! يجب ان يكون تاريخ انتهاء المهمة اكبر من تاريخ البداية"
 
 #. module: project_mrp
 #: model:process.node,name:project_mrp.process_node_saleordertask0
 msgid "Sale Order Task"
-msgstr ""
+msgstr "مهمة امر البيع"
 
 #. module: project_mrp
 #: model:ir.model,name:project_mrp.model_product_product
@@ -69,7 +69,7 @@ msgstr "المنتج"
 #. module: project_mrp
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "خطأ: كود إين غير صالح"
 
 #. module: project_mrp
 #: field:product.product,project_id:0
@@ -93,34 +93,81 @@ msgstr "مهمة"
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_mrptask0
 msgid "A task is created to provide the service."
-msgstr ""
+msgstr "تم انشاء المهمة لتؤدي الخدمة."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_ordertask0
 msgid "Order Task"
-msgstr ""
+msgstr "اطلب مهمة"
 
 #. module: project_mrp
 #: constraint:project.task:0
 msgid "Error ! You cannot create recursive tasks."
-msgstr ""
+msgstr "خطأ ! لا يمكنك انشاء مهام رجعية."
 
 #. module: project_mrp
 #: model:process.transition,name:project_mrp.process_transition_createtask0
 msgid "Create Task"
-msgstr ""
+msgstr "انشيء مهمة"
 
 #. module: project_mrp
 #: model:process.transition,note:project_mrp.process_transition_ordertask0
 msgid "If procurement method is Make to order and supply method is produce"
-msgstr ""
+msgstr "اذا كانت طريقة الشراء لعمل امر واسلوب العرض هو للانتاج"
 
 #. module: project_mrp
 #: model:process.node,note:project_mrp.process_node_saleordertask0
 msgid "In case you sell services on sale order"
-msgstr ""
+msgstr "في حالة قيامك ببيع الخدمات على حسب ترتيب البيع"
 
 #. module: project_mrp
 #: field:project.task,sale_line_id:0
 msgid "Sale Order Line"
-msgstr ""
+msgstr "سطر أمر الشراء"
+
+#~ msgid "Procurement and Project Management integration"
+#~ msgstr "تكامل ادارة المشروع والمشتريات"
+
+#~ msgid ""
+#~ "\n"
+#~ "This module creates a link between procurement orders\n"
+#~ "containing \"service\" lines and project management tasks.\n"
+#~ "\n"
+#~ "When installed, this module will automatically create a new task\n"
+#~ "for each procurement order line, when the corresponding product\n"
+#~ "meets the following characteristics:\n"
+#~ "  * Type = Service\n"
+#~ "  * Procurement method (Order fulfillment) = MTO (make to order)\n"
+#~ "  * Supply/Procurement method = Produce\n"
+#~ "\n"
+#~ "The new task is created outside of any existing project, but\n"
+#~ "can be added to a project manually.\n"
+#~ "\n"
+#~ "When the project task is completed or cancelled, the workflow of the "
+#~ "corresponding\n"
+#~ "procurement line is updated accordingly.\n"
+#~ "\n"
+#~ "This module is useful to be able to invoice services based on tasks\n"
+#~ "automatically created via sale orders.\n"
+#~ "\n"
+#~ msgstr ""
+#~ "\n"
+#~ "تنشأ هذه الوحدة ارتباط بين أوامر الشراء\n"
+#~ "تحتوي على \"خدمة\" خطوط ومهام إدارة المشاريع.\n"
+#~ "\n"
+#~ "عندما ركبت، وهذه الوحدة تلقائيا إنشاء مهمة جديدة\n"
+#~ "لكل المشتريات خط النظام، وعندما يكون المنتج المطابق\n"
+#~ "تجتمع الخصائص التالية:\n"
+#~ "* نوع الخدمة =\n"
+#~ "* طريقة الشراء (تلبية الطلبات) = MTO (جعل للنظام)\n"
+#~ "* التموين / المشتريات = طريقة إنتاج\n"
+#~ "\n"
+#~ "يتم إنشاء مهمة جديدة خارج أي مشروع قائم، ولكن\n"
+#~ "ويمكن أن يضاف إلى مشروع يدويا.\n"
+#~ "\n"
+#~ "عندما يتم الانتهاء من مهمة مشروع أو إلغاء، سير العمل في المناظرة\n"
+#~ "ويتم تحديث خط الشراء وفقا لذلك.\n"
+#~ "\n"
+#~ "هذا النموذج هو مفيد لتكون قادرة على فاتورة الخدمات على أساس المهام\n"
+#~ "إنشاؤه تلقائيا عن طريق أوامر بيع.\n"
+#~ "\n"

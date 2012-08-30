@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:12+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:38+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitation Type"
-msgstr ""
+msgstr "Урилгын Төрөл"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -31,7 +31,7 @@ msgstr "Үйл явдал эхлэх"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Declined Invitations"
-msgstr ""
+msgstr "Татгалзсан Урилгууд"
 
 #. module: base_calendar
 #: help:calendar.event,exdate:0
@@ -40,11 +40,13 @@ msgid ""
 "This property defines the list of date/time exceptions for a recurring "
 "calendar component."
 msgstr ""
+"Энэ үзүүлэлт нь цагалбарын давтагдах зүйлсээс хасах огноо/цагийн жагсаалтыг "
+"тодорхойлно."
 
 #. module: base_calendar
 #: constraint:res.users:0
 msgid "The chosen company is not in the allowed companies for this user"
-msgstr ""
+msgstr "Сонгосон компани энэ хэрэглэгчид зөвшөөрөгдсөн компаниуд дунд алга."
 
 #. module: base_calendar
 #: field:calendar.event,we:0
@@ -61,7 +63,7 @@ msgstr "Сар тутмын"
 #. module: base_calendar
 #: selection:calendar.attendee,cutype:0
 msgid "Unknown"
-msgstr ""
+msgstr "Мэдэгдэхгүй"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -77,7 +79,7 @@ msgstr "Урих"
 #: help:calendar.event,recurrency:0
 #: help:calendar.todo,recurrency:0
 msgid "Recurrent Meeting"
-msgstr ""
+msgstr "Давтагдах Уулзалт"
 
 #. module: base_calendar
 #: model:ir.actions.act_window,name:base_calendar.action_res_alarm_view
@@ -113,7 +115,7 @@ msgstr "4 дэх"
 #: code:addons/base_calendar/base_calendar.py:1006
 #, python-format
 msgid "Count cannot be negative"
-msgstr ""
+msgstr "Тоо сөрөг байж болохгүй"
 
 #. module: base_calendar
 #: field:calendar.event,day:0
@@ -132,7 +134,7 @@ msgstr "Нийтийн"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid " "
-msgstr ""
+msgstr " "
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -182,7 +184,7 @@ msgstr "Чөлөөтэй"
 #. module: base_calendar
 #: help:calendar.attendee,rsvp:0
 msgid "Indicats whether the favor of a reply is requested"
-msgstr ""
+msgstr "Хариултын эрхэмлэлт хүсэгдэхийг илтгэнэ"
 
 #. module: base_calendar
 #: field:calendar.alarm,alarm_id:0
@@ -192,7 +194,7 @@ msgstr "Үндсэн дохио"
 #. module: base_calendar
 #: help:calendar.attendee,delegated_to:0
 msgid "The users that the original request was delegated to"
-msgstr ""
+msgstr "Анхны хүсэлт ацаглагдсан хэрэглэгчид"
 
 #. module: base_calendar
 #: field:calendar.attendee,ref:0
@@ -236,7 +238,7 @@ msgstr "Өрөө"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Accepted Invitations"
-msgstr ""
+msgstr "Зөвшөөрөгдсөн уулзалтууд"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -255,7 +257,7 @@ msgstr "Алдаа!"
 #. module: base_calendar
 #: selection:calendar.attendee,role:0
 msgid "Chair Person"
-msgstr ""
+msgstr "Даргалах Хүн"
 
 #. module: base_calendar
 #: selection:calendar.alarm,action:0
@@ -266,7 +268,7 @@ msgstr "Хийх ажил"
 #: code:addons/base_calendar/base_calendar.py:1004
 #, python-format
 msgid "Interval cannot be negative"
-msgstr ""
+msgstr "Муж сөрөг байж болохгүй"
 
 #. module: base_calendar
 #: selection:calendar.event,state:0
@@ -278,7 +280,7 @@ msgstr "Цуцлагдсан"
 #: code:addons/base_calendar/wizard/base_calendar_invite_attendee.py:143
 #, python-format
 msgid "%s must have an email  address to send mail"
-msgstr ""
+msgstr "%s имэйл илгээхийн тулд имэйл хаяг байх ёстой"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_interval:0
@@ -299,7 +301,7 @@ msgstr "Урилгын төрөл"
 #. module: base_calendar
 #: help:calendar.attendee,state:0
 msgid "Status of the attendee's participation"
-msgstr ""
+msgstr "Оролцогчийн ирцийн төлөв"
 
 #. module: base_calendar
 #: selection:calendar.alarm,trigger_related:0
@@ -316,7 +318,7 @@ msgstr "Бүлэглэх..."
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,email:0
 msgid "Provide external email address who will receive this invitation."
-msgstr ""
+msgstr "Энэ урилгыг хүлээж авах гадаад имэйл хаягийг оруулна уу"
 
 #. module: base_calendar
 #: help:calendar.attendee,partner_id:0
@@ -360,6 +362,8 @@ msgid ""
 "If the active field is set to          true, it will allow you to hide the "
 "event alarm information without removing it."
 msgstr ""
+"Хэрэв идэвхтэй талбар нь үнэн бол энэ нь үйл явдлын сануулгыг үүнийг "
+"устгалгүйгээр нуух боломжийг олгоно."
 
 #. module: base_calendar
 #: field:base_calendar.invite.attendee,partner_id:0
@@ -415,6 +419,7 @@ msgstr "Оролцогчид"
 #, python-format
 msgid "Group by date not supported, use the calendar view instead"
 msgstr ""
+"Огноогоор бүлэглэх дэмжигдэхгүй, үүний оронд цаглабар харагдацыг хэрэглэ"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -445,7 +450,7 @@ msgstr "Дэлгэрэнгүй сануулах"
 #. module: base_calendar
 #: field:calendar.attendee,parent_ids:0
 msgid "Delegrated From"
-msgstr ""
+msgstr "Хэнээс Ацаглагдсан"
 
 #. module: base_calendar
 #: selection:calendar.event,select1:0
@@ -464,7 +469,7 @@ msgstr "Байрлал"
 #: selection:calendar.event,class:0
 #: selection:calendar.todo,class:0
 msgid "Public for Employees"
-msgstr ""
+msgstr "Ажилчдад Нээлттэй"
 
 #. module: base_calendar
 #: field:base_calendar.invite.attendee,send_mail:0
@@ -486,7 +491,7 @@ msgstr "Үйл явдлын мэдээлэл"
 #. module: base_calendar
 #: selection:calendar.alarm,state:0
 msgid "Run"
-msgstr ""
+msgstr "Ажиллуулах"
 
 #. module: base_calendar
 #: field:calendar.event,exdate:0
@@ -505,7 +510,7 @@ msgstr "Давталт хүртэл"
 msgid ""
 "Create specific calendar alarms that may be assigned to calendar events or "
 "meetings."
-msgstr ""
+msgstr "Цаглабарын үзэгдлүүд, уулзалтуудад тусгайлсан сэрүүлэгийг үүсгэх"
 
 #. module: base_calendar
 #: field:calendar.event,show_as:0
@@ -527,7 +532,7 @@ msgstr "Хариулт шаардлагатай юу?"
 #: field:calendar.event,base_calendar_url:0
 #: field:calendar.todo,base_calendar_url:0
 msgid "Caldav URL"
-msgstr ""
+msgstr "Caldav URL"
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_uid:0
@@ -556,12 +561,12 @@ msgstr "Пү"
 #. module: base_calendar
 #: field:calendar.attendee,child_ids:0
 msgid "Delegrated To"
-msgstr ""
+msgstr "Ацаглагдсан"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "To"
-msgstr ""
+msgstr "Хэнд"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -582,7 +587,7 @@ msgstr "Үүссэн"
 #. module: base_calendar
 #: sql_constraint:ir.model:0
 msgid "Each model must be unique!"
-msgstr ""
+msgstr "Модуль бүр үл давхцах байх ёстой!"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -594,7 +599,7 @@ msgstr "Өдөр тутмын"
 #: field:calendar.event,class:0
 #: field:calendar.todo,class:0
 msgid "Mark as"
-msgstr ""
+msgstr "Болгож тэмдэглэх"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -606,7 +611,7 @@ msgstr "Гэрээ"
 #: help:calendar.event,rrule_type:0
 #: help:calendar.todo,rrule_type:0
 msgid "Let the event automatically repeat at that interval"
-msgstr ""
+msgstr "Энэ  интервалд үйл явдлыг автоматаар давтах"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -662,7 +667,7 @@ msgstr "12 сар"
 #. module: base_calendar
 #: help:base_calendar.invite.attendee,send_mail:0
 msgid "Check this if you want to send an Email to Invited Person"
-msgstr ""
+msgstr "Уригдсан хүмүүст имэйл илгээх бол үүнийг тэмдэглэ"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -678,7 +683,7 @@ msgstr "Хувийн"
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 msgid "Repeat x times"
-msgstr ""
+msgstr "x удаа давтах"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -769,7 +774,7 @@ msgstr "Гишүүн"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "From"
-msgstr ""
+msgstr "Хэнээс"
 
 #. module: base_calendar
 #: field:calendar.event,rrule:0
@@ -833,7 +838,7 @@ msgstr "Давтах"
 msgid ""
 "Reference to the URIthat points to the directory information corresponding "
 "to the attendee."
-msgstr ""
+msgstr "URL-н сурвалж. ирцийн мэдээллийг агуулах директор руу заасан URL."
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -850,7 +855,7 @@ msgstr "Даваа"
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_ir_model
 msgid "Models"
-msgstr ""
+msgstr "Модел"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -869,7 +874,7 @@ msgstr "Үйл явцын огноо"
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 msgid "Number of repetitions"
-msgstr ""
+msgstr "Давтах Тоо"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -902,7 +907,7 @@ msgstr "11 сар"
 #. module: base_calendar
 #: help:calendar.attendee,member:0
 msgid "Indicate the groups that the attendee belongs to"
-msgstr ""
+msgstr "Оролцогсдын харъяалагдах группүүд"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -913,7 +918,7 @@ msgstr "Өгөгдөл"
 #: field:calendar.event,end_type:0
 #: field:calendar.todo,end_type:0
 msgid "Recurrence termination"
-msgstr ""
+msgstr "Давталтын төгсгөл"
 
 #. module: base_calendar
 #: field:calendar.event,mo:0
@@ -924,7 +929,7 @@ msgstr "Да"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Invitations To Review"
-msgstr ""
+msgstr "Дахин шалгах Урилгууд"
 
 #. module: base_calendar
 #: selection:calendar.event,month_list:0
@@ -958,7 +963,7 @@ msgstr "1 сар"
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Delegated Invitations"
-msgstr ""
+msgstr "Ацагласан Урилгууд"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_interval:0
@@ -990,12 +995,12 @@ msgstr "Идэвхитэй"
 #: code:addons/base_calendar/base_calendar.py:389
 #, python-format
 msgid "You cannot duplicate a calendar attendee."
-msgstr ""
+msgstr "Цаглабарын ирцыг хувилж болохгүй"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day in the month where repeat the meeting"
-msgstr ""
+msgstr "Уулзалтыг давтахын тулд сарын өдөрийг сонгоно уу"
 
 #. module: base_calendar
 #: field:calendar.alarm,action:0
@@ -1014,16 +1019,18 @@ msgid ""
 "Duration' and 'Repeat' are both optional, but if one occurs, so MUST the "
 "other"
 msgstr ""
+"'Үргэлжлэх хугацаа' болон 'Давталт' аль аль нь албагүй боловч нэгийг нь "
+"оруулбал нөгөөг нь заавал оруулна"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
 msgid "Required to Join"
-msgstr ""
+msgstr "Холбогдох Шаардлагатай"
 
 #. module: base_calendar
 #: help:calendar.attendee,role:0
 msgid "Participation role for the calendar user"
-msgstr ""
+msgstr "Цаглабарын хэрэглэгчийн оролцох дүр"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -1034,13 +1041,13 @@ msgstr "рүү шилжүүлэх"
 #. module: base_calendar
 #: help:calendar.alarm,action:0
 msgid "Defines the action to be invoked when an alarm is triggered"
-msgstr ""
+msgstr "Сэрүүлэг ажиллахад хийгдэх үйлдлийг тодорхойл"
 
 #. module: base_calendar
 #: selection:calendar.event,end_type:0
 #: selection:calendar.todo,end_type:0
 msgid "End date"
-msgstr ""
+msgstr "Дуусах огноо"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1050,7 +1057,7 @@ msgstr "Үйл явдал хайх"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency Option"
-msgstr ""
+msgstr "Давтах Сонголт"
 
 #. module: base_calendar
 #: selection:calendar.event,rrule_type:0
@@ -1065,6 +1072,7 @@ msgid ""
 "If the active field is set to true, it will allow you to hide the event "
 "alarm information without removing it."
 msgstr ""
+"Идэвхтэй талбар нь тэмдэглэгдсэн бол сэрүүлэгийг устгахгүйгээр нуудаг."
 
 #. module: base_calendar
 #: field:calendar.event,recurrent_id:0
@@ -1075,7 +1083,7 @@ msgstr "ID давтагдсан огноо"
 #. module: base_calendar
 #: sql_constraint:res.users:0
 msgid "You can not have two users with the same login !"
-msgstr ""
+msgstr "Ижил нэвтрэх нэртэй хоёр хэрэглэгч байж болохгүй!"
 
 #. module: base_calendar
 #: field:calendar.alarm,state:0
@@ -1106,7 +1114,7 @@ msgstr "Дууссан"
 #: help:calendar.event,interval:0
 #: help:calendar.todo,interval:0
 msgid "Repeat every (Days/Week/Month/Year)"
-msgstr ""
+msgstr "(Өдөр/Долооног/Сар/Жил) тутам давтах"
 
 #. module: base_calendar
 #: view:base_calendar.invite.attendee:0
@@ -1138,6 +1146,7 @@ msgid ""
 "calendar component, than that                             provided by the "
 "\"SUMMARY\" property"
 msgstr ""
+"\"Товчоо\" үзүүлэлтээр өгөгдөх цаглабарын илүү гүйцэд тодорхойлолтыг өгдөг."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1170,13 +1179,13 @@ msgstr "Шалгуур"
 #: field:calendar.event,interval:0
 #: field:calendar.todo,interval:0
 msgid "Repeat every"
-msgstr ""
+msgstr "Тутамд давтах"
 
 #. module: base_calendar
 #: field:calendar.event,recurrency:0
 #: field:calendar.todo,recurrency:0
 msgid "Recurrent"
-msgstr ""
+msgstr "Давтагдах"
 
 #. module: base_calendar
 #: help:calendar.event,location:0
@@ -1206,7 +1215,7 @@ msgstr "Онцгой үүрэг"
 #: help:calendar.attendee,language:0
 msgid ""
 "To specify the language for text values in aproperty or property parameter."
-msgstr ""
+msgstr "aproperty эсвэл property параметрийн текст утгын хэлийг зааж өгөх."
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1219,7 +1228,7 @@ msgstr "Нарийвчлал"
 msgid ""
 "Defines a rule or repeating pattern of time to exclude from the recurring "
 "rule."
-msgstr ""
+msgstr "Давтах дүрмээс ялгах хугацааны давталтын дүрмийг тодохойлно."
 
 #. module: base_calendar
 #: field:calendar.event,month_list:0
@@ -1236,7 +1245,7 @@ msgstr "Хүмүүсийг урих"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Confirmed Events"
-msgstr ""
+msgstr "Батлагдсан Үйл Явдлууд"
 
 #. module: base_calendar
 #: field:calendar.attendee,dir:0
@@ -1306,7 +1315,7 @@ msgstr "Бя"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Choose day where repeat the meeting"
-msgstr ""
+msgstr "Уулзалтыг давтах өдөрийг сонго"
 
 #. module: base_calendar
 #: field:calendar.alarm,trigger_related:0
@@ -1317,7 +1326,7 @@ msgstr "Холбоотой"
 #. module: base_calendar
 #: help:calendar.attendee,sent_by:0
 msgid "Specify the user that is acting on behalf of the calendar user"
-msgstr ""
+msgstr "Цаглабарын хэрэглэгчээр хагаслан ажиллах хэрэглэгчийг зааж өгнө үү"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1376,7 +1385,7 @@ msgstr "4 сар"
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Recurrency period"
-msgstr ""
+msgstr "Давтах хугацааны муж"
 
 #. module: base_calendar
 #: field:calendar.event,week_list:0
@@ -1430,7 +1439,7 @@ msgstr "Нөөцийн дугаар"
 #: code:addons/base_calendar/base_calendar.py:418
 #, python-format
 msgid "Couldn't Invite because date is not specified!"
-msgstr ""
+msgstr "Огноо заагдаагүй учир урьж чадахгүй!"
 
 #. module: base_calendar
 #: field:calendar.attendee,sent_by:0
@@ -1514,6 +1523,11 @@ msgid ""
 "                    * Points to a procedure resource, which is invoked when  "
 "                    the alarm is triggered for procedure."
 msgstr ""
+"* Нөөцөд дуут дохио өгөх цэгүүд,                     эдгээр нь сэрүүлэг "
+"болоход дугарах дуу бичлэгүүд,\n"
+"                    * Имэйлийн хувьд хавралт илгээгдэх файл,\n"
+"                    * Нөөцөд процедур дуудах цэгүүд, эдгээр нь сэрүүлэг "
+"болоход дуудагдах процедурууд."
 
 #. module: base_calendar
 #: selection:calendar.event,byday:0
@@ -1581,3 +1595,6 @@ msgstr "5 дахь"
 
 #~ msgid "Months"
 #~ msgstr "Сар"
+
+#~ msgid "End of recurrency"
+#~ msgstr "Давталтын төгсгөл"

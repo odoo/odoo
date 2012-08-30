@@ -59,15 +59,16 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('open', 'Open'), ('close', 'Closed'), ('cancel', 'Cancelled')], 'Status', readonly=True),
+        'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
         'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
-        'send_response': fields.boolean('E-mail Notification on Answer'),
+        'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
+        'color': fields.integer('Color Index'),
         'invited_user_ids': fields.many2many('res.users', 'survey_invited_user_rel', 'sid', 'uid', 'Invited User'),
     }
     _defaults = {
@@ -142,6 +143,17 @@ class survey(osv.osv):
                 'nodestroy':True,
             }
         return report
+    
+    def fill_survey(self, cr, uid, ids, context=None):
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'context': {'survey_id': ids[0]}
+        }
+
 survey()
 
 class survey_history(osv.osv):
@@ -166,7 +178,7 @@ class survey_page(osv.osv):
     _columns = {
         'title': fields.char('Page Title', size=128, required=1),
         'survey_id': fields.many2one('survey', 'Survey', ondelete='cascade'),
-        'question_ids': fields.one2many('survey.question', 'page_id', 'Question'),
+        'question_ids': fields.one2many('survey.question', 'page_id', 'Questions'),
         'sequence': fields.integer('Page Nr'),
         'note': fields.text('Description'),
     }
@@ -367,7 +379,7 @@ class survey_question(osv.osv):
             if que_type in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans',\
                              'matrix_of_drop_down_menus', 'rating_scale']:
                 if not col_len:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more column heading."))
+                    raise osv.except_osv(_('Warning!'),_("You must enter one or more column headings."))
             ans_len = len(question['answer_choice_ids'])
 
             if vals.has_key('answer_choice_ids'):
@@ -379,7 +391,7 @@ class survey_question(osv.osv):
 
             if que_type not in ['descriptive_text', 'single_textbox', 'comment','table']:
                 if not ans_len:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more Answer."))
+                    raise osv.except_osv(_('Warning!'),_("You must enter one or more Answers."))
             req_type = ""
 
             if vals.has_key('required_type'):
@@ -393,12 +405,12 @@ class survey_question(osv.osv):
                 if req_type in ['at least', 'at most', 'exactly']:
                     if vals.has_key('req_ans'):
                         if not vals['req_ans'] or  vals['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("#Required Answer you entered \
+                            raise osv.except_osv(_('Warning!'),_("#Required Answer you entered \
                                     is greater than the number of answer. \
                                     Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         if not question['req_ans'] or  question['req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("#Required Answer you entered is \
+                            raise osv.except_osv(_('Warning!'),_("#Required Answer you entered is \
                                     greater than the number of answer.\
                                     Please use a number that is smaller than %d.") % (ans_len + 1))
 
@@ -408,40 +420,40 @@ class survey_question(osv.osv):
                     if vals.has_key('minimum_req_ans'):
                         minimum_ans = vals['minimum_req_ans']
                         if not vals['minimum_req_ans'] or  vals['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("Minimum Required Answer\
+                            raise osv.except_osv(_('Warning!'),_("Minimum Required Answer\
                                      you entered is greater than the number of answer.\
                                     Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         minimum_ans = question['minimum_req_ans']
                         if not question['minimum_req_ans'] or  question['minimum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("Minimum Required Answer you\
+                            raise osv.except_osv(_('Warning!'),_("Minimum Required Answer you\
                                      entered is greater than the number of answer. \
                                      Please use a number that is smaller than %d.") % (ans_len + 1))
                     if vals.has_key('maximum_req_ans'):
                         maximum_ans = vals['maximum_req_ans']
                         if not vals['maximum_req_ans'] or vals['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("Maximum Required Answer you \
+                            raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you \
                                     entered for your maximum is greater than the number of answer.\
                                      Please use a number that is smaller than %d.") % (ans_len + 1))
                     else:
                         maximum_ans = question['maximum_req_ans']
                         if not question['maximum_req_ans'] or question['maximum_req_ans'] > ans_len:
-                            raise osv.except_osv(_('Warning !'),_("Maximum Required Answer you\
+                            raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you\
                                      entered for your maximum is greater than the number of answer.\
                                       Please use a number that is smaller than %d.") % (ans_len + 1))
                     if maximum_ans <= minimum_ans:
-                        raise osv.except_osv(_('Warning !'),_("Maximum Required Answer is greater \
+                        raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater \
                                     than Minimum Required Answer"))
 
             if question['type'] ==  'matrix_of_drop_down_menus' and vals.has_key('column_heading_ids'):
                 for col in vals['column_heading_ids']:
                     if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                        raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices\
-                                 in column heading"))
+                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices\
+                                 in column heading."))
                     elif not col[2] or not col[2].has_key('menu_choice') or\
                              col[2]['menu_choice'].strip() == '':
-                        raise osv.except_osv(_('Warning !'),_("You must enter one or more menu \
-                                choices in column heading (white spaces not allowed)"))
+                        raise osv.except_osv(_('Warning!'),_("You must enter one or more menu \
+                                choices in column heading (white spaces not allowed)."))
 
         return super(survey_question, self).write(cr, uid, ids, vals, context=context)
 
@@ -450,33 +462,33 @@ class survey_question(osv.osv):
         maximum_ans = 0
         if vals.has_key('answer_choice_ids') and  not len(vals['answer_choice_ids']):
             if vals.has_key('type') and vals['type'] not in ['descriptive_text', 'single_textbox', 'comment','table']:
-                raise osv.except_osv(_('Warning !'),_("You must enter one or more answer."))
+                raise osv.except_osv(_('Warning!'),_("You must enter one or more answers."))
 
         if vals.has_key('column_heading_ids') and  not len(vals['column_heading_ids']):
             if vals.has_key('type') and vals['type'] in ['matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale']:
-                raise osv.except_osv(_('Warning !'),_("You must enter one or more column heading."))
+                raise osv.except_osv(_('Warning!'),_("You must enter one or more column heading."))
 
         if vals['type'] in ['multiple_choice_multiple_ans','matrix_of_choices_only_one_ans', 'matrix_of_choices_only_multi_ans', 'matrix_of_drop_down_menus', 'rating_scale','multiple_textboxes','numerical_textboxes','date','date_and_time']:
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] in ['at least', 'at most', 'exactly']:
                 if vals.has_key('answer_choice_ids') and vals['req_ans'] > len(vals['answer_choice_ids']) or not vals['req_ans']:
-                    raise osv.except_osv(_('Warning !'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Warning!'),_("#Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
 
             if vals.has_key('is_require_answer') and vals.has_key('required_type') and vals['required_type'] == 'a range':
                 minimum_ans = vals['minimum_req_ans']
                 maximum_ans = vals['maximum_req_ans']
                 if vals.has_key('answer_choice_ids') or vals['minimum_req_ans'] > len(vals['answer_choice_ids']) or not vals['minimum_req_ans']:
-                    raise osv.except_osv(_('Warning !'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Warning!'),_("Minimum Required Answer you entered is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
                 if vals.has_key('answer_choice_ids') or vals['maximum_req_ans'] > len(vals['answer_choice_ids']) or not vals['maximum_req_ans']:
-                    raise osv.except_osv(_('Warning !'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
+                    raise osv.except_osv(_('Warning!'),_("Maximum Required Answer you entered for your maximum is greater than the number of answer. Please use a number that is smaller than %d.") % (len(vals['answer_choice_ids'])+1))
                 if maximum_ans <= minimum_ans:
-                    raise osv.except_osv(_('Warning !'),_("Maximum Required Answer is greater than Minimum Required Answer"))
+                    raise osv.except_osv(_('Warning!'),_("Maximum Required Answer is greater than Minimum Required Answer."))
 
         if vals['type'] ==  'matrix_of_drop_down_menus':
             for col in vals['column_heading_ids']:
                 if not col[2] or not col[2].has_key('menu_choice') or not col[2]['menu_choice']:
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading"))
+                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading."))
                 elif not col[2] or not col[2].has_key('menu_choice') or col[2]['menu_choice'].strip() == '':
-                    raise osv.except_osv(_('Warning !'),_("You must enter one or more menu choices in column heading (white spaces not allowed)"))
+                    raise osv.except_osv(_('Warning!'),_("You must enter one or more menu choices in column heading (white spaces not allowed)."))
 
         res = super(survey_question, self).create(cr, uid, vals, context)
         return res
@@ -627,7 +639,7 @@ class survey_response(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_('Warning !'),_('You cannot duplicate the resource!'))
+        raise osv.except_osv(_('Warning!'),_('You cannot duplicate the resource!'))
 
 survey_response()
 
@@ -699,10 +711,10 @@ class survey_request(osv.osv):
     _columns = {
         'date_deadline': fields.date("Deadline date"),
         'user_id': fields.many2one("res.users", "User"),
-        'email': fields.char("E-mail", size=64),
+        'email': fields.char("Email", size=64),
         'survey_id': fields.many2one("survey", "Survey", required=1, ondelete='cascade'),
         'response': fields.many2one('survey.response', 'Answer'),
-        'state': fields.selection([('draft','Draft'),('waiting_answer', 'Waiting Answer'),('done', 'Done'),('cancel', 'Cancelled')], 'State', readonly=1)
+        'state': fields.selection([('draft','Draft'),('cancel', 'Cancelled'),('waiting_answer', 'Waiting Answer'),('done', 'Done')], 'Status', readonly=1)
     }
     _defaults = {
         'state': lambda * a: 'draft',
@@ -728,7 +740,7 @@ class survey_request(osv.osv):
         if user_id:
             user_obj = self.pool.get('res.users')
             user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.user_email}}
+            return {'value': {'email': user.email}}
         return {}
 
 survey_request()

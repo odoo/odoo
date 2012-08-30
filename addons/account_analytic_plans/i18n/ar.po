@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:19+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -92,7 +92,7 @@ msgstr "رقم الحساب2"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -105,6 +105,8 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية "
+"أيضأً."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -129,17 +131,17 @@ msgstr "خط بيان البنك"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "عريف خططك التحليلية"
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "خطأ في إتصال قاعدة البيانات"
 
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "يجب أن يكون اليومية و الفترة مرتبطين لشركة واحدة."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -147,6 +149,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
+"اليومية."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -249,6 +253,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
+"الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -278,7 +284,7 @@ msgstr "خط مقترح تحليلي"
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
 msgid "Root Account"
-msgstr ""
+msgstr "حساب رئيسي"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -305,7 +311,7 @@ msgstr "التحليلي.الخطة.انشأ.نموذج_خطط"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "خط تحليلي"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -363,7 +369,7 @@ msgstr "احفظ ذلك التوزيع كنموذج"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "لا يمكنك إنشاء عناصري يومية علي حساب من نوع ’عرض’."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -406,7 +412,7 @@ msgstr "رقم  الحساب3"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -427,7 +433,7 @@ msgstr "رقم  الحساب4"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "لشركة يجب أن تكون هي نفسها لحساباتها و فترتها."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -513,11 +519,13 @@ msgid ""
 "analytic accounts for each plan set. Then, you must attach a plan set to "
 "your account journals."
 msgstr ""
+"لإعداد بيئة خطط تحليلية متعددة، يجب عليك تعريف الحسابات التحليلية الرئيسية "
+"لكل مجموعة الخطة. ثم، يجب إرفاق مجموعة الخطة ليومية الحسابات."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -551,3 +559,70 @@ msgstr "خطأ القيمة"
 
 #~ msgid "You can not create move line on view account."
 #~ msgstr "لا يمكن إنشاء خط متحرك على عرض الحساب."
+
+#~ msgid ""
+#~ "This module allows to use several analytic plans, according to the general "
+#~ "journal,\n"
+#~ "so that multiple analytic lines are created when the invoice or the entries\n"
+#~ "are confirmed.\n"
+#~ "\n"
+#~ "For example, you can define the following analytic structure:\n"
+#~ "  Projects\n"
+#~ "      Project 1\n"
+#~ "          SubProj 1.1\n"
+#~ "          SubProj 1.2\n"
+#~ "      Project 2\n"
+#~ "  Salesman\n"
+#~ "      Eric\n"
+#~ "      Fabien\n"
+#~ "\n"
+#~ "Here, we have two plans: Projects and Salesman. An invoice line must\n"
+#~ "be able to write analytic entries in the 2 plans: SubProj 1.1 and\n"
+#~ "Fabien. The amount can also be split. The following example is for\n"
+#~ "an invoice that touches the two subproject and assigned to one salesman:\n"
+#~ "\n"
+#~ "Plan1:\n"
+#~ "    SubProject 1.1 : 50%\n"
+#~ "    SubProject 1.2 : 50%\n"
+#~ "Plan2:\n"
+#~ "    Eric: 100%\n"
+#~ "\n"
+#~ "So when this line of invoice will be confirmed, it will generate 3 analytic "
+#~ "lines,\n"
+#~ "for one account entry.\n"
+#~ "The analytic plan validates the minimum and maximum percentage at the time "
+#~ "of creation\n"
+#~ "of distribution models.\n"
+#~ "        "
+#~ msgstr ""
+#~ "يسمح هذا النموذج لاستخدام خطط تحليلية عدة، وفقا لليومية العامة،\n"
+#~ "بحيث يتم إنشاء خطوط تحليلية متعددة عند الفاتورة أو الإدخالات\n"
+#~ "المؤكدة.\n"
+#~ "\n"
+#~ "على سبيل المثال، يمكنك تحديد هيكل تحليلي التالية:\n"
+#~ "المشاريع\n"
+#~ "المشروع 1\n"
+#~ "المشروع 1.1\n"
+#~ "المشروع1.2\n"
+#~ "المشروع (2)\n"
+#~ "بائع\n"
+#~ "إيريك\n"
+#~ "فابيان\n"
+#~ "\n"
+#~ "هنا، لدينا خطتين: مشاريع وبائع متجول. ويجب على خط فاتورة\n"
+#~ "أن يكون قادرا على كتابة القيود التحليلية في الخطط 2: SubProj 1.1 و\n"
+#~ "فابيان. ويمكن أيضا أن يتم تقسيم المبلغ. المثال التالي هو\n"
+#~ "للفاتورة التي تتصل بـ المشروعيين الفرعين وتعيين مندوب مبيعات:\n"
+#~ "n1:\n"
+#~ "الفرعي 1.1: 50٪\n"
+#~ "الفرعي 1.2: 50٪\n"
+#~ "الخطة2:\n"
+#~ "إيريك: 100%\n"
+#~ "\n"
+#~ "لذلك عندما سيتم تأكيد هذا الخط من الفاتورة، فإنه سيتم إنشاء 3 خطوط "
+#~ "التحليلية،\n"
+#~ "لدخول حساب واحد.\n"
+#~ "خطة تحليلية بالتحقق من صحة نسبة الحد الأدنى والحد الأقصى في ذلك الوقت من "
+#~ "خلق\n"
+#~ "نماذج التوزيع.\n"
+#~ "        "

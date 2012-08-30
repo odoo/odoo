@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:08+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:40+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: purchase_requisition
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Odnośnik zamowienia musi być unikalny w firmie!"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -37,7 +37,7 @@ msgstr ""
 #. module: purchase_requisition
 #: view:purchase.order:0
 msgid "Requisition"
-msgstr ""
+msgstr "Zlecenie"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -64,7 +64,7 @@ msgstr "Stan"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Purchase Requisition in negociation"
-msgstr ""
+msgstr "Zlecenie w negocjacjach"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -75,7 +75,7 @@ msgstr "Dostawca"
 #: view:purchase.requisition:0
 #: selection:purchase.requisition,state:0
 msgid "New"
-msgstr ""
+msgstr "Nowe"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -86,7 +86,7 @@ msgstr "Szczegóły produktu"
 #: report:purchase.requisition:0
 #: field:purchase.requisition,date_start:0
 msgid "Requisition Date"
-msgstr ""
+msgstr "Data zlecenia"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition_partner
@@ -99,12 +99,12 @@ msgstr ""
 #: field:purchase.requisition.line,requisition_id:0
 #: view:purchase.requisition.partner:0
 msgid "Purchase Requisition"
-msgstr ""
+msgstr "Zlecenie zakupu"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_line
 msgid "Purchase Requisition Line"
-msgstr ""
+msgstr "Pozycja zlecenia zakupu"
 
 #. module: purchase_requisition
 #: view:purchase.order:0
@@ -139,7 +139,7 @@ msgstr ""
 #: code:addons/purchase_requisition/purchase_requisition.py:136
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Ostrzeżenie"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -186,7 +186,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_user
 msgid "User"
-msgstr ""
+msgstr "Użytkownik"
 
 #. module: purchase_requisition
 #: field:purchase.requisition.partner,partner_address_id:0
@@ -207,6 +207,10 @@ msgid ""
 "negotiation, once you have reviewed all the supplier's offers, you can "
 "validate some and cancel others."
 msgstr ""
+"Zlecenie zakupu jest krokiem przed zapytaniem ofertowym. W zleceniu zakupu "
+"możesz umieścić produkty, które chcesz zakupić i uruchomić zapytania "
+"ofertowe do dostawców. Po negocjacjach, kiedy przejrzysz oferty dostawców, "
+"możesz zatwierdzić część z nich, a inne anulować."
 
 #. module: purchase_requisition
 #: field:purchase.requisition.line,product_qty:0
@@ -216,13 +220,13 @@ msgstr "Ilość"
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Unassigned  Requisition"
-msgstr ""
+msgstr "Nieprzypisane zlecenia"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Purchase Requisitions"
-msgstr ""
+msgstr "Zlecenia zakupu"
 
 #. module: purchase_requisition
 #: code:addons/purchase_requisition/purchase_requisition.py:136
@@ -231,6 +235,8 @@ msgid ""
 "You have already one %s purchase order for this partner, you must cancel "
 "this purchase order to create a new quotation."
 msgstr ""
+"Masz już jedno %s zamówienie zakupu dla tego partnera. Musisz najpierw "
+"anulować to zamówienie zakupu, aby utworzyć ofertę."
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -241,7 +247,7 @@ msgstr "Data końcowa"
 #: report:purchase.requisition:0
 #: field:purchase.requisition,name:0
 msgid "Requisition Reference"
-msgstr ""
+msgstr "Odnośnik zlecenia"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,line_ids:0
@@ -251,12 +257,12 @@ msgstr "Produkty do zakupienia"
 #. module: purchase_requisition
 #: field:purchase.requisition,date_end:0
 msgid "Requisition Deadline"
-msgstr ""
+msgstr "Termin zlecenia"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "Search Purchase Requisition"
-msgstr ""
+msgstr "Szukaj zlecenia zakupu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -293,17 +299,17 @@ msgstr "Zamówienie Zakupu"
 #: code:addons/purchase_requisition/wizard/purchase_requisition_partner.py:42
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Błąd!"
 
 #. module: purchase_requisition
 #: field:purchase.requisition,exclusive:0
 msgid "Requisition Type"
-msgstr ""
+msgstr "Typ zlecenia"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
 msgid "New Purchase Requisition"
-msgstr ""
+msgstr "Nowe zlecenie zakupu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -333,7 +339,7 @@ msgstr ""
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_partner
 msgid "Purchase Requisition Partner"
-msgstr ""
+msgstr "Partner zlecenia akupu"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0
@@ -348,7 +354,7 @@ msgstr "Szczegóły oferty"
 #. module: purchase_requisition
 #: report:purchase.requisition:0
 msgid "Purchase for Requisitions"
-msgstr ""
+msgstr "Zamówienia dla zlecenia"
 
 #. module: purchase_requisition
 #: model:ir.actions.act_window,name:purchase_requisition.act_res_partner_2_purchase_order
@@ -380,7 +386,7 @@ msgstr "Magazyn"
 #. module: purchase_requisition
 #: field:procurement.order,requisition_id:0
 msgid "Latest Requisition"
-msgstr ""
+msgstr "Ostatnie zlecenie"
 
 #. module: purchase_requisition
 #: report:purchase.requisition:0
@@ -395,12 +401,12 @@ msgstr ""
 #. module: purchase_requisition
 #: model:res.groups,name:purchase_requisition.group_purchase_requisition_manager
 msgid "Manager"
-msgstr ""
+msgstr "Menedżer"
 
 #. module: purchase_requisition
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Błąd: Niedozwolony kod EAN"
 
 #. module: purchase_requisition
 #: view:purchase.requisition:0

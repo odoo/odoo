@@ -5,68 +5,99 @@
         <record id="product_search_form_view_stock" model="ir.ui.view">
             <field name="name">product.search.stock.form</field>
             <field name="model">product.product</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="product.product_search_form_view"/>
             <field name="arch" type="xml">
-                   <field name="pricelist_id" position="before">
-                       <field name="location_id" widget="selection" context="{'location': self}"/>
-                       <field name="warehouse_id" widget="selection" context="{'warehouse': self}"/>
-                       <separator orientation="vertical"/>
-                   </field>
+                <field name="pricelist_id" position="before">
+                    <field name="location_id" context="{'location': self}"/>
+                    <field name="warehouse_id" context="{'warehouse': self}"/>
+                </field>
             </field>
         </record>
 
         <record id="view_category_property_form" model="ir.ui.view">
             <field name="name">product.category.stock.property.form.inherit</field>
             <field name="model">product.category</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_category_form_view"/>
             <field name="arch" type="xml">
-                <form position="inside">
-                    <group col="2" colspan="2">
-                        <separator string="Accounting Stock Properties" colspan="2"/>
+                <data>
+                    <xpath expr="/form/sheet//group[@name='account_stock_property']" position="inside">
                         <field name="property_stock_account_input_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_account_output_categ" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_valuation_account_id" domain="[('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
                         <field name="property_stock_journal"/>
-                    </group>
-                </form>
+                    </xpath>
+                </data>
             </field>
         </record>
 
         <record id="view_template_property_form" model="ir.ui.view">
             <field name="name">product.template.stock.property.form.inherit</field>
             <field name="model">product.template</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
                 <page position="after" string="Information">
                     <page string="Properties">
-                        <separator string="Counter-Part Locations Properties" groups="stock.group_locations" colspan="4"/>
-                        <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
-                        <separator string="Accounting Entries" colspan="4"/>
-                        <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                        <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        <group string="Counter-Part Locations Properties" groups="stock.group_locations">
+                            <field name="property_stock_procurement" domain="[('usage','=','procurement')]"/>
+                            <field name="property_stock_production" domain="[('usage','=','production')]"/>
+                            <field name="property_stock_inventory" domain="[('usage','=','inventory')]"/>
+                        </group>
+                        <group string="Accounting Entries">
+                            <field name="property_stock_account_input" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                            <field name="property_stock_account_output" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
+                        </group>
                     </page>
                 </page>
+            </field>
+        </record>
+        
+        <record id="view_normal_procurement_locations_form" model="ir.ui.view">
+            <field name="name">product.normal.procurement.locations.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Procurement &amp; Locations" groups="base.group_user">
+                                <group>
+                                    <group name="delay" string="Delays">
+                                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                                        <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="warranty"/>
+                                    </group>
+                                    <group name="store" string="Storage Localisation">
+                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
+                                    </group>
+                                    <group name="store" groups="stock.group_locations">
+				                        <separator string="Counter-Part Locations Properties" colspan="2"/>
+				                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+				                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+				                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+				                    </group>
+                                    <group name="misc" string="Miscellaneous">
+                                        <field name="active"/>
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    </group>
+                                </group>
+                            </page>
+                </notebook>
             </field>
         </record>
 
         <record id="view_product_standard_price_form" model="ir.ui.view">
             <field name="name">product.product.standard.price.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="standard_price" position="replace">
-                    <label string="Cost Price" for="standard_price" align="1.0"/>
-                    <group col="2" colspan="1">
-                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
-                        <button name="%(action_view_change_standard_price)d" string="Update"
-                            type="action" icon="gtk-execute" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"/>
-                    </group>
+                <field name="standard_price" position="replace" version="7.0">
+                    <label string="Cost Price" for="standard_price" align="1.0" groups="base.group_user"/>
+                    <div groups="base.group_user">
+                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/> - 
+                        <button name="%(action_view_change_standard_price)d" string="update"
+                            type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
+                            class="oe_link"/>
+                    </div>
                 </field>
             </field>
         </record>
@@ -74,20 +105,19 @@
         <record id="view_normal_property_acc_form" model="ir.ui.view">
             <field name="name">product.normal.stock.acc.property.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="priority">26</field>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/group[@name='properties']" position="before">
+                <xpath expr="//group[@name='properties']" position="before">
                     <group groups="stock.group_inventory_valuation">
                         <separator string="Inventory Valuation" colspan="4"/>
                         <group colspan="2" col="2">
                             <field name="valuation" attrs="{'readonly':[('type', '=', 'service')]}"/>
                         </group>
                         <group colspan="2" col="2">
-                            <field name="property_stock_account_input" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_input" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="property_stock_account_output" attrs="{'readonly':[('valuation', '!=', 'real_time')]}"
+                            <field name="property_stock_account_output" attrs="{'invisible':[('valuation', '!=', 'real_time')]}"
                                 domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                         </group>
                     </group>
@@ -99,25 +129,24 @@
         <record id="view_normal_stock_property_form" model="ir.ui.view">
             <field name="name">product.normal.stock.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="status" position="after">
-                    <group colspan="2" col="3">
-                        <separator string="Stocks" colspan="4"/>
-                        <field name="qty_available"/>
-                        <button name="%(action_view_change_product_quantity)d" string="Update" attrs="{'invisible': [('type', '=', 'service')]}"
-                            type="action" icon="gtk-execute" groups="stock.group_stock_manager,stock.group_stock_user"/>
-                        <newline/>
-                        <field name="virtual_available"/>
+                <group name="status" position="before" version="7.0">
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}">
+                        <label for="qty_available"/>
+                        <div>
+                            <field name="qty_available" class="oe_inline"/>
+                            <button name="%(action_view_change_product_quantity)d" string="update"
+                                type="action" groups="stock.group_stock_manager,stock.group_stock_user"
+                                class="oe_link"/>
+                        </div>
+                        <label for="virtual_available" groups="base.group_user"/>
+                        <div groups="base.group_user">
+                            <field name="virtual_available" class="oe_inline"/>
+                            (+<field name="incoming_qty" class="oe_inline"/> -<field name="outgoing_qty" class="oe_inline"/>)
+                        </div>
                     </group>
-                    <group colspan="2" col="2" name="stock_variations">
-                        <separator string="Expected Stock Variations" colspan="2"/>
-                        <field name="incoming_qty"/>
-                        <field name="outgoing_qty"/>
-                    </group>
-                    <group colspan="2" col="2" name="lot" groups="stock.group_tracking_lot,stock.group_production_lot">
-                        <separator string="Lots" colspan="4"/>
+                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
                         <field name="track_production" groups="stock.group_production_lot"/>
                         <field name="track_incoming" groups="stock.group_tracking_lot"/>
                         <field name="track_outgoing" groups="stock.group_tracking_lot"/>
@@ -126,31 +155,83 @@
             </field>
         </record>
 
+        <record id="action_receive_move" model="ir.actions.act_window">
+            <field name="name">Receptions</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_id.type','=','in')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a reception for this product. 
+              </p><p>
+                Here you will find the history of all receptions related to
+                this product, as well as all future receptions you are waiting
+                from your suppliers.
+              </p>
+            </field>
+        </record>
+
+        <record id="action_deliver_move" model="ir.actions.act_window">
+            <field name="name">Deliveries</field>
+            <field name="res_model">stock.move</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[('picking_id.type','=','out')]</field>
+            <field name="view_id" ref="view_move_tree_reception_picking"/>
+            <field name="context" eval="'{\'search_default_product_id\': [active_id]}'"/>
+            <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a delivery order for this product.
+              </p><p>
+                Here you will find the history of all past deliveries related to
+                this product, as well as all the products you must deliver to
+                customers.
+              </p>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="product_image"/>
+                    <field name="image_medium"/>
                     <field name="list_price"/>
+                    <field name="reception_count"/>
+                    <field name="delivery_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_product_vignette">
                                 <div class="oe_product_img">
-                                <a type="edit"><img t-att-src="kanban_image('product.product', 'product_image', record.id.value)" class="oe_product_photo"/></a>
+                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
                                 </div>
                                 <div class="oe_product_desc">
-                                    <h4><a type="edit"><field name="name"></field></a></h4>
+                                    <h4><a type="open"><field name="name"></field></a></h4>
                                     <ul>
-                                        <li>Code: <field name="code"/></li>
+                                        <li t-if="record.code.raw_value">Code: <field name="code"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
                                         <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
                                         <li>Price: <field name="lst_price"></field></li>
-                                        <li>Cost: <field name="standard_price"></field></li>
+                                        <!-- TODO the 'groups' attribute doesn't work in kanban views -->
+                                        <li groups="base.group_user">Cost: <field name="standard_price"></field></li>
                                     </ul>
+                                    <div groups="base.group_user">
+                                        <a name="%(action_receive_move)d" type="action">
+                                            <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
+                                        </a>
+                                        <a name="%(action_deliver_move)d" type="action">
+                                            <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                             <script>
@@ -162,35 +243,6 @@
                 </kanban>
             </field>
         </record>
-
-        <record id="view_normal_property_form" model="ir.ui.view">
-            <field name="name">product.normal.stock.property.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <group name="store" position="after">
-                    <group col="2" colspan="2" name="store" groups="stock.group_locations">
-                        <separator string="Counter-Part Locations Properties" colspan="2"/>
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
-                    </group>
-                </group>
-            </field>
-        </record>
-
-<!--        <record id="view_product_valuation_form" model="ir.ui.view">
-            <field name="name">product.valuation.stock.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="cost_method" position="after">
-                    <field name="valuation"/>
-                </field>
-            </field>
-        </record>-->
 
     </data>
 </openerp>

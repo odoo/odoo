@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- vim:fdl=1:
+-->
+<templates id="template" xml:space="preserve">
+
+<t t-extend="Login">
+    <t t-jquery="form ul:first li:last" t-operation="after">
+        <li>
+            <a class="oe_signup" href="#">Sign Up</a>
+        </li>
+    </t>
+</t>
+
+<t t-name="auth_signup.signup">
+  <div>
+    <form>
+        Name = <input type="text" name="name"/><br/>
+        Email = <input type="email" name="email"/><br/>
+        Password = <input type="password" name="password"/><br/>
+        Confirmation = <input type="password" name="password_confirmation"/><br/>
+        <button type="submit" disabled="disabled">Signup</button>
+    </form>
+  </div>
+</t>
+
+
+
+</templates>

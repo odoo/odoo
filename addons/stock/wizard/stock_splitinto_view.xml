@@ -4,15 +4,17 @@
         <record id="view_stock_move_split_wizard" model="ir.ui.view">
             <field name="name">Split move</field>
             <field name="model">stock.split.into</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Split Move">
-                <separator string="Quantity to Leave in the Current Pack" colspan="4"/>
-                <field name="quantity"/>
-                <button icon='gtk-cancel' special="cancel"
-                    string="_Cancel" />
-                <button name="split" string="Ok"
-                    type="object" icon="gtk-ok" />
+            <form string="Split Move" version="7.0">
+                <separator string="Quantity to Leave in the Current Pack"/>
+                <group>
+                    <field name="quantity"/>
+                </group>
+                <footer>
+                    <button name="split" string="Ok" type="object" class="oe_highlight" />
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

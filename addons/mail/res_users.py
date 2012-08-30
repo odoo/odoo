@@ -20,30 +20,37 @@
 ##############################################################################
 
 from osv import osv, fields
+from openerp import SUPERUSER_ID
 from tools.translate import _
 
-class res_users(osv.osv):
+class res_users(osv.Model):
     """ Update of res.users class
-        - add a preference about sending emails about notificatoins
+        - add a preference about sending emails about notifications
         - make a new user follow itself
+        - add a welcome message
     """
     _name = 'res.users'
-    _inherit = ['res.users', 'mail.thread']
-    
+    _inherit = ['res.users']
+    _inherits = {'mail.alias': 'alias_id'}
+
     _columns = {
         'notification_email_pref': fields.selection([
-                        ('all', 'All feeds'),
-                        ('comments', 'Only comments'),
-                        ('to_me', 'Only when sent directly to me'),
-                        ('none', 'Never')
-                        ], 'Receive Feeds by E-mail', required=True,
-                        help="Choose in which case you want to receive an email when you receive new feeds."),
+            ('all', 'All Feeds'),
+            ('to_me', 'Only send directly to me'),
+            ('none', 'Never')
+            ], 'Receive Feeds by Email', required=True,
+            help="Choose in which case you want to receive an email when you "\
+                 "receive new feeds."),
+        'alias_id': fields.many2one('mail.alias', 'Alias', ondelete="cascade", required=True, 
+            help="Email address internally associated with this user. Incoming "\
+                 "emails will appear in the user's notifications."),
     }
     
     _defaults = {
-        'notification_email_pref': 'none',
+        'notification_email_pref': 'to_me',
+        'alias_domain': False, # always hide alias during creation
     }
-    
+
     def __init__(self, pool, cr):
         """ Override of __init__ to add access rights on notification_email_pref
             field. Access rights are disabled by default, but allowed on
@@ -54,31 +61,123 @@ class res_users(osv.osv):
         self.SELF_WRITEABLE_FIELDS = list(self.SELF_WRITEABLE_FIELDS)
         self.SELF_WRITEABLE_FIELDS.append('notification_email_pref')
         return init_res
-    
+
+    def _auto_init(self, cr, context=None):
+        """Installation hook to create aliases for all users and avoid constraint errors."""
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users,self)._auto_init,
+            self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+
     def create(self, cr, uid, data, context=None):
+        # create default alias same as the login
+        mail_alias = self.pool.get('mail.alias')
+        alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
+        data['alias_id'] = alias_id
+        data.pop('alias_name', None) # prevent errors during copy()
+        # create user that follows its related partner
         user_id = super(res_users, self).create(cr, uid, data, context=context)
-        user = self.browse(cr, uid, [user_id], context=context)[0]
-        # make user follow itself
-        self.message_subscribe(cr, uid, [user_id], [user_id], context=context)
-        # create a welcome message to broadcast
-        company_name = user.company_id.name if user.company_id else 'the company'
-        message = _('%s has joined %s! You may leave him/her a message to celebrate a new arrival in the company ! You can help him/her doing its first steps on OpenERP.') % (user.name, company_name)
-        # TODO: clean the broadcast feature. As this is not cleany specified, temporarily remove the message broadcasting that is not buggy but not very nice.
-        #self.message_broadcast(cr, uid, [user.id], 'Welcome notification', message, context=context)
+        user = self.browse(cr, uid, user_id, context=context)
+        self.pool.get('res.partner').message_subscribe(cr, uid, [user.partner_id.id], [user_id], context=context)
+        # alias
+        mail_alias.write(cr, SUPERUSER_ID, [alias_id], {"alias_force_thread_id": user_id}, context)
+        # create a welcome message
+        self.create_welcome_message(cr, uid, user, context=context)
         return user_id
 
-    def message_load_ids(self, cr, uid, ids, limit=100, offset=0, domain=[], ascent=False, root_ids=[False], context=None):
-        """ Override of message_load_ids
-            User discussion page :
-            - messages posted on res.users, res_id = user.id
-            - messages directly sent to user with @user_login
-        """
-        if context is None:
-            context = {}
-        msg_obj = self.pool.get('mail.message')
-        msg_ids = []
+    def create_welcome_message(self, cr, uid, user, context=None):
+        company_name = user.company_id.name if user.company_id else _('the company')
+        subject = '''%s has joined %s.''' % (user.name, company_name)
+        body = '''Welcome to OpenERP !''' 
+        # TODO change 1 into user.id but catch errors
+        return self.pool.get('res.partner').message_append_note(cr, 1, [user.partner_id.id],
+            subject=subject, body=body, type='comment', content_subtype='html', context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        # User alias is sync'ed with login
+        if vals.get('login'): vals['alias_name'] = vals['login']
+        return super(res_users, self).write(cr, uid, ids, vals, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade-delete mail aliases as well, as they should not exist without the user.
+        alias_pool = self.pool.get('mail.alias')
+        alias_ids = [user.alias_id.id for user in self.browse(cr, uid, ids, context=context) if user.alias_id]
+        res = super(res_users, self).unlink(cr, uid, ids, context=context)
+        alias_pool.unlink(cr, uid, alias_ids, context=context)
+        return res
+
+    # --------------------------------------------------
+    # Wrappers on partner methods for Chatter
+    # #FIXME: another branch holds a refactoring of mail.thread
+    # that should help cleaning those wrappers
+    # --------------------------------------------------
+
+    def message_append(self, cr, uid, threads, subject, body_text=None, body_html=None,
+                        type='email', email_date=None, parent_id=False,
+                        content_subtype='plain', state=None,
+                        partner_ids=None, email_from=False, email_to=False,
+                        email_cc=None, email_bcc=None, reply_to=None,
+                        headers=None, message_id=False, references=None,
+                        attachments=None, original=None, context=None):
+        for user in self.browse(cr, uid, threads, context=context):
+            user.partner_id.message_append(subject, body_text, body_html, type, email_date, parent_id,
+                content_subtype, state, partner_ids, email_from, email_to, email_cc, email_bcc, reply_to,
+                headers, message_id, references, attachments, original)
+
+    def message_read(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, context=None):
         for user in self.browse(cr, uid, ids, context=context):
-            msg_ids += msg_obj.search(cr, uid, ['|', '|', ('body_text', 'like', '@%s' % (user.login)), ('body_html', 'like', '@%s' % (user.login)), '&', ('res_id', '=', user.id), ('model', '=', self._name)] + domain,
-            limit=limit, offset=offset, context=context)
-        if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)
-        return msg_ids
+            return user.partner_id.message_read(fetch_ancestors, ancestor_ids, limit, offset, domain)
+
+    def message_search(self, cr, uid, ids, fetch_ancestors=False, ancestor_ids=None, 
+                        limit=100, offset=0, domain=None, count=False, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_search(fetch_ancestors, ancestor_ids, limit, offset, domain, count)
+
+    def message_subscribe(self, cr, uid, ids, user_ids = None, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_subscribe(user_ids)
+
+    def message_unsubscribe(self, cr, uid, ids, user_ids = None, context=None):
+        for user in self.browse(cr, uid, ids, context=context):
+            return user.partner_id.message_unsubscribe(user_ids)
+
+
+class res_users_mail_group(osv.Model):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.users'
+    _inherit = ['res.users']
+
+    def write(self, cr, uid, ids, vals, context=None):
+        write_res = super(res_users_mail_group, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('groups_id'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
+            user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', user_group_ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, ids, context=context)
+        return write_res
+
+class res_groups_mail_group(osv.Model):
+    """ Update of res.groups class
+        - if adding/removing users from a group, check mail.groups linked to
+          this user group, and subscribe / unsubscribe them from the discussion
+          group. This is done by overriding the write method.
+    """
+    _name = 'res.groups'
+    _inherit = 'res.groups'
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('users'):
+            # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
+            user_ids = [command[1] for command in vals['users'] if command[0] == 4]
+            user_ids += [id for command in vals['users'] if command[0] == 6 for id in command[2]]
+            mail_group_obj = self.pool.get('mail.group')
+            mail_group_ids = mail_group_obj.search(cr, uid, [('group_ids', 'in', ids)], context=context)
+            mail_group_obj.message_subscribe(cr, uid, mail_group_ids, user_ids, context=context)
+        return super(res_groups_mail_group, self).write(cr, uid, ids, vals, context=context)
+
+# vim:et:

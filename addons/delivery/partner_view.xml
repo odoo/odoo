@@ -4,15 +4,11 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.carrier.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="stock.view_partner_property_form" />
             <field name="arch" type="xml">
-                <page string="Sales &amp; Purchases" position="inside">
-                    <group colspan="2" col="2">
-                        <separator string="Deliveries Properties" colspan="4"/>
-                        <field name="property_delivery_carrier"/>
-                    </group>
-                </page>
+                <field name="property_stock_supplier" position="after">
+                    <field name="property_delivery_carrier"/>
+                </field>
             </field>
         </record>
 
