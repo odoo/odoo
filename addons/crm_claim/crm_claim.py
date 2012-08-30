@@ -49,7 +49,7 @@ class crm_claim_stage(osv.osv):
         'sequence': fields.integer('Sequence', help="Used to order stages. Lower is better."),
         'section_ids':fields.many2many('crm.case.section', 'section_claim_stage_rel', 'stage_id', 'section_id', string='Sections',
                         help="Link between stages and sales teams. When set, this limitate the current stage to the selected sales teams."),
-        'state': fields.selection(crm.AVAILABLE_STATES, 'State', required=True, help="The related state for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
+        'state': fields.selection(crm.AVAILABLE_STATES, 'State', required=True, help="The related status for the stage. The state of your document will automatically change regarding the selected stage. For example, if a stage is related to the state 'Close', when your document reaches this stage, it will be automatically have the 'closed' state."),
         'case_refused': fields.boolean('Refused stage',
                         help='Refused stages are specific stages for done.'),
         'case_default': fields.boolean('Common to All Teams',
