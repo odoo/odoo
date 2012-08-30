@@ -38,7 +38,7 @@ except ImportError:
 
 class email_template(osv.osv):
     "Templates for sending email"
-    _inherit = 'mail.message'
+    _inherit = 'mail.mail'
     _name = "email.template"
     _description = 'Email Templates'
     _rec_name = 'name' # override mail.message's behavior
@@ -137,28 +137,27 @@ class email_template(osv.osv):
         'model': fields.related('model_id','model', type='char', string='Related Document Model',
                                 size=128, select=True, store=True, readonly=True),
         # we need a separate m2m table to avoid ID collisions with the original mail.message entries
-        'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
-                                           'attachment_id', 'Files to attach',
-                                           help="You may attach files to this template, to be added to all "
-                                                "emails created from this template"),
+        #'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
+        #                                   'attachment_id', 'Files to attach',
+        #                                   help="You may attach files to this template, to be added to all "
+        #                                        "emails created from this template"),
 
         # Overridden mail.message.common fields to make tooltips more appropriate:
-        'subject':fields.char('Subject', size=512, translate=True, help="Subject (placeholders may be used here)",),
+        #'subject':fields.char('Subject', size=512, translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
         'email_to': fields.char('To', size=256, help="Comma-separated recipient addresses (placeholders may be used here)"),
         'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
-        'email_bcc': fields.char('Bcc', size=256, help="Blind carbon copy recipients (placeholders may be used here)"),
         'reply_to': fields.char('Reply-To', size=250, help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_text': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
+        #'body': fields.text('Text Contents', translate=True, help="Plaintext version of the message (placeholders may be used here)"),
         'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
-        'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
-                                                               "Please note that this overrides the 'Resource Tracking' option, "
-                                                               "so if you simply need to track replies to outgoing emails, enable "
-                                                               "that option instead.\n"
-                                                               "Placeholders must be used here, as this value always needs to be unique!"),
+        #'message_id': fields.char('Message-Id', size=256, help="Message-ID SMTP header to use in outgoing messages based on this template. "
+        #                                                       "Please note that this overrides the 'Resource Tracking' option, "
+        #                                                       "so if you simply need to track replies to outgoing emails, enable "
+        #                                                       "that option instead.\n"
+        #                                                       "Placeholders must be used here, as this value always needs to be unique!"),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",
@@ -301,12 +300,11 @@ class email_template(osv.osv):
             context = {}
         values = {
                   'subject': False,
-                  'body_text': False,
+                  'body': False,
                   'body_html': False,
                   'email_from': False,
                   'email_to': False,
                   'email_cc': False,
-                  'email_bcc': False,
                   'reply_to': False,
                   'auto_delete': False,
                   'model': False,
@@ -317,7 +315,6 @@ class email_template(osv.osv):
                   'message_id': False,
                   'state': 'outgoing',
                   'content_subtype': 'plain',
-                  'partner_ids': [],
         }
         if not template_id:
             return values
@@ -325,26 +322,19 @@ class email_template(osv.osv):
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
 
-        for field in ['subject', 'body_text', 'body_html', 'email_from',
-                      'email_to', 'email_cc', 'email_bcc', 'reply_to',
+        for field in ['subject', 'body', 'body_html', 'email_from',
+                      'email_to', 'email_cc', 'reply_to',
                       'message_id']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
-
-        # if email_to: find or create a partner
-        if values['email_to']:
-            partner_id = self.pool.get('mail.thread').message_partner_by_email(cr, uid, values['email_to'], context=context)['partner_id']
-            if not partner_id:
-                partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
-            values['partner_ids'] = [partner_id]
 
         if values['body_html']:
             values.update(content_subtype='html')
 
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body_text'] += '\n\n' + signature
+            values['body'] += '\n\n' + signature
 
         values.update(mail_server_id = template.mail_server_id.id or False,
                       auto_delete = template.auto_delete,
@@ -391,12 +381,12 @@ class email_template(osv.osv):
            :returns: id of the mail.message that was created 
         """
         if context is None: context = {}
-        mail_message = self.pool.get('mail.message')
+        mail_mail = self.pool.get('mail.mail')
         ir_attachment = self.pool.get('ir.attachment')
         values = self.generate_email(cr, uid, template_id, res_id, context=context)
         assert 'email_from' in values, 'email_from is missing or empty after template rendering, send_mail() cannot proceed'
         attachments = values.pop('attachments') or {}
-        msg_id = mail_message.create(cr, uid, values, context=context)
+        msg_id = mail_mail.create(cr, uid, values, context=context)
         # link attachments
         attachment_ids = []
         for fname, fcontent in attachments.iteritems():
@@ -404,15 +394,15 @@ class email_template(osv.osv):
                     'name': fname,
                     'datas_fname': fname,
                     'datas': fcontent,
-                    'res_model': mail_message._name,
+                    'res_model': mail_mail._name,
                     'res_id': msg_id,
             }
             context.pop('default_type', None)
             attachment_ids.append(ir_attachment.create(cr, uid, attachment_data, context=context))
         if attachment_ids:
-            mail_message.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
+            mail_mail.write(cr, uid, msg_id, {'attachment_ids': [(6, 0, attachment_ids)]}, context=context)
         if force_send:
-            mail_message.send(cr, uid, [msg_id], context=context)
+            mail_mail.send(cr, uid, [msg_id], context=context)
         return msg_id
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

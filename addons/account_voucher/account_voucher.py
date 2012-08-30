@@ -1293,17 +1293,17 @@ class account_voucher(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, subtype="new", context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="new", context=context)
 
     def post_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_append_note(cr, uid, [obj.id], body=message, subtype="post", context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="post", context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, subtype="reconcile", context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="reconcile", context=context)
 
 account_voucher()
 

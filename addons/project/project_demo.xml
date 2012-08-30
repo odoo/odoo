@@ -441,36 +441,30 @@
         <record id="message_task_1" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_22"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Hello Quentin,
+            <field name="body">Hello Demo,
 There is a change in customer requirement.
 Can you check the document from customer again.
 Thanks,</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
-
         <record id="message_task_2" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_22"/>
             <field name="parent_id" ref="message_task_1"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Ok, I have checked the mail,
+            <field name="body">Ok, I have checked the mail,
 I will update the document and let you know.</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_qdp"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
-
-
         <record id="message_task_3" model="mail.message">
             <field name="model">project.task</field>
             <field name="res_id" ref="project_task_22"/>
             <field name="parent_id" ref="message_task_2"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Fine!
+            <field name="body">Fine!
 Send it ASAP, its urgent.</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
 
     </data>

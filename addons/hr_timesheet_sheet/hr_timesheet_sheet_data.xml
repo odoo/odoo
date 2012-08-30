@@ -1,13 +1,12 @@
 <?xml version="1.0" ?>
 <openerp>
     <data noupdate="1">
-
         <!-- Notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Timesheets Validation has been installed</value>
             <value>From the top menu "Human Resources", encode and validate timesheets and attendances.</value>
+            <value>Module Timesheets Validation has been installed</value>
         </function>
 
         <record id="ir_actions_server_timsheet_sheet" model="ir.actions.server">

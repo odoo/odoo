@@ -2,15 +2,15 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
+        <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module eInvoicing &amp; Payments has been installed.</value>
             <value>OpenERP's electronic invoicing allows to ease and fasten the creation of invoices and collection of customer payments. Invoices are created in a few clicks and your customers receive them by email. They can pay online and/or import them in their own system.
 
 You can track customer payments easily and automate the reminders. You get an overview of the discussion with your customers on each invoice to ensure a full traceability.
 
 If you want to use advanced accounting features, you should install the "Accounting and Finance" module.</value>
+            <value>Module eInvoicing &amp; Payments has been installed.</value>
         </function>
         <!-- Message Sub Type -->
         <record id="mail.mail_subtype_new" model="mail.message.subtype">
