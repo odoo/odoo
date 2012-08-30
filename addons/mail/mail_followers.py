@@ -79,19 +79,19 @@ class mail_notification(osv.Model):
         if context.get('mail_noemail') or not partner_ids:
             return True
 
-        mail_mail_obj = self.pool.get('mail.mail')
-        msg_obj = self.pool.get('mail.message')
-        msg = msg_obj.browse(cr, uid, msg_id, context=context)
+        mail_mail = self.pool.get('mail.mail')
+        msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
 
         # add signature
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
-        insertion_point = body_html.find('</html>')
-        if insertion_point > -1:
+        if signature:
+            signature_block = u'\n<pre>%s</pre>\n' % signature
             insertion_point = body_html.find('</html>')
-            body_html = body_html[:insertion_point] + '<div>%s</div>' % tools.ustr(signature) + body_html[insertion_point:]
-        else:
-            body_html = body_html + '<div>%s</div>' % tools.ustr(signature)
+            if insertion_point > -1:
+                body_html = body_html[:insertion_point] + signature_block + body_html[insertion_point:]
+            else:
+                body_html += signature_block
 
         towrite = {
             'mail_message_id': msg.id,
@@ -118,8 +118,8 @@ class mail_notification(osv.Model):
                 continue
             if partner.email not in towrite['email_to']:
                 towrite['email_to'].append(partner.email)
-        towrite['email_to'] = ', '.join(towrite['email_to'])
-
-        email_notif_id = mail_mail_obj.create(cr, uid, towrite, context=context)
-        mail_mail_obj.send(cr, uid, [email_notif_id], context=context)
+        if towrite['email_to']:
+            towrite['email_to'] = ', '.join(towrite['email_to'])
+            email_notif_id = mail_mail.create(cr, uid, towrite, context=context)
+            mail_mail.send(cr, uid, [email_notif_id], context=context)
         return True

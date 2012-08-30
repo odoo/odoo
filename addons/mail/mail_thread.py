@@ -475,16 +475,25 @@ class mail_thread(osv.Model):
                     # plain text is wrapped in <pre/> to preserve formatting
                     text = u'<pre>%s</pre>' % tools.ustr(part.get_payload(decode=True),
                                                          encoding, errors='replace')
-                    body = body[:insertion_point] + text + body[:insertion_point]
+                    if insertion_point != -1:
+                        body = body[:insertion_point] + text + body[insertion_point:]
+                    else:
+                        body += text
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
                     if alternative:
                         body = html
+                        # force </html> tag to lowercase, for easier matching
+                        body = re.sub(r'(?i)</html>', r'</html>', body)
                     else:
-                        html = re.sub('(?i)</?html>', '', html)
+                        # strip enclosing html/body tags and append to existing body
+                        html = re.sub(r'(?i)(</?html>|</?body>)', '', html)
                         insertion_point = body.find('</html>')
-                        body = body[:insertion_point] + text + body[:insertion_point]
+                        if insertion_point != -1:
+                            body = body[:insertion_point] + html + body[insertion_point:]
+                        else:
+                            body += html
                 # 4) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))

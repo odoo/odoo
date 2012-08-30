@@ -330,19 +330,19 @@ class mail_message(osv.Model):
             Call mail_notification.notify to manage the email sending
         """
         message = self.browse(cr, uid, newid, context=context)
-        partners_to_notify = []
+        partners_to_notify = set([])
         # add all partner_ids of the message
         if message.partner_ids:
-            for partner in message.partner_ids:
-                if partner.id not in partners_to_notify:
-                    partners_to_notify.append(partner.id)
-        # add all followers and set them as partner_ids
+            partners_to_notify |= set(partner.id for partner in message.partner_ids)
+        # add all followers and set add them in partner_ids
         if message.model and message.res_id:
-            modobj = self.pool.get(message.model)
-            for follower in modobj.browse(cr, uid, message.res_id, context=context).message_follower_ids:
-                partners_to_notify.append(follower.id)
-                self.write(cr, uid, [newid], {'partner_ids': [(4, follower.id)]}, context=context)
-        self.pool.get('mail.notification').notify(cr, uid, partners_to_notify, newid, context=context)
+            record = self.pool.get(message.model).browse(cr, uid, message.res_id, context=context)
+            extra_notified = set(partner.id for partner in record.message_follower_ids)
+            missing_notified = extra_notified - partners_to_notify
+            if missing_notified:
+                message.write({'partner_ids': [(4, p_id) for p_id in missing_notified]})
+            partners_to_notify |= extra_notified
+        self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
     def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
         self.check(cr, uid, ids, 'read', context=context)
