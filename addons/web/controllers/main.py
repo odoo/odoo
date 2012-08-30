@@ -806,7 +806,6 @@ class Session(openerpweb.Controller):
             "context": req.session.get_context() if req.session._uid else {},
             "db": req.session._db,
             "login": req.session._login,
-            "openerp_entreprise": req.session.openerp_entreprise(),
         }
 
     @openerpweb.jsonrequest

@@ -35,7 +35,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.username = false;
         this.user_context= {};
         this.db = false;
-        this.openerp_entreprise = false;
         this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
@@ -78,8 +77,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
         });
     },
@@ -103,8 +101,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
             if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
@@ -520,57 +517,6 @@ $.async_when = function() {
         return old_async_when.apply(this, arguments);
 };
 
-/** Setup blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<div class="oe_blockui_spin_container">';
-    $.blockUI.defaults.css.border = '0';
-    $.blockUI.defaults.css["background-color"] = '';
-}
-
-instance.web.Throbber = instance.web.Widget.extend({
-    template: "Throbber",
-    start: function() {
-        var opts = {
-          lines: 13, // The number of lines to draw
-          length: 7, // The length of each line
-          width: 4, // The line thickness
-          radius: 10, // The radius of the inner circle
-          rotate: 0, // The rotation offset
-          color: '#FFF', // #rgb or #rrggbb
-          speed: 1, // Rounds per second
-          trail: 60, // Afterglow percentage
-          shadow: false, // Whether to render a shadow
-          hwaccel: false, // Whether to use hardware acceleration
-          className: 'spinner', // The CSS class to assign to the spinner
-          zIndex: 2e9, // The z-index (defaults to 2000000000)
-          top: 'auto', // Top position relative to parent in px
-          left: 'auto' // Left position relative to parent in px
-        };
-        this.spin = new Spinner(opts).spin(this.$element[0]);
-    },
-    destroy: function() {
-        if (this.spin)
-            this.spin.stop();
-        this._super();
-    },
-});
-instance.web.Throbber.throbbers = [];
-
-instance.web.blockUI = function() {
-    var tmp = $.blockUI.apply($, arguments);
-    var throbber = new instance.web.Throbber();
-    instance.web.Throbber.throbbers.push(throbber);
-    throbber.appendTo($(".oe_blockui_spin_container"));
-    return tmp;
-}
-instance.web.unblockUI = function() {
-    _.each(instance.web.Throbber.throbbers, function(el) {
-        el.destroy();
-    });
-    return $.unblockUI.apply($, arguments);
-}
-
 /** Setup default session */
 instance.session = new instance.web.Session();
 
@@ -653,6 +599,86 @@ instance.session.on('module_loaded', this, function () {
     // provide timeago.js with our own translator method
     $.timeago.settings.translator = instance.web._t;
 });
+
+/** Setup blockui */
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<div class="oe_blockui_spin_container">';
+    $.blockUI.defaults.css.border = '0';
+    $.blockUI.defaults.css["background-color"] = '';
+}
+
+var messages_by_seconds = function() {
+    return [
+        [0, _t("Loading...")],
+        [30, _t("Still loading...")],
+        [60, _t("Still loading...<br />Please be patient.")],
+        [120, _t("Don't leave yet,<br />it's still loading...")],
+        [300, _t("You may not believe it,<br />but the application is actually loading...")],
+        [600, _t("You know, sometimes,<br />OpenERP can be a little bit slow,<br />because it's loading...")],
+        [3600, _t("Maybe you should consider pressing F5...")],
+    ];
+};
+
+instance.web.Throbber = instance.web.Widget.extend({
+    template: "Throbber",
+    start: function() {
+        var opts = {
+          lines: 13, // The number of lines to draw
+          length: 7, // The length of each line
+          width: 4, // The line thickness
+          radius: 10, // The radius of the inner circle
+          rotate: 0, // The rotation offset
+          color: '#FFF', // #rgb or #rrggbb
+          speed: 1, // Rounds per second
+          trail: 60, // Afterglow percentage
+          shadow: false, // Whether to render a shadow
+          hwaccel: false, // Whether to use hardware acceleration
+          className: 'spinner', // The CSS class to assign to the spinner
+          zIndex: 2e9, // The z-index (defaults to 2000000000)
+          top: 'auto', // Top position relative to parent in px
+          left: 'auto' // Left position relative to parent in px
+        };
+        this.spin = new Spinner(opts).spin(this.$el[0]);
+        this.start_time = new Date().getTime();
+        this.act_message();
+    },
+    act_message: function() {
+        var self = this;
+        setTimeout(function() {
+            if (self.isDestroyed())
+                return;
+            var seconds = (new Date().getTime() - self.start_time) / 1000;
+            var mes;
+            _.each(messages_by_seconds(), function(el) {
+                if (seconds >= el[0])
+                    mes = el[1];
+            });
+            self.$(".oe_throbber_message").html(mes);
+            self.act_message();
+        }, 1000);
+    },
+    destroy: function() {
+        if (this.spin)
+            this.spin.stop();
+        this._super();
+    },
+});
+instance.web.Throbber.throbbers = [];
+
+instance.web.blockUI = function() {
+    var tmp = $.blockUI.apply($, arguments);
+    var throbber = new instance.web.Throbber();
+    instance.web.Throbber.throbbers.push(throbber);
+    throbber.appendTo($(".oe_blockui_spin_container"));
+    return tmp;
+}
+instance.web.unblockUI = function() {
+    _.each(instance.web.Throbber.throbbers, function(el) {
+        el.destroy();
+    });
+    return $.unblockUI.apply($, arguments);
+}
 
 /**
  * Registry for all the client actions key: tag value: widget

@@ -20,7 +20,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$element.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
+        this.$el.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -53,10 +53,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         var item = _.extend({
             show: function(index) {
-                this.widget.$element.show();
+                this.widget.$el.show();
             },
             hide: function() {
-                this.widget.$element.hide();
+                this.widget.$el.hide();
             },
             destroy: function() {
                 this.widget.destroy();
@@ -277,14 +277,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
             this.dialog.dialog_title = action.name;
             this.dialog_widget = widget;
-            this.dialog_widget.appendTo(this.dialog.$element);
+            this.dialog_widget.appendTo(this.dialog.$el);
             this.dialog.open();
         } else  {
             this.dialog_stop();
             this.inner_action = action;
             this.inner_widget = widget;
             post_process();
-            this.inner_widget.appendTo(this.$element);
+            this.inner_widget.appendTo(this.$el);
         }
     },
     ir_actions_act_window: function (action, on_close) {
@@ -376,7 +376,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     start: function() {
         this._super();
         var self = this;
-        this.$element.find('.oe_view_manager_switch a').click(function() {
+        this.$el.find('.oe_view_manager_switch a').click(function() {
             self.on_mode_switch($(this).data('view-type'));
         }).tipsy();
         var views_ids = {};
@@ -385,9 +385,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 deferred : $.Deferred(),
                 controller : null,
                 options : _.extend({
-                    $buttons : self.$element.find('.oe_view_manager_buttons'),
-                    $sidebar : self.flags.sidebar ? self.$element.find('.oe_view_manager_sidebar') : undefined,
-                    $pager : self.$element.find('.oe_view_manager_pager'),
+                    $buttons : self.$el.find('.oe_view_manager_buttons'),
+                    $sidebar : self.flags.sidebar ? self.$el.find('.oe_view_manager_sidebar') : undefined,
+                    $pager : self.$el.find('.oe_view_manager_pager'),
                     action : self.action,
                     action_views_ids : views_ids
                 }, self.flags, self.flags[view.view_type] || {}, view.options || {})
@@ -395,7 +395,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             views_ids[view.view_type] = view.view_id;
         });
         if (this.flags.views_switcher === false) {
-            this.$element.find('.oe_view_manager_switch').hide();
+            this.$el.find('.oe_view_manager_switch').hide();
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
@@ -432,9 +432,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
         }
 
-        this.$element
+        this.$el
             .find('.oe_view_manager_switch a').parent().removeClass('active');
-        this.$element
+        this.$el
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
@@ -442,7 +442,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
-                    var container = self.$element.find(".oe_view_manager_view_" + view_name + ":first");
+                    var container = self.$el.find(".oe_view_manager_view_" + view_name + ":first");
                     if (view_name === view_type) {
                         container.show();
                         controller.do_show(view_options || {});
@@ -451,10 +451,10 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                         controller.do_hide();
                     }
                     // put the <footer> in the dialog's buttonpane
-                    if (self.$element.parent('.ui-dialog-content') && self.$element.find('footer')) {
-                        self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
-                        self.$element.find('footer').appendTo(
-                            self.$element.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonpane')
+                    if (self.$el.parent('.ui-dialog-content') && self.$el.find('footer')) {
+                        self.$el.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonset').hide()
+                        self.$el.find('footer').appendTo(
+                            self.$el.parent('.ui-dialog-content').parent().find('div.ui-dialog-buttonpane')
                         );
                     }
                 }
@@ -491,7 +491,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         controller.do_switch_view.add_last(_.bind(this.switch_view, this));
 
         controller.do_prev_view.add_last(this.on_prev_view);
-        var container = this.$element.find(".oe_view_manager_view_" + view_type);
+        var container = this.$el.find(".oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
@@ -505,7 +505,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
     },
     set_title: function(title) {
-        this.$element.find('.oe_view_title_text:first').text(title);
+        this.$el.find('.oe_view_title_text:first').text(title);
     },
     add_breadcrumb: function() {
         var self = this;
@@ -524,7 +524,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             action: this.action,
             show: function(index) {
                 var view_to_select = views[index];
-                self.$element.show();
+                self.$el.show();
                 if (self.active_view !== view_to_select) {
                     self.on_mode_switch(view_to_select);
                 }
@@ -600,7 +600,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, this.flags.search_view === false);
 
         this.searchview.on_search.add(this.do_searchview_search);
-        return this.searchview.appendTo(this.$element.find(".oe_view_manager_view_search"));
+        return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
         var self = this,
@@ -717,8 +717,8 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
 
         var manager_ready = $.when(searchview_loaded, main_view_loaded);
 
-        this.$element.find('.oe_debug_view').change(this.on_debug_changed);
-        this.$element.addClass("oe_view_manager_" + (this.action.target || 'current'));
+        this.$el.find('.oe_debug_view').change(this.on_debug_changed);
+        this.$el.addClass("oe_view_manager_" + (this.action.target || 'current'));
         return manager_ready;
     },
     on_debug_changed: function (evt) {
@@ -730,7 +730,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         switch (val) {
             case 'fvg':
                 var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
-                $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$element);
+                $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
                 break;
             case 'perm_read':
                 var ids = current_view.get_selected_ids();
@@ -828,7 +828,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             var controller = self.views[self.active_view].controller,
                 fvg = controller.fields_view,
                 view_id = (fvg && fvg.view_id) || '--';
-            self.$element.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
+            self.$el.find('.oe_debug_view').html(QWeb.render('ViewManagerDebug', {
                 view: controller,
                 view_manager: self
             }));
@@ -842,7 +842,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         return r;
     },
     set_title: function(title) {
-        this.$element.find('.oe_breadcrumb_title:first').html(this.getParent().get_title());
+        this.$el.find('.oe_breadcrumb_title:first').html(this.getParent().get_title());
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {
@@ -874,7 +874,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'files', 'label' : _t('Attachment'), },
+            { 'name' : 'files', 'label' : _t('Attachment(s)'), },
             { 'name' : 'other', 'label' : _t('More'), }
         ];
         this.items = {
@@ -901,7 +901,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var self = this;
         this._super(this);
         this.redraw();
-        this.$element.on('click','.oe_dropdown_menu li a', function(event) {
+        this.$el.on('click','.oe_dropdown_menu li a', function(event) {
             var section = $(this).data('section');
             var index = $(this).data('index');
             var item = self.items[section][index];
@@ -917,7 +917,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
     },
     redraw: function() {
         var self = this;
-        self.$element.html(QWeb.render('Sidebar', {widget: self}));
+        self.$el.html(QWeb.render('Sidebar', {widget: self}));
 
         // Hides Sidebar sections when item list is empty
         this.$('.oe_form_dropdown_section').each(function() {
@@ -1024,12 +1024,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
         self.items['files'] = attachments;
         self.redraw();
         this.$('.oe_sidebar_add_attachment .oe_form_binary_file').change(this.on_attachment_changed);
-        this.$element.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
+        this.$el.find('.oe_sidebar_delete_item').click(this.on_attachment_delete);
     },
     on_attachment_changed: function(e) {
         var $e = $(e.target);
         if ($e.val() !== '') {
-            this.$element.find('form.oe_form_binary_form').submit();
+            this.$el.find('form.oe_form_binary_form').submit();
             $e.parent().find('input[type=file]').prop('disabled', true);
             $e.parent().find('button').prop('disabled', true).find('img, span').toggle();
             this.$('.oe_sidebar_add_attachment span').text(_t('Uploading...'));
@@ -1078,8 +1078,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         var self = this;
         this._super();
         $.when(this.languages_loaded).then(function() {
-            self.$element.html(instance.web.qweb.render('TranslateDialog', { widget: self }));
-            self.$fields_form = self.$element.find('.oe_translation_form');
+            self.$el.html(instance.web.qweb.render('TranslateDialog', { widget: self }));
+            self.$fields_form = self.$el.find('.oe_translation_form');
             self.$fields_form.find('.oe_trad_field').change(function() {
                 $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
             });
@@ -1125,8 +1125,8 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             if (self.view.translatable_fields && self.view.translatable_fields.length) {
                 self.do_load_fields_values(function() {
                     if (field) {
-                        var $field_input = self.$element.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
-                        self.$element.scrollTo($field_input);
+                        var $field_input = self.$el.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
+                        self.$el.scrollTo($field_input);
                         $field_input.focus();
                     }
                 });
@@ -1302,10 +1302,10 @@ instance.web.View = instance.web.Widget.extend({
         this.embedded_view = embedded_view;
     },
     do_show: function () {
-        this.$element.show();
+        this.$el.show();
     },
     do_hide: function () {
-        this.$element.hide();
+        this.$el.hide();
     },
     do_push_state: function(state) {
         if (this.getParent() && this.getParent().do_push_state) {

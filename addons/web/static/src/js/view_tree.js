@@ -84,13 +84,13 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
         });
         this.fields = fields_view.fields;
         this.hook_row_click();
-        this.$element.html(QWeb.render('TreeView', {
+        this.$el.html(QWeb.render('TreeView', {
             'title': this.fields_view.arch.attrs.string,
             'fields_view': this.fields_view.arch.children,
             'fields': this.fields,
             'toolbar': has_toolbar
         }));
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         this.dataset.read_slice(this.fields_list()).then(function(records) {
             self.store_record(records);
@@ -102,7 +102,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 return;
             }
 
-            var $select = self.$element.find('select')
+            var $select = self.$el.find('select')
                 .change(function () {
                     var $option = $(this).find(':selected');
                     self.getdata($option.val());
@@ -120,10 +120,10 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 $select.change();
             }
         });
-        this.$element.find("#tree_view_expand").click(function(){
+        this.$el.find("#tree_view_expand").click(function(){
                 self.expand_all();
         });
-        this.$element.find("#tree_view_collapse").click(function(){
+        this.$el.find("#tree_view_collapse").click(function(){
             self.collpase_all();
         });
         // TODO store open nodes in url ?...
@@ -143,14 +143,14 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     },
     expand_all: function(){
         var self = this;
-        var tr = this.$element.find(".oe-treeview-table tbody tr[id^='treerow_']");
+        var tr = this.$el.find(".oe-treeview-table tbody tr[id^='treerow_']");
         _.each(tr,function(rec){
             self.showcontent($(rec).attr('data-id'),true);
         });
     },
     collpase_all: function(){
         var self = this;
-        var root_tr = this.$element.find(".oe-treeview-table tbody tr[data-level='"+1+"']");
+        var root_tr = this.$el.find(".oe-treeview-table tbody tr[data-level='"+1+"']");
         _.each(root_tr,function(rec){
             if($(rec).hasClass('oe_open')){
                 self.showcontent($(rec).attr('data-id'),false);
@@ -187,12 +187,12 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
      */
     hook_row_click: function () {
         var self = this;
-        this.$element.delegate('.treeview-td span, .treeview-tr span', 'click', function (e) {
+        this.$el.delegate('.treeview-td span, .treeview-tr span', 'click', function (e) {
             e.stopImmediatePropagation();
             self.activate($(this).closest('tr').data('id'));
         });
 
-        this.$element.delegate('.treeview-tr', 'click', function () {
+        this.$el.delegate('.treeview-tr', 'click', function () {
             var $this = $(this),
                 record_id = $this.data('id'),
                 bool = $this.parent().hasClass('oe_open');
@@ -220,7 +220,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
     render_data: function(groupby){
         var self = this;
         _.each(_.keys(groupby),function(key){
-            var $curr_node = self.$element.find('#treerow_' + key);
+            var $curr_node = self.$el.find('#treerow_' + key);
             var record = groupby[key];
             var children_rows = QWeb.render('TreeView.rows', {
                 'records': record,
@@ -235,7 +235,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
                 $curr_node.addClass('oe_open');
                 $curr_node.after(children_rows);
             } else {
-                self.$element.find('tbody').html(children_rows);
+                self.$el.find('tbody').html(children_rows);
             }
         });
         self.collpase_all();
@@ -272,11 +272,11 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
 
     // show & hide the contents
     showcontent: function (record_id, show) {
-        this.$element.find('#treerow_' + record_id)
+        this.$el.find('#treerow_' + record_id)
                 .toggleClass('oe_open', show);
 
         _(this.records[record_id][this.children_field]).each(function (child_id) {
-            var $child_row = this.$element.find('#treerow_' + child_id);
+            var $child_row = this.$el.find('#treerow_' + child_id);
             if ($child_row.hasClass('oe_open')) {
                 this.showcontent(child_id, false);
             }

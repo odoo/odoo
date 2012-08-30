@@ -525,8 +525,8 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
         _.each(this.getChildren(), function(el) {
             el.destroy();
         });
-        if(this.$element) {
-            this.$element.remove();
+        if(this.$el) {
+            this.$el.remove();
         }
         instance.web.PropertiesMixin.destroy.call(this);
     },
@@ -538,7 +538,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     appendTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.appendTo(t);
+            self.$el.appendTo(t);
         }, target);
     },
     /**
@@ -549,7 +549,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     prependTo: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.prependTo(t);
+            self.$el.prependTo(t);
         }, target);
     },
     /**
@@ -560,7 +560,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertAfter: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertAfter(t);
+            self.$el.insertAfter(t);
         }, target);
     },
     /**
@@ -571,7 +571,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
     insertBefore: function(target) {
         var self = this;
         return this.__widgetRenderAndInsert(function(t) {
-            self.$element.insertBefore(t);
+            self.$el.insertBefore(t);
         }, target);
     },
     /**
@@ -581,7 +581,7 @@ instance.web.WidgetMixin = _.extend({},instance.web.CallbackEnabledMixin, {
      */
     replace: function(target) {
         return this.__widgetRenderAndInsert(_.bind(function(t) {
-            this.$element.replaceAll(t);
+            this.$el.replaceAll(t);
         }, this), target);
     },
     __widgetRenderAndInsert: function(insertion, target) {
@@ -640,8 +640,8 @@ instance.web.CallbackEnabled = instance.web.Class.extend(instance.web.CallbackEn
  *         // stuff that you want to init before the rendering
  *     },
  *     start: function() {
- *         // stuff you want to make after the rendering, `this.$element` holds a correct value
- *         this.$element.find(".my_button").click(/* an example of event binding * /);
+ *         // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *         this.$el.find(".my_button").click(/* an example of event binding * /);
  *
  *         // if you have some asynchronous operations, it's a good idea to return
  *         // a promise in start()
@@ -718,15 +718,15 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @returns {*} this
      */
     replaceElement: function ($el) {
-        var $oldel = this.$element;
+        var $oldel = this.$el;
         this.setElement($el);
-        if ($oldel && !$oldel.is(this.$element)) {
-            $oldel.replaceWith(this.$element);
+        if ($oldel && !$oldel.is(this.$el)) {
+            $oldel.replaceWith(this.$el);
         }
         return this;
     },
     /**
-     * Re-sets the widget's root element (el/$el/$element).
+     * Re-sets the widget's root element (el/$el/$el).
      *
      * Includes:
      * * re-delegating events
@@ -738,14 +738,14 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * @return {*} this
      */
     setElement: function (element) {
-        // NB: completely useless, as WidgetMixin#init creates a $element
+        // NB: completely useless, as WidgetMixin#init creates a $el
         // always
-        if (this.$element) {
+        if (this.$el) {
             this.undelegateEvents();
         }
 
-        this.$element = (element instanceof $) ? element : $(element);
-        this.el = this.$element[0];
+        this.$el = (element instanceof $) ? element : $(element);
+        this.el = this.$el[0];
 
         this.delegateEvents();
 
@@ -797,23 +797,23 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
 
             event += '.widget_events';
             if (!selector) {
-                this.$element.on(event, method);
+                this.$el.on(event, method);
             } else {
-                this.$element.on(event, selector, method);
+                this.$el.on(event, selector, method);
             }
         }
     },
     undelegateEvents: function () {
-        this.$element.off('.widget_events');
+        this.$el.off('.widget_events');
     },
     /**
-     * Shortcut for ``this.$element.find(selector)``
+     * Shortcut for ``this.$el.find(selector)``
      *
      * @param {String} selector CSS selector, rooted in $el
      * @returns {jQuery} selector match
      */
     $: function(selector) {
-        return this.$element.find(selector);
+        return this.$el.find(selector);
     },
     /**
      * Informs the action manager to do an action. This supposes that
