@@ -1259,7 +1259,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             self.bind_child_events(child);
             child.datagroup = group;
 
-            var $row = child.$row = $('<tr>');
+            var $row = child.$row = $('<tr class="oe_group_header">');
             if (group.openable && group.length) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {

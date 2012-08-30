@@ -1970,6 +1970,8 @@ $sheet-max-width: 860px
                 position: absolute
                 margin: 0 !important // dammit
                 padding: 0
+        .oe_list_content .oe_group_header
+            @include vertical-gradient(#fcfcfc, #dedede)
 
     .oe_list_content
         width: 100%
@@ -2028,6 +2030,7 @@ $sheet-max-width: 860px
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
+
         > tfoot
             border-top: 2px solid #cacaca
             border-bottom: 1px solid #cacaca
