@@ -40,6 +40,9 @@ Adds menu to show relevant information to each manager.You can also view the rep
         'account_analytic_analysis_menu.xml',
         'account_analytic_analysis_cron.xml',
     ],
+    'css': [
+        'static/src/css/analytic.css'
+    ],
     'demo': [],
     'installable': True,
     'auto_install': False,
