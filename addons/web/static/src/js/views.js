@@ -1135,9 +1135,9 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
         });
     },
     on_btn_save: function() {
-        var trads = {},
-            self = this,
-            trads_mutex = new $.Mutex();
+        var trads = {};
+        var self = this;
+        var trads_mutex = new $.Mutex();
         self.$fields_form.find('.oe_trad_field.touched').each(function() {
             var field = $(this).attr('name').split('-');
             if (!trads[field[0]]) {
@@ -1156,6 +1156,7 @@ instance.web.TranslateDialog = instance.web.Dialog.extend({
             });
         });
         this.close();
+        return trads_mutex;
     },
     on_btn_close: function() {
         this.close();
