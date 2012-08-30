@@ -38,22 +38,26 @@ openerp.base_import = function (instance) {
     instance.web.DataImport = instance.web.Dialog.extend({
         template: 'ImportView',
         dialog_title: _lt("Import Data"),
+        defaults: {
+            quoting: '"',
+            separator: ',',
+        },
         events: {
             'change input.oe_import_file': 'file_update',
-            'click input.oe_import_has_header': function (e) {
-                this.$el.toggleClass(
-                    'oe_import_noheaders', !e.target.checked);
-                this.settings_updated();
-            },
+            'change input:not(.oe_import_file)': 'settings_updated',
             'click a.oe_import_csv': function (e) {
                 e.preventDefault();
             },
             'click a.oe_import_export': function (e) {
                 e.preventDefault();
             },
-            'click dt a': function (e) {
+            'click a.oe_import_toggle': function (e) {
                 e.preventDefault();
-                $(e.target).parent().next().toggle();
+                var $el = $(e.target);
+                ($el.next().length
+                        ? $el.next()
+                        : $el.parent().next())
+                    .toggle();
             }
         },
         init: function (parent, dataset) {
@@ -82,9 +86,8 @@ openerp.base_import = function (instance) {
 
         import_options: function () {
             return {
-                // TODO: customizable gangnam style
-                quote: '"',
-                separator: ',',
+                quote: this.$('input.oe_import_quoting').val(),
+                separator: this.$('input.oe_import_separator').val(),
                 headers: this.$('input.oe_import_has_header').prop('checked'),
             };
         },
@@ -106,6 +109,9 @@ openerp.base_import = function (instance) {
                 .then(this.proxy('preview'));
         },
         preview: function (result) {
+            this.$el.toggleClass(
+                'oe_import_noheaders',
+                !this.$('input.oe_import_has_header').prop('checked'));
             if (result.error) {
                 this.$el.addClass('oe_import_error');
                 this.$('.oe_import_error_report').html(

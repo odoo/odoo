@@ -1,4 +1,5 @@
 .oe_import dd,
+.oe_import .oe_import_toggled,
 .oe_import .oe_import_grid,
 .oe_import .oe_import_error_report,
 .oe_import .oe_import_with_file,
@@ -24,4 +25,11 @@
 
 .oe_import .oe_import_noheaders {
     color: #888;
+}
+
+.oe_import a.oe_import_toggle {
+    display: block;
+}
+.oe_import a.oe_import_toggle:before {
+    content: '> '
 }
