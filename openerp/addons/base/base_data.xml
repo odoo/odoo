@@ -84,7 +84,7 @@
         <record id="au" model="res.country">
             <field name="name">Australia</field>
             <field name="code">au</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s %(state_code)s %(zip)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="aw" model="res.country">
             <field name="name">Aruba</field>
@@ -113,7 +113,7 @@
         <record id="be" model="res.country">
             <field name="name">Belgium</field>
             <field name="code">be</field>
-            <field name="address_format" eval="'%(street)s\n%(zip)s, %(city)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
         </record>
         <record id="bf" model="res.country">
             <field name="name">Burkina Faso</field>
@@ -158,7 +158,7 @@
         <record id="br" model="res.country">
             <field name="name">Brazil</field>
             <field name="code">br</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s\n%(zip)s%(country_name)s'" />
         </record>
         <record id="bs" model="res.country">
             <field name="name">Bahamas</field>
@@ -187,7 +187,7 @@
         <record id="ca" model="res.country">
             <field name="name">Canada</field>
             <field name="code">ca</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s, %(state_code)s %(zip)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="cc" model="res.country">
             <field name="name">Cocos (Keeling) Islands</field>
@@ -309,7 +309,7 @@
         <record id="es" model="res.country">
             <field name="name">Spain</field>
             <field name="code">es</field>
-            <field name="address_format" eval="'%(street)s\n%(zip)s %(city)s,%(state_name)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
         </record>
         <record id="et" model="res.country">
             <field name="name">Ethiopia</field>
@@ -338,7 +338,7 @@
         <record id="fr" model="res.country">
             <field name="name">France</field>
             <field name="code">fr</field>
-            <field name="address_format" eval="'%(street)s\n%(zip)s %(city)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(zip)s %(city)s\n%(country_name)s'" />
         </record>
         <record id="ga" model="res.country">
             <field name="name">Gabon</field>
@@ -455,7 +455,7 @@
         <record id="in" model="res.country">
             <field name="name">India</field>
             <field name="code">in</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s, %(zip)s\n%(state_name)s%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s\n%(country_name)s'" />
         </record>
         <record id="io" model="res.country">
             <field name="name">British Indian Ocean Territory</field>
@@ -968,7 +968,7 @@
         </record>
         <record id="uk" model="res.country">
             <field name="name">United Kingdom</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(country_name)s\n%(zip)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s\n%(state_name)s\n%(zip)s\n%(country_name)s'" />
             <field name="code">gb</field>
         </record>
         <record id="um" model="res.country">
@@ -978,7 +978,7 @@
         <record id="us" model="res.country">
             <field name="name">United States</field>
             <field name="code">us</field>
-            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s, %(state_code)s %(zip)s\n%(country_name)s'"/>
+            <field name="address_format" eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" />
         </record>
         <record id="uy" model="res.country">
             <field name="name">Uruguay</field>
