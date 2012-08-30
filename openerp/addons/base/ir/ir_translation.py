@@ -77,7 +77,7 @@ class ir_translation_import_cursor(object):
     def push(self, ddict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        state = ddict['value'] and "translated"  or "to_translate"
+        state =  "translated" if (ddict['value'] and ddict['value'] != "") else "to_translate"
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
                         imd_model, imd_module, imd_name, value,state)
@@ -172,7 +172,7 @@ class ir_translation(osv.osv):
     }
     
     _defaults = {
-        'state':'translated',
+        'state':'to_translate',
     }
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
