@@ -23,10 +23,6 @@ instance.web.form.FieldManagerMixin = {
      */
     get_field: function(field_name) {},
     /**
-     * Called by the field when the translate button is clicked.
-     */
-    open_translate_dialog: function(field) {},
-    /**
      * Returns true when the view is in create mode.
      */
     is_create_mode: function() {},
@@ -1049,9 +1045,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     is_create_mode: function() {
         return this.get("actual_mode") === "create";
     },
-    open_translate_dialog: function(field) {
-        return this._super(field);
-    },
 });
 
 /**
@@ -1882,6 +1875,10 @@ instance.web.form.FieldInterface = {
      * Must set the focus on the field. Return false if field is not focusable.
      */
     focus: function() {},
+    /**
+     * Called when the translate button is clicked.
+     */
+    on_translate: function() {},
 };
 
 /**
@@ -1936,9 +1933,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this._super();
         if (this.field.translate) {
             this.$el.addClass('oe_form_field_translatable');
-            this.$el.find('.oe_field_translate').click(_.bind(function() {
-                this.field_manager.open_translate_dialog(this);
-            }, this));
+            this.$el.find('.oe_field_translate').click(this.on_translate);
         }
         this.$label = this.view.$el.find('label[for=' + this.id_for_label + ']');
         if (instance.session.debug) {
@@ -1999,6 +1994,13 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
     set_input_id: function(id) {
         this.id_for_label = id;
+    },
+    on_translate: function() {
+        var self = this;
+        var trans = new instance.web.DataSet(this, 'ir.translation', this.view.dataset.get_context());
+        return trans.call('translate', [this.view.dataset.model, this.view.datarecord.id, this.name]).then(function(action) {
+            self.do_action(action);
+        });
     },
 });
 
