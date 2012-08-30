@@ -28,15 +28,10 @@ class res_company(osv.Model):
     _columns = {
            "gengo_private_key": fields.text("Gengo Private Key"),
            "gengo_public_key": fields.text("Gengo Public Key"),
-           "gengo_tier": fields.selection([('machine', 'Machine'),
-                                          ('standard', 'Standard'),
-                                          ('pro', 'Pro'),
-                                          ('ultra', 'Ultra')], "Tier Type", required=True),
            "gengo_comment": fields.text("Comments", help="This comment will be automatically be enclosed in each an every request sent to Gengo"),
            "gengo_auto_approve": fields.boolean("Auto Approve Translation ?", help="Jobs are Automatically Approved by Gengo."),
     }
 
     _defaults = {
-        "gengo_tier": "machine",
         "gengo_auto_approve": True,
     }

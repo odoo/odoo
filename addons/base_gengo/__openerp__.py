@@ -34,7 +34,7 @@ Automated Translations through Gengo API
         'res_company_view.xml',
         'res_lang_view.xml',
 
-        'wizard/base_gengo_translation_view.xml',
+        'wizard/base_gengo_translations_view.xml',
            ],
     'demo_xml': [],
     'test': [],
