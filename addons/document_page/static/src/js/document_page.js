@@ -11,7 +11,7 @@ openerp.document_page = function (openerp) {
                 }
             } else {
                 var wiki_value = wiky.process(show_value || '');
-                this.$element.html(wiki_value);
+                this.$el.html(wiki_value);
             }
         },
     });

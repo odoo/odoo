@@ -239,30 +239,52 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <h3 class="oe_kanban_ellipsis"><field name="name"/></h3>
 
+                                    <h4><field name="name"/></h4>
                                     <div class="oe_kanban_project_list">
-                                        <a t-if="record.use_tasks.raw_value"
-                                            name="%(act_project_project_2_project_task_all)d" type="action">
-                                            Tasks(<field name="task_count"/>)</a>
+                                        <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action"> <field name="task_count"/> Tasks</a>
                                     </div>
-
-                                    <div class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
-                                        <div>Deadline</div>
-                                        <div><field name="date"/></div>
-                                    </div>
-                                    <div class="oe_kanban_project_fields oe_kanban_project_progress">
-                                        <div>Progress</div>
-                                        <div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>
-                                    </div>
-                                    <div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">
-                                        <a t-attf-href="mailto:#{record.alias_id.value}"><field name="alias_id"/></a>
-                                    </div>
+                                    <table>
+                                      <tr class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
+                                        <th>Deadline</th>
+                                        <td><field name="date"/></td>
+                                      </tr>
+                                      <tr class="oe_kanban_project_fields oe_kanban_project_progress">
+                                        <th>Progress</th>
+                                        <td><t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></td>
+                                      </tr>
+                                    </table>
                                     <div class="oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
+
+                                    <!--<h3 class="oe_kanban_ellipsis"><field name="name"/></h3>-->
+
+                                    <!--<div class="oe_kanban_project_list">-->
+                                        <!--<a t-if="record.use_tasks.raw_value"-->
+                                            <!--name="%(act_project_project_2_project_task_all)d" type="action">-->
+                                            <!--Tasks(<field name="task_count"/>)</a>-->
+                                    <!--</div>-->
+
+                                    <!--<div class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">-->
+                                        <!--<div>Deadline</div>-->
+                                        <!--<div><field name="date"/></div>-->
+                                    <!--</div>-->
+                                    <!--<div class="oe_kanban_project_fields oe_kanban_project_progress">-->
+                                        <!--<div>Progress</div>-->
+                                        <!--<div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>-->
+                                    <!--</div>-->
+                                    <!--<div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">-->
+                                        <!--<a t-attf-href="mailto:#{record.alias_id.value}"><field name="alias_id"/></a>-->
+                                    <!--</div>-->
+                                    <!--<div class="oe_kanban_project_avatars">-->
+                                        <!--<t t-foreach="record.members.raw_value" t-as="member">-->
+                                            <!--<img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>-->
+                                        <!--</t>-->
+                                    <!--</div>-->
+
                                 </div>
                             </div>
                         </t>
@@ -666,11 +688,9 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_tasks"/>
+                    <label for="use_tasks"/>
                 </xpath>
             </field>
         </record>

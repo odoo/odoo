@@ -118,7 +118,7 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="priority">50</field>
             <field name="arch" type="xml">
-                <xpath expr='//field[@name="remaining_hours"]' position='after'>
+                <xpath expr='//field[@name="quantity_max"]' position='after'>
                     <field name="company_uom_id" readonly="1" class="oe_inline"/>
                 </xpath>
             </field>

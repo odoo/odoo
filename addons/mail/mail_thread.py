@@ -296,7 +296,7 @@ class mail_thread(osv.Model):
         self.message_create_notify_by_email(cr, uid, vals, user_to_push_ids, context=context)
         
         return msg_id
-    
+
     def message_get_user_ids_to_notify(self, cr, uid, thread_ids, new_msg_vals, context=None):
         # get body
         body = new_msg_vals.get('body_html', '') if new_msg_vals.get('content_subtype') == 'html' else new_msg_vals.get('body_text', '')
@@ -1139,7 +1139,7 @@ class mail_thread(osv.Model):
         """ When creating a new message, set as unread if uid is not the
             object responsible. """
         for obj in self.browse(cr, uid, ids, context=context):
-            if obj.message_state and self._columns.get('user_id') and (not obj.user_id or obj.user_id.id != uid):
+            if obj.message_state and ('user_id' in obj._columns.keys()) and (not obj.user_id or obj.user_id.id != uid) :
                 self.message_mark_as_unread(cr, uid, [obj.id], context=context)
 
     def message_check_and_set_unread(self, cr, uid, ids, context=None):
