@@ -393,11 +393,9 @@
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_issues"/>
+                    <label for="use_issues"/>
                 </xpath>
             </field>
         </record>
