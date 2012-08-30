@@ -73,12 +73,10 @@ The kernel of OpenERP, needed for all installation.
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
-        'publisher_warranty/publisher_warranty_view.xml',
         'security/ir.model.access.csv',
         'security/ir.model.access-1.csv', # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
-        'publisher_warranty/publisher_warranty_data.xml',
     ],
     'demo': [
         'base_demo.xml',

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.4\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:44+0000\n"
-"PO-Revision-Date: 2012-07-06 21:06+0000\n"
+"PO-Revision-Date: 2012-08-20 15:29+0000\n"
 "Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-19 04:39+0000\n"
-"X-Generator: Launchpad (build 15637)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:49+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base
 #: model:res.country,name:base.sh
@@ -3264,6 +3264,18 @@ msgid ""
 "że wszystkie towary są w obrocie hurtowym.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul dient der Verwaltung des Kontenplans und der Steuern für Polen "
+"in OpenERP.\n"
+"============================================================================="
+"=====\n"
+"\n"
+"To jest moduł do tworzenia wzorcowego planu kont i podstawowych ustawień do "
+"podatków\n"
+"VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów "
+"zakładając,\n"
+"że wszystkie towary są w obrocie hurtowym.\n"
+"    "
 
 #. module: base
 #: field:ir.actions.client,params_store:0
@@ -3809,6 +3821,14 @@ msgid ""
 "Canadian accounting charts and localizations.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul dient der Verwaltung des englischen und französischen "
+"Kontenplan Kanadas in OpenERP.\n"
+"============================================================================="
+"==============\n"
+"\n"
+"Kanadischer Kontenplan und Lokalisierung.\n"
+"    "
 
 #. module: base
 #: view:base.module.import:0
@@ -3841,6 +3861,14 @@ msgid ""
 "    * the Tax Code Chart for Luxembourg\n"
 "    * the main taxes used in Luxembourg"
 msgstr ""
+"\n"
+"Dieses Modul dient der Verwaltung des Luxemburgischen Kontenplans in "
+"OpenERP.\n"
+"======================================================================\n"
+"\n"
+"* Der KLUWER Kontenplan,\n"
+"* Die Steuerschlüssel für Luxembourg,\n"
+"* Die wesentlichen Steuern, die in Luxembourg Verwendung finden."
 
 #. module: base
 #: field:ir.module.module,demo:0
@@ -4266,7 +4294,7 @@ msgstr "EAN Prüfung"
 
 #. module: base
 #: field:res.partner,vat:0
-msgid "TIN"
+msgid "VAT"
 msgstr "USt-IdNr. / UID"
 
 #. module: base
@@ -4595,6 +4623,37 @@ msgid ""
 "\n"
 "\n"
 msgstr ""
+"\n"
+"Dies verbessert den Umgang mit Mehrfachwährungen bei Kostenstellenrechnung "
+"generell bei Mehrfachunternehmungen.\n"
+"\n"
+"Dieses Modul basiert auf der durchgeführten Arbeit in allen Modulen c2c-"
+"multicost* die ab der stabilen Version 5.0\n"
+"verfügbar sind und ermöglicht die gemeinsame Nutzung von Kostenstellenkonten "
+"durch die Unternehmen (selbst\n"
+"wenn die Währungen sich unterscheiden).\n"
+"\n"
+"Was hier umgesetzt ist:\n"
+"\n"
+"  * Zuweisung des Verursachers einer Kostenposition (=Unternehmen, dass die "
+"Kostenstelle eingerichtet hat)\n"
+"  * Mehrfachwährung für Kosten (wie bei der Finanzbuchhaltung auch)\n"
+"  * Alle Kosten auf die in der Kostenstelle geführten Währung (Eigner-"
+"Unternehmen) umrechnen.\n"
+"  * Per Standard ohne Einfluss bei Einrichtung für Einfachunternehmen\n"
+"\n"
+"Als Ergebnis können Kostenstellen, trotz unterschiedlicher Währungen, "
+"gemeinsam genutzt werden. Diese\n"
+"Einrichtung wird nun Realität, geniesse!\n"
+"\n"
+"- Unternehmen A: EUR\n"
+"- Unternehmen B: CHF\n"
+"\n"
+"- Kostenstelle A: USD, eigner ist Unternehmen A\n"
+"- Kostenstelle B; CHF, eigner ist Unternehmen A\n"
+"- Kostenstelle C: EUR, eigner ist Unternehmen B\n"
+"\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_it
@@ -4735,6 +4794,23 @@ msgid ""
 "anonymization process to recover your previous data.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht die Anonymisierung einer Datenbank.\n"
+"\n"
+"Dieses Modul ermöglicht Daten einer gegebenen Datenbank vertraulich zu "
+"halten.\n"
+"Dies ist zweckmäßig, wenn Sie den Migrationsprozess nutzen und die "
+"vertraulichen\n"
+"Daten von Ihnen oder Ihrem Klienten schützen möchten. Im Prinzip lassen Sie "
+"das \n"
+"Anonymisierungs-Werkzeug die vertraulichen Daten verstecken (diese werden "
+"durch \"XXX\"-\n"
+"Zeichen ersetzt). Sie können dann die anonymisierte Datenbank an das "
+"Migrationsteam \n"
+"senden. Wenn Sie anschließend die migrierte Datenbank zurück erhalten, "
+"stellen Sie,\n"
+"im Umkehrprozess zur Anonymisierung, die Daten wieder her.\n"
+"    "
 
 #. module: base
 #: help:publisher_warranty.contract,name:0
@@ -4885,6 +4961,21 @@ msgid ""
 "You can also use the geolocalization without using the GPS coordinates.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul wird durch die OpenERP S.A. verwendet, um Kunden per Geo-"
+"Lokalisierung \n"
+"an die zuständigen Partner weiter zu vermitteln.\n"
+"============================================================================="
+"\n"
+"\n"
+"Sie können mit diesem Modul Ihre Geschäftsgelegenheiten geo-lokalisieren.\n"
+"\n"
+"Benutzen Sie Geo-Lokalisierung, um Geschäftgelegenheiten Partnern "
+"zuzuweisen.\n"
+"Ermitteln Sie die GPS-Koordinaten mittels der Addresse des Partners.\n"
+"Der zutreffendste Partne kann somit zugewiesen werden.\n"
+"Sie können die Geo-Lokalisierung auch ohne GPS-Koordinaten nutzen.\n"
+"    "
 
 #. module: base
 #: help:ir.actions.act_window,help:0
@@ -5400,6 +5491,20 @@ msgid ""
 "of the survey\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul dient der Erstellung von Fragebögen.\n"
+"==============================================\n"
+"\n"
+"Es hängt von den Antworten ab, die auf Fragen verschiedener Benutzer "
+"folgen.\n"
+"Ein Fragebogen kann mehrere Seiten haben. Jede Seite kann mehrere Fragen mit "
+"wiederum\n"
+"mehreren Antwortmöglichkeiten haben.\n"
+"Nutzer können verschiedene Antworten liefern und davon hängt die Beurteilung "
+"ab.\n"
+"Partnern wird eine Mail mit Name und Kennwort als Einladung zur Teilnahme "
+"zugeschickt.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bm
@@ -5568,6 +5673,15 @@ msgid ""
 "This new object will regroup and will allow you to easily keep track and "
 "order all your purchase orders.\n"
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht Bestellanforderungen (BANF) zu verwalten.\n"
+"===========================================================\n"
+"\n"
+"Wenn eine Bedarfsmeldung generiert wird, haben Sie nun die Möglichkeit die "
+"zugehörigen Bestellanforderungen\n"
+"zu speichern. Dieses neue Objekt gruppiert die Bedarfsmeldungen neu und "
+"erlaubt die einfache Kontrolle und\n"
+"Bestellung aller Bedarfe.\n"
 
 #. module: base
 #: model:res.country,name:base.hu
@@ -5659,6 +5773,17 @@ msgid ""
 "It adds sales name and sales Reference on production order.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul macht die gleichzeitige Installation der Module MRP und Verkauf "
+"verfügbar.\n"
+"===========================================================================\n"
+"\n"
+"Es wird im Wesentlichen dann genutzt, wenn aus Verkäufen entstandene "
+"Fertigungsaufträge \n"
+"nachverfolgt werden sollen. Es fügt dem Fertigungsauftrag den Verkäufernamen "
+"und die\n"
+"Bezugsnummer (Referenz) hinzu.\n"
+"    "
 
 #. module: base
 #: selection:res.request,state:0
@@ -5698,6 +5823,13 @@ msgid ""
 "revenue\n"
 "reports, etc."
 msgstr ""
+"Erzeugen Sie Rechnungen aus Spesen, Stundennachweisen, ...\n"
+"Modul zum generieren von Rechnungen aus Kosten (Personalkosten, Auslagen, "
+"...).\n"
+"=====================================================================\n"
+"\n"
+"Sie können Preislisten auf Kostenstellen beziehen, theoretische "
+"Umsatzberichte erstellen, usw."
 
 #. module: base
 #: field:ir.ui.menu,parent_id:0
@@ -5794,6 +5926,12 @@ msgid ""
 "    those assets. And it allows to create Move's of the depreciation lines.\n"
 "    "
 msgstr ""
+"Vermögens- und Anlagenverwaltung.\n"
+"    Dieses Modul verwaltet Anlagen eines Unternehmens oder eines Einzelnen. "
+"Es wird die jeweiligen Abschreibungen\n"
+"    festhalten. Es ermöglicht darüber hinaus auch die Veränderungen dieser "
+"Aktiva zu pflegen.\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.bv
@@ -6021,6 +6159,28 @@ msgid ""
 "        * Graph : Products to send in delay (date < = today)\n"
 "    "
 msgstr ""
+"\n"
+"Die OpenERP Lagerverwaltung kann mit mehreren Lagerorten, mit mehreren \n"
+"und strukturierten Lagerplätzen umgehen.\n"
+"==========================================================================\n"
+"\n"
+"Dank der Doppelten Buchhaltung ist die Lagerverwaltung leistungsfähig und "
+"flexibel:\n"
+"    * Lagerveränderung und -planung,\n"
+"    * Unterschiedliche Methoden (FIFO, LIFO, ...),\n"
+"    * Lagerbewertung (Festpreis, Mittelwert, ...),\n"
+"    * Solider Umgang mit Bestandsabweichungen,\n"
+"    * Automatische Regeln für Nachbestellungen (Bestand, JIT, ...),\n"
+"    * Unterstützung für Barcodes,\n"
+"    * Schnelle Fehlerfeststellung durch Gegenbuchungs-System,\n"
+"    * Nachverfolgung (Zugang/Abgang, Fertigungslose, Seriennummern, ...),\n"
+"    * Pinnwand für Lagerverwaltung mit:\n"
+"        - Kommissionierungsprobleme,\n"
+"        - Liste der Lagerzugänge,\n"
+"        - Liste der Lagerabgänge,\n"
+"        - Diagramm: Erwartete Produkte im Verzug (Datum <= heute),\n"
+"        - Diagramm: zu versendende Produkte im Verzug (Datum <= heute),\n"
+"    "
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -6095,6 +6255,35 @@ msgid ""
 "Budgets per Budgets.\n"
 "\n"
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht Buchhaltern die Verwaltung von Kostenstellen und "
+"übergreifenden Budgets.\n"
+"============================================================================="
+"=========\n"
+"\n"
+"Sind die Haupt- und Nebenkostenstellen festgelegt (in Finanzen/Budgets/) "
+"können Projektmanager die\n"
+"Verfügungsbeträge den jeweiligen Kostenstellen zuschreiben.\n"
+"\n"
+"Der Buchhalter hat die Möglichkeit die Gesamtsummen aller Haupt- und "
+"Nebenkostenstellen überblicken,\n"
+"um eine Über-/Unterschreitung der Plansummen zu vermeiden. Jede Kontenliste "
+"kann auch zu einer\n"
+"grafischen Ansicht umgeschaltet werden.\n"
+"\n"
+"Drei Berichte sind verfügbar:\n"
+"    1. Der erste ist aus einer Liste von Budgets erreichbar: Er zeigt die "
+"Verteilung der Kostenarten, der \n"
+"        Neben- und der Haupt-Kostenstellen.\n"
+"\n"
+"    2. Der zweite stellt eine Zusammenfassung des vorigen dar und zeigt nur "
+"die Verteilung ausgewählter \n"
+"        Busgets innerhalb der Kostenstellen.\n"
+"\n"
+"    3. Der letzte Bericht ist vom Kostenstellenplan aus erhältlich. Es weist "
+"die Verteilung der \n"
+"        Nebenkostenstellen innerhalb der Hauptkostenstellen aus.\n"
+"\n"
 
 #. module: base
 #: help:res.lang,iso_code:0
@@ -6448,7 +6637,7 @@ msgstr "Wertebereich"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_module_quality
 msgid "Analyse Module Quality"
-msgstr ""
+msgstr "Modulqualität analysieren"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -6574,6 +6763,19 @@ msgid ""
 "    * Integrated with Holiday Management\n"
 "    "
 msgstr ""
+"\n"
+"Allgemeines System für Lohn und Gehalt.\n"
+"====================================\n"
+"\n"
+"    * Mitarbeiterstammdaten\n"
+"    * Mitarbeiterverträge\n"
+"    * Kennwortgeschützter Vertrag\n"
+"    * Bezüge und Abzüge\n"
+"    * Ermöglicht Grundlohn / Zulagen / Nettolohn\n"
+"    * Lohn-/Gehaltsnachweis\n"
+"    * Monatliche Lohn-/Gehalts -Saldenliste\n"
+"    * Urlaubsplanung ist integriert\n"
+"    "
 
 #. module: base
 #: selection:ir.cron,interval_type:0
@@ -6607,7 +6809,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_web_diagram
 msgid "OpenERP Web Diagram"
-msgstr ""
+msgstr "OpenERP Web Diagramm"
 
 #. module: base
 #: view:res.partner.bank:0
@@ -6744,6 +6946,43 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Ein generisches eMail Teilsystem mit Nachrichtenspeicherung und "
+"Warteschlange.\n"
+"====================================================================\n"
+"\n"
+"Dieses eMail-Teilsystem ist nicht zur alleinigen Nutzung gedacht, es soll "
+"eine \n"
+"vereinheitlichte Abstraktionsebene zur Verfügung stellen auf die alle "
+"anderen\n"
+"Anwendungen/Module zurückgreifen können.\n"
+"\n"
+"Hauptmerkmale sind:\n"
+"\n"
+"    * Verkässt sich auf global eingerichtete Ausgangs-Mailserver im "
+"Einrichtungs-\n"
+"        menü für erfolgreiche Mail-Zustellung.\n"
+"    * Bietet eine API zum Senden und Speichern von Nachrichten nach Thema "
+"gruppiert.\n"
+"    * Jedes OpenERP-Dokument kann als Unterhaltungsthema dienen, "
+"vorausgesetzt \n"
+"        dieses bietet die notwendige Unterstützung zum Umgang mit "
+"eingehenden \n"
+"        Nachrichten (s. a. \"mail.thread\"-Klasse für Details.\n"
+"    * Bietet ein Warteschlangen-System mit automatischer Abarbeitung durch\n"
+"        konfigurierbarem Ausführungsplaner.\n"
+"    * Bietet einen allgemeinen eMail-Erstellungs-Assistenten der auch zum \n"
+"       MassenMail-Assistenten werden kann und in der Lage ist einfache \n"
+"       Platzhalter-Ausdrücke zu interpretieren. Diese werden mit "
+"dynamischen\n"
+"       Daten ersetzt wenn die Nachricht tatsächlich versandt wird. Dieser \n"
+"       einfache, allgemeine Assistent kann auf einfache Weise erweitert "
+"werden\n"
+"       auch höhere Ansprüche zu erfüllen (siehe \"email_template\" für ein "
+"Beispiel,\n"
+"       welches eMail-Vorlagen-Merkmale diesem Assistenten hinzufügt).\n"
+"\n"
+"    "
 
 #. module: base
 #: view:res.lang:0
@@ -6779,6 +7018,27 @@ msgid ""
 "an other object.\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht Ihnen die Verwaltung Ihrer Kontakte.\n"
+"=====================================================\n"
+"\n"
+"Es läßt folgendes festlegen:\n"
+"    * Kontakte ohne Bezug zu einem Partner,\n"
+"    * Kontakte mit Bezug zu mehreren Addressen (evtl. bei verschiedenen "
+"Partnern),\n"
+"    * Kontakte mit möglicherweise verschiedenen Funktionen \n"
+"        bei den verschiedenen Adressen,\n"
+"\n"
+"Ebenso werden neue Menüs hinzugefügt in:\n"
+"    Beschaffung / Addressbuch / Kontakte\n"
+"    Verkauf / Addressbuch / Kontakte\n"
+"\n"
+"Beachten Sie bitte, dass dieses Modul bestehende Addressen zu \"Addressen + "
+"Kontake\" umwandelt. Dies\n"
+"bedeutet, dass bedeutet, dass manche Felder bei den Addressen fehlen (wie "
+"der Ansprechpartnername), da diese in einem anderen Objekt definiert sein "
+"sollen.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_res_partner_event
@@ -6850,7 +7110,7 @@ msgstr "Deinstallieren"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_budget
 msgid "Budgets Management"
-msgstr ""
+msgstr "Budgetverwaltung"
 
 #. module: base
 #: field:workflow.triggers,workitem_id:0
@@ -6943,6 +7203,14 @@ msgid ""
 "using the\n"
 "FTP client.\n"
 msgstr ""
+"\n"
+"Dies ist die FTP-Unterstützung für das Dokumentenverwaltungssystem (DMS)\n"
+"=================================================================\n"
+"\n"
+"Mit diesem Modul können Sie nicht nur über OpenERP auf Dokumente zugreifen, "
+"sondern\n"
+"können auch mit einen FTP-Programm auf das Dateisystem der Dokumente "
+"zugreifen.\n"
 
 #. module: base
 #: field:ir.model.fields,size:0
@@ -6968,6 +7236,23 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul ermöglicht Ihnen die Festlegung  von Vorgabe-Funktionen eines "
+"Benutzers für bestimmte Konten.\n"
+"============================================================================="
+"================\n"
+"\n"
+"Dies wird zumeist genutzt, wenn ein Nutzer seinen Stundennachweis ausfüllt. "
+"Die Zahlenwerte werden abgefragt\n"
+"und die Felder anschließend die Felder automatisch geschrieben. Die "
+"Feldinhalte können danach immer noch\n"
+"verändert werden.\n"
+"\n"
+"Offensichtlicherweise werden Felder ohne Eingaben mit den Vorgabewerten des "
+"Mitarbeiters gefüllt, so dass\n"
+"die Kompatibilität zu älteren Konfigurationen gegeben ist.\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_audittrail
@@ -7276,7 +7561,7 @@ msgstr ""
 #. module: base
 #: selection:res.currency,position:0
 msgid "After Amount"
-msgstr ""
+msgstr "Betrag danach"
 
 #. module: base
 #: selection:base.language.install,lang:0
@@ -7326,7 +7611,7 @@ msgstr "Ursprungsbezeichnung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_timesheet_sheet
 msgid "Timesheets Validation"
-msgstr ""
+msgstr "Bewilligung von Stundennachweisen"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_main_pm
@@ -7473,7 +7758,7 @@ msgstr "wird gelöscht"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_multilang
 msgid "Multi Language Chart of Accounts"
-msgstr ""
+msgstr "Mehrsprachige Kontenpläne"
 
 #. module: base
 #: selection:res.lang,direction:0
@@ -7500,6 +7785,18 @@ msgid ""
 "that have no counterpart in the general financial accounts.\n"
 "    "
 msgstr ""
+"\n"
+"Modul zum Erstellen von Kostenstellenobjekten.\n"
+"==========================================\n"
+"\n"
+"In OpenERP sind Kostenstellen-Konten an Konten der Finanzbuchhaltung "
+"gebunden,\n"
+"werden jedoch vollkommen losgelöst behandelt. So können Sie verschiedene "
+"analytische\n"
+"Operationen daran verüben, ohne daß sich dies in den Konten der "
+"Finanzbuchhaltung \n"
+"auswirken würde.\n"
+"    "
 
 #. module: base
 #: field:res.users,signature:0
@@ -7509,7 +7806,7 @@ msgstr "Signatur"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_crm_caldav
 msgid "Meetings Synchronization"
-msgstr ""
+msgstr "Abgleich von Besprechungsterminen"
 
 #. module: base
 #: field:ir.actions.act_window,context:0
@@ -7722,7 +8019,7 @@ msgstr "Honduras Buchführung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_report_intrastat
 msgid "Intrastat Reporting"
-msgstr ""
+msgstr "Innergemeinschaftliche Handelsstatistik"
 
 #. module: base
 #: code:addons/base/res/res_users.py:222
@@ -7799,7 +8096,7 @@ msgstr "Erzeugtes Menü"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_analytic_default
 msgid "Account Analytic Defaults"
-msgstr ""
+msgstr "Kostenstellen Vorgabewerte"
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_contract
@@ -7815,6 +8112,17 @@ msgid ""
 "You can assign several contracts per employee.\n"
 "    "
 msgstr ""
+"\n"
+"Information aus der Mitarbeiter-Vertragsverwaltung auf Sicht verfügbar "
+"machen.\n"
+"=================================================================\n"
+"\n"
+"    * Familienstand,\n"
+"    * Sozialversicherungsnummer,\n"
+"    * Geburtsort, Geburtsdatum, ---\n"
+"\n"
+"Sie können einem Mitarbeiter mehrere Verträge zuordnen.\n"
+"    "
 
 #. module: base
 #: selection:ir.ui.view,type:0
@@ -7937,7 +8245,7 @@ msgstr "Gelesen"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_association
 msgid "Associations Management"
-msgstr ""
+msgstr "Beziehungsmanagement"
 
 #. module: base
 #: help:ir.model,modules:0
@@ -8027,7 +8335,7 @@ msgstr ""
 #. module: base
 #: field:res.partner,title:0
 msgid "Partner Firm"
-msgstr ""
+msgstr "Partner-Unternehmen"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_model_fields
@@ -8069,6 +8377,12 @@ msgid ""
 "Invite OpenERP user feedback, powered by uservoice.\n"
 "    "
 msgstr ""
+"\n"
+"Rückmeldungs-Schaltfläche im Kopfbereich hinzufügen.\n"
+"================================================\n"
+"\n"
+"OpenERP-Nutzer um Rückmeldung bitten; durch \"uservoice\" ermöglicht.\n"
+"    "
 
 #. module: base
 #: field:res.company,rml_header2:0
@@ -8136,6 +8450,13 @@ msgid ""
 "that exceeds minimum amount set by configuration wizard.\n"
 "    "
 msgstr ""
+"\n"
+"Zweistufige Bewilligung bei Beschaffung mit Betragsüberschreitung.\n"
+"===========================================================\n"
+"\n"
+"Dieses Modul verändert den Beschaffungs-Prozess so, dass eine Beschaffung,\n"
+"ab einem einstellbaren Mindest-Betrag, zusätzlich bewilligt werden muss.\n"
+"    "
 
 #. module: base
 #: field:res.currency,rounding:0
@@ -8223,6 +8544,14 @@ msgid ""
 "all the tasks will change accordingly.\n"
 "    "
 msgstr ""
+"\n"
+"Paßt Daten so an, dass Sie mit veränderten Projekt Abschlußdaten "
+"korellieren.\n"
+"=================================================================\n"
+"\n"
+"Wenn Projekt-Enddaten verändert werden, so werden Frist und Startdatum aller "
+"Aufgaben entsprechend angepaßt.\n"
+"    "
 
 #. module: base
 #: help:res.users,view:0
@@ -8371,6 +8700,12 @@ msgid ""
 "Contains the installer for marketing-related modules.\n"
 "    "
 msgstr ""
+"\n"
+"Menü für Marketing.\n"
+"====================\n"
+"\n"
+"Enthält einen Installations-Assistenten für auf Marketing bezogene Module.\n"
+"    "
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_knowledge_management
@@ -8418,6 +8753,37 @@ msgid ""
 "task is completed.\n"
 "\n"
 msgstr ""
+"\n"
+"Erstellt automatisch Projektaufgaben aus Beschaffungsauftragspositionen.\n"
+"===============================================================\n"
+"\n"
+"Dieses Modul generiert automatisch neue Aufgaben für jede Bedarfsposition "
+"(z. B. \n"
+"aus einer Verkaufsauftragsposition), wenn der korrespondierende Artikel mit "
+"den \n"
+"folgenden Charakteristika übereinstimmt:\n"
+"\n"
+"  * Typ = Dienstleistung\n"
+"  * Dispositionsmethode = Beschaffe von Auftrag,\n"
+"  * Beschaffungsmethode = Fertigung,\n"
+"\n"
+"Wenn darüber hinaus auch noch ein Projekt in der Produkt-Sicht (Beschaffung "
+"& Lagerorte)\n"
+"festgelgt ist, dann wird die Aufgabe in diesem Projekt angelegt.\n"
+"Andenfalls wird die Aufgabe keinem Projekt zugewiesen und kann später einem "
+"manuell\n"
+"einem Projekt zugewiesen werden.\n"
+"\n"
+"Wenn die Projekt-Aufgabe abgeschlossen oder storniert/abgebrochen wird, so "
+"wird der \n"
+"Prozess der zugehörigen Beschaffungsauftragzeile entsprechend aktualisiert. "
+"Zum \n"
+"Beispiel die Position des Beschaffungsauftrags zu einer "
+"Verkaufsauftragsposition \n"
+"korrespondiert, so wird diese Zeile als zugestellt angesehen, wenn die "
+"Aufgabe\n"
+"abgeschlossen ist.\n"
+"\n"
 
 #. module: base
 #: code:addons/base/res/res_config.py:348
@@ -8476,6 +8842,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul generiert automatisch Projektaufgaben bei eingehenden eMails.\n"
+"==================================================================\n"
+"\n"
+"Ermöglicht die erstellung von Aufgaben basierend auf neuen eMails in "
+"bestimmten Postfächern,\n"
+"ähnlich dem in Kundenverwaltungsbereich vorhandenen Mechanismus.\n"
+"Es gibt zwei übliche Alternativen die Postfach-Integration festzulegen:\n"
+"\n"
+" * Das \"fetchmail\"-Modul installieren, ein neues Postfach anlegen und "
+"dann\n"
+"   \"Projekt-Aufgaben\" als Ziel für die eingehenden Nachrichten auswählen.\n"
+" * Selbst händisch in Ihrem Posteingangsserver auf Grundlage des \"Mail "
+"Gateway\"\n"
+"  -Skripts des \"Post\"-Moduls - dieses darin an das \"project.task\"-Modell "
+"binden.\n"
+"\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -8589,6 +8974,9 @@ msgid ""
 "serialization field, instead of having its own database column. This cannot "
 "be changed after creation."
 msgstr ""
+"Wenn gesetzt, wird dieses Feld in einer zusätzlichen Struktur des "
+"Serialisierungsfeldes gespeichert anstelle einer eigenen Spalte in der "
+"Datenbank. Dies kann nach Erstellung nicht mehr geändert werden."
 
 #. module: base
 #: view:res.partner.bank:0
@@ -8779,6 +9167,12 @@ msgid ""
 "\n"
 "    *  Share meeting with other calendar clients like sunbird\n"
 msgstr ""
+"\n"
+"CalDAV Merkmale in Besprechungen.\n"
+"=================================\n"
+"\n"
+"    * Besprechungen-Kalender mit anderen Kalender-Anwendungen wie Sunbird "
+"gemeinsam nutzen.\n"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_iban
@@ -9028,6 +9422,14 @@ msgid ""
 "for Wiki Quality Manual.\n"
 "    "
 msgstr ""
+"\n"
+"Vorlage für Qualitätshandbuch.\n"
+"===========================\n"
+"\n"
+"Liefert Beispieldaten unter gleichzeitiger Erstellung einer Wiki-Gruppe und "
+"\n"
+"einer Wiki-Seite für ein Wiki-Qualitätshandbuch.\n"
+"    "
 
 #. module: base
 #: model:ir.actions.act_window,name:base.act_values_form_action
@@ -9491,6 +9893,17 @@ msgid ""
 "* Date\n"
 "    "
 msgstr ""
+"Setzt Vorgabewerte für Ihre Kostenstellen\n"
+"Ermöglicht die automatische Auswahl von Kostenstellen gemäß den  folgenden "
+"Kriterien:\n"
+"==========================================================================\n"
+"\n"
+"* Produkt\n"
+"* Partner\n"
+"* Benutzer\n"
+"* Unternehmen\n"
+"* Datum\n"
+"    "
 
 #. module: base
 #: model:res.country,name:base.ae
@@ -9551,6 +9964,12 @@ msgid ""
 "Keep track of Wiki groups, pages, and history.\n"
 "    "
 msgstr ""
+"\n"
+"Das Basis-Modul für die Dokumenten-Verwaltung:\n"
+"=============================================\n"
+"\n"
+"Wiki-Gruppen, -Seiten und Historie verfolgen\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_repair
@@ -10907,7 +11326,7 @@ msgstr "Wochen"
 #. module: base
 #: code:addons/base/res/res_company.py:157
 #, python-format
-msgid "TIN: "
+msgid "VAT: "
 msgstr "UID: "
 
 #. module: base
