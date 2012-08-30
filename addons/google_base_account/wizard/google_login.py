@@ -37,14 +37,16 @@ class google_login(osv.osv_memory):
     }
 
     def google_login(self, user, password, type='', context=None):
-        if type == 'group':
-            gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
-        if type == 'contact':
-            gd_client = gdata.contacts.service.ContactsService()
-        if type == 'calendar':
-            gd_client = gdata.calendar.service.CalendarService()
-        if type =='docs_client':
-            gd_client = gdata.docs.client.DocsClient()
+        if type == 'group' or type == 'contact' or type == 'calendar' or type == 'docs_client':
+            if type == 'group' :
+                gd_client = gdata.contacts.client.ContactsClient(source='OpenERP')
+                gd_client = gdata.contacts.service.ContactsService()
+            if type == 'contact':
+                gd_client = gdata.contacts.service.ContactsService()
+            if type == 'calendar':
+                gd_client = gdata.calendar.service.CalendarService()
+            if type =='docs_client':
+                gd_client = gdata.docs.client.DocsClient()
         else:
             gd_client = gdata.contacts.service.ContactsService()
         try:

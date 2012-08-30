@@ -255,7 +255,7 @@ class google_import(import_framework):
                     'email_from': 'Email',
                     'date': 'DateStart',
                     'date_deadline': 'DateEnd',
-                    'categ_id/id': call(self.get_event_category, value('Category')),
+                    'categ_ids/id': call(self.get_event_category, value('Category')),
                     'recurrency': self.get_rec,
                     'end_date' : 'end_date',
                     'end_type' : 'end_type',
