@@ -6,7 +6,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this._super();
         this.db = db;
         this.token = token;
-        this.session = openerp.connection;
+        this.session = openerp.session;
         this.template = "EdiEmpty";
         this.content = "";
         this.sidebar = "";
@@ -28,14 +28,14 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         if (openerp.web.qweb.templates[template_content]) {
             this.content = openerp.web.qweb.render(template_content, param);
         }
-        this.$element.html(openerp.web.qweb.render("EdiView", param));
-        this.$element.find('button.oe_edi_action_print').bind('click', this.do_print);
-        this.$element.find('button#oe_edi_import_existing').bind('click', this.do_import_existing);
-        this.$element.find('button#oe_edi_import_create').bind('click', this.do_import_create);
-        this.$element.find('button#oe_edi_download').bind('click', this.do_download);
-        this.$element.find('.oe_edi_import_choice, .oe_edi_import_choice_label').bind('click', this.toggle_choice('import'));
-        this.$element.find('.oe_edi_pay_choice, .oe_edi_pay_choice_label').bind('click', this.toggle_choice('pay'));
-        this.$element.find('#oe_edi_download_show_code').bind('click', this.show_code);
+        this.$el.html(openerp.web.qweb.render("EdiView", param));
+        this.$el.find('button.oe_edi_action_print').bind('click', this.do_print);
+        this.$el.find('button#oe_edi_import_existing').bind('click', this.do_import_existing);
+        this.$el.find('button#oe_edi_import_create').bind('click', this.do_import_create);
+        this.$el.find('button#oe_edi_download').bind('click', this.do_download);
+        this.$el.find('.oe_edi_import_choice, .oe_edi_import_choice_label').bind('click', this.toggle_choice('import'));
+        this.$el.find('.oe_edi_pay_choice, .oe_edi_pay_choice_label').bind('click', this.toggle_choice('pay'));
+        this.$el.find('#oe_edi_download_show_code').bind('click', this.show_code);
     },
     on_document_failed: function(response) {
         var self = this;
@@ -85,7 +85,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
     },
     do_import_existing: function(e) {
         var url_download = this.get_download_url();
-        var $edi_text_server_input = this.$element.find('#oe_edi_txt_server_url');
+        var $edi_text_server_input = this.$el.find('#oe_edi_txt_server_url');
         var server_url = $edi_text_server_input.val();
         $edi_text_server_input.removeClass('invalid');
         if (!server_url) {
@@ -108,7 +108,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
 });
 
 openerp.edi.edi_view = function (db, token) {
-    openerp.connection.session_bind().then(function () {
+    openerp.session.session_bind().then(function () {
         new openerp.edi.EdiView(null,db,token).appendTo($("body").addClass('openerp'));
     });
 }
@@ -138,14 +138,14 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     show_login: function() {
         this.destroy_content();
         this.login = new openerp.web.Login(this);
-        this.login.appendTo(this.$element);
+        this.login.appendTo(this.$el);
     },
 
     destroy_content: function() {
         _.each(_.clone(this.getChildren()), function(el) {
             el.destroy();
         });
-        this.$element.children().remove();
+        this.$el.children().remove();
     },
 
     do_import: function() {
@@ -188,7 +188,7 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
 });
 
 openerp.edi.edi_import = function (url) {
-    openerp.connection.session_bind().then(function () {
+    openerp.session.session_bind().then(function () {
         new openerp.edi.EdiImport(null,url).appendTo($("body").addClass('openerp'));
     });
 }

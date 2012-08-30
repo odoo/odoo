@@ -63,7 +63,7 @@
         </div>
         <div class="oe_mail_recthread_aside">
             <div class="oe_mail_recthread_actions">
-                <button type="button" class="oe_mail_button_follow oe_mail_button_mouseout">Not following</button>
+                <button type="button" class="oe_mail_button_follow">Follow</button>
                 <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
                 <button type="button" class="oe_mail_button_followers">Show followers</button>
             </div>
@@ -73,15 +73,6 @@
             </div>
         </div>
     </div>
-
-    <!--
-        record_thread.subscriber template
-        Template used to display a subscriber.
-        -->
-    <li t-name="mail.record_thread.subscriber">
-        <img class="oe_mail_thumbnail oe_mail_frame" t-attf-src="{record.avatar_url}"/>
-        <a t-attf-href="#model=res.users&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-    </li>
 
     <!--
         mail.compose_message template
@@ -124,7 +115,7 @@
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
         <div t-attf-class="oe_mail_msg_#{record.type}">
-            <img class="oe_mail_icon oe_left" t-att-src="record.mini_url"/>
+            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">

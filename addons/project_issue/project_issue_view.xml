@@ -160,6 +160,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -238,6 +239,7 @@
             <field name="model">project.issue</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
+                    <field name="stage_id"/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="user_email"/>
@@ -353,11 +355,12 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_issues"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr='//div[@name="options_active"]' position='inside'>
+                    <field name="use_issues" class="oe_inline"/>
+                    <label for="use_issues"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
@@ -380,7 +383,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        Issues(<field name="issue_count"/>)</a>
+                        <field name="issue_count"/> Issues</a>
                 </xpath>
             </field>
         </record>
@@ -391,11 +394,9 @@
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_issues"/>
+                    <label for="use_issues"/>
                 </xpath>
             </field>
         </record>

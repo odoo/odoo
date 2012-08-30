@@ -155,7 +155,7 @@
                         <group>
                             <field name="partner_name" string="Company Name"/>
                             <field name="partner_id" string="Customer"
-                                on_change="on_change_partner(partner_id)" />
+                                on_change="on_change_partner(partner_id)" options='{"create_name_field": "name"}'/>
                             <label for="street" string="Address"/>
                             <div>
                                 <field name="street" placeholder="Street..."/>
@@ -222,6 +222,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
             </form>
         </field>
@@ -287,6 +288,7 @@
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
                     <field name="state" groups="base.group_no_one"/>
+                    <field name="stage_id"/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="planned_revenue" sum="Expected Revenues"/>
@@ -532,6 +534,7 @@
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>

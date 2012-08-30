@@ -31,7 +31,7 @@
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="amount"/>
                     <field name="state"/>
                 </tree>
@@ -42,7 +42,7 @@
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
                     <field name="department_id"/>
@@ -64,9 +64,10 @@
                     <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
                     <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
-                    <button name="invoice" states="accepted" string="Invoice" type="object" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="action_view_receipt" states="done" string="Open Receipt" type="object"/>
                     <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
-                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
                 </header>
                 <sheet>
                     <group>
@@ -79,7 +80,7 @@
                         <group>
                             <field name="name"/>
                             <field name="user_valid"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"/>
                         </group>
                     </group>
                     <notebook>
@@ -105,14 +106,21 @@
                                     </group>
                                 </form>
                             </field>
-                            <separator string="Notes"/>
-                            <field name="note" placeholder="Free Notes"/>
+                            <group>
+                                <div>
+                                    <separator string="Notes"/>
+                                    <field name="note" placeholder="Free Notes"/>
+                                </div>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount"/>
+                                </group>
+                            </group>
                         </page>
                         <page string="Other Info">
                             <group>
                                 <group string="Accounting Data">
-                                    <field name="journal_id"/>
-                                    <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
+                                    <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
+                                    <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
                             </group>
                         </page>
@@ -120,6 +128,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>

@@ -180,16 +180,15 @@
                     <button name="purchase_confirm" states="draft,sent" string="Confirm Quotation" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
-                    <button name="action_cancel" states="except_picking,except_invoice,wait" string="Cancel" type="object" />
+                    <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
                     <button name="picking_ok" states="except_picking" string="Manually Corrected"/>
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
-                    <button name="purchase_appbuyer" states="wait_auth" string="Approve Purchase" class="oe_highlight"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
-                    <button name="purchase_cancel" states="draft,confirmed,wait_auth,sent" string="Cancel"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue","wait":"blue"}' readonly="1"/>
+                    <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -262,6 +261,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -323,7 +323,7 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
+                <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
                     <field name="needaction_pending" invisible="1"/>
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
@@ -551,6 +551,21 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
+                </xpath>
+            </field>
+        </record>
+        
+        <!-- Product Suppliers-->
+        
+        <record id="view_product_supplier_inherit" model="ir.ui.view">
+            <field name="name">product.normal.supplier.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Descriptions']" position="before">
+                    <page string="Suppliers" groups="base.group_user">
+                         <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                    </page>
                 </xpath>
             </field>
         </record>

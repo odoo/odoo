@@ -23,7 +23,12 @@
         <field name="name">Purchase Pricelists</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
-
+	
+	<record id="group_costing_method" model="res.groups">
+        <field name="name">Costing Method</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+	
     <record id="group_uom" model="res.groups">
         <field name="name">Manage Multiple Units of Measure</field>
         <field name="category_id" ref="base.module_category_hidden"/>
