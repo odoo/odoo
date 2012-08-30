@@ -1,10 +1,7 @@
-import base64
-import codecs
 import csv
 import itertools
 import logging
 import operator
-import random
 
 try:
     from cStringIO import StringIO
@@ -24,7 +21,8 @@ class ir_import(orm.TransientModel):
 
     _columns = {
         'res_model': fields.char('Model', size=64),
-        'file': fields.binary('File'),
+        'file': fields.binary(
+            'File', help="File to check and/or import, raw binary (not base64)"),
         'file_name': fields.char('File Name', size=None),
         'file_mime': fields.char('File Type', size=None),
     }
@@ -123,7 +121,7 @@ class ir_import(orm.TransientModel):
         :throws UnicodeDecodeError: if ``options.encoding`` is incorrect
         """
         csv_iterator = csv.reader(
-            StringIO(base64.b64decode(record.file)),
+            StringIO(record.file),
             quotechar=options['quote'],
             delimiter=options['separator'])
         csv_nonempty = itertools.ifilter(None, csv_iterator)
@@ -238,8 +236,8 @@ class ir_import(orm.TransientModel):
                 # even if it yields non-printable characters. This is
                 # in case of UnicodeDecodeError (or csv.Error
                 # compounded with UnicodeDecodeError)
-                'preview': base64.b64decode(record.file)[:ERROR_PREVIEW_BYTES]\
-                                 .decode('iso-8859-1'),
+                'preview': record.file[:ERROR_PREVIEW_BYTES]
+                                .decode( 'iso-8859-1'),
             }
 
     def _convert_import_data(self, record, fields, options, context=None):

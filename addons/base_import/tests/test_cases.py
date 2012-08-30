@@ -167,15 +167,12 @@ class test_match_headers_multiple(TransactionCase):
             })
         )
 
-import base64, csv
 class test_preview(TransactionCase):
     def make_import(self):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
             'res_model': 'res.users',
-            'file': base64.b64encode(
-                u"로그인,언어\n".encode('euc_kr'),
-                "bob,1\n"),
+            'file': u"로그인,언어\nbob,1\n".encode('euc_kr'),
         })
         return Import, id
 
@@ -211,10 +208,10 @@ class test_preview(TransactionCase):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
+            'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
                     'bar,3,4\n'
-                    'qux,5,6\n')
+                    'qux,5,6\n'
         })
 
         result = Import.parse_preview(self.cr, self.uid, id, {
@@ -248,10 +245,10 @@ class test_convert_import_data(TransactionCase):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
+            'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
                     'bar,3,4\n'
-                    'qux,5,6\n')
+                    'qux,5,6\n'
         })
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
@@ -272,10 +269,10 @@ class test_convert_import_data(TransactionCase):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
+            'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
                     'bar,3,4\n'
-                    'qux,5,6\n')
+                    'qux,5,6\n'
         })
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
@@ -296,10 +293,10 @@ class test_convert_import_data(TransactionCase):
         Import = self.registry('base_import.import')
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
+            'file': 'name,Some Value,Counter\n'
                     'foo,1,2\n'
                     ',3,\n'
-                    ',5,6\n')
+                    ',5,6\n'
         })
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
@@ -317,8 +314,8 @@ class test_convert_import_data(TransactionCase):
 
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
-                    'foo,1,2\n')
+            'file': 'name,Some Value,Counter\n'
+                    'foo,1,2\n'
         })
 
         record = Import.browse(self.cr, self.uid, id)
@@ -333,8 +330,8 @@ class test_convert_import_data(TransactionCase):
 
         id = Import.create(self.cr, self.uid, {
             'res_model': 'base_import.tests.models.preview',
-            'file': base64.b64encode('name,Some Value,Counter\n'
-                    'foo,1,2\n')
+            'file': 'name,Some Value,Counter\n'
+                    'foo,1,2\n'
         })
 
         record = Import.browse(self.cr, self.uid, id)

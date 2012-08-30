@@ -15,7 +15,7 @@ class ImportController(openerpweb.Controller):
         import_id = int(import_id)
 
         written = req.session.model('base_import.import').write(import_id, {
-            'file': base64.b64encode(file.read()),
+            'file': file.read(),
             'file_name': file.filename,
             'file_type': file.content_type,
         }, req.session.eval_context(req.context))
