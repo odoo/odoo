@@ -507,6 +507,40 @@ class res_partner(osv.osv):
             args['company_name'] = ''
         return address_format % args
 
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):        
+        res = super(res_partner,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            fieldstyle = { 'state_id': {'placeholder': "State", 'style': "width:24%;", 'options': '{"no_open": true}', 'class': "oe_no_button"},
+                           'city': {'placeholder': "City", 'style': "width: 40%;", 'options': '', 'class': ""},
+                           'zip': {'placeholder': "ZIP", 'style': 'width:34%;', 'options': '', 'class': ""}
+                         }            
+            country_id = self.pool.get('res.users').browse(cr, uid, uid,context).company_id.country_id        
+            if country_id and country_id.address_format:
+                address_format = country_id.address_format
+            else:
+                address_format = self._defaults['address_format']
+            address_format = address_format.replace("_code","_id").replace("_name","_id")           
+            fields = re.findall('(state_id|city|zip)', address_format)
+            
+            nodelist = []
+            doc = etree.XML(res['arch'])
+            for field in ['city','state_id','zip']:
+                nodelist.append(doc.xpath("//field[@name='%s']" % (field))[0])
+            
+            tot = len(fields)
+            for idx, node in enumerate(nodelist):
+                if idx < tot:
+                    field = fields[idx]
+                    node.set('name', fields[idx])
+                    node.set('style', fieldstyle[field]['style'])
+                    node.set('placeholder', fieldstyle[field]['placeholder'])
+                    node.set('options', fieldstyle[field]['options'])
+                    node.set('class', fieldstyle[field]['class'])
+                else:
+                    node.getparent().remove(node)
+
+            res['arch'] = etree.tostring(doc)
+        return res
 
 
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
