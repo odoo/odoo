@@ -29,15 +29,15 @@
                 <table class="oe_import_grid" width="100%"/>
                 <a href="#" class="oe_import_toggle">
                     File Format Options…</a>
-                <div class="oe_import_toggled">
-                    <!-- no @name, avoid submission when file_update called -->
-                    <label t-attf-for="sep_#{_id}">Separator:</label>
-                    <input t-attf-id="sep_#{_id}" class="oe_import_separator"
-                           t-att-value="widget.defaults.separator"/>
-                    <br/>
-                    <label t-attf-for="quoting_#{_id}">Quoting:</label>
-                    <input t-attf-id="quoting_#{_id}" class="oe_import_quoting"
-                           t-att-value="widget.defaults.quoting"/>
+                <div class="oe_import_toggled oe_import_options">
+                    <p t-foreach="widget.opts" t-as="option">
+                        <!-- no @name, avoid submission when file_update called -->
+                        <label t-attf-for="#{option.name}_#{_id}">
+                            <t t-esc="option.label"/></label>
+                        <input t-attf-id="#{option.name}_#{_id}"
+                               t-attf-class="oe_import_#{option.name}"
+                               t-att-value="option.value"/>
+                    </p>
                 </div>
 
                 <h2>Frequently Asked Questions</h2>

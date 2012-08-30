@@ -124,10 +124,10 @@ class ir_import(orm.TransientModel):
         """
         csv_iterator = csv.reader(
             StringIO(record.file),
-            quotechar=options['quote'],
+            quotechar=options['quoting'],
             delimiter=options['separator'])
         csv_nonempty = itertools.ifilter(None, csv_iterator)
-        # TODO: guess encoding?
+        # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
         return itertools.imap(
             lambda row: [item.decode(encoding) for item in row],
@@ -206,7 +206,7 @@ class ir_import(orm.TransientModel):
         :param id: identifier of the import
         :param int count: number of preview lines to generate
         :param options: format-specific options.
-                        CSV: {encoding, quote, separator, headers}
+                        CSV: {encoding, quoting, separator, headers}
         :type options: {str, str, str, bool}
         :returns: {fields, matches, headers, preview} | {error, preview}
         :rtype: {dict(str: dict(...)), dict(int, list(str)), list(str), list(list(str))} | {str, str}

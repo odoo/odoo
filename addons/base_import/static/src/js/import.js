@@ -38,10 +38,11 @@ openerp.base_import = function (instance) {
     instance.web.DataImport = instance.web.Dialog.extend({
         template: 'ImportView',
         dialog_title: _lt("Import Data"),
-        defaults: {
-            quoting: '"',
-            separator: ',',
-        },
+        opts: [
+            {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
+            {name: 'separator', label: _lt("Separator:"), value: ','},
+            {name: 'quoting', label: _lt("Quoting:"), value: '"'}
+        ],
         events: {
             'change input.oe_import_file': 'file_update',
             'change input:not(.oe_import_file)': 'settings_updated',
@@ -85,11 +86,15 @@ openerp.base_import = function (instance) {
         },
 
         import_options: function () {
-            return {
-                quote: this.$('input.oe_import_quoting').val(),
-                separator: this.$('input.oe_import_separator').val(),
-                headers: this.$('input.oe_import_has_header').prop('checked'),
+            var self = this;
+            var options = {
+                headers: this.$('input.oe_import_has_header').prop('checked')
             };
+            _(this.opts).each(function (opt) {
+                options[opt.name] =
+                    self.$('input.oe_import_' + opt.name).val();
+            });
+            return options;
         },
 
         //- File & settings change section

@@ -179,7 +179,7 @@ class test_preview(TransactionCase):
     def test_encoding(self):
         Import, id = self.make_import()
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quote': '"',
+                'quoting': '"',
                 'separator': ',',
         })
         self.assertTrue('error' in result)
@@ -188,7 +188,7 @@ class test_preview(TransactionCase):
         Import, id = self.make_import()
 
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quote': 'foo',
+                'quoting': 'foo',
                 'separator': ',',
                 'encoding': 'euc_kr',
         })
@@ -198,7 +198,7 @@ class test_preview(TransactionCase):
         Import, id = self.make_import()
 
         result = Import.parse_preview(self.cr, self.uid, id, {
-                'quote': '"',
+                'quoting': '"',
                 'separator': 'bob',
                 'encoding': 'euc_kr',
         })
@@ -215,7 +215,7 @@ class test_preview(TransactionCase):
         })
 
         result = Import.parse_preview(self.cr, self.uid, id, {
-            'quote': '"',
+            'quoting': '"',
             'separator': ',',
             'headers': True,
         })
@@ -253,7 +253,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', 'somevalue', 'othervalue'],
-            {'quote': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True,})
 
         self.assertItemsEqual(fields, ['name', 'somevalue', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -277,7 +277,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', False, 'othervalue'],
-            {'quote': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True,})
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -301,7 +301,7 @@ class test_convert_import_data(TransactionCase):
         record = Import.browse(self.cr, self.uid, id)
         data, fields = Import._convert_import_data(
             record, ['name', False, 'othervalue'],
-            {'quote': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True,})
 
         self.assertItemsEqual(fields, ['name', 'othervalue'])
         self.assertItemsEqual(data, [
@@ -323,7 +323,7 @@ class test_convert_import_data(TransactionCase):
             ValueError,
             Import._convert_import_data,
             record, [],
-            {'quote': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True,})
 
     def test_falsefields(self):
         Import = self.registry('base_import.import')
@@ -339,4 +339,4 @@ class test_convert_import_data(TransactionCase):
             ValueError,
             Import._convert_import_data,
             record, [False, False, False],
-            {'quote': '"', 'separator': ',', 'headers': True,})
+            {'quoting': '"', 'separator': ',', 'headers': True,})
