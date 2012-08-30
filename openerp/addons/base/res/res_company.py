@@ -24,6 +24,7 @@ from osv import fields
 import os
 import tools
 import openerp
+from openerp import SUPERUSER_ID
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
@@ -101,7 +102,7 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
-    def _format_company_footer(self, cr, uid, ids, company, context=None):
+    def _format_company_footer(self, cr, uid, company, context=None):
         """ Format the company's RML footer the right way """
         val = []
 
@@ -124,12 +125,15 @@ class res_company(osv.osv):
         result = {}
         for company in self.browse(cr, uid, ids, context=context):
             if not company.customize_footer:
-                result[company.id] = self._format_company_footer(cr, uid, ids, company, context)
+                result[company.id] = self._format_company_footer(cr, uid, company, context)
 
         return result
 
-    def _set_rml_footer(self, cr, uid, ids, footer=False, context=None):
-        return 'todo'
+    def _set_rml_footer(self, cr, uid, company_id, name, value, arg, context=None):
+        company = self.browse(cr, uid, [company_id], context=context)[0]
+        rml_footer = self._format_company_footer(cr, uid, company, context)
+
+        return cr.execute('UPDATE res_company SET rml_footer = %s WHERE id = %s', (rml_footer, company_id))
 
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
@@ -137,8 +141,7 @@ class res_company(osv.osv):
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        #'rml_footer': fields.text('General Information Footer'),
-        'rml_footer': fields.function(_get_rml_footer, type='text', string='General Information Footer'),
+        'rml_footer': fields.function(_get_rml_footer, fnct_inv=_set_rml_footer, type='text', string='General Information Footer', store=True),
         'rml_header': fields.text('RML Header and Footer', required=True),
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
@@ -179,7 +182,7 @@ class res_company(osv.osv):
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
