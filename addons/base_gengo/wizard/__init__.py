@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import gengo_update_translation
-import gengo_update_message
+import base_gengo_translation
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

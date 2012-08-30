@@ -34,12 +34,14 @@ Automated Translations through Gengo API
         'res_company_view.xml',
         'res_lang_view.xml',
 
-        'wizard/alert_message_gengo.xml',
+        'wizard/base_gengo_translation_view.xml',
            ],
     'demo_xml': [],
     'test': [],
     'installable': True,
     'auto_install': False,
+    #'qweb': ['static/src/xml/base_gengo.xml'],
+    #'js': ['static/src/js/base_gengo.js'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
