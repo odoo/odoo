@@ -67,12 +67,13 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         var viewmanager = this.getParent();
         this.dataset.read_slice().done(function(){
             if (_.isEmpty(self.dataset.ids)){
-                self.$el.hide();
+                viewmanager.action.context.next_partner_only = true;
+                /*self.$el.hide();
                 viewmanager.action.context.next_partner_only = false;
-                viewmanager.searchview.do_search();
+                viewmanager.searchview.do_search();*/
             }
             else{
-                self.on_pager_action('next');
+                self.on_pager_action('first');
             }
         });
     },

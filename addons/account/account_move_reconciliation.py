@@ -50,14 +50,37 @@ class account_move_reconciliation(osv.osv):
 
     def _rec_progress(self, cr, uid, ids, prop, unknow_none, context=None):
         res = {}
-        to_reconcile_ids = self.search(cr, uid, [], context=context)
-        to_reconcile = to_reconcile_ids and len(to_reconcile_ids) or 0
-        today_reconcile_ids = self.search(cr, uid, [('last_reconciliation_date','=',time.strftime('%Y-%m-%d'))], context=context)
-        today_reconcile = today_reconcile_ids and len(today_reconcile_ids) or 0
+        if context is None:
+            context = {}
+        ctx = dict(context)
+        ctx['next_partner_only'] = False
+        move_line_obj = self.pool.get("account.move.line")
+        
+        to_reconcile_ids = move_line_obj.search(cr, uid, [
+                    ('reconcile_id','=',False), 
+                    ('account_id.reconcile','=',True), 
+                    ('state','!=', 'draft'), 
+                    ('partner_id','!=', False), 
+                    '|', ('partner_id.last_reconciliation_date', '=', False),('partner_id.last_reconciliation_date','<',time.strftime('%Y-%m-%d 00:00:00')),
+                    '|', ('debit', '>' ,0), ('credit', '>' ,0)
+                    ], 
+                context=ctx)
+        partner_ids = []
+        for move_line in move_line_obj.browse(cr, uid, to_reconcile_ids, context=ctx):
+            partner = move_line.partner_id
+            if move_line.date > partner.last_reconciliation_date and partner.id not in partner_ids:
+                partner_ids.append(move_line.partner_id.id)
+
+        to_reconcile = len(partner_ids)
+        today_reconciled_ids = self.pool.get('res.partner').search(cr, uid, [
+                ('last_reconciliation_date','>=',time.strftime('%Y-%m-%d 00:00:00')),
+                ('last_reconciliation_date','<=',time.strftime('%Y-%m-%d 23:59:59'))
+            ], context=ctx)
+        today_reconciled = today_reconciled_ids and len(today_reconciled_ids) or 0 # total partners which reconciled today
         if to_reconcile < 0:
             reconciliation_progress = 100
         else:
-            reconciliation_progress = (100 / (float( to_reconcile + today_reconcile) or 1.0)) * today_reconcile
+            reconciliation_progress = (100 / (float( to_reconcile + today_reconciled) or 1.0)) * today_reconciled
         for id in ids:
             res[id] = reconciliation_progress
         return res
