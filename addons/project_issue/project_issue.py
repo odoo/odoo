@@ -46,8 +46,7 @@ class project_issue(base_stage, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
-    _mail_compose_message = True
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -454,14 +453,13 @@ class project_issue(base_stage, osv.osv):
 
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
         })
         if  msg.get('priority'):
             custom_values['priority'] =  msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
         # self.convert_to_bug(cr, uid, [res_id], context=context)
@@ -477,16 +475,16 @@ class project_issue(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         # Update doc values according to the message
-        update_vals['description'] = msg.get('body_text', '')
+        update_vals['description'] = msg.get('body', '')
         if msg.get('priority'):
             update_vals['priority'] = msg.get('priority')
-        # Parse 'body_text' to find values to update
+        # Parse 'body' to find values to update
         maps = {
             'cost': 'planned_cost',
             'revenue': 'planned_revenue',
             'probability': 'probability',
         }
-        for line in msg.get('body_text', '').split('\n'):
+        for line in msg.get('body', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
@@ -499,36 +497,31 @@ class project_issue(base_stage, osv.osv):
     # OpenChatter methods and notifications
     # -------------------------------------------------------
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' to the monitored fields """
-        res = super(project_issue, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id']
-
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
         return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> into task.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        message = _("Project issue <b>converted</b> to task.")
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>created</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        message = _("Project issue <b>created</b>.")
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
-                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
-                obj.message_append_note(body=message, context=context)
+                message = _("<b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
+                obj.message_post(body=message)
             else:
-                message = _("has been <b>escalated</b>.")
-                obj.message_append_note(body=message, context=context)
+                message = _("<b>escalated</b>.")
+                obj.message_post(body=message)
         return True
 
 project_issue()

@@ -48,7 +48,7 @@ sale_shop()
 
 class sale_order(osv.osv):
     _name = "sale.order"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
 
 
@@ -1022,24 +1022,20 @@ class sale_order(osv.osv):
     # OpenChatter methods and notifications
     # ------------------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id].append(obj.user_id.id)
-        return result
+    def needaction_domain_get(self, cr, uid, ids, context=None):
+        return [('state', '=', 'draft'), ('user_id','=',uid)]
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), subtype="new", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), subtype="new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), subtype="cancel", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), subtype="cancel", context=context)
 
     def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -1048,21 +1044,21 @@ class sale_order(osv.osv):
                 # convert it to the user TZ and re-render it with %Z to add the timezone
                 picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-                self.message_append_note(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
+                self.message_post(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
 
     def delivery_end_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Order <b>delivered</b>."), subtype="delivered", context=context)
+        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), subtype="delivered", context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="paid", context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="paid", context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), subtype="pending", context=context)
+                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), subtype="pending", context=context)
 
     def action_cancel_draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body='Sale order has been set in draft.', context=context)
+        return self.message_post(cr, uid, ids, body=_('Sale order set to draft.'), context=context)
 
 
 sale_order()

@@ -369,7 +369,7 @@ class mrp_bom(osv.osv):
         prod_obj = self.pool.get('product.product')
         for obj in self.browse(cr, uid, ids, context=context):
             for prod in prod_obj.browse(cr, uid, [obj.product_id], context=context):
-                self.message_append_note(cr, uid, [obj.id], body=_("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), context=context)
+                self.message_post(cr, uid, [obj.id], body=_("Bill of Material has been <b>created</b> for <em>%s</em> product.") % (prod.id.name_template), context=context)
         return True
 
 mrp_bom()
@@ -407,7 +407,7 @@ class mrp_production(osv.osv):
     _name = 'mrp.production'
     _description = 'Manufacturing Order'
     _date_name  = 'date_planned'
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _production_calc(self, cr, uid, ids, prop, unknow_none, context=None):
         """ Calculates total hours and total no. of cycles for a production order.
@@ -1046,33 +1046,28 @@ class mrp_production(osv.osv):
     # OpenChatter methods and notifications
     # ---------------------------------------------------
 
-    def message_get_monitored_follower_fields(self, cr, uid, ids, context=None):
-        """ Add 'user_id' to the monitored fields """
-        res = super(mrp_production, self).message_get_monitored_follower_fields(cr, uid, ids, context=context)
-        return res + ['user_id']
-
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_ready_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_in_production_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>in production</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_confirm_send_note(self, cr, uid, ids, context=None):
@@ -1082,7 +1077,7 @@ class mrp_production(osv.osv):
             obj_datetime = fields.DT.datetime.strptime(obj.date_planned, DEFAULT_SERVER_DATETIME_FORMAT)
             obj_date_str = fields.datetime.context_timestamp(cr, uid, obj_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
             message = _("Manufacturing order has been <b>confirmed</b> and is <b>scheduled</b> for the <em>%s</em>.") % (obj_date_str)
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, context=context)
         return True
 
 

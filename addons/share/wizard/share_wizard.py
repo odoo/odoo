@@ -819,7 +819,7 @@ class share_wizard(osv.TransientModel):
             elif tmp_idx == len(wizard_data.result_line_ids)-2:
                 body += ' and'
         body += '.'
-        return self.pool.get(model_name).message_append_note(cr, uid, [res_id], _('System Notification'), body, context=context)
+        return self.pool.get(model_name).message_post(cr, uid, [res_id], _('System Notification'), body, context=context)
     
     def send_invite_email(self, cr, uid, wizard_data, context=None):
         message_obj = self.pool.get('mail.message')

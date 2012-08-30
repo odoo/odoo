@@ -19,8 +19,7 @@
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
                                             icon="terp-mail-forward" type="action"
-                                            context="{'default_name': 'partner', 'default_partner_id': partner_assigned_id}"
-                                        />
+                                            context="{'mail.compose.message.mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
                                 </group>
                                 <group string="Geo Assignation">
@@ -37,8 +36,6 @@
             </field>
         </record>
 
-
-
         <record id="view_crm_opportunity_geo_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.geo_assign.tree.inherit</field>
             <field name="model">crm.lead</field>
@@ -49,6 +46,7 @@
                  </field>
             </field>
         </record>
+
         <record model="ir.ui.view" id="crm_opportunity_partner_filter">
             <field name="name">crm.opportunity.partner.filter.assigned</field>
             <field name="model">crm.lead</field>
@@ -63,5 +61,6 @@
                 </field>
             </field>
          </record>
+
     </data>
 </openerp>

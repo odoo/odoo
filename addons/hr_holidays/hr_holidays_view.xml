@@ -44,7 +44,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="date_from"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                     <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
@@ -194,8 +193,7 @@
             <field name="name">hr.holidays.allocation.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
                     <field name="employee_id"/>
                     <field name="holiday_type"/>
                     <field name="category_id"/>
@@ -243,8 +241,7 @@
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -266,8 +263,7 @@
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
                     <field name="employee_id"/>
                     <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
                     <field name="name"/>
