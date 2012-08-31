@@ -2193,7 +2193,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
             changeMonth: true,
             changeYear: true,
             showWeek: true,
-            showButtonPanel: true
+            showButtonPanel: true,
+            firstDay: Date.CultureInfo.firstDayOfWeek
         });
         this.$el.find('img.oe_datepicker_trigger').click(function() {
             if (self.get("effective_readonly") || self.picker('widget').is(':visible')) {
