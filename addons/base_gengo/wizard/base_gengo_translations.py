@@ -48,7 +48,6 @@ class base_gengo_translations(osv.osv_memory):
     _name = 'base.gengo.translations'
     _columns = {
         'restart_send_job': fields.boolean("Restart Sending Job"),
-        'restart_fetch_job': fields.boolean("Restart Fetching Job"),
         'lang_id': fields.many2one('res.lang', 'Language', help="Leave empty if you don't want to restrict the request to a single language"),
     }
 
@@ -118,8 +117,7 @@ class base_gengo_translations(osv.osv_memory):
             #check the cron jobs and eventually restart/recreate them
             if wizard.restart_send_job:
                 self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', _('Gengo Sync Translation (Request)'), '_sync_request', context=context)
-            if wizard.restart_fetch_job:
-                self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', _('Gengo Sync Translation (Response)'), '_sync_response', context=context)
+            self.do_check_schedular(cr, uid, 'gengo_sync_receive_request_scheduler', _('Gengo Sync Translation (Response)'), '_sync_response', context=context)
         return {'type': 'ir.actions.act_window_close'}
 
     def _sync_response(self, cr, uid, limit=GENGO_DEFAULT_LIMIT, context=None):
