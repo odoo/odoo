@@ -711,8 +711,8 @@ class mail_thread(osv.Model):
         return True
 
     def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
-        subscription_obj = self.pool.get('mail.followers')
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
+        followers_obj = self.pool.get('mail.followers')
+        followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
