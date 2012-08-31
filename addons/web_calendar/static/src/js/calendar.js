@@ -281,17 +281,16 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     convert_event: function(evt) {
+        var self = this;
         var date_start = openerp.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? openerp.web.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || 1.0,
             res_text = '';
 
         if (this.info_fields) {
-            res_text = _.map(this.info_fields, function(fld) {
-                if(evt[fld] instanceof Array)
-                    return evt[fld][1];
-                return evt[fld];
-            });
+            res_text = _(this.info_fields).chain()
+                .filter(function(fld) { return self.fields[fld].type == 'boolean' ? fld : !_.isBoolean(evt[fld]) && fld; })
+                .map(function(fld) { return (evt[fld] instanceof Array) ? evt[fld][1] : evt[fld]; }).value();
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
