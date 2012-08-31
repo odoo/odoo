@@ -122,17 +122,18 @@ class res_company(osv.osv):
         if company['company_registry']: val.append(_('Reg: ')+company['company_registry'])
 
         # fetch the company's bank accounts
-        # todo: make it work with the onchange
+        # todo #TODO: make it work with the onchange
         bank_accounts = self.browse(cr, uid, company['id'], context=context).bank_ids
         bank_accounts_names = [bank_account.name_get()[0][1] for bank_account in bank_accounts if bank_account.footer]
 
+        res = ' | '.join(val)
         # append the account(s) in the footer and manage plural form of "account" if necessary
         if len(bank_accounts_names) == 1:
-            val.append(_('Bank Account: ') + ', '.join(bank_accounts_names))
+            res += _('\nBank Account: ') + ', '.join(bank_accounts_names)
         elif len(bank_accounts_names) > 1:
-            val.append(_('Bank Accounts: ') + ', '.join(bank_accounts_names))
+            res += _('\nBank Accounts: ') + ', '.join(bank_accounts_names)
 
-        return ' | '.join(val)
+        return res
 
     def _get_rml_footer(self, cr, uid, ids, field_names, arg, context=None):
         result = {}
