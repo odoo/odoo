@@ -799,6 +799,9 @@ openerp.web.form.SidebarAttachments = openerp.web.OldWidget.extend({
 
         this._super(parent, $section.attr('id'));
         this.view = form_view;
+        this.attachment_title = function (name) {
+            return _.str.sprintf(_t("Delete the attachment %s"), name);
+        };
     },
     do_update: function() {
         if (!this.view.datarecord.id) {

@@ -791,7 +791,7 @@
             <a class="oe-sidebar-attachments-link" t-att-href="attachment.url" target="_blank">
                 <t t-esc="attachment.name"/>
             </a>
-            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-attf-title="Delete the attachment #{attachment.name}">
+            <a href="#" class="oe-sidebar-attachment-delete" t-att-data-id="attachment.id" t-att-title="attachment_title(attachment.name)">
                 <img t-att-src='_s + "/web/static/src/img/attachments-close.png"' width="15" height="15" border="0"/>
             </a>
         </li>
