@@ -27,5 +27,38 @@ From the Manufacturing Settings, you can choose to compute production schedules 
             <field name="number_increment">1</field>
         </record>
         
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_ready" model="mail.message.subtype">
+            <field name="name">ready</field>
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_production" model="mail.message.subtype">
+            <field name="name">production</field>
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('mrp.model_mrp_production'))]"/>
+        </record>
     </data>
 </openerp>
