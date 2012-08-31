@@ -592,18 +592,9 @@ class crm_lead(base_stage, osv.osv):
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.state in ('done', 'cancel'):
                 continue
-
             vals = self._convert_opportunity_data(cr, uid, lead, customer, section_id, context=context)
             self.write(cr, uid, [lead.id], vals, context=context)
-
             self.convert_opportunity_send_note(cr, uid, lead, context=context)
-            #TOCHECK: why need to change partner details in all messages of lead ?
-            # TDE FIXME: I propose to delete this, makes no sense to update partner of an already-send email ...
-            # if lead.partner_id:
-            #     msg_ids = [x.id for x in lead.message_ids]
-            #     mail_message.write(cr, uid, msg_ids, {
-            #             'partner_id': lead.partner_id.id
-            #         }, context=context)
 
         if user_ids or section_id:
             self.allocate_salesman(cr, uid, ids, user_ids, section_id, context=context)
