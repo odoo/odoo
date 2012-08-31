@@ -356,9 +356,12 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
             index = this.dataset.get_id_index(event_id);
         if (index != null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}, function() {
-                self.refresh_minical();
-            });
+            this.dataset.write(event_id, data, {})
+                .then(function() {
+                    self.refresh_minical();
+                }, function() {
+                    self.reload_event(event_id);
+                });
         }
     },
     do_delete_event: function(event_id, event_obj) {
