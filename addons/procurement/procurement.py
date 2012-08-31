@@ -511,7 +511,7 @@ class procurement_order(osv.osv):
         self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), subtype="cancelled", context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), subtype="close", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), subtype="closed", context=context)
 
 procurement_order()
 
