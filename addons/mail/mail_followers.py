@@ -59,6 +59,8 @@ class mail_notification(osv.Model):
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
         'read': fields.boolean('Read'),
+        'message_id': fields.many2one('mail.message', string='Message',
+                        ondelete='cascade', required=True, select=1),
     }
 
     _defaults = {
@@ -71,6 +73,11 @@ class mail_notification(osv.Model):
         if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
         return False
+
+    def set_message_read(self, cr, uid, msg_id, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
+        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
 
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
