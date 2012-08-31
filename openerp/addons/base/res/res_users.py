@@ -815,7 +815,7 @@ class users_view(osv.osv):
                     'type': 'selection',
                     'string': app and app.name or _('Other'),
                     'selection': [(False, '')] + [(g.id, g.name) for g in gs],
-                    'help': '\n'.join(tips),
+                    'help': ''.join(tips),
                 }
             else:
                 # boolean group fields
