@@ -6,9 +6,11 @@
         <field name="name">Officer</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Officer: the user will be able to approve document created by employees</field>
     </record>
     <record id="base.group_hr_manager" model="res.groups">
         <field name="name">Manager</field>
+        <field name="comment">Manager: the user will have an access to the human resources configuration as well as statistic reports</field>
         <field name="category_id" ref="base.module_category_human_resources"/>
         <field name="implied_ids" eval="[(4, ref('base.group_hr_user'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
