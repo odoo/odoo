@@ -88,7 +88,7 @@ class res_users(osv.Model):
         subject = '''%s has joined %s.''' % (user.name, company_name)
         body = '''Welcome to OpenERP !''' 
         # TODO change 1 into user.id but catch errors
-        return self.pool.get('res.partner').message_append_note(cr, 1, [user.partner_id.id],
+        return self.pool.get('res.partner').message_append_note(cr, SUPERUSER_ID, [user.partner_id.id],
             subject=subject, body=body, type='comment', content_subtype='html', context=context)
 
     def write(self, cr, uid, ids, vals, context=None):

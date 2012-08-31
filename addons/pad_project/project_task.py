@@ -5,7 +5,6 @@ from osv import fields, osv
 class task(osv.osv):
     _name = "project.task"
     _inherit = ["project.task",'pad.common']
-    _pad_fields = ['description_pad']
     _columns = {
-        'description_pad': fields.char('Description PAD', size=250)
+        'description_pad': fields.char('Description PAD', pad_content_field='description')
     }
