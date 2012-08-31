@@ -183,13 +183,13 @@
             <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
         </record>
         <record id="mail.mail_subtype_email" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
         </record>
         <record id="mail.mail_subtype_comment" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
         </record>
         <record id="mail.mail_subtype_other" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
         </record>
     </data>
 </openerp>
