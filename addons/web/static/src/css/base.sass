@@ -111,16 +111,6 @@ $sheet-max-width: 860px
         content: $icon-name
         color: $color
 
-@mixin ul-html-override()
-    margin: 0
-    padding: 0
-    li
-        list-style-type: none
-
-@mixin semantic-html-override()
-    ul, li, ol
-        @include ul-html-override()
-
 // }}}
 // CSS animation bounces {{{
 @-moz-keyframes bounce
@@ -204,6 +194,11 @@ $sheet-max-width: 860px
         @include vertical-gradient(#f0f0fa, #eeeef6)
     .zebra tbody tr:hover td
         @include vertical-gradient(#eee, #dedede)
+    ul, li, ol
+        margin: 0
+        padding: 0
+    li
+        list-style-type: none
     input, textarea, select
         padding: 2px 4px
         border: 1px solid #ccc
@@ -213,8 +208,6 @@ $sheet-max-width: 860px
         vertical-align: middle
     h4
         margin: 4px 0
-    .oe_semantic_html_override
-        @include semantic-html-override
     // }}}
     // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
@@ -516,8 +509,6 @@ $sheet-max-width: 860px
         padding: 0 16px
         list-style: none
         zoom: 1
-        @include ul-html-override
-        @include semantic-html-override
     .oe_notebook.ui-corner-all
         @include radius(0)
     .oe_notebook:before, .oe_notebook:after
@@ -737,7 +728,6 @@ $sheet-max-width: 860px
             text-align: left
             @include radius(8px)
             @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
-            @include semantic-html-override
             h2
                 margin-top: 0
                 font-size: 18px
@@ -803,7 +793,6 @@ $sheet-max-width: 860px
         height: 31px
         border-top: solid 1px #d3d3d3
         @include vertical-gradient(#646060, #262626)
-        @include semantic-html-override
         .oe_topbar_item
             display: block
             padding: 5px 10px 7px
@@ -854,7 +843,6 @@ $sheet-max-width: 860px
         border-right: 1px solid $tag-border
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
-        @include semantic-html-override
     a.oe_logo
         width: 220px
         display: block
@@ -1019,7 +1007,6 @@ $sheet-max-width: 860px
         table.oe_view_manager_header
             width: 100%
             table-layout: fixed
-            @include semantic-html-override
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -1529,10 +1516,12 @@ $sheet-max-width: 860px
             max-width: $sheet-max-width
             margin: 0 auto
             padding: 16px 0 48px
+        .oe_grey
+            color: #aaa
+            max-width: 650px
+            margin: 0 0 10px 0
         div.oe_form_configuration
-            div.oe_horizontal_separator 
-                margin: 12px 0 8px 0
-            p, ul, ol
+            p
                 color: #aaa
                 max-width: 650px
             label
@@ -1567,7 +1556,6 @@ $sheet-max-width: 860px
                 padding-left: 24px
                 margin: 0
                 position: relative
-                z-index: 10
             .arrow
                 width: 17px
                 display: inline-block
@@ -1576,7 +1564,6 @@ $sheet-max-width: 860px
                 margin-left: -5px
                 span 
                     position: relative
-                    z-index: 11
                     width: 24px
                     height: 24px
                     display: inline-block
@@ -1692,7 +1679,7 @@ $sheet-max-width: 860px
     .oe_horizontal_separator
         font-weight: bold
         font-size: 20px
-        margin: 8px 0px 8px 0px
+        margin: 15px 0px 10px 0px
         color: $section-title-color
     .oe_horizontal_separator:empty
         height: 5px
@@ -1866,11 +1853,12 @@ $sheet-max-width: 860px
             line-height: 14px
             float: right
             padding-left: 2px
-    // }}}
-    // FormView.fieldstatus {{{
-    .oe_form_field_status
-        @include semantic-html-override
-        @include ul-html-override
+    &.ui-autocomplete
+        li.oe_m2o_dropdown_option a
+            font-style: italic
+            padding-left: 2em
+        li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option
+            margin-top: 10px
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager

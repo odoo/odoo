@@ -193,29 +193,9 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
     on_traceback: function(error) {
         var self = this;
         var buttons = {};
-        if (instance.session.openerp_entreprise) {
-            buttons[_t("Send OpenERP Enterprise Report")] = function() {
-                var $this = $(this);
-                var issuename = $('#issuename').val();
-                var explanation = $('#explanation').val();
-                var remark = $('#remark').val();
-                // Call the send method from server to send mail with details
-                new instance.web.DataSet(self, 'publisher_warranty.contract').call_and_eval('send', [error.data,explanation,remark,issuename]).then(function(result){
-                    if (result === false) {
-                        alert('There was a communication error.');
-                    } else {
-                        $this.dialog('close');
-                    }
-                });
-            };
-            buttons[_t("Dont send")] = function() {
-                $(this).dialog("close");
-            };
-        } else {
-            buttons[_t("Ok")] = function() {
-                $(this).dialog("close");
-            };
-        }
+        buttons[_t("Ok")] = function() {
+            $(this).dialog("close");
+        };
         var dialog = new instance.web.Dialog(this, {
             title: "OpenERP " + _.str.capitalize(error.type),
             width: '80%',
@@ -1043,10 +1023,6 @@ instance.web.WebClient = instance.web.Client.extend({
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
         self.user_menu.do_update();
         self.bind_hashchange();
-        if (!self.session.openerp_entreprise) {
-            var version_label = _t("OpenERP - Unsupported/Community Version");
-            self.$el.find('.oe_footer_powered').append(_.str.sprintf('<span> - <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">%s</a></span>', version_label));
-        }
         self.set_title();
     },
     destroy_content: function() {

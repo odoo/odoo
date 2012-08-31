@@ -121,7 +121,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             case 'button':
             case 'a':
                 var type = node.attrs.type || '';
-                if (_.indexOf('action,object,edit,delete'.split(','), type) !== -1) {
+                if (_.indexOf('action,object,edit,open,delete'.split(','), type) !== -1) {
                     _.each(node.attrs, function(v, k) {
                         if (_.indexOf('icon,type,name,args,string,context,states,kanban_states'.split(','), k) != -1) {
                             node.attrs['data-' + k] = v;
@@ -286,6 +286,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                 start: function(event, ui) {
                     self.currently_dragging.index = ui.item.index();
                     self.currently_dragging.group = ui.item.parents('.oe_kanban_column:first').data('widget');
+                    ui.item.find('*').on('click.prevent', function(ev) {
+                        return false;
+                    });
                 },
                 stop: function(event, ui) {
                     var record = ui.item.data('widget');
@@ -296,6 +299,11 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     if (!(old_group.title === new_group.title && old_group.value === new_group.value && old_index == new_index)) {
                         self.on_record_moved(record, old_group, old_index, new_group, new_index);
                     }
+                    setTimeout(function() {
+                        // A bit hacky but could not find a better solution for Firefox (problem not present in chrome)
+                        // http://stackoverflow.com/questions/274843/preventing-javascript-click-event-with-scriptaculous-drag-and-drop
+                        ui.item.find('*').off('click.prevent');
+                    }, 0);
                 },
                 scroll: false
             });
@@ -825,6 +833,9 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     },
     do_action_edit: function($action) {
         this.view.open_record(this.id, true);
+    },
+    do_action_open: function($action) {
+        this.view.open_record(this.id);
     },
     do_action_object: function ($action) {
         var button_attrs = $action.data();

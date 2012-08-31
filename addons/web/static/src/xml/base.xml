@@ -51,29 +51,6 @@
     </table>
 </t>
 <t t-name="CrashManager.error">
-    <t t-if="!session.openerp_entreprise">
-        <span>Your version of OpenERP is unsupported. Support &amp; maintenance services are available here: <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">OpenERP Entreprise</a>.</span>
-    </t>
-    <t t-if="session.openerp_entreprise">
-        <div class="oe_error_send">
-            <div>
-                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
-                <div><br/>Your report will be sent to the OpenERP Enterprise team.<br/></div><br/>
-                <div>
-                    <label>Summary:</label><br/>
-                    <input id="issuename" type="text" class="oe_fielddiv"/>
-                </div><br/><br/>
-                <div>
-                    <label>Description:</label><br/>
-                    <textarea id="explanation" rows="6"></textarea>
-                </div><br/><br/>
-                <div>
-                    <label>What you did:</label><br/>
-                    <textarea id="remark" rows="6" ></textarea>
-                </div>
-            </div>
-        </div><br/>
-    </t>
     <div class="oe_error_detail">
         <pre><t t-esc="error.message"/></pre>
         <hr/>
@@ -143,7 +120,7 @@
                     </tr>
                     <tr>
                         <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$" autofocus="true"/></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="demo_data">Load Demonstration data:</label></td>
@@ -563,6 +540,7 @@
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
                 <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                    <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
                 </button>
                 <ul class="oe_dropdown_menu">
@@ -749,15 +727,17 @@
         <span class="oe_form_buttons_view">
             <t t-if="widget._is_action_enabled('edit')">
                 <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
-                  <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+                    <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
                 </div>
-        </t>
-        <t t-if="widget._is_action_enabled('create')">
-            <button type="button" class="oe_button oe_form_button_create">Create</button>
-        </t>
+            </t>
+            <t t-if="widget._is_action_enabled('create')">
+                <button type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
+            </t>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save oe_highlight">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
+            <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
+            <span class="oe_fade">or</span>
+            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
         </span>
     </t>
 </div>
@@ -843,7 +823,7 @@
     <div class="oe_clear">
         <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a t-attf-href="##{page.id}">
+                <a t-attf-href="##{page.id}" t-att-accesskey="page.accesskey">
                     <t t-esc="page.string"/>
                 </a>
             </li>
@@ -1087,7 +1067,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps'" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
@@ -1191,7 +1171,8 @@
     <button type="button" class="oe_button oe_form_button"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus">
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
