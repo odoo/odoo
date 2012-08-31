@@ -67,8 +67,8 @@ You can also manage purchase requisitions, see also the Purchase Settings.</fiel
             <field name="name">received</field>
             <field name="model_ids" eval="[(4,ref('purchase.model_purchase_order'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
-            <field name="name">cancel</field>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
             <field name="model_ids" eval="[(4,ref('purchase.model_purchase_order'))]"/>
             <field name="default" eval="False"/>
         </record>
