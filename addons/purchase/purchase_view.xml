@@ -562,11 +562,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Descriptions']" position="before">
-                    <page string="Suppliers" groups="base.group_user">
-                         <field name="seller_ids" context="{'uom_id': uom_id}"/>
-                    </page>
-                </xpath>
+                <group name="procurement" position="after">
+                     <label for="seller_ids"/>
+                     <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                </group>
             </field>
         </record>
     </data>

@@ -71,6 +71,12 @@
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
+                            <div name="options" groups="base.group_user">
+                                <field name="sale_ok"/>
+                                <label for="sale_ok"/>
+                                <field name="purchase_ok"/>
+                                <label for="purchase_ok"/>
+                            </div>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                         </div>
@@ -78,57 +84,60 @@
                             <page string="Information">
                                 <group>
                                     <group>
-                                        <field name="default_code"/>
-                                        <field name="ean13" placeholder="e.g. 5901234123457"/>
-                                        <field groups="product.group_product_variant" name="variants"/>
-                                    </group>
-                                    <group groups="base.group_user">
-                                        <field name="sale_ok"/>
-                                        <field name="purchase_ok"/>
-                                    </group>
-                                    <group string="Procurement">
-                                        <field name="type"/>
-                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
-                                    </group>
-                                    <group string="Prices">
                                         <field name="list_price"/>
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
+                                    <group>
+                                        <field name="default_code"/>
+                                        <field name="ean13" placeholder="e.g. 5901234123457"/>
+                                        <field groups="product.group_product_variant" name="variants"/>
+                                    </group>
+                                    <group>
+                                        <field name="type"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                    </group>
+                                </group>
+                                <field name="description" placeholder="describe the product's characteristics..."/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <group name="procurement">
+                                    <group>
+                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="uom_po_id"/>
 
+                                    </group>
+                                </group>
+
+                                <label for="description_purchase"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                            </page>
+                            <page string="Inventory" groups="base.group_user">
+                                <group name="inventory">
                                     <group groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                                     </group>
-
-                                    <group name="uom" groups="product.group_uom" string="Unit of Measure">
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                        <field name="uom_po_id"/>
-                                        <field name="uos_id"/>
-                                        <field name="uos_coeff"/>
-                                        <field name="mes_type"/>
-                                    </group>
-
                                     <group name="status" string="Status">
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
-
                                 </group>
                             </page>
-                            <page string="Descriptions" groups="base.group_user">
-                                <separator string="Description"/>
-                                <field name="description"/>
-                                <separator string="Sale Description"/>
-                                <field name="description_sale" placeholder="This note will be displayed on quotations..."/>
-                                <separator string="Purchase Description"/>
-                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
-                            </page>
-                            <page groups="product.group_stock_packaging" string="Packaging">
-                                <field name="packaging">
+                            <page string="Sales">
+                                <group>
+                                    <group groups="product.group_uom">
+                                        <field name="uos_id"/>
+                                        <field name="uos_coeff"/>
+                                        <field name="mes_type"/>
+                                    </group>
+                                </group>
+                                <field name="packaging" groups="product.group_stock_packaging">
                                     <form string="Packaging" version="7.0">
                                         <group col="4">
                                             <field name="ean"/>
@@ -150,6 +159,8 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
+                                <label for="description_sale"/>
+                                <field name="description_sale" placeholder="This note will be displayed on quotations..."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -534,7 +545,7 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
@@ -606,7 +617,7 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
-                    <field name="sequence" string="Seq"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="min_qty"/>
