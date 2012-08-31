@@ -208,10 +208,11 @@ class mail_thread(osv.Model):
     # mail.message wrappers and tools
     #------------------------------------------------------
 
-    def _needaction_domain_get(self, cr, uid, context={}):
+    def _needaction_domain_get(self, cr, uid, context=None):
         if self._needaction:
             return [('message_unread', '=', True)]
         return []
+
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
