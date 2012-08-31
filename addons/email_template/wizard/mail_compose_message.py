@@ -27,13 +27,9 @@ from osv import fields
 from tools.translate import _
 
 class mail_compose_message(osv.osv_memory):
-    """ Inherit mail_compose_message to add email template feature in the
-        message composer. """
-
     _inherit = 'mail.compose.message'
 
     def _get_templates(self, cr, uid, context=None):
-        """ Return Email Template of particular  Model. """
         if context is None:
             context = {}
         model = False
@@ -52,7 +48,6 @@ class mail_compose_message(osv.osv_memory):
         return []
 
     def default_get(self, cr, uid, fields, context=None):
-        """ Override to handle templates. """
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -65,39 +60,34 @@ class mail_compose_message(osv.osv_memory):
         'template_id': fields.selection(_get_templates, 'Template', size=-1),
     }
 
-    def onchange_template_id(self, cr, uid, ids, use_template, template_id, composition_mode, res_id, context=None):
-        """ onchange_template_id: read or render the template if set, get back
-            to default values if not. """
+    def onchange_template_id(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
+        """ - use_template not set: return default_get
+            - use_template set:
+                - mass_mailing: we cannot render, so return the template values
+                - else: return rendered values """
         fields = ['body', 'body_html', 'subject', 'partner_ids', 'email_to', 'email_cc']
-        if use_template and template_id:
-            # use the original template values, to be rendered when actually sent
-            if composition_mode == 'mass_mail':
-                values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
-            # render the mail as one-shot
-            else:
-                values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-                # retrofit generated attachments in the expected field format
-                if values['attachments']:
-                    attachment = values.pop('attachments')
-                    attachment_obj = self.pool.get('ir.attachment')
-                    att_ids = []
-                    for fname, fcontent in attachment.iteritems():
-                        data_attach = {
-                            'name': fname,
-                            'datas': fcontent,
-                            'datas_fname': fname,
-                            'description': fname,
-                            'res_model' : self._name,
-                            'res_id' : ids[0] if ids else False
-                        }
-                        att_ids.append(attachment_obj.create(cr, uid, data_attach))
-                    values['attachment_ids'] = att_ids
-        else: # restore defaults
+        if use_template and template_id and composition_mode == 'mass_mail':
+            values = self.pool.get('email.template').read(cr, uid, template_id, fields, context)
+        elif use_template and template_id:
+            values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+
+            values['attachment_ids'] = []
+            attachment_obj = self.pool.get('ir.attachment')
+            for attach_fname, attach_datas in values.get('attachments', []):
+                data_attach = {
+                    'name': attach_fname,
+                    'datas': attach_datas,
+                    'datas_fname': attach_fname,
+                    'description': fname,
+                    'res_model': model,
+                    'res_id': res_id,
+                }
+                values['attachment_ids'].append(attachment_obj.create(cr, uid, data_attach), context=context)
+        else:
             values = self.default_get(cr, uid, fields, context=context)
 
         if values.get('body_html') and not values.get('body'):
             values['body'] = values.get('body_html')
-        
         values.update(use_template=use_template, template_id=template_id)
 
         return {'value': values}
@@ -107,16 +97,15 @@ class mail_compose_message(osv.osv_memory):
             emulate an on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
             onchange_res = self.onchange_use_template(cr, uid, ids, not record.use_template,
-                record.template_id, record.composition_mode, record.res_id, context=context)['value']
+                record.template_id, record.composition_mode, record.model, record.res_id, context=context)['value']
             record.write(onchange_res)
         return True
 
-    def onchange_use_template(self, cr, uid, ids, use_template, template_id, composition_mode, res_id, context=None):
+    def onchange_use_template(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
         """ onchange_use_template (values: True or False).  If use_template is
             False, we do like an onchange with template_id False for values """
-        onchange_template_values = self.onchange_template_id(cr, uid, ids, use_template,
-            template_id, composition_mode, res_id, context=context)
-        return onchange_template_values
+        return self.onchange_template_id(cr, uid, ids, use_template,
+            template_id, composition_mode, model, res_id, context=context)
 
     def save_as_template(self, cr, uid, ids, context=None):
         """ hit save as template button: current form value will be a new
@@ -142,9 +131,36 @@ class mail_compose_message(osv.osv_memory):
             record.write({'template_id': template_id, 'use_template': True})
         return True
 
+    #------------------------------------------------------
+    # Wizard validation and send
+    #------------------------------------------------------
+
+    def render_message(self, cr, uid, wizard, model, res_id, context=None):
+        """ Generate an email from the template for given (model, res_id) pair.
+            This method is meant to be inherited by email_template that will
+            produce a more complete dictionary, with email_to, ...
+        """
+        # render the template to get the email
+        template_values = self.pool.get('email.template').generate_email(cr, uid, wizard.template_id, res_id, context=context)
+        # TDE TODO: handle fields to update / not to update (mail_server_id, auto_delete, ...)
+        # transform email_to, email_cc into partner_ids
+        partner_ids = []
+        mails = tools.email_split(template_values.pop('email_to', '') + ' ' + template_values.pop('email_cc', ''))
+        for mail in mails:
+            partner_search_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', mail)], context=context)
+            if partner_search_ids:
+                partner_ids.append((4, partner_search_ids[0]))
+            else:
+                partner_id = self.pool.get('res.partner').name_create(cr, uid, mail, context=context)[0]
+                partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
+                partner_ids.append((4, partner_id))
+        # get values to return
+        email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, model, res_id, context)
+        email_dict.update(template_values)
+        email_dict.update(partner_ids=partner_ids, attachments=template_values.get('attachments'))
+        return email_dict
+
     def render_template(self, cr, uid, template, model, res_id, context=None):
-        """ Override of mail.compose.message behavior: use the power of
-            templates ! """
         return self.pool.get('email.template').render_template(cr, uid, template, model, res_id, context=context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
