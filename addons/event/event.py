@@ -269,7 +269,7 @@ class event_event(osv.osv):
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="cancel", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="cancelled", context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
@@ -366,7 +366,7 @@ class event_registration(osv.osv):
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_post(cr, uid, ids, body=_('State set to Cancel'), subtype="cancel", context=context)
+        self.message_post(cr, uid, ids, body=_('State set to Cancel'), subtype="cancelled", context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):

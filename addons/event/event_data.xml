@@ -21,8 +21,8 @@
             <field name="name">close</field>
             <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
-            <field name="name">cancel</field>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
             <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
             <field name="default" eval="False"/>
         </record>
