@@ -1306,7 +1306,7 @@ class product_product(osv.osv):
 
     def edit_ean(self, cr, uid, ids, context):
         return {
-            'name': "Edit Ean",
+            'name': _("Assign a Custom EAN"),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',

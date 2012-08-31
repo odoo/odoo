@@ -635,7 +635,7 @@
                     </group>
                 </group>
                 <field name="ean13" position="after">
-                    <button name="edit_ean" type="object" string="Custom EAN" class="oe_link"/>
+                    <button name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>
@@ -1069,9 +1069,17 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Ean13 Generator" version="7.0">  
-                    <field name="ean13_pattern"/>
+                    <p class="oe_grey">
+                        Enter a reference for this product, it will be converted
+                        automatically to a valid EAN number.
+                    </p>
+                    <group>
+                        <field name="ean13_pattern"/>
+                    </group>
                     <footer>
-                        <button name="sanitize_ean13" type="object" string="Apply"/>
+                        <button name="sanitize_ean13" type="object" string="Apply" class="oe_highlight"/> or 
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" class="oe_link"/>
                     </footer>
                 </form>
             </field>
