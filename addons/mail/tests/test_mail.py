@@ -203,17 +203,19 @@ class test_mail(common.TransactionCase):
         user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul'})
         user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
 
-        # Subscribe Raoul twice (niak niak) through message_subscribe_users
+        # Subscribe Raoul three times (niak niak) through message_subscribe_users
         group_pigs.message_subscribe_users([user_raoul_id, user_raoul_id])
+        group_pigs.message_subscribe_users([user_raoul_id])
         group_pigs.refresh()
-        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids, set([user_raoul.partner_id.id, user_admin.partner_id.id]), 'Admin and Raoul should be the only 2 Pigs group followers')
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(len(follower_ids), 2, 'There should be 2 Pigs fans')
+        self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]), 'Admin and Raoul should be the only 2 Pigs fans')
 
         # Unsubscribe Raoul twice through message_unsubscribe_users
         group_pigs.message_unsubscribe_users([user_raoul_id, user_raoul_id])
         group_pigs.refresh()
-        follower_ids = set([follower.id for follower in group_pigs.message_follower_ids])
-        self.assertEqual(follower_ids,  set([user_admin.partner_id.id]), 'Admin must be the only Pigs fan')
+        follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
+        self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
