@@ -100,8 +100,6 @@ class mail_compose_message(osv.osv_memory):
         
         values.update(use_template=use_template, template_id=template_id)
 
-        print 'returning ', values
-
         return {'value': values}
 
     def toggle_template(self, cr, uid, ids, context=None):

@@ -29,7 +29,7 @@ from osv import fields
 import tools
 from tools.translate import _
 from tools.html_sanitize import html_sanitize
-from tools import html2plaintext
+from tools import html2plaintext, append_content_to_html
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 
@@ -322,13 +322,12 @@ class email_template(osv.osv):
                                                  template.model, res_id, context=context) \
                                                  or False
 
-        if values['body_html']:
-            values['body'] = html_sanitize(values['body_html'])
-            values['body_text'] = html2plaintext(values['body_html'])
-
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body'] += '\n\n' + signature
+            values['body_html'] = append_content_to_html(values['body_html'], signature)
+
+        if values['body_html']:
+            values['body'] = html_sanitize(values['body_html'])
 
         values.update(mail_server_id = template.mail_server_id.id or False,
                       auto_delete = template.auto_delete,

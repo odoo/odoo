@@ -460,29 +460,15 @@ class mail_thread(osv.Model):
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    insertion_point = body.find('</html>')
-                    # plain text is wrapped in <pre/> to preserve formatting
-                    text = u'<pre>%s</pre>' % tools.ustr(part.get_payload(decode=True),
-                                                         encoding, errors='replace')
-                    if insertion_point != -1:
-                        body = body[:insertion_point] + text + body[insertion_point:]
-                    else:
-                        body += text
+                    body = tools.append_content_to_html(body, tools.ustr(part.get_payload(decode=True),
+                                                                         encoding, errors='replace'))
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
                     if alternative:
                         body = html
-                        # force </html> tag to lowercase, for easier matching
-                        body = re.sub(r'(?i)</html>', r'</html>', body)
                     else:
-                        # strip enclosing html/body tags and append to existing body
-                        html = re.sub(r'(?i)(</?html>|</?body>)', '', html)
-                        insertion_point = body.find('</html>')
-                        if insertion_point != -1:
-                            body = body[:insertion_point] + html + body[insertion_point:]
-                        else:
-                            body += html
+                        body = tools.append_content_to_html(body, html, plaintext=False)
                 # 4) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
