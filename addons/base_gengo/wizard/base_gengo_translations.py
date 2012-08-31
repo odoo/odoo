@@ -114,6 +114,7 @@ class base_gengo_translations(osv.osv_memory):
             ctx = context.copy()
             ctx['gengo_language'] = wizard.lang_id.id
             self._sync_request(cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
+            self._sync_response( cr, uid, limit=GENGO_DEFAULT_LIMIT, context=ctx)
             #check the cron jobs and eventually restart/recreate them
             if wizard.restart_send_job:
                 self.do_check_schedular(cr, uid, 'gengo_sync_send_request_scheduler', _('Gengo Sync Translation (Request)'), '_sync_request', context=context)
