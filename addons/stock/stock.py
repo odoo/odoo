@@ -1394,7 +1394,7 @@ class stock_picking(osv.osv):
                 'internal': 'moved',
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), subtype="close", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), subtype="closed", context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
