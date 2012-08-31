@@ -40,7 +40,6 @@ except ImportError:
 
 class email_template(osv.osv):
     "Templates for sending email"
-    _inherit = 'mail.mail'
     _name = "email.template"
     _description = 'Email Templates'
     _rec_name = 'name' # override mail.message's behavior
@@ -111,6 +110,8 @@ class email_template(osv.osv):
     _columns = {
         'name': fields.char('Name', size=250),
         'model_id': fields.many2one('ir.model', 'Related document model'),
+        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
+                                size=128, select=True, store=True, readonly=True),
         'lang': fields.char('Language Selection', size=250,
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
@@ -134,16 +135,12 @@ class email_template(osv.osv):
                                                    "in outgoing emails so you can identify replies and link "
                                                    "them back to the corresponding resource record. "
                                                    "This is useful for CRM leads for example"),
-
-        # Overridden mail.message.common fields for technical reasons:
-        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                size=128, select=True, store=True, readonly=True),
         # we need a separate m2m table to avoid ID collisions with the original mail.message entries
-        #'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
-        #                                   'attachment_id', 'Files to attach',
-        #                                   help="You may attach files to this template, to be added to all "
-        #                                        "emails created from this template"),
-
+        'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
+                                           'attachment_id', 'Files to attach',
+                                           help="You may attach files to this template, to be added to all "
+                                                "emails created from this template"),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
         # Overridden mail.message.common fields to make tooltips more appropriate:
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
         'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
@@ -289,32 +286,14 @@ class email_template(osv.osv):
            :param res_id: id of the record to use for rendering the template (model
                           is taken from template definition)
            :returns: a dict containing all relevant fields for creating a new
-                     mail.message entry, with the addition one additional
-                     special key ``attachments`` containing a list of
+                     mail.mail entry, with one extra key ``attachments``, in the
+                     format expected by :py:meth:`mail_thread.message_post`.
         """
         if context is None:
             context = {}
-        values = {
-                  'subject': False,
-                  'body_html': False,
-                  'email_from': False,
-                  'email_to': False,
-                  'email_cc': False,
-                  'reply_to': False,
-                  'auto_delete': False,
-                  'model': False,
-                  'res_id': False,
-                  'mail_server_id': False,
-                  'attachments': False,
-                  'attachment_ids': False,
-                  'message_id': False,
-                  'state': 'outgoing',
-        }
-        if not template_id:
-            return values
-
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
+        values = {'model': template.model_id.model}
 
         for field in ['subject', 'body_html', 'email_from',
                       'email_to', 'email_cc', 'reply_to']:
