@@ -103,33 +103,25 @@ class many2many_reference(fields.many2many):
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
 class mail_thread(osv.Model):
-    '''Mixin model, meant to be inherited by any model that needs to
-       act as a discussion topic on which messages can be attached.
-       Public methods are prefixed with ``message_`` in order to avoid
-       name collisions with methods of the models that will inherit
-       from this mixin.
+    ''' mail_thread model is meant to be inherited by any model that needs to
+        act as a discussion topic on which messages can be attached. Public
+        methods are prefixed with ``message_`` in order to avoid name
+        collisions with methods of the models that will inherit from this class.
 
-       ``mail.thread`` is designed to work without adding any field
-       to the extended models. All functionalities and expected behavior
-       are managed by mail.thread, using model name and record ids.
-       A widget has been designed for the 6.1 and following version of OpenERP
-       web-client. However, due to technical limitations, ``mail.thread``
-       adds a simulated one2many field, to display the web widget by
-       overriding the default field displayed. Using this field
-       is not recommanded has it will disappeear in future version
-       of OpenERP, leading to a pure mixin class.
+        ``mail.thread`` defines fields used to handle and display the
+        communication history. ``mail.thread`` also manages followers of
+        inheriting classes. All features and expected behavior are managed
+        by mail.thread. Widgets has been designed for the 7.0 and following
+        versions of OpenERP.
 
-       Inheriting classes are not required to implement any method, as the
-       default implementation will work for any model. However it is common
-       to override at least the ``message_new`` and ``message_update``
-       methods (calling ``super``) to add model-specific behavior at
-       creation and update of a thread.
-       
-       #TODO: UPDATE WITH SUBTYPE / NEW FOLLOW MECHANISM
+        Inheriting classes are not required to implement any method, as the
+        default implementation will work for any model. However it is common
+        to override at least the ``message_new`` and ``message_update``
+        methods (calling ``super``) to add model-specific behavior at
+        creation and update of a thread when processing incoming emails.
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
-    # TODO: may be we should make it _inherit ir.needaction
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         res = dict( (id, dict(message_unread=False, message_summary='')) for id in ids)
@@ -179,8 +171,7 @@ class mail_thread(osv.Model):
             string='Related Messages', 
             help="All messages related to the current document."),
         'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
-            string='Has Unread Messages',
-            type='boolean',
+            string='Has Unread Messages', type='boolean',
             help="When checked, new messages require your attention.",
             multi="_get_message_data"),
         'message_summary': fields.function(_get_message_data, method=True,
@@ -221,7 +212,6 @@ class mail_thread(osv.Model):
         if self._needaction:
             return [('message_unread', '=', True)]
         return []
-
     #------------------------------------------------------
     # Mail gateway
     #------------------------------------------------------
@@ -447,7 +437,6 @@ class mail_thread(osv.Model):
             self.write(cr, uid, ids, update_vals, context=context)
         return True
 
-
     def _message_extract_payload(self, message, save_original=False):
         """Extract body as HTML and attachments from the mail message"""
         attachments = []
@@ -475,16 +464,25 @@ class mail_thread(osv.Model):
                     # plain text is wrapped in <pre/> to preserve formatting
                     text = u'<pre>%s</pre>' % tools.ustr(part.get_payload(decode=True),
                                                          encoding, errors='replace')
-                    body = body[:insertion_point] + text + body[:insertion_point]
+                    if insertion_point != -1:
+                        body = body[:insertion_point] + text + body[insertion_point:]
+                    else:
+                        body += text
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     html = tools.ustr(part.get_payload(decode=True), encoding, errors='replace')
                     if alternative:
                         body = html
+                        # force </html> tag to lowercase, for easier matching
+                        body = re.sub(r'(?i)</html>', r'</html>', body)
                     else:
-                        html = re.sub('(?i)</?html>', '', html)
+                        # strip enclosing html/body tags and append to existing body
+                        html = re.sub(r'(?i)(</?html>|</?body>)', '', html)
                         insertion_point = body.find('</html>')
-                        body = body[:insertion_point] + text + body[:insertion_point]
+                        if insertion_point != -1:
+                            body = body[:insertion_point] + html + body[insertion_point:]
+                        else:
+                            body += html
                 # 4) Anything else -> attachment
                 else:
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
@@ -510,8 +508,7 @@ class mail_thread(osv.Model):
                       'from': from,
                       'to': to,
                       'cc': cc,
-                      'body': unified_body, 
-                      'body_html': html_body,               --> to remove
+                      'body': unified_body,
                       'attachments': [('file1', 'bytes'),
                                       ('file2', 'bytes')}
                     }
@@ -581,27 +578,27 @@ class mail_thread(osv.Model):
 
     def message_post(self, cr, uid, thread_id, body='', subject=False,
             msg_type='notification', parent_id=False, attachments=None, subtype='other', context=None, **kwargs):
-        """Post a new message in an existing message thread, returning the new mail.message ID.
-           Extra keyword arguments will be used as default column values for the new
-           mail.message record.
-
-           :param int thread_id: thread ID to post into, or list with one ID
-           :param str body: body of the message, usually raw HTML
-           :param str subject: optional subject
-           :param str msg_type: message type, out of the possible values for mail_message.type,
-               currently one of ``email, 'comment', 'notification'``.
-           :param int parent_id: optional ID of parent message in this thread
-           :param tuple(str,str) attachments: list of attachment tuples in the form ``(name,content)``
-           :return: ID of newly created mail.message 
+        """ Post a new message in an existing message thread, returning the new
+            mail.message ID. Extra keyword arguments will be used as default
+            column values for the new mail.message record.
+            :param int thread_id: thread ID to post into, or list with one ID
+            :param str body: body of the message, usually raw HTML that will
+                be sanitized
+            :param str subject: optional subject
+            :param str msg_type: mail_message.type
+            :param int parent_id: optional ID of parent message in this thread
+            :param tuple(str,str) attachments: list of attachment tuples in the form
+                ``(name,content)``, where content is NOT base64 encoded
+            :return: ID of newly created mail.message 
         """
         context = context or {}
-        attachments = attachments or {}
+        attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int,long)) or \
             (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id" 
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
-        to_attach = []
+        attachment_ids = []
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -613,7 +610,8 @@ class mail_thread(osv.Model):
                 'res_model': context.get('thread_model') or self._name,
                 'res_id': thread_id,
             }
-            to_attach.append((0,0, data_attach))
+            attachment_ids.append((0,0, data_attach))
+
         values = kwargs
         subtype_obj = self.pool.get('mail.message.subtype')
         if subtype:
@@ -629,7 +627,7 @@ class mail_thread(osv.Model):
             'subject': subject,
             'type': msg_type,
             'parent_id': parent_id,
-            'attachment_ids': to_attach,
+            'attachment_ids': attachment_ids,
         })
         for x in ('from','to','cc'): values.pop(x, None) # Avoid warnings 
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
@@ -652,7 +650,6 @@ class mail_thread(osv.Model):
             :param partner_ids: a list of partner_ids to subscribe
             :param return: new value of followers, for Chatter
         """
-        print "message_subscribe",subtype_ids
         self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
@@ -714,19 +711,8 @@ class mail_thread(osv.Model):
         return True
 
     def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
-        subscription_obj = self.pool.get('mail.followers')
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
+        followers_obj = self.pool.get('mail.followers')
+        followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
         
-    def message_subscription_remove_subtype(self, cr, uid, ids, user_id, subtype_id):
-        subscription_obj = self.pool.get('mail.followers')
-        subscription_ids = subscription_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
-        return subscription_obj.write(cr, uid, subscription_ids, {'subtype_ids': [3, subtype_id]}, context = context) # remove link
-        
-    def message_subscription_remove_subtype_name(self, cr, uid, ids, user_id, subtype_name):
-        subtype_obj = self.pool.get('mail.message.subtype')
-        subtype_ids = subtype_obj.search(cr, uid, [('name', '=', subtype_name), ('model_ids', '=', self._name)])
-        if not subtype_ids:
-            return False
-        self.message_subscription_remove_subtype(cr, uid, ids, user_id, subtype_ids)
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,14 +2,15 @@
 <openerp>
 <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage job positions and the recruitment process in your company.  This module is integrated with the module Survey to help you to define interviews for different jobs.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Recruitment Process application installed!</field>
+            <field name="body">Manage job positions and your company's recruitment process.  This application is integrated with the Survey application to help you define interviews for different jobs.
 
-You can automatically create application records from an email gateway, that you can configure in the Human Resources Settings.</value>
-            <value>Module Recruitment Process has been installed</value>
-        </function>
+You can automatically receive job application though an email gateway, see the Human Resources settings.</field>
+        </record>
 
     <!-- Meeting Types (for interview meetings) -->
     <record model="crm.meeting.type" id="categ_meet_interview">
