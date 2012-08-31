@@ -48,15 +48,11 @@ class ir_translation(osv.Model):
     _inherit = "ir.translation"
     _columns = {
         'gengo_comment': fields.text("Comments & Activity Linked to Gengo"),
-        'job_id': fields.char('Gengo JobId', size=32),
-        "gengo_translation": fields.selection([('', 'Do not translate this term by Gengo'),
-                                            ('machine', 'Translation By Machine'),
+        'job_id': fields.char('Gengo Job ID', size=32),
+        "gengo_translation": fields.selection([('machine', 'Translation By Machine'),
                                             ('standard', 'Standard'),
                                             ('pro', 'Pro'),
-                                            ('ultra', 'Ultra')], "Gengo Translation Service Level", help='You can select here the service level you want for an automatic translation using Gengo.', required=True),
-    }
-    _defaults = {
-        'gengo_translation': '',
+                                            ('ultra', 'Ultra')], "Gengo Translation Service Level", help='You can select here the service level you want for an automatic translation using Gengo.'),
     }
 
     def _get_all_supported_languages(self, cr, uid, context=None):
@@ -79,7 +75,7 @@ class ir_translation(osv.Model):
         supported_langs = self._get_all_supported_languages(cr, uid, context=context)
         if supported_langs:
             for term in self.browse(cr, uid, ids, context=context):
-                if term.gengo_translation == "":
+                if not term.gengo_translation:
                     continue
                 tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
                 language = self._get_gengo_corresponding_language(term.lang)
