@@ -1339,7 +1339,8 @@ class SearchView(View):
         to_eval = common.nonliterals.CompoundContext(context_to_save)
         to_eval.session = req.session
         ctx = dict((k, v) for k, v in to_eval.evaluate().iteritems()
-                   if not k.startswith('search_default_'))
+                   if not k.startswith('search_default_')
+                   if k != 'lang')
         ctx['dashboard_merge_domains_contexts'] = False # TODO: replace this 6.1 workaround by attribute on <action/>
         domain = common.nonliterals.CompoundDomain(domain)
         domain.session = req.session
