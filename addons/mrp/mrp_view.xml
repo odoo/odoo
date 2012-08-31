@@ -347,7 +347,7 @@
                 <form string="Bill of Material" version="7.0">
                     <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>:
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
                         <field name="product_qty" class="oe_inline"/>
                         <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                     </h1>
@@ -411,6 +411,12 @@
                             <field name="property_ids" widget="many2many_tags"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <div class="oe_chatter">
+                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                             <field name="message_follower_ids" widget="mail_followers"/>
+                        </div>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -540,35 +546,6 @@
             <field eval="'mrp.bom'" name="model"/>
             <field name="name">Bill of Materials Structure</field>
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
-        </record>
-
-        <record id="mrp_bom_revision_tree" model="ir.ui.view">
-            <field name="name">mrp.bom.revision</field>
-            <field name="model">mrp.bom.revision</field>
-            <field name="arch" type="xml">
-                <tree string="BoM Revisions">
-                    <field name="indice"/>
-                    <field name="author_id"/>
-                    <field name="date"/>
-                    <field colspan="4" name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="mrp_bom_revision_form" model="ir.ui.view">
-            <field name="name">mrp.bom.revision</field>
-            <field name="model">mrp.bom.revision</field>
-            <field name="arch" type="xml">
-                <form string="BoM Revisions" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="indice"/>
-                        <field name="date"/>
-                        <field name="author_id" readonly="1"/>
-                    </group>
-                    <separator string="Description"/>
-                    <field name="description"/>
-                </form>
-            </field>
         </record>
 
         <!--
