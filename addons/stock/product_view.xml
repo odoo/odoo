@@ -58,11 +58,13 @@
             <field name="arch" type="xml">
                 <group name="procurement" position="inside">
                     <group name="delay" string="Delays">
-                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
+                        <field name="active"/>
                         <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
+                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
                         <field name="warranty"/>
                     </group>
                     <group name="store" string="Storage Localisation">
+                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
                         <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
                         <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
@@ -71,10 +73,6 @@
                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
                         <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
-                    </group>
-                    <group name="misc" string="Miscellaneous">
-                        <field name="active"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </group>
             </field>

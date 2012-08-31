@@ -108,29 +108,34 @@
                                         <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
                                     </group>
                                     <group>
-                                        <field name="uom_po_id"/>
-
+                                        <field name="uom_po_id" groups="product.group_uom"/>
                                     </group>
                                 </group>
-
-                                <label for="description_purchase"/>
+                                <separator string="Notes for Suppliers"/>
                                 <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
                             </page>
                             <page string="Inventory" groups="base.group_user">
                                 <group name="inventory">
+                                    <group name="status" string="Status">
+                                        <field name="state"/>
+                                        <field name="product_manager"/>
+                                    </group>
                                     <group groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                                     </group>
-                                    <group name="status" string="Status">
-                                        <field name="state"/>
-                                        <field name="product_manager"/>
-                                    </group>
                                 </group>
                             </page>
-                            <page string="Sales">
+                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
                                 <group>
+                                    <group>
+                                        <label for="sale_delay"/>
+                                        <div>
+                                            <field name="sale_delay"/> days
+                                        </div>
+                                        <field name="warranty"/>
+                                    </group>
                                     <group groups="product.group_uom">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
@@ -159,7 +164,7 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
-                                <label for="description_sale"/>
+                                <separator string="Notes on Quotations"/>
                                 <field name="description_sale" placeholder="This note will be displayed on quotations..."/>
                             </page>
                         </notebook>

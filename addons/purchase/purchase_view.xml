@@ -563,7 +563,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <group name="procurement" position="after">
-                     <label for="seller_ids"/>
+                     <separator string="Suppliers"/>
                      <field name="seller_ids" context="{'uom_id': uom_id}"/>
                 </group>
             </field>
