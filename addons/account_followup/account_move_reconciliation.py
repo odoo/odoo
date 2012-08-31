@@ -30,7 +30,7 @@ class account_move_reconciliation(osv.osv):
         for rec in self.browse(cr, uid, ids, context=context):
             move_line_ids = move_obj.search(cr, uid, [('partner_id','=',rec.partner_id.id),('followup_date','=',rec.followup_date)], context=context)
             move_line = move_line_ids and move_obj.browse(cr, uid, move_line_ids[0], context=context) or False
-            result[rec.id] = move_line and move_line.followup_line_id or False
+            result[rec.id] = move_line and move_line.followup_line_id.id or False
         return result
 
     _columns = {
