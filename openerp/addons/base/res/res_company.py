@@ -154,6 +154,12 @@ class res_company(osv.osv):
 
         return cr.execute('UPDATE res_company SET rml_footer = %s WHERE id = %s', (rml_footer, company_id))
 
+    def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line=0, context=None):
+        rml_split = rml_footer.split('\n')
+        if len(rml_split) < line + 1:
+            return False
+        return rml_split[line]
+
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'customize_footer': fields.boolean('Customize Footer', help="If it is true then general information footer will not update automatically."),
@@ -326,7 +332,7 @@ class res_company(osv.osv):
     _header_main = """
 <header>
 <pageTemplate>
-    <frame id="first" x1="1.3cm" y1="2.5cm" height="%s" width="19.0cm"/>
+    <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
     <pageGraphics>
         <!-- You Logo - Change X,Y,Width and Height -->
         <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
@@ -349,9 +355,10 @@ class res_company(osv.osv):
 
         <!--page bottom-->
 
-        <lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
-
-        <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer ]]</drawCentredString>
+        <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
+        <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
+        <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
+        <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]
         <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
     </pageGraphics>
 </pageTemplate>
