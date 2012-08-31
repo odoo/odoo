@@ -465,7 +465,7 @@ class account_analytic_account(osv.osv):
     def open_sale_order_lines(self,cr,uid,ids,context=None):
         if context is None:
             context = {}
-        sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','=',context.get('search_default_partner_id',False))])
+        sale_ids = self.pool.get('sale.order').search(cr, uid, [('project_id', '=', context.get('search_default_project_id',False))])
         names = [record.name for record in self.browse(cr, uid, ids, context=context)]
         name = _('Sale Order Lines of %s') % ','.join(names)
         return {
