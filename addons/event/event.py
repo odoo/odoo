@@ -54,7 +54,7 @@ class event_event(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
               return []
-        if not isinstance(ids, list):
+        if isinstance(ids, (int, long)):
             ids = [ids]
         res = []
         for record in self.browse(cr, uid, ids, context=context):
