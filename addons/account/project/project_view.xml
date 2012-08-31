@@ -5,7 +5,6 @@
         <record id="view_account_analytic_account_list" model="ir.ui.view">
             <field name="name">account.analytic.account.list</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree toolbar="1" colors="red:state=='pending';grey:state in ('cancelled','close');blue:type=='view'" string="Analytic Accounts">
@@ -27,25 +26,17 @@
         <record id="view_account_analytic_account_search" model="ir.ui.view">
             <field name="name">account.analytic.account.search</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Account">
-                    <group>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
-                        <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
-                        <separator orientation="vertical"/>
-                        <field name="partner_id"/>
-                        <field name="user_id" widget="selection"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Account"/>
+                    <field name="date"/>
+                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Accounts"/>
+                    <filter icon="terp-camera_test" string="Current" domain="[('state','=','open')]" help="Current Accounts"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Manager" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Associated Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
-                        <separator orientation="vertical"/>
                         <filter string="Parent Account" icon="terp-folder-green" domain="[]" context="{'group_by':'parent_id'}"/>
                         <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" groups="base.group_no_one"/>
                     </group>
@@ -56,7 +47,6 @@
         <record id="view_account_analytic_account_tree" model="ir.ui.view">
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_complete_ids</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state=='pending';grey:state in ('close','cancelled');blue:type=='view'" string="Analytic account" toolbar="1">
@@ -107,7 +97,21 @@
             <field name="view_type">tree</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="domain">[('parent_id','=',False)]</field>
-            <field name="help">The normal chart of accounts has a structure defined by the legal requirement of the country. The analytic chart of accounts structure should reflect your own business needs in term of costs/revenues reporting. They are usually structured by contracts, projects, products or departements. Most of the OpenERP operations (invoices, timesheets, expenses, etc) generate analytic entries on the related account.</field>
+            <field name="help" type="html">
+              <p>
+                Click to add a new analytic account.
+              </p><p>
+                The normal chart of accounts has a structure defined by the
+                legal requirement of the country. The analytic chart of
+                accounts structure should reflect your own business needs in
+                term of costs/revenues reporting.
+              </p><p>
+                They are usually structured by contracts, projects, products or
+                departements. Most of the OpenERP operations (invoices,
+                timesheets, expenses, etc) generate analytic entries on the
+                related account.
+              </p>
+            </field>
         </record>
 
         <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
@@ -117,7 +121,7 @@
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
                 <form string="Analytic Entry" version="7.0">
                     <group>
@@ -158,7 +162,6 @@
         <record id="view_account_analytic_line_tree" model="ir.ui.view">
             <field name="name">account.analytic.line.tree</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="top" string="Analytic Entries">
                     <field name="date"/>
@@ -179,30 +182,22 @@
         <record id="view_account_analytic_line_filter" model="ir.ui.view">
             <field name="name">account.analytic.line.select</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Analytic Lines">
-                    <group>
-                        <field name="name" string="Analytic Line"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <separator orientation="vertical"/>
-                        <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
-                        <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
-                        <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
-                        <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
-                        <separator orientation="vertical"/>
-                        <field name="account_id"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Analytic Line"/>
+                    <field name="date"/>
+                    <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
+                    <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
+                    <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
+                    <separator/>
+                    <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                    <field name="account_id"/>
+                    <field name="user_id"/>
                     <group string="Group By..." expand="0">
                         <filter string="Account" context="{'group_by':'account_id'}" icon="terp-folder-green"/>
                         <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
                         <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
-                        <separator orientation="vertical"/>
                         <filter string="Fin.Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
-                        <separator orientation="vertical"/>
                         <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
                     </group>
                 </search>
@@ -238,22 +233,35 @@
         <record id="account_analytic_line_extended_form" model="ir.ui.view">
             <field name="name">account.analytic.line.extended_form</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project line" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="account_id"/>
-                        <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="journal_id"/>
-                        <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
-                        <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
-                        <field invisible="True" name="general_account_id"/>
-                        <field name="amount"/>
-                        <field name="currency_id" />
-                        <field name="amount_currency" />
-                        <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                    <group>
+                       <group>
+                          <field name="name"/>
+                          <field name="account_id"/>
+                          <field name="journal_id"/>
+                       </group>
+                       <group>
+                          <field name="date" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                          <field name="company_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)"/>
+                        </group>
+                        <group string="Amount">
+                            <field name="amount"/>
+                            <label for="amount_currency"/>
+                            <div>
+                                <field name="amount_currency" class="oe_inline"/>
+                                <field name="currency_id" class="oe_inline"/>
+                            </div>
+                            <field invisible="1" name="general_account_id"/>
+                        </group>
+                        <group string="Product Information">
+                            <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id, journal_id)"/>
+                            <label for="unit_amount"/>
+                            <div>
+                                <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                                <field name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, company_id, product_uom_id)" class="oe_inline"/>
+                            </div>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -273,7 +281,6 @@
         <record id="view_account_analytic_journal_tree" model="ir.ui.view">
             <field name="name">account.analytic.journal.tree</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Analytic Journal">
                     <field name="code"/>
@@ -286,14 +293,10 @@
         <record id="view_analytic_journal_search" model="ir.ui.view">
             <field name="name">account.analytic.journal.search</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Analytic Journals">
-                    <group>
-                        <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
-                        <field name="type"/>
-                    </group>
-                    <newline/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('code','ilike',self)]" string="Analytic Journal"/>
+                    <field name="type"/>
                     <group expand="0" string="Group By...">
                         <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type'}"/>
                     </group>
@@ -304,7 +307,6 @@
         <record id="view_account_analytic_journal_form" model="ir.ui.view">
             <field name="name">account.analytic.journal.form</field>
             <field name="model">account.analytic.journal</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Analytic Journal" version="7.0">
                     <group col="4">
@@ -369,9 +371,8 @@
             <field name="name">account.journal.form.1</field>
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <field name="currency" position="after">
+                <field name="type" position="after">
                     <field name="analytic_journal_id"/>
                 </field>
             </field>
@@ -380,7 +381,6 @@
      <record id="analytic_accounts_graph" model="ir.ui.view">
             <field name="name">analytic.accounts.graph</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Analytic Account Statistics" type="bar">
                     <field name="complete_name"/>

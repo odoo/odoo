@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-28 04:38+0000\n"
-"X-Generator: Launchpad (build 15505)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -39,7 +39,7 @@ msgstr "Ligar o funcionário à informação"
 #. module: hr
 #: field:hr.employee,sinid:0
 msgid "SIN No"
-msgstr ""
+msgstr "No SIN"
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_main
@@ -67,6 +67,11 @@ msgid ""
 "will be used in the recruitment process to evaluate the applicants for this "
 "job position."
 msgstr ""
+"Cargos são usados para definir posições de emprego e seus requerimentos. "
+"Você pode manter um registro do número de empregados que você tem por cargo "
+"e quando você espera no futuro. Você também pode anexar uma pesquisa a um "
+"cargo que será usada no processo de seleção para avaliar os candidatos a "
+"este cargo."
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,department_id:0 view:hr.job:0
@@ -142,6 +147,10 @@ msgid ""
 "operations on all the employees of the same category, i.e. allocating "
 "holidays."
 msgstr ""
+"Crie formulário de funcionários e anexe ao usuário do OpenErp se você deseja "
+"que ele tenha acesso a essa instância. Categorias podem ser definidas nos "
+"funcionários para executar operações em massa em todos os funcionários da "
+"mesma categoria, exemplo alocando os feriados."
 
 #. module: hr
 #: model:ir.actions.act_window,help:hr.open_module_tree_department
@@ -150,6 +159,9 @@ msgid ""
 "to employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"A Estrutura de Departamentos usado em sua empresa para gerenciar todos os "
+"documentos relacionados a funcionários por departamentos: Despesas e quadro "
+"de horários, controle de faltas, seleção, etc."
 
 #. module: hr
 #: field:hr.employee,color:0
@@ -189,7 +201,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
 msgid "Attendance"
-msgstr ""
+msgstr "Freqüência"
 
 #. module: hr
 #: view:hr.employee:0
@@ -363,6 +375,17 @@ msgid ""
 "they will be able to enter time through the system. In the note tab, you can "
 "enter text data that should be recorded for a specific employee."
 msgstr ""
+"Aqui você pode gerenciar sua força de trabalho criando funcionários e "
+"associando eles a propriedades específicas no sistema. Manter todas as "
+"informações relacionadas empregado e manter o controle de tudo o que precisa "
+"ser registrado para eles. A guia de informação pessoal vai ajudar você a "
+"manter seus dados de identidade. A guia Categorias lhe dá a oportunidade "
+"para atribuir-lhes categorias de empregados dependendo de sua posição e "
+"atividades dentro da empresa. Uma categoria pode ser um nível de antiguidade "
+"na empresa ou um departamento. A guia Timesheets permite atribuir-lhes um "
+"quadro de horários específicos e o diário analítico onde será capaz de "
+"entrar no tempo através do sistema. Na guia nota, você pode inserir dados de "
+"texto que devem ser gravados para um funcionário específico."
 
 #. module: hr
 #: help:hr.employee,bank_account_id:0
@@ -419,12 +442,12 @@ msgstr "desconhecido"
 #. module: hr
 #: help:hr.job,no_of_employee:0
 msgid "Number of employees with that job."
-msgstr ""
+msgstr "Número de funcionários com este cargo"
 
 #. module: hr
 #: field:hr.employee,ssnid:0
 msgid "SSN No"
-msgstr ""
+msgstr "No SSN"
 
 #. module: hr
 #: view:hr.employee:0
@@ -448,6 +471,9 @@ msgid ""
 "employees by departments: expenses and timesheet validation, leaves "
 "management, recruitments, etc."
 msgstr ""
+"Sua Estrutura de Departamentos usado para gerenciar todos os documentos "
+"relacionados a funcionários por departamentos: Despesas e quadro de "
+"horários, controle de faltas, seleção, etc."
 
 #. module: hr
 #: field:hr.employee,bank_account_id:0
@@ -614,7 +640,7 @@ msgstr "Colaboradores"
 #. module: hr
 #: help:hr.employee,sinid:0
 msgid "Social Insurance Number"
-msgstr ""
+msgstr "Número do Seguro Social"
 
 #. module: hr
 #: field:hr.department,name:0
@@ -624,7 +650,7 @@ msgstr "Nome do Departamento"
 #. module: hr
 #: help:hr.employee,ssnid:0
 msgid "Social Security Number"
-msgstr ""
+msgstr "Número do Seguro Social"
 
 #. module: hr
 #: model:process.node,note:hr.process_node_openerpuser0
@@ -634,7 +660,7 @@ msgstr "Criação de usuário OpenERP"
 #. module: hr
 #: field:hr.employee,login:0
 msgid "Login"
-msgstr ""
+msgstr "Nome de acesso"
 
 #. module: hr
 #: view:hr.employee:0
@@ -650,7 +676,7 @@ msgstr "Cargos"
 #. module: hr
 #: field:hr.employee,otherid:0
 msgid "Other Id"
-msgstr ""
+msgstr "Outro ID"
 
 #. module: hr
 #: view:hr.employee:0 field:hr.employee,coach_id:0
@@ -665,7 +691,7 @@ msgstr "O nome do cargo deve ser único por empresa!"
 #. module: hr
 #: view:hr.job:0
 msgid "My Departments Jobs"
-msgstr ""
+msgstr "Cargos do meu Departamento"
 
 #. module: hr
 #: field:hr.department,manager_id:0 view:hr.employee:0
@@ -676,7 +702,7 @@ msgstr "Gestor"
 #. module: hr
 #: selection:hr.employee,marital:0
 msgid "Widower"
-msgstr ""
+msgstr "Viúvo"
 
 #. module: hr
 #: field:hr.employee,child_ids:0
@@ -961,3 +987,6 @@ msgstr ""
 
 #~ msgid "Number of Employees"
 #~ msgstr "Número de Funcionários"
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Hierarquia"

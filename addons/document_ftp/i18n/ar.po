@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:06+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:40+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_configuration
@@ -31,6 +31,10 @@ msgid ""
 "format is HOST:PORT and the default host (localhost) is only suitable for "
 "access from the server machine itself.."
 msgstr ""
+"يشير عنوان الشبكة التي لديك على الخادم OpenERP ينبغي أن تكون قابلة للوصول "
+"للمستخدمين النهائيين. هذا يعتمد على هيكل الشبكة الخاصة بك والتكوين، وسوف "
+"تؤثر فقط على الروابط المعروضة للمستخدمين. والشكل هو مضيف: منفذ والمضيف "
+"الافتراضي (المضيف المحلي) وهي مناسبة فقط للوصول من جهاز الخادم نفسه .."
 
 #. module: document_ftp
 #: model:ir.actions.url,name:document_ftp.action_document_browse
@@ -55,7 +59,7 @@ msgstr "خادم FTP"
 #. module: document_ftp
 #: model:ir.actions.act_window,name:document_ftp.action_config_auto_directory
 msgid "FTP Server Configuration"
-msgstr "تكوين خدمة FTP"
+msgstr "ضبط خدمة FTP"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -67,11 +71,13 @@ msgstr "_تصفح"
 msgid ""
 "Server address or IP and port to which users should connect to for DMS access"
 msgstr ""
+"عنوان الخادم أو الملكية الفكرية والمنفذ الذي يجب على المستخدمين الاتصال به "
+"للحصول DMS"
 
 #. module: document_ftp
 #: model:ir.ui.menu,name:document_ftp.menu_document_browse
 msgid "Shared Repository (FTP)"
-msgstr ""
+msgstr "مستودع مشترك (FTP)"
 
 #. module: document_ftp
 #: view:document.ftp.browse:0
@@ -81,7 +87,7 @@ msgstr "ال_غاء"
 #. module: document_ftp
 #: view:document.ftp.configuration:0
 msgid "Configure FTP Server"
-msgstr ""
+msgstr "قم بضبط الخادم FTP"
 
 #. module: document_ftp
 #: view:document.ftp.configuration:0
@@ -91,7 +97,7 @@ msgstr "الاسم"
 #. module: document_ftp
 #: model:ir.model,name:document_ftp.model_document_ftp_browse
 msgid "Document FTP Browse"
-msgstr "تفصح وثيقة FTP"
+msgstr "تصفح وثيقة FTP"
 
 #. module: document_ftp
 #: view:document.ftp.configuration:0
@@ -117,4 +123,17 @@ msgstr "res_config_contents"
 #~ msgstr "سير الإعدادات"
 
 #~ msgid "Integrated FTP Server with Document Management System"
-#~ msgstr "خدمة FTP المتكامل مع نظام ادارة الوثيقة"
+#~ msgstr "ربط خدمة FTP مع نظام ادارة الوثائق"
+
+#~ msgid ""
+#~ "This is a support FTP Interface with document management system.\n"
+#~ "    With this module you would not only be able to access documents through "
+#~ "OpenERP\n"
+#~ "    but you would also be able to connect with them through the file system "
+#~ "using the\n"
+#~ "    FTP client.\n"
+#~ msgstr ""
+#~ "هذا هو واجهة دعم بروتوكول نقل الملفات مع نظام إدارة الوثائق.\n"
+#~ "مع هذه الوحدة فإنك لن تكون قادرا على الوصول إلى المستندات من خلال OpenERP\n"
+#~ "ولكن هل ستكون أيضا قادرا على الاتصال معهم من خلال نظام الملفات باستخدام\n"
+#~ "بروتوكول نقل الملفات العملاء.\n"

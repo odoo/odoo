@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:39+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:57+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: stock
 #: model:ir.actions.todo.category,name:stock.category_stock_management_config
@@ -1706,7 +1706,7 @@ msgstr "Lotes seguimiento de fabricación"
 #. module: stock
 #: view:stock.picking:0
 msgid "Is a Back Order"
-msgstr ""
+msgstr "Es un albarán relacionado"
 
 #. module: stock
 #: field:stock.location,valuation_out_account_id:0
@@ -1767,7 +1767,7 @@ msgstr "Lote seguimiento"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr "Albaranes pendientes"
+msgstr "Albaranes relacionados"
 
 #. module: stock
 #: view:product.product:0 view:product.template:0
@@ -2786,7 +2786,7 @@ msgstr "Dirección de contacto :"
 #. module: stock
 #: field:stock.move,backorder_id:0
 msgid "Back Order"
-msgstr "Albarán pendiente"
+msgstr "Albarán relacionado"
 
 #. module: stock
 #: field:stock.incoterms,active:0 field:stock.location,active:0
@@ -4027,7 +4027,7 @@ msgstr "Dividir movimiento"
 #. module: stock
 #: field:stock.picking,backorder_id:0
 msgid "Back Order of"
-msgstr "Albarán pendiente de"
+msgstr "Albarán relacionado de:"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_return_picking.py:106
@@ -4191,6 +4191,9 @@ msgid ""
 "would let a quantity of \"%s %s\" to ship and only roundings of \"%s %s\" is "
 "accepted by the uom."
 msgstr ""
+"El redondeo de la UdM inicial no permite enviar \"%s %s\" porque dejaría una "
+"cantidad de \"%s %s\" para enviar y solo redondeos de \"%s %s\" son "
+"aceptados por la UdM"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_move.py:213
@@ -4198,6 +4201,8 @@ msgstr ""
 msgid ""
 "Production lot quantity %d of %s is larger than available quantity (%d) !"
 msgstr ""
+"La cantidad del lote de producción %d de %s es superior a la cantidad "
+"disponible (%d) !"
 
 #. module: stock
 #: constraint:product.category:0

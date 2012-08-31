@@ -16,40 +16,34 @@
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="40" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//field[@name="type"]' position='after'>
-                    <field name="template_id" on_change="on_change_template(template_id,context)"  domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
-                </xpath>
                 <xpath expr='//div[@name="duration"]' position="after" version="7.0">
                     <label for="quantity_max"/>
                     <div>
-                        <field name="quantity_max" class="oe_inline"/> / Remaining: <field name="remaining_hours" class="oe_inline"/> 
+                        <field name="quantity_max" class="oe_inline"/>
+                        <field name="company_uom_id" readonly="1" class="oe_inline"/>
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">
-                    <group name='invoice_on_timesheets' string="Invoice on Timesheets Options" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" col="4">
-                        <field name="pricelist_id" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
-                        <field name="to_invoice" widget="selection" attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
-                    </group>
                 </xpath>
-                <xpath expr='//group[@name="master"]' position='after'>
+                <xpath expr='//separator[@name="description"]' position='before'>
                     <separator name="toinvoice" string="Invoicing"/>
-                    <table width="100%%">
+                    <table class="oe_form_analytic_account">
                         <tr>
-                            <th></th>
-                            <th></th>
-                            <th><label string="Est.Tot"/></th>
-                            <th><label string="Invoiced"/></th>
-                            <th><label string="Remaining"/></th>
-                            <th><label string="To Invoice"/></th>
+                            <th class="oe_grey" width="160px"></th>
+                            <th class="oe_grey" width="25px"></th>
+                            <th class="oe_grey" width="100px"><label string="Expected"/></th>
+                            <th class="oe_grey" width="100px"><label string="Invoiced"/></th>
+                            <th class="oe_grey" width="100px"><label string="Remaining"/></th>
+                            <th class="oe_grey" width="100px"><label string="To Invoice"/></th>
+                            <th width="30px"></th>
                             <th></th>
                         </tr><tr>
-                            <td>
+                            <td class="oe_grey">
                                 <label for="fix_price_invoices"/>
-                            </td><td>
+                            </td><td class="oe_grey">
                                 <field name="fix_price_invoices" class="oe_inline"/>
                             </td><td>
                                 <field class="oe_inline" name="amount_max" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
@@ -60,13 +54,22 @@
                             </td><td>
                                 <field class="oe_inline" name="fix_price_to_invoice" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
                             </td><td>
-                                <button name="%(action_sales_order)d" string="All Sales" type="action" context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                                <button name="open_sale_order_lines" string="Lines To Invoice" type="object" context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}" attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
-                            </td>
-                        </tr><tr attrs="{'invisible':[('use_timesheets','=',False)]}">
-                            <td>
-                                <label for="invoice_on_timesheets"/>
+                                <button name="open_sale_order_lines"
+                                    class="oe_link oe_e"
+                                    string="/" type="object"
+                                    context="{'default_partner_id': [partner_id],'default_project_id': active_id,'search_default_uninvoiced': 1,'search_default_project_id': active_id,'search_default_partner_id': [partner_id]}"
+                                    attrs="{'invisible': [('fix_price_to_invoice','=',0)]}"/>
                             </td><td>
+                                <button name="%(action_sales_order)d" string="Sale Orders"
+                                    type="action"
+                                    class="oe_link"
+                                    context="{'default_partner_id': [partner_id], 'search_default_partner_id': [partner_id],'search_default_project_id': [active_id],'default_project_id': [active_id]}"
+                                    attrs="{'invisible': [('fix_price_invoices','=',False)]}"/>
+                            </td>
+                        </tr><tr>
+                            <td class="oe_grey">
+                                <label for="invoice_on_timesheets"/>
+                            </td><td class="oe_grey">
                                 <field name="invoice_on_timesheets"/>
                             </td><td>
                                 <field class="oe_inline" name="hours_qtt_est" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
@@ -77,25 +80,44 @@
                             </td><td>
                                 <field class="oe_inline" name="ca_to_invoice" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
                             </td><td>
-                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d" string="All Timesheets" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}" context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
-                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d" string="Timesheets to Invoice" type="action" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
+                                <button name="%(hr_timesheet_invoice.act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice)d"
+                                    type="action"
+                                    class="oe_link oe_e"
+                                    string="/"
+                                    attrs="{'invisible': [('ca_to_invoice','=',0.0)]}"/>
+
+                            </td><td>
+                                <button name="%(hr_timesheet.act_hr_timesheet_line_evry1_all_form)d"
+                                    string="Timesheets" type="action"
+                                    class="oe_link"
+                                    attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"
+                                    context="{'default_account_id': active_id,'search_default_account_id': active_id}"/>
                             </td>
                         </tr><tr name='total'>
-                            <th>
+                            <th class="oe_grey">
                                 <label string="Total"/>
-                            </th><td>
-                            </td><td>
+                            </th><td class="oe_grey">
+                            </td><td class="oe_grey">
                                 <field name="est_total" class="oe_inline" attrs="{'invisible': [('invoice_on_timesheets','=',False)]}"/>
-                            </td><td>
+                            </td><td class="oe_grey">
                                 <field name="invoiced_total" class="oe_inline"/>
-                            </td><td>
+                            </td><td class="oe_grey">
                                 <field name="remaining_total" class="oe_inline"/>
-                            </td><td>
+                            </td><td class="oe_grey">
                                 <field name="toinvoice_total" class="oe_inline"/>
                             </td><td>
                             </td>
                         </tr>
                     </table>
+                    <group name='invoice_on_timesheets' attrs="{'invisible': [('invoice_on_timesheets','=',False)]}">
+                        <field name="pricelist_id"
+                            class="oe_inline"
+                            attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                        <field name="to_invoice"
+                            class="oe_inline"
+                            widget="selection"
+                            attrs="{'required': [('invoice_on_timesheets', '=', True)]}"/>
+                    </group>
                  </xpath>
             </field>
         </record>
@@ -104,7 +126,6 @@
             <field name="name">account.analytic.account.tree</field>
             <field name="model">account.analytic.account</field>
             <field name="inherit_id" ref="account.view_account_analytic_account_list"/>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="date" position="before">
                     <field name="last_invoice_date"/>

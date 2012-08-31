@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 05:11+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:36+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -70,6 +70,8 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Gepland uitgaand in periodes voor de berekening. Tussen startdatum van de "
+"huidige periode en één dag voor de start van de berekende periode."
 
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,warehouse_id:0
@@ -77,6 +79,8 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Magazijn waarvoor de prognose geldt. Tijdens het plannen heeft u "
+"verkoopprognoses nodig van alle magazijnen. Kies een magazijn."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
@@ -102,6 +106,7 @@ msgstr "Maak prognose regels"
 #: help:stock.planning,outgoing:0
 msgid "Quantity of all confirmed outgoing moves in calculated Period."
 msgstr ""
+"Hoeveeheid van alle bevestigde uitgaande mutaties in de berekende periode."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -124,6 +129,8 @@ msgid ""
 "All sales forecasts for selected Warehouse of selected Product during "
 "selected Period."
 msgstr ""
+"Alle verkoopprognoses voor het geselecteerde magazijn, van de geselecteerde "
+"producten gedurende de geselecteerde periode."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -145,6 +152,8 @@ msgstr "Alleen voorraadlocatie"
 msgid ""
 "Quantity which is already dispatched out of this warehouse in current period."
 msgstr ""
+"Hoeveelheid welke al is verscheept uit het magazijn gedurende de huidige "
+"periode."
 
 #. module: stock_planning
 #: field:stock.planning,incoming:0
@@ -163,6 +172,10 @@ msgid ""
 "are independent of financial periods. If you need periods other than day-, "
 "week- or month-based, you may also add then manually."
 msgstr ""
+"Deze wizzard helpt u bij het maken van voorraadplanning periodes. Deze "
+"periodes zijn onafhankelijk van de financiële periodes. Indien u periodes "
+"nodig hebt, anders dan een dag, week of maand, dan dient u deze handmatig "
+"aan te maken."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -202,6 +215,9 @@ msgid ""
 "Check to make procurement to stock location of selected warehouse. If not "
 "selected procurement will be made into input location of warehouse."
 msgstr ""
+"Vink dit aan om een verwerving te maken naar het geselecteerde magazijn. "
+"Indien niet aangevinkt, wordt de verwerving gemaakt naar de inkomende "
+"locatie van het magazijn."
 
 #. module: stock_planning
 #: help:stock.planning,already_in:0
@@ -247,6 +263,9 @@ msgid ""
 "Between start date of current period and one day before start of calculated "
 "period."
 msgstr ""
+"Bevestigde ontvangsten in de periode voor de berekening (inclusief wat al "
+"binnen is). Tussen de startdatum van de huidige periode en één dag voor de "
+"start van de berekende periode."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -327,7 +346,7 @@ msgstr "Status"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
-msgstr ""
+msgstr "Productcategorie van producten waarover de prognose gaat."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
@@ -357,6 +376,13 @@ msgid ""
 "Initial Stock - Planned Out Before + Incoming Before - Planned Out + Planned "
 "In."
 msgstr ""
+"Voorraad simulatie aan het einde van de geselecteerde periode.\n"
+" Voor de huidige periode is deze: \n"
+" Huidige voorraad - Reeds eruit + Reeds binnen - Verwacht uit + Nog te "
+"ontvangen\n"
+"Voor de aankomende periode:\n"
+" Huidige voorraad - Eerder gepland eruit + Eerder binnen - Gepland eruit + "
+"Gepland nog te ontvangen"
 
 #. module: stock_planning
 #: help:stock.sale.forecast,analyze_company:0
@@ -393,6 +419,23 @@ msgid ""
 "  \n"
 " Stock Simulation: %s    Minimum stock: %s"
 msgstr ""
+" Verwerving aangemaakt door MPS voor gebruiker: %s, aanmaakdatum: %s         "
+"                                \n"
+" Voor periode: %s                                         \n"
+" Volgens status:                                          \n"
+" Magazijn prognose: %s                                         \n"
+" Begin voorraad: %s                                         \n"
+" Gepland uitgaand: %s, gepland inkomend: %s                                  "
+"       \n"
+" Reeds uitgaand: %s, reeds ingekomen: %s                                     "
+"    \n"
+" Bevestigd uitgaand: %s, bevestigd inkomend: %s                              "
+"           \n"
+" Gepland uitgaand voor: %s, Gepland inkomend voor: %s                        "
+"                 \n"
+" Verwacht uitgaand: %s, verwacht inkomend: %s                                "
+"         \n"
+" Voorraad simulatie: %s, minimale voorraad: %s"
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:626
@@ -447,6 +490,9 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units from default category or from second category (UoS category)."
 msgstr ""
+"De maateenheid, welke wordt gebruikt om de hoeveelheden weer te geven in de "
+"voorraadberekening. U kunt standaard maateenheden gebruiken, of een tweede "
+"maateenheid (de voorraad maateenheid)."
 
 #. module: stock_planning
 #: view:stock.period.createlines:0
@@ -460,6 +506,9 @@ msgid ""
 "account periods. You can use wizard for creating periods and review them "
 "here."
 msgstr ""
+"Voorraadperiodes worden gebruikt voor de voorraadplanning. De periodes zijn "
+"onafhankelijk van de financiële periodes. U kunt de wizzard gebruiken voor "
+"het aanamaken van periodes."
 
 #. module: stock_planning
 #: view:stock.planning:0
@@ -490,6 +539,7 @@ msgstr "Bedrijf prognose"
 #: help:stock.planning,minimum_op:0
 msgid "Minimum quantity set in Minimum Stock Rules for this Warehouse"
 msgstr ""
+"Minimum hoeveelheid ingesteld in minimale voorraadregel voor dit magazijn."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -499,7 +549,7 @@ msgstr "Per gebruiker:"
 #. module: stock_planning
 #: help:stock.planning.createlines,warehouse_id:0
 msgid "Warehouse which planning will concern."
-msgstr ""
+msgstr "Magazijn waarvoor deze planning is."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,user_id:0
@@ -518,6 +568,8 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"U dient een bronlocatie aan te geven, welke anders is dan de berekende "
+"bestemmingslocatie."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:146
@@ -533,7 +585,7 @@ msgstr "Dit bedrijf periode5"
 #. module: stock_planning
 #: field:stock.sale.forecast,product_uom:0
 msgid "Product UoM"
-msgstr "Product eenheid"
+msgstr "Product maateenheid"
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period1_per_company:0
@@ -572,6 +624,9 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"De planning zal worden samengesteld van producten van de productcategorie, "
+"geselecteerd door dit veld. Dit veld wordt genegeerd, wanneer u de optie "
+"\"Alle geprognotiseerde producten\" aanvinkt."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
@@ -612,11 +667,14 @@ msgid ""
 "Unit of Measure used to show the quantities of stock calculation.You can use "
 "units form default category or from second category (UoS category)."
 msgstr ""
+"De maateenheid, welke wordt gebruikt om de hoeveelheden weer te geven in de "
+"voorraadberekening. U kunt standaard maateenheden gebruiken, of een tweede "
+"maateenheid (de voorraad maateenheid)."
 
 #. module: stock_planning
 #: view:stock.planning:0
 msgid "Planning and Situation for Calculated Period"
-msgstr ""
+msgstr "Planning en situatie voor de berekende periode"
 
 #. module: stock_planning
 #: help:stock.planning,planned_outgoing:0
@@ -625,6 +683,10 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Geef de geplande hoeveelheid van het geselecteerde magazijn in voor de "
+"geselecteerde periode en producten. Om deze waarde te plannen, kijkt u naar "
+"de bevestigd uit of de verkoopprognose. deze waarde zou gelijk of groter "
+"moeten zijn dan bevestigd uit."
 
 #. module: stock_planning
 #: view:stock.period:0
@@ -681,11 +743,15 @@ msgid ""
 "warehouse, so you don't have to create them one by one. The wizard doesn't "
 "duplicate lines if they already exist for this selection."
 msgstr ""
+"Deze wizzard helpt u bij het maken van MPS planningsregels voor een "
+"geselecteerde periode en magazijn, zo hoeft u deze niet één voor één te "
+"maken. de wizzard dupliceert geen regels, als deze al bestaan voor deze "
+"selectie."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing:0
 msgid "Confirmed Out"
-msgstr ""
+msgstr "Bevestigd uit"
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_planning_createlines_form
@@ -740,6 +806,9 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Vink deze optie aan om een planning te maken voor alle producten met een "
+"prognose, voor het geselecteerde magazijn en periode. Het productcategorie "
+"veld wordt genegeerd."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:632
@@ -802,6 +871,22 @@ msgid ""
 " Expected Out: %s   Incoming Left: %s                                     \n"
 " Stock Simulation: %s   Minimum stock: %s "
 msgstr ""
+"Verzamelopdracht aangemaakt door MPS voor gebruiker: %s, aanmaakdatum: %s    "
+"                                     \n"
+"Voor periode: %s, volgens status:                                     \n"
+" Magazijn prognose: %s                                         \n"
+" Begin voorraad: %s                                         \n"
+" Gepland uitgaand: %s, gepland inkomend: %s                                  "
+"       \n"
+" Reeds uitgaand: %s, reeds ingekomen: %s                                     "
+"    \n"
+" Bevestigd uitgaand: %s, bevestigd inkomend: %s                              "
+"           \n"
+" Gepland uitgaand voor: %s, Gepland inkomend voor: %s                        "
+"                 \n"
+" Verwacht uitgaand: %s, verwacht inkomend: %s                                "
+"         \n"
+" Voorraad simulatie: %s, minimale voorraad: %s "
 
 #. module: stock_planning
 #: field:stock.planning,period_id:0
@@ -835,7 +920,7 @@ msgstr "Kopieer laatste prognose"
 #. module: stock_planning
 #: help:stock.sale.forecast,product_id:0
 msgid "Shows which product this forecast concerns."
-msgstr ""
+msgstr "Laat zien over welke producten deze prognose gaat"
 
 #. module: stock_planning
 #: selection:stock.planning,state:0
@@ -919,6 +1004,10 @@ msgid ""
 "supply will be made from Output location of Supply Warehouse. Used in "
 "'Supply from Another Warehouse' with Supply Warehouse."
 msgstr ""
+"Vink deze optie aan om te leveren vanuit voorraad van het leverende "
+"magazijn. Indien niet aangevinkt wordt de levering gedaan vanuit de "
+"uitgaande locatie van het magazijn. Wordt gebruikt in 'lever vanuit ander "
+"magazijn' met lever magazijn."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,create_uid:0
@@ -991,7 +1080,7 @@ msgstr "Dit bedrijf periode4"
 #. module: stock_planning
 #: help:stock.planning.createlines,period_id:0
 msgid "Period which planning will concern."
-msgstr ""
+msgstr "Periode waarover deze planning gaat."
 
 #. module: stock_planning
 #: field:stock.planning,already_out:0
@@ -1037,6 +1126,7 @@ msgstr "Voorraad"
 #: help:stock.planning,incoming:0
 msgid "Quantity of all confirmed incoming moves in calculated Period."
 msgstr ""
+"Hoeveelheid van alle bevestigde inkomende mutaties in de berekende periode."
 
 #. module: stock_planning
 #: field:stock.period,date_stop:0
@@ -1057,7 +1147,7 @@ msgstr "Naam"
 #. module: stock_planning
 #: help:stock.sale.forecast,period_id:0
 msgid "Shows which period this forecast concerns."
-msgstr ""
+msgstr "Geeft aan over welke periode deze prognose gaat."
 
 #. module: stock_planning
 #: field:stock.planning,product_uom:0
@@ -1099,7 +1189,7 @@ msgstr "U dient een bronmagazijn te specificeren!"
 #. module: stock_planning
 #: field:stock.planning,procure_to_stock:0
 msgid "Procure To Stock Location"
-msgstr ""
+msgstr "Verwerf naar vororaadlocatie"
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1112,6 +1202,8 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Periode voor deze planning. Bestellingen worden aangemaakt op het begin van "
+"de periode."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:631
@@ -1135,6 +1227,8 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Vink aan om alleen bevestigde prognose mee te nemen. Indien niet aangevinkt, "
+"worden bevestigde en concept prognoses meegenomen."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0
@@ -1149,7 +1243,7 @@ msgstr "Dit magazijn"
 #. module: stock_planning
 #: help:stock.sale.forecast,user_id:0
 msgid "Shows who created this forecast, or who validated."
-msgstr ""
+msgstr "Laat zien wie deze prognose heeft gemaakt of heeft goedgekeurd."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_team_id:0
@@ -1184,6 +1278,10 @@ msgid ""
 "you only have to fill in the forecast quantities. The wizard doesn't "
 "duplicate the line when another one exist for the same selection."
 msgstr ""
+"Deze wizard helpt u bij het maken van meerdere prognoseregels tegelijk. "
+"Nadat deze zijn aangemaakt hoeft u alleen de prognose hoeveelheden in te "
+"voeren. De wizard dupliceert geen regels wanneer er reeds een regel bestaat "
+"voor dezelfde selectie."
 
 #~ msgid "This Copmany Period1"
 #~ msgstr "Dit bedrijf periode 1"

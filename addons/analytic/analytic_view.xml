@@ -5,47 +5,50 @@
         <record id="view_account_analytic_account_form" model="ir.ui.view">
             <field name="name">analytic.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Analytic Account" version="7.0">
                     <sheet string="Analytic Account">
                         <label for="name" class="oe_edit_only"/>
                         <h1>
-                            <field name="name"/>
+                            <field name="name" class="oe_inline"/>
                         </h1>
+                        <div name="project"/>
                         <group>
                             <group>
                                 <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}"/>
-                                <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>
-                                <field name="type"/>
+                                <field name="manager_id"/>
+                                <field name="code"/>
                             </group>
                             <group>
-                                <field name="code"/>
-                                <field name="manager_id"/>
+                                <field name="type"/>
+                                <field name="parent_id" on_change="on_change_parent(parent_id)" attrs="{'invisible': [('type','in',['contract','template'])]}"/>
+                                <field name="template_id" on_change="on_change_template(template_id,context)" domain="[('type','=','template')]" attrs="{'invisible': [('type','in',['view', 'normal','template'])]}" context="{'default_type' : 'template'}"/>
                                 <field name="company_id" on_change="on_change_company(company_id)" widget="selection" groups="base.group_multi_company" attrs="{'required': [('type','&lt;&gt;','view')]}"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Contract Information" name="contract_page" attrs="{'invisible':[('type','not in',['contract', 'template'])]}">
-                                <group name="master">
-                                    <group string="Validity" name="contract">
-                                        <label for="date_start" string="Duration"/>
-                                        <div name="duration">
-                                            <field name="date_start" class="oe_inline"/> - <field name="date" class="oe_inline"/>
-                                        </div>
-                                    </group>
-                                    <group name="project">
-                                        <separator string="Project Management" name="project_sep" invisible="1"/>
-                                    </group>
+                                <group string="Renewal" name="contract">
+                                    <p colspan="2" class="oe_grey oe_edit_only">
+                                        Once the end date of the contract is
+                                        passed or the maximum number of service
+                                        units is reached, the account manager
+                                        is warned by email to renew the contract.
+                                    </p>
+                                    <label for="date" string="End Date"/>
+                                    <div name="duration">
+                                        <field name="date" class="oe_inline"/>
+                                    </div>
                                 </group>
                                 <separator string="Terms and Conditions" name="description"/>
                                 <field name="description"/>
                             </page>
                         </notebook>
                     </sheet>
-                    <footer>
+                    <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread"/>
-                    </footer>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>

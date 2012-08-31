@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-09 05:39+0000\n"
-"X-Generator: Launchpad (build 15376)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:38+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base_calendar
 #: view:calendar.attendee:0
@@ -511,12 +511,12 @@ msgstr "カレンダーイベントまたはミーティングを割り当てら
 #: field:calendar.event,show_as:0
 #: field:calendar.todo,show_as:0
 msgid "Show as"
-msgstr "見せる（として）"
+msgstr "表示"
 
 #. module: base_calendar
 #: view:calendar.event:0
 msgid "Visibility"
-msgstr "視界"
+msgstr "表示"
 
 #. module: base_calendar
 #: field:calendar.attendee,rsvp:0
@@ -678,7 +678,7 @@ msgstr "個人"
 #: help:calendar.event,count:0
 #: help:calendar.todo,count:0
 msgid "Repeat x times"
-msgstr "ｎ回繰り返し"
+msgstr "x回繰り返し"
 
 #. module: base_calendar
 #: field:calendar.alarm,user_id:0
@@ -1152,7 +1152,7 @@ msgstr "ユーザ責任者"
 #: selection:res.users,availability:0
 #, python-format
 msgid "Busy"
-msgstr "ビジー"
+msgstr "割当済"
 
 #. module: base_calendar
 #: model:ir.model,name:base_calendar.model_calendar_event
@@ -1231,7 +1231,7 @@ msgstr "月"
 #: view:base_calendar.invite.attendee:0
 #: view:calendar.event:0
 msgid "Invite People"
-msgstr "招待"
+msgstr "人を招待"
 
 #. module: base_calendar
 #: view:calendar.event:0
@@ -1386,7 +1386,7 @@ msgstr "平日"
 #: field:calendar.event,byday:0
 #: field:calendar.todo,byday:0
 msgid "By day"
-msgstr "日毎"
+msgstr "日別"
 
 #. module: base_calendar
 #: field:calendar.alarm,model_id:0
@@ -1521,3 +1521,11 @@ msgstr ""
 #: selection:calendar.todo,byday:0
 msgid "Fifth"
 msgstr "第５"
+
+#~ msgid ""
+#~ "Defines a rule or repeating pattern for recurring events\n"
+#~ "e.g.: Every other month on the last Sunday of the month for 10 occurrences:  "
+#~ "      FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"
+#~ msgstr ""
+#~ "定期的なイベントのルールや繰り返しパターンを定義します。\n"
+#~ "例：隔月の月の最終日曜日を10回発生させる：FREQ=MONTHLY;INTERVAL=2;COUNT=10;BYDAY=-1SU"

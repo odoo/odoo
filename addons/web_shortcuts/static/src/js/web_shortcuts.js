@@ -39,13 +39,13 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         var self = this;
         this._super();
         this.trigger('load');
-        this.$element.on('click', '.oe_systray_shortcuts_items a', function() {
+        this.$el.on('click', '.oe_systray_shortcuts_items a', function() {
             self.trigger('click', $(this));
         });
     },
     load: function() {
         var self = this;
-        this.$element.find('.oe_systray_shortcuts_items').empty();
+        this.$el.find('.oe_systray_shortcuts_items').empty();
         return this.rpc('/web/shortcuts/list', {}, function(shortcuts) {
             _.each(shortcuts, function(sc) {
                 self.trigger('display', sc);
@@ -64,13 +64,13 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
     },
     display: function(sc) {
         var self = this;
-        this.$element.find('.oe_systray_shortcuts_items').append();
+        this.$el.find('.oe_systray_shortcuts_items').append();
         var $sc = $(QWeb.render('Systray.Shortcuts.Item', {'shortcut': sc}));
-        $sc.appendTo(self.$element.find('.oe_systray_shortcuts_items'));
+        $sc.appendTo(self.$el.find('.oe_systray_shortcuts_items'));
     },
     remove: function (menu_id) {
         var menu_id = this.session.active_id;
-        var $shortcut = this.$element.find('.oe_systray_shortcuts_items li a[data-id=' + menu_id + ']');
+        var $shortcut = this.$el.find('.oe_systray_shortcuts_items li a[data-id=' + menu_id + ']');
         var shortcut_id = $shortcut.data('shortcut-id');
         $shortcut.remove();
         this.dataset.unlink([shortcut_id]);
@@ -79,15 +79,16 @@ instance.web_shortcuts.Shortcuts = instance.web.Widget.extend({
         var self = this,
             id = $link.data('id');
         self.session.active_id = id;
+        // TODO: Use do_action({menu_id: id, type: 'ir.actions.menu'})
         self.rpc('/web/menu/action', {'menu_id': id}, function(ir_menu_data) {
             if (ir_menu_data.action.length){
-                instance.webclient.user_menu.on_action(ir_menu_data.action[0][2]);
+                instance.webclient.user_menu.on_action({action_id: ir_menu_data.action[0][2].id});
             }
         });
-        this.$element.find('.oe_systray_shortcuts').trigger('mouseout');
+        this.$el.find('.oe_systray_shortcuts').trigger('mouseout');
     },
     has: function(menu_id) {
-        return !!this.$element.find('a[data-id=' + menu_id + ']').length;
+        return !!this.$el.find('a[data-id=' + menu_id + ']').length;
     }
 });
 
@@ -100,7 +101,7 @@ instance.web.UserMenu.include({
                 self.shortcuts.trigger('load');
             } else {
                 self.shortcuts = new instance.web_shortcuts.Shortcuts(self);
-                self.shortcuts.appendTo(instance.webclient.$element.find('.oe_systray'));
+                self.shortcuts.appendTo(instance.webclient.$el.find('.oe_systray'));
             }
         });
     },
@@ -118,7 +119,7 @@ instance.web.ViewManagerAction.include({
         var shortcuts_menu = instance.webclient.user_menu.shortcuts;
         var grandparent = this.getParent() && this.getParent().getParent();
         // display shortcuts if on the first view for the action
-        var $shortcut_toggle = this.$element.find('.oe_shortcuts_toggle');
+        var $shortcut_toggle = this.$el.find('.oe_shortcuts_toggle');
         if (!this.action.name ||
                 !(view.view_type === this.views_src[0].view_type
                     && view.view_id === this.views_src[0].view_id)) {

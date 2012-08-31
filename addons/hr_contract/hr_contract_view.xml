@@ -28,7 +28,7 @@
                         <field name="place_of_birth"/>
                     </field>
                     <field name="bank_account_id" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True, 'partner_id':partner_id}"/>
+                        <field name="bank_account_id" context="{'display_partner':True}"/>
                     </field>
                 </data>
             </field>
@@ -37,25 +37,17 @@
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
             <field name="model">hr.contract</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
-                   <group>
-                       <field name="name" string="Contracts"/>
-                       <separator orientation="vertical"/>
-                       <field name="date_start"/>
-                       <field name="date_end"/>
-                       <separator orientation="vertical"/>
-                       <field name="employee_id"/>
-                       <field name="working_hours"/>
-                   </group>
-                   <newline/>
+                   <field name="name" string="Contracts"/>
+                   <field name="date_start"/>
+                   <field name="date_end"/>
+                   <field name="working_hours"/>
+                   <field name="employee_id"/>
                    <group expand="0" string="Group By...">
                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string="Working Schedule" icon="terp-go-week" domain="[]" context="{'group_by':'working_hours'}"/>
                        <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
-                       <separator orientation="vertical"/>
                        <filter string="Contract Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_id'}"/>
                    </group>
                </search>
@@ -65,25 +57,23 @@
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contract" version="7.0">
                     <sheet>
                     <div class="oe_title">
                         <h1>
-                            <field name="name" class="oe_inline"/>, <field name="employee_id" class="oe_inline"/>
+                            <field name="name" placeholder="Contract Reference"/>
                         </h1>
-                        <h2>
-                            <div>
-                                <label for="job_id" class="oe_edit_only"/>
-                                <field name="job_id"/>
-                            </div>
-                            <div>
-                                <label for="type_id" class="oe_edit_only"/>
-                                <field name="type_id"/>
-                            </div>
-                        </h2>
                     </div>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="job_id"/>
+                        </group>
+                        <group>
+                            <field name="type_id"/>
+                        </group>
+                    </group>
                     <notebook>
                         <page string="Information" name="information">
                             <group>
@@ -122,7 +112,6 @@
         <record id="hr_contract_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.view.tree</field>
             <field name="model">hr.contract</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contracts">
                     <field name="name"/>
@@ -150,7 +139,6 @@
         <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contract Type">
                     <field colspan="4" name="name"/>
@@ -161,7 +149,6 @@
          <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contract Type">
                     <field colspan="4" name="name"/>
@@ -172,12 +159,9 @@
         <record id="hr_contract_type_view_search" model="ir.ui.view">
             <field name="name">hr.contract.type.view.search</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
-                   <group>
-                       <field name="name" string="Contract Type"/>
-                   </group>
+                    <field name="name" string="Contract Type"/>
                </search>
             </field>
         </record>
