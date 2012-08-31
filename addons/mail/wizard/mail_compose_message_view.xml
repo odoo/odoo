@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
                     <group>
+                        <field name="composition_mode" invisible="1"/>
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <field name="author_id"/>
@@ -38,11 +39,11 @@
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0" >
                     <group>
+                        <!-- truly invisible fields for control and options -->
                         <field name="composition_mode" colspan="2" nolabel="1" invisible="1"/>
                         <field name="model" colspan="2" nolabel="1" invisible="1"/>
                         <field name="res_id" colspan="2" nolabel="1" invisible="1"/>
                         <field name="parent_id" colspan="2" nolabel="1" invisible="1"/>
-                        <!-- truly invisible fields for control and options -->
                         <field name="content_subtype" colspan="2" nolabel="1" invisible="1"/>
                         <!-- visible wizard -->
                         <field name="subject" colspan="2" nolabel="1" placeholder="Subject..."
@@ -63,14 +64,15 @@
                                 class="oe_mail_compose_message_attachment_ids"/>
                         <!-- void div to display attachments, Chatter-controlled -->
                         <div colspan="2" class="oe_mail_compose_message_attachments"/>
-                        <!-- buttons, mostly Chatter-controlled -->
+                        <!-- buttons, with as few Chatter logic as possible -->
                         <div>
                             <button name="send_mail" string="Post" type="object"
                                 class="oe_mail_compose_message_button_send"/>
                         </div>
                         <div class='oe_mail_compose_message_icons'>
-                            <button icon="/mail/static/src/img/attachment.png" name="dummy"
+                            <button icon="/mail/static/src/img/attachment.png"
                                 class="oe_mail_compose_message_attachment" string=""
+                                name="dummy"
                                 help="Add an attachment"/>
                             <button icon="/mail/static/src/img/formatting.png"
                                 class="oe_mail_compose_message_formatting" string=""
@@ -100,6 +102,6 @@
                 target="new"
                 key2="client_action_multi"
                 id="base.action_partner_mass_mail"
-                context="{'mail.compose.message.mode':'mass_mail'}"/>
+                context="{'default_composition_mode': 'mass_mail'}"/>
     </data>
 </openerp>

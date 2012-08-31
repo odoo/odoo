@@ -21,13 +21,14 @@
         </record>
 
         <!-- Notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>With OpenERP's accounting, you can get an instant access to all your financial data, setup your analytic accounting, forecast your taxes, control your budgets, easily create and send invoices, record bank statements, etc.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Accounting and Finance application installed!</field>
+            <field name="body">With OpenERP's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.
 
-The accounting features are fully integrated with others OpenERP applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</value>
-            <value>Module Accounting and Finance has been installed.</value>
-        </function>
+The accounting features are fully integrated with other OpenERP applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</field>
+        </record>
     </data>
 </openerp>
