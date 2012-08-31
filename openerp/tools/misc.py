@@ -406,7 +406,7 @@ def append_content_to_html(html, content, plaintext=True):
        EOF), and wrapping the provided content in a <pre/> block
        unless ``plaintext`` is False. A side-effect of this
        method is to coerce all HTML tags to lowercase in ``html``,
-       and strips enclosing <html> or <body> tags in content if
+       and strip enclosing <html> or <body> tags in content if
        ``plaintext`` is False.
        
        :param str html: html tagsoup (doesn't have to be XHTML)

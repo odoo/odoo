@@ -351,14 +351,17 @@ class res_partner(osv.osv):
             res.append((record.id, name))
         return res
 
-    def parse_partner_name(self, cr, uid, name, context=None):
+    def _parse_partner_name(self, text, context=None):
         """ Supported syntax:
-            - 'Raoul <raoul@grosbedon.fr>', available with '  ', '<>', '{}',
-                '()', '[]': will find name and email address
+            - 'Raoul <raoul@grosbedon.fr>': will find name and email address
             - otherwise: default, everything is set as the name """
-        regex = re.compile('^(.*?)(?: ?[\<{(\[]?([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>})\]]?)?$')
-        result = regex.match(name)
-        return (result.group(1).strip(), result.group(2))
+        match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
+        if match:
+            email = match.group(1) 
+            name = text[:text.index(email)].replace('"','').replace('<','').strip()
+        else:
+            name, email = text, ''
+        return name, email
 
     def name_create(self, cr, uid, name, context=None):
         """ Override of orm's name_create method for partners. The purpose is
@@ -367,7 +370,7 @@ class res_partner(osv.osv):
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
-        name, email = self.parse_partner_name(cr, uid, name, context=context)
+        name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
         if not name and email:
