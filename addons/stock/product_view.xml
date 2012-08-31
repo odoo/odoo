@@ -60,8 +60,6 @@
                     <group name="delay" string="Delays">
                         <field name="active"/>
                         <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
-                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                        <field name="warranty"/>
                     </group>
                     <group name="store" string="Storage Localisation">
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
