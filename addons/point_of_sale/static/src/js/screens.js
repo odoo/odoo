@@ -741,6 +741,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                         self.validateCurrentOrder();
                     },
                 });
+
+            this.updatePaymentSummary();
         },
         close: function(){
             this._super();
@@ -807,7 +809,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('#payment-paid-total').html(paidTotal.toFixed(2));
             this.$('#payment-remaining').html(remaining.toFixed(2));
             this.$('#payment-change').html(change.toFixed(2));
-            this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
+            if(this.pos_widget.action_bar){
+                this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
+            }
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {

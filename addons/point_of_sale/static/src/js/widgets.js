@@ -433,7 +433,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             var button = new module.ActionButtonWidget(this,button_options);
             this.button_list.push(button);
             if(button_options.name){
-                this.buttons[name] = button;
+                this.buttons[button_options.name] = button;
             }
             button.appendTo(this.$('.pos-actionbar-button-list'));
             return button;
