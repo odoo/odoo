@@ -526,7 +526,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 f = self.fields[f];
                 if (!f.is_valid()) {
                     form_invalid = true;
-                    f.update_dom(true);
                     if (!first_invalid_field) {
                         first_invalid_field = f;
                     }
@@ -536,6 +535,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     // on 'edit' : save non readonly modified fields
                     values[f.name] = f.get_value();
                 }
+                f.update_dom(true);
             }
             if (form_invalid) {
                 first_invalid_field.focus();
