@@ -152,7 +152,7 @@ body.openerp {
     background: whitesmoke;
     -moz-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
     -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
-    -box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3);
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     border-radius: 3px;
@@ -210,7 +210,7 @@ body.openerp {
     border-radius: 8px;
     -moz-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
     -webkit-box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
-    -box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 18px rgba(0, 0, 0, 0.9);
 }
 
 .login .pane h2 {
@@ -262,7 +262,7 @@ body.openerp {
     border-radius: 4px;
     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-    -box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
     color: #eee;
     font-size: 14px;
     padding: 14px 18px;
@@ -1026,6 +1026,7 @@ label.error {
     box-shadow: none;
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
+    box-shadow: none;
 }
 .openerp .oe-listview .oe-field-cell button:active {
     opacity: 0.5;
@@ -1192,9 +1193,10 @@ label.error {
     background: -moz-linear-gradient(#dc5f59, #b33630);
     background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630));
     background: -webkit-linear-gradient(#dc5f59, #b33630);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr= #dc5f59, endColorstr= #b33630, GradientType=0); // IE9 and down
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
-    -box-shadow: none;
+    box-shadow: none;
     font-weight: bold;
 }
 .openerp .oe_form_frame_cell input[type="checkbox"] {
