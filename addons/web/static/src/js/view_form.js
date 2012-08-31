@@ -2705,7 +2705,7 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
 openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context([this.o2m.name]);
-        return this.context;
+        return this._super.apply(this, arguments);
     }
 });
 
