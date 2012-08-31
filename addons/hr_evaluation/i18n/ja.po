@@ -1,0 +1,911 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"PO-Revision-Date: 2012-04-23 16:41+0000\n"
+"Last-Translator: Masaki Yamaya <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:30+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Send an anonymous summary to the manager"
+msgstr "マネジャに匿名の要約を送る。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Start Appraisal"
+msgstr "査定を始める。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: view:hr_evaluation.plan:0
+msgid "Group By..."
+msgstr "グループ化…"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that overpassed the deadline"
+msgstr "締切を過ぎた査定"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,request_id:0
+#: field:hr.evaluation.report,request_id:0
+msgid "Request_id"
+msgstr "要求ID"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,progress_bar:0
+#: field:hr_evaluation.evaluation,progress:0
+msgid "Progress"
+msgstr "進捗状況"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "March"
+msgstr "3月"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,delay_date:0
+msgid "Delay to Start"
+msgstr "開始遅れ"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in waiting appreciation state"
+msgstr "評価を待っている査定"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#: code:addons/hr_evaluation/hr_evaluation.py:317
+#, python-format
+msgid "Warning !"
+msgstr "警告"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,company_id:0
+#: field:hr_evaluation.plan.phase,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,evaluation_id:0
+#: field:hr_evaluation.plan.phase,survey_id:0
+msgid "Appraisal Form"
+msgstr "査定票"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,day:0
+msgid "Day"
+msgstr "日"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan:0 field:hr_evaluation.plan,phase_ids:0
+msgid "Appraisal Phases"
+msgstr "査定段階"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_first:0
+msgid ""
+"This number of months will be used to schedule the first evaluation date of "
+"the employee when selecting an evaluation plan. "
+msgstr "この月数が従業員の最初の評価計画の期間になります。 "
+
+#. module: hr_evaluation
+#: view:hr.employee:0
+msgid "Notes"
+msgstr "注記"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "(eval_name)s:Appraisal Name"
+msgstr "(eval_name)s：査定の名称"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.open_view_hr_evaluation_tree
+msgid ""
+"Each employee may be assigned an Appraisal Plan. Such a plan defines the "
+"frequency and the way you manage your periodic personnel evaluation. You "
+"will be able to define steps and attach interviews to each step. OpenERP "
+"manages all kind of evaluations: bottom-up, top-down, self-evaluation and "
+"final evaluation by the manager."
+msgstr ""
+"各従業員に評価計画が割り当てられます。評価計画では、人事評価を管理する頻度と方法を定義します。評価の手順とそのときの面接内容を添付することができます。ボト"
+"ム・アップ、トップ・ダウン、自己評価、マネジャの評価など多種類の評価を管理できます。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Mail Body"
+msgstr "Eメールの本文"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,wait:0
+msgid "Wait Previous Phases"
+msgstr "前段階の終了待ち"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_evaluation
+msgid "Employee Appraisal"
+msgstr "従業員の査定"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Cancelled"
+msgstr "キャンセルされました。"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Did not meet expectations"
+msgstr "期待に達しなかった。"
+
+#. module: hr_evaluation
+#: view:hr.employee:0 view:hr_evaluation.evaluation:0
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_tree
+msgid "Appraisal"
+msgstr "査定"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Managers"
+msgstr "マネジャに送る。"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date_close:0
+msgid "Ending Date"
+msgstr "終了日"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,note_action:0
+msgid ""
+"If the evaluation does not meet the expectations, you can proposean action "
+"plan"
+msgstr "評価が期待に達しなかった場合には、活動計画を提案できます。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Send to Employees"
+msgstr "従業員に送る。"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:82
+#, python-format
+msgid ""
+"\n"
+"Date: %(date)s\n"
+"\n"
+"Dear %(employee_name)s,\n"
+"\n"
+"I am doing an evaluation regarding %(eval_name)s.\n"
+"\n"
+"Kindly submit your response.\n"
+"\n"
+"\n"
+"Thanks,\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+msgstr ""
+"\n"
+"日付： %(date)s\n"
+"\n"
+"%(employee_name)s 様\n"
+"\n"
+"%(eval_name)s について評価をしています。\n"
+"\n"
+"あなたから返信してください。\n"
+"\n"
+"--\n"
+"%(user_signature)s\n"
+"\n"
+"        "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal that are in Plan In Progress state"
+msgstr "計画された進行中の査定"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Reset to Draft"
+msgstr "草稿に再設定する。"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,deadline:0
+msgid "Deadline"
+msgstr "期限"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid " Month "
+msgstr " 月 "
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "In progress Evaluations"
+msgstr "進行中の評価"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_survey_request
+msgid "survey.request"
+msgstr "survey.request"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "(date)s: Current Date"
+msgstr "(date)s：今日の日付"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_anonymous_employee:0
+msgid "Send an anonymous summary to the employee"
+msgstr "従業員に匿名の要約を送る。"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:81
+#, python-format
+msgid "Regarding "
+msgstr "次に関して "
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr.evaluation.report:0
+#: field:hr.evaluation.report,state:0 view:hr_evaluation.evaluation:0
+#: field:hr_evaluation.evaluation,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,employee_id:0
+#: view:hr_evaluation.evaluation:0
+#: field:hr_evaluation.evaluation,employee_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_employee
+msgid "Employee"
+msgstr "従業員"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "New"
+msgstr "新規"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_body:0
+msgid "Email"
+msgstr "Eメール"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Exceeds expectations"
+msgstr "期待を上回った。"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,mail_feature:0
+msgid ""
+"Check this box if you want to send mail to employees coming under this phase"
+msgstr "従業員にEメールを送るのであれば，このボックスをチェックして下さい。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in last month"
+msgstr "評価は先月、終了"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_mail_compose_message
+msgid "Email composition wizard"
+msgstr ""
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Creation Date"
+msgstr "作成日"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "Send all answers to the manager"
+msgstr "全ての回答をマネジャに送る。"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Plan In Progress"
+msgstr "計画中"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Public Notes"
+msgstr "公開された注記"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Send Reminder Email"
+msgstr "催促のEメールを送る。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr_evaluation.evaluation,rating:0
+msgid "Appreciation"
+msgstr "好意的評価"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Print Interview"
+msgstr "面接結果の印刷"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Pending"
+msgstr "保留"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,closed:0
+msgid "closed"
+msgstr "済み"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Meet expectations"
+msgstr "期待を達成"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,nbr:0
+msgid "# of Requests"
+msgstr "予定の数"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "July"
+msgstr "7月"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_plans_installer
+msgid "Review Appraisal Plans"
+msgstr "査定計画を見直す。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "    Month-1    "
+msgstr "    月-1    "
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Action to Perform"
+msgstr "実行すべき活動"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_action:0
+msgid "Action Plan"
+msgstr "活動計画"
+
+#. module: hr_evaluation
+#: model:ir.ui.menu,name:hr_evaluation.menu_eval_hr_config
+msgid "Periodic Appraisal"
+msgstr "周期的な査定"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal to close within the next 7 days"
+msgstr "7日間以内に終わらせるべき査定"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Ending Summary"
+msgstr "最終要約"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly exceeds expectations"
+msgstr "期待を著しく上回った。"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_hr_evaluation_interview_tree
+msgid ""
+"Interview Requests are generated automatically by OpenERP according to an "
+"employee's Appraisal Plan. Each user receives automatic emails and requests "
+"to evaluate their colleagues periodically."
+msgstr "従業員の査定計画に基づいて、面接の予定が自動的に作成されます。自分の同僚を定期的に評価することを要求するEメールを受け取ります。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "In progress"
+msgstr "進行中"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Interview Request"
+msgstr "面接の要求"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_answer_employee:0
+#: field:hr_evaluation.plan.phase,send_answer_manager:0
+msgid "All Answers"
+msgstr "全ての回答"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "September"
+msgstr "9月"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "December"
+msgstr "12月"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in current year"
+msgstr "今年度に評価が終了"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,month:0
+msgid "Month"
+msgstr "月"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Group by..."
+msgstr "グル―化…"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Mail Settings"
+msgstr "Eメールの設定"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.evaluation_reminders
+msgid "Appraisal Reminders"
+msgstr "査定の催促"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Interview Question"
+msgstr "面接の質問"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,wait:0
+msgid ""
+"Check this box if you want to wait that all preceding phases are finished "
+"before launching this phase."
+msgstr "この文章を挿入する前に、上記の文章が終わるまで待つのであれば、このボックスをチェックして下さい。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Legend"
+msgstr "凡例"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_first:0
+msgid "First Appraisal in (months)"
+msgstr "(months) の最初の査定"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,state:0
+msgid "Draft"
+msgstr "草案"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,send_anonymous_employee:0
+#: field:hr_evaluation.plan.phase,send_anonymous_manager:0
+msgid "Anonymous Summary"
+msgstr "匿名の要約"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "7 Days"
+msgstr "7日間"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_plan_id:0 view:hr_evaluation.plan:0
+#: field:hr_evaluation.plan,name:0 field:hr_evaluation.plan.phase,plan_id:0
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan
+msgid "Appraisal Plan"
+msgstr "査定計画"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Print Survey"
+msgstr "調査票を印刷"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "August"
+msgstr "8月"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "June"
+msgstr "6月"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,rating:0
+#: selection:hr_evaluation.evaluation,rating:0
+msgid "Significantly bellow expectations"
+msgstr "期待を著しく下回った"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid " (employee_name)s: Partner name"
+msgstr " (employee_name)s：パートナ名"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,plan_id:0
+#: view:hr_evaluation.evaluation:0 field:hr_evaluation.evaluation,plan_id:0
+msgid "Plan"
+msgstr "計画"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,active:0
+msgid "Active"
+msgstr "仕掛り中"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "November"
+msgstr "11月"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Extended Filters..."
+msgstr "拡張フィルタ…"
+
+#. module: hr_evaluation
+#: constraint:hr.employee:0
+msgid "Error ! You cannot create recursive Hierarchy of Employees."
+msgstr "エラー：従業員の反復した階層構造を作ることはできません。"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_plan_phase
+msgid "Appraisal Plan Phase"
+msgstr "査定計画の段階"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "January"
+msgstr "1月"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.act_hr_employee_2_hr__evaluation_interview
+msgid "Appraisal Interviews"
+msgstr "査定の面接"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Date"
+msgstr "日付"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Survey"
+msgstr "調査"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.evaluation,rating:0
+msgid "This is the appreciation on that summarize the evaluation"
+msgstr "これは評価を要約したことに対する感謝です。"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,action:0
+msgid "Action"
+msgstr "活動"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
+msgid "Final Validation"
+msgstr "最終検証"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.evaluation,state:0
+msgid "Waiting Appreciation"
+msgstr "評価待ち"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_evaluation_report_all
+#: model:ir.ui.menu,name:hr_evaluation.menu_evaluation_report_all
+msgid "Appraisal Analysis"
+msgstr "査定分析"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,date:0
+msgid "Appraisal Deadline"
+msgstr "査定の締切"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,rating:0
+msgid "Overall Rating"
+msgstr "総合評価"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,email_subject:0
+msgid "char"
+msgstr "文字"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Interviewer"
+msgstr "面接者"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_report
+msgid "Evaluations Statistics"
+msgstr "評価統計"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "Deadline Date"
+msgstr "締切日"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:45
+#, python-format
+msgid ""
+"Hello %s, \n"
+"\n"
+" Kindly post your response for '%s' survey interview. \n"
+"\n"
+" Thanks,"
+msgstr ""
+"こんにちは %s さん\n"
+"\n"
+"%s さんの面接に対するあなたの返答を提出してください。"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Top-Down Appraisal Requests"
+msgstr "トップ・ダウン査定の予定"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,help:hr_evaluation.action_evaluation_plans_installer
+msgid ""
+"You can define appraisal plans (ex: first interview after 6 months, then "
+"every year). Then, each employee can be linked to an appraisal plan so that "
+"OpenERP can automatically generate interview requests to managers and/or "
+"subordinates."
+msgstr ""
+"査定計画を定義することができます（例えば、最初の面接は6ヶ月後、それ以降は毎年）。そうした後、従業員に査定計画を設定すると、その人のマネジャと同僚に面接予"
+"定が作成されます。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "General"
+msgstr "一般"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan.phase,send_answer_employee:0
+msgid "Send all answers to the employee"
+msgstr "全ての回答を従業員に送る。"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Appraisal Data"
+msgstr "査定日"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 selection:hr.evaluation.report,state:0
+#: view:hr_evaluation.evaluation:0 selection:hr_evaluation.evaluation,state:0
+msgid "Done"
+msgstr "終了"
+
+#. module: hr_evaluation
+#: model:ir.actions.act_window,name:hr_evaluation.open_view_hr_evaluation_plan_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_view_hr_evaluation_plan_tree
+msgid "Appraisal Plans"
+msgstr "査定計画"
+
+#. module: hr_evaluation
+#: model:ir.model,name:hr_evaluation.model_hr_evaluation_interview
+msgid "Appraisal Interview"
+msgstr "査定面接"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/wizard/mail_compose_message.py:49
+#, python-format
+msgid "Reminder to fill up Survey"
+msgstr "調査票を記入を催促する。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0
+msgid "To Do"
+msgstr "実行予定"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Final Validation Evaluations"
+msgstr "評価の最終検証"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,mail_feature:0
+msgid "Send mail for this phase"
+msgstr "この文章でEメールを送る。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Late"
+msgstr "遅れ"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "October"
+msgstr "10月"
+
+#. module: hr_evaluation
+#: help:hr.employee,evaluation_date:0
+msgid ""
+"The date of the next appraisal is computed by the appraisal plan's dates "
+"(first appraisal + periodicity)."
+msgstr "次の査定日は、査定計画の日付によって計算されます（最初の査定日＋査定周期）"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,overpass_delay:0
+msgid "Overpassed Deadline"
+msgstr "締切日を経過"
+
+#. module: hr_evaluation
+#: help:hr_evaluation.plan,month_next:0
+msgid ""
+"The number of month that depicts the delay between each evaluation of this "
+"plan (after the first one)."
+msgstr "月数は、査定計画の周期の間での遅れを表します（最初の査定以降）。"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan,month_next:0
+msgid "Periodicity of Appraisal (months)"
+msgstr "査定の周期（月）"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Self Appraisal Requests"
+msgstr "自己査定の予定"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,survey_request_ids:0
+msgid "Appraisal Forms"
+msgstr "査定票"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "May"
+msgstr "5月"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Internal Notes"
+msgstr "内部注記"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Final Interview"
+msgstr "最終面接"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,name:0
+msgid "Phase"
+msgstr "段階"
+
+#. module: hr_evaluation
+#: selection:hr_evaluation.plan.phase,action:0
+msgid "Bottom-Up Appraisal Requests"
+msgstr "ボトム・アップ査定予定"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:244
+#, python-format
+msgid ""
+"You cannot change state, because some appraisal in waiting answer or draft "
+"state"
+msgstr "回答待ちあるいは草案状態の査定があるので、状態を変更することはできません。"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "February"
+msgstr "2月"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Interview Appraisal"
+msgstr "面接査定"
+
+#. module: hr_evaluation
+#: field:survey.request,is_evaluation:0
+msgid "Is Appraisal?"
+msgstr "査定ですか？"
+
+#. module: hr_evaluation
+#: code:addons/hr_evaluation/hr_evaluation.py:317
+#, python-format
+msgid "You cannot start evaluation without Appraisal."
+msgstr "査定なしでは評価を開始できません。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0
+msgid "Evaluation done in current month"
+msgstr "今月、評価が終了"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.interview,user_to_review_id:0
+msgid "Employee to Interview"
+msgstr "面接する従業員"
+
+#. module: hr_evaluation
+#: selection:hr.evaluation.report,month:0
+msgid "April"
+msgstr "4月"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "Appraisal Plan Phases"
+msgstr "査定計画の段階"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.evaluation:0
+msgid "Validate Appraisal"
+msgstr "査定を検証する。"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.interview:0 view:hr_evaluation.evaluation:0
+msgid "Search Appraisal"
+msgstr "査定を検索する。"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.plan.phase,sequence:0
+msgid "Sequence"
+msgstr "順序"
+
+#. module: hr_evaluation
+#: view:hr_evaluation.plan.phase:0
+msgid "(user_signature)s: User name"
+msgstr "(user_signature)s：ユーザ名"
+
+#. module: hr_evaluation
+#: view:board.board:0
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_board
+#: model:ir.actions.act_window,name:hr_evaluation.action_hr_evaluation_interview_tree
+#: model:ir.ui.menu,name:hr_evaluation.menu_open_hr_evaluation_interview_requests
+msgid "Interview Requests"
+msgstr "面接予定"
+
+#. module: hr_evaluation
+#: field:hr.evaluation.report,create_date:0
+msgid "Create Date"
+msgstr "作成日"
+
+#. module: hr_evaluation
+#: view:hr.evaluation.report:0 field:hr.evaluation.report,year:0
+msgid "Year"
+msgstr "年"
+
+#. module: hr_evaluation
+#: field:hr_evaluation.evaluation,note_summary:0
+msgid "Appraisal Summary"
+msgstr "査定要約"
+
+#. module: hr_evaluation
+#: field:hr.employee,evaluation_date:0
+msgid "Next Appraisal Date"
+msgstr "次の査定日"
+
+#~ msgid "E-mail composition wizard"
+#~ msgstr "Eメール作成ツール"

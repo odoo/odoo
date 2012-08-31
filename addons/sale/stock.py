@@ -67,8 +67,6 @@ class stock_picking(osv.osv):
         """
         invoice_vals = super(stock_picking, self)._prepare_invoice(cr, uid, picking, partner, inv_type, journal_id, context=context)
         if picking.sale_id:
-            invoice_vals['address_contact_id'] = picking.sale_id.partner_order_id.id
-            invoice_vals['address_invoice_id'] = picking.sale_id.partner_invoice_id.id
             invoice_vals['fiscal_position'] = picking.sale_id.fiscal_position.id
             invoice_vals['payment_term'] = picking.sale_id.payment_term.id
             invoice_vals['user_id'] = picking.sale_id.user_id.id
@@ -110,7 +108,6 @@ class stock_picking(osv.osv):
                                         'invoiced': True,
                                         'invoice_lines': [(4, invoice_line_id)],
                                     })
-            invoice_line_obj.write(cursor, user, [invoice_line_id], {'note':  move_line.sale_line_id.notes,})
         return super(stock_picking, self)._invoice_line_hook(cursor, user, move_line, invoice_line_id)
 
     def _invoice_hook(self, cursor, user, picking, invoice_id):
@@ -188,4 +185,13 @@ class stock_picking(osv.osv):
                         })
         return result
 
+# Redefinition of the new field in order to update the model stock.picking.out in the orm
+# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
+#        the bug is fixed
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+    _columns = {
+        'sale_id': fields.many2one('sale.order', 'Sale Order',
+            ondelete='set null', select=True),
+    }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

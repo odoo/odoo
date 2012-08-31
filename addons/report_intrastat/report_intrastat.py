@@ -112,10 +112,9 @@ class report_intrastat(osv.osv):
                     left join product_uom uom on uom.id=inv_line.uos_id
                     left join product_uom puom on puom.id = pt.uom_id
                     left join report_intrastat_code intrastat on pt.intrastat_id = intrastat.id
-                    left join (res_partner_address inv_address
+                    left join (res_partner inv_address
                         left join res_country inv_country on (inv_country.id = inv_address.country_id))
-                    on (inv_address.id = inv.address_invoice_id)
-
+                    on (inv_address.id = inv.partner_id)
                 where
                     inv.state in ('open','paid')
                     and inv_line.product_id is not null

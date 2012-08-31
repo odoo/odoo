@@ -6,13 +6,11 @@
         <record id="view_partners_form_crm1" model="ir.ui.view">
                 <field name="name">view.res.partner.form.crm.inherited1</field>
                 <field name="model">res.partner</field>
-                <field name="type">form</field>
                 <field name="inherit_id" ref="base.view_partner_form"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="user_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
+                        <field name="section_id" completion="1"/>
                     </field>
                 </field>
         </record>
@@ -20,13 +18,11 @@
         <record id="view_partners_tree_crm2" model="ir.ui.view">
                 <field name="name">view.res.partner.tree.crm.inherited2</field>
                 <field name="model">res.partner</field>
-                <field name="type">tree</field>
                 <field name="inherit_id" ref="base.view_partner_tree"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <field name="country" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
+                    <field name="phone" position="after">
+                        <field name="section_id" completion="1" invisible="context.get('invisible_section', True)"/>
                     </field>
                 </field>
         </record>
@@ -34,83 +30,117 @@
         <record id="view_partners_form_crm3" model="ir.ui.view">
                 <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
-                <field name="type">search</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
                     <field name="category_id" position="after">
-                        <field name="section_id" completion="1" widget="selection"
-                            groups="base.group_extended"/>
+                        <field name="section_id" completion="1"/>
+                        <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
                     </field>
+                    <xpath expr="//field[@name='user_id']" position="after">
+                        <field name="country_id"/>
+                    </xpath>
+                    <xpath expr="//group[@string='Group By...']" position="after">
+                        <group string="Display">
+                            <filter string="Show Sales Team" context="{'invisible_section': False}"/>
+                        </group>
+                    </xpath>
                 </field>
         </record>
 
-        <!-- Add History tabs to res.partner form -->
-        <record id="view_crm_partner_info_form1" model="ir.ui.view">
-            <field name="name">res.partner.crm.info.inherit1</field>
+        <!-- open meetings related to given partner -->
+        <record id="crm_meeting_partner" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="src_model">res.partner</field>
+            <field name="res_model">crm.meeting</field>
+            <field name="view_mode">calendar,tree,form,gantt</field>
+            <field name="context">{'search_default_partner_ids': active_id}</field>
+        </record>
+
+        <!-- open opportunities related to given partner -->
+        <record model="ir.actions.act_window" id="relate_partner_opportunities">
+            <field name="name">Opportunities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">kanban,tree,form,graph,calendar</field>
+            <field name="domain">[('type','=','opportunity')]</field>
+            <field name="context">{'search_default_partner_id': active_id,
+                'stage_type': 'opportunity', 'default_type': 'opportunity'}</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="crm.view_crm_case_opportunities_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create an opportunity related to this customer.
+              </p><p>
+                Use opportunities to keep track of your sales pipeline, follow
+                up potential sales and better forecast your future revenues.
+              </p><p>
+                You will be able to plan meetings and phone calls from
+                opportunities, convert them into quotations, attach related
+                documents, track all discussions, and much more.
+              </p>
+            </field>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_kanban">
+            <field name="sequence" eval="0"/>
+            <field name="view_mode">kanban</field>
+            <field name="view_id" ref="crm_case_kanban_view_leads"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm_case_tree_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+        <record model="ir.actions.act_window.view" id="relate_partner_opportunities_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="crm_case_form_view_oppor"/>
+            <field name="act_window_id" ref="relate_partner_opportunities"/>
+        </record>
+
+        <!-- Partner kanban view inherte -->
+        <record model="ir.ui.view" id="crm_lead_partner_kanban_view">
+            <field name="name">res.partner.kanban.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="base.res_partner_kanban_view"/>
+            <field name="priority" eval="10"/>
             <field name="arch" type="xml">
-                <page string="History" position="inside">
-                    <field name="opportunity_ids" colspan="4" nolabel="1">
-                         <tree string="Leads and Opportunities"  colors="blue:state=='pending';gray:state=='cancel'">
-                             <field name="create_date"/>
-                             <field name="name"/>
-                             <field name="type"/>
-                             <field name="stage_id"/>
-                             <button name="stage_previous" string="Previous"
-                                 states="open,pending" type="object" icon="gtk-go-back" />
-                             <button name="stage_next" string="Next"
-                                 states="open,pending" type="object"
-                                 icon="gtk-go-forward" />
-                             <field name="user_id" />
-                             <field name="state" />
-                             <button name="case_cancel" string="Cancel"
-                                 states="draft,open,pending" type="object"
-                                 icon="gtk-cancel" />
-                             <button name="case_open" string="Open"
-                                 states="draft,pending" type="object"
-                                 icon="gtk-go-forward" />
-                             <button name="case_close" string="Close"
-                                 states="open,draft,pending" type="object"
-                                 icon="gtk-close" />
-                             <button string="Convert to Opportunity"
-                                 name="convert_opportunity"
-                                 states="draft,open,pending" icon="gtk-index"
-                                 type="object" attrs="{'invisible':[('type','=','opportunity')]}" />
-                             <button name="case_escalate" string="Escalate"
-                                 states="open,draft,pending" type="object"
-                                 icon="gtk-go-up" />
-                         </tree>
-                    </field>
-                    <field name="meeting_ids" colspan="4" nolabel="1">
-                        <tree string="Meetings" colors="gray:state in ('draft', 'cancel','done','pending')">
-                            <field name="state" invisible="1"/>
-                            <field name="user_id" string="Responsible"/>
-                            <field name="name" string="Subject" />
-                            <field name="date" string="Start Date" />
-                            <field name="date_deadline" string="End Date"/>
-                        </tree>
-                    </field>
-                    <field name="phonecall_ids" colspan="4" nolabel="1">
-                        <tree string="Phone Calls" colors="gray:state in ('draft', 'cancel','done','pending')">
-                            <field name="date" string="Date"/>
-                            <field name="name" string="Call Summary"/>
-                            <field name="categ_id" widget="selection"/>
-                            <field name="user_id"/>
-                            <field name="state"/>
-                            <button name="case_cancel" string="Cancel" states="draft,open,pending" type="object" icon="gtk-cancel"/>
-                            <button name="case_open" string="Todo" states="draft,pending" type="object" icon="gtk-go-forward"/>
-                            <button name="case_close" string="Held" states="open,draft,pending" type="object" icon="gtk-jump-to"/>
-                            <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
-                        </tree>
-                    </field>
-                </page>
+                <field name="mobile" position="after">
+                    <field name="opportunity_count"/>
+                    <field name="meeting_count"/>
+                </field>
+                <xpath expr="//div[@class='oe_kanban_partner_links']" position="inside">
+                    <a name="%(relate_partner_opportunities)d" type="action" t-if="record.opportunity_count.value>0">
+                        <t t-esc="record.opportunity_count.value"/> Opportunities
+                    </a>
+                    <a name="%(crm_meeting_partner)d" type="action" t-if="record.meeting_count.value>0">
+                        <t t-esc="record.meeting_count.value"/> Meetings
+                    </a>
+                </xpath>
             </field>
         </record>
 
 
+        <record model="ir.ui.view" id="res_partner_view_buttons">
+            <field name="name">res.partner.view.buttons</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="priority" eval="10"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button type="action"
+                        string="Schedule a Meeting"
+                        name="%(base_calendar.action_crm_meeting)d"
+                        context="{'search_default_partner_ids': active_id, 'default_partner_ids' : [active_id]}"/>
+                    <button type="action" string="Schedule a Call" 
+                        name="%(crm.crm_case_categ_phone_create_partner)d" 
+                        context="{'search_default_partner_id': active_id, 'default_duration': 1.0}" />
+                    <button type="action" string="Opportunities" attrs="{'invisible': [('customer', '=', False)]}"
+                        name="%(crm.crm_case_category_act_oppor11)d" context="{'search_default_partner_id': active_id}"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

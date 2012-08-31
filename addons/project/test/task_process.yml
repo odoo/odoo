@@ -40,7 +40,7 @@
   I change the stage of task to next stage.
 -
   !python {model: project.task}: |
-    self.next_type(cr, uid, [ref("project_task_1")])
+    self.stage_next(cr, uid, [ref("project_task_1")])
 -
   !record {model: project.task.reevaluate, id: reevaluate_id}:
     remaining_hours : 120
@@ -68,7 +68,7 @@
   I change the stage of task to previous stage.
 -
   !python {model: project.task}: |
-    self.prev_type(cr, uid, [ref("project_task_1")])
+    self.stage_previous(cr, uid, [ref("project_task_1")])
 -
   I cancel Task.
 -

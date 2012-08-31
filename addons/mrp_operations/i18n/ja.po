@@ -1,0 +1,836 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"PO-Revision-Date: 2012-06-08 02:54+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:25+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_form
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_action_planning
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_order
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+msgid "Work Orders"
+msgstr "作業オーダー"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:489
+#, python-format
+msgid "Operation is already finished!"
+msgstr "操作は既に終了しています。"
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_canceloperation0
+msgid "Cancel the operation."
+msgstr "操作のキャンセル"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation_code
+msgid "mrp_operations.operation.code"
+msgstr ""
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+msgid "Group By..."
+msgstr "グループ化…"
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_workorder0
+msgid "Information from the routing definition."
+msgstr "経路定義からの情報"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "March"
+msgstr "3月"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_resource_planning
+#: model:ir.ui.menu,name:mrp_operations.menu_mrp_production_wc_resource_planning
+msgid "Work Centers"
+msgstr "作業センタ"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Resume"
+msgstr "再開"
+
+#. module: mrp_operations
+#: report:mrp.code.barcode:0
+msgid "("
+msgstr "（"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Product to Produce"
+msgstr "製造製品"
+
+#. module: mrp_operations
+#: view:mrp_operations.operation:0
+msgid "Production Operation"
+msgstr "製造操作"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+msgid "Set to Draft"
+msgstr "ドラフトに設定"
+
+#. module: mrp_operations
+#: field:mrp.production,allow_reorder:0
+msgid "Free Serialisation"
+msgstr "自由な直列化"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_production
+msgid "Manufacturing Order"
+msgstr "製造オーダー"
+
+#. module: mrp_operations
+#: model:process.process,name:mrp_operations.process_process_mrpoperationprocess0
+msgid "Mrp Operations"
+msgstr "MRP操作"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,day:0
+msgid "Day"
+msgstr "日"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+msgid "Cancel Order"
+msgstr "オーダーのキャンセル"
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_productionorder0
+msgid "Production Order"
+msgstr "製造オーダー"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Picking Exception"
+msgstr "例外の集荷"
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_productionstart0
+msgid "Creation of the work order"
+msgstr "作業オーダーの作成"
+
+#. module: mrp_operations
+#: help:mrp.production.workcenter.line,state:0
+msgid ""
+"* When a work order is created it is set in 'Draft' state.\n"
+"* When user sets work order in start mode that time it will be set in 'In "
+"Progress' state.\n"
+"* When work order is in running mode, during that time if user wants to stop "
+"or to make changes in order then can set in 'Pending' state.\n"
+"* When the user cancels the work order it will be set in 'Canceled' state.\n"
+"* When order is completely processed that time it is set in 'Finished' state."
+msgstr ""
+"・ 作業オーダーが作成されると、それはドラフト状態に設定されます。\n"
+"・ ユーザが作業オーダーに開始モードを設定すると、それは進行中に設定されます。\n"
+"・ 作業オーダーが実行中モードになった時にユーザが停止やオーダーを変更した場合、保留中状態に設定されます。\n"
+"・ ユーザが作業オーダーをキャンセルすると、キャンセル済状態に設定されます。\n"
+"・ オーダーが完全に処理されると、完了状態に設定されます。"
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_productionstart0
+msgid "The work orders are created on the basis of the production order."
+msgstr "作業オーダーは製造オーダーを元にして作成されます。"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#: code:addons/mrp_operations/mrp_operations.py:470
+#: code:addons/mrp_operations/mrp_operations.py:474
+#: code:addons/mrp_operations/mrp_operations.py:486
+#: code:addons/mrp_operations/mrp_operations.py:489
+#, python-format
+msgid "Error!"
+msgstr "エラー"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Cancelled"
+msgstr "キャンセル済"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:486
+#, python-format
+msgid "There is no Operation to be cancelled!"
+msgstr "キャンセルされる操作がありません。"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:482
+#, python-format
+msgid "Operation is Already Cancelled!"
+msgstr "操作は既にキャンセル済です。"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_operation_action
+#: view:mrp.production.workcenter.line:0
+msgid "Operations"
+msgstr "操作"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_stock_move
+msgid "Stock Move"
+msgstr "在庫移動"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:479
+#, python-format
+msgid ""
+"In order to Finish the operation, it must be in the Start or Resume state!"
+msgstr "操作を完了するには、開始か再開状態でなければなりません。"
+
+#. module: mrp_operations
+#: field:mrp.workorder,nbr:0
+msgid "# of Lines"
+msgstr "行数"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Finish Order"
+msgstr "オーダーの完了"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_finished:0
+#: field:mrp.production.workcenter.line,date_planned_end:0
+#: field:mrp_operations.operation,date_finished:0
+msgid "End Date"
+msgstr "終了日"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "In Production"
+msgstr "製造中"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.production.workcenter.line,state:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,production_state:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Draft"
+msgstr "ドラフト"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.action_report_mrp_workorder
+#: model:ir.model,name:mrp_operations.model_mrp_production_workcenter_line
+msgid "Work Order"
+msgstr "作業オーダー"
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_workstartoperation0
+msgid ""
+"There is 1 work order per work center. The information about the number of "
+"cycles or the cycle time."
+msgstr "作業センタごとに１つの作業オーダーがあります。サイクルの数あるいはサイクル時間についての情報です。"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Month -1"
+msgstr "月 -1"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,uom:0
+msgid "UOM"
+msgstr "単位"
+
+#. module: mrp_operations
+#: constraint:stock.move:0
+msgid "You can not move products from or to a location of the type view."
+msgstr "タイプビューの場所から、あるいは場所へは製品を動かすことはできません。"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Planned Date"
+msgstr "予定日"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,product_qty:0
+msgid "Product Qty"
+msgstr "製品数量"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:134
+#, python-format
+msgid "Manufacturing order cannot start in state \"%s\"!"
+msgstr "製造オーダーは %s 状態であるため開始できません。"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "July"
+msgstr "7月"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation.code,name:0
+msgid "Operation Name"
+msgstr "操作名"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation.code,start_stop:0
+msgid "Status"
+msgstr "状態"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_planning
+msgid ""
+"To manufacture or assemble products, and use raw materials and finished "
+"products you must also handle manufacturing operations. Manufacturing "
+"operations are often called Work Orders. The various operations will have "
+"different impacts on the costs of manufacturing and planning depending on "
+"the available workload."
+msgstr ""
+"製品を製造または組み立て、原材料を使って製品を完成させるために、製造操作を処理しなくてはなりません。製造操作はよく、作業オーダーと呼ばれます。多種な操作は"
+"製造と使用可能な作業負荷に応じた計画のコストに異なる影響を持ちます。"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Year"
+msgstr "計画年"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation,order_date:0
+msgid "Order Date"
+msgstr "オーダー日"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_draft_action
+msgid "Future Work Orders"
+msgstr "将来の作業オーダー"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Work orders during last month"
+msgstr "先月の作業オーダー"
+
+#. module: mrp_operations
+#: help:mrp.production.workcenter.line,delay:0
+msgid "The elapsed time between operation start and stop in this Work Center"
+msgstr "この作業センタでの操作の開始と終了の間の経過時間"
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_canceloperation0
+msgid "Operation Cancelled"
+msgstr "操作はキャンセルされました。"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Pause Work Order"
+msgstr "作業オーダーの中断"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "September"
+msgstr "9月"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "December"
+msgstr "12月"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,month:0
+msgid "Month"
+msgstr "月"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Canceled"
+msgstr "キャンセル済"
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_operations_operation
+msgid "mrp_operations.operation"
+msgstr ""
+
+#. module: mrp_operations
+#: model:ir.model,name:mrp_operations.model_mrp_workorder
+msgid "Work Order Report"
+msgstr "作業オーダーレポート"
+
+#. module: mrp_operations
+#: constraint:mrp.production:0
+msgid "Order quantity cannot be negative or zero!"
+msgstr "オーダー数量は負または0にはできません。"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_start:0
+#: field:mrp.production.workcenter.line,date_start_date:0
+#: field:mrp_operations.operation,date_start:0
+msgid "Start Date"
+msgstr "開始日"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Waiting Goods"
+msgstr "待機商品"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Work orders made during current year"
+msgstr "現在年中になされた作業オーダー"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,state:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Pause"
+msgstr "一時停止"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "In Progress"
+msgstr "進行中"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:470
+#, python-format
+msgid ""
+"In order to Pause the operation, it must be in the Start or Resume state!"
+msgstr "操作を一時停止するには、開始または再開状態でなければなりません。"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:474
+#, python-format
+msgid "In order to Resume the operation, it must be in the Pause state!"
+msgstr "操作を再開するには、一時停止状態でなければなりません。"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Start"
+msgstr "開始"
+
+#. module: mrp_operations
+#: view:mrp_operations.operation:0
+msgid "Calendar View"
+msgstr "カレンダービュー"
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_startcanceloperation0
+msgid ""
+"When the operation needs to be cancelled, you can do it in the work order "
+"form."
+msgstr "操作をキャンセルする必要がある時、作業オーダーフォームの中で行うことができます。"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Set Draft"
+msgstr "ドラフトにセット"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
+msgid "Pending"
+msgstr "保留中"
+
+#. module: mrp_operations
+#: view:mrp_operations.operation.code:0
+msgid "Production Operation Code"
+msgstr "製造操作コード"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:466
+#, python-format
+msgid ""
+"Operation has already started !Youcan either Pause/Finish/Cancel the "
+"operation"
+msgstr "操作は既に開始されました。一時停止 / 完了 / キャンセル操作ができます。"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "August"
+msgstr "8月"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Started"
+msgstr "開始済"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Production started late"
+msgstr "製造は遅れて開始"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Day"
+msgstr "計画日"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "June"
+msgstr "6月"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,total_cycles:0
+msgid "Total Cycles"
+msgstr "合計サイクル"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+msgid "Ready to Produce"
+msgstr "製造準備完了"
+
+#. module: mrp_operations
+#: field:stock.move,move_dest_id_lines:0
+msgid "Children Moves"
+msgstr "子の移動"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_action_planning
+msgid "Work Orders Planning"
+msgstr "作業オーダー計画"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: field:mrp.workorder,date:0
+msgid "Date"
+msgstr "日付"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "November"
+msgstr "11月"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Search"
+msgstr "検索"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "October"
+msgstr "10月"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "January"
+msgstr "1月"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Resume Work Order"
+msgstr "作業オーダーの再開"
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_doneoperation0
+msgid "Finish the operation."
+msgstr "操作の終了"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:459
+#, python-format
+msgid "Operation is not started yet !"
+msgstr "操作はまだ開始されていません。"
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_productionorder0
+msgid "Information from the production order."
+msgstr "製造オーダーからの情報"
+
+#. module: mrp_operations
+#: sql_constraint:mrp.production:0
+msgid "Reference must be unique per Company!"
+msgstr "参照は会社ごとに固有でなければいけません。"
+
+#. module: mrp_operations
+#: code:addons/mrp_operations/mrp_operations.py:459
+#: code:addons/mrp_operations/mrp_operations.py:466
+#: code:addons/mrp_operations/mrp_operations.py:479
+#: code:addons/mrp_operations/mrp_operations.py:482
+#, python-format
+msgid "Sorry!"
+msgstr "残念です。"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Current"
+msgstr "現在"
+
+#. module: mrp_operations
+#: field:mrp_operations.operation,code_id:0
+#: field:mrp_operations.operation.code,code:0
+msgid "Code"
+msgstr "コード"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_wc_confirm_action
+msgid "Confirmed Work Orders"
+msgstr "確認済作業オーダー"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,name:mrp_operations.mrp_production_code_action
+msgid "Operation Codes"
+msgstr "操作コード"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,qty:0
+msgid "Qty"
+msgstr "数量"
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_doneoperation0
+msgid "Operation Done"
+msgstr "操作完了"
+
+#. module: mrp_operations
+#: selection:mrp.production.workcenter.line,production_state:0
+#: view:mrp.workorder:0
+#: selection:mrp_operations.operation.code,start_stop:0
+msgid "Done"
+msgstr "完了"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_code_barcode
+msgid "Start/Stop Barcode"
+msgstr "開始 / 停止バーコード"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Cancel"
+msgstr "キャンセル"
+
+#. module: mrp_operations
+#: model:ir.actions.act_window,help:mrp_operations.mrp_production_wc_action_form
+msgid ""
+"Work Orders is the list of operations to be performed for each manufacturing "
+"order. Once you start the first work order of a manufacturing order, the "
+"manufacturing order is automatically marked as started. Once you finish the "
+"latest operation of a manufacturing order, the MO is automatically done and "
+"the related products are produced."
+msgstr ""
+"作業オーダーは各製造オーダーを実行するための操作のリストです。製造オーダーの最初の作業オーダーを開始すると、製造オーダーは自動的に開始したとマークされます"
+"。製造オーダーの最後の操作が終わると、製造オーダーは自動的に完了となり関連製品は製造されます。"
+
+#. module: mrp_operations
+#: model:process.node,name:mrp_operations.process_node_startoperation0
+msgid "Start Operation"
+msgstr "操作を開始"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Information"
+msgstr "情報"
+
+#. module: mrp_operations
+#: model:ir.actions.report.xml,name:mrp_operations.report_wc_barcode
+msgid "Work Centers Barcode"
+msgstr "作業センターバーコード"
+
+#. module: mrp_operations
+#: constraint:stock.move:0
+msgid "You must assign a production lot for this product"
+msgstr "この製品に製造ロットを割り当てる必要があります。"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Late"
+msgstr "遅延"
+
+#. module: mrp_operations
+#: field:mrp.workorder,delay:0
+msgid "Delay"
+msgstr "遅延"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,production_id:0
+#: field:mrp_operations.operation,production_id:0
+msgid "Production"
+msgstr "製造"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Search Work Orders"
+msgstr "作業オーダーの検索"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,workcenter_id:0
+#: field:mrp_operations.operation,workcenter_id:0
+#: model:process.node,name:mrp_operations.process_node_workorder0
+msgid "Work Center"
+msgstr "作業センタ"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Real"
+msgstr "実物"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,date_planned:0
+msgid "Scheduled Date"
+msgstr "予定日"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,product:0
+#: view:mrp.workorder:0
+#: field:mrp.workorder,product_id:0
+msgid "Product"
+msgstr "製品"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,total_hours:0
+msgid "Total Hours"
+msgstr "合計時間"
+
+#. module: mrp_operations
+#: help:mrp.production,allow_reorder:0
+msgid ""
+"Check this to be able to move independently all production orders, without "
+"moving dependent ones."
+msgstr "依存する物を動かすことなく、全ての製造オーダー独立して移動させるためにはこれをチェックして下さい。"
+
+#. module: mrp_operations
+#: report:mrp.code.barcode:0
+msgid ")"
+msgstr "）"
+
+#. module: mrp_operations
+#: model:ir.ui.menu,name:mrp_operations.menu_report_mrp_workorders_tree
+msgid "Work Order Analysis"
+msgstr "作業オーダー分析"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+#: selection:mrp.production.workcenter.line,state:0
+#: selection:mrp.workorder,state:0
+msgid "Finished"
+msgstr "完了"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Hours by Work Center"
+msgstr "作業センター毎の時間"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,delay:0
+msgid "Working Hours"
+msgstr "労働時間"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Planned Month"
+msgstr "計画月"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "February"
+msgstr "2月"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "Work orders made during current month"
+msgstr "現在月中になされた作業オーダー"
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_startcanceloperation0
+msgid "Operation cancelled"
+msgstr "操作はキャンセルされました。"
+
+#. module: mrp_operations
+#: model:process.node,note:mrp_operations.process_node_startoperation0
+msgid "Start the operation."
+msgstr "操作を開始します。"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "April"
+msgstr "4月"
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_startdoneoperation0
+msgid "Operation done"
+msgstr "操作完了"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+msgid "#Line Orders"
+msgstr "オーダー行数"
+
+#. module: mrp_operations
+#: view:mrp.production:0
+#: view:mrp.production.workcenter.line:0
+msgid "Start Working"
+msgstr "作業開始"
+
+#. module: mrp_operations
+#: model:process.transition,note:mrp_operations.process_transition_startdoneoperation0
+msgid ""
+"When the operation is finished, the operator updates the system by finishing "
+"the work order."
+msgstr "操作が完了した時、操作者は作業オーダーを終えるとシステムを更新します。"
+
+#. module: mrp_operations
+#: selection:mrp.workorder,month:0
+msgid "May"
+msgstr "5月"
+
+#. module: mrp_operations
+#: model:process.transition,name:mrp_operations.process_transition_workstartoperation0
+msgid "Details of the work order"
+msgstr "作業オーダーの詳細"
+
+#. module: mrp_operations
+#: field:mrp.production.workcenter.line,production_state:0
+msgid "Production State"
+msgstr "製造状態"
+
+#. module: mrp_operations
+#: view:mrp.workorder:0
+#: field:mrp.workorder,year:0
+msgid "Year"
+msgstr "年"
+
+#. module: mrp_operations
+#: view:mrp.production.workcenter.line:0
+msgid "Duration"
+msgstr "期間"
+
+#. module: mrp_operations
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product"
+msgstr "違う製品のロットを割り当てることはできません。"

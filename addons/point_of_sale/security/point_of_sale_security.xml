@@ -10,7 +10,14 @@
         <field name="name">Manager</field>
         <field name="category_id" ref="base.module_category_point_of_sale"/>
         <field name="implied_ids" eval="[(4, ref('group_pos_user')), (4, ref('stock.group_stock_user'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
+    <record id="rule_pos_multi_company" model="ir.rule">
+        <field name="name">Point Of Sale Order</field>
+        <field name="model_id" ref="model_pos_order" />
+        <field name="global" eval="True" />
+        <field name="domain_force">[('company_id', '=', user.company_id.id)]</field>
+    </record>
 </data>
 </openerp>

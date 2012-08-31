@@ -20,28 +20,19 @@
 ##############################################################################
 
 {
-    "name": "Lunch Orders",
-    "author": "OpenERP SA",
-    'complexity': "easy",
-    "Description": """
-    The lunch module is for keeping a record of the order placed and payment of the orders.
-    =======================================================================================
-
-    The products are defined under categories and the payment records are maintained user-wise.
-    Every user has a cashbox which keeps track of the amount paid for a particular order.
-
-    """,
-    "version": "0.1",
-    "depends": ["base_tools"],
-    "category" : "Tools",
+    'name': 'Lunch Orders',
+    'author': 'OpenERP SA',
+    'version': '0.1',
+    'depends': ['base_tools'],
+    'category' : 'Tools',
     'description': """
-    The base module to manage lunch
+The base module to manage lunch.
+================================
 
-    keep track for the Lunch Order ,Cash Moves ,CashBox ,Product.
-    Apply Different Category for the product.
+keep track for the Lunch Order, Cash Moves, CashBox, Product. Apply Different
+Category for the product.
     """,
-    "init_xml": [],
-    "update_xml": [
+    'data': [
         'security/lunch_security.xml',
         'security/ir.model.access.csv',
         'wizard/lunch_order_cancel_view.xml',
@@ -52,10 +43,10 @@
         'report/report_lunch_order_view.xml',
         'lunch_installer_view.xml'
     ],
-    "demo_xml": ['lunch_demo.xml'],
-    "test": ['test/test_lunch.yml', 'test/lunch_report.yml'],
-    "installable": True,
-    "certificate" : "001292377792581874189",
+    'demo': ['lunch_demo.xml'],
+    'test': ['test/test_lunch.yml', 'test/lunch_report.yml'],
+    'installable': True,
+    'certificate' : '001292377792581874189',
     'images': ['images/cash_moves.jpeg','images/lunch_orders.jpeg','images/products.jpeg'],
 }
 

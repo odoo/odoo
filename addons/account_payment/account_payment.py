@@ -35,7 +35,7 @@ class payment_mode(osv.osv):
             domain=[('type', 'in', ('bank','cash'))], help='Bank or Cash Journal for the Payment Mode'),
         'company_id': fields.many2one('res.company', 'Company',required=True),
         'partner_id':fields.related('company_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True,),
-        
+
     }
     _defaults = {
         'company_id': lambda self,cr,uid,c: self.pool.get('res.users').browse(cr, uid, uid, c).company_id.id
@@ -51,14 +51,14 @@ class payment_mode(osv.osv):
             JOIN payment_mode pm ON (pm.bank_id = pb.id)
             WHERE pm.id = %s """, [payment_code])
         return [x[0] for x in cr.fetchall()]
-    
+
     def onchange_company_id (self, cr, uid, ids, company_id=False, context=None):
         result = {}
         if company_id:
             partner_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).partner_id.id
             result['partner_id'] = partner_id
         return {'value': result}
-                
+
 
 payment_mode()
 
@@ -71,8 +71,8 @@ class payment_order(osv.osv):
     #dead code
     def get_wizard(self, type):
         logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-                "No wizard found for the payment type '%s'." % type)
+        logger.notifyChannel("Warning!", netsvc.LOG_WARNING,
+                "No wizard is found for the payment type '%s'." % type)
         return None
 
     def _total(self, cursor, user, ids, name, args, context=None):
@@ -87,25 +87,25 @@ class payment_order(osv.osv):
         return res
 
     _columns = {
-        'date_scheduled': fields.date('Scheduled date if fixed', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
+        'date_scheduled': fields.date('Scheduled Date', states={'done':[('readonly', True)]}, help='Select a date if you have chosen Preferred Date to be fixed.'),
         'reference': fields.char('Reference', size=128, required=1, states={'done': [('readonly', True)]}),
-        'mode': fields.many2one('payment.mode', 'Payment mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
+        'mode': fields.many2one('payment.mode', 'Payment Mode', select=True, required=1, states={'done': [('readonly', True)]}, help='Select the Payment Mode to be applied.'),
         'state': fields.selection([
             ('draft', 'Draft'),
-            ('open', 'Confirmed'),
             ('cancel', 'Cancelled'),
-            ('done', 'Done')], 'State', select=True,
+            ('open', 'Confirmed'),
+            ('done', 'Done')], 'Status', select=True,
             help='When an order is placed the state is \'Draft\'.\n Once the bank is confirmed the state is set to \'Confirmed\'.\n Then the order is paid the state is \'Done\'.'),
         'line_ids': fields.one2many('payment.line', 'order_id', 'Payment lines', states={'done': [('readonly', True)]}),
         'total': fields.function(_total, string="Total", type='float'),
-        'user_id': fields.many2one('res.users', 'User', required=True, states={'done': [('readonly', True)]}),
+        'user_id': fields.many2one('res.users', 'Responsible', required=True, states={'done': [('readonly', True)]}),
         'date_prefered': fields.selection([
             ('now', 'Directly'),
             ('due', 'Due date'),
             ('fixed', 'Fixed date')
-            ], "Preferred date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
-        'date_created': fields.date('Creation date', readonly=True),
-        'date_done': fields.date('Execution date', readonly=True),
+            ], "Preferred Date", change_default=True, required=True, states={'done': [('readonly', True)]}, help="Choose an option for the Payment Order:'Fixed' stands for a date specified by you.'Directly' stands for the direct execution.'Due date' stands for the scheduled date of execution."),
+        'date_created': fields.date('Creation Date', readonly=True),
+        'date_done': fields.date('Execution Date', readonly=True),
         'company_id': fields.related('mode', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
 
@@ -183,57 +183,30 @@ class payment_line(osv.osv):
                 "reference": "ref"}.get(orig, orig)
 
     def info_owner(self, cr, uid, ids, name=None, args=None, context=None):
-        if not ids: return {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
-
         result = {}
-        info=''
         for line in self.browse(cr, uid, ids, context=context):
             owner = line.order_id.mode.bank_id.partner_id
-            result[line.id] = False
-            if owner.address:
-                for ads in owner.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
-                        else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
-                            zip_city = zip + ' ' + city
-                        cntry = ads.country_id and ads.country_id.name or ''
-                        info = owner.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-                        result[line.id] = info
-                        break
+            result[line.id] = self._get_info_partner(cr, uid, owner, context=context)
         return result
 
-    def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
-        if not ids: return {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
-        result = {}
-        info = ''
+    def _get_info_partner(self,cr, uid, partner_record, context=None):
+        if not partner_record:
+            return False
+        st = partner_record.street or ''
+        st1 = partner_record.street2 or ''
+        zip = partner_record.zip or ''
+        city = partner_record.city or  ''
+        zip_city = zip + ' ' + city
+        cntry = partner_record.country_id and partner_record.country_id.name or ''
+        return partner_record.name + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
 
+    def info_partner(self, cr, uid, ids, name=None, args=None, context=None):
+        result = {}
         for line in self.browse(cr, uid, ids, context=context):
             result[line.id] = False
             if not line.partner_id:
                 break
-            partner = line.partner_id.name or ''
-            if line.partner_id.address:
-                for ads in line.partner_id.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
-                        else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
-                            zip_city = zip + ' ' + city
-                        cntry = ads.country_id and ads.country_id.name or ''
-                        info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-                        result[line.id] = info
-                        break
+            result[line.id] = self._get_info_partner(cr, uid, line.partner_id, context=context)
         return result
 
     #dead code
@@ -420,7 +393,6 @@ class payment_line(osv.osv):
 
     def onchange_partner(self, cr, uid, ids, partner_id, payment_type, context=None):
         data = {}
-        partner_zip_obj = self.pool.get('res.partner.zip')
         partner_obj = self.pool.get('res.partner')
         payment_mode_obj = self.pool.get('payment.mode')
         data['info_partner'] = data['bank_id'] = False
@@ -428,24 +400,7 @@ class payment_line(osv.osv):
         if partner_id:
             part_obj = partner_obj.browse(cr, uid, partner_id, context=context)
             partner = part_obj.name or ''
-
-            if part_obj.address:
-                for ads in part_obj.address:
-                    if ads.type == 'default':
-                        st = ads.street and ads.street or ''
-                        st1 = ads.street2 and ads.street2 or ''
-
-                        if 'zip_id' in ads:
-                            zip_city = ads.zip_id and partner_zip_obj.name_get(cr, uid, [ads.zip_id.id])[0][1] or ''
-                        else:
-                            zip = ads.zip and ads.zip or ''
-                            city = ads.city and ads.city or  ''
-                            zip_city = zip + ' ' + city
-
-                        cntry = ads.country_id and ads.country_id.name or ''
-                        info = partner + "\n" + st + " " + st1 + "\n" + zip_city + "\n" +cntry
-
-                        data['info_partner'] = info
+            data['info_partner'] = self._get_info_partner(cr, uid, part_obj, context=context)
 
             if part_obj.bank_ids and payment_type:
                 bank_type = payment_mode_obj.suitable_bank_types(cr, uid, payment_type, context=context)

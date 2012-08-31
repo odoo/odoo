@@ -134,11 +134,11 @@ class lunch_order(osv.osv):
         'product': fields.many2one('lunch.product', 'Product', required=True, \
             readonly=True, states={'draft':[('readonly', False)]}, change_default=True),
         'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
-        'cashmove': fields.many2one('lunch.cashmove', 'CashMove' , readonly=True),
-        'descript': fields.char('Description Order', readonly=True, size=250, \
+        'cashmove': fields.many2one('lunch.cashmove', 'Cash Move' , readonly=True),
+        'descript': fields.char('Comment', readonly=True, size=250, \
             states = {'draft':[('readonly', False)]}),
         'state': fields.selection([('draft', 'New'), ('confirmed', 'Confirmed'), ], \
-            'State', readonly=True, select=True),
+            'Status', readonly=True, select=True),
         'price': fields.function(_price_get, string="Price"),
         'category': fields.many2one('lunch.category','Category'),
     }
@@ -210,7 +210,7 @@ class report_lunch_amount(osv.osv):
     _name = 'report.lunch.amount'
     _description = "Amount available by user and box"
     _auto = False
-    _rec_name = "user"
+    _rec_name = "user_id"
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User Name', readonly=True),

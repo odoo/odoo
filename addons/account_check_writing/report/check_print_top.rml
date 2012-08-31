@@ -112,7 +112,7 @@
                   <font color="white"> </font>
                 </para>
               </td>
-            </tr>              
+            </tr>
             <tr>
               <td>
                 <para style="P6">
@@ -123,7 +123,7 @@
                 <para style="P9">[[ formatLang(voucher.date , date=True) or '' ]] [[ voucher.journal_id.use_preprint_check and voucher.chk_seq or '' ]]</para>
               </td>
             </tr>
-          </blockTable>        
+          </blockTable>
           <blockTable colWidths="54.0,425.0,85.0" rowHeights="21.5" style="Table4">
             <tr>
               <td>
@@ -153,15 +153,15 @@
               </td>
               <td>
                 <para style="P9">[[ voucher.partner_id.name ]] </para>
-                <para style="P15">[[ voucher.partner_id.address and voucher.partner_id.address[0] and voucher.partner_id.address[0].street2 or removeParentNode('para') ]]</para>
-                <para style="P15">[[ get_zip_line(voucher.partner_id.address[0]) ]] </para>
-                <para style="P15">[[ voucher.partner_id.address[0].country_id.name]]</para>  
+                <para style="P15">[[ voucher.partner_id.street2 or removeParentNode('para') ]]</para>
+                <para style="P15">[[ get_zip_line(voucher.partner_id) ]] </para>
+                <para style="P15">[[ voucher.partner_id.country_id.name]]</para>
               </td>
               <td>
                 <para/>
               </td>
             </tr>
-          </blockTable>          
+          </blockTable>
           <blockTable colWidths="25.0,350,150" rowHeights="10.5" style="Table12">
             <tr>
               <td>
@@ -176,7 +176,7 @@
                 <para style="P3">
                   <font color="white"> </font>
                 </para>
-              </td>              
+              </td>
             </tr>
           </blockTable>
           <para style="P3">
@@ -184,7 +184,7 @@
           </para>
         </td>
       </tr>
-    </blockTable>    
+    </blockTable>
     <blockTable colWidths="568.0" style="Table2" rowHeights="255">
       <tr>
         <td>

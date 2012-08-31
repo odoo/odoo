@@ -8,13 +8,13 @@ msgstr ""
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:49+0000\n"
 "PO-Revision-Date: 2012-02-10 18:42+0000\n"
-"Last-Translator: Carlos @ smile-iberia <Unknown>\n"
+"Last-Translator: Carlos Ch. <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-11 05:07+0000\n"
-"X-Generator: Launchpad (build 14771)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:59+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -604,6 +604,8 @@ msgstr "Precio proveedor por UdM"
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
+"Indica el orden de secuencia cuando se muestra una lista de procesos "
+"productivos de centros de producción."
 
 #. module: mrp
 #: constraint:stock.move:0
@@ -719,6 +721,8 @@ msgstr "Tiempo en horas para realizar un ciclo."
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
 msgstr ""
+"Un producto de línea de LdM no puede ser el mismo que el producto fabricado "
+"por la Ldm"
 
 #. module: mrp
 #: view:mrp.production:0
@@ -849,6 +853,11 @@ msgid ""
 "resource leave are not taken into account in the time computation of the "
 "work center."
 msgstr ""
+"Los centros de trabajo permiten crear y gestionar las unidades de "
+"producción. Consisten en trabajadores y/o máquinas, que son consideradas "
+"como unidades en cuanto a capacidad y previsiones.  Tenga en cuenta que el "
+"timepo de trabajo y las ausencias/permisos no son tenidos en cuenta para el "
+"cálculo del centro de trabajo."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -904,7 +913,7 @@ msgstr "Buscar"
 #: code:addons/mrp/mrp.py:626
 #, python-format
 msgid "Could not cancel manufacturing order !"
-msgstr "¿ No se pudo cancelar la orden de fabricación !"
+msgstr "¡No se pudo cancelar la orden de fabricación!"
 
 #. module: mrp
 #: field:report.workcenter.load,cycle:0
@@ -1120,7 +1129,7 @@ msgstr "Gestión MRP"
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
 msgid "Specify Cost of Work Center per hour."
-msgstr ""
+msgstr "Especifque el coste horario del centro de producción"
 
 #. module: mrp
 #: help:mrp.workcenter,capacity_per_cycle:0
@@ -1229,7 +1238,7 @@ msgstr "Notas"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Manufacturing Orders which are ready to start production."
-msgstr ""
+msgstr "Ordenes de fabircación listas para iniciar la producción"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom
@@ -2071,7 +2080,7 @@ msgstr "Normal"
 #. module: mrp
 #: view:mrp.production:0
 msgid "Production started late"
-msgstr ""
+msgstr "Prodcucción iniciada con retraso"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_routing0
@@ -2147,7 +2156,7 @@ msgstr "Error"
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Production Started"
-msgstr ""
+msgstr "Producción iniciada"
 
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0

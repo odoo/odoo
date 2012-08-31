@@ -23,7 +23,6 @@
     'name': 'Retro-Planning on Events',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Organization and management of events.
 ======================================
@@ -33,9 +32,8 @@ This module allows you to create retro planning for managing your events.
     'author': 'OpenERP SA',
     'images': ['images/event.jpeg'],
     'depends': ['project_retro_planning', 'event'],
-    'init_xml': [],
-    'update_xml': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
-    'demo_xml': [],
+    'data': ['wizard/event_project_retro_view.xml', 'event_project_view.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0069726863885',

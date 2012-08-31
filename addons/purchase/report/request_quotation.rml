@@ -91,7 +91,7 @@
       <tr>
         <td>
           <para style="terp_default_Bold_9">Expected Delivery address:</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.partner_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
+          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
           <para style="terp_default_9">[[ order.dest_address_id and display_address(order.dest_address_id) ]] </para>
         </td>
         <td>
@@ -100,14 +100,14 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ order.partner_address_id and display_address(order.partner_address_id) ]] </para>
+          <para style="terp_default_9">[[ (order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
+          <para style="terp_default_9">[[ display_address(order.partner_id) ]] </para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.: [[ (order.partner_address_id and order.partner_address_id.phone) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax: [[ (order.partner_address_id and order.partner_address_id.fax) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">TVA: [[ (order.partner_id and order.partner_id.vat) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_id.fax) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">TVA: [[ (order.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
@@ -146,11 +146,6 @@
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (order_line.product_uom and order_line.product_uom.name) or '' ]]</para>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <para style="terp_default_8_italic">[[ format(order_line.notes or removeParentNode('tr')) ]]</para>
           </td>
         </tr>
       </blockTable>

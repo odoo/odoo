@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!-- CATEGORY -->
+        <record model="ir.module.category" id="module_category_social">
+            <field name="name">Social and Sharing Tools</field>
+            <field name="parent_id" ref="base.module_category_tools"/>
+            <field name="sequence">26</field>
+        </record>
+
+        <!-- GROUPS -->
+        <record id="group_mail_manager" model="res.groups">
+            <field name="name">Mail manager</field>
+            <field name="comment"></field>
+            <field name="category_id" ref="module_category_social"/>
+        </record>
+
+        <!-- RULES -->
+        <record id="group_rule_public_and_joined" model="ir.rule">
+            <field name="name">Mail.group: access only public and joined groups</field>
+            <field name="model_id" ref="model_mail_group"/>
+            <!-- This rule has to be improved for employee only groups -->
+            <field name="domain_force">['|', '|', ('public', '=', 'public'), ('message_follower_ids', 'in', [user.id]), '&amp;', ('public','=','groups'), ('group_public_id','in', [x.id for x in user.groups_id])]</field>
+        </record>
+
+    </data>
+</openerp>

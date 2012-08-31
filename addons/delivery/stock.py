@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,7 +15,7 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
@@ -50,7 +50,7 @@ class stock_picking(osv.osv):
         for line in self.pool.get('stock.move').browse(cr, uid, ids, context=context):
             result[line.picking_id.id] = True
         return result.keys()
-    
+
     _columns = {
         'carrier_id':fields.many2one("delivery.carrier","Carrier"),
         'volume': fields.float('Volume'),
@@ -84,9 +84,9 @@ class stock_picking(osv.osv):
                 for inv_line in invoice.invoice_line):
             return None
         grid_id = carrier_obj.grid_get(cr, uid, [picking.carrier_id.id],
-                picking.address_id.id, context=context)
+                picking.partner_id.id, context=context)
         if not grid_id:
-            raise osv.except_osv(_('Warning'),
+            raise osv.except_osv(_('Warning!'),
                     _('The carrier %s (id: %d) has no delivery grid!') \
                             % (picking.carrier_id.name,
                                 picking.carrier_id.id))
@@ -99,7 +99,7 @@ class stock_picking(osv.osv):
                     .property_account_income_categ.id
 
         taxes = picking.carrier_id.product_id.taxes_id
-        partner = picking.address_id.partner_id or False
+        partner = picking.partner_id or False
         if partner:
             account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, partner.property_account_position, account_id)
             taxes_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, partner.property_account_position, taxes)
@@ -121,7 +121,7 @@ class stock_picking(osv.osv):
             group=False, type='out_invoice', context=None):
         invoice_obj = self.pool.get('account.invoice')
         picking_obj = self.pool.get('stock.picking')
-        invoice_line_obj = self.pool.get('account.invoice.line') 
+        invoice_line_obj = self.pool.get('account.invoice.line')
         result = super(stock_picking, self).action_invoice_create(cr, uid,
                 ids, journal_id=journal_id, group=group, type=type,
                 context=context)
@@ -173,5 +173,34 @@ class stock_move(osv.osv):
 
 stock_move()
 
+# Redefinition of the new fields in order to update the model stock.picking.out in the orm
+# FIXME: this is a temporary workaround because of a framework bug (ref: lp996816). It should be removed as soon as
+#        the bug is fixed
+class stock_picking_out(osv.osv):
+    _inherit = 'stock.picking.out'
+
+    def _cal_weight(self, cr, uid, ids, name, args, context=None):
+        return self.pool.get('stock.picking')._cal_weight(cr, uid, ids, name, args, context=context)
+
+
+    def _get_picking_line(self, cr, uid, ids, context=None):
+        return self.pool.get('stock.picking')._get_picking_line(cr, uid, ids, context=context)
+
+    _columns = {
+        'carrier_id':fields.many2one("delivery.carrier","Carrier"),
+        'volume': fields.float('Volume'),
+        'weight': fields.function(_cal_weight, type='float', string='Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                 }),
+        'weight_net': fields.function(_cal_weight, type='float', string='Net Weight', digits_compute= dp.get_precision('Stock Weight'), multi='_cal_weight',
+                  store={
+                 'stock.picking': (lambda self, cr, uid, ids, c={}: ids, ['move_lines'], 20),
+                 'stock.move': (_get_picking_line, ['product_id','product_qty','product_uom','product_uos_qty'], 20),
+                 }),
+        'carrier_tracking_ref': fields.char('Carrier Tracking Ref', size=32),
+        'number_of_packages': fields.integer('Number of Packages'),
+        }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

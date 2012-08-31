@@ -2,6 +2,7 @@
 <openerp>
     <data>
         <!--Export edi document  -->
+        <!--
         <record id="ir_actions_server_edi_purchase" model="ir.actions.server">
             <field name="code">if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='purchase.email_template_edi_purchase', context=context)</field>
             <field name="state">code</field>
@@ -10,6 +11,7 @@
             <field name="condition">True</field>
             <field name="name">Auto-email confirmed purchase orders</field>
         </record>
+        -->
 
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
@@ -27,24 +29,26 @@
          so users can freely customize/delete them -->
     <data noupdate="1">
          <!-- bind the mailing server action to purchase.order confirmed activity -->
+        <!--
         <record id="purchase.act_confirmed" model="workflow.activity">
             <field name="action_id" ref="ir_actions_server_edi_purchase"/>
         </record>
+        -->
 
         <!--Email template -->
         <record id="email_template_edi_purchase" model="email.template">
             <field name="name">Automated Purchase Order Notification Mail</field>
-            <field name="email_from">${object.validator.user_email or ''}</field>
+            <field name="email_from">${object.validator.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
-            <field name="email_to">${object.partner_address_id.email}</field>
+            <field name="email_to">${object.partner_id.email}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
-    <p>Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},</p>
+    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
     
-    <p>Here is a purchase order confirmation from ${object.company_id.name}: </p>
+    <p>Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}: </p>
     
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
        &nbsp;&nbsp;<strong>REFERENCES</strong><br />
@@ -57,11 +61,11 @@
        % if object.partner_ref:
        &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />
        % endif
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
     </p>
 
     <p>
-    You can view the order confirmation document and download it using the following link:
+    You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} document and download it using the following link:
     </p>
             <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;" 
                href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
@@ -105,9 +109,9 @@
 </div>
             ]]></field>
             <field name="body_text"><![CDATA[
-Hello${object.partner_address_id.name and ' ' or ''}${object.partner_address_id.name or ''},
+Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
-Here is a purchase order confirmation from ${object.company_id.name}:
+Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}:
        | Order number: *${object.name}*
        | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
        | Order date: ${object.date_order}
@@ -117,9 +121,9 @@ Here is a purchase order confirmation from ${object.company_id.name}:
        % if object.partner_ref:
        | Your reference: ${object.partner_ref}<br />
        % endif
-       | Your contact: ${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
+       | Your contact: ${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
 
-You can view the order confirmation and download it using the following link:
+You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} and download it using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
 
 If you have any question, do not hesitate to contact us.
@@ -128,7 +132,7 @@ Thank you!
 
 
 --
-${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
+${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
 ${object.company_id.name}
 % if object.company_id.street:
 ${object.company_id.street or ''}

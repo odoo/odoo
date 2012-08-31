@@ -2,23 +2,22 @@
   I create a draft Purchase Order
 -
   !record {model: purchase.order, id: purchase_order_edi_1}:
-    partner_id: base.res_partner_agrolait
-    partner_address_id: base.res_partner_address_8invoice
+    partner_id: base.res_partner_3
     location_id: stock.stock_location_3
     pricelist_id: 1
     order_line:
-      - product_id: product.product_product_pc1
-        product_qty: 1.0
-        product_uom: 1
-        price_unit: 150.0
-        name: 'Basic PC'
-        date_planned: '2011-08-31'
-    order_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_33
         product_qty: 10.0
         product_uom: 1
-        price_unit: 20.0
-        name: 'Medium PC'
+        price_unit: 60.0
+        name: 'Headset USB'
+        date_planned: '2011-08-31'
+    order_line:
+      - product_id: product.product_product_29
+        product_qty: 12.0
+        product_uom: 1
+        price_unit: 89.0
+        name: 'Pen drive, 8GB'
         date_planned: '2011-08-31'
 
 -
@@ -59,7 +58,7 @@
         "partner_address": {
                 "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.res_partner_address_7wdsjasdjh",
                 "__module": "base",
-                "__model": "res.partner.address",
+                "__model": "res.partner",
                 "phone": "(+32).81.81.37.00", 
                 "street": "Chaussee de Namur 40", 
                 "city": "Gerompont", 
@@ -70,7 +69,7 @@
         "company_address": {
                 "__id": "base:724f93ec-ddd0-11e0-88ec-701a04e25543.main_address", 
                 "__module": "base",
-                "__model": "res.partner.address",
+                "__model": "res.partner",
                 "city": "Gerompont", 
                 "zip": "1367", 
                 "country_id": ["base:724f93ec-ddd0-11e0-88ec-701a04e25543.be", "Belgium"], 
@@ -87,13 +86,13 @@
             "__model": "sale.order.line",
             "__import_module": "purchase", 
             "__import_model": "purchase.order.line", 
-            "name": "Basic PC", 
+            "name": "PC Assemble SC234", 
             "product_uom": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_uom_unit", "Unit"], 
             "product_qty": 1.0,
             "date_planned": "2011-09-30",
             "sequence": 10, 
             "price_unit": 150.0, 
-            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_3", "[PCSC234] PC Assemble SC234"],
         },
         {
             "__id": "sale:724f93ec-ddd0-11e0-88ec-701a04e25543.sale_order_line-LXEqeadasdad", 
@@ -101,13 +100,13 @@
             "__model": "sale.order.line",
             "__import_module": "purchase", 
             "__import_model": "purchase.order.line", 
-            "name": "Medium PC", 
+            "name": "PC on Demand", 
             "product_uom": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_uom_unit", "Unit"], 
             "product_qty": 10.0, 
             "sequence": 11, 
             "date_planned": "2011-09-15", 
             "price_unit": 20.0, 
-            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+            "product_id": ["product:724f93ec-ddd0-11e0-88ec-701a04e25543.product_product_5", "[PC-DEM] PC on Demand"],
         }], 
     }
     new_purchase_order_id = purchase_order_pool.edi_import(cr, uid, edi_document, context=context)
@@ -124,11 +123,11 @@
     assert order_new.amount_untaxed == 350, "untaxed amount is not same"
     assert len(order_new.order_line) == 2, "Purchase order lines number mismatch"
     for purchase_line in order_new.order_line:
-        if purchase_line.name == 'Basic PC':
+        if purchase_line.name == 'PC Assemble SC234':
             assert purchase_line.product_uom.name == "Unit" , "uom is not same"
             assert purchase_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 1 , "product qty is not same"
-        elif purchase_line.name == 'Medium PC':
+        elif purchase_line.name == 'PC on Demand':
             assert purchase_line.product_uom.name == "Unit" , "uom is not same"
             assert purchase_line.price_unit == 20 , "unit price is not same, got %s, expected 20"%(purchase_line.price_unit,)
             assert purchase_line.product_qty == 10 , "product qty is not same"

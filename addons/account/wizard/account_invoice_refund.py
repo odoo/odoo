@@ -32,11 +32,11 @@ class account_invoice_refund(osv.osv_memory):
     _name = "account.invoice.refund"
     _description = "Invoice Refund"
     _columns = {
-       'date': fields.date('Operation date', help='This date will be used as the invoice date for Refund Invoice and Period will be chosen accordingly!'),
+       'date': fields.date('Operation Date', help='This date will be used as the invoice date for credit note and period will be chosen accordingly!'),
        'period': fields.many2one('account.period', 'Force period'),
-       'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the refund invoice that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
+       'journal_id': fields.many2one('account.journal', 'Refund Journal', help='You can select here the journal to use for the credit note that will be created. If you leave that field empty, it will use the same journal as the current invoice.'),
        'description': fields.char('Description', size=128, required=True),
-       'filter_refund': fields.selection([('refund', 'Create a draft Refund'), ('cancel', 'Cancel: refund invoice and reconcile'),('modify', 'Modify: refund invoice, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Refund invoice base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
+       'filter_refund': fields.selection([('refund', 'Create a draft refund'), ('cancel', 'Cancel: create credit note and reconcile'),('modify', 'Modify: create credit note, reconcile and create a new draft invoice')], "Refund Method", required=True, help='Credit note base on this type. You can not Modify and Cancel if the invoice is already reconciled'),
     }
 
     def _get_journal(self, cr, uid, context=None):
@@ -60,6 +60,7 @@ class account_invoice_refund(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         journal_obj = self.pool.get('account.journal')
         user_obj = self.pool.get('res.users')
         # remove the entry with key 'form_view_ref', otherwise fields_view_get crashes
@@ -105,9 +106,9 @@ class account_invoice_refund(osv.osv_memory):
             journal_id = form.journal_id.id
             for inv in inv_obj.browse(cr, uid, context.get('active_ids'), context=context):
                 if inv.state in ['draft', 'proforma2', 'cancel']:
-                    raise osv.except_osv(_('Error !'), _('Can not %s draft/proforma/cancel invoice.') % (mode))
+                    raise osv.except_osv(_('Error!'), _('Cannot %s draft/proforma/cancel invoice.') % (mode))
                 if inv.reconciled and mode in ('cancel', 'modify'):
-                    raise osv.except_osv(_('Error !'), _('Can not %s invoice which is already reconciled, invoice should be unreconciled first. You can only Refund this invoice') % (mode))
+                    raise osv.except_osv(_('Error!'), _('Cannot %s invoice which is already reconciled, invoice should be unreconciled first. You can only refund this invoice.') % (mode))
                 if form.period.id:
                     period = form.period.id
                 else:
@@ -142,8 +143,8 @@ class account_invoice_refund(osv.osv_memory):
                     description = inv.name
 
                 if not period:
-                    raise osv.except_osv(_('Data Insufficient !'), \
-                                            _('No Period found on Invoice!'))
+                    raise osv.except_osv(_('Insufficient Data!'), \
+                                            _('No period found on the invoice.'))
 
                 refund_id = inv_obj.refund(cr, uid, [inv.id], date, period, description, journal_id)
                 refund = inv_obj.browse(cr, uid, refund_id[0], context=context)
@@ -176,7 +177,6 @@ class account_invoice_refund(osv.osv_memory):
                         invoice = inv_obj.read(cr, uid, [inv.id],
                                     ['name', 'type', 'number', 'reference',
                                     'comment', 'date_due', 'partner_id',
-                                    'address_contact_id', 'address_invoice_id',
                                     'partner_insite', 'partner_contact',
                                     'partner_ref', 'payment_term', 'account_id',
                                     'currency_id', 'invoice_line', 'tax_line',
@@ -197,8 +197,8 @@ class account_invoice_refund(osv.osv_memory):
                             'period_id': period,
                             'name': description
                         })
-                        for field in ('address_contact_id', 'address_invoice_id', 'partner_id',
-                                'account_id', 'currency_id', 'payment_term', 'journal_id'):
+                        for field in ('partner_id', 'account_id', 'currency_id',
+                                         'payment_term', 'journal_id'):
                                 invoice[field] = invoice[field] and invoice[field][0]
                         inv_id = inv_obj.create(cr, uid, invoice, {})
                         if inv.payment_term.id:

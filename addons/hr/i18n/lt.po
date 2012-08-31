@@ -7,15 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2010-09-09 07:19+0000\n"
-"Last-Translator: Giedrius Slavinskas - inovera.lt "
-"<giedrius.slavinskas@gmail.com>\n"
+"PO-Revision-Date: 2012-05-10 18:17+0000\n"
+"Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -179,7 +178,8 @@ msgstr "Moteris"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -231,8 +231,8 @@ msgstr ""
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr ""
+msgid "Work Email"
+msgstr "Darbo el. paštas"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -242,7 +242,7 @@ msgstr ""
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_hr_reporting
 msgid "Reporting"
-msgstr ""
+msgstr "Ataskaitos"
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_board_hr
@@ -272,7 +272,7 @@ msgstr ""
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
+msgid "Total Employees"
 msgstr ""
 
 #. module: hr
@@ -391,12 +391,6 @@ msgid "Working Address"
 msgstr "Darbovietės adresas"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr ""
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Žemesnieji padaliniai"
@@ -409,7 +403,7 @@ msgstr "Būsena"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
+msgid "Categories Structure"
 msgstr "Kategorijų struktūra"
 
 #. module: hr
@@ -439,7 +433,7 @@ msgstr ""
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr ""
 
 #. module: hr
@@ -684,7 +678,12 @@ msgstr "Pavaldiniai"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
 msgstr ""
 
 #~ msgid "Sunday"
@@ -710,6 +709,9 @@ msgstr ""
 
 #~ msgid "Monday"
 #~ msgstr "Pirmadienis"
+
+#~ msgid "Categories structure"
+#~ msgstr "Kategorijų struktūra"
 
 #~ msgid "Day of week"
 #~ msgstr "Savaitės diena"
@@ -740,9 +742,6 @@ msgstr ""
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Darbuotojo kontaktai"
-
-#~ msgid "Work Email"
-#~ msgstr "Darbo el. paštas"
 
 #~ msgid "Working Time Categories"
 #~ msgstr "Darbo laiko kategorijos"

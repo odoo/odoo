@@ -4,9 +4,8 @@
         <record id="board_mrp_manager_form" model="ir.ui.view">
             <field name="name">board.mrp.manager.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Manufacturing board">
+                <form string="Manufacturing board" version="7.0">
                     <board style="2-1">
                         <column>
                             <action name="%(procurement.procurement_exceptions)d" string="Procurements in Exception" domain="[('state','=','exception')]"/>
@@ -21,23 +20,18 @@
         </record>
 
         <record id="open_board_manufacturing" model="ir.actions.act_window">
-            <field name="name">Production Dashboard</field>
+            <field name="name">Manufacturing</field>
             <field name="res_model">board.board</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="board_mrp_manager_form"/>
         </record>
 
-        <menuitem id="menus_dash_mrp" name="Manufacturing"
-            parent="base.menu_dasboard" sequence="15"/>
-        <menuitem
-            action="open_board_manufacturing" icon="terp-graph"
-            id="menu_board_manufacturing" parent="menus_dash_mrp"
-            sequence="1"/>
-
-        <menuitem icon="terp-mrp" id="base.menu_mrp_root" name="Manufacturing" sequence="8"
-            action="open_board_manufacturing"/>
-
+        <menuitem action="open_board_manufacturing"
+                  icon="terp-graph"
+                  id="menu_board_manufacturing"
+                  parent="base.menu_reporting_dashboard"
+                  sequence="30"/>
 
     </data>
 </openerp>

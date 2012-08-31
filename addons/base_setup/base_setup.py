@@ -18,7 +18,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-import pytz
 
 import simplejson
 import cgi
@@ -28,110 +27,7 @@ from osv import fields, osv
 from tools.translate import _
 from lxml import etree
 
-#Migrate data from another application Conf wiz
-
-class migrade_application_installer_modules(osv.osv_memory):
-    _name = 'migrade.application.installer.modules'
-    _inherit = 'res.config.installer'
-    _columns = {
-        'import_saleforce': fields.boolean('Import Saleforce',
-            help="For Import Saleforce"),
-        'import_sugarcrm': fields.boolean('Import Sugarcrm',
-            help="For Import Sugarcrm"),
-        'sync_google_contact': fields.boolean('Sync Google Contact',
-            help="For Sync Google Contact"),
-        'quickbooks_ippids': fields.boolean('Quickbooks Ippids',
-            help="For Quickbooks Ippids"),
-    }
-
-class product_installer(osv.osv_memory):
-    _name = 'product.installer'
-    _inherit = 'res.config'
-    _columns = {
-        'customers': fields.selection([('create','Create'), ('import','Import')], 'Customers', size=32, required=True, help="Import or create customers"),
-    }
-    _defaults = {
-        'customers': 'create',
-    }
-
-    def execute(self, cr, uid, ids, context=None):
-        if context is None:
-             context = {}
-        data_obj = self.pool.get('ir.model.data')
-        val = self.browse(cr, uid, ids, context=context)[0]
-        if val.customers == 'create':
-            id2 = data_obj._get_id(cr, uid, 'base', 'view_partner_form')
-            if id2:
-                id2 = data_obj.browse(cr, uid, id2, context=context).res_id
-            return {
-                    'view_type': 'form',
-                    'view_mode': 'form',
-                    'res_model': 'res.partner',
-                    'views': [(id2, 'form')],
-                    'type': 'ir.actions.act_window',
-                    'target': 'current',
-                    'nodestroy':False,
-                }
-        if val.customers == 'import':
-            return {'type': 'ir.actions.act_window'}
-
-# Define users preferences for new users (ir.values)
-
-def _lang_get(self, cr, uid, context=None):
-    obj = self.pool.get('res.lang')
-    ids = obj.search(cr, uid, [('translatable','=',True)])
-    res = obj.read(cr, uid, ids, ['code', 'name'], context=context)
-    res = [(r['code'], r['name']) for r in res]
-    return res
-
-def _tz_get(self,cr,uid, context=None):
-    return [(x, x) for x in pytz.all_timezones]
-
-class user_preferences_config(osv.osv_memory):
-    _name = 'user.preferences.config'
-    _inherit = 'res.config'
-    _columns = {
-        'context_tz': fields.selection(_tz_get,  'Timezone', size=64,
-            help="Set default for new user's timezone, used to perform timezone conversions "
-                 "between the server and the client."),
-        'context_lang': fields.selection(_lang_get, 'Language', required=True,
-            help="Sets default language for the all user interface, when UI "
-                "translations are available. If you want to Add new Language, you can add it from 'Load an Official Translation' wizard  from 'Administration' menu."),
-        'view': fields.selection([('simple','Simplified'),
-                                  ('extended','Extended')],
-                                 'Interface', required=True, help= "If you use OpenERP for the first time we strongly advise you to select the simplified interface, which has less features but is easier. You can always switch later from the user preferences." ),
-        'menu_tips': fields.boolean('Display Tips', help="Check out this box if you want to always display tips on each menu action"),
-
-    }
-    _defaults={
-               'view' : lambda self,cr,uid,*args: self.pool.get('res.users').browse(cr, uid, uid).view or 'simple',
-               'context_lang' : 'en_US',
-               'menu_tips' : True
-    }
-
-    def default_get(self, cr, uid, fields, context=None):
-        if context is None:
-            context = {}
-        res = super(user_preferences_config, self).default_get(cr, uid, fields, context=context)
-        res_default = self.pool.get('ir.values').get(cr, uid, 'default', False, ['res.users'])
-        for id, field, value in res_default:
-            res.update({field: value})
-        return res
-
-    def execute(self, cr, uid, ids, context=None):
-        user_obj = self.pool.get('res.users')
-        user_ids = user_obj.search(cr, uid, [], context=context)
-        for o in self.browse(cr, uid, ids, context=context):
-            user_obj.write(cr , uid, user_ids ,{'context_tz' : o.context_tz, 'context_lang' : o.context_lang, 'view' : o.view, 'menu_tips' : o.menu_tips}, context=context)
-            ir_values_obj = self.pool.get('ir.values')
-            ir_values_obj.set(cr, uid, 'default', False, 'context_tz', ['res.users'], o.context_tz)
-            ir_values_obj.set(cr, uid, 'default', False, 'context_lang', ['res.users'], o.context_lang)
-            ir_values_obj.set(cr, uid, 'default', False, 'view', ['res.users'], o.view)
-            ir_values_obj.set(cr, uid, 'default', False, 'menu_tips', ['res.users'], o.menu_tips)
-        return {}
-
-# Specify Your Terminology
-
+# Specify Your Terminology will move to 'partner' module
 class specify_partner_terminology(osv.osv_memory):
     _name = 'base.setup.terminology'
     _inherit = 'res.config'
@@ -154,7 +50,7 @@ class specify_partner_terminology(osv.osv_memory):
     def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
-        context_lang = user_obj.browse(cr, uid, uid, context=context).context_lang
+        context_lang = user_obj.browse(cr, uid, uid, context=context).lang
         existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src), ('res_id','=',res_id)])
         if existing_trans_ids:
             trans_obj.write(cr, uid, existing_trans_ids, {'value': value}, context=context)

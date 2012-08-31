@@ -5,15 +5,17 @@
         <record id="view_hr_attendance_month" model="ir.ui.view">
             <field name="name">Attendances Report Monthly</field>
             <field name="model">hr.attendance.month</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Print Attendance Report Monthly">
-                <field name="month"/>
-                <field name="year"/>
-                <newline/>
-                <separator colspan="4"/>
-                <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                <button name="print_report" string="Print" type="object"  icon="gtk-print"/>
+            <form string="Print Attendance Report Monthly" version="7.0">
+                <group col="4">
+                    <field name="month"/>
+                    <field name="year"/>
+                </group>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

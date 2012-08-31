@@ -2,8 +2,44 @@
 <openerp>
     <data>
 
-<!--  Phonecall Categories Form View  -->
+    <!-- Read/Unread actions -->
+    <record id="actions_server_crm_phonecall_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_phonecall_unread" model="ir.values">
+        <field name="name">action_crm_phonecall_unread</field>
+        <field name="action_id" ref="actions_server_crm_phonecall_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_phonecall_unread'))"/>
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="model">crm.phonecall</field>
+        <field name="key2">client_action_multi</field>
+    </record>
 
+    <record id="actions_server_crm_phonecall_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_crm_phonecall_read" model="ir.values">
+        <field name="name">action_crm_phonecall_read</field>
+        <field name="action_id" ref="actions_server_crm_phonecall_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_phonecall_read'))"/>
+        <field name="key">action</field>
+        <field name="model_id" ref="model_crm_phonecall"/>
+        <field name="model">crm.phonecall</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+<!--  Phonecall Categories Form View  -->
     <record id="crm_phonecall_categ_action" model="ir.actions.act_window">
         <field name="name">Phonecall Categories</field>
         <field name="res_model">crm.case.categ</field>
@@ -11,7 +47,14 @@
         <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
         <field name="domain">[('object_id.model', '=', 'crm.phonecall')]</field>
         <field name="context" eval="{'object_id': ref('model_crm_phonecall')}"/>
-        <field name="help">Create specific phone call categories to better define the type of calls tracked in the system.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new category.
+          </p><p>
+            Create specific phone call categories to better define the type of
+            calls tracked in the system.
+          </p>
+        </field>
     </record>
 
     <menuitem action="crm_phonecall_categ_action" name="Categories"
@@ -22,31 +65,35 @@
     <record model="ir.ui.view" id="crm_case_phone_tree_view">
         <field name="name">CRM - Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+            <tree fonts="bold:needaction_pending==True" colors="gray:state in ('cancel','done');blue:state in ('pending',)" string="Phone Calls">
+                <field name="needaction_pending" invisible="1"/>
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"/>
-                <field name="partner_contact"/>
                 <field name="partner_phone"/>
                 <field name="user_id"/>
                 <field name="categ_id" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
+                <field name="needaction_pending" invisible="1"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
                     icon="gtk-index"
-                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
                 <button string="Meeting"
                     states="open,pending" icon="gtk-redo"
-                     name="action_make_meeting" type="object" />
+                     name="action_make_meeting" type="object"/>
                 <field name="state"/>
-                <button name="case_cancel" string="Cancel" states="open,pending" type="object" icon="gtk-cancel"/>
-                <button name="case_open" string="Todo" states="pending" type="object" icon="gtk-go-forward"/>
-                <button name="case_close" string="Held" states="open,pending" type="object" icon="gtk-jump-to"/>
-                <button name="case_pending" string="Not Held" states="open" type="object" icon="gtk-media-pause"/>
+                <button name="case_open" string="Confirm" type="object"
+                        states="draft,pending" icon="gtk-go-forward"/>
+                <button name="case_close" string="Held" type="object"
+                        states="open,pending" icon="gtk-jump-to"/>
+                <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending" icon="gtk-cancel"/>
+                <button name="case_reset" string="Reset to Todo" type="object"
+                        states="cancel" icon="gtk-convert"/>
             </tree>
         </field>
     </record>
@@ -56,73 +103,59 @@
     <record model="ir.ui.view" id="crm_case_phone_form_view">
         <field name="name">CRM - Phone Call Form</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form string="Phone Call">
-                 <group colspan="6" col="7">
-                    <field name="name" required="1"/>
-                    <field name="partner_phone"/>
-                    <field name="duration" widget="float_time"/>
-                    <button string="Schedule a Meeting" name="action_make_meeting" icon="gtk-redo" type="object"/>
-
+            <form string="Phone Call" version="7.0">
+            <header>
+                <button name="case_close" string="Held" type="object" class="oe_highlight"
+                        states="open,pending"/>
+                <button name="case_reset" string="Reset to Todo" type="object"
+                        states="cancel"/>
+                <button string="Convert to Opportunity"
+                        name="%(phonecall2opportunity_act)d"
+                        type="action"
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'open')]}"/>
+                <button string="Convert to Opportunity" class="oe_highlight"
+                        name="%(phonecall2opportunity_act)d"
+                        type="action"
+                        attrs="{'invisible':[ '|', ('opportunity_id','!=',False), ('state','!=', 'done')]}"/>
+                <button string="Schedule Other Call"
+                        name="%(phonecall_to_phonecall_act)d"
+                        type="action"/>
+                <button string="Schedule a Meeting" name="action_make_meeting" type="object"/>
+                <button name="case_cancel" string="Cancel" type="object"
+                        states="draft,open,pending"/>
+                <field name="state" widget="statusbar" nolabel="1" statusbar_visible="open,done"/>
+            </header>
+            <sheet string="Phone Call">
+                  <div class="oe_title">
+                      <div class="oe_edit_only">
+                          <label for="name" string="Title"/>
+                      </div>
+                      <h1><field name="name" required="1"/></h1>
+                      <div class="oe_edit_only">
+                        <label for="partner_phone" string="Phone"/>
+                      </div>
+                      <h2><field name="partner_phone"/></h2>
+                  </div>
+                 <group col="4">
                     <field name="date"/>
                     <field name="user_id"/>
-                    <field name="section_id" colspan="1" widget="selection" />
-                    <button string="Schedule Other Call"
-                     icon="terp-call-start"
-                    name="%(phonecall_to_phonecall_act)d"
-                    type="action"  />
-                    <label colspan="6"  string=""/>
-                    <button string="Convert to Opportunity"
-                        name="%(phonecall2opportunity_act)d"
-                        icon="gtk-index" type="action"
-                        attrs="{'invisible':[('opportunity_id','!=',False)]}" />
-
-                </group>
-
-                <group col="3" colspan="2">
-                    <separator colspan="3" string="Contacts" />
-                    <field name="partner_id"
-                        on_change="onchange_partner_id(partner_id)" />
-                    <button string="Create a Partner"
-                        icon="terp-partner"
-                        name="%(action_crm_phonecall2partner)d"
-                        type="action"
-                        attrs="{'invisible':[('partner_id','!=',False)]}"
-                        groups="base.group_partner_manager"/>
-                    <newline/>
-                    <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)" />
-                    <newline/>
-                    <field name="partner_mobile" />
-                </group>
-                <group col="2" colspan="2">
-                    <separator colspan="2" string="Categorization" />
+                    <field name="duration" widget="float_time"/>
+                    <field name="section_id" colspan="1" widget="selection"/>
+                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
                     <field name="categ_id" widget="selection"
                         domain="[('object_id.model', '=', 'crm.phonecall')]"/>
+                    <field name="partner_mobile"/>
                     <field name="priority"/>
                     <field name="opportunity_id"/>
                 </group>
-                <separator string="Description" colspan="4" />
-                <field name="description" nolabel="1" colspan="4" />
-                <separator colspan="4" />
-                <group col="8" colspan="4">
-                    <field name="state" widget="statusbar" statusbar_visible="open,done" statusbar_colors='{"pending":"red"}' select="1"/>
-                    <button name="case_cancel" string="Cancel"
-                        states="open,pending" type="object"
-                        icon="gtk-cancel" />
-                    <button name="case_open" string="Todo"
-                        states="pending" type="object"
-                        icon="gtk-go-forward" />
-                    <button name="case_pending" string="Not Held"
-                        states="open" type="object" icon="gtk-media-pause" />
-                    <button name="case_close" string="Held"
-                        states="open,pending" type="object"
-                        icon="gtk-jump-to" />
-                    <button name="case_reset" string="Reset to Todo"
-                        states="cancel" type="object"
-                        icon="gtk-convert" />
-                </group>
+
+                <field name="description" placeholder="Description..."/>
+            </sheet>
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+                <field name="message_follower_ids" widget="mail_followers"/>
+            </div>
             </form>
         </field>
     </record>
@@ -132,48 +165,43 @@
     <record model="ir.ui.view" id="crm_case_inbound_phone_tree_view">
         <field name="name">CRM - Logged Phone Calls Tree</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Phone Calls" editable="top">
+            <tree string="Phone Calls" fonts="bold:needaction_pending==True" editable="top">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="partner_id"
-                    on_change="onchange_partner_id(partner_id)"
-                    string="Partner" />
-                <field name="partner_address_id"
-                        on_change="onchange_partner_address_id(partner_address_id)"
-                        invisible="1"/>
+                    on_change="onchange_partner_id(partner_id)"/>
                 <field name="partner_phone"
                     invisible="1"/>
-                <field name="user_id" groups="base.group_extended"/>
+                <field name="user_id"/>
                 <field name="categ_id" widget="selection"
                     domain="[('object_id.model', '=', 'crm.phonecall')]"
                     invisible="1"/>
                 <field name="state" invisible="1"/>
                 <field name="create_date" invisible="1"/>
                 <field name="opportunity_id" invisible="1"/>
+                <field name="needaction_pending" invisible="1"/>
                 <button string="Schedule Other Call"
                     icon="terp-call-start"
                     name="%(phonecall_to_phonecall_act)d"
-                    type="action"  />
+                    type="action"/>
                 <button string="Meeting"
                      icon="gtk-redo"
-                     name="action_make_meeting" type="object" />
+                     name="action_make_meeting" type="object"/>
                 <button string="Convert to Opportunity"
                     name="%(phonecall2opportunity_act)d"
                     states="open,pending"
                     icon="gtk-index"
-                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}" />
+                    type="action" attrs="{'invisible':[('opportunity_id','!=',False)]}"/>
             </tree>
         </field>
     </record>
 
-<!-- Phonecalls Calendar View -->
+    <!-- Phonecalls Calendar View -->
 
     <record model="ir.ui.view" id="crm_case_phone_calendar_view">
         <field name="name">CRM - Phone Calls Calendar</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Phone Calls" date_start="date" color="user_id" date_delay="duration">
@@ -183,101 +211,30 @@
         </field>
     </record>
 
-<!-- Phonecalls Search View  -->
-
+    <!-- Phonecalls Search View  -->
     <record id="view_crm_case_phonecalls_filter" model="ir.ui.view">
         <field name="name">CRM - Phone Calls Search</field>
         <field name="model">crm.phonecall</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Phonecalls">
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
-
-               <separator orientation="vertical"/>
-               <field name="name"/>
-               <field name="partner_id"/>
-               <field name="user_id">
-                   <filter icon="terp-personal-"
-                       domain="[('user_id','=',False)]"
-                       help="Unassigned Phonecalls" />
-               </field>
-               <field name="section_id"
-                   widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
-                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                       help="My Sales Team(s)" />
-               </field>
-               <newline/>
-               <group expand="0" string="Group By...">
-                   <filter string="Partner" icon="terp-partner" domain="[]"
-                       context="{'group_by':'partner_id'}" />
-                   <filter string="Responsible" icon="terp-personal"
-                       domain="[]" context="{'group_by':'user_id'}" />
-                   <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
-                       domain="[]" context="{'group_by':'create_date'}" />
-                   <filter string="Date" icon="terp-go-month" domain="[]"
-                       context="{'group_by':'date'}" help="Date of Call" />
-               </group>
-           </search>
-        </field>
-    </record>
-    <!-- Scheduled a phonecall search view-->
-    <record id="view_crm_case_scheduled_phonecalls_filter" model="ir.ui.view">
-        <field name="name">CRM - Scheduled Calls Search</field>
-        <field name="model">crm.phonecall</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Scheduled Phonecalls">
+               <field name="name" string="Phonecalls"/>
+               <field name="date"/>
+               <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+               <separator/>
                <filter icon="terp-gtk-go-back-rtl" string="To Do" name="current" domain="[('state','=','open')]"/>
-               <separator orientation="vertical"/>
-               <filter icon="terp-go-today" string="Today"
-                   domain="[('date','&lt;', time.strftime('%%Y-%%m-%%d 23:59:59')),
-                    ('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]"
-                   name="today"
-                   help="Todays's Phonecalls"
-               />
-               <filter icon="terp-go-week"
-                   string="7 Days"
-                   help="Phonecalls during last 7 days"
-                   domain="[('date','&gt;=',(datetime.date.today()-datetime.timedelta(days=7)).strftime('%%Y-%%m-%%d'))]"
-               />
-
-               <separator orientation="vertical"/>
-               <field name="name"/>
+               <separator/>
+               <filter string="Unassigned Phonecalls" icon="terp-personal-" domain="[('user_id','=',False)]" help="Unassigned Phonecalls"/>
+               <separator/>
+               <filter string="Phone Calls Assigned to Me or My Team(s)" icon="terp-personal+" domain="['|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
+                       help="Phone Calls that are assigned to me or to my team(s)"/>
                <field name="partner_id"/>
-               <field name="user_id">
-                   <filter icon="terp-personal-"
-                       domain="[('user_id','=',False)]"
-                       help="Unassigned Phonecalls" />
-               </field>
-               <field name="section_id"
-                   widget="selection" string="Sales Team">
-                   <filter icon="terp-personal+" groups="base.group_extended"
-                       domain="['|', ('section_id', '=', context.get('section_id')), '|', ('section_id.user_id','=',uid), ('section_id.member_ids', 'in', [uid])]"
-                       help="My Sales Team(s)" />
-               </field>
-               <newline/>
+               <field name="user_id"/>
+               <field name="section_id" string="Sales Team"/>
                <group expand="0" string="Group By...">
-                   <filter string="Partner" icon="terp-partner" domain="[]"
-                       context="{'group_by':'partner_id'}" />
-                   <filter string="Responsible" icon="terp-personal"
-                       domain="[]" context="{'group_by':'user_id'}" />
-                   <separator orientation="vertical" />
-                   <filter string="Creation" icon="terp-go-month" help="Creation Date"
-                       domain="[]" context="{'group_by':'create_date'}" />
-                   <filter string="Date" icon="terp-go-month" domain="[]"
-                       context="{'group_by':'date'}" help="Date of Call" />
+                   <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
+                   <filter string="Responsible" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                   <filter string="Creation" icon="terp-go-month" help="Creation Date" domain="[]" context="{'group_by':'create_date'}"/>
+                   <filter string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" help="Date of Call"/>
                </group>
            </search>
         </field>

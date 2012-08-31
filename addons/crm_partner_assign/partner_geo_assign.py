@@ -34,7 +34,7 @@ def geo_find(addr):
         xml = urllib.urlopen(url).read()
     except Exception, e:
         raise osv.except_osv(_('Network error'),
-                             _('Could not contact geolocation servers, please make sure you have a working internet connection (%s)') % e)
+                             _('Cannot contact geolocation servers. Please make sure that your internet connection is up and running (%s).') % e)
 
     if '<error>' in xml:
         return None
@@ -46,11 +46,11 @@ def geo_find(addr):
 def geo_query_address(street=None, zip=None, city=None, state=None, country=None):
     if country and ',' in country and (country.endswith(' of') or country.endswith(' of the')):
         # put country qualifier in front, otherwise GMap gives wrong results,
-        # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo' 
-        country = '{1} {0}'.format(*country.split(',',1)) 
-    return tools.ustr(', '.join(filter(None, [street, 
-                                              ("%s %s" % (zip or '', city or '')).strip(), 
-                                              state, 
+        # e.g. 'Congo, Democratic Republic of the' => 'Democratic Republic of the Congo'
+        country = '{1} {0}'.format(*country.split(',',1))
+    return tools.ustr(', '.join(filter(None, [street,
+                                              ("%s %s" % (zip or '', city or '')).strip(),
+                                              state,
                                               country])))
 
 class res_partner_grade(osv.osv):
@@ -99,14 +99,13 @@ class res_partner(osv.osv):
     def geo_localize(self, cr, uid, ids, context=None):
         # Don't pass context to browse()! We need country names in english below
         for partner in self.browse(cr, uid, ids):
-            if not partner.address:
+            if not partner:
                 continue
-            contact = partner.address[0] #TOFIX: should be get latitude and longitude for default contact?
-            result = geo_find(geo_query_address(street=contact.street,
-                                                zip=contact.zip,
-                                                city=contact.city,
-                                                state=contact.state_id.name,
-                                                country=contact.country_id.name))
+            result = geo_find(geo_query_address(street=partner.street,
+                                                zip=partner.zip,
+                                                city=partner.city,
+                                                state=partner.state_id.name,
+                                                country=partner.country_id.name))
             if result:
                 self.write(cr, uid, [partner.id], {
                     'partner_latitude': result[0],
@@ -199,7 +198,7 @@ class crm_lead(osv.osv):
                     ('partner_weight', '>', 0),
                     ('partner_latitude', '>', latitude - 2), ('partner_latitude', '<', latitude + 2),
                     ('partner_longitude', '>', longitude - 1.5), ('partner_longitude', '<', longitude + 1.5),
-                    ('country', '=', lead.country_id.id),
+                    ('country_id', '=', lead.country_id.id),
                 ], context=context)
 
                 # 2. second way: in the same country, big area
@@ -208,7 +207,7 @@ class crm_lead(osv.osv):
                         ('partner_weight', '>', 0),
                         ('partner_latitude', '>', latitude - 4), ('partner_latitude', '<', latitude + 4),
                         ('partner_longitude', '>', longitude - 3), ('partner_longitude', '<' , longitude + 3),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 3. third way: in the same country, extra large area
@@ -225,7 +224,7 @@ class crm_lead(osv.osv):
                     # still haven't found any, let's take all partners in the country!
                     partner_ids = res_partner.search(cr, uid, [
                         ('partner_weight', '>', 0),
-                        ('country', '=', lead.country_id.id),
+                        ('country_id', '=', lead.country_id.id),
                     ], context=context)
 
                 # 6. sixth way: closest partner whatsoever, just to have at least one result

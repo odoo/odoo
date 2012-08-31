@@ -3,12 +3,12 @@
 -
   !python {model: sale.order}: |
     try:
-        self.unlink(cr, uid, [ref("order")])
+        self.unlink(cr, uid, [ref("sale_order_1")])
     except Exception,e:
         pass
 -
   I make duplicate order and delete.
 -
   !python {model: sale.order}: |
-    id = self.copy(cr, uid, ref('order'))
+    id = self.copy(cr, uid, ref('sale_order_1'))
     self.unlink(cr, uid, [id])

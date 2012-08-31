@@ -13,6 +13,12 @@
             <field name="flow_start">True</field>
             <field name="name">draft</field>
         </record>
+        <record id="act_sent" model="workflow.activity">
+            <field name="wkf_id" ref="purchase_order"/>
+            <field name="name">sent</field>
+            <field name="kind">function</field>
+            <field name="action">write({'state':'sent'})</field>
+        </record>
         <record id="act_confirmed" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">confirmed</field>
@@ -55,7 +61,7 @@
         <record id="act_invoice_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">invoice_done</field>
-            <field name="action">write({'state':'approved'})</field>
+            <field name="action">invoice_done()</field>
             <field name="kind">function</field>
         </record>
         <record id="act_invoice_end" model="workflow.activity">
@@ -72,7 +78,7 @@
         <record id="act_picking_done" model="workflow.activity">
             <field name="wkf_id" ref="purchase_order"/>
             <field name="name">picking_done</field>
-            <field name="action">write({'shipped':1,'state':'approved'})</field>
+            <field name="action">picking_done()</field>
             <field name="kind">function</field>
             <field name="signal_send">subflow.delivery_done</field>
         </record>
@@ -90,6 +96,22 @@
             <field name="act_to" ref="act_confirmed"/>
             <field name="signal">purchase_confirm</field>
         </record>
+         <record id="trans_draft_sent" model="workflow.transition">
+            <field name="act_from" ref="act_draft"/>
+            <field name="act_to" ref="act_sent"/>
+            <field name="signal">send_rfq</field>
+        </record>
+        <record id="trans_sent_confirmed" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_confirmed"/>
+            <field name="signal">purchase_confirm</field>
+        </record>
+        <record id="trans_sent_cancel" model="workflow.transition">
+            <field name="act_from" ref="act_sent"/>
+            <field name="act_to" ref="act_cancel"/>
+            <field name="signal">purchase_cancel</field>
+        </record>
+        
         <record id="trans_confirmed_cancel" model="workflow.transition">
             <field name="act_from" ref="act_confirmed"/>
             <field name="act_to" ref="act_cancel"/>
@@ -177,9 +199,9 @@
             <field name="act_from" ref="act_invoice_end"/>
             <field name="act_to" ref="act_done"/>
         </record>
-	
-	<!-- Procurement -->
-		<record id="act_buy" model="workflow.activity">
+    
+    <!-- Procurement -->
+        <record id="act_buy" model="workflow.activity">
             <field name="wkf_id" ref="procurement.wkf_procurement"/>
             <field name="name">buy</field>
             <field name="kind">subflow</field>

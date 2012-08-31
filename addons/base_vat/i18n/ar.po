@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:07+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:141
@@ -23,31 +23,33 @@ msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"رقم ض.ق.م يبدو غير صحيح\n"
+"ملحوظة: الصيغة المتوقعة %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن يكون فريداً !"
 
 #. module: base_vat
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
 
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "التحقق للـ ض.ق.م من خلال VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "الشركات"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "خطأ! لا يمكنك إنشاء شركات متداخلة (شركات تستخدم نفسها)."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -55,6 +57,8 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"تحقق من هذه الخانة اذا تعرض الشريك للضريبة على القيمة المضافة. سوف تُستخدم "
+"للتصريح القانوني للضريبة."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
@@ -67,11 +71,44 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"اختر من أجل التحقق التحقق للـ ض.ق.م من خلال VIES الأوروبي و ليس التحقق البسيط"
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
+msgstr "التصريح القانوني للضريبة"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "خطأ! لا يمكنك إنشاء أعضاء ذوي ارتباطات متداخلة."
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr "تبدو الفاتورة غير صحيحة. يتوجب عليك ادخال شيء ما مثل %s"
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "الضريبة على القيمة المضافة غير صالحة, يجب ان تبدأ بكود البلد"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr ""
+#~ "القاعدة الضريبية للقيمة المضافة - للتحقق من صلاحية عدد الضريبة على القيمة "
+#~ "المضافة"
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    تمكن العدد الضريبي للشريك. تحقق من صلاحية للعدد الضريبي.\n"
+#~ "تتبع هذه الوحدة المنهجيات الموضحة في http://sima-pc.com/nif.php للتحقق من "
+#~ "صلاحية العدد الضريبي المخصص للشركاء في البلاد الاوروبية.\n"
+#~ "    "

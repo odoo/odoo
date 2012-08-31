@@ -10,7 +10,7 @@
     <record model="res.partner.bank" id="agro_bank">
         <field name="name">Fortis account</field>
         <field name="acc_number">123456</field>
-        <field name="partner_id" ref="base.res_partner_agrolait"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
         <field name="state">bvrbank</field>
         <field name="post_number">01-23456-5</field>
         <field name="bank" ref="partner_bank"/>
@@ -32,8 +32,7 @@
         <field name="name">V11 invoice</field>
         <field name="amount_total">54150</field>
         <field name="number">1</field>
-        <field name="partner_id" ref="base.res_partner_agrolait"/>
-        <field name="address_invoice_id" ref="base.res_partner_address_8"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
         <field name="account_id" ref="account.a_recv"/>
         <field name="currency_id" ref="base.EUR"/>
         <field name="company_id" ref="base.main_partner"/>

@@ -9,11 +9,10 @@
     <record id="view_partner_bank_form_inherit" model="ir.ui.view">
         <field name="name">Partner Bank Accounts - Journal</field>
         <field name="model">res.partner.bank</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_partner_bank_form"/>
         <field name="arch" type="xml">
             <group name="bank" position="after">
-                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}" groups="base.group_extended">
+                <group name="accounting" col="2" colspan="2" attrs="{'invisible': [('company_id','=', False)]}">
                     <separator string="Accounting Information" colspan="2"/>
                     <field name="journal_id"/>
                     <field name="currency_id"/>
@@ -26,7 +25,6 @@
     <record id="view_partner_bank_tree_add_currency" model="ir.ui.view">
         <field name="name">Partner Bank Accounts - Add currency on tree</field>
         <field name="model">res.partner.bank</field>
-        <field name="type">tree</field>
         <field name="inherit_id" ref="base.view_partner_bank_tree"/>
         <field name="arch" type="xml">
             <field name="acc_number" position="after">
@@ -42,21 +40,23 @@
         <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="context" eval="{'default_partner_id':ref('base.main_partner'), 'company_hide':False, 'default_company_id':ref('base.main_company'), 'search_default_my_bank':1}"/>
-        <field name="help">Configure your company's bank account and select those that must appear on the report footer. You can reorder banks in the list view. If you use the accounting application of OpenERP, journals and accounts will be created automatically based on these data.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to setup a new bank account. 
+          </p><p>
+            Configure your company's bank account and select those that must
+            appear on the report footer.
+          </p><p>
+            If you use the accounting application of OpenERP, journals and
+            accounts will be created automatically based on these data.
+          </p>
+        </field>
     </record>
     <menuitem
         sequence="0"
         parent="account.account_account_menu"
         id="menu_action_bank_tree"
         action="action_bank_tree"/>
-
-
-    <record id="account_configuration_bank_todo" model="ir.actions.todo">
-        <field name="action_id" ref="action_bank_tree"/>
-        <field name="category_id" ref="category_accounting_configuration"/>
-        <field name="sequence">4</field>
-    </record>
-
 
 </data>
 </openerp>

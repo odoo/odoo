@@ -26,8 +26,8 @@ from osv import osv, fields
 from tools.misc import email_re
 from tools.translate import _
 
-from base.res.res_users import _lang_get
-
+from base.res.res_partner import _lang_get
+_logger = logging.getLogger(__name__)
 
 
 # welcome email sent to new portal users (note that calling tools.translate._
@@ -62,18 +62,17 @@ def random_password():
     random.shuffle(chars)
     return ''.join(chars)
 
-def extract_email(user_email):
+def extract_email(email):
     """ extract the email address from a user-friendly email address """
-    m = email_re.search(user_email or "")
+    m = email_re.search(email or "")
     return m and m.group(0) or ""
 
 
 
 class wizard(osv.osv_memory):
     """
-        A wizard to create portal users from instances of either 'res.partner'
-        or 'res.partner.address'.  The purpose is to provide an OpenERP database
-        access to customers or suppliers.
+        A wizard to create portal users from instances of 'res.partner'. The purpose
+        is to provide an OpenERP database access to customers or suppliers.
     """
     _name = 'res.portal.wizard'
     _description = 'Portal Wizard'
@@ -91,30 +90,36 @@ class wizard(osv.osv_memory):
     def _default_user_ids(self, cr, uid, context):
         """ determine default user_ids from the active records """
         def create_user_from_address(address):
-            return {    # a user config based on a contact (address)
-                'name': address.name,
-                'user_email': extract_email(address.email),
-                'lang': address.partner_id and address.partner_id.lang or 'en_US',
-                'partner_id': address.partner_id and address.partner_id.id,
-            }
+            if isinstance(address, int):
+                res_partner_obj = self.pool.get('res.partner')
+                address = res_partner_obj.browse(cr, uid, address, context=context)
+                lang = address.id and address.lang or 'en_US'
+                partner_id = address.id
+                
+            else:
+                lang = address.parent_id and address.parent_id.lang or 'en_US'
+                partner_id = address.parent_id and address.parent_id.id
+            
+            return{
+                   'name': address.name,
+                   'email': extract_email(address.email),
+                   'lang': lang,
+                   'partner_id': partner_id,
+                   }
         
         user_ids = []
-        if context.get('active_model') == 'res.partner.address':
-            address_obj = self.pool.get('res.partner.address')
-            address_ids = context.get('active_ids', [])
-            addresses = address_obj.browse(cr, uid, address_ids, context)
-            user_ids = map(create_user_from_address, addresses)
-        
-        elif context.get('active_model') == 'res.partner':
+        if context.get('active_model') == 'res.partner':
             partner_obj = self.pool.get('res.partner')
             partner_ids = context.get('active_ids', [])
             partners = partner_obj.browse(cr, uid, partner_ids, context)
             for p in partners:
                 # add one user per contact, or one user if no contact
-                if p.address:
-                    user_ids.extend(map(create_user_from_address, p.address))
+                if p.child_ids:
+                    user_ids.extend(map(create_user_from_address, p.child_ids))
+                elif p.is_company == False and p.customer == True:
+                    user_ids.extend(map(create_user_from_address, [p.id]))
                 else:
-                    user_ids.append({'lang': p.lang or 'en_US', 'partner_id': p.id})
+                    user_ids.append({'lang': p.lang or 'en_US', 'parent_id': p.id})
         
         return user_ids
 
@@ -131,7 +136,7 @@ class wizard(osv.osv_memory):
         
         user_obj = self.pool.get('res.users')
         user = user_obj.browse(cr, ROOT_UID, uid, context0)
-        if not user.user_email:
+        if not user.email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
@@ -139,7 +144,7 @@ class wizard(osv.osv_memory):
         portal_obj = self.pool.get('res.portal')
         for wiz in self.browse(cr, uid, ids, context):
             # determine existing users
-            login_cond = [('login', 'in', [u.user_email for u in wiz.user_ids])]
+            login_cond = [('login', 'in', [u.email for u in wiz.user_ids])]
             existing_uids = user_obj.search(cr, ROOT_UID, login_cond)
             existing_users = user_obj.browse(cr, ROOT_UID, existing_uids)
             existing_logins = [u.login for u in existing_users]
@@ -147,13 +152,15 @@ class wizard(osv.osv_memory):
             # create new users in portal (skip existing logins)
             new_users_data = [ {
                     'name': u.name,
-                    'login': u.user_email,
+                    'login': u.email,
                     'password': random_password(),
-                    'user_email': u.user_email,
-                    'context_lang': u.lang,
+                    'email': u.email,
+                    'lang': u.lang,
                     'share': True,
+                    'action_id': wiz.portal_id.home_action_id and wiz.portal_id.home_action_id.id or False,
                     'partner_id': u.partner_id and u.partner_id.id,
-                } for u in wiz.user_ids if u.user_email not in existing_logins ]
+                    'groups_id': [(6, 0, [])],
+                } for u in wiz.user_ids if u.email not in existing_logins ]
             portal_obj.write(cr, ROOT_UID, [wiz.portal_id.id],
                 {'users': [(0, 0, data) for data in new_users_data]}, context0)
             
@@ -168,18 +175,18 @@ class wizard(osv.osv_memory):
             dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
             dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
             for dest_user in dest_users:
-                context['lang'] = dest_user.context_lang
+                context['lang'] = dest_user.lang
                 data['login'] = dest_user.login
                 data['password'] = dest_user.password
                 data['name'] = dest_user.name
                 
-                email_from = user.user_email
-                email_to = dest_user.user_email
+                email_from = user.email
+                email_to = dest_user.email
                 subject = _(WELCOME_EMAIL_SUBJECT) % data
                 body = _(WELCOME_EMAIL_BODY) % data
                 res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
                 if not res:
-                    logging.getLogger('res.portal.wizard').warning(
+                    _logger.warning(
                         'Failed to send email from %s to %s', email_from, email_to)
         
         return {'type': 'ir.actions.act_window_close'}
@@ -201,8 +208,8 @@ class wizard_user(osv.osv_memory):
         'name': fields.char(size=64, required=True,
             string='User Name',
             help="The user's real name"),
-        'user_email': fields.char(size=64, required=True,
-            string='E-mail',
+        'email': fields.char(size=64, required=True,
+            string='Email',
             help="Will be used as user login.  "  
                  "Also necessary to send the account information to new users"),
         'lang': fields.selection(_lang_get, required=True,
@@ -215,7 +222,7 @@ class wizard_user(osv.osv_memory):
     def _check_email(self, cr, uid, ids):
         """ check syntax of email address """
         for wuser in self.browse(cr, uid, ids):
-            if not email_re.match(wuser.user_email): return False
+            if not email_re.match(wuser.email): return False
         return True
 
     _constraints = [

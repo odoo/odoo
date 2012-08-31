@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-01-24 19:21+0000\n"
+"PO-Revision-Date: 2012-05-10 18:01+0000\n"
 "Last-Translator: Grzegorz Grzelak (OpenGLOBE.pl) <grzegorz@openglobe.pl>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:30+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:18+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -59,7 +59,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.cat1
+#: model:product.category,name:product.product_category_1
 msgid "Sellable"
 msgstr "Do sprzedaży"
 
@@ -477,7 +477,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Końcowa data ważności wersji cennika."
 
 #. module: product
-#: model:product.category,name:product.cat0
+#: model:product.category,name:product.product_category_0
 msgid "All products"
 msgstr "Wszystkie produkty"
 
@@ -781,7 +781,7 @@ msgstr ""
 "(jeśli zdefiniowana) lub dla jednostki domyślnej w produkcie."
 
 #. module: product
-#: model:product.category,name:product.product_category_accessories
+#: model:product.category,name:product.product_category_5
 msgid "Accessories"
 msgstr "Akcesoria"
 
@@ -1054,7 +1054,7 @@ msgstr "Num."
 
 #. module: product
 #: view:product.price_list:0
-msgid "Calculate Product Price per unit base on pricelist version."
+msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Oblicz cenę produktu na jednostkę bazową dla wersji cennika."
 
 #. module: product
@@ -1242,7 +1242,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,weight_net:0
-msgid "Net weight"
+msgid "Net Weight"
 msgstr "Waga netto"
 
 #. module: product
@@ -1293,7 +1293,7 @@ msgstr ""
 "Główny dostawca, czyli ten który ma najwyższy priorytet w liście dostawców."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
+#: model:product.category,name:product.product_category_6
 #: view:product.product:0
 msgid "Services"
 msgstr "Usługi"
@@ -1382,7 +1382,7 @@ msgid "Minimal Quantity"
 msgstr "Minimalna ilość"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
+#: model:product.category,name:product.product_category_9
 msgid "PC"
 msgstr "Komputer"
 
@@ -1470,7 +1470,7 @@ msgstr "Jednostka miary zakupu"
 
 #. module: product
 #: field:product.template,supply_method:0
-msgid "Supply method"
+msgid "Supply Method"
 msgstr "Metoda zaopatrzenia"
 
 #. module: product
@@ -1771,7 +1771,7 @@ msgstr "Przypisuje priorytet do dostawcy produktu w listy.."
 
 #. module: product
 #: field:product.template,uom_id:0
-msgid "Default Unit Of Measure"
+msgid "Default Unit of Measure"
 msgstr "Domyślna jednostka miary"
 
 #. module: product
@@ -2210,7 +2210,7 @@ msgstr "Min. marża ceny"
 
 #. module: product
 #: field:product.template,weight:0
-msgid "Gross weight"
+msgid "Gross Weight"
 msgstr "Waga brutto"
 
 #. module: product
@@ -2406,7 +2406,7 @@ msgid "Category Type"
 msgstr "Typ Kategorii"
 
 #. module: product
-#: model:product.category,name:product.cat2
+#: model:product.category,name:product.product_category_2
 msgid "Private"
 msgstr "Prywatne"
 
@@ -2442,6 +2442,9 @@ msgstr "Upust cenowy"
 #~ msgstr ""
 #~ "Minimalna ilość, którą można zakupić od tego dostawcy, wyrażona w domyślnej "
 #~ "jednostce miary."
+
+#~ msgid "Net weight"
+#~ msgstr "Waga netto"
 
 #~ msgid "Prices Types"
 #~ msgstr "Typy cen"
@@ -2494,6 +2497,9 @@ msgstr "Upust cenowy"
 
 #~ msgid "Price list"
 #~ msgstr "Cennik"
+
+#~ msgid "Gross weight"
+#~ msgstr "Waga brutto"
 
 #~ msgid "Pricelists Types"
 #~ msgstr "Typy cenników"
@@ -2613,6 +2619,9 @@ msgstr "Upust cenowy"
 #~ msgstr ""
 #~ "Ilości produktów, które wg planu mają dotrzeć do wybranej strefy magazynowej "
 #~ "lub do wszystkich stref wewnętrznych, jeśli strefy nie wybrano."
+
+#~ msgid "Supply method"
+#~ msgstr "Metoda zaopatrzenia"
 
 #~ msgid "Real Stock"
 #~ msgstr "Zapas rzeczywisty"
@@ -2770,10 +2779,16 @@ msgstr "Upust cenowy"
 #~ msgid "Stockable"
 #~ msgstr "Rejestrowany"
 
+#~ msgid "Default Unit Of Measure"
+#~ msgstr "Domyślna jednostka miary"
+
 #~ msgid ""
 #~ "Choose here the Unit of Measure in which the prices and quantities are "
 #~ "expressed below."
 #~ msgstr "Wybierz Jednostkę miary, w której są wyrażone ilości i ceny poniżej."
+
+#~ msgid "Calculate Product Price per unit base on pricelist version."
+#~ msgstr "Oblicz cenę produktu na jednostkę bazową dla wersji cennika."
 
 #, python-format
 #~ msgid ""

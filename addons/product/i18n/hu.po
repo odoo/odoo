@@ -7,15 +7,15 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2011-02-10 09:07+0000\n"
+"PO-Revision-Date: 2012-05-10 18:19+0000\n"
 "Last-Translator: NOVOTRADE RENDSZERHÁZ ( novotrade.hu ) "
 "<openerp@novotrade.hu>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:30+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:18+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -60,7 +60,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.cat1
+#: model:product.category,name:product.product_category_1
 msgid "Sellable"
 msgstr "Értékesíthető"
 
@@ -482,7 +482,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Záró dátum, ameddig ez az árlista verzió érvényes."
 
 #. module: product
-#: model:product.category,name:product.cat0
+#: model:product.category,name:product.product_category_0
 msgid "All products"
 msgstr "Minden termék"
 
@@ -562,7 +562,7 @@ msgstr "Doboz 20x20x40"
 #. module: product
 #: view:product.pricelist.item:0
 msgid "Price Computation"
-msgstr "Árszámítás"
+msgstr "Ár számítása"
 
 #. module: product
 #: model:res.groups,name:product.group_uos
@@ -789,7 +789,7 @@ msgstr ""
 "alapértelmezett mértékegysége vagy bármely mértékegysége más."
 
 #. module: product
-#: model:product.category,name:product.product_category_accessories
+#: model:product.category,name:product.product_category_5
 msgid "Accessories"
 msgstr "Kiegészítők"
 
@@ -1066,7 +1066,7 @@ msgstr "Sorszám"
 
 #. module: product
 #: view:product.price_list:0
-msgid "Calculate Product Price per unit base on pricelist version."
+msgid "Calculate Product Price per Unit Based on Pricelist Version."
 msgstr "Kiszámítja a termékárat egységenként az árlista verziója alapján."
 
 #. module: product
@@ -1256,7 +1256,7 @@ msgstr ""
 
 #. module: product
 #: field:product.template,weight_net:0
-msgid "Net weight"
+msgid "Net Weight"
 msgstr "Nettó súly"
 
 #. module: product
@@ -1307,7 +1307,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Főszállító, aki a legelső a sorban a szállítók listáján."
 
 #. module: product
-#: model:product.category,name:product.product_category_services
+#: model:product.category,name:product.product_category_6
 #: view:product.product:0
 msgid "Services"
 msgstr "Szolgáltatások"
@@ -1396,7 +1396,7 @@ msgid "Minimal Quantity"
 msgstr "Minimum mennyiség"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
+#: model:product.category,name:product.product_category_9
 msgid "PC"
 msgstr "PC"
 
@@ -1485,7 +1485,7 @@ msgstr "Beszerzés mértékegysége"
 
 #. module: product
 #: field:product.template,supply_method:0
-msgid "Supply method"
+msgid "Supply Method"
 msgstr "Ellátási mód"
 
 #. module: product
@@ -1790,7 +1790,7 @@ msgstr "A szállítói terméklistához rendeli a prioritást."
 
 #. module: product
 #: field:product.template,uom_id:0
-msgid "Default Unit Of Measure"
+msgid "Default Unit of Measure"
 msgstr "Alapértelmezett mértékegység"
 
 #. module: product
@@ -2238,7 +2238,7 @@ msgstr "Min. árrés"
 
 #. module: product
 #: field:product.template,weight:0
-msgid "Gross weight"
+msgid "Gross Weight"
 msgstr "Bruttó súly"
 
 #. module: product
@@ -2436,7 +2436,7 @@ msgid "Category Type"
 msgstr "Kategóriatípus"
 
 #. module: product
-#: model:product.category,name:product.cat2
+#: model:product.category,name:product.product_category_2
 msgid "Private"
 msgstr "Privát"
 
@@ -2464,6 +2464,9 @@ msgstr "Árengedmény"
 #~ "unit of measure."
 #~ msgstr "Minimális beszerzési mennyiség, alap mértékegységben kifejezve"
 
+#~ msgid "Net weight"
+#~ msgstr "Nettó súly"
+
 #~ msgid "Units of Measure Categories"
 #~ msgstr "Mértékegység kategóriák"
 
@@ -2475,6 +2478,9 @@ msgstr "Árengedmény"
 
 #~ msgid "Weigths"
 #~ msgstr "Súlyok"
+
+#~ msgid "Gross weight"
+#~ msgstr "Bruttó súly"
 
 #~ msgid "Pricelists Types"
 #~ msgstr "Árlista típusok"
@@ -2493,6 +2499,9 @@ msgstr "Árengedmény"
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "Hiba! Nem hozhat létre rekurzív kategóriákat."
+
+#~ msgid "Default Unit Of Measure"
+#~ msgstr "Alapértelmezett mértékegység"
 
 #~ msgid "Error ! You can not create recursive associated members."
 #~ msgstr "Hiba! Nem hozhat létre rekurzív társult tagokat."
@@ -2591,12 +2600,18 @@ msgstr "Árengedmény"
 #~ "Elszállítandó termékek mennyisége a kiválasztott helyszíneken vagy az összes "
 #~ "belső helyszínen, ha egyet sem választott ki."
 
+#~ msgid "Supply method"
+#~ msgstr "Ellátási mód"
+
 #~ msgid ""
 #~ "Current quantities of products in selected locations or all internal if none "
 #~ "have been selected."
 #~ msgstr ""
 #~ "Termékek jelenlegi mennyisége a kiválasztott helyszíneken vagy az összes "
 #~ "belső helyszínenen, ha egyet sem választott ki."
+
+#~ msgid "Calculate Product Price per unit base on pricelist version."
+#~ msgstr "Kiszámítja a termékárat egységenként az árlista verziója alapján."
 
 #~ msgid ""
 #~ "Choose here the Unit of Measure in which the prices and quantities are "

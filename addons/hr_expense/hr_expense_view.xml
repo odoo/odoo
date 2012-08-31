@@ -6,7 +6,6 @@
 
         <record id="view_expenses_line_tree" model="ir.ui.view">
             <field name="name">hr.expense.line.tree</field>
-            <field name="type">tree</field>
             <field name="model">hr.expense.line</field>
             <field name="arch" type="xml">
                 <tree string="Expense Lines">
@@ -14,7 +13,7 @@
                     <field name="date_value"/>
                     <field name="name"/>
                     <field name="ref"/>
-                    <field domain="[('type','=','normal'), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
                     <field name="unit_amount"/>
                     <field name="unit_quantity"/>
                     <field name="total_amount" sum="Total"/>
@@ -25,18 +24,16 @@
         <record id="view_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" colors="blue:state=='draft'">
                     <field name="employee_id"/>
+                    <field name="department_id" invisible="1"/>
                     <field name="date"/>
                     <field name="user_id" invisible="1"/>
                     <field name="name"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="amount"/>
                     <field name="state"/>
-                    <button name="confirm" states="draft" string="Confirm" type="workflow" icon="gtk-apply"/>
-                    <button name="refuse" states="confirm,draft,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user"/>
                 </tree>
             </field>
         </record>
@@ -44,13 +41,11 @@
         <record id="view_editable_expenses_tree" model="ir.ui.view">
             <field name="name">hr.expense.expense.tree</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'"  string="Expenses" editable="top">
+                <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'"  string="Expenses" editable="top">
                     <field name="employee_id"/>
                     <field name="date"/>
-                    <field name="department_id" groups="base.group_extended"/>
-                    <field name="ref"/>
+                    <field name="department_id"/>
                     <field name="name"/>
                     <field name="amount"/>
                     <field name="state"/>
@@ -62,68 +57,79 @@
 
         <record id="view_expenses_form" model="ir.ui.view">
             <field name="name">hr.expense.form</field>
-            <field name="type">form</field>
             <field name="model">hr.expense.expense</field>
             <field name="arch" type="xml">
-                <form string="Expenses Sheet">
-                    <group colspan="4" col="6">
-                        <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
-                        <field name="name"/>
-                        <field name="ref" groups="base.group_extended"/>
-                        <field name="date"/>
-                        <field name="currency_id"/>
-                        <field name="department_id" groups="base.group_extended"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
+                <form string="Expenses Sheet" version="7.0">
+                <header>
+                    <button name="confirm" states="draft" string="Submit to Manager" type="workflow" class="oe_highlight"/>
+                    <button name="validate" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" groups="base.group_hr_user" />
+                    <button name="done" states="accepted" string="Generate Accounting Entries" type="workflow" groups="account.group_account_invoice" class="oe_highlight"/>
+                    <button name="action_view_receipt" states="done" string="Open Receipt" type="object"/>
+                    <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" groups="base.group_hr_user" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,done" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" on_change="onchange_employee_id(employee_id)"/>
+                            <field name="date"/>
+                            <field name="department_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="user_valid"/>
+                            <field name="currency_id" groups="base.group_multi_currency" on_change="onchange_currency_id(currency_id, company_id)"/>
+                        </group>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Description">
-                            <newline/>
-                            <field colspan="4" name="line_ids" nolabel="1" context="{'currency_id': currency_id}">
-                                <form string="Expense Lines">
-                                    <group col="6" colspan="4">
-                                        <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
-                                        <field name="name" colspan="4"/>
-                                        <newline/>
-                                        <field name="unit_amount"/>
-                                        <field name="unit_quantity"/>
-                                        <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)"/>
-                                    </group>
-                                    <group colspan="2" col="2" groups="analytic.group_analytic_accounting">
-                                        <separator string="Customer Project" colspan="2"/>
-                                        <field domain="[('type','=','normal')]" name="analytic_account"/>
-                                    </group>
-                                    <group colspan="2" col="2">
-                                        <separator string="References" colspan="2"/>
-                                        <field name="date_value" />
-                                        <field name="ref"/>
+                            <field name="line_ids" context="{'currency_id': currency_id}">
+                                <form string="Expense Lines" version="7.0">
+                                    <group>
+                                        <group>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="name"/>
+                                            <field name="ref"/>
+                                            <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                        </group>
+                                        <group>
+                                            <field name="unit_amount"/>
+                                            <label for="unit_quantity"/>
+                                            <div>
+                                                <field name="unit_quantity" class="oe_inline"/> 
+                                                <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" class="oe_inline"/>
+                                            </div>
+                                            <field name="date_value" />
+                                        </group>
                                     </group>
                                 </form>
                             </field>
-                            <field name="state" widget="statusbar" statusbar_visible="draft,confirm,accepted,invoiced" statusbar_colors='{"confirm":"blue","cancelled":"red"}'/>
-                            <group col="6" colspan="2">
-                                <button name="draft" states="confirm,cancelled" string="Set to Draft" type="workflow" icon="gtk-convert" groups="base.group_hr_user"/>
-                                <button name="refuse" states="confirm,accepted" string="Refuse" type="workflow" icon="gtk-no" groups="base.group_hr_user" />
-                                <button name="confirm" states="draft" string="Submit to Manager" type="workflow" icon="gtk-apply"/>
-                                <button name="invoice" states="accepted" string="Invoice" type="object" icon="gtk-go-forward" groups="base.group_hr_user"/>
-                                <button name="validate" states="confirm" string="Approve" type="workflow" icon="gtk-go-forward" groups="base.group_hr_user"/>
+                            <group>
+                                <div>
+                                    <separator string="Notes"/>
+                                    <field name="note" placeholder="Free Notes"/>
+                                </div>
+                                <group class="oe_subtotal_footer">
+                                    <field name="amount"/>
+                                </group>
                             </group>
                         </page>
-                        <page string="Other Info" groups="base.group_extended">
-                            <group col="2" colspan="2">
-                            <separator colspan="2" string="Accounting data"/>
-                            <field name="journal_id"/>
-                            <field name="invoice_id" context="{'type':'in_invoice', 'journal_type': 'purchase'}"/>
+                        <page string="Other Info">
+                            <group>
+                                <group string="Accounting Data">
+                                    <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
+                                    <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
+                                </group>
                             </group>
-                            <group col="2" colspan="2" groups="base.group_no_one">
-                                <separator colspan="2" string="Validation"/>
-                                <field name="date_confirm" readonly = "1"/>
-                                <field name="date_valid" readonly = "1"/>
-                                <field name="user_valid"/>
-                            </group>
-                            <separator colspan="4" string="Notes"/>
-                            <field colspan="4" name="note" nolabel="1"/>
                         </page>
                     </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                </div>
                 </form>
             </field>
         </record>
@@ -132,38 +138,21 @@
         <record id="view_hr_expense_filter" model="ir.ui.view">
             <field name="name">hr.expense.expense.filter</field>
             <field name="model">hr.expense.expense</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Expense">
-                    <group>
-                      <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
-                      <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve"
-                        help="Confirmed Expense"/>
-                      <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay"
-                        help="Expenses to Invoice"/>
-                      <separator orientation="vertical"/>
-                      <filter icon="terp-go-month" string="This Month" name="this"
-                              domain="[('date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"/>
-                      <separator orientation="vertical"/>
-                      <field name="employee_id"/>
-                      <field name="date"/>
-                      <field name="department_id" widget="selection" string="Department" context="{'invisible_department': False}">
-                   <filter icon="terp-personal+" context="{'invisible_department': False}" domain="[('department_id','=',context.get('department_id',False))]" help="My Department"/>
-                    </field>
-                      <field name="name"/>
-                      <field name="user_id"  string="User">
-                      <filter icon="terp-personal+" domain="[('department_id','=',context.get('department_id',False))]"
-                            string="Expenses of My Department"/>
-                      </field>
-                </group>
-                <newline />
-                <group expand="0" string="Group By...">
-                    <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
-                </group>
+                    <field name="name" string="Expenses"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" domain="[('state','=','draft')]" string="New" help="New Expense"/>
+                    <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" help="Confirmed Expense"/>
+                    <filter icon="terp-dolar" domain="[('state','=','accepted')]" string="To Pay" help="Expenses to Invoice"/>
+                    <field name="employee_id"/>
+                    <field name="department_id" string="Department" context="{'invisible_department': False}"/>
+                    <field name="user_id"  string="User"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Employee" icon="terp-personal" domain="[]" context="{'group_by':'employee_id'}"/>
+                        <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'date'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -174,7 +163,16 @@
             <field name="view_type">form</field>
             <field name="search_view_id" ref="view_hr_expense_filter"/>
             <field name="view_id" ref="view_expenses_tree"/>
-            <field name="help">The OpenERP expenses management module allows you to track the full flow. Every month, the employees record their expenses. At the end of the month, their managers validates the expenses sheets which creates costs on projects/analytic accounts. The accountant validates the proposed entries and the employee can be reimbursed. You can also reinvoice the customer at the end of the flow.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register new expenses. 
+              </p><p>
+                OpenERP will ensure the whole process is followed; the expense
+                sheet is validated by manager(s), the employee is reimbursed
+                from his expenses, some expenses must be re-invoiced to the
+                customers.
+              </p>
+            </field>
         </record>
 
         <menuitem id="next_id_49" name="Expenses" sequence="15" parent="hr.menu_hr_root"/>
@@ -184,7 +182,6 @@
             <field name="name">product.product.expense.form</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <field name="purchase_ok" position="after">
             <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>

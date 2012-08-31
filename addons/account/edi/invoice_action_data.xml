@@ -38,16 +38,16 @@
         <!--Email template -->
         <record id="email_template_edi_invoice" model="email.template">
             <field name="name">Automated Invoice Notification Mail</field>
-            <field name="email_from">${object.user_id.user_email or object.company_id.email or 'noreply@localhost'}</field>
+            <field name="email_from">${object.user_id.email or object.company_id.email or 'noreply@localhost'}</field>
             <field name="subject">${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })</field>
-            <field name="email_to">${object.address_invoice_id.email or ''}</field>
+            <field name="email_to">${object.partner_id.email or ''}</field>
             <field name="model_id" ref="account.model_account_invoice"/>
             <field name="auto_delete" eval="True"/>
             <field name="body_html"><![CDATA[
 <div style="font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, 255, 255); ">
 
-    <p>Hello${object.address_invoice_id.name and ' ' or ''}${object.address_invoice_id.name or ''},</p>
-    
+    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},</p>
+
     <p>A new invoice is available for ${object.partner_id.name}: </p>
     
     <p style="border-left: 1px solid #8e0000; margin-left: 30px;">
@@ -58,7 +58,7 @@
        % if object.origin:
        &nbsp;&nbsp;Order reference: ${object.origin}<br />
        % endif
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.user_email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Invoice%20${object.number}">${object.user_id.name}</a>
     </p>  
     
     <p>
@@ -124,7 +124,7 @@
 </div>
             ]]></field>
             <field name="body_text"><![CDATA[
-Hello${object.address_invoice_id.name and ' ' or ''}${object.address_invoice_id.name or ''},
+Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
 
 A new invoice is available for ${object.partner_id.name}:
        | Invoice number: *${object.number}*
@@ -133,7 +133,7 @@ A new invoice is available for ${object.partner_id.name}:
        % if object.origin:
        | Order reference: ${object.origin}
        % endif
-       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
+       | Your contact: ${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
 
 You can view the invoice document, download it and pay online using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
@@ -160,7 +160,7 @@ Thank you for choosing ${object.company_id.name}!
 
 
 --
-${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
+${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
 ${object.company_id.name}
 % if object.company_id.street:
 ${object.company_id.street or ''}

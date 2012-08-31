@@ -24,22 +24,24 @@
     'name': 'Events Sales',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Creating registration with sale orders.
 =======================================
 
-This module allows you to automatize and connect your registration creation with your main sale flow and, therefore, to enable the invoicing feature of registrations.
+This module allows you to automatize and connect your registration creation with
+your main sale flow and therefore, to enable the invoicing feature of registrations.
 
-It defines a new kind of service products that offers you the possibility to choose an event category associated with it. When you encode a sale order for that product, you will be able to choose an existing event of that category and when you confirm your sale order it will automatically create a registration for this event.
+It defines a new kind of service products that offers you the possibility to
+choose an event category associated with it. When you encode a sale order for
+that product, you will be able to choose an existing event of that category and
+when you confirm your sale order it will automatically create a registration for
+this event.
 """,
     'author': 'OpenERP SA',
     'depends': ['event','sale','sale_crm'],
-    'update_xml': [
-        'event_sale_view.xml',
-        'event_demo.xml',
-    ],
-    'test':['test/confirm.yml'],
+    'data': ['event_sale_view.xml'],
+    'demo': ['event_demo.xml'],
+    'test': ['test/confirm.yml'],
     'installable': True,
     'active': False,
 }

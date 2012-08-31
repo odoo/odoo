@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!-- Update Preferences form !-->
+        <record id="view_users_form_simple_modif_mail" model="ir.ui.view">
+            <field name="name">res.users.preferences.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form_simple_modif"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="email" position="before">
+                    <field name="notification_email_pref" readonly="0"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
+        <!-- Update user form !-->
+        <record id="view_users_form_mail" model="ir.ui.view">
+            <field name="name">res.users.form.mail</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_form"/>
+            <field name="arch" type="xml">
+            <data>
+                <field name="email" position="before">
+                    <field name="notification_email_pref"/>
+                </field>
+                <field name="email" position="after">
+                    <field name="alias_domain" invisible="1"/>
+                    <field name="alias_id" readonly="1" required="0" attrs="{'invisible': [('alias_domain', '=', False)]}"/>
+                </field>
+            </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>
