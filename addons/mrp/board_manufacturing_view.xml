@@ -31,7 +31,16 @@
                   icon="terp-graph"
                   id="menu_board_manufacturing"
                   parent="base.menu_reporting_dashboard"
-                  sequence="30"/>
+                  sequence="30"
+                  />
+                  
+                  <menuitem action="purchase.open_board_purchase"
+                  icon="terp-graph"
+                  id="purchase.menu_board_purchase" 
+                  parent="base.menu_reporting_dashboard"
+                  sequence="20"
+                  groups="mrp.group_mrp_manager"/>
+                 
 
     </data>
 </openerp>
