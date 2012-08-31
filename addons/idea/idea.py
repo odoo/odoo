@@ -67,7 +67,7 @@ class idea_idea(osv.osv):
 
     def idea_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state': 'cancel' })
-        self.message_post(cr, uid, ids, body=_('Idea canceled.'), subtype="cancel", context=context)
+        self.message_post(cr, uid, ids, body=_('Idea canceled.'), subtype="cancelled", context=context)
         return True
 
     def idea_open(self, cr, uid, ids, context={}):
