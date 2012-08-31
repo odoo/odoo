@@ -194,12 +194,27 @@ class account_cash_statement(osv.osv):
             journal = self.pool.get('account.journal').browse(cr, uid, vals['journal_id'], context=context)
         if journal and (journal.type == 'cash') and not vals.get('details_ids'):
             vals['details_ids'] = []
+
+            last_pieces = None
+
+            if journal.with_last_closing_balance == True:
+                domain = [('journal_id', '=', journal.id),
+                          ('state', '=', 'confirm')]
+                last_bank_statement_ids = self.search(cr, uid, domain, limit=1, order='create_date desc', context=context)
+                if last_bank_statement_ids:
+                    last_bank_statement = self.browse(cr, uid, last_bank_statement_ids[0], context=context)
+
+                    last_pieces = dict(
+                        (line.pieces, line.number_closing) for line in last_bank_statement.details_ids
+                    )
+
             for value in journal.cashbox_line_ids:
                 nested_values = {
                     'number_closing' : 0,
-                    'number_opening' : 0,
+                    'number_opening' : last_pieces.get(value.pieces, 0) if isinstance(last_pieces, dict) else 0,
                     'pieces' : value.pieces
                 }
+
                 vals['details_ids'].append([0, False, nested_values])
 
         res_id = super(account_cash_statement, self).create(cr, uid, vals, context=context)

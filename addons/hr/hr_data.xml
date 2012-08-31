@@ -2,14 +2,16 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage your human resources in OpenERP: employees and hierarchy, HR departments and jobs.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Employee Directory application installed!</field>
+            <field name="body">Manage your human resources with OpenERP: employees and their hierarchy, HR departments and job positions.
 
-More HR features are available from the following modules: Recruitment Process (manage job positions and recruitment), Timesheets Validation (record timesheets and attendance), Leaves Management (keep track of employee leaves), Expenses Management (manage employee expenses), Employee Appraisals (organize employee surveys, where employees evaluate their subordinates or their manager.)</value>
-            <value>Module Employee Directory has been installed</value>
-        </function>
+More HR features are available via extra applications: Recruitment Process (manage job positions and recruitment), Timesheet Validation (record timesheets and attendance),
+Leave Management (keep track of employee leaves), Expense Management (manage employee expenses), Employee Appraisals (organize employee surveys, where employees evaluate their subordinates or their manager).</field>
+        </record>
 
         <record id="employee" model="hr.employee">
             <field name="name">Administrator</field>
