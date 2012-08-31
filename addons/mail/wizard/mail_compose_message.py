@@ -68,17 +68,19 @@ class mail_compose_message(osv.TransientModel):
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
 
         # get some important values from context
-        composition_mode = context.get('mail.compose.message.mode')
+        composition_mode = context.get('default_composition_mode', context.get('mail.compose.message.mode'))
         model = context.get('default_model', context.get('active_model'))
         res_id = context.get('default_res_id', context.get('active_id'))
         active_id = context.get('active_id')
         active_ids = context.get('active_ids')
 
         # get default values according to the composition mode
-        if composition_mode in ['reply']:
+        if composition_mode == 'reply':
             vals = self.get_message_data(cr, uid, active_id, context=context)
-        elif composition_mode in ['comment', 'mass_mail'] and model and res_id:
+        elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
+        elif composition_mode == 'mass_mail' and model and active_ids:
+            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -189,91 +191,107 @@ class mail_compose_message(osv.TransientModel):
         """ onchange_content_subtype (values: 'plain' or 'html'). This onchange
             on the subtype allows to have some specific behavior when switching
             between text or html mode.
-            Basically, subject is reset when going out of html mode.
             This method can be overridden for models that want to have their
-            specific behavior.
-        """
+            specific behavior. """
         return {'value': {'content_subtype': value}}
+
+    def _verify_partner_email(self, cr, uid, partner_ids, context=None):
+        """ Verify that selected partner_ids have an email_address defined.
+            Otherwise throw a warning. """
+        partner_wo_email_lst = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            if not partner.email:
+                partner_wo_email_lst.append(partner)
+        if not partner_wo_email_lst:
+            return {}
+        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
+        for partner in partner_wo_email_lst:
+            warning_msg += '\n- %s' % (partner.name)
+        return {'warning': {
+                    'title': _('Partners email addresses not found'),
+                    'message': warning_msg }
+                }
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ onchange_partner_ids (value format: [[6, False, [3, 4]]]). The
             basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
         """
-        partner_ids = value[0][2]
-        partner_wo_email_lst = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
-            if not partner.email:
-                partner_wo_email_lst.append(partner)
-        if not partner_wo_email_lst:
-            return {'value': {}}
-        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
-        for partner in partner_wo_email_lst:
-            warning_msg += '\n- %s' % (partner.name)
-        warning = {
-            'title': _('Partners email addresses not found'),
-            'message': warning_msg,
-        }
-        return {'warning': warning, 'value': {}}
+        res = {'value': {}}
+        if not value or not value[0] or not value[0][0] == 6:
+            return 
+        res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
+        return res
 
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
+        active_ids = context.get('active_ids')
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
-
-            attachment = {}
-            for attach in wizard.attachment_ids:
-                attachment[attach.datas_fname] = attach.datas and attach.datas or False
-
-            # default values, according to the wizard options
-            subject = wizard.subject if wizard.content_subtype == 'html' else False
-            partner_ids = [(4, partner.id) for partner in wizard.partner_ids]
-            body = wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text)
-
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
-            
-            #TODO: TDE: WIP: have to check for mass mail and templates - no time anymore today
-            if context.get('mail.compose.message.mode') == 'mass_mail' and context.get('default_model', False) and context.get('default_res_id', False):
-                active_model = context.get('default_model', False)
-                active_model_pool = self.pool.get(active_model)
-                subject = self.render_template(cr, uid, subject, active_model, active_id)
-                body = self.render_template(cr, uid, wizard.body, active_model, active_id)
 
-                # TODO TDE: find partner_ids
-                # if email_to: find or create a partner
-                if values['email_to']:
-                    partner_id = self.pool.get('mail.thread').message_partner_by_email(cr, uid, values['email_to'], context=context)['partner_id']
-                    if not partner_id:
-                        partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
-                    values['partner_ids'] = [partner_id]
-
-            # determine the ids we are commenting
-            if mass_mail_mode:
-                res_ids = context.get('active_ids', [])
-            else:
-                res_ids = [wizard.res_id]
-            active_model_pool.message_post(cr, uid, res_ids, body=body, subject=subject, msg_type='comment', 
-                attachments=attachment, context=context, partner_ids=partner_ids)
+            # wizard works in batch mode: [res_id] or active_ids
+            res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
+            for res_id in res_ids:
+                # default values, according to the wizard options
+                post_values = {
+                    'subject': wizard.subject if wizard.content_subtype == 'html' else False,
+                    'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
+                    'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
+                    'attachments': [(attach.datas_fname, attach.datas) for attach in wizard.attachment_ids],
+                }
+                # mass mailing: render and override default values
+                if mass_mail_mode and wizard.model:
+                    email_dict = self.render_message(cr, uid, wizard, wizard.model, res_id, context=context)
+                    post_values['subject'] = email_dict.get('subject', False)
+                    post_values['body'] = email_dict.get('body', '')
+                    if email_dict.get('partner_ids'):
+                        post_values['partner_ids'] += [(4, id) for id in email_dict.get('partner_ids')]
+                    if email_dict.get('attachments'):
+                        post_values['attachments'] += [(attach.datas_fname, attach.datas) for attach in email_dict.get('attachments')]
+                # post the message
+                active_model_pool.message_post(cr, uid, res_ids, msg_type='comment', context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
+    def render_message(self, cr, uid, wizard, model, res_id, context=None):
+        """ Generate an email from the template for given (model, res_id) pair.
+            This method is meant to be inherited by email_template that will
+            produce a more complete dictionary, with email_to, ...
+        """
+        # TDE: TODO: to move into mail.compose.message in email template
+        # mails = tools.email_split(email_dict.get('email_to', '')) + tools.email_split(email_dict.get('email_cc', ''))
+        # for mail in mails:
+        #     partner_search_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)
+        #     if partner_search_ids:
+        #         partner_ids.append((4, 0, partner_search_ids[0]))
+        #     else:
+        #         partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
+        #         partner_ids.append((4, 0, partner_id))
+        return {
+            'subject': self.render_template(cr, uid, wizard.subject, model, res_id, context),
+            'body': self.render_template(cr, uid, wizard.body, model, res_id, context),
+            'partner_ids': [],
+            'attachment_ids': [],
+        }
+
     def render_template(self, cr, uid, template, model, res_id, context=None):
-        """Render the given template text, replace mako-like expressions ``${expr}``
-           with the result of evaluating these expressions with an evaluation context
-           containing:
+        """ Render the given template text, replace mako-like expressions ``${expr}``
+            with the result of evaluating these expressions with an evaluation context
+            containing:
 
                 * ``user``: browse_record of the current user
                 * ``object``: browse_record of the document record this mail is
                               related to
                 * ``context``: the context passed to the mail composition wizard
 
-           :param str template: the template text to render
-           :param str model: model name of the document record this mail is related to.
-           :param int res_id: id of the document record this mail is related to.
+            :param str template: the template text to render
+            :param str model: model name of the document record this mail is related to.
+            :param int res_id: id of the document record this mail is related to.
         """
         if context is None:
             context = {}
