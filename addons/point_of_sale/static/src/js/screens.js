@@ -735,6 +735,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             this.validate_button = this.add_action_button({
                     label: 'Validate',
+                    name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
                         self.validateCurrentOrder();
@@ -806,6 +807,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('#payment-paid-total').html(paidTotal.toFixed(2));
             this.$('#payment-remaining').html(remaining.toFixed(2));
             this.$('#payment-change').html(change.toFixed(2));
+            this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {
