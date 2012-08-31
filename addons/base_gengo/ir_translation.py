@@ -73,15 +73,14 @@ class ir_translation(osv.Model):
         return lang in LANG_CODE_MAPPING and LANG_CODE_MAPPING[lang][0] or lang
 
     def _check_lang_support(self, cr, uid, ids, context=None):
-        supported_langs = self._get_all_supported_languages(cr, uid, context=context)
-        if supported_langs:
-            for term in self.browse(cr, uid, ids, context=context):
-                if not term.gengo_translation:
-                    continue
-                tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
-                language = self._get_gengo_corresponding_language(term.lang)
-                if tier not in supported_langs.get(language,[]):
-                    return False
+        for term in self.browse(cr, uid, ids, context=context):
+            if term.gengo_translation:
+                supported_langs = self._get_all_supported_languages(cr, uid, context=context)
+                if supported_langs:
+                    tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
+                    language = self._get_gengo_corresponding_language(term.lang)
+                    if tier not in supported_langs.get(language,[]):
+                        return False
         return True
 
     _constraints = [
