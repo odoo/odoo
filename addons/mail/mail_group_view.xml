@@ -27,10 +27,10 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="{record.message_is_follower.raw_value} oe_group_vignette">
                                 <div class="oe_group_image">
-                                    <a type="edit"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
+                                    <a type="open"><img t-att-src="kanban_image('mail.group', 'image_medium', record.id.value)" class="oe_group_photo" tooltip="kanban-description"/></a>
                                 </div>
                                 <div class="oe_group_details">
-                                    <h4><a type="edit"><field name="name"/></a></h4>
+                                    <h4><a type="open"><field name="name"/></a></h4>
                                     <ul>
                                         <li><t t-raw="record.message_summary.raw_value"/></li>
                                         <li t-if="! record.message_is_follower.raw_value"><a name="message_subscribe_users" string="Join" type="object" class="oe_group_join">Not following</a></li>

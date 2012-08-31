@@ -182,7 +182,7 @@
         <field name="model">product.product</field>
         <field name="inherit_id" ref="product.product_normal_form_view"/>
         <field name="arch" type="xml">
-            <field name="supply_method" position="after">
+            <field name="procure_method" position="before">
                 <group colspan="2" col="2" attrs="{'invisible': [('supply_method','&lt;&gt;','buy')]}">
                 <field name="purchase_requisition"/>
                 </group>

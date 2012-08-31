@@ -244,7 +244,7 @@
                     <templates>
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
-                        <a type="edit" class="oe_module_icon">
+                        <a type="open" class="oe_module_icon">
                            <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
                            <div class="oe_event_month_year">
                              <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
@@ -253,7 +253,7 @@
                            <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
                         </a>
                         <div class="oe_module_desc">
-                            <h4><a type="edit"><field name="name"/></a></h4>
+                            <h4><a type="open"><field name="name"/></a></h4>
                             <p>
                               <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
                               <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
