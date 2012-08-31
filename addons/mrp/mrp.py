@@ -436,8 +436,8 @@ class mrp_production(osv.osv):
         return dest_location_id.id
 
     _columns = {
-        'name': fields.char('Reference', size=64, required=True),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
+        'name': fields.char('Reference', size=64, required=True, states={'in_production':[('readonly',True)]}),
+        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request.", states={'in_production':[('readonly',True)]}),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', select=True),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -452,9 +452,9 @@ class mrp_production(osv.osv):
             readonly=True, states={'draft':[('readonly',False)]}, help="Location where the system will stock the finished products."),
 
         'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
-        'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
-        'date_planned': fields.datetime('Scheduled Date', required=True, select=1),
-        'date_start': fields.datetime('Start Date', select=True),
+        'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date', states={'in_production':[('readonly',True)]}),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=1, states={'in_production':[('readonly',True)]}),
+        'date_start': fields.datetime('Start Date', select=True, states={'in_production':[('readonly',True)]}),
         'date_finished': fields.datetime('End Date', select=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
@@ -462,12 +462,12 @@ class mrp_production(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
-        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
-        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
+        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)],'in_production':[('readonly',True)]}),
+        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))], states={'in_production':[('readonly',True)]}),
+        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)],'in_production':[('readonly',True)]}),
         'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products', domain=[('state','in', ('done', 'cancel'))]),
-        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
-        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
+        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods',states={'in_production':[('readonly',True)]}),
+        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation', states={'in_production':[('readonly',True)]}),
         'state': fields.selection([('draft','New'),('cancel','Cancelled'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('done','Done')],'Status', readonly=True,
                                     help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
                                     \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
@@ -1074,7 +1074,7 @@ class mrp_production_workcenter_line(osv.osv):
     _inherit = ['mail.thread']
 
     _columns = {
-        'name': fields.char('Work Order', size=64, required=True),
+        'name': fields.char('Work Order', size=64, required=True, states={'in_production':[('readonly',True)]}),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
         'cycle': fields.float('Number of Cycles', digits=(16,2)),
         'hour': fields.float('Number of Hours', digits=(16,2)),
