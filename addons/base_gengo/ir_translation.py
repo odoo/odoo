@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 LANG_CODE_MAPPING = {
     'ar_SA': ('ar', 'Arabic'),
