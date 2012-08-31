@@ -189,7 +189,7 @@ class res_users(osv.osv):
         result = super(res_users, self).read(cr, uid, ids, fields, context, load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
         if not canwrite:
-            if isinstance(ids, (int, float)):
+            if isinstance(ids, (int, long)):
                 result = override_password(result)
             else:
                 result = map(override_password, result)
