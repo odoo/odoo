@@ -70,7 +70,7 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         if (this.group_field) {
             fs.push(this.group_field);
         }
-        return fs;
+        return _.uniq(fs);
     },
     on_loaded: function() {
         this.chart = this.fields_view.arch.attrs.type || 'pie';
