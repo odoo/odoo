@@ -26,6 +26,7 @@ import logging
 from lxml import etree
 from lxml.builder import E
 import netsvc
+from openerp import SUPERUSER_ID
 import openerp
 import openerp.exceptions
 from osv import fields,osv
@@ -233,9 +234,9 @@ class res_users(osv.osv):
         dataobj = self.pool.get('ir.model.data')
         result = []
         try:
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_user')
+            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_user')
             result.append(group_id)
-            dummy,group_id = dataobj.get_object_reference(cr, 1, 'base', 'group_partner_manager')
+            dummy,group_id = dataobj.get_object_reference(cr, SUPERUSER_ID, 'base', 'group_partner_manager')
             result.append(group_id)
         except ValueError:
             # If these groups does not exists anymore
@@ -275,7 +276,7 @@ class res_users(osv.osv):
                     break
             else:
                 if 'company_id' in values:
-                    if not (values['company_id'] in self.read(cr, 1, uid, ['company_ids'], context=context)['company_ids']):
+                    if not (values['company_id'] in self.read(cr, SUPERUSER_ID, uid, ['company_ids'], context=context)['company_ids']):
                         del values['company_id']
                 uid = 1 # safe fields only, so we write as super-user to bypass access rights
 
@@ -327,7 +328,7 @@ class res_users(osv.osv):
         return super(res_users, self).copy(cr, uid, id, copydef, context)
 
     def context_get(self, cr, uid, context=None):
-        user = self.browse(cr, 1, uid, context)
+        user = self.browse(cr, SUPERUSER_ID, uid, context)
         result = {}
         for k in self._all_columns.keys():
             if k.startswith('context_'):
@@ -345,7 +346,7 @@ class res_users(osv.osv):
 
     def action_get(self, cr, uid, context=None):
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id(cr, 1, 'base', 'action_res_users_my')
+        data_id = dataobj._get_id(cr, SUPERUSER_ID, 'base', 'action_res_users_my')
         return dataobj.browse(cr, uid, data_id, context=context).res_id
 
     def check_super(self, passwd):
@@ -356,7 +357,7 @@ class res_users(osv.osv):
 
     def check_credentials(self, cr, uid, password):
         """ Override this method to plug additional authentication methods"""
-        res = self.search(cr, 1, [('id','=',uid),('password','=',password)])
+        res = self.search(cr, SUPERUSER_ID, [('id','=',uid),('password','=',password)])
         if not res:
             raise openerp.exceptions.AccessDenied()
 
@@ -372,7 +373,7 @@ class res_users(osv.osv):
             # of them rolled back due to a concurrent access.)
             cr.autocommit(True)
             # check if user exists
-            res = self.search(cr, 1, [('login','=',login)])
+            res = self.search(cr, SUPERUSER_ID, [('login','=',login)])
             if res:
                 user_id = res[0]
                 # check credentials
@@ -537,7 +538,7 @@ class groups_implied(osv.osv):
             return memo[g]
 
         res = {}
-        for g in self.browse(cr, 1, ids, context):
+        for g in self.browse(cr, SUPERUSER_ID, ids, context):
             res[g.id] = map(int, computed_set(g))
         return res
 
@@ -682,7 +683,7 @@ class groups_view(osv.osv):
 
     def get_user_groups_view(self, cr, uid, context=None):
         try:
-            view = self.pool.get('ir.model.data').get_object(cr, 1, 'base', 'user_groups_view', context)
+            view = self.pool.get('ir.model.data').get_object(cr, SUPERUSER_ID, 'base', 'user_groups_view', context)
             assert view and view._table_name == 'ir.ui.view'
         except Exception:
             view = False
