@@ -13,16 +13,16 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- thread_id, body='', subject=False, msg_type='notification', parent_id=False -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Your homepage is a summary of messages you received and key information about documents you follow.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Welcome to OpenERP!</field>
+            <field name="body">Your homepage is a summary of messages you received and key information about documents you follow.
 
 The top menu bar contains all applications you installed. You can use this &lt;i&gt;Settings&lt;/i&gt; menu to install more applications, activate others features or give access to new users.
 
-To setup your preferences (name, email signature, avatar), click on the top right corner.</value>
-            <value>Welcome to OpenERP!</value>
-        </function>
-
+To setup your preferences (name, email signature, avatar), click on the top right corner.</field>
+        </record>
     </data>
 </openerp>

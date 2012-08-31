@@ -124,13 +124,15 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage multi-level projects and tasks.  You can delegate tasks, track the work done on tasks, and review your planning based on the entered data.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Project Management application installed!</field>
+            <field name="body">Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.
 
-You can manage todo lists on tasks by installing the module "Todo Lists", which supports the methodology Getting Things Done (GTD).  You can also manage issues/bugs in projects by installing the module "Issues Tracker."</value>
-            <value>Module Project Management has been installed</value>
-        </function>
+You can manage todo lists on tasks by installing the "Todo Lists" application, supporting the Getting Things Done (GTD) methodology.
+You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</field>
+        </record>
     </data>
 </openerp>

@@ -39,6 +39,8 @@ class mail_mail(osv.Model):
     _name = 'mail.mail'
     _description = 'Outgoing Mails'
     _inherits = {'mail.message': 'mail_message_id'}
+    _order = 'id desc'
+
     _columns = {
         'mail_message_id': fields.many2one('mail.message', 'Message', required=True, ondelete='cascade'),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing mail server', readonly=1),
@@ -51,13 +53,12 @@ class mail_mail(osv.Model):
         ], 'Status', readonly=True),
         'auto_delete': fields.boolean('Auto Delete',
             help="Permanently delete this email after sending it, to save space"),
-        'user_signature': fields.boolean('Add Signature',
-            help="If checked, the user's signature will be appended to the text version of the message"),
         'references': fields.text('References', help='Message references, such as identifiers of previous messages', readonly=1),
-        'email_from': fields.char('From', size=128, help='Message sender, taken from user preferences.'),
+        'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
-        'email_cc': fields.char('Cc', size=256, help='Carbon copy message recipients'),
-        'reply_to':fields.char('Reply-To', size=256, help='Preferred response address for the message'),
+        'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
+        'reply_to':fields.char('Reply-To', help='Preferred response address for the message'),
+        'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
     }
 
     def _get_default_from(self, cr, uid, context=None):
@@ -71,7 +72,6 @@ class mail_mail(osv.Model):
     _defaults = {
         'state': 'outgoing',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
-        'user_signature': False,
     }
 
     def mark_outgoing(self, cr, uid, ids, context=None):
@@ -145,18 +145,12 @@ class mail_mail(osv.Model):
         ir_mail_server = self.pool.get('ir.mail_server')
         for message in self.browse(cr, uid, ids, context=context):
             try:
-                body = message.body
+                body = message.body_html
 
                 # handle attachments
                 attachments = []
                 for attach in message.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
-
-                #  add signature if flag set
-                if message.user_signature:
-                    signature = message.author_id and message.author_id.user_ids[0].signature or ''
-                    insertion_point = body.find('</html>')
-                    body = body[:insertion_point] + signature + body[:insertion_point]
 
                 # no subject, res_id, model: '<Author> posted on <Resource>'
                 if not message.subject and message.model and message.res_id:
@@ -171,11 +165,11 @@ class mail_mail(osv.Model):
                 # build an RFC2822 email.message.Message object and send it
                 # without queuing
                 msg = ir_mail_server.build_email(
+                    email_from = message.email_from,
+                    email_to = tools.email_split(message.email_to),
                     subject = subject,
                     body = body,
                     body_alternative = body_alternative,
-                    email_from = message.email_from,
-                    email_to = tools.email_split(message.email_to),
                     email_cc = tools.email_split(message.email_cc),
                     reply_to = message.reply_to,
                     attachments = attachments,

@@ -3,14 +3,15 @@
     <data noupdate="1">
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>From the top menu Purchases, create purchase orders to buy products from your suppliers, encode supplier invoices and manage your payments.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Purchase Management application installed!</field>
+            <field name="body">From the top menu Purchases, create purchase orders to buy products from your suppliers, enter supplier invoices and manage payments.
 
-You can also manage purchase requisitions, see the Purchase Settings.</value>
-            <value>Module Purchase Management has been installed.</value>
-        </function>
+You can also manage purchase requisitions, see also the Purchase Settings.</field>
+        </record>
 
         <record id="req_link_purchase_order" model="res.request.link">
             <field name="name">Purchase Order</field>
