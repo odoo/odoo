@@ -130,11 +130,11 @@
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
                                 <h4>
-                                    <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                    <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
                                 </h4>
                                 <ul>
                                     <li id="last_login">

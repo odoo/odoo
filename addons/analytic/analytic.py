@@ -153,9 +153,9 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account Name', size=128, required=True),
+        'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
-        'code': fields.char('Code/Reference', size=24, select=True),
+        'code': fields.char('Reference', size=24, select=True),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
@@ -171,7 +171,7 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
+        'quantity_max': fields.float('Prepaid Units', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),

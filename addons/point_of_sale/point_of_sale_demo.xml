@@ -8,7 +8,7 @@
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
             <field name="ean13">0410200000005</field>
         </record>
-    	  <record id="account.cash_journal" model="account.journal">
+        <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
         </record>
         <record id="base.user_jsmith" model="res.users">
@@ -34,6 +34,10 @@
             <field name="login">bsoap</field>
             <field name="ean13">0420200000004</field>
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
+        </record>
+
+        <record model="pos.config" id="pos_config_main">
+            <field name="journal_ids" eval="[(6, 0, [ref('account.cash_journal'), ref('account.bank_journal')])]" />
         </record>
 
         <!-- Resource: pos.category -->
