@@ -416,15 +416,6 @@ class test_mail(common.TransactionCase):
 
     def test_30_message_read(self):
         """ Tests designed for message_read. """
-        def _simplify_struct(read_dict):
-            res = []
-            for val in read_dict:
-                current = {'_id': val['id']}
-                if val.get('child_ids'):
-                    current['child_ids'] = _simplify_struct(val.get('child_ids'))
-                res.append(current)
-            return res
-
         # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
         # It wil be updated as soon as we have fixed specs !
         cr, uid  = self.cr, self.uid
@@ -432,38 +423,31 @@ class test_mail(common.TransactionCase):
 
         # Test message_read_tree_flatten that flattens a thread according to a given thread_level
         import copy
-        tree = [
-            {'id': 1, 'child_ids':[
-                {'id': 3, 'child_ids': [] },
-                {'id': 4, 'child_ids': [
-                    {'id': 5, 'child_ids': []},
-                    {'id': 12, 'child_ids': []},
+        tree = [{'id': 1, 'child_ids':[
+                    {'id': 3, 'child_ids': [] },
+                    {'id': 4, 'child_ids': [
+                        {'id': 5, 'child_ids': []},
+                        {'id': 12, 'child_ids': []},
+                        ] },
+                    {'id': 8, 'child_ids': [
+                        {'id': 10, 'child_ids': []},
+                        ] },
                     ] },
-                {'id': 8, 'child_ids': [
-                    {'id': 10, 'child_ids': []},
+                {'id': 2, 'child_ids': [
+                    {'id': 7, 'child_ids': [
+                        {'id': 9, 'child_ids': []},
+                        ] },
                     ] },
-                ] },
-            {'id': 2, 'child_ids': [
-                {'id': 7, 'child_ids': [
-                    {'id': 9, 'child_ids': []},
+                {'id': 6, 'child_ids': [
+                    {'id': 11, 'child_ids': [] },
                     ] },
-                ] },
-            {'id': 6, 'child_ids': [
-                {'id': 11, 'child_ids': [] },
-                ] },
-            ]
+                ]
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 0)
-        # self.mail_message._debug_print_tree(new_tree)
-        # print '-------------------'
         self.assertTrue(len(new_tree) == 12, 'Flattening wrongly produced')
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 1)
-        # self.mail_message._debug_print_tree(new_tree)
-        # print '-------------------'
         self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 6 and len(new_tree[1]['child_ids']) == 2 and len(new_tree[2]['child_ids']) == 1,
             'Flattening wrongly produced')
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 2)
-        # self.mail_message._debug_print_tree(new_tree)
-        # print '-------------------'
         self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 3 and len(new_tree[0]['child_ids'][1]) == 2,
             'Flattening wrongly produced')
 
@@ -483,12 +467,10 @@ class test_mail(common.TransactionCase):
 
         # Second try: read with thread_level 1
         tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-        # self.mail_message._debug_print_tree(tree)
         self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 3, 'Incorrect number of child in message_read')
 
         # Third try: read with thread_level 2
         tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2)
-        # self.mail_message._debug_print_tree(tree)
         self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 2 and len(tree[1]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
 
     def test_40_needaction(self):
