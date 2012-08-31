@@ -145,15 +145,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
-            if(this.fields_view.toolbar) {
+            if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            if (self._is_action_enabled('delete')){
+            if (self._is_action_enabled('delete')) {
                 this.sidebar.add_items('other', [
-                    { label: _t('Delete'), callback: self.on_button_delete },
+                    { label: _t('Delete'), callback: self.on_button_delete }
                 ]);
             }
-            if (self._is_action_enabled('create')){
+            if (self._is_action_enabled('create')) {
                 this.sidebar.add_items('other', [
                     { label: _t('Duplicate'), callback: self.on_button_duplicate }
                 ]);
@@ -3469,8 +3469,8 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         }
     },
     do_activate_record: function(index, id) {
-        var self = this, 
-            attr_readonly = (_.has(this.fields_view.arch.attrs, 'edit'))?JSON.parse(this.fields_view.arch.attrs.edit):true;
+        var self = this;
+        var attr_readonly = (_.has(this.fields_view.arch.attrs, 'edit')) ? JSON.parse(this.fields_view.arch.attrs.edit) : true;
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
@@ -3587,7 +3587,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         }).length;
         if (this.options.selectable) { columns++; }
         if (this.options.deletable) { columns++; }
-        if (this.view._is_action_enabled('create')){
+        if (this.view._is_action_enabled('create')) {
             var $cell = $('<td>', {
                 colspan: columns,
                 'class': 'oe_form_field_one2many_list_row_add'

@@ -1358,13 +1358,13 @@ instance.web.View = instance.web.Widget.extend({
     reload: function () {
         return $.when();
     },
-    _is_action_enabled: function(action) {
     /**
-     * Takes action (e.g. create/edit/delete) and return the tag attribute from
-     * the view (e.g. <from string="" create="false" edit="false" delete="false">)
-     * will help to check access ui of the view.
+     * Return whether the user can perform the action ('create', 'edit', 'delete') in this view.
+     * An action is disabled by setting the corresponding attribute in the view's main element,
+     * like: <form string="" create="false" edit="false" delete="false">
      */
-        return (_.has(this.fields_view.arch.attrs, action))?JSON.parse(this.fields_view.arch.attrs[action]):true;
+    _is_action_enabled: function(action) {
+        return (_.has(this.fields_view.arch.attrs, action)) ? JSON.parse(this.fields_view.arch.attrs[action]) : true;
     }
 });
 

@@ -183,7 +183,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
                 self.on_task_display(task_info.internal_task);
             }
         });
-        if (this._is_action_enabled('create')){        
+        if (this._is_action_enabled('create')) {        
             // insertion of create button
             var td = $($("table td", self.$el)[0]);
             var rendered = QWeb.render("GanttView-create-button");
