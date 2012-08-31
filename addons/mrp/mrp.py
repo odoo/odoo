@@ -214,7 +214,6 @@ class mrp_bom(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
-        'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
@@ -373,26 +372,6 @@ class mrp_bom(osv.osv):
         return True
 
 mrp_bom()
-
-class mrp_bom_revision(osv.osv):
-    _name = 'mrp.bom.revision'
-    _description = 'Bill of Material Revision'
-    _columns = {
-        'name': fields.char('Modification name', size=64, required=True),
-        'description': fields.text('Description'),
-        'date': fields.date('Modification Date'),
-        'indice': fields.char('Revision', size=16),
-        'last_indice': fields.char('last indice', size=64),
-        'author_id': fields.many2one('res.users', 'Author'),
-        'bom_id': fields.many2one('mrp.bom', 'BoM', select=True),
-    }
-
-    _defaults = {
-        'author_id': lambda x, y, z, c: z,
-        'date': fields.date.context_today,
-    }
-
-mrp_bom_revision()
 
 def rounding(f, r):
     import math
