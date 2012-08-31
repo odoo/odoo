@@ -229,7 +229,6 @@ class res_partner(osv.osv):
         if is_company:
             image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
         else:
-<<<<<<< TREE
             from PIL import Image
             from StringIO import StringIO
             from random import random
@@ -242,20 +241,6 @@ class res_partner(osv.osv):
             avatar.save(buffer, 'PNG')
             image = buffer.getvalue()
         return tools.image_resize_image_big(image.encode('base64'))
-=======
-            from PIL import Image
-            from StringIO import StringIO
-            from random import random
-            color = (int(random() * 256), int(random() * 256), int(random() * 256))
-            face = open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read()
-            avatar = Image.new('RGB', face.size)
-            avatar.paste(color)
-            avatar.paste(face, mask=face)
-            buffer = StringIO()
-            avatar.save(buffer, 'PNG')
-            image = buffer.getvalue()
-        return tools.image_resize_image_big(image.encode('base64'))
->>>>>>> MERGE-SOURCE
 
     _defaults = {
         'active': True,
