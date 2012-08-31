@@ -3,7 +3,13 @@
  *--------------------------------------------------------*/
 var console;
 if (!console) {
-    console = {log: function () {}};
+    console = {};
+    var noop = function () {};
+    _.each('log error debug info warn assert clear dir dirxml trace group \
+            groupCollapsed groupEnd time timeEnd profile profileEnd count \
+            exception'.split(/\s+/), function (property) {
+        console[property] = noop;
+    });
 }
 if (!console.debug) {
     console.debug = console.log;
