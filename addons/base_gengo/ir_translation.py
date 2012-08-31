@@ -79,6 +79,8 @@ class ir_translation(osv.Model):
         supported_langs = self._get_all_supported_languages(cr, uid, context=context)
         if supported_langs:
             for term in self.browse(cr, uid, ids, context=context):
+                if term.gengo_translation == "":
+                    continue
                 tier = "nonprofit" if term.gengo_translation == 'machine' else term.gengo_translation
                 language = self._get_gengo_corresponding_language(term.lang)
                 if tier not in supported_langs.get(language,[]):
