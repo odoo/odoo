@@ -74,19 +74,19 @@ class email_template_preview(osv.osv_memory):
         vals = {}
         email_template = self.pool.get('email.template')
         template_id = context and context.get('template_id')
+        
+        # FIXME ODO: replace everything below with a call to template.generate_email
         template = email_template.get_email_template(cr, uid, template_id=template_id, record_id=res_id, context=context)
         model = template.model
         vals['email_to'] = self.render_template(cr, uid, template.email_to, model, res_id, context)
         vals['email_cc'] = self.render_template(cr, uid, template.email_cc, model, res_id, context)
         vals['reply_to'] = self.render_template(cr, uid, template.reply_to, model, res_id, context)
         vals['subject'] = self.render_template(cr, uid, template.subject, model, res_id, context)
-        description = self.render_template(cr, uid, template.body, model, res_id, context) or ''
+        description = self.render_template(cr, uid, template.body_html, model, res_id, context) or ''
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             description += '\n' + signature
-        vals['body'] = description
-        if template.body_html:
-            vals['body_html'] = self.render_template(cr, uid, template.body_html, model, res_id, context) or ''
+        vals['body_html'] = description
         vals['report_name'] = self.render_template(cr, uid, template.report_name, model, res_id, context)
         return {'value': vals}
 
