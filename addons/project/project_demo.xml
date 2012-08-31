@@ -47,9 +47,8 @@
             <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">followers</field>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_niv'),
-                    ref('base.user_al'),
-                    ref('base.user_qdp')])]"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
@@ -71,9 +70,8 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_fpi'),
-                    ref('base.user_jth'),
-                    ref('base.user_mit')])]"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
         </record>
 
@@ -85,8 +83,8 @@
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_design'),ref('project_tt_development'),ref('project_tt_testing')])]"/>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_niv'),
-                    ref('base.user_mit')])]"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
         </record>
 
         <record id="project_project_5" model="project.project">
@@ -98,7 +96,7 @@
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_development')])]"/>
             <field name="members" eval="[(6, 0, [
                     ref('base.user_root'),
-                    ref('base.user_qdp')])]"/>
+                    ref('base.user_demo')])]"/>
         </record>
 
 
