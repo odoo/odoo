@@ -125,17 +125,25 @@ class account_analytic_line(osv.osv):
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
     }
+    
+    def get_employee(self, cr, uid, emp_ids):
+        if not emp_ids:
+            user_name = self.pool.get('res.users').read(cr, uid, [uid], ['name'])[0]['name']
+            raise osv.except_osv(_('Warning!'), _('Please define employee for this user "%s"!') % (user_name,))
+        return emp_ids
 
     def _default_journal(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        employee_ids = self.get_employee(cr, uid, record_ids)
+        employee = proxy.browse(cr, uid, employee_ids[0], context=context)
         return employee.journal_id and employee.journal_id.id or False
 
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
-        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        employee_ids = self.get_employee(cr, uid, record_ids)
+        employee = proxy.browse(cr, uid, employee_ids[0], context=context)
         if employee.product_id and employee.product_id.property_account_income:
             return employee.product_id.property_account_income.id
         return False
