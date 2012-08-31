@@ -24,6 +24,13 @@
     'category': 'Tools',
     'description': """
 Automated Translations through Gengo API
+----------------------------------------
+    The module will install passive Scheduler job for Automated Translations 
+using Gnego API. To active translation Configure your gengo authentication 
+parameters under `Settings > Companies > Gengo Parameters1 and Launch the 
+Gengo Language Sync Wizard under `Settings > Application Terms > 
+Gengo: Manual Request of Translation` and follow the wizard. This wizard will
+active the Scheduler and will start active translation via Gengo Services,
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

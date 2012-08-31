@@ -4,7 +4,7 @@
         <!--Scheduler sync Receive Request-->
         <record id="gengo_sync_receive_request_scheduler" model="ir.cron">
             <field name="name" >Gengo Sync Translation (Response)</field>
-            <field eval="True" name="active"/>
+            <field eval="False" name="active"/>
             <field name="interval_number">20</field>
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
@@ -16,7 +16,7 @@
         <!--Scheduler Sync Send Request-->
         <record id="gengo_sync_send_request_scheduler" model="ir.cron">
             <field name="name" >Gengo Sync Translation (Request)</field>
-            <field eval="True" name="active"/>
+            <field eval="False" name="active"/>
             <field name="interval_number">20</field>
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
