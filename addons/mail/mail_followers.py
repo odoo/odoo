@@ -58,7 +58,7 @@ class mail_notification(osv.Model):
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
                         ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read'),
+        'read': fields.boolean('Read', select=1),
         'message_id': fields.many2one('mail.message', string='Message',
                         ondelete='cascade', required=True, select=1),
     }

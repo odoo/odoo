@@ -75,15 +75,14 @@ class mail_message(osv.Model):
     def _search_unread(self, cr, uid, obj, name, domain, context=None):
         """ Search for messages unread by the current user. Condition is 
             inversed because we search unread message on a read column. """
-        read_cond = '' if not domain[0][2] else '!= true'
+        if domain[0][2]:
+            read_cond = '(read = false or read is null)'
+        else:
+            read_cond = 'read = true'
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        cr.execute("""  SELECT mail_message.id \
-                        FROM mail_message \
-                        JOIN mail_notification ON ( \
-                            mail_notification.message_id = mail_message.id ) \
-                        WHERE mail_notification.partner_id = %%s AND \
-                            mail_notification.read %s \
-                    """ % read_cond, (partner_id,) )
+        cr.execute("SELECT message_id FROM mail_notification "\
+                        "WHERE partner_id = %%s AND %s" % read_cond,
+                    (partner_id,))
         return [('id', 'in', [r[0] for r in cr.fetchall()])]
 
     def name_get(self, cr, uid, ids, context=None):
