@@ -400,6 +400,37 @@ def email_split(text):
     if not text: return []
     return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
 
+def append_content_to_html(html, content, plaintext=True):
+    """Append extra content at the end of an HTML snippet, trying
+       to locate the end of the HTML document (</body>, </html>, or
+       EOF), and wrapping the provided content in a <pre/> block
+       unless ``plaintext`` is False. A side-effect of this
+       method is to coerce all HTML tags to lowercase in ``html``,
+       and strips enclosing <html> or <body> tags in content if
+       ``plaintext`` is False.
+       
+       :param str html: html tagsoup (doesn't have to be XHTML)
+       :param str content: extra content to append
+       :param bool plaintext: whether content is plaintext and should
+           be wrapped in a <pre/> tag.
+    """
+    html = ustr(html)
+    if plaintext:
+        content = u'\n<pre>%s</pre>\n' % ustr(content)
+    else:
+        content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
+        content = u'\n%s\n'% ustr(content)
+    # Force all tags to lowercase
+    html = re.sub(r'(</?)\W*(\w+)([ >])',
+        lambda m: '%s%s%s' % (m.group(1),m.group(2).lower(),m.group(3)), html)
+    insert_location = html.find('</body>')
+    if insert_location == -1:
+        insert_location = html.find('</html>')
+    if insert_location == -1:
+        return '%s%s' % (html, content)
+    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])  
+
+
 #----------------------------------------------------------
 # SMS
 #----------------------------------------------------------
