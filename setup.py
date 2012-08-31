@@ -95,7 +95,7 @@ setuptools.setup(
           'docutils',
           'feedparser',
           'gdata',
-          'lxml',
+          'lxml < 3',
           'mako',
           'psycopg2',
           'pydot',

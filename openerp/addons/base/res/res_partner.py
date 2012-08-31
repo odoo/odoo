@@ -227,10 +227,35 @@ class res_partner(osv.osv):
 
     def _get_default_image(self, cr, uid, is_company, context=None):
         if is_company:
-            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')
+            image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
         else:
-            image_path = openerp.modules.get_module_resource('base', 'static/src/img', 'partner_image.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+<<<<<<< TREE
+            from PIL import Image
+            from StringIO import StringIO
+            from random import random
+            color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
+            face = Image.open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png'))
+            avatar = Image.new('RGB', face.size)
+            avatar.paste(color)
+            avatar.paste(face, mask=face)
+            buffer = StringIO()
+            avatar.save(buffer, 'PNG')
+            image = buffer.getvalue()
+        return tools.image_resize_image_big(image.encode('base64'))
+=======
+            from PIL import Image
+            from StringIO import StringIO
+            from random import random
+            color = (int(random() * 256), int(random() * 256), int(random() * 256))
+            face = open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read()
+            avatar = Image.new('RGB', face.size)
+            avatar.paste(color)
+            avatar.paste(face, mask=face)
+            buffer = StringIO()
+            avatar.save(buffer, 'PNG')
+            image = buffer.getvalue()
+        return tools.image_resize_image_big(image.encode('base64'))
+>>>>>>> MERGE-SOURCE
 
     _defaults = {
         'active': True,
