@@ -126,7 +126,7 @@
             </field>
         </record>
         <record model="ir.ui.view" id="view_pos_order_tree">
-            <field name="name">Sales</field>
+            <field name="name">Orders</field>
             <field name="model">pos.order</field>
             <field name="arch" type="xml">
                 <tree string="POS Orders" colors="blue:state == 'draft';gray:state in ('done','cancel');black:state not in('done','cancel')">
@@ -138,6 +138,7 @@
                     <field name="amount_total" sum="Amount total"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state"/>
+                    <field name="session_id" />
                 </tree>
             </field>
         </record>
@@ -625,7 +626,7 @@
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
                 <group name="misc" position="after">
                     <group name="pos" colspan="2" col="2">
@@ -791,8 +792,7 @@
                                 <field name="code" />
                                 <field name="name" />
                                 <field name="type" />
-                                <field name="opening_control" />
-                                <field name="closing_control" />
+                                <field name="cash_control" />
                             </tree>
                         </field>
                         <group string="Material Interfaces" >
@@ -878,10 +878,10 @@
                     <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
                         <button name="cashbox_control" type="workflow" string="End of Session"
-                            attrs="{'invisible' : [('has_closing_control', '=', False),('state', '=', 'opened')]}" 
+                            attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
                             class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries"
-                            attrs="{'invisible' : [('has_closing_control', '=', True),('state', '=', 'opened')]}"
+                            attrs="{'invisible' : ['|', ('cash_control', '=', True),('state', '!=', 'opened')]}"
                             class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
                             class="oe_highlight" />
@@ -900,8 +900,7 @@
                             <field name="name" attrs="{'invisible': [('name','=','/')]}" class="oe_inline"/>
                         </h1>
                         <group>
-                            <field name="has_opening_control" invisible="1" />
-                            <field name="has_closing_control" invisible="1" />
+                            <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
                                 <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
@@ -912,26 +911,26 @@
                             </group>
                             <newline/>
 
-                            <group string="Opening Cash Control">
+                            <group string="Opening Cash Control" attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '=', 'closed')]}">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
-                                        <field name="number_opening" string="Opening Unit Numbers" on_change="on_change_sub_opening(pieces, number_opening)" />
+                                        <field name="number_opening" on_change="on_change_sub_opening(pieces, number_opening)" />
                                         <field name="subtotal_opening" string="Opening Subtotal" sum="Total"/>
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Closing Cash Control" attrs="{'invisible': [('state', '=', 'opening_control')]}">
+                            <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '!=', 'closing_control')]}">
                                 <field name="details_ids" nolabel="1" colspan="2">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
-                                        <field name="number_closing"/>
+                                        <field name="number_closing" />
                                         <field name="subtotal_closing"/>
                                     </tree>
                                 </field>
                             </group>
 
-                            <div>
+                            <div attrs="{'invisible': [('state', '=', 'closed')]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -948,7 +947,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '=', 'opening_control')]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', 'in', ('opening_control', 'closed'))]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>

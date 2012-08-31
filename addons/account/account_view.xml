@@ -515,7 +515,7 @@
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
-                        <page string="Cash Registers" attrs="{'invisible':[('type', '!=', 'cash')]}">
+                        <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
                                     <field name="profit_account_id"/>
@@ -524,10 +524,11 @@
                                 </group>
                                 <group string="Miscellaneous">
                                     <field name="with_last_closing_balance"/>
+                                    <field name="cash_control"/>
                                 </group>
                             </group>
-                            <separator string="Available Coins" colspan="4" />
-                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
+                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)] }"/>
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
