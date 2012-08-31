@@ -107,8 +107,8 @@
                 <form string="Physical Inventory" version="7.0">
                 <header>
                     <button name="%(action_view_stock_fill_inventory)d" string="Import Inventory" type="action" class="oe_highlight"/>
-                    <button name="action_confirm" states="draft" string="Confirm Inventory" type="object" class="oe_highlight"/>
-                    <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight"/>
+                    <button name="action_confirm" states="draft" string="Confirm Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
+                    <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
                     <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                     <button name="action_cancel_inventory" states="draft,confirm,done" string="Cancel Inventory" type="object"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm"/>
