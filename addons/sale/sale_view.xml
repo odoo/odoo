@@ -280,7 +280,7 @@
                                     <field name="product_uos" string="UoS" groups="product.group_uos"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
-                                    <field name="tax_id"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
