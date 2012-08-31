@@ -7,8 +7,8 @@
             model="ir.values"
             name="set"/>
         <!-- SUBTYPE -->
-        <record id="mail.mail_subtype_close" model="mail.message.subtype">
-            <field name="name">close</field>
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
             <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
         </record>
         <record id="mail.mail_subtype_new" model="mail.message.subtype">

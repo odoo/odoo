@@ -97,7 +97,7 @@ class purchase_requisition(osv.osv):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), subtype="new", context=context)
      
     def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), subtype="close", context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), subtype="closed", context=context)
         
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), subtype="cancel", context=context)
