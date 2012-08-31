@@ -652,7 +652,6 @@ class mail_thread(osv.Model):
             :param partner_ids: a list of partner_ids to subscribe
             :param return: new value of followers, for Chatter
         """
-        print "message_subscribe",subtype_ids
         self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')

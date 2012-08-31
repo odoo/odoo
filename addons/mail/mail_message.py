@@ -330,19 +330,23 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids.
             Call mail_notification.notify to manage the email sending
         """
+        followers_obj = self.pool.get('mail.followers')
         message = self.browse(cr, uid, newid, context=context)
+        followers_ids = followers_obj.search(cr, uid, ['&', ('res_model', '=', message.model), ('res_id', 'in', [message.res_id])], context=context)
+        # check with subtype
+        is_subtype = False
+       
+        for subscription in followers_obj.browse(cr, uid, followers_ids, context=context):
+            if subtype_id:
+                if subtype_id in [subtype.id for subtype in subscription.subtype_ids]:
+                    is_subtype = True
         partners_to_notify = []
         # add all partner_ids of the message
-        is_subtype = False
         if message.partner_ids:
             for partner in message.partner_ids:
                 if partner.id not in partners_to_notify:
-                    if subtype_id:
-                        if subtype_id in [subtype.id for subtype in subscription.subtype_ids]:
-                            is_subtype = False
+                    if(is_subtype):
                             partners_to_notify.append(partner.id)
-                    else:
-                        partners_to_notify.append(partner.id)
         # add all followers and set them as partner_ids
         if message.model and message.res_id:
             modobj = self.pool.get(message.model)
