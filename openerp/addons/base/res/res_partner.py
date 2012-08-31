@@ -29,6 +29,7 @@ from tools.translate import _
 import logging
 import pooler
 import pytz
+from lxml import etree
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
@@ -508,28 +509,34 @@ class res_partner(osv.osv):
         return address_format % args
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):        
-        res = super(res_partner,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            fieldstyle = { 'state_id': {'placeholder': "State", 'style': "width:24%;", 'options': '{"no_open": true}', 'class': "oe_no_button"},
-                           'city': {'placeholder': "City", 'style': "width: 40%;", 'options': '', 'class': ""},
-                           'zip': {'placeholder': "ZIP", 'style': 'width:34%;', 'options': '', 'class': ""}
-                         }            
-            country_id = self.pool.get('res.users').browse(cr, uid, uid,context).company_id.country_id        
-            if country_id and country_id.address_format:
-                address_format = country_id.address_format
-            else:
-                address_format = self._defaults['address_format']
-            address_format = address_format.replace("_code","_id").replace("_name","_id")           
-            fields = re.findall('(state_id|city|zip)', address_format)
-            
+        res = super(res_partner,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)        
+        if view_id and context and view_type == 'form':
             nodelist = []
             doc = etree.XML(res['arch'])
             for field in ['city','state_id','zip']:
-                nodelist.append(doc.xpath("//field[@name='%s']" % (field))[0])
+                nodes = doc.xpath("//field[@name='%s']" % (field))
+                for node in nodes:
+                    nodelist.append(node)
+            if not nodelist:
+                return res
+
+            fieldstyle = { 
+                'state_id': {'placeholder': "State", 'style': "width:24%;", 'options': '{"no_open": true}', 'class': "oe_no_button"},
+                'city': {'placeholder': "City", 'style': "width: 40%;", 'options': '', 'class': ""},
+                'zip': {'placeholder': "ZIP", 'style': 'width:34%;', 'options': '', 'class': ""}
+            }
+            user_obj = self.pool.get('res.users')                         
+            country_id = user_obj.browse(cr, uid, uid,context).company_id.country_id        
+            if country_id and country_id.address_format:
+                address_format = country_id.address_format
+            else:
+                address_format = "%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s\n%(country_name)s"
+            address_format = address_format.replace("_code","_id").replace("_name","_id")           
+            fields = re.findall('(state_id|city|zip)', address_format)
             
-            tot = len(fields)
+            cfields = len(fields)
             for idx, node in enumerate(nodelist):
-                if idx < tot:
+                if idx < cfields:
                     field = fields[idx]
                     node.set('name', fields[idx])
                     node.set('style', fieldstyle[field]['style'])
