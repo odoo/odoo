@@ -181,7 +181,7 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="name">close</field>
             <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
             <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
         </record>
         <record id="mail.mail_subtype_email" model="mail.message.subtype">
