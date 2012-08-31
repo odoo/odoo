@@ -508,7 +508,7 @@ class procurement_order(osv.osv):
         self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), subtype="ready", context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), subtype="cancel", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), subtype="cancelled", context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), subtype="close", context=context)

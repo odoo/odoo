@@ -47,7 +47,7 @@
             <field name="name">running</field>
             <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
             <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
         </record>
         <record id="mail.mail_subtype_close" model="mail.message.subtype">
