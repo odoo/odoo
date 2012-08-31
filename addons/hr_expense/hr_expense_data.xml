@@ -2,20 +2,20 @@
 <openerp>
     <data noupdate="1">
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage your employee's expenses, with validations by employee manager and accountant, creation and payment of invoices.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Expense Management application installed!</field>
+            <field name="body">Manage your employees' expenses, after due validation by their manager and the accountant, then generate and pay the corresponding invoices.
 
-This module also uses the analytic accounting and is compatible with the invoice on timesheet module so that you will be able to automatically re-invoice your customer's expenses if your work by project.</value>
-            <value>Module Expenses Management has been installed</value>
-        </function>
+This feature is also linked to analytic accounting and compatible with timesheet invoices, so you will be able to automatically re-invoice project-related expenses to your customers.</field>
+        </record>
 
         <!-- Resource: product.uom.categ -->
         <record id="cat_expense" model="product.category">
             <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Expenses</field>
         </record>
-
     </data>
 </openerp>

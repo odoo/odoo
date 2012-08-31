@@ -29,7 +29,8 @@ class res_partner_mail(osv.Model):
     _columns = {
         'notification_email_send': fields.selection([
             ('all', 'All feeds'),
-            ('comment', 'Comments and emails'),
+            ('comment', 'Comments and Emails'),
+            ('email', 'Emails only'),
             ('none', 'Never')
             ], 'Receive Feeds by Email', required=True,
             help="Choose in which case you want to receive an email when you "\

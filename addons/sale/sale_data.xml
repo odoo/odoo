@@ -41,13 +41,47 @@
         <function eval="('default',False,'shop_id', [('sale.order', False)], sale_shop_1, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>This modules allows you to create and send easily quotations and process your sales orders; from the delivery to the invoicing.
-
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Sales Management application installed!</field>
+            <field name="body">This application lets you create and send quotations and process your sales orders; from delivery to invoicing.
 If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.</value>
             <value>The Sales Management application has been installed.</value>
         </function>
+        
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+            <field name="name">cancel</field>
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_paid" model="mail.message.subtype">
+            <field name="name">paid</field>
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_pending" model="mail.message.subtype">
+            <field name="name">pending</field>
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_delivered" model="mail.message.subtype">
+            <field name="name">delivered</field>
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('sale.model_sale_order'))]"/>
+        </record>
     </data>
 </openerp>

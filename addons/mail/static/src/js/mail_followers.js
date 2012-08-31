@@ -40,11 +40,7 @@ openerp_mail_followers = function(session, mail) {
             this._check_visibility();
             this.fetch_subtype();
             this.$el.find('ul.oe_mail_recthread_subtype').click(function () {self.update_subtype();})
-            this.$el.find('button.oe_mail_button_follow').click(function () {
-                self.do_follow();
-                self.fetch_subtype();
-                })
-            this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
+            this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); self.fetch_subtype();})
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$el.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })

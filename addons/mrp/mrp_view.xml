@@ -362,6 +362,10 @@
                         </group>
                         <group>
                             <field name="type"/>
+                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                When processing a sale order for this product, the delivery order
+                                will contain the raw materials, instead of the finished product.
+                            </p>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
@@ -678,11 +682,11 @@
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group groups="stock.group_locations">
+                            <group>
                                 <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
-                                <group>
+                                <group groups="stock.group_locations">
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                 </group>
@@ -981,43 +985,14 @@
                </data>
             </field>
         </record>
-		<record id="product_normal_form_supply_view" model="ir.ui.view">
+        <record id="product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-            	<xpath expr="//field[@name='procure_method']" position="after">
-            		<field name="supply_method" groups="base.group_user"/>
-            	</xpath>
-            </field>
-        </record>
-
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.mrp.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
-            <field name="arch" type="xml">
-                <page string="Procurement &amp; Locations" position="inside">
-                    <separator string="Bill of Materials"/>
-                    <field name="bom_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
-                        <tree string="Bill of Materials">
-                            <field name="name" string="Component Name"/>
-                            <field name="bom_id"/>
-                            <field name="product_qty" string="Quantity of Product"/>
-                            <field name="type"/>
-                            <field name="date_start"/>
-                            <field name="date_stop"/>
-                        </tree>
-                        <form string="Bill of Material">
-                            <field name="name" string="Component Name"/>
-                            <field name="bom_id"/>
-                            <field name="product_qty" string="Quantity of Product"/>
-                            <field name="type"/>
-                            <field name="date_start"/>
-                            <field name="date_stop"/>
-                        </form>
-                    </field>
-                </page>
+                <xpath expr="//field[@name='procure_method']" position="after">
+                    <field name="supply_method" groups="base.group_user"/>
+                </xpath>
             </field>
         </record>
 
@@ -1074,6 +1049,25 @@
         <menuitem action="mrp.mrp_production_action_planning"
                 id="menu_mrp_production_order_action" name="Orders Planning"
                 parent="menu_mrp_planning" sequence="1"/>
+
+
+        <record model="ir.actions.act_window" id="product_open_bom">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Bill of Materials</field>
+            <field name="res_model">mrp.bom</field>
+        </record>
+
+        <record model="ir.ui.view" id="product_form_view_bom_button">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button string="Bill of Materials" name="%(product_open_bom)d" type="action"/>
+                </xpath>
+            </field>
+        </record>
+
 
     </data>
 </openerp>

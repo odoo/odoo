@@ -96,11 +96,14 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_phases"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d" string="Phases" type="action" attrs="{'invisible':[('use_phases','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr="//div[@name='options_active']" position='inside'>
+                       <field name="use_phases" class="oe_inline"/>
+                       <label for="use_phases"/>
+                </xpath>
+                <xpath expr="//div[@name='buttons']" position='inside'>
+                        <button icon="terp-gtk-go-back-rtl" name="%(act_project_phases)d"
+                                string="Phases" type="action"
+                                attrs="{'invisible':[('use_phases','=', 0)]}"/>
                 </xpath>
             </field>
         </record>
@@ -347,11 +350,9 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator name="project_sep" string="Project Management" colspan="4"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_phases"/>
+                    <label for="use_phases"/>
                 </xpath>
             </field>
         </record>
