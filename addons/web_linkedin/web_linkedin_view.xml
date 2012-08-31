@@ -15,15 +15,11 @@
         
         <record id="view_linkedin_config_settings" model="ir.ui.view">
             <field name="name">linkedin_settings</field>
-            <field name="model">web_linkedin.settings</field>
+            <field name="model">sale.config.settings</field>
+            <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
-                <form string="Configure Linkedin" version="7.0" class="oe_form_configuration">
-                    <header>
-                        <button string="Apply" type="object" name="execute" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" type="object" name="cancel" class="oe_link"/>
-                    </header>
-                    <div>
+                <div name="linkedin" position="inside">
+                    <form string="Configure Linkedin" version="7.0" class="oe_form_configuration">
                         <p>
                             To use the LinkedIn module with this database, an API Key is required. Please follow this procedure:
                         </p>
@@ -34,31 +30,19 @@
                             <li>Log into LinkedIn.</li>
                             <li>Add a new application and fill the form:
                                 <ul>
-                                    <li>JavaScript API Domain: the domain of the url used to log into this database (example: http://localhost:8069)</li>
+                                    <li>JavaScript API Domain: <field name="server_domain" readonly="1" style="width:0"/></li>
                                     <li>The programming tool is Javascript</li>
                                 </ul>
                             </li>
                             <li>Copy the API key down here:</li>
                         </ul>
-                    </div>
-                    <group>
-                        <field name="api_key"/>
-                    </group>
-                </form>
+                        <group>
+                            <field name="api_key"/>
+                        </group>
+                    </form>
+                </div>
             </field>
         </record>
-
-        <record id="action_linkedin_config_settings" model="ir.actions.act_window">
-            <field name="name">Configure Linkedin</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">web_linkedin.settings</field>
-            <field name="view_mode">form</field>
-            <field name="target">inline</field>
-        </record>
-
-        <menuitem id="menu_linkedin_config_settings" name="Linkedin" parent="base.menu_config"
-            sequence="10" action="action_linkedin_config_settings"/>
-
         
    </data>
 </openerp>
