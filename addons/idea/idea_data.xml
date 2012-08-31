@@ -15,6 +15,35 @@
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('base.group_tool_user'))]"/>
         </record>
+
+        <!-- SUBTYPE -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_open" model="mail.message.subtype">
+            <field name="name">open</field>
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+            <field name="name">cancel</field>
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_close" model="mail.message.subtype">
+            <field name="name">close</field>
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('idea.model_idea_idea'))]"/>
+        </record>
     </data>
 </openerp>
 
