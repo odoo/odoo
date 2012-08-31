@@ -387,6 +387,9 @@ openerp.web_kanban.KanbanRecord = openerp.web.OldWidget.extend({
     },
     set_record: function(record) {
         this.id = record.id;
+        if(!_(this.view.dataset.ids).contains(this.id)) {
+            this.view.dataset.ids.push(this.id)
+        }
         this.record = this.transform_record(record);
     },
     start: function() {
