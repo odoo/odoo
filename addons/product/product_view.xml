@@ -123,6 +123,12 @@
                                         <field name="state"/>
                                         <field name="product_manager"/>
                                     </group>
+                                    <group name="store" string="Storage Localisation">
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                                    </group>
                                     <group groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
@@ -132,14 +138,17 @@
                             </page>
                             <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
                                 <group name="sale">
-                                    <group>
+                                    <group string="Sale Conditions">
                                         <label for="sale_delay"/>
                                         <div>
                                             <field name="sale_delay" class="oe_inline"/> days
                                         </div>
-                                        <field name="warranty" class="oe_inline"/> months
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline"/> months
+                                        </div>
                                     </group>
-                                    <group groups="product.group_uos">
+                                    <group groups="product.group_uos" string="Unit of Measure">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
                                         <field name="mes_type"/>
@@ -735,7 +744,10 @@
                             <group>
                                 <group name="delay" string="Delays">
                                     <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                    <field name="produce_delay"/>
+                                    <label for="produce_delay"/>
+                                    <div>
+                                        <field name="produce_delay" class="oe_inline"/> days
+                                    </div>
                                     <field name="warranty"/>
                                 </group>
                                 <group name="store" string="Storage Localisation">

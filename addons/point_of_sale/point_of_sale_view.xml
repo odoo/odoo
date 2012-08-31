@@ -608,21 +608,6 @@
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
 
-        <record id="product_normal_form_pos_view" model="ir.ui.view">
-            <field name="name">product.normal.pos.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                  <group name="status" position="after">
-                      <group name="pos" string="Point of Sale">
-                          <field name="pos_categ_id"/>
-                          <field name="to_weight" />
-                      </group>
-                  </group>
-            </field>
-        </record>
-
-
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
@@ -630,6 +615,8 @@
             <field name="arch" type="xml">
                 <group name="sale" position="inside">
                     <group name="pos" string="Point of Sale">
+                        <field name="pos_categ_id"/>
+                        <field name="to_weight" />
                         <field name="income_pdt"/>
                         <field name="expense_pdt"/>
                     </group>
