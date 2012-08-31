@@ -178,7 +178,7 @@
         text-align: center
         overflow: hidden
         @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.4))
+        @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
     .oe_kanban_details
         display: inline-block
         vertical-align: top
@@ -246,6 +246,8 @@
         margin: 0
     .oe_kanban_action_a
         text-decoration: none
+        &:hover
+            text-decoration: none
     .oe_kanban_table
         width: 100%
         border: none
