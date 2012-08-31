@@ -26,7 +26,7 @@ from tools.translate import _
 class product_product(osv.osv):
     _inherit = "product.product"    
     _columns = {
-        "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials', [('bom_id','=',False)]),
+        "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials', domain=[('bom_id','=',False)]),
     }
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
