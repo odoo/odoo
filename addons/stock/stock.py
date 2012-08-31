@@ -1737,10 +1737,10 @@ class stock_move(osv.osv):
         """ Gets default type of move 
         @return: type
         """
-        picking_type = context.get('picking_type')
-        type = 'internal'
         if context is None:
             context = {}
+        picking_type = context.get('picking_type')
+        type = 'internal'
         if picking_type == 'in':
             type = 'in'
         elif picking_type == 'out':
