@@ -12,6 +12,38 @@
             <field name="type">automatic</field>
             <field name="sequence">100</field>
         </record>
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_close" model="mail.message.subtype">
+            <field name="name">close</field>
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+            <field name="name">cancel</field>
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_confirm" model="mail.message.subtype">
+            <field name="name">confirm</field>
+            <field name="model_ids" eval="[(4,ref('event.model_event_event'))]"/>
+            <field name="default" eval="False"/>
+        </record>    
+        <record id="mail.mail_subtype_open" model="mail.message.subtype">
+            <field name="name">open</field>
+            <field name="model_ids" eval="[(4,ref('event.model_event_registration'))]"/>
+        </record>      
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('event.model_event_event')),(4,ref('event.model_event_registration'))]"/>
+        </record>
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_post">
@@ -20,5 +52,6 @@
             <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
             <value>Module Events Organisation has been installed</value>
         </function>
+      	
     </data>
 </openerp>

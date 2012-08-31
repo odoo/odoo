@@ -46,6 +46,7 @@ Note that:
     'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
+        'event_data.xml',
         'wizard/event_confirm_view.xml',
         'event_view.xml',
         'report/report_event_registration_view.xml',
