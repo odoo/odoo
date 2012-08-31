@@ -166,12 +166,10 @@ class mail_message(osv.Model):
 
     def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
         """ Given a tree with several roots of following structure :
-            [
-                {'id': 1, 'child_ids':[
-                    {'id': 11, 'child_ids': [...] },
-                ] },
-                {...}
-            ]
+            [   {'id': 1, 'child_ids': [
+                    {'id': 11, 'child_ids': [...] },],
+                },
+                {...}   ]
             Flatten it to have a maximum number of level, with 0 being
             completely flat.
             Perform the flattening at leafs if above the maximum depth, then get
@@ -186,6 +184,8 @@ class mail_message(osv.Model):
             return [msg_dict] + child_ids
         # Depth-first flattening
         for message in messages:
+            if message['type'] == 'expandable':
+                continue
             message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level+1, level, context=context)
         # Flatten if above maximum depth
         if current_level < level:
@@ -252,8 +252,8 @@ class mail_message(osv.Model):
                 break
 
         # Flatten the result
-        # if thread_level > 0:
-        #     result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
+        if thread_level > 0:
+            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
 
         return result
 
