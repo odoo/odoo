@@ -17,6 +17,7 @@
 
     <record model="res.groups" id="group_user">
         <field name="name">Employee</field>
+        <field name="comment">Employee: the user will be able to manage his own human resources stuff (leave request, timesheets, ...), if he is linked to an employee in the system.</field>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
 
@@ -26,6 +27,7 @@
     
     <record model="res.groups" id="group_multi_currency">
         <field name="name">Multi Currencies</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record model="res.groups" id="group_no_one">
