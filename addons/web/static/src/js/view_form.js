@@ -2322,12 +2322,16 @@ instance.web.form.FieldDate = instance.web.form.FieldDatetime.extend({
 
 instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldText',
+    init: function (field_manager, node) {
+        this._super(field_manager, node);
+    },
     initialize_content: function() {
+        var self = this;
         this.$textarea = this.$el.find('textarea');
         this.default_height = this.$textarea.css('height');
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
-                this.set({'value': instance.web.parse_value(this.$textarea.val(), this)});
+                self.set({'value': instance.web.parse_value(self.$textarea.val(), self)});
             }, this));
         } else {
             this.$textarea.attr('disabled', 'disabled');
@@ -2340,14 +2344,17 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         this.setupFocus(this.$textarea);
     },
     set_value: function(value_) {
-        this._super.apply(this, arguments);
+        this._super(value_);
         this.render_value();
+        $(window).resize();
     },
     render_value: function() {
         var show_value = instance.web.format_value(this.get('value'), this, '');
+        if (show_value === '') {
+            this.$textarea.css('height', parseInt(this.default_height)+"px");
+        }
         this.$textarea.val(show_value);
-        this.$textarea.autosize();
-        this.$textarea.css('height', parseInt(this.default_height)+"px");
+        this.$textarea.autosize();        
     },
     is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
