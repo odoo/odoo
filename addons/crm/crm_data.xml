@@ -55,21 +55,20 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>From the top menu Sales, you can: trace leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">CRM application installed!</field>
+            <field name="body">From the top Sales menu you can track leads and opportunities, get accurate forecast on your sales pipeline, plan meetings and phonecalls, get realtime statistics and efficiently organize the communication with your prospects.
+To manage quotations and sale orders, install the "Sales Management" application.</field>
+        </record>
 
-To manage quotations and sale orders, install the module "Sales Management".</value>
-            <value>Module CRM has been installed</value>
-        </function>
-        
         <record model="mail.alias" id="default_sales_alias">
             <field name="alias_name">sales</field>
             <field name="alias_model_id" ref="model_crm_lead"/>
             <field name="alias_user_id" ref="base.user_root"/>
             <field name="alias_defaults">{'type':'lead'}</field>
         </record>
-
     </data>
 </openerp>
