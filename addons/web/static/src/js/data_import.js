@@ -205,7 +205,7 @@ openerp.web.DataImport = openerp.web.Dialog.extend({
         if (results['error']) {
             result_node.append(QWeb.render('ImportView.error', {
                 'error': results['error']}));
-            this.$element.find('fieldset').removeClass('oe-closed');
+            this.$element.find('form').removeClass('oe-import-no-result');
             return;
         }
         if (results['success']) {
