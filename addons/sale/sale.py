@@ -1027,7 +1027,7 @@ class sale_order(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), subtype="new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1035,7 +1035,7 @@ class sale_order(osv.osv):
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), subtype="cancel", context=context)
 
     def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -1047,15 +1047,15 @@ class sale_order(osv.osv):
                 self.message_post(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
 
     def delivery_end_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), subtype="delivered", context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="paid", context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), subtype="pending", context=context)
 
     def action_cancel_draft_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_('Sale order set to draft.'), context=context)

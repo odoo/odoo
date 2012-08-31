@@ -13,12 +13,15 @@
             <field name="sequence">100</field>
         </record>
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Manage employee leaves from the top menu "Human Resources". Employees can create leave requests that are validated by their manager and/or HR people.  Once validated, they are visible in the employee's calendar.  HR people can define leave types and allocate off-days for employees.</value>
-            <value>Module Leaves Management has been installed</value>
-        </function>
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Leave Management application installed!</field>
+            <field name="body">Manage employee leaves from the top menu "Human Resources". Employees can create leave requests that are validated by their manager and/or HR officers.
+Once validated, they are visible in the employee's calendar. HR officers can define leave types and allocate leaves to employees and employee categories.</field>
+        </record>
+
 
         <!-- Casual leave -->
         <record model="hr.holidays.status" id="holiday_status_cl">
