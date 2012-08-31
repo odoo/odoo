@@ -164,5 +164,32 @@
             <field name="lot_stock_id" ref="stock_location_stock"/>
             <field name="lot_output_id" ref="stock_location_output"/>
         </record>
+
+        <!--
+    Mail: mail.message.subtype
+    -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_moved" model="mail.message.subtype">
+            <field name="name">moved</field>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_close" model="mail.message.subtype">
+            <field name="name">close</field>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+        </record>
     </data>
 </openerp>
