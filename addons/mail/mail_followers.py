@@ -57,15 +57,20 @@ class mail_notification(osv.Model):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
-                        ondelete='cascade', required=True, select=1),
-        'read': fields.boolean('Read', select=1),
+                        ondelete='cascade', required=True),
+        'read': fields.boolean('Read'),
         'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True, select=1),
+                        ondelete='cascade', required=True),
     }
 
     _defaults = {
         'read': False,
     }
+
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_partner_id_read_message_id',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX mail_notification_partner_id_read_message_id ON mail_notification (partner_id, read, message_id)')
 
     def create(self, cr, uid, vals, context=None):
         """ Override of create to check that we can not create a notification
