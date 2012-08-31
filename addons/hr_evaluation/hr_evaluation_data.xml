@@ -14,12 +14,14 @@
             <field name="sequence">100</field>
         </record>
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_post">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Create evaluations for your subordinates or manager. You can define a plan with several surveys, where you organize evaluation surveys related to the hierarchy levels. Evaluations filled by employees can exported as pdf files.</value>
-            <value>Module Employee Appraisals has been installed</value>
-        </function>
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Employee Appraisals application installed!</field>
+            <field name="body">Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels.
+Evaluations filled by employees may be exported as pdf files.</field>
+        </record>
 
         <record id="survey_2" model="survey">
             <field name="title">Self Appraisal</field>

@@ -193,7 +193,7 @@ class project(osv.osv):
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of Projects."),
-        'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
+        'analytic_account_id': fields.many2one('account.analytic.account', 'Contract/Analytic', help="Link this project to an analytic account if you need financial management on projects. It enables you to connect projects with budgets, planning, cost and revenue analysis, timesheets on projects, etc.", ondelete="cascade", required=True),
         'priority': fields.integer('Sequence', help="Gives the sequence order when displaying the list of projects"),
         'members': fields.many2many('res.users', 'project_user_rel', 'project_id', 'uid', 'Project Members',
             help="Project's members are users who can have an access to the tasks related to this project.", states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
@@ -1245,7 +1245,7 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_tasks': fields.boolean('Tasks Mgmt.',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
+        'use_tasks': fields.boolean('Tasks',help="If check,this contract will be available in the project menu and you will be able to manage tasks or track issues"),
         'company_uom_id': fields.related('company_id', 'project_time_mode_id', type='many2one', relation='product.uom'),
     }
 
