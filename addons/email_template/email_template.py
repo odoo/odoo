@@ -313,8 +313,8 @@ class email_template(osv.osv):
                       model=template.model,
                       res_id=res_id or False)
 
-        attachments = {}
-        # Add report as a Document
+        attachments = []
+        # Add report in attachments
         if template.report_template:
             report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
             report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
@@ -330,12 +330,11 @@ class email_template(osv.osv):
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
-            attachments[report_name] = result
+            attachments.append(report_name, result)
 
-        # Add document attachments
+        # Add template attachments
         for attach in template.attachment_ids:
-            # keep the bytes as fetched from the db, base64 encoded
-            attachments[attach.datas_fname] = attach.datas
+            attachments.append(attach.datas_fname, attach.datas)
 
         values['attachments'] = attachments
         return values
