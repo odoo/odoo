@@ -362,6 +362,10 @@
                         </group>
                         <group>
                             <field name="type"/>
+                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                When processing a sale order for this product, the delivery order
+                                will contain the raw materials, instead of the finished product.
+                            </p>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
@@ -678,11 +682,11 @@
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group groups="stock.group_locations">
+                            <group>
                                 <group>
                                     <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
                                 </group>
-                                <group>
+                                <group groups="stock.group_locations">
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                                 </group>
