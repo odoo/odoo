@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-07-23 10:49+0000\n"
-"Last-Translator: Terje Nauf <Unknown>\n"
+"PO-Revision-Date: 2012-08-28 11:00+0000\n"
+"Last-Translator: Kaare Pettersen <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:30+0000\n"
+"X-Launchpad-Export-Date: 2012-08-29 05:31+0000\n"
 "X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_followup
@@ -43,7 +43,7 @@ msgstr "Oppfølging"
 #: help:account.followup.print.all,test_print:0
 msgid ""
 "Check if you want to print followups without changing followups level."
-msgstr ""
+msgstr "Sjekk om du vil skrive ut oppfølging uten å endre oppfølging nivå."
 
 #. module: account_followup
 #: model:account_followup.followup.line,description:account_followup.demo_followup_line2
@@ -68,6 +68,25 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Kjære% (PARTNER_NAME) s,\n"
+"\n"
+"Vi er skuffet over å se at til tross for å sende en påminnelse, at kontoen "
+"er nå alvorlig forfalt.\n"
+"\n"
+"Det er viktig at umiddelbar betaling er gjort, ellers vil vi måtte vurdere å "
+"plassere en stopp på din konto som gjør at vi ikke lenger vil være i stand "
+"til å levere din bedrift med (varer / tjenester).\n"
+"Vennligst ta nødvendige tiltak for å gjennomføre denne betalingen i de neste "
+"8 dagene.\n"
+"\n"
+"Hvis det er et problem med å betale fakturaen som vi ikke er klar over, ikke "
+"nøl med å ta kontakt med vår regnskapsavdelingen på (+32) .10.68.94.39. slik "
+"at vi kan løse saken raskt.\n"
+"\n"
+"Detaljer om forfalte innbetalinger skrives under.\n"
+"\n"
+"Med vennlig hilsen,\n"
 
 #. module: account_followup
 #: field:account_followup.followup,company_id:0
@@ -104,7 +123,7 @@ msgstr "Forklaring"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Follow up Entries with period in current year"
-msgstr ""
+msgstr "Følge opp oppføringer med perioden i inneværende år"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -114,7 +133,7 @@ msgstr "Ok"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Amount"
-msgstr ""
+msgstr "Beløp"
 
 #. module: account_followup
 #: sql_constraint:account.move.line:0
@@ -148,11 +167,13 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Datoen for din bilagsregistrering ikke er i den definerte perioden! Du bør "
+"endre datoen eller fjerne denne begrensningen fra tidsskriftet."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(heading)s: Move line header"
-msgstr ""
+msgstr "% (posisjon) s: Flytt linje til topptekst"
 
 #. module: account_followup
 #: field:account.followup.print,followup_id:0
@@ -232,13 +253,13 @@ msgstr "Ref"
 #. module: account_followup
 #: help:account_followup.followup.line,sequence:0
 msgid "Gives the sequence order when displaying a list of follow-up lines."
-msgstr ""
+msgstr "Gir rekkefølgen av når du viser en liste over oppfølging linjer."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 #: field:account.followup.print.all,email_body:0
 msgid "Email body"
-msgstr ""
+msgstr "E-post kroppen"
 
 #. module: account_followup
 #: field:account.move.line,followup_line_id:0
@@ -282,6 +303,18 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Kjære% (PARTNER_NAME) s,\n"
+"\n"
+"Unntak gjøres dersom det var en feil av oss, synes det som om følgende beløp "
+"forblir ubetalt. Vennligst ta nødvendige tiltak for å gjennomføre denne "
+"betalingen i de neste 8 dagene.\n"
+"\n"
+"Ville betalingen er gjennomført etter denne posten ble sendt, kan du se bort "
+"fra denne meldingen. Ikke nøl med å ta kontakt med vår regnskapsavdelingen "
+"på (+32) .10.68.94.39.\n"
+"\n"
+"Med vennlig hilsen,\n"
 
 #. module: account_followup
 #: field:account_followup.followup.line,description:0
@@ -316,6 +349,9 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Alle e-poster har blitt sendt til Partnere:.\n"
+"\n"
+"% s"
 
 #. module: account_followup
 #: constraint:account_followup.followup.line:0
@@ -323,6 +359,8 @@ msgid ""
 "Your description is invalid, use the right legend or %% if you want to use "
 "the percent character."
 msgstr ""
+"Din beskrivelse er ugyldig, bruk riktig legende eller%% hvis du ønsker å "
+"bruke prosent karakter."
 
 #. module: account_followup
 #: constraint:account.move.line:0
@@ -331,6 +369,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Den valgte kontoen av dine Bilagsregistrering blir tvunget for å gi en "
+"sekundær valuta. Du bør fjerne den sekundære valuta på konto eller velg en "
+"flervaluta syn på tidsskriftet."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -345,7 +386,7 @@ msgstr "Oppfølgings statistikk per Partner"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Message"
-msgstr ""
+msgstr "Beskjed"
 
 #. module: account_followup
 #: field:account_followup.stat,blocked:0
@@ -362,6 +403,11 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"\n"
+"\n"
+"E-post sendes til følgende Partners vellykket. !\n"
+"\n"
+"% s"
 
 #. module: account_followup
 #: help:account.followup.print,date:0
@@ -405,7 +451,7 @@ msgstr "Oppfølgings statistikk"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(user_signature)s: User Name"
-msgstr ""
+msgstr "%(Brukers_signatur)s: bruker navn"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_account_move_line
@@ -415,7 +461,7 @@ msgstr "Journal Elementer"
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Du kan ikke lage journalregistreringer på konto av typen vis"
 
 #. module: account_followup
 #: field:account.followup.print.all,email_conf:0
@@ -425,7 +471,7 @@ msgstr "Send e-post bekreftelse"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Total:"
-msgstr ""
+msgstr "Totalt:"
 
 #. module: account_followup
 #: constraint:res.company:0
@@ -435,7 +481,7 @@ msgstr "Feil! Dukan ikke opprette rekursive firmaer."
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_name)s: User's Company name"
-msgstr ""
+msgstr "% (Firma_navn) s: Brukerens Firmanavn"
 
 #. module: account_followup
 #: model:ir.model,name:account_followup.model_res_company
@@ -461,7 +507,7 @@ msgstr "Forfallsdato"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(partner_name)s: Partner Name"
-msgstr ""
+msgstr "% (Partner_Navn) s: Partner Navn"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -471,7 +517,7 @@ msgstr "Oppfølgings linjer"
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(company_currency)s: User's Company Currency"
-msgstr ""
+msgstr "% (Selskap_Valuta) s: Brukerens Selskap Valuta"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -505,7 +551,7 @@ msgstr "Oppfølgingsrapport"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "Follow-Up Steps"
-msgstr ""
+msgstr "Oppfølgning's trinn"
 
 #. module: account_followup
 #: field:account_followup.stat,period_id:0
@@ -537,12 +583,12 @@ msgstr "Maks Oppfølgings Nivå"
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.action_view_account_followup_followup_form
 msgid "Review Invoicing Follow-Ups"
-msgstr ""
+msgstr "Anmeldelse Fakturering oppfølging"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Selskapet må være den samme for tilhørende konto og periode"
 
 #. module: account_followup
 #: model:ir.actions.act_window,help:account_followup.action_account_followup_definition_form
@@ -552,11 +598,15 @@ msgid ""
 "code to adapt the email content to the good context (good name, good date) "
 "and you can manage the multi language of messages."
 msgstr ""
+"Definer oppfølging nivåer og deres relaterte meldinger og forsinkelse. For "
+"hvert trinn, angir meldingen og forsinkelsen. Bruk legenden å vite med kode "
+"for å tilpasse e-innhold til den gode konteksten (godt navn, god dato), og "
+"du kan administrere flere språk av meldinger."
 
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_payable_all
 msgid "Payable Items"
-msgstr ""
+msgstr "leverandørgjeld elementer"
 
 #. module: account_followup
 #: code:addons/account_followup/wizard/account_followup_print.py:298
@@ -566,11 +616,14 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"E-post sendes ikke til følgende Partnere, E-post ikke tilgjengelig!\n"
+"\n"
+"% s"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
 msgid "%(followup_amount)s: Total Amount Due"
-msgstr ""
+msgstr "% (followup_Beløp) s: totalbeløpet"
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -581,7 +634,7 @@ msgstr "%(date)s: Gjeldende Dato"
 #. module: account_followup
 #: view:account_followup.stat:0
 msgid "Including journal entries marked as a litigation"
-msgstr ""
+msgstr "Inkludert posteringer merket som en rettssak"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -597,7 +650,7 @@ msgstr "Beskrivelse"
 #. module: account_followup
 #: constraint:account_followup.followup:0
 msgid "Only One Followup by Company."
-msgstr ""
+msgstr "Bare En Oppfølging av Selskapet."
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -621,7 +674,7 @@ msgstr ""
 #. module: account_followup
 #: model:ir.actions.act_window,name:account_followup.act_account_partner_account_move_all
 msgid "Receivable Items"
-msgstr ""
+msgstr "Mottas elementer"
 
 #. module: account_followup
 #: view:account_followup.stat:0
@@ -633,7 +686,7 @@ msgstr "Oppfølginger sendt"
 #. module: account_followup
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "Firmanavn må være unikt !"
 
 #. module: account_followup
 #: field:account_followup.followup,name:0
@@ -650,7 +703,7 @@ msgstr "Første bevegelse"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Li."
-msgstr ""
+msgstr "Li."
 
 #. module: account_followup
 #: view:account.followup.print:0
@@ -665,7 +718,7 @@ msgstr "Dager forsinket"
 #. module: account_followup
 #: report:account_followup.followup.print:0
 msgid "Document : Customer account statement"
-msgstr ""
+msgstr "Dokument: Kundens kontoutskrift"
 
 #. module: account_followup
 #: view:account.move.line:0
@@ -691,11 +744,26 @@ msgid ""
 "\n"
 "Best Regards,\n"
 msgstr ""
+"\n"
+"Kjære% (Partner_nanvn) s,\n"
+"\n"
+"Til tross for flere purringer, er kontoen din fortsatt ikke avgjort.\n"
+"\n"
+"Med mindre full betaling skjer i neste 8 dagene, deretter søksmål om "
+"tilbakebetaling av gjelden vil bli tatt uten ytterligere varsel.\n"
+"\n"
+"Jeg stoler på at denne handlingen vil være unødvendig og detaljer på grunn "
+"betalinger skrives under.\n"
+"\n"
+"Ved eventuelle spørsmål angående denne saken, ikke nøl med å ta kontakt med "
+"vår regnskapsavdelingen på (+32) .10.68.94.39.\n"
+"\n"
+"Med vennlig hilsen,\n"
 
 #. module: account_followup
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Du kan ikke lage journal elementer på en lukket konto."
 
 #. module: account_followup
 #: view:account.followup.print.all:0
@@ -710,7 +778,7 @@ msgstr "Sekvens"
 #. module: account_followup
 #: view:account_followup.followup.line:0
 msgid "%(company_name)s: User's Company Name"
-msgstr ""
+msgstr "%(Firma_Navn)s : Brukerens firma navn"
 
 #. module: account_followup
 #: report:account_followup.followup.print:0
@@ -720,7 +788,7 @@ msgstr "Kunde ref:"
 #. module: account_followup
 #: field:account.followup.print.all,test_print:0
 msgid "Test Print"
-msgstr ""
+msgstr "Prøv Skriv ut"
 
 #. module: account_followup
 #: view:account.followup.print.all:0

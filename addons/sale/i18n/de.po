@@ -8,13 +8,13 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
+"PO-Revision-Date: 2012-08-29 08:46+0000\n"
+"Last-Translator: Rudolf Schnapka <rs@techno-flex.de>\n"
 "Language-Team: German <kde-i18n-doc@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:01+0000\n"
+"X-Launchpad-Export-Date: 2012-08-30 05:26+0000\n"
 "X-Generator: Launchpad (build 15864)\n"
 
 #. module: sale
@@ -338,6 +338,19 @@ msgid ""
 "  - The 'Invoice based on deliveries' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
+"Die Regeln zur Rechnungserstellung stimmen Rechnungs- und "
+"Lieferscheinerstellung ab.\n"
+"  - \"Zahlung vor Auslieferung\" erstellt zuerst die Rechnung. Der "
+"Lieferschein, und damit die Kommissionierung, erfolgen erst nach "
+"Zahlungseingang.\n"
+"  - \"Kommissionierung & Rechnung aus Abruf\" erstellt sofort einen "
+"Lieferschein zur (Vor-)Kommissionierung. Danach wird auf den manuellen "
+"Rechnungsentwurf gemäss Verkaufsauftrag oder Auftragspositionen gewartet.\n"
+"  - Bei \"Rechnungserstellung nach Auslieferung\" erfolgt die "
+"Rechnungsstellung erst nach erfolgreicher Auslieferung aller "
+"Teillieferungen.\n"
+"  - \"Rechnung bei Kommissionierung\" erstellt im Moment der "
+"Kommissionierung eine zugehörige Rechnung."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -898,6 +911,14 @@ msgid ""
 "The 'Waiting Schedule' state is set when the invoice is confirmed but "
 "waiting for the scheduler to run on the order date."
 msgstr ""
+"Liefert den Status der Angebotsanfrage oder der Verkaufsauftrags.\n"
+"Der Ausnahme-Status wird bei Abbruch eines Vorgangs automatisch gesetzt. Bei "
+"Rechnungsprüfung wird einem Rechnungsabbruch folgend und bei "
+"Kommissionierungsfehlern oder Auslieferungsfehlern der Lieferungsabbruch zu "
+"dieser Ausnahme führen.\n"
+"Der Zustand \"Warte auf Terminierung\" wird erreicht, wenn eine Rechnung "
+"zwar erstellt und bestätigt wurde, aber die Auftrags-Terminierung diesen "
+"Auftrag noch nicht abgearbeitet hat."
 
 #. module: sale
 #: code:addons/sale/sale.py:1272
@@ -1299,6 +1320,9 @@ msgid ""
 "create a task, purchase order or manufacturing order linked to this sale "
 "order line."
 msgstr ""
+"Wenn \"Auf Abruf\", so wird eine Beschaffung ausgelöst sobald der "
+"Verkaufsauftrag bestätigt wurde. Somit wird eine Anforderung zum Einkauf "
+"oder eine Fertigung erzeugt."
 
 #. module: sale
 #: field:sale.advance.payment.inv,amount:0
@@ -1450,6 +1474,10 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
+"Sie haben die Anzahl von %d Einheiten gewählt.\n"
+"Dies ist mit der ausgewählten Verpackung nicht vereinbar.\n"
+"Ein Vorschlag der Verpackung entsprechend wäre:\n"
+"EAN: %s  Anzahl: %s  Art: %s"
 
 #. module: sale
 #: view:sale.order:0
