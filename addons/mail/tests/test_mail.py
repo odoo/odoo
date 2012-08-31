@@ -19,8 +19,10 @@
 #
 ##############################################################################
 
-from openerp.tests import common
+import base64
 import tools
+
+from openerp.tests import common
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -245,10 +247,10 @@ class test_mail(common.TransactionCase):
         _body2 = '<html>Pigs rules</html>'
         _mail_body2 = '<html>Pigs rules\n<pre>Admin</pre>\n</html>'
         _mail_bodyalt2 = 'Pigs rules\nAdmin\n'
+        _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
-        # Post comment with body and subject, comment preference
+        # CASE1: post comment, body and subject specified
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, msg_type='comment')
-        # Fetch: created mail_message, mail_mail, sent_email
         message = self.mail_message.browse(cr, uid, msg_id)
         mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
         mail = self.mail_mail.browse(cr, uid, mail_ids[0])
@@ -261,7 +263,7 @@ class test_mail(common.TransactionCase):
         self.assertEqual(mail.subject, _subject, 'mail.mail subject incorrect')
         self.assertEqual(mail.body_html, _mail_body1, 'mail.mail body_html incorrect')
         self.assertEqual(mail.mail_message_id.id, msg_id, 'mail_mail.mail_message_id is not the id of its related mail_message)')
-        # Test: sent_email: email send by server: correct subject and body
+        # Test: sent_email: email send by server: correct subject, body; body_alternative
         self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
         self.assertEqual(sent_email['body'], _mail_body1, 'sent_email body incorrect')
         self.assertEqual(sent_email['body_alternative'], _mail_bodyalt1, 'sent_email body_alternative is incorrect')
@@ -276,23 +278,24 @@ class test_mail(common.TransactionCase):
         # Test: sent_email: email_to should contain b@b, not c@c (pref email), not a@a (writer)
         self.assertEqual(sent_email['email_to'], ['b@b'], 'sent_email email_to is incorrect')
 
-        # New post: test automatic subject, signature in html, add a partner, email preference, parent_id previous message
-        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, msg_type='email', partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id)
-        # Fetch: created mail_message, mail_mail, sent_email
+        # CASE2: post an email with attachments, parent_id, partner_ids
+        # TESTS: automatic subject, signature in body_html, attachments propagation
+        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, msg_type='email',
+            partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
         mail = self.mail_mail.browse(cr, uid, mail_ids[0])
         sent_email = self._build_email_kwargs
 
-        # Test: mail_message: subject is False, body is _body1 (no formatting done), parent_id is msg_id
+        # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
         self.assertEqual(message.body, _body2, 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
-        # Test: mail_mail: subject is False, body_html is _mail_body1 (signature appended)
+        # Test: mail_mail: subject is False, body_html is _mail_body2 (signature appended)
         self.assertEqual(mail.subject, False, 'mail.mail subject is incorrect')
         self.assertEqual(mail.body_html, _mail_body2, 'mail.mail body_html incorrect')
         self.assertEqual(mail.mail_message_id.id, msg_id2, 'mail_mail.mail_message_id incorrect')
-        # Test: sent_email: email send by server: correct subject and body
+        # Test: sent_email: email send by server: correct subject, body, body_alternative
         self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
         self.assertEqual(sent_email['body'], _mail_body2, 'sent_email body incorrect')
         self.assertEqual(sent_email['body_alternative'], _mail_bodyalt2, 'sent_email body_alternative incorrect')
@@ -300,17 +303,20 @@ class test_mail(common.TransactionCase):
         message_pids = set([partner.id for partner in message.partner_ids])
         test_pids = set([p_a_id, p_b_id, p_c_id, p_d_id])
         self.assertEqual(message_pids, test_pids, 'mail.message partners incorrect')
-        # Test: notification linked to this message = group followers = partner_ids
+        # Test: notifications linked to this message = group followers = partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
         # Test: sent_email: email_to should contain b@b, c@c, not a@a (writer)
         self.assertEqual(set(sent_email['email_to']), set(['b@b', 'c@c']), 'sent_email email_to incorrect')
+        # Test: attachments
+        for i in range(len(message.attachment_ids)):
+            self.assertEqual(message.attachment_ids[i].name, _attachments[i][0], 'mail.message attachment name incorrect')
+            self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
+            self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
+            self.assertEqual(base64.b64decode(message.attachment_ids[i].datas), _attachments[i][1], 'mail.message attachment data incorrect')
 
-    def test_21_message_post_attachments(self):
-        """ Tests designed for attachments. """
-
-    def test_22_message_compose_wizard(self):
+    def test_21_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
         cr, uid = self.cr, self.uid
         mail_compose = self.registry('mail.compose.message')
@@ -325,6 +331,10 @@ class test_mail(common.TransactionCase):
         _msg_body1 = '<pre>Pigs rules</pre>'
         _body_html = '<html>Pigs rules</html>'
         _msg_body2 = '<html>Pigs rules</html>'
+        _attachments = [
+            {'name': 'First', 'datas': base64.b64encode('My first attachment')},
+            {'name': 'Second', 'datas': base64.b64encode('My second attachment')}
+            ]
 
         # Create partners
         # 0 - Admin
@@ -339,46 +349,54 @@ class test_mail(common.TransactionCase):
         # Subscribe #1
         group_pigs.message_subscribe([p_b_id])
 
-        # Comment group_pigs: body_text
+        # CASE1: comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'mail.compose.message.mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
         compose = mail_compose.browse(cr, uid, compose_id)
-
-        # Test: model, res_id
-        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id,
-            'mail.compose.message has model %s and res_id %s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
+        # Test: mail.compose.message: model, res_id
+        self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
+        self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
         # Post the comment, get created message
         mail_compose.send_mail(cr, uid, [compose_id])
         group_pigs.refresh()
-        msg = group_pigs.message_ids[0]
+        message = group_pigs.message_ids[0]
 
         # Test: mail.message: subject, body inside pre
-        self.assertTrue(msg.subject == False and msg.body == _msg_body1,
-            'mail.message subject is %s, body is %s; should be %s and %s' % (msg.subject, msg.body, False, _msg_body1))
-        # Test: mail.message partners = notified people: group_pigs followers (a, b) + mail.compose.message partner_ids (c, d)
-        msg_pids = [partner.id for partner in msg.partner_ids]
+        self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
+        self.assertEqual(message.body, _msg_body1, 'mail.message incorrect body')
+        # Test: mail.message: partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
+        msg_pids = [partner.id for partner in message.partner_ids]
         test_pids = [p_a_id, p_b_id, p_c_id, p_d_id]
-        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg.id)])
-        self.assertTrue(len(msg_pids) == 4, 'There are %s partners linked to the newly posted comment; should be 4' % (len(msg_pids)))
-        self.assertTrue(len(notif_ids) == 4, 'There are %s entries in mail_notification: should be 4' % (len(notif_ids)))
-        self.assertTrue(all(id in msg_pids for id in test_pids) and len(msg_pids) == len(test_pids),
-            'Admin, Bert Raoul and Roger should be the 4 partners of the newly created message')
+        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
+        self.assertEqual(len(notif_ids), 4, 'mail.message: too much notifications created')
+        self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
 
-        # Create a reply to the last comment
+        # CASE2: reply to last comment with attachments
         compose_id = mail_compose.create(cr, uid,
-            {}, {'mail.compose.message.mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id,
-                'active_id': msg.id})
+            {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
+            {'mail.compose.message.mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'active_id': message.id})
         compose = mail_compose.browse(cr, uid, compose_id)
 
+        # Test: form view methods
         # Test: model, res_id, parent_id
-        self.assertTrue(compose.model == 'mail.group' and compose.res_id == self.group_pigs_id,
-            'Wizard message has model: %s and res_id:%s; should be mail.group and %s' % (compose.model, compose.res_id, self.group_pigs_id))
-        self.assertEqual(compose.parent_id.id, msg.id,
-            'Wizard parent_id is %d; should be %d' % (compose.parent_id.id, msg.id))
+        self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
+        self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
+        self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
 
-        # 3 - Create in mass_mail composition mode that should work with or without email_template installed
+        # Post the comment, get created message
+        mail_compose.send_mail(cr, uid, [compose_id])
+        group_pigs.refresh()
+        message = group_pigs.message_ids[0]
+        # Test: attachments
+        for i in range(len(message.attachment_ids)):
+            self.assertEqual(message.attachment_ids[i].name, _attachments[i]['name'], 'mail.message attachment name incorrect')
+            self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
+            self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
+            self.assertEqual(base64.b64decode(message.attachment_ids[i].datas), base64.b64decode(_attachments[i]['datas']), 'mail.message attachment data incorrect')
+
+        # CASE3 - Create in mass_mail composition mode that should work with or without email_template installed
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': -1,
@@ -389,14 +407,12 @@ class test_mail(common.TransactionCase):
         mail_compose.send_mail(cr, uid, [compose_id], {'default_res_id': -1, 'active_ids': [self.group_pigs_id]})
         group_pigs.refresh()
         msg = group_pigs.message_ids[0]
-
         # Test: last message on Pigs = last created message
         test_msg = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [], limit=1))[0]
         self.assertEqual(msg.id, test_msg.id, 'Pigs did not receive its mass mailing message')
         # Test: mail.message: subject, body
         self.assertEqual(msg.subject, _subject, 'mail.message subject is incorrect')
         self.assertEqual(msg.body, group_pigs.description, 'mail.message body is incorrect')
-
 
     def test_30_message_read(self):
         """ Tests designed for message_read. """

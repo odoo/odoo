@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import base64
 import re
 import tools
 
@@ -242,7 +243,7 @@ class mail_compose_message(osv.TransientModel):
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
                     'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
-                    'attachments': [(attach.datas_fname, attach.datas) for attach in wizard.attachment_ids],
+                    'attachments': [(attach.name or attach.datas_fname, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
