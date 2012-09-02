@@ -1333,10 +1333,11 @@
             <field eval="3" name="priority"/>
             <field name="arch" type="xml">
                 <search string="Stock Moves">
-                    <field name="origin" string="Stock Moves"/>
+                    <field name="origin" domain="['|',('origin','ilike',self),('picking_id','ilike',self)]" string="Reference"/>
                     <field name="date" groups="base.group_no_one"/>
+
                     <filter icon="terp-camera_test" string="Ready" name="ready" domain="[('state','=','assigned')]" help="Stock moves that are Available (Ready to process)"/>
-                    <filter icon="terp-stock" string="Future" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
+                    <filter icon="terp-stock" string="To Do" name="future" domain="[('state','in',('assigned','confirmed','waiting'))]" help="Stock moves that are Confirmed, Available or Waiting"/>
                     <filter icon="terp-dialog-close" string="Done" name="done" domain="[('state','=','done')]" help="Stock moves that have been processed"/>
                     <separator/>
                     <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders processed Today or planned for Today"/>
@@ -1389,8 +1390,10 @@
             <field name="priority" eval="6"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel'" string="Moves">
-                    <field name="picking_id" string="Reference"/>
+                    <field name="date" widget="date"/>
+                    <field name="picking_id" string="Reference" invisible="1"/>
                     <field name="origin"/>
+                    <field name="partner_id" string="Supplier"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
@@ -1413,8 +1416,13 @@
                         groups="product.group_stock_packaging"
                         icon="terp-stock_effects-object-colorize"
                         states="draft,assigned,confirmed,done"/>
-                    <field name="date" groups="base.group_no_one"/>
                     <field name="state"/>
+                    <button name="%(action_partial_move_server)d"
+                        icon="terp-stock_effects-object-colorize" type="action"
+                        states="assigned" class="oe_highlight"/>
+                    <button name="action_done" states="draft,assigned,confirmed"
+                        icon="gtk-go-forward" type="object"
+                        class="oe_highlight"/>
                 </tree>
             </field>
         </record>
@@ -1435,54 +1443,6 @@
             </field>
         </record>
 
-        <record id="view_move_search_reception_incoming_picking" model="ir.ui.view">
-            <field name="name">stock.move.incoming.search2</field>
-            <field name="model">stock.move</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <search string="Stock Moves">
-                    <field name="origin" string="Stock Moves"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting " domain="[('state','in',('confirmed','assigned'))]" help="Stock to be receive"/>
-                    <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                    <filter icon="terp-dialog-close" name="done" string="Done" domain="[('state', '=', 'done')]"/>
-                    <separator/>
-                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_move_search_reception_outcoming_picking" model="ir.ui.view">
-            <field name="name">stock.move.outgoing.search2</field>
-            <field name="model">stock.move</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <search string="Stock Moves">
-                    <field name="origin" string="Stock Moves"/>
-                    <filter icon="terp-gtk-go-back-rtl" name="receive" string="Waiting" domain="[('state','in',('confirmed','assigned'))]" help="Stock to be delivered (Available or not)"/>
-                    <filter icon="terp-check" name="available" string="Available" domain="[('state','in',('assigned',))]" help="Stock available to be delivered"/>
-                    <filter icon="terp-dialog-close" name="received" string="Done" domain="[('state','=','done')]"/>
-                    <separator/>
-                    <filter icon="terp-go-today" string="Today" domain="[('date','&lt;=',time.strftime('%%Y-%%m-%%d 23:59:59')),('date','&gt;=',time.strftime('%%Y-%%m-%%d 00:00:00'))]" help="Orders planned for today"/>
-                    <field name="product_id"/>
-                    <field name="prodlot_id"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
-                        <filter string="Order" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'origin'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
-                        <filter string="Order Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" groups="base.group_no_one"/>
-                    </group>
-                </search>
-            </field>
-        </record>
-
         <record id="action_reception_picking_move" model="ir.actions.act_window">
             <field name="name">Receive Products</field>
             <field name="res_model">stock.move</field>
@@ -1491,8 +1451,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
-            <field name="search_view_id" ref="view_move_search_reception_incoming_picking"/>
+            <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d, \'search_default_future\': 1}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
             <field name="help" type="html">
               <p>
                 Click to register a product reception. 
@@ -1627,8 +1586,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
-            <field name="search_view_id" ref="view_move_search_reception_outcoming_picking"/>
+            <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d, \'search_default_future\': 1}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
             <field name="help" type="html">
               <p>
                 You will find in this list all products you have to deliver to
