@@ -85,8 +85,6 @@
                                 <group>
                                     <group>
                                         <field name="list_price"/>
-                                        <field name="cost_method" groups="product.group_costing_method"/>
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
@@ -109,6 +107,8 @@
                                 <group name="procurement">
                                     <group>
                                         <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
+                                        <field name="cost_method" groups="product.group_costing_method"/>
+                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
                                     <group>
                                         <field name="uom_po_id" groups="product.group_uom"/>
