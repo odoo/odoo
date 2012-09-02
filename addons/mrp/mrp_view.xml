@@ -501,7 +501,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_bom_component_tree_view"/>
-            <field name="domain">[('bom_id','!=',False)]</field>
+            <field name="domain">[]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
@@ -524,6 +524,7 @@
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
             parent="menu_mrp_configuration"
+            groups="base.group_no_one"
             sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
