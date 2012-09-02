@@ -84,9 +84,9 @@
                             <page string="Information">
                                 <group>
                                     <group>
+                                        <field name="type"/>
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
-                                        <field name="price_margin" groups="product.group_product_variant"/>
-                                        <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                     <group>
                                         <field name="default_code"/>
@@ -94,11 +94,11 @@
                                         <div name="ean">
                                             <field name="ean13" placeholder="e.g. 5901234123457"/>
                                         </div>
-                                        <field groups="product.group_product_variant" name="variants"/>
                                     </group>
                                     <group>
-                                        <field name="type"/>
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
+                                        <field groups="product.group_product_variant" name="variants"/>
+                                        <field name="price_margin" groups="product.group_product_variant"/>
+                                        <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
                                 </group>
                                 <field name="description" placeholder="describe the product's characteristics..."/>
