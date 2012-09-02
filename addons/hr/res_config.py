@@ -38,7 +38,7 @@ class hr_config_settings(osv.osv_memory):
             help ="""This installs the module hr_expense."""),
         'module_hr_recruitment': fields.boolean('manage the recruitment process',
             help ="""This installs the module hr_recruitment."""),
-        'module_hr_contract': fields.boolean('manage contracts per employee',
+        'module_hr_contract': fields.boolean('record contracts per employee',
             help ="""This installs the module hr_contract."""),
         'module_hr_evaluation': fields.boolean('organize employees periodic evaluation',
             help ="""This installs the module hr_evaluation."""),
