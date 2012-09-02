@@ -268,7 +268,8 @@
               </p>
             </field>
         </record>
-        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" sequence="3"/>
+        <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
+            sequence="3" groups="stock.group_stock_tracking_lot,stock.group_stock_production_lot"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
             groups="product.group_stock_packaging"
             sequence="6"
