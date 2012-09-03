@@ -167,12 +167,10 @@ class mail_message(osv.Model):
 
     def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
         """ Given a tree with several roots of following structure :
-            [
-                {'id': 1, 'child_ids':[
-                    {'id': 11, 'child_ids': [...] },
-                ] },
-                {...}
-            ]
+            [   {'id': 1, 'child_ids': [
+                    {'id': 11, 'child_ids': [...] },],
+                },
+                {...}   ]
             Flatten it to have a maximum number of level, with 0 being
             completely flat.
             Perform the flattening at leafs if above the maximum depth, then get
@@ -187,40 +185,29 @@ class mail_message(osv.Model):
             return [msg_dict] + child_ids
         # Depth-first flattening
         for message in messages:
+            if message.get('type') == 'expandable':
+                continue
             message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level+1, level, context=context)
         # Flatten if above maximum depth
         if current_level < level:
             return messages
         new_list = []
-        for x in range(0, len(messages)):
-            flatenned = _flatten(messages[x])
-            for flat in flatenned:
-                new_list.append(flat)
-        messages = new_list
-        return messages
-
-    def _debug_print_tree(self, tree, prefix=''):
-        for elem in tree:
-            print '%s%s (%s childs: %s)' % (prefix, elem['id'], len(elem['child_ids']), [xelem['id'] for xelem in elem['child_ids']])
-            if elem['child_ids']:
-                self._debug_print_tree(elem['child_ids'], prefix+'--')
+        for message in messages:
+            for flat_message in _flatten(message):
+                new_list.append(flat_message)
+        return new_list
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
-        """ 
-            If IDS are provided, fetch these records, otherwise use the domain to
-            fetch the matching records. After having fetched the records provided
-            by IDS, it will fetch children (according to thread_level).
-            
-            Return [
-            
-            ]
+        """ If IDs are provided, fetch these records. Otherwise use the domain
+            to fetch the matching records.
+            After having fetched the records provided by IDs, it will fetch the
+            parents to have well-formed threads.
+            :return list: list of trees of messages
         """
         limit = limit or self._message_read_limit
         context = context or {}
-        if ids is False:
+        if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
-
-        # FP Todo: flatten to max X level of mail_thread
         messages = self.browse(cr, uid, ids, context=context)
 
         result = []
@@ -253,9 +240,8 @@ class mail_message(osv.Model):
                 break
 
         # Flatten the result
-        # if thread_level > 0:
-        #     result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
-
+        if thread_level > 0:
+            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
         return result
 
     #------------------------------------------------------
