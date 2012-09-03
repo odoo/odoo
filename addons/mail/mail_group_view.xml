@@ -58,7 +58,7 @@
             <field name="arch" type="xml">
                 <form string="Group Form" version="7.0">
                     <sheet class="openerp_mail_group_sheet">
-                        <field name="image_small" widget='image' class="oe_avatar oe_left"/>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
                                 <label for="name" string="Group Name"/> 
