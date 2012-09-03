@@ -171,27 +171,27 @@ watch your stock valuation, and track production lots upstream and downstream (b
     Mail: mail.message.subtype
     -->
         <record id="mail.mail_subtype_new" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_moved" model="mail.message.subtype">
             <field name="name">moved</field>
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_closed" model="mail.message.subtype">
             <field name="name">closed</field>
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_email" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_comment" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')),(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
         <record id="mail.mail_subtype_other" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_move'))]"/>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking')), (4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
         </record>
     </data>
 </openerp>
