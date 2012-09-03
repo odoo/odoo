@@ -9,5 +9,12 @@
             <field name="domain_force">['|',('company_id','=',False),('company_id','child_of',[user.company_id.id])]</field>
         </record>
 
+    <record id="employee_timesheet_rule" model="ir.rule">
+        <field name="name">Employee Timesheet Rule</field>
+        <field model="ir.model" name="model_id" ref="model_hr_timesheet_sheet_sheet"/>
+        <field name="domain_force">['|', ('employee_id.user_id', '=', user.id), ('employee_id.department_id.manager_id.user_id', '=', user.id)]</field>
+        <field name="groups" eval="[(4,ref('base.group_user'))]"/>
+    </record>
+
     </data>
 </openerp>
