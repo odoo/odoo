@@ -1047,27 +1047,27 @@ class mrp_production(osv.osv):
     # ---------------------------------------------------
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), subtype="new", context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="cancelled", context=context)
         return True
 
     def action_ready_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>ready to produce</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="ready", context=context)
         return True
 
     def action_in_production_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order is <b>in production</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="production", context=context)
         return True
 
     def action_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="closed", context=context)
         return True
 
     def action_confirm_send_note(self, cr, uid, ids, context=None):
