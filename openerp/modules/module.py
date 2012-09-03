@@ -283,25 +283,28 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.
 
-    @param module: the module
-    @param args: the resource path components
+    :param module: module name
+    :param list(str) args: resource path components within module
 
-    @return: absolute path to the resource
+    :rtype: str
+    :return: absolute path to the resource
 
     TODO name it get_resource_path
     TODO make it available inside on osv object (self.get_resource_path)
     """
-    a = get_module_path(module)
-    if not a: return False
-    resource_path = opj(a, *args)
-    if zipfile.is_zipfile( a +'.zip') :
-        zip = zipfile.ZipFile( a + ".zip")
+    mod_path = get_module_path(module)
+    if not mod_path: return False
+    resource_path = opj(mod_path, *args)
+    if os.path.isdir(mod_path):
+        # the module is a directory - ignore zip behavior
+        if os.path.exists(resource_path):
+            return resource_path
+    elif zipfile.is_zipfile(mod_path + '.zip'):
+        zip = zipfile.ZipFile( mod_path + ".zip")
         files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
         resource_path = '/'.join(args)
         if resource_path in files:
-            return opj(a, resource_path)
-    elif os.path.exists(resource_path):
-        return resource_path
+            return opj(mod_path, resource_path)
     return False
 
 def get_module_icon(module):
