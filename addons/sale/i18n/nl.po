@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-19 13:39+0000\n"
+"PO-Revision-Date: 2012-08-26 14:09+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-20 05:40+0000\n"
-"X-Generator: Launchpad (build 14833)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:16+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -80,7 +80,7 @@ msgstr "De offerte '%s' is omgezet in een verkooporder."
 #. module: sale
 #: view:sale.order:0
 msgid "Print Quotation"
-msgstr "Print offerte"
+msgstr "Offerte afdrukken"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice.py:42
@@ -90,8 +90,8 @@ msgstr "Waarschuwing !"
 
 #. module: sale
 #: report:sale.order:0
-msgid "VAT"
-msgstr "BTW"
+msgid "Tax"
+msgstr "Belasting"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -124,8 +124,8 @@ msgid ""
 "orders."
 msgstr ""
 "Om een ​​bevestigde verkooporder te verwijderen, moet u deze eerst "
-"annuleren! Om een verkooporder te annuleren, moet u eerst gereleateerde "
-"pickopdrachten of leveringsopdrachten annuleren."
+"annuleren! Om een verkooporder te annuleren, moet u eerst de gerelateerde "
+"uitgaande levering annuleren."
 
 #. module: sale
 #: model:process.node,name:sale.process_node_saleprocurement0
@@ -140,7 +140,7 @@ msgstr "Relatie"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice based on deliveries"
-msgstr "Facturatie gebaseerd op leveringen"
+msgstr "Factuur van leveringsopdracht"
 
 #. module: sale
 #: view:sale.order:0
@@ -189,7 +189,7 @@ msgstr "Std. betalingstermijn"
 #. module: sale
 #: field:sale.config.picking_policy,deli_orders:0
 msgid "Based on Delivery Orders"
-msgstr "Gebaseerd op leveringopdrachten"
+msgstr "Gebaseerd op uitgaande leveringen"
 
 #. module: sale
 #: field:sale.config.picking_policy,time_unit:0
@@ -205,7 +205,7 @@ msgstr "Status"
 #. module: sale
 #: report:sale.order:0
 msgid "Disc.(%)"
-msgstr "Korting. (%)"
+msgstr "Krt. (%)"
 
 #. module: sale
 #: view:sale.report:0 field:sale.report,price_total:0
@@ -269,7 +269,7 @@ msgstr "Gebaseerd op taken"
 #. module: sale
 #: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
 msgid "Quotations and Sales"
-msgstr "Offertes en verkopen"
+msgstr "Offertes en verkooporders"
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_make_invoice
@@ -329,17 +329,17 @@ msgid ""
 "  - The 'Invoice based on deliveries' choice is used to create an invoice "
 "during the picking process."
 msgstr ""
-"Het factureerbeleid wordt gebruikt om facturatie en leveringsopdrachten te "
+"Het factureerbeleid wordt gebruikt om facturatie en uitgaande leveringen te "
 "synchroniseren.\n"
 "  - De 'Vooruitbetaling' keuze genereert eerst de factuur en genereert de "
-"pakbon na betaling van de factuur.\n"
-"  - De 'Leveren & Handmatig factureren' keuze maakt de pakbon direct en "
-"wacht met het genereren van een concept factuur totdat de gebruiker de "
-"'Factureren' knop drukt.\n"
-"  - De 'Factuur op order na levering' keuze genereert de concept factuur "
-"gebaseerd op de verkooporder nadat alle pakbonnen gereed zijn. \n"
-"  - De 'Factuur van pakbon' keuze wordt gebruikt om een factuur te maken "
-"gedurende het verzamel proces."
+"uitgaande leveringen na betaling van de factuur.\n"
+"  - De 'Leveren & Handmatig factureren' keuze maakt de uitgaande leveringen "
+"direct en wacht met het genereren van een concept factuur totdat de "
+"gebruiker de 'Factureren' knop drukt.\n"
+"  - De 'Factuur van order na levering' keuze genereert de concept factuur "
+"gebaseerd op de verkooporder nadat alle verzamelijsten zijn verwerkt. \n"
+"  - De 'Factuur van uitgaande leveringen' keuze wordt gebruikt om een "
+"factuur te maken gedurende het verzamel proces."
 
 #. module: sale
 #: code:addons/sale/sale.py:1171
@@ -372,7 +372,7 @@ msgid ""
 "Product Category or Fiscal Position is not defined !"
 msgstr ""
 "Er is geen categorie opbrengstrekening gedefinieerd in de standaard "
-"eigenschappen van de productcategorie of fiscale situatie niet gedefinieerd !"
+"eigenschappen van de productcategorie of fiscale positie niet gedefinieerd !"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -454,7 +454,7 @@ msgstr "Offertedatum"
 #. module: sale
 #: field:sale.order,fiscal_position:0
 msgid "Fiscal Position"
-msgstr "Fiscale situatie"
+msgstr "Fiscale positie"
 
 #. module: sale
 #: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
@@ -584,7 +584,7 @@ msgstr "Datum bevestigd"
 #. module: sale
 #: field:sale.order,incoterm:0
 msgid "Incoterm"
-msgstr "Leveringsconditie"
+msgstr "Leveringsvoorwaarden"
 
 #. module: sale
 #: field:sale.order.line,address_allotment_id:0
@@ -643,8 +643,9 @@ msgid ""
 "Incoterm which stands for 'International Commercial terms' implies its a "
 "series of sales terms which are used in the commercial transaction."
 msgstr ""
-"Incoterm wat staat voor 'International Commercial Terms' staat voor een "
-"reeks verkoopvoorwaarden die gebruikt worden in de commerciële transactie."
+"Leveringsvoorwaarden of Incoterm wat staat voor 'International Commercial "
+"Terms', staat voor een reeks leveringsvoorwaarden die gebruikt worden in de "
+"commerciële transactie."
 
 #. module: sale
 #: field:sale.order,partner_invoice_id:0
@@ -701,7 +702,7 @@ msgstr "Bedrag voor belastingen"
 #: model:ir.actions.act_window,name:sale.action_order_line_tree2
 #: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
 msgid "Lines to Invoice"
-msgstr "Te factureren regels"
+msgstr "Te factureren orderregels"
 
 #. module: sale
 #: field:sale.order.line,product_uom_qty:0
@@ -826,7 +827,7 @@ msgstr "Orderstatus"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s) ?"
+msgid "Do you really want to create the invoice(s)?"
 msgstr "Wilt u echt de facturen aanmaken?"
 
 #. module: sale
@@ -900,9 +901,9 @@ msgid ""
 "waiting for the scheduler to run on the order date."
 msgstr ""
 "Geeft de status van de offerte of verkooporder.\n"
-"De fout staat wordt automatisch ingesteld wanneer een annuleringsopdracht "
-"plaatsvindt bij de factuurvalidatie (Factureerfout) of in het pickinglijst "
-"proces (verzendingsfout).\n"
+"De foutsituatie wordt automatisch ingesteld wanneer een annuleringsopdracht "
+"plaatsvindt bij de factuurvalidatie (Factureerfout) of in het verzamelproces "
+"(verzendingsfout).\n"
 "De 'Wacht op planner' staat wordt ingesteld wanneer de factuur is bevestigd, "
 "maar wacht deze op de planner, als deze start op de orderdatum."
 
@@ -920,7 +921,7 @@ msgstr "Historie"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Invoice on order after delivery"
-msgstr "Factureer op basis van order, na aflevering"
+msgstr "Factuur van order na levering"
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -936,7 +937,7 @@ msgstr ""
 #. module: sale
 #: report:sale.order:0
 msgid "Your Reference"
-msgstr "Eigen referentie"
+msgstr "Uw referentie"
 
 #. module: sale
 #: help:sale.order,partner_order_id:0
@@ -1042,7 +1043,7 @@ msgstr "Forceer toewijzing"
 #. module: sale
 #: selection:sale.order.line,type:0
 msgid "on order"
-msgstr "Bij Order"
+msgstr "Maak op bestelling"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_invoiceafterdelivery0
@@ -1052,7 +1053,7 @@ msgstr "Gebaseerd op de geleverde of bestelde hoeveelheden."
 #. module: sale
 #: selection:sale.order,picking_policy:0
 msgid "Deliver all products at once"
-msgstr "Lever alle producten in 1 keer"
+msgstr "Lever alle producten tegelijk"
 
 #. module: sale
 #: field:sale.order,picking_ids:0
@@ -1106,7 +1107,7 @@ msgstr "Totaal incl. BTW"
 #. module: sale
 #: model:process.transition,name:sale.process_transition_packing0
 msgid "Create Pick List"
-msgstr "Picklijst maken"
+msgstr "Verzamellijst maken"
 
 #. module: sale
 #: view:sale.report:0
@@ -1143,7 +1144,7 @@ msgstr "Maak factuur opnieuw"
 #: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
 #: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
 msgid "Deliveries to Invoice"
-msgstr "Te factureren leveringen"
+msgstr "Te factureren uitgaande leveringen"
 
 #. module: sale
 #: selection:sale.order,state:0 selection:sale.report,state:0
@@ -1158,12 +1159,12 @@ msgstr "Verwervingswijze"
 #. module: sale
 #: model:process.node,name:sale.process_node_packinglist0
 msgid "Pick List"
-msgstr "Picklijst"
+msgstr "Verzamellijst"
 
 #. module: sale
 #: view:sale.order:0
 msgid "Set to Draft"
-msgstr "Naar Concept"
+msgstr "Terug naar offerte-aanvraag"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_packinglist0
@@ -1362,7 +1363,7 @@ msgstr "Voorraadmutatie"
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
 msgid "Create Invoices"
-msgstr "Facturen maken"
+msgstr "Maak facturen"
 
 #. module: sale
 #: view:sale.report:0
@@ -1418,7 +1419,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_stock_picking
 msgid "Picking List"
-msgstr "Picklijst"
+msgstr "Verzamellijst"
 
 #. module: sale
 #: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
@@ -1437,7 +1438,7 @@ msgstr "Kan verkooporder niet annuleren !"
 #. module: sale
 #: view:sale.order:0
 msgid "Qty(UoM)"
-msgstr "Hvh(UoM)"
+msgstr "Hoeveelheid"
 
 #. module: sale
 #: view:sale.report:0
@@ -1463,7 +1464,7 @@ msgstr "Fouten in verzendingen"
 #: code:addons/sale/sale.py:1156
 #, python-format
 msgid "Picking Information ! : "
-msgstr "Picking Informatie ! : "
+msgstr "Orderverzamel informatie!: "
 
 #. module: sale
 #: field:sale.make.invoice,grouped:0
@@ -1519,7 +1520,7 @@ msgstr "Stuurt verwerving en facturatie aan"
 #. module: sale
 #: field:sale.order,invoiced:0
 msgid "Paid"
-msgstr "Gefactureerd"
+msgstr "Betaald"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_all
@@ -1536,10 +1537,10 @@ msgid ""
 "Here is a proposition of quantities according to the packaging:\n"
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
-"U heeft een hoeveelheid van %d units geselecteerd.\n"
+"U heeft een hoeveelheid van %d geselecteerd.\n"
 "Maar het is niet in overeenstemming met de gekozen verpakking.\n"
 "Hier is een voorstel van de hoeveelheden, volgens de verpakking:\n"
-"EAN: %s Aantal: %s Type ul: %s"
+"EAN: %s Aantal: %s Type verpakking: %s"
 
 #. module: sale
 #: view:sale.order:0
@@ -1633,7 +1634,7 @@ msgstr "Te doen"
 #. module: sale
 #: field:sale.order,picking_policy:0
 msgid "Picking Policy"
-msgstr "Pickingbeleid"
+msgstr "Verzamelbeleid"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_deliveryorder0
@@ -1649,7 +1650,8 @@ msgstr "Het bedrag zonder BTW."
 #: code:addons/sale/sale.py:604
 #, python-format
 msgid "You must first cancel all picking attached to this sales order."
-msgstr "U moet eerst alle picking bij deze verkooporder annuleren."
+msgstr ""
+"U moet eerst alle uitgaande leveringen bij deze verkooporder annuleren."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_advance_payment_inv
@@ -1711,7 +1713,7 @@ msgstr "Handmatig in behandeling"
 #. module: sale
 #: field:sale.order.line,product_uom:0
 msgid "Product UoM"
-msgstr "Product meeteenheid"
+msgstr "Product maateenheid"
 
 #. module: sale
 #: view:sale.order:0
@@ -1798,7 +1800,7 @@ msgstr ""
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Pay before delivery"
-msgstr "Betalen voor afleveren"
+msgstr "Vooruitbetaling"
 
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
@@ -1851,15 +1853,15 @@ msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
 "You have to change either the product, the quantity or the pricelist."
 msgstr ""
-"Kon geen prijslijst regel binnen deze product en de hoeveelheid vinden welke "
+"Kon geen prijslijstregel, voor dit product en deze hoeveelheid, vinden welke "
 "voldoet.\n"
-"U dient ofwel het product, de hoeveelheid of de prijslijst wijzigen."
+"U dient ofwel het product, de hoeveelheid of de prijslijst te wijzigen."
 
 #. module: sale
 #: help:sale.order,picking_ids:0
 msgid ""
 "This is a list of picking that has been generated for this sales order."
-msgstr "Dit is de picklijst die door de verkooporder is gegenereerd."
+msgstr "Dit is de verzamellijst die door de verkooporder is gegenereerd."
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
@@ -1933,10 +1935,10 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
-"Het picklijst formulier wordt gemaakt zodra de verkooporder is bevestigd, op "
+"De verzamellijst wordt gemaakt zodra de verkooporder is bevestigd, op "
 "hetzelfde moment als de verwervingsopdracht. Het representeert de toekenning "
-"van onderdelen aan de verkooporder. Er is 1 picklijst per verkooporderregel "
-"die ontwikkelt met de beschikbaarheid van onderdelen."
+"van onderdelen aan de verkooporder. Er is 1 verzamellijst per "
+"verkooporderregel die ontwikkelt met de beschikbaarheid van onderdelen."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1994,7 +1996,7 @@ msgstr "EDI Prijslijst (%s)"
 #. module: sale
 #: view:sale.order:0
 msgid "Print Order"
-msgstr "Afdrukvolgorde"
+msgstr "Order afdrukken"
 
 #. module: sale
 #: view:sale.report:0
@@ -2201,7 +2203,7 @@ msgstr "Toezegging vertraging"
 #. module: sale
 #: selection:sale.order,order_policy:0
 msgid "Deliver & invoice on demand"
-msgstr "Lever & factureer op oproep"
+msgstr "Leveren & Handmatig factureren"
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleprocurement0
@@ -2373,7 +2375,7 @@ msgstr "Jaar"
 #. module: sale
 #: selection:sale.config.picking_policy,order_policy:0
 msgid "Invoice Based on Deliveries"
-msgstr "Facturatie gebaseer op leveringen"
+msgstr "Factuur gebaseerd op leveringen"
 
 #~ msgid "Partial Delivery"
 #~ msgstr "Deellevering"
@@ -2600,6 +2602,9 @@ msgstr "Facturatie gebaseer op leveringen"
 #~ "geven verkooporder. Deze handeling verplaatst de verkooporder naar de "
 #~ "facturen."
 
+#~ msgid "VAT"
+#~ msgstr "BTW"
+
 #~ msgid "Make Invoice"
 #~ msgstr "Maak factuur"
 
@@ -2815,6 +2820,9 @@ msgstr "Facturatie gebaseer op leveringen"
 
 #~ msgid "  Year  "
 #~ msgstr "  Jaar  "
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "Wilt u echt de facturen aanmaken?"
 
 #~ msgid "Sales Order Dates"
 #~ msgstr "Verkooporder data"

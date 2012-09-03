@@ -9,14 +9,13 @@
         <record id="procurement_tree_view" model="ir.ui.view">
             <field name="name">procurement.order.tree</field>
             <field name="model">procurement.order</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
                     <field name="date_planned" widget="date"/>
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="procure_method"/>
                     <field name="state"/>
                     <field name="message"/>
@@ -27,7 +26,6 @@
          <record id="procurement_tree_view_board" model="ir.ui.view">
             <field name="name">procurement.order.tree.board</field>
             <field name="model">procurement.order</field>
-            <field name="type">tree</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Procurement Lines" colors="red:date_planned&lt;current_date and state == 'exception';black:state=='running';darkgreen:state=='confirmed';gray:state in ['done','cancel'];blue:state == 'ready'">
@@ -35,7 +33,7 @@
                     <field name="origin"/>
                     <field name="product_id"/>
                     <field name="product_qty"/>
-                    <field name="product_uom" string="UOM"/>
+                    <field name="product_uom" string="Unit of Measure"/>
                     <field name="state" invisible = "1"/>
                     <field name="message"/>
                 </tree>
@@ -44,82 +42,93 @@
         <record id="procurement_form_view" model="ir.ui.view">
             <field name="name">procurement.order.form</field>
             <field name="model">procurement.order</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement">
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="References"/>
-                        <field name="name" string="Procurement Reason"/>
-                        <field name="origin"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                <form string="Procurement" version="7.0">
+                    <header>
+                        <button name="button_confirm" states="draft" string="Confirm" class="oe_highlight"/>
+                        <button name="button_check" states="confirmed" string="Run Procurement" class="oe_highlight"/>
+                        <button name="button_restart" states="exception" string="Retry" class="oe_highlight"/>
+                        <button name="button_cancel" states="draft,exception,waiting" string="Cancel"/>
+                        <field name="state" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed" />
+                    </header>
+                    <sheet>
+                    <label for="name" class="oe_edit_only"/>
+                    <h1>
+                        <field name="name" class="oe_inline"/>
+                        <label string="-" attrs="{'invisible':[('origin','=',False)]}"/>
+                        <field name="origin" class="oe_inline"/>
+                    </h1>
+                    <group>
+                        <group>
+                            <field name="date_planned"/>
+                            <field name="procure_method"/>
+                            <field name="priority"/>
+                        </group>
+                        <group>
+                            <field name="message"/>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                        </group>
                     </group>
-                    <group col="2" colspan="2">
-                        <separator colspan="2" string="Planification"/>
-                        <field name="date_planned"/>
-                        <field name="procure_method"/>
-                        <field name="priority" groups="base.group_extended"/>
-                    </group>
-                    <notebook colspan="4">
+                    <notebook>
                     <page string="Procurement Details">
-                        <separator colspan="4" string="Product &amp; Location"/>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="location_id" domain="[('usage','=','internal')]"/>
-                        <field name="product_qty"/>
-                        <field name="product_uom"/>
-
-                        <field name="product_uos_qty" groups="product.group_uos,base.group_extended"/>
-                        <field name="product_uos"  groups="product.group_uos,base.group_extended"/>
-
-                        <separator colspan="4" string="Status"/>
-                        <field colspan="4" name="message" readonly="1"/>
-                        <field name="state" readonly="1"/>
-                        <group col="7" colspan="2">
-                            <button name="button_cancel" states="draft,exception,waiting" string="Cancel" icon="gtk-cancel"/>
-                            <button name="button_confirm" states="draft" string="Confirm" icon="gtk-apply"/>
-                            <button name="button_restart" states="exception" string="Retry" icon="gtk-convert"/>
-                            <button name="button_check" states="confirmed" string="Run Procurement" icon="gtk-media-play"/>
+                        <group>
+                            <group>
+                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline"/>
+                                </div>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos">
+                                    <field name="product_uos_qty" class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                               <field name="location_id" domain="[('usage','=','internal')]"/>
+                            </group>
                         </group>
                     </page>
                     <page string="Extra Information">
-                        <separator colspan="4" string="Details"/>
-                        <field name="move_id" groups="base.group_extended"/>
-                        <field name="date_close"/>
-                        <field name="close_move" groups="base.group_extended"/>
+                        <group>
+                            <field name="move_id"/>
+                            <field name="date_close"/>
+                            <field name="close_move"/>
+                        </group>
                     </page>
                     <page string="Notes">
-                        <separator colspan="4" string="Note" />
-                        <field name="note" colspan="4" nolabel="1"/>
+                        <field name="note"/>
                     </page>
                     </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
         <record id="view_procurement_filter" model="ir.ui.view">
             <field name="name">procurement.order.select</field>
             <field name="model">procurement.order</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Procurement">
-                    <group>
-                       <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
-                       <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
-                       <separator orientation="vertical"/>
-                       <filter icon="terp-gnome-cpu-frequency-applet+" string="Late"
-                           domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]"
-                           help="Procurement started late" />
-                       <separator orientation="vertical"/>
-                       <field name="origin"/>
-                       <field name="product_id" />
-                       <field name="date_planned"/>
-                       <field name="state" />
-                    </group>
-                    <newline/>
-                    <group expand="0" string="Group By" groups="base.group_extended">
+                    <field name="origin" string="Procurement"/>
+                    <field name="date_planned"/>
+                    <filter icon="terp-emblem-important" string="Exceptions" name="exceptions" domain="[('state','=','exception')]" help="Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-emblem-important" string="To Fix" name="perm_exceptions" domain="[('state','=','exception'),('message', '!=', '')]" help="Permanent Procurement Exceptions"/>
+                    <filter icon="terp-emblem-important" string="Temporary" name="temp_exceptions" domain="[('state','=','exception'),('message', '=', '')]" help="Temporary Procurement Exceptions"/>
+                    <separator/>
+                    <filter icon="terp-gnome-cpu-frequency-applet+" string="Late" domain="['&amp;', ('date_planned','&lt;', current_date), ('state', 'in', ('draft', 'confirmed'))]" help="Procurement started late" />
+                    <field name="product_id" />
+                    <field name="state" />
+                    <group expand="0" string="Group By">
                         <filter string="Product" icon="terp-accessories-archiver" domain="[]" context="{'group_by':'product_id'}"/>
                         <filter string="Reason" icon="terp-gtk-jump-to-rtl" domain="[]" context="{'group_by':'name'}"/>
                         <filter string="Scheduled Date" icon="terp-go-month" domain="[]" context="{'group_by':'date_planned'}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -133,7 +142,20 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_procurement_filter"/>
             <field name="context">{'search_default_current':1}</field>
-            <field name="help">A procurement order is used to record a need for a specific product at a specific location. A procurement order is usually created automatically from sales orders, a Pull Logistics rule or Minimum Stock Rules. When the procurement order is confirmed, it automatically creates the necessary operations to fullfil the need: purchase order proposition, manufacturing order, etc.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a procurement order. 
+              </p><p>
+                A procurement order is used to record a need for a specific
+                product at a specific location.  Procurement orders are usually
+                created automatically from sales orders, pull logistic rules or
+                minimum stock rules.
+              </p><p>
+                When the procurement order is confirmed, it automatically
+                creates the necessary operations to fullfil the need: purchase
+                order proposition, manufacturing order, etc.
+              </p>
+            </field>
         </record>
 
         <record id="procurement_exceptions" model="ir.actions.act_window">
@@ -160,14 +182,13 @@
         <record id="view_warehouse_orderpoint_tree" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.tree</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Minimum Stock Rules">
+                <tree string="Reordering Rules">
                     <field name="name"/>
-                    <field name="warehouse_id"/>
-                    <field name="location_id"/>
+                    <field name="warehouse_id" groups="stock.group_locations"/>
+                    <field name="location_id" groups="stock.group_locations"/>
                     <field name="product_id"/>
-                    <field name="product_uom"/>
+                    <field name="product_uom" groups="product.group_uom"/>
                     <field name="product_min_qty"/>
                     <field name="product_max_qty"/>
                 </tree>
@@ -177,17 +198,13 @@
         <record model="ir.ui.view" id="warehouse_orderpoint_search">
             <field name="name">stock.warehouse.orderpoint.search</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Minimum Stock Rules Search">
-                    <group>
-                        <field name="name"/>
-                        <field name="warehouse_id" widget="selection"/>
-                        <field name="location_id"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="product_id"/>
-                    </group>
-                    <newline/>
+                <search string="Reordering Rules Search">
+                    <field name="name" string="Reordering Rules"/>
+                    <field name="warehouse_id"/>
+                    <field name="location_id" groups="stock.group_locations"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="product_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Warehouse" icon="terp-go-home" domain="[]"  context="{'group_by':'warehouse_id'}"/>
                         <filter string="Location" icon="terp-go-home" domain="[]" context="{'group_by':'location_id'}"/>
@@ -199,42 +216,42 @@
         <record id="view_warehouse_orderpoint_form" model="ir.ui.view">
             <field name="name">stock.warehouse.orderpoint.form</field>
             <field name="model">stock.warehouse.orderpoint</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Minimum Stock Rules">
-                    <group col="2" colspan="2">
-                        <separator string="General Information" colspan="2" />
-                        <field name="name" />
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="product_uom"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Locations" colspan="2" />
-                        <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                        <field name="location_id"/>
-                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                    </group>
-                    <group col="2" colspan="2">
-                        <separator string="Quantity Rules" colspan="2" />
-                        <field name="product_min_qty"/>
-                        <field name="product_max_qty"/>
-                        <field name="qty_multiple"/>
-                    </group>
-                    <group col="2" colspan="2" groups="base.group_extended">
-                        <separator string="Misc" colspan="2" />
-                        <field name="procurement_id" readonly="1"/>
-                        <field name="active" />
-                    </group>
-                    <group col="4" colspan="4" groups="base.group_extended">
-                        <separator string="Procurement Orders to Process" colspan="4" />
-                        <field name="procurement_draft_ids" colspan="4" nolabel="1"/>
-                    </group>
+                <form string="Reordering Rules" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name" />
+                                <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                            </group>
+                            <group>
+                                <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection" groups="stock.group_locations"/>
+                                <field name="product_uom" groups="product.group_uom"/>
+                                <field name="location_id" groups="stock.group_locations"/>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Rules">
+                                <field name="product_min_qty" />
+                                <field name="product_max_qty" />
+                                <field name="qty_multiple" string="Quantity Multiple"/>
+                            </group>
+                            <group string="Misc">
+                                <field name="procurement_id" readonly="1"/>
+                                <field name="active" />
+                            </group>
+                        </group>
+                        <group string="Procurement Orders to Process">
+                            <field name="procurement_draft_ids" nolabel="1"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
 
         <record id="action_orderpoint_form" model="ir.actions.act_window">
-            <field name="name">Minimum Stock Rules</field>
+            <field name="name">Reordering Rules</field>
             <field name="res_model">stock.warehouse.orderpoint</field>
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
@@ -244,26 +261,17 @@
         </record>
 
         <act_window
-        context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
-        id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Minimum Stock Rules"
-        res_model="stock.warehouse.orderpoint"
-        src_model="stock.warehouse"
-        groups="stock.group_stock_user"/>
-
-        <!-- add product_uom to context to be the default value when adding new orderpoints -->
-        <act_window
-            context="{'product_uom': locals().has_key('uom_id') and uom_id,'search_default_product_id': [active_id], 'default_product_id': active_id}"
-            id="act_product_product_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
+            context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
+            id="act_stock_warehouse_2_stock_warehouse_orderpoint"
+            name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
-            src_model="product.product"
+            src_model="stock.warehouse"
             groups="stock.group_stock_user"/>
 
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
             id="act_procurement_2_stock_warehouse_orderpoint"
-            name="Minimum Stock Rules"
+            name="Reordering Rules"
             res_model="stock.warehouse.orderpoint"
             src_model="procurement.order"
             groups="stock.group_stock_user"/>
@@ -276,29 +284,23 @@
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
 
 
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.orderpoint.inherit</field>
-            <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                  <group name="misc" position="after">
-                      <group col="2" colspan="2" attrs="{'invisible':[('type', '=', 'service')]}">
-                          <separator string="Minimum Stock Rules" colspan="2"/>
-                          <field name="orderpoint_ids" context="{'default_product_uom': uom_id}" nolabel="1">
-                              <tree string="Minimum Stock Rule" editable="bottom">
-                                  <field name="warehouse_id" on_change="onchange_warehouse_id(warehouse_id)" widget="selection"/>
-                                  <field name="location_id" groups="base.group_extended"/>
-                                  <field name="product_min_qty"/>
-                                  <field name="product_max_qty"/>
-                                  <field name="product_uom" groups="base.group_extended"/>
-                              </tree>
-                          </field>
-                      </group>
-                  </group>
-            </field>
+        <record model="ir.actions.act_window" id="product_open_orderpoint">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Orderpoints</field>
+            <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
 
+        <record model="ir.ui.view" id="product_form_view_procurement_button">
+            <field name="name">product.product.procurement</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button string="Request Procurement" name="%(act_make_procurement)d" type="action"/>
+                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action"/>
+                </xpath>
+            </field>
+        </record>
 
     </data>
 </openerp>

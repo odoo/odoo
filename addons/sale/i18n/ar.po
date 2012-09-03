@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-08 02:51+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:46+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:27+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:16+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: sale
 #: field:sale.config.picking_policy,timesheet:0
@@ -88,8 +88,8 @@ msgstr "تحذير !"
 
 #. module: sale
 #: report:sale.order:0
-msgid "VAT"
-msgstr "ضريبة القيمة المضافة"
+msgid "Tax"
+msgstr ""
 
 #. module: sale
 #: model:process.node,note:sale.process_node_saleorderprocurement0
@@ -153,6 +153,12 @@ msgid ""
 "configuration of the sales order, a draft invoice will be generated so that "
 "you just have to confirm it when you want to bill your customer."
 msgstr ""
+"أوامر البيع تساعدك على إدارة الأسعار والأوامر من العملاء. OpenERP تشير إلى "
+"أن تبدأ من خلال انشاء تسعيره. مرة واحدة يتم تأكيد ذلك، سيتم تحويل الاسعار في "
+"امر المبيعات. يمكن OpenERP التعامل مع عدة أنواع من المنتجات  قد تؤدي ترتيب "
+"مبيعات  المهام، وأوامر التسليم، وأوامر التصنيع، والمشتريات، وهلم جرا. "
+"استنادا إلى تكوين النظام للمبيعات، سيتم إنشاء فاتورة المشروع بحيث يكون لديك "
+"فقط للتأكد من ذلك عندما ترغب في فاتورة العميل."
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -163,6 +169,10 @@ msgid ""
 "the product is a service, shipped quantities means hours spent on the "
 "associated tasks."
 msgstr ""
+"سيقوم النظام تلقائيا إنشاء الفاتورة المقترحة (فاتورة مشروع). الطلبات "
+"والكميات الموردة قد لا تكون هي نفسها. عليك ان تختار اذا كنت تريد الفاتورة "
+"على أساس الكميات المطلوبة أو التي يتم شحنها. إذا كان المنتج هو خدمة، "
+"والكميات التي يتم شحنها تعني الساعات التي تقضيها على المهام المرتبطة بها."
 
 #. module: sale
 #: field:sale.shop,payment_default_id:0
@@ -274,7 +284,7 @@ msgstr "الخصم (%)"
 #: view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_quotation_for_sale
 msgid "My Quotations"
-msgstr ""
+msgstr "العروض الخاصة بي"
 
 #. module: sale
 #: view:board.board:0
@@ -329,7 +339,7 @@ msgstr "المبيعات ذات الخلل"
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:70
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "خطأ في الإعدادات!"
 
 #. module: sale
 #: view:sale.order:0
@@ -498,7 +508,7 @@ msgstr "ملاحظات"
 #. module: sale
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن يكون فريداً !"
 
 #. module: sale
 #: help:sale.order,partner_invoice_id:0
@@ -508,7 +518,7 @@ msgstr "عنوان الفاتورة لأمر البيع الحالي"
 #. module: sale
 #: view:sale.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "شهر- ١"
 
 #. module: sale
 #: view:sale.report:0
@@ -673,7 +683,7 @@ msgstr "تاريخ الإنشاء"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
 msgid "Miscellaneous"
-msgstr ""
+msgstr "متفرقات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_line_tree3
@@ -717,7 +727,7 @@ msgstr "# للكمية"
 #: code:addons/sale/sale.py:1327
 #, python-format
 msgid "Hour"
-msgstr ""
+msgstr "ساعة"
 
 #. module: sale
 #: view:sale.order:0
@@ -738,7 +748,7 @@ msgstr "جميع التسعيرات"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "Options"
-msgstr ""
+msgstr "خيارات"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -781,7 +791,7 @@ msgstr "حالة الأمر"
 
 #. module: sale
 #: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s) ?"
+msgid "Do you really want to create the invoice(s)?"
 msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟"
 
 #. module: sale
@@ -826,12 +836,12 @@ msgstr ""
 #. module: sale
 #: field:sale.order,date_order:0
 msgid "Date"
-msgstr ""
+msgstr "التاريخ"
 
 #. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
-msgstr "مرشحات مفصلة"
+msgstr "مرشحات مفصلة..."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1418,6 +1428,9 @@ msgid ""
 "is 'Shipping and Manual in Progress'. The invoice is created automatically "
 "if the shipping policy is 'Payment before Delivery'."
 msgstr ""
+"ينشأ البائع الفاتورة يدويا، إذا كان النظام لسياسة شحن المبيعات هي \"دليل "
+"والشحن في التقدم\". يتم إنشاء الفاتورة تلقائيا إذا كانت سياسة النقل البحري "
+"هو \"الدفع قبل التسليم\"."
 
 #. module: sale
 #: help:sale.config.picking_policy,order_policy:0
@@ -1434,7 +1447,7 @@ msgstr ""
 #: code:addons/sale/sale.py:473
 #, python-format
 msgid "Customer Invoices"
-msgstr ""
+msgstr "فواتير العميل"
 
 #. module: sale
 #: model:process.process,name:sale.process_process_salesprocess0
@@ -1535,7 +1548,7 @@ msgstr "المبيعات.تكوين.اختيار_سياسة"
 #: view:account.invoice.report:0 view:board.board:0
 #: model:ir.actions.act_window,name:sale.action_turnover_by_month
 msgid "Monthly Turnover"
-msgstr ""
+msgstr "دورة الشهر"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
@@ -1592,6 +1605,9 @@ msgid ""
 "generates an invoice or a delivery order as soon as it is confirmed by the "
 "salesman."
 msgstr ""
+"اعتمادا على مراقبة الفواتير من امر المبيعات، يمكن أن تستند على تسليم "
+"الفاتورة أو على الكميات المطلوبة. وبالتالي، يمكن أن تنشأ امر المبيعات فاتورة "
+"أو أمر تسليم حالما يتم تأكيده من قبل البائع."
 
 #. module: sale
 #: code:addons/sale/sale.py:1251
@@ -1611,7 +1627,7 @@ msgstr "حالات"
 #. module: sale
 #: view:sale.config.picking_policy:0
 msgid "res_config_contents"
-msgstr "الدقة_التكوين_المحتويات"
+msgstr "res_config_contents"
 
 #. module: sale
 #: field:sale.order,client_order_ref:0
@@ -1646,7 +1662,7 @@ msgstr ""
 #. module: sale
 #: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
 msgid "Sales Dashboard"
-msgstr ""
+msgstr "لوحة المبيعات"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
@@ -1773,6 +1789,9 @@ msgid ""
 "parts to the sales order. There is 1 pick list by sales order line which "
 "evolves with the availability of parts."
 msgstr ""
+"يتم إنشاء نموذج للقائمة المختارة حالما يتم تأكيد ترتيب المبيعات، في نفس "
+"الوقت من اجل الشراء. لأنها تمثل أجزاء مهمة من امر المبيعات. هناك قائمة "
+"اختيار 1 من قبل خط ترتيب المبيعات التي تتطور مع توافر قطع الغيار."
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -1883,6 +1902,9 @@ msgid ""
 "production of products regarding to the rules and to the sales order's "
 "parameters. "
 msgstr ""
+"يتم تلقائيا إنشاء نظام الشراء في أقرب وقت لتأكيد ترتيب المبيعات أو كما يتم "
+"دفع الفاتورة. انه يقود عمليات الشراء وإنتاج المنتجات المتعلقة بالقواعد "
+"والمعايير لترتيب المبيعات. "
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1938,6 +1960,13 @@ msgid ""
 "            \n"
 "* The 'Cancelled' state is set when a user cancel the sales order related."
 msgstr ""
+"تم تعيين الحالة 'مشروع' عند ترتيب المبيعات ذات الصلة في مشروع الحالة.\n"
+"* تم تعيين حالة \"مؤكد\"  عندما يتم تأكيد ترتيب المبيعات ذات الصلة.\n"
+"* تم تعيين الحالة 'استثناء'  عندما يتم تعيين ترتيب مبيعات ذات الصلة، "
+"واستثناء من ذلك.\n"
+"* تم تعيين الحالة \"تم\" عندما يتم اختيار خط ترتيب المبيعات.\n"
+"* تم تعيين الحالة \"ملغاة\" عندما يقوم المستخدم بإلغاء ترتيب المبيعات ذات "
+"الصلة."
 
 #. module: sale
 #: help:sale.order,amount_tax:0
@@ -1963,7 +1992,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale.action_email_templates
 #: model:ir.ui.menu,name:sale.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "قوالب البريد الإلكتروني"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
@@ -2090,6 +2119,10 @@ msgid ""
 "warehouse from which the products will be delivered for each particular "
 "sales."
 msgstr ""
+"إذا كان لديك أكثر من متجر إعادة بيع منتجات الشركة الخاصة بك، يمكنك إنشاء "
+"وإدارة ذلك من هنا. كلما كنت سوف يسجل اقتباس جديد أو ترتيب المبيعات، وأنه لا "
+"بد من ربطها إلى متجر. المحل يعرف أيضا المستودع الذي سيتم تسليم المنتجات في "
+"كل مبيعات خاصة."
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2162,6 +2195,11 @@ msgid ""
 "having invoiced yet. If you want to analyse your turnover, you should use "
 "the Invoice Analysis report in the Accounting application."
 msgstr ""
+"سيقوم النظام تلقائيابتحليل اسعارك واوامر المبيعات. يتحقق التحليل من عوائد "
+"المبيعات الخاصة بك ويصنفها بمعايير المجموعة المختلفة (ندوب مبيعات، شريك، "
+"والمنتج، الخ.) استخدم هذا التقرير للقيام بتحليل المبيعات التي ليس لديها "
+"فواتير بعد.إذا كنت ترغب في تحليل دوران الخاص بك، يجب عليك استخدام تقرير "
+"تحليل الفاتورة في تطبيق المحاسبة."
 
 #. module: sale
 #: report:sale.order:0
@@ -2242,6 +2280,9 @@ msgstr "أصدر الفواتير بناءً على التسليم"
 
 #~ msgid "Invoice On Order After Delivery"
 #~ msgstr "أصدر فاتورة الأمر بعد التسليم"
+
+#~ msgid "Do you really want to create the invoice(s) ?"
+#~ msgstr "هل تريد فعلاً  إنشاء الفاتورة/الفواتبر؟"
 
 #~ msgid "  Year  "
 #~ msgstr "  السنة  "
@@ -2372,6 +2413,9 @@ msgstr "أصدر الفواتير بناءً على التسليم"
 #~ msgid "Configuration Progress"
 #~ msgstr "تقدم الإعدادات"
 
+#~ msgid "VAT"
+#~ msgstr "ضريبة القيمة المضافة"
+
 #~ msgid "    Month-1    "
 #~ msgstr "    شهر- ١    "
 
@@ -2391,3 +2435,110 @@ msgstr "أصدر الفواتير بناءً على التسليم"
 
 #~ msgid "Layout Sequence"
 #~ msgstr "تسلسل التخطيط"
+
+#~ msgid ""
+#~ "\n"
+#~ "    The base module to manage quotations and sales orders.\n"
+#~ "\n"
+#~ "    * Workflow with validation steps:\n"
+#~ "        - Quotation -> Sales order -> Invoice\n"
+#~ "    * Invoicing methods:\n"
+#~ "        - Invoice on order (before or after shipping)\n"
+#~ "        - Invoice on delivery\n"
+#~ "        - Invoice on timesheets\n"
+#~ "        - Advance invoice\n"
+#~ "    * Partners preferences (shipping, invoicing, incoterm, ...)\n"
+#~ "    * Products stocks and prices\n"
+#~ "    * Delivery methods:\n"
+#~ "        - all at once, multi-parcel\n"
+#~ "        - delivery costs\n"
+#~ "    * Dashboard for salesman that includes:\n"
+#~ "    * Your open quotations\n"
+#~ "    * Top 10 sales of the month\n"
+#~ "    * Cases statistics\n"
+#~ "    * Graph of sales by product\n"
+#~ "    * Graph of cases of the month\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    وحدة قاعدة لإدارة عروض الأسعار وأوامر البيع.\n"
+#~ "\n"
+#~ "* سير العمل مع خطوات التحقق من الصحة:\n"
+#~ "- التسعير - ترتيب مبيعات> -> الفاتورة\n"
+#~ "أساليب الفواتير *:\n"
+#~ "- الفاتورة على النظام (قبل أو بعد الشحن)\n"
+#~ "- الفاتورة عند التسليم\n"
+#~ "- الفاتورة في سجلات الدوام\n"
+#~ "- مقدما فاتورة\n"
+#~ "* شركاء تفضيلات (النقل البحري، والفواتير، incoterm، ...)\n"
+#~ "* الأسهم وأسعار المنتجات\n"
+#~ "طرق التسليم *:\n"
+#~ "- في كل مرة، متعددة لا يتجزأ\n"
+#~ "تكاليف التسليم -\n"
+#~ "* لوحة للبائع أن تشمل ما يلي:\n"
+#~ "* لديك الاٍسعار المفتوحة\n"
+#~ "* أفضل 10 مبيعات من الشهر\n"
+#~ "* حالات الإحصاءات\n"
+#~ "* الرسم البياني للمبيعات حسب المنتج\n"
+#~ "* الرسم البياني لحالات من هذا الشهر\n"
+#~ "    "
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sales order. \n"
+#~ "The exception state is automatically set when a cancel operation occurs in "
+#~ "the invoice validation (Invoice Exception) or in the picking list process "
+#~ "(Shipping Exception). \n"
+#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
+#~ "waiting for the scheduler to run on the date 'Ordered Date'."
+#~ msgstr ""
+#~ "تعطي الحالة من التسعير أو من امر المبيعات.\n"
+#~ "يتم تلقائيا تعيين حالة استثناء عند عملية إلالغاء التي تحدث في التحقق من صحة "
+#~ "الفاتورة (فاتورة استثناء) أو في عملية اختيار قائمة (استثناء الشحن).\n"
+#~ "في \"انتظار سجل الدوام\" دولة يتم تعيين عندما يتم تأكيد الفاتورة ولكن في "
+#~ "انتظار جدولة لتشغيلها على \"التاريخ المطلوب\" للتاريخ."
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging:\n"
+#~ "\n"
+#~ "EAN: %s Quantity: %s Type of ul: %s"
+#~ msgstr ""
+#~ "حددت كمية من وحدات %d\n"
+#~ "ولكنها ليست متوافقة مع التعبئة والتغليف المحددة.\n"
+#~ "وهنا الاقتراح من الكميات وفقا للتعبئة والتغليف:\n"
+#~ "\n"
+#~ "EAN: الكمية %s: نوع %s من ul: %s"
+
+#~ msgid ""
+#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay Before delivery' choice will first generate the invoice and "
+#~ "then generate the picking order after the payment of this invoice.\n"
+#~ "  - The 'Shipping & Manual Invoice' will create the picking order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice.\n"
+#~ "  - The 'Invoice On Order After Delivery' choice will generate the draft "
+#~ "invoice based on sales order after all picking lists have been finished.\n"
+#~ "  - The 'Invoice From The Picking' choice is used to create an invoice "
+#~ "during the picking process."
+#~ msgstr ""
+#~ "يتم استخدام سياسة الشحن لمزامنة الفاتورة وعمليات التسليم.\n"
+#~ "- إن \"الدفع قبل التسليم\" الاختيار سيتم إنشاء أول فاتورة ومن ثم إنشاء نظام "
+#~ "اختيار بعد دفع هذه الفاتورة.\n"
+#~ "- إن \"فاتورة الشحن ودليل\" خلق من اجل اختيار مباشرة والانتظار للمستخدم "
+#~ "يدويا انقر على زر 'الفاتورة' لانشاء فاتورة مشروع.\n"
+#~ "- وسوف تنشأ \"الفاتورة على النظام بعد تسليم\"  فاتورة المشروع على أساس ترتيب "
+#~ "المبيعات بعد أن يتم الانتهاء من جميع قوائم اختيار.\n"
+#~ "- يتم استخدام \"الفاتورة من الاختيار\"  لإنشاء فاتورة خلال عملية اختيار."
+
+#~ msgid ""
+#~ "By default, OpenERP is able to manage complex routing and paths of products "
+#~ "in your warehouse and partner locations. This will configure the most common "
+#~ "and simple methods to deliver products to the customer in one or two "
+#~ "operations by the worker."
+#~ msgstr ""
+#~ "افتراضيا، OpenERP قادرة على إدارة التوجيه والمسارات المعقدة من المنتجات في "
+#~ "المستودع الخاص بك والمواقع الشريكة. وهذا تكوين الأساليب الأكثر شيوعا وبسيطة "
+#~ "لتوصيل المنتجات إلى العملاء في واحد أو اثنين من العمليات التي تقوم بها "
+#~ "للعامل."

@@ -4,11 +4,10 @@
         <record model="ir.ui.view" id="res_partner_opt_out_form">
             <field name="name">res.partner.opt_out.form</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='active']" position="after">
-                    <field name="opt_out" groups="base.group_extended"/>
+                <xpath expr="//field[@name='active']" position="after">
+                    <field name="opt_out"/>
                 </xpath>
             </field>
         </record>

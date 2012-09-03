@@ -7,23 +7,21 @@
         <record id="view_make_procurment_wizard" model="ir.ui.view">
             <field name="name">Procurement Request</field>
             <field name="model">make.procurement</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Procurement Request">
-                    <label string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders." colspan="4"/>
-                    <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                    <field name="qty"/>
-                    <field name="uom_id"/>
-                    <field name="date_planned"/>
-                    <field name="warehouse_id" colspan="4"/>
-                    <newline/>
-                    <separator colspan="4"/>
-                    <group col="2" colspan="4">
-                        <button icon='gtk-cancel' special="cancel"
-                            string="Cancel" />
-                        <button name="make_procurement" string="Ask New Products"
-                            colspan="1" type="object" icon="gtk-ok" />
+                <form string="Procurement Request" version="7.0">
+                    <group col="4" string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders."/>
+                     <group>
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                        <field name="qty"/>
+                        <field name="uom_id" groups="product.group_uom"/>
+                        <field name="date_planned"/>
+                        <field name="warehouse_id" groups="stock.group_locations"/>
                     </group>
+                    <footer>
+                        <button name="make_procurement" string="Ask New Products" type="object"  class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

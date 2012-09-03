@@ -21,62 +21,62 @@
 
 import logging
 import os
-import sys
+import tempfile
 import urllib
+from openerp import SUPERUSER_ID
 
 import werkzeug.urls
 import werkzeug.exceptions
 
 from openerp.modules.registry import RegistryManager
+from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
 try:
     import openerp.addons.web.common.http as openerpweb
 except ImportError:
-    import web.common.http as openerpweb
+    import web.common.http as openerpweb    # noqa
 
 from openid import oidutil
-from openid.store import memstore
-#from openid.store import filestore
+from openid.store import filestore
 from openid.consumer import consumer
 from openid.cryptutil import randomString
 from openid.extensions import ax, sreg
 
 from .. import utils
 
+_logger = logging.getLogger(__name__)
+oidutil.log = _logger.debug
 
-
-_logger = logging.getLogger('web.auth_openid')
-oidutil.log = logging.getLogger('openid').debug
-
+_storedir = os.path.join(tempfile.gettempdir(), 'openerp-auth_openid-store')
 
 class GoogleAppsAwareConsumer(consumer.GenericConsumer):
     def complete(self, message, endpoint, return_to):
         if message.getOpenIDNamespace() == consumer.OPENID2_NS:
-            server_url = message.getArg(consumer.OPENID2_NS, 'op_endpoint', consumer.no_default)
+            server_url = message.getArg(consumer.OPENID2_NS, 'op_endpoint', '')
             if server_url.startswith('https://www.google.com/a/'):
-                # update fields
-                for attr in ['claimed_id', 'identity']:
-                    value = message.getArg(consumer.OPENID2_NS, attr)
-                    value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % urllib.quote_plus(value)
-                    message.setArg(consumer.OPENID2_NS, attr, value)
-
-                # now, resign the message
                 assoc_handle = message.getArg(consumer.OPENID_NS, 'assoc_handle')
                 assoc = self.store.getAssociation(server_url, assoc_handle)
-                message.delArg(consumer.OPENID2_NS, 'sig')
-                message.delArg(consumer.OPENID2_NS, 'signed')
-                message = assoc.signMessage(message)
+                if assoc:
+                    # update fields
+                    for attr in ['claimed_id', 'identity']:
+                        value = message.getArg(consumer.OPENID2_NS, attr, '')
+                        value = 'https://www.google.com/accounts/o8/user-xrds?uri=%s' % urllib.quote_plus(value)
+                        message.setArg(consumer.OPENID2_NS, attr, value)
 
-        return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to) 
+                    # now, resign the message
+                    message.delArg(consumer.OPENID2_NS, 'sig')
+                    message.delArg(consumer.OPENID2_NS, 'signed')
+                    message = assoc.signMessage(message)
+
+        return super(GoogleAppsAwareConsumer, self).complete(message, endpoint, return_to)
 
 
 class OpenIDController(openerpweb.Controller):
     _cp_path = '/auth_openid/login'
 
-    _store = memstore.MemoryStore()  # TODO use a filestore
+    _store = filestore.FileOpenIDStore(_storedir)
 
     _REQUIRED_ATTRIBUTES = ['email']
     _OPTIONAL_ATTRIBUTES = 'nickname fullname postcode country language timezone'.split()
-
 
     def _add_extensions(self, request):
         """Add extensions to the request"""
@@ -118,8 +118,20 @@ class OpenIDController(openerpweb.Controller):
     def _get_realm(self, req):
         return req.httprequest.host_url
 
+    @openerpweb.httprequest
+    def verify_direct(self, req, db, url):
+        result = self._verify(req, db, url)
+        if 'error' in result:
+            return werkzeug.exceptions.BadRequest(result['error'])
+        if result['action'] == 'redirect':
+            return werkzeug.utils.redirect(result['value'])
+        return result['value']
+
     @openerpweb.jsonrequest
     def verify(self, req, db, url):
+        return self._verify(req, db, url)
+
+    def _verify(self, req, db, url):
         redirect_to = werkzeug.urls.Href(req.httprequest.host_url + 'auth_openid/login/process')(session_id=req.session_id)
         realm = self._get_realm(req)
 
@@ -145,12 +157,11 @@ class OpenIDController(openerpweb.Controller):
             form_html = request.htmlMarkup(realm, redirect_to)
             return {'action': 'post', 'value': form_html, 'session_id': req.session_id}
 
-    
     @openerpweb.httprequest
     def process(self, req, **kw):
         session = getattr(req.session, 'openid_session', None)
         if not session:
-            return werkzeug.utils.redirect('/')
+            return set_cookie_and_redirect(req, '/')
 
         oidconsumer = consumer.Consumer(session, self._store, consumer_class=GoogleAppsAwareConsumer)
 
@@ -159,15 +170,14 @@ class OpenIDController(openerpweb.Controller):
         display_identifier = info.getDisplayIdentifier()
 
         session['status'] = info.status
-        user_id = None
 
         if info.status == consumer.SUCCESS:
             dbname = session['dbname']
-            with utils.cursor(dbname) as cr:
-                registry = RegistryManager.get(dbname)
+            registry = RegistryManager.get(dbname)
+            with registry.cursor() as cr:
                 Modules = registry.get('ir.module.module')
 
-                installed = Modules.search_count(cr, 1, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
+                installed = Modules.search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
                 if installed:
 
                     Users = registry.get('res.users')
@@ -185,26 +195,22 @@ class OpenIDController(openerpweb.Controller):
                         domain += ['|', ('openid_email', '=', False)]
                     domain += [('openid_email', '=', openid_email)]
 
-                    domain += [
-                               ('openid_url', '=', openid_url),
-                               ('active', '=', True),
-                              ]
-                    ids = Users.search(cr, 1, domain)
+                    domain += [('openid_url', '=', openid_url), ('active', '=', True)]
+
+                    ids = Users.search(cr, SUPERUSER_ID, domain)
                     assert len(ids) < 2
                     if ids:
                         user_id = ids[0]
-                        login = Users.browse(cr, 1, user_id).login
+                        login = Users.browse(cr, SUPERUSER_ID, user_id).login
                         key = randomString(utils.KEY_LENGTH, '0123456789abcdef')
-                        Users.write(cr, 1, [user_id], {'openid_key': key})
+                        Users.write(cr, SUPERUSER_ID, [user_id], {'openid_key': key})
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        u = req.session.login(dbname, login, key)
+                        return login_and_redirect(req, dbname, login, key)
 
-            if not user_id:
-                session['message'] = 'This OpenID identifier is not associated to any active users'
+            session['message'] = 'This OpenID identifier is not associated to any active users'
 
-                
         elif info.status == consumer.SETUP_NEEDED:
             session['message'] = info.setup_url
         elif info.status == consumer.FAILURE and display_identifier:
@@ -217,9 +223,7 @@ class OpenIDController(openerpweb.Controller):
             # information in a log.
             session['message'] = 'Verification failed.'
 
-
-        fragment = '#loginerror' if not user_id else ''
-        return werkzeug.utils.redirect('/'+fragment)
+        return set_cookie_and_redirect(req, '/#action=login&loginerror=1')
 
     @openerpweb.jsonrequest
     def status(self, req):

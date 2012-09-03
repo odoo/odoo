@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model="ir.ui.view" id="pos_session_opening_form_view">
+            <field name="name">pos.session.opening.form.view</field>
+            <field name="model">pos.session.opening</field>
+            <field name="arch" type="xml">
+                <form string="PoS Session Opening" version="7.0">
+                    <field name="show_config" invisible="1" />
+                    <separator string="Select your Point of Sale" colspan="4" attrs="{'invisible' : [('show_config', '=', False)]}" />
+                    <group attrs="{'invisible' : [('show_config', '=', False)]}">
+                        <field name="pos_config_id" on_change="on_change_config(pos_config_id)"
+                            widget="selection" domain="[('state','=','active')]"
+                            class="oe_inline"/>
+                        <field name="pos_state" class="oe_inline" attrs="{'invisible' : [('pos_state', '=', False)]}" />
+                    </group>
+                    <field name="pos_session_id" invisible="1"/>
+                    <button name="open_ui" type="object" string="Start Selling" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_existing_session_cb" type="object" string="Open Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opening_control',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_existing_session_cb_close" type="object" string="Close Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('opened',))]}" 
+                    />
+                    <button name="open_existing_session_cb" type="object" string="Close Session" 
+                        attrs="{'invisible' : [('pos_state', 'not in', ('closing_control',))]}" 
+                        class="oe_highlight"
+                    />
+                    <button name="open_session_cb" type="object" string="New Session" 
+                        attrs="{'invisible' : ['|', ('pos_state', '!=', False),('pos_config_id','=',False)]}"
+                        class="oe_highlight"
+                    />
+
+                    <div attrs="{'invisible' : ['|', ('pos_state', '!=', False),('pos_config_id','=',False)]}" class="oe_view_nocontent">
+                        <p class="oe_view_nocontent_create">
+                          Click to start a session.
+                        </p><p>
+                          You will first have to control your cash amount in your cash register.
+                          Then you will be able to open the session and start selling with the touchscreen
+                          interface.
+                        </p>
+                    </div>
+                    <div attrs="{'invisible' : [('pos_state', '!=', 'opened')]}" class="oe_view_nocontent">
+                        <p class="oe_view_nocontent_create">
+                            Click to continue the session.
+                        </p>
+                        <p>
+                            The session <field name="pos_session_name" class="oe_inline" /> (<field name="pos_session_username" class="oe_inline" />) is "<b><field name="pos_state" class="oe_inline" /></b>"<br/>
+                            You can continue sales from the touchscreen interface by clicking on "<b>Settings</b>" or close the cash register session ?
+                        </p>
+                    </div>
+
+                </form>
+            </field>
+        </record>
+
+        <record id="action_pos_session_opening" model="ir.actions.act_window">
+            <field name="name">Your Session</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">pos.session.opening</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">inline</field>
+        </record>
+    </data>
+</openerp>

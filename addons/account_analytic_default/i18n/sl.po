@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:36+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:22+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,partner_id:0
@@ -23,6 +23,8 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "partner, it will automatically take this as an analytical account)"
 msgstr ""
+"Izberite partnerja , ki mu bo prirejen analitični konto (npr. pri kreiranju "
+"računa za tega partnerja  bo avtomatsko izbran ta analitični konto)"
 
 #. module: account_analytic_default
 #: model:ir.actions.act_window,name:account_analytic_default.analytic_rule_action_partner
@@ -34,27 +36,27 @@ msgstr "Pravila analitike"
 #. module: account_analytic_default
 #: help:account.analytic.default,analytic_id:0
 msgid "Analytical Account"
-msgstr ""
+msgstr "Analitični konto"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Current"
-msgstr ""
+msgstr "Trenutno"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Group By..."
-msgstr ""
+msgstr "Združeno po..."
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_stop:0
 msgid "Default end date for this Analytical Account"
-msgstr ""
+msgstr "Privzeti datum zaključka"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_stock_picking
 msgid "Picking List"
-msgstr ""
+msgstr "Izbirni seznam"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -68,28 +70,30 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "company, it will automatically take this as an analytical account)"
 msgstr ""
+"Izberite podjetje , ki mu bo prirejen analitični konto (npr. pri kreiranju "
+"računa za to podjetje  bo avtomatsko izbran ta analitični konto)"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,date_start:0
 msgid "Default start date for this Analytical Account"
-msgstr ""
+msgstr "Privzeti začetni datum"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,product_id:0
 msgid "Product"
-msgstr "Proizvod"
+msgstr "Izdelek"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Analitična porazdelitev"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: field:account.analytic.default,company_id:0
 msgid "Company"
-msgstr "Družba"
+msgstr "Podjetje"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -105,30 +109,30 @@ msgstr "Vknjižbe"
 #. module: account_analytic_default
 #: field:account.analytic.default,date_stop:0
 msgid "End Date"
-msgstr "Končni datum"
+msgstr "Zaključni datum"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,user_id:0
 msgid ""
 "select a user which will use analytical account specified in analytic default"
-msgstr ""
+msgstr "Izberite uporabnika , ki mu bo prirejen analitični konto"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 #: model:ir.actions.act_window,name:account_analytic_default.action_analytic_default_list
 #: model:ir.ui.menu,name:account_analytic_default.menu_analytic_default_list
 msgid "Analytic Defaults"
-msgstr "Privzete vrednosti analitike"
+msgstr "Privzete vrednosti"
 
 #. module: account_analytic_default
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Referenca mora biti enoznačna"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Analytical defaults whose end date is greater than today or None"
-msgstr ""
+msgstr "Zaključni datum privzete analitike je večji od trenutnega datuma"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,product_id:0
@@ -137,6 +141,8 @@ msgid ""
 "default (eg. create new cutomer invoice or Sale order if we select this "
 "product, it will automatically take this as an analytical account)"
 msgstr ""
+"Izberite izdelek , ki mu bo prirejen analitični konto (npr. pri kreiranju "
+"računa za ta izdelek  bo avtomatsko izbran ta analitični konto)"
 
 #. module: account_analytic_default
 #: field:account.analytic.default,sequence:0
@@ -146,7 +152,7 @@ msgstr "Zaporedje"
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_account_invoice_line
 msgid "Invoice Line"
-msgstr ""
+msgstr "Postavka računa"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -157,7 +163,7 @@ msgstr "Analitični konto"
 #. module: account_analytic_default
 #: view:account.analytic.default:0
 msgid "Accounts"
-msgstr ""
+msgstr "Konti"
 
 #. module: account_analytic_default
 #: view:account.analytic.default:0
@@ -168,18 +174,18 @@ msgstr "Partner"
 #. module: account_analytic_default
 #: field:account.analytic.default,date_start:0
 msgid "Start Date"
-msgstr "Datum začetka"
+msgstr "Začetni datum"
 
 #. module: account_analytic_default
 #: help:account.analytic.default,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of analytic distribution"
-msgstr ""
+msgstr "Zaporedje analitične porazdelitve"
 
 #. module: account_analytic_default
 #: model:ir.model,name:account_analytic_default.model_sale_order_line
 msgid "Sales Order Line"
-msgstr ""
+msgstr "Postavka  naročila"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Neveljaven XML za arhitekturo pogleda."

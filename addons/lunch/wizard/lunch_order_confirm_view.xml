@@ -4,25 +4,23 @@
 
 <!-- confirm order  -->
 
-  		<record id="view_lunch_order_confirm" model="ir.ui.view">
+        <record id="view_lunch_order_confirm" model="ir.ui.view">
             <field name="name">lunch.order.confirm.form</field>
             <field name="model">lunch.order.confirm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Confirm">
-                	<group colspan="4" >
-                		 <separator string="Orders Confirmation" colspan="4"/>
-                		 <field name="confirm_cashbox"/>
-                		 <newline/>
-                    </group>
-                       	<separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                    	<button  icon="gtk-cancel" special="cancel" string="Cancel"/>
-                    	<button  icon="gtk-ok" name="confirm" string="Confirm Order" type="object"/>
+                <form string="Confirm" version="7.0">
+                    <group col="4">
+                         <separator string="Orders Confirmation" colspan="4"/>
+                         <field name="confirm_cashbox"/>
                    </group>
+                    <footer>
+                        <button name="confirm" string="Confirm Order" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
-  		</record>
+        </record>
 
         <record id="action_lunch_order_confirm" model="ir.actions.act_window">
             <field name="name">Confirm Order</field>
@@ -34,9 +32,9 @@
         </record>
 
         <act_window id="action_lunch_order_confirm_values"
-    		key2="client_action_multi" name="Confirm Order"
-    		res_model="lunch.order.confirm" src_model="lunch.order"
-    		view_mode="form" target="new" view_type="form"/>
+            key2="client_action_multi" name="Confirm Order"
+            res_model="lunch.order.confirm" src_model="lunch.order"
+            view_mode="form" target="new" view_type="form"/>
 
     </data>
 </openerp>

@@ -19,15 +19,15 @@
 #
 ##############################################################################
 
-import time
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import netsvc
+import pooler
 from osv import osv
+from osv import fields
 from tools.translate import _
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 import tools
-import netsvc
-import pooler
 
 class procurement_order(osv.osv):
     _inherit = 'procurement.order'
@@ -69,7 +69,7 @@ class procurement_order(osv.osv):
                 cr.commit()
             company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id
             maxdate = (datetime.today() + relativedelta(days=company.schedule_range)).strftime(tools.DEFAULT_SERVER_DATE_FORMAT)
-            start_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+            start_date = fields.datetime.now()
             offset = 0
             report = []
             report_total = 0
@@ -113,13 +113,14 @@ class procurement_order(osv.osv):
                                     proc.product_id.name,))
                         report_except += 1
 
+
                 if use_new_cursor:
                     cr.commit()
                 offset += len(ids)
                 if not ids: break
-            end_date = time.strftime('%Y-%m-%d, %Hh %Mm %Ss')
+            end_date = fields.datetime.now()
             if uid:
-                request = self.pool.get('res.request')
+                # Chatter: old res.request is now a chatter on res.users, id=uid
                 summary = _("""Here is the procurement scheduling report.
 
         Start Time: %s 
@@ -130,12 +131,7 @@ class procurement_order(osv.osv):
 
         Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
                 summary += '\n'.join(report)
-                request.create(cr, uid,
-                    {'name': "Procurement Processing Report.",
-                        'act_from': uid,
-                        'act_to': uid,
-                        'body': summary,
-                    })
+                procurement_obj.message_append_note(cr, uid, ids, body=summary, context=context)
 
             if use_new_cursor:
                 cr.commit()
@@ -237,9 +233,7 @@ class procurement_order(osv.osv):
         orderpoint_obj = self.pool.get('stock.warehouse.orderpoint')
         location_obj = self.pool.get('stock.location')
         procurement_obj = self.pool.get('procurement.order')
-        request_obj = self.pool.get('res.request')
         wf_service = netsvc.LocalService("workflow")
-        report = []
         offset = 0
         ids = [1]
         if automatic:
@@ -248,8 +242,9 @@ class procurement_order(osv.osv):
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 if op.procurement_id.state != 'exception':
-                    if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                        continue
+                    if op.procurement_id and hasattr(op.procurement_id, 'purchase_id'):
+                        if op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
+                            continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
@@ -292,13 +287,6 @@ class procurement_order(osv.osv):
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
-        if user_id and report:
-            request_obj.create(cr, uid, {
-                'name': 'Orderpoint report.',
-                'act_from': user_id,
-                'act_to': user_id,
-                'body': '\n'.join(report)
-            })
         if use_new_cursor:
             cr.commit()
             cr.close()

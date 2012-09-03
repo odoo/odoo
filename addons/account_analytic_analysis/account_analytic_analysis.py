@@ -98,7 +98,7 @@ class account_analytic_account(osv.osv):
                             WHERE account_analytic_account.id IN %s \
                                 AND account_analytic_line.invoice_id IS NULL \
                                 AND account_analytic_line.to_invoice IS NOT NULL \
-                                AND account_analytic_journal.type IN ('purchase','general') \
+                                AND account_analytic_journal.type = 'general' \
                             GROUP BY account_analytic_account.id;""", (parent_ids,))
                     for account_id, sum in cr.fetchall():
                         if account_id not in res:
@@ -257,6 +257,12 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+    def _remaining_hours_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = max(account.hours_qtt_est - account.timesheet_ca_invoiced, account.ca_to_invoice)
+        return res
+
     def _hours_qtt_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
@@ -291,15 +297,34 @@ class account_analytic_account(osv.osv):
             res[id] = round(res.get(id, 0.0),2)
         return res
 
+    def _fix_price_to_invoice_calc(self, cr, uid, ids, name, arg, context=None):
+        sale_obj = self.pool.get('sale.order')
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = 0.0
+            sale_ids = sale_obj.search(cr, uid, [('project_id','=', account.id), ('partner_id', '=', account.partner_id.id)], context=context)
+            for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+                if not sale.invoiced:
+                    res[account.id] += sale.amount_untaxed
+                    for invoice in sale.invoice_ids:
+                        if invoice.state not in ('draft', 'cancel'):
+                            res[account.id] -= invoice.amount_untaxed
+        return res
+
+    def _timesheet_ca_invoiced_calc(self, cr, uid, ids, name, arg, context=None):
+        lines_obj = self.pool.get('account.analytic.line')
+        res = {}
+        for account in self.browse(cr, uid, ids, context=context):
+            res[account.id] = 0.0
+            line_ids = lines_obj.search(cr, uid, [('account_id','=', account.id), ('invoice_id','!=',False), ('to_invoice','!=', False), ('journal_id.type', '=', 'general')], context=context)
+            for line in lines_obj.browse(cr, uid, line_ids, context=context):
+                res[account.id] += line.invoice_id.amount_untaxed
+        return res
+
     def _remaining_ca_calc(self, cr, uid, ids, name, arg, context=None):
         res = {}
         for account in self.browse(cr, uid, ids, context=context):
-            if account.amount_max != 0:
-                res[account.id] = account.amount_max - account.ca_invoiced
-            else:
-                res[account.id]=0.0
-        for id in ids:
-            res[id] = round(res.get(id, 0.0),2)
+            res[account.id] = max(account.amount_max - account.ca_invoiced, account.fix_price_to_invoice)
         return res
 
     def _real_margin_calc(self, cr, uid, ids, name, arg, context=None):
@@ -333,6 +358,47 @@ class account_analytic_account(osv.osv):
             result.add(line.account_id.id)
         return list(result)
 
+    def _get_total_estimation(self, account):
+        tot_est = 0.0
+        if account.fix_price_invoices:
+            tot_est += account.amount_max 
+        if account.invoice_on_timesheets:
+            tot_est += account.hours_qtt_est
+        return tot_est
+
+    def _get_total_invoiced(self, account):
+        total_invoiced = 0.0
+        if account.fix_price_invoices:
+            total_invoiced += account.ca_invoiced
+        if account.invoice_on_timesheets:
+            total_invoiced += account.timesheet_ca_invoiced
+        return total_invoiced
+
+    def _get_total_remaining(self, account):
+        total_remaining = 0.0
+        if account.fix_price_invoices:
+            total_remaining += account.remaining_ca
+        if account.invoice_on_timesheets:
+            total_remaining += account.remaining_hours_to_invoice
+        return total_remaining
+
+    def _get_total_toinvoice(self, account):
+        total_toinvoice = 0.0
+        if account.fix_price_invoices:
+            total_toinvoice += account.fix_price_to_invoice
+        if account.invoice_on_timesheets:
+            total_toinvoice += account.ca_to_invoice
+        return total_toinvoice
+
+    def _sum_of_fields(self, cr, uid, ids, name, arg, context=None):
+         res = dict([(i, {}) for i in ids])
+         for account in self.browse(cr, uid, ids, context=context):
+            res[account.id]['est_total'] = self._get_total_estimation(account)
+            res[account.id]['invoiced_total'] =  self._get_total_invoiced(account)
+            res[account.id]['remaining_total'] = self._get_total_remaining(account)
+            res[account.id]['toinvoice_total'] =  self._get_total_toinvoice(account)
+         return res
+
     _columns = {
         'is_overdue_quantity' : fields.function(_is_overdue_quantity, method=True, type='boolean', string='Overdue Quantity',
                                                 store={
@@ -350,7 +416,7 @@ class account_analytic_account(osv.osv):
         'ca_theorical': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Theoretical Revenue',
             help="Based on the costs you had on the project, what would have been the revenue if all these costs have been invoiced at the normal sale price provided by the pricelist.",
             digits_compute=dp.get_precision('Account')),
-        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Time',
+        'hours_quantity': fields.function(_analysis_all, multi='analytic_analysis', type='float', string='Total Worked Time',
             help="Number of time you spent on the analytic account (from timesheet). It computes quantities on all journal of type 'general'."),
         'last_invoice_date': fields.function(_analysis_all, multi='analytic_analysis', type='date', string='Last Invoice Date',
             help="If invoice from the costs, this is the date of the latest invoiced."),
@@ -363,7 +429,13 @@ class account_analytic_account(osv.osv):
         'hours_qtt_invoiced': fields.function(_hours_qtt_invoiced_calc, type='float', string='Invoiced Time',
             help="Number of time (hours/days) that can be invoiced plus those that already have been invoiced."),
         'remaining_hours': fields.function(_remaining_hours_calc, type='float', string='Remaining Time',
-            help="Computed using the formula: Maximum Time - Total Time"),
+            help="Computed using the formula: Maximum Time - Total Worked Time"),
+        'remaining_hours_to_invoice': fields.function(_remaining_hours_to_invoice_calc, type='float', string='Remaining Time',
+            help="Computed using the formula: Maximum Time - Total Invoiced Time"),
+        'fix_price_to_invoice': fields.function(_fix_price_to_invoice_calc, type='float', string='Remaining Time',
+            help="Sum of quotations for this contract."),
+        'timesheet_ca_invoiced': fields.function(_timesheet_ca_invoiced_calc, type='float', string='Remaining Time',
+            help="Sum of timesheet lines invoiced for this contract."),
         'remaining_ca': fields.function(_remaining_ca_calc, type='float', string='Remaining Revenue',
             help="Computed using the formula: Max Invoice Price - Invoiced Amount.",
             digits_compute=dp.get_precision('Account')),
@@ -374,15 +446,52 @@ class account_analytic_account(osv.osv):
             help="Computed using the formula: Invoiced Amount - Total Costs.",
             digits_compute=dp.get_precision('Account')),
         'theorical_margin': fields.function(_theorical_margin_calc, type='float', string='Theoretical Margin',
-            help="Computed using the formula: Theorial Revenue - Total Costs",
+            help="Computed using the formula: Theoretical Revenue - Total Costs",
             digits_compute=dp.get_precision('Account')),
         'real_margin_rate': fields.function(_real_margin_rate_calc, type='float', string='Real Margin Rate (%)',
             help="Computes using the formula: (Real Margin / Total Costs) * 100.",
             digits_compute=dp.get_precision('Account')),
+        'fix_price_invoices' : fields.boolean('Fixed Price'),
+        'invoice_on_timesheets' : fields.boolean("On Timesheets"),
         'month_ids': fields.function(_analysis_all, multi='analytic_analysis', type='many2many', relation='account_analytic_analysis.summary.month', string='Month'),
         'user_ids': fields.function(_analysis_all, multi='analytic_analysis', type="many2many", relation='account_analytic_analysis.summary.user', string='User'),
+        'hours_qtt_est': fields.float('Estimation of Hours to Invoice'),
+        'est_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Estimation"),
+        'invoiced_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Invoiced"),
+        'remaining_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total Remaining", help="Expectation of remaining income for this contract. Computed as the sum of remaining subtotals which, in turn, are computed as the maximum between '(Estimation - Invoiced)' and 'To Invoice' amounts"),
+        'toinvoice_total' : fields.function(_sum_of_fields, type="float",multi="sum_of_all", string="Total to Invoice", help=" Sum of everything that could be invoiced for this contract."),
     }
 
+    def open_sale_order_lines(self,cr,uid,ids,context=None):
+        if context is None:
+            context = {}
+        sale_ids = self.pool.get('sale.order').search(cr,uid,[('project_id','=',context.get('search_default_project_id',False)),('partner_id','=',context.get('search_default_partner_id',False))])
+        names = [record.name for record in self.browse(cr, uid, ids, context=context)]
+        name = _('Sale Order Lines of %s') % ','.join(names)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': name,
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'context': context,
+            'domain' : [('order_id','in',sale_ids)],
+            'res_model': 'sale.order.line',
+            'nodestroy': True,
+        }
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        if not template_id:
+            return {}
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['fix_price_invoices'] = template.fix_price_invoices
+            res['value']['invoice_on_timesheets'] = template.invoice_on_timesheets
+            res['value']['hours_qtt_est'] = template.hours_qtt_est
+            res['value']['amount_max'] = template.amount_max
+            res['value']['to_invoice'] = template.to_invoice.id
+            res['value']['pricelist_id'] = template.pricelist_id.id
+        return res
 account_analytic_account()
 
 class account_analytic_account_summary_user(osv.osv):
@@ -419,40 +528,25 @@ class account_analytic_account_summary_user(osv.osv):
 
     def init(self, cr):
         tools.sql.drop_view_if_exists(cr, 'account_analytic_analysis_summary_user')
-        cr.execute('CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (' \
-                'SELECT ' \
-                    '(u.account_id * u.max_user) + u."user" AS id, ' \
-                    'u.account_id AS account_id, ' \
-                    'u."user" AS "user", ' \
-                    'COALESCE(SUM(l.unit_amount), 0.0) AS unit_amount ' \
-                'FROM ' \
-                    '(SELECT ' \
-                        'a.id AS account_id, ' \
-                        'u1.id AS "user", ' \
-                        'MAX(u2.id) AS max_user ' \
-                    'FROM ' \
-                        'res_users AS u1, ' \
-                        'res_users AS u2, ' \
-                        'account_analytic_account AS a ' \
-                    'GROUP BY u1.id, a.id ' \
-                    ') AS u ' \
-                'LEFT JOIN ' \
-                    '(SELECT ' \
-                        'l.account_id AS account_id, ' \
-                        'l.user_id AS "user", ' \
-                        'SUM(l.unit_amount) AS unit_amount ' \
-                    'FROM account_analytic_line AS l, ' \
-                        'account_analytic_journal AS j ' \
-                    'WHERE (j.type = \'general\') and (j.id=l.journal_id) ' \
-                    'GROUP BY l.account_id, l.user_id ' \
-                    ') AS l '
-                    'ON (' \
-                        'u.account_id = l.account_id ' \
-                        'AND u."user" = l."user"' \
-                    ') ' \
-                'GROUP BY u."user", u.account_id, u.max_user' \
-                ')')
-
+        cr.execute('''CREATE OR REPLACE VIEW account_analytic_analysis_summary_user AS (
+            with mu as
+                (select max(id) as max_user from res_users)
+            , lu AS
+                (SELECT   
+                 l.account_id AS account_id,   
+                 coalesce(l.user_id, 0) AS user_id,   
+                 SUM(l.unit_amount) AS unit_amount   
+             FROM account_analytic_line AS l,   
+                 account_analytic_journal AS j   
+             WHERE (j.type = 'general' ) and (j.id=l.journal_id)   
+             GROUP BY l.account_id, l.user_id   
+            )
+            select (lu.account_id * mu.max_user) + lu.user_id as id,
+                    lu.account_id as account_id,
+                    lu.user_id as "user",
+                    unit_amount
+            from lu, mu)''')
+                   
 account_analytic_account_summary_user()
 
 class account_analytic_account_summary_month(osv.osv):

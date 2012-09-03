@@ -4,33 +4,32 @@
         <record model="ir.ui.view" id="view_voucher_tree">
             <field name="name">account.voucher.tree</field>
             <field name="model">account.voucher</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
                     <field name="date"/>
                     <field name="number"/>
                     <field name="reference"/>
                     <field name="partner_id"/>
-                    <field name="journal_id"/>
-                    <field name="period_id" groups="base.group_extended" invisible="context.get('visible', True)"/>
+                    <field name="journal_id" groups="account.group_account_user"/>
+                    <field name="period_id" invisible="context.get('visible', True)"/>
                     <field name="type" invisible="context.get('visible', True)"/>
                     <field name="amount" sum="Total Amount"/>
-                    <field name="audit"/>
+                    <field name="audit" invisible="1"/>
                     <field name="state"/>
-                    <button name="proforma_voucher" string="Post" states="draft" icon="terp-document-new"/>
                 </tree>
             </field>
         </record>
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Voucher Lines">
-                    <field name="name"/>
-                    <field name="account_id"/>
-                    <field name="partner_id"/>
-                    <field name="amount"/>
+                <form string="Voucher Lines" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="account_id"/>
+                        <field name="partner_id"/>
+                        <field name="amount"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -38,22 +37,30 @@
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Accounting Voucher">
+                <form string="Accounting Voucher" version="7.0">
+                  <header>
+                      <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
+                      <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
+                      <button name="cancel_voucher" string="Cancel" states="draft,proforma" />
+                      <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft"/>
+                      <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
+                  </header>
+                  <sheet string="Accounting Voucher">
                     <group col="6" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="payment_rate_currency_id" invisible="1"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
-                        <field name="journal_id" widget="selection" select="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
+                        <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <field name="reference" select="1"/>
+                        <field name="reference"/>
                         <field name="account_id" widget="selection" invisible="True"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
-                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" colspan="4" nolabel="1" height="180">
+                            <field name="line_ids" on_change="onchange_price(line_ids, tax_id, partner_id)" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Voucher Items" editable="bottom">
                                     <field name="account_id"/>
                                     <field name="name"/>
@@ -62,29 +69,29 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group col="2" colspan="3">
-                                <separator string="Internal Notes" colspan="2"/>
-                                <field name="narration" colspan="2" nolabel="1"/>
-                            </group>
-                            <group col="2" colspan="1">
-                                <group col="2" colspan="1" >
-                                    <separator string="Other Information" colspan="2"/>
+                            <group col="3">
+                                <group string="Internal Notes">
+                                    <field name="narration" colspan="2" nolabel="1"/>
+                                </group>
+                                <group string="Other Information">
                                     <field name="number"/>
                                     <field name="currency_id"/>
                                 </group>
-                                <group col="4" colspan="1" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
+                                <group col="4" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/><field name="tax_amount" nolabel="1"/><button type="object" icon="terp-stock_format-scientific" name="compute_tax" groups="base.group_extended" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+                                    <field name="tax_amount" nolabel="1"/>
+                                    <button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
                                     <label colspan="1" string=""/><field name="amount" string="Total"/>
                                 </group>
                             </group>
                         </page>
-                        <page string="Journal Items" groups="base.group_extended" attrs="{'invisible': [('state','!=','posted')]}">
-                            <group col="6" colspan="4">
+                        <page string="Journal Items" attrs="{'invisible': [('state','!=','posted')]}">
+                            <group col="4">
                                 <field name="period_id"/>
                                 <field name="audit"/>
                             </group>
-                            <field name="move_ids" colspan="4" nolabel="1" readonly="1">
+                            <field name="move_ids" readonly="1">
                                <tree string="Journal Items">
                                    <field name="move_id"/>
                                    <field name="ref"/>
@@ -101,13 +108,11 @@
                             </field>
                         </page>
                     </notebook>
-                    <group col="10" colspan="4">
-                        <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
-                        <button name="cancel_voucher" string="Cancel" states="draft,proforma"  icon="gtk-cancel"/>
-                        <button name="cancel_voucher" string="Cancel" type="object" states="posted" icon="terp-stock_effects-object-colorize" confirm="Are you sure to unreconcile this record ?"/>
-                        <button name="proforma_voucher" string="Post" states="draft" icon="terp-camera_test"/>
-                        <button name="action_cancel_draft" type="object" states="cancel" string="Set to Draft" icon="terp-stock_effects-object-colorize"/>
-                    </group>
+                  </sheet>
+                  <div class="oe_chatter">
+                      <field name="message_ids" widget="mail_thread"/>
+                      <field name="message_follower_ids" widget="mail_followers"/>
+                  </div>
                 </form>
             </field>
         </record>
@@ -115,31 +120,23 @@
         <record id="view_voucher_filter" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
-                    <group>
-                        <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
-                        <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
-                        <separator orientation="vertical"/>
-                        <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" groups="base.group_extended" help="To Review"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="number"/>
-                        <field name="partner_id"/>
-                    </group>
-                    <newline/>
-                    <group>
-                        <field name="journal_id" widget="selection" context="{'journal_id': self, 'set_visible':False}" />
-                        <field name="period_id" groups="base.group_extended"/>
-                    </group>
-                    <newline/>
+                    <field name="number" string="Voucher"/>
+                    <field name="date"/>
+                    <filter icon="terp-document-new" string="Draft" domain="[('state','=','draft')]" help="Draft Vouchers"/>
+                    <filter icon="terp-camera_test" string="Posted" domain="[('state','=','posted')]" help="Posted Vouchers"/>
+                    <separator/>
+                    <filter icon="terp-gtk-jump-to-ltr" string="To Review" domain="[('state','=','posted'), ('audit','=',False)]" help="To Review"/>
+                    <field name="partner_id"/>
+                    <field name="journal_id" context="{'journal_id': self, 'set_visible':False}" />
+                    <field name="period_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Journal" icon="terp-folder-orange" domain="[]" context="{'group_by':'journal_id'}"/>
                         <filter string="Period" icon="terp-go-month" domain="[]" context="{'group_by':'period_id','visible':True}"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     </group>
                 </search>
             </field>
@@ -148,7 +145,6 @@
         <record id="account_cash_statement_graph" model="ir.ui.view">
             <field name="name">account.voucher.graph</field>
             <field name="model">account.voucher</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Voucher Statistics" type="bar">
                     <field name="date"/>
@@ -201,24 +197,22 @@
         <record id="view_bank_statement_form_invoice" model="ir.ui.view">
             <field name="name">account.bank.statement.invoice.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-              <field name="currency" invisible="1" position="after">
-                <button name="%(action_view_account_statement_from_invoice_lines)d"
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(action_view_account_statement_from_invoice_lines)d"
                             string="Import Invoices" type="action" icon="gtk-execute"
                             attrs="{'invisible':[('state','=','confirm')]}"/>
-              </field>
+                </xpath>
             </field>
         </record>
 
         <record id="view_bank_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -227,10 +221,9 @@
         <record id="view_bank_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@name='statement_line_ids']/field[@name='line_ids']/form/field[@name='sequence']" position="before">
+                <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -238,10 +231,9 @@
         <record id="view_cash_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
+                <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -250,10 +242,9 @@
         <record id="view_cash_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='line_ids']/form/field[@name='amount']" position="after">
+                <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
                     <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
@@ -264,13 +255,27 @@
             <field name="name">res.company.form.inherit</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
-                      <field name="income_currency_exchange_account_id" colspan="2"/>
-                      <field name="expense_currency_exchange_account_id" colspan="2"/>
+                      <field name="income_currency_exchange_account_id"/>
+                      <field name="expense_currency_exchange_account_id"/>
                 </field>
             </field>
+        </record>
+
+    </data>
+    <data noupdate="1">
+
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_invoice_menu" model="ir.actions.client">
+            <field name="name">Open Invoicing Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
+        </record>
+        <record id="todo_open_invoice_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_invoice_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
         </record>
 
     </data>
