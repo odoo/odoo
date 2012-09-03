@@ -9,7 +9,7 @@
                 <tree editable="bottom" string="Timesheet Lines">
                     <field name="date" on_change="on_change_date(date)"/>
                     <field name="user_id" on_change="on_change_user_id(user_id)" required="1"/>
-                    <field name="journal_id" invisible="1"/>
+                    <field name="journal_id"/>
                     <field name="name"/>
                     <field domain="[('type','=','normal'),('use_timesheets','=',1)]" name="account_id" context="{'default_use_timesheets': 1}"/>
                     <field name="product_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" required="1" domain="[('type','=','service')]" invisible="1"/>

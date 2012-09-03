@@ -46,7 +46,7 @@
             <field name="arch" type="xml">
                 <form string="Timesheet" version="7.0">
                 <header>
-                    <button name="button_confirm" states="draft" string="Submited to Manager" type="object" class="oe_highlight"/>
+                    <button name="button_confirm" states="draft" string="Submit to Manager" type="object" class="oe_highlight"/>
                     <button name="done" states="confirm" string="Approve" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button name="action_set_to_draft" states="done" string="Set to Draft" type="object" />
                     <button name="cancel" states="confirm" string="Refuse" type="workflow" groups="base.group_hr_user" />
@@ -108,7 +108,7 @@
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>
                                     <field name="to_invoice" widget="selection"/>
-                                    <field invisible="1" name="journal_id"/>
+                                    <field name="journal_id"/>
                                     <field invisible="1" name="product_id" domain="[('type','=','service')]" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field invisible="1" name="product_uom_id" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)"/>
                                     <field invisible="1" name="amount"/>
