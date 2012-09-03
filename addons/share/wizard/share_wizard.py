@@ -257,7 +257,6 @@ class share_wizard(osv.TransientModel):
                         'email': new_user,
                         'groups_id': [(6,0,[group_id])],
                         'share': True,
-                        'message_email_pref': 'all',
                         'company_id': current_user.company_id.id
                 }, context)
                 new_line = { 'user_id': user_id,
