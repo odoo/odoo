@@ -94,7 +94,7 @@
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user,base.group_hr_manager"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse,validate" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -153,7 +153,7 @@
                     <button string="Submit to Manager" name="confirm" states="draft" type="workflow" class="oe_highlight"/>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="cancel,validate,refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -161,8 +161,8 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_manager"/>
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" attrs="{'readonly':[('state','!=','draft')]}" string="Allocation Mode" groups="base.group_hr_user"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'readonly':[('state','!=','draft')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" attrs="{'readonly':['|', ('holiday_type','=','category'), ('state','not in' ,('draft', 'confirm'))]}"/>
                         </group>
