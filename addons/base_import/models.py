@@ -227,7 +227,7 @@ class ir_import(orm.TransientModel):
                 'headers': headers or False,
                 'preview': list(preview),
             }
-        except (csv.Error, TypeError, UnicodeDecodeError), e:
+        except Exception, e:
             # Due to lazy generators, UnicodeDecodeError (for
             # instance) may only be raised when serializing the
             # preview to a list in the return.
