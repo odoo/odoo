@@ -735,7 +735,7 @@ class purchase_order(osv.osv):
         return [('state','=','draft')]
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), subtype="new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -753,20 +753,20 @@ class purchase_order(osv.osv):
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), subtype="pending", context=context)
 
     def shipment_done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
+        self.message_post(cr, uid, ids, body=_("""Shipment <b>received</b>."""), subtype="received", context=context)
 
     def invoice_done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="paid", context=context)
 
     def draft_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), subtype="cancelled", context=context)
 
 purchase_order()
 

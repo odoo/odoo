@@ -34,11 +34,8 @@ def decode(text):
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
 class mail_message(osv.Model):
-    """Model holding messages: system notification (replacing res.log
-    notifications), comments (for OpenChatter feature). This model also
-    provides facilities to parse new email messages. Type of messages are
-    differentiated using the 'type' column. """
-
+    """ Messages model: system notification (replacing res.log notifications),
+        comments (OpenChatter discussion) and incoming emails. """
     _name = 'mail.message'
     _description = 'Message'
     _inherit = ['ir.needaction_mixin']
@@ -76,21 +73,17 @@ class mail_message(osv.Model):
         return res
 
     def _search_unread(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages unread by the current user. """
-        read_value = not domain[0][2]
-        read_cond = '' if read_value else '!= true'
+        """ Search for messages unread by the current user. Condition is 
+            inversed because we search unread message on a read column. """
+        if domain[0][2]:
+            read_cond = '(read = false or read is null)'
+        else:
+            read_cond = 'read = true'
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        cr.execute("""  SELECT mail_message.id \
-                        FROM mail_message \
-                        JOIN mail_notification ON ( \
-                            mail_notification.message_id = mail_message.id ) \
-                        WHERE mail_notification.partner_id = %%s AND \
-                            mail_notification.read %s \
-                    """ % read_cond, (partner_id,) )
-        res = cr.fetchall()
-        message_ids = [r[0] for r in res]
-        return [('id', 'in', message_ids)]
-
+        cr.execute("SELECT message_id FROM mail_notification "\
+                        "WHERE partner_id = %%s AND %s" % read_cond,
+                    (partner_id,))
+        return [('id', 'in', [r[0] for r in cr.fetchall()])]
 
     def name_get(self, cr, uid, ids, context=None):
         # name_get may receive int id instead of an id list
@@ -103,9 +96,8 @@ class mail_message(osv.Model):
         return res
 
     _columns = {
-        # should we keep a distinction between email and comment ?
         'type': fields.selection([
-                        ('email', 'email'),
+                        ('email', 'Email'),
                         ('comment', 'Comment'),
                         ('notification', 'System notification'),
                         ], 'Type',
@@ -147,7 +139,6 @@ class mail_message(osv.Model):
         'author_id': _get_default_author
     }
 
-
     #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
@@ -176,12 +167,10 @@ class mail_message(osv.Model):
 
     def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
         """ Given a tree with several roots of following structure :
-            [
-                {'id': 1, 'child_ids':[
-                    {'id': 11, 'child_ids': [...] },
-                ] },
-                {...}
-            ]
+            [   {'id': 1, 'child_ids': [
+                    {'id': 11, 'child_ids': [...] },],
+                },
+                {...}   ]
             Flatten it to have a maximum number of level, with 0 being
             completely flat.
             Perform the flattening at leafs if above the maximum depth, then get
@@ -196,40 +185,29 @@ class mail_message(osv.Model):
             return [msg_dict] + child_ids
         # Depth-first flattening
         for message in messages:
+            if message.get('type') == 'expandable':
+                continue
             message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level+1, level, context=context)
         # Flatten if above maximum depth
         if current_level < level:
             return messages
         new_list = []
-        for x in range(0, len(messages)):
-            flatenned = _flatten(messages[x])
-            for flat in flatenned:
-                new_list.append(flat)
-        messages = new_list
-        return messages
-
-    def _debug_print_tree(self, tree, prefix=''):
-        for elem in tree:
-            print '%s%s (%s childs: %s)' % (prefix, elem['id'], len(elem['child_ids']), [xelem['id'] for xelem in elem['child_ids']])
-            if elem['child_ids']:
-                self._debug_print_tree(elem['child_ids'], prefix+'--')
+        for message in messages:
+            for flat_message in _flatten(message):
+                new_list.append(flat_message)
+        return new_list
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
-        """ 
-            If IDS are provided, fetch these records, otherwise use the domain to
-            fetch the matching records. After having fetched the records provided
-            by IDS, it will fetch children (according to thread_level).
-            
-            Return [
-            
-            ]
+        """ If IDs are provided, fetch these records. Otherwise use the domain
+            to fetch the matching records.
+            After having fetched the records provided by IDs, it will fetch the
+            parents to have well-formed threads.
+            :return list: list of trees of messages
         """
         limit = limit or self._message_read_limit
         context = context or {}
-        if ids is False:
+        if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
-
-        # FP Todo: flatten to max X level of mail_thread
         messages = self.browse(cr, uid, ids, context=context)
 
         result = []
@@ -262,11 +240,9 @@ class mail_message(osv.Model):
                 break
 
         # Flatten the result
-#        if thread_level > 0:
-#            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
-
+        if thread_level > 0:
+            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
         return result
-
 
     #------------------------------------------------------
     # Email api
@@ -277,52 +253,47 @@ class mail_message(osv.Model):
         if not cr.fetchone():
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
-    def check(self, cr, uid, ids, mode, context=None):
-        """
-        You can read/write a message if:
-          - you received it (a notification exists) or
-          - you can read the related document (res_model, res_id)
-        If a message is not attached to a document, normal access rights on
-        the mail.message object apply.
-        """
-        if not ids:
-            return
+    def check_access_rule(self, cr, uid, ids, operation, context=None):
+        """ mail.message access rule check
+            - message received (a notification exists) -> ok
+            - check rules of related document if exists
+            - fallback on normal mail.message check """
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-
         # check messages for which you have a notification
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         not_obj = self.pool.get('mail.notification')
         not_ids = not_obj.search(cr, uid, [
             ('partner_id', '=', partner_id),
             ('message_id', 'in', ids),
         ], context=context)
-        for notification in not_obj.browse(cr, uid, not_ids, context=context):
-            if notification.message_id.id in ids:
-                pass
-                # FP Note: we should put this again !!!
-                #ids.remove(notification.message_id.id)
+        notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, uid, not_ids, context=context)
+            if notification.message_id.id in ids]
 
-        # check messages according to related documents
-        res_ids = {}
-        cr.execute('SELECT DISTINCT model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
-        for rmod, rid in cr.fetchall():
+        # check messages linked to an existing document
+        model_record_ids = {}
+        document_ids = []
+        cr.execute('SELECT DISTINCT id, model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
+        for id, rmod, rid in cr.fetchall():
             if not (rmod and rid):
                 continue
-            res_ids.setdefault(rmod,set()).add(rid)
+            document_ids.append(id)
+            model_record_ids.setdefault(rmod,set()).add(rid)
+        for model, mids in model_record_ids.items():
+            model_obj = self.pool.get(model)
+            mids = model_obj.exists(cr, uid, mids)
+            model_obj.check_access_rights(cr, uid, operation)
+            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
 
-        ima_obj = self.pool.get('ir.model.access')
-        for model, mids in res_ids.items():
-            mids = self.pool.get(model).exists(cr, uid, mids)
-            ima_obj.check(cr, uid, model, mode)
-            self.pool.get(model).check_access_rule(cr, uid, mids, mode, context=context)
+        # fall back on classic operation for other ids
+        other_ids = set(ids).difference(set(notified_ids), set(document_ids))
+        super(mail_message, self).check_access_rule(cr, uid, other_ids, operation, context=None)
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s'% values)
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self.check(cr, uid, [newid], mode='create', context=context)
         self.notify(cr, uid, newid, context=context)
         return newid
 
@@ -351,39 +322,9 @@ class mail_message(osv.Model):
             partners_to_notify |= extra_notified
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
-    def read(self, cr, uid, ids, fields_to_read=None, context=None, load='_classic_read'):
-        self.check(cr, uid, ids, 'read', context=context)
-        return super(mail_message, self).read(cr, uid, ids, fields_to_read, context, load)
-
     def copy(self, cr, uid, id, default=None, context=None):
         """Overridden to avoid duplicating fields that are unique to each email"""
         if default is None:
             default = {}
-        self.check(cr, uid, [id], 'read', context=context)
         default.update(message_id=False, headers=False)
         return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        result = super(mail_message, self).write(cr, uid, ids, vals, context)
-        self.check(cr, uid, ids, 'write', context=context)
-        return result
-
-    def unlink(self, cr, uid, ids, context=None):
-        self.check(cr, uid, ids, 'unlink', context=context)
-        return super(mail_message, self).unlink(cr, uid, ids, context)
-
-
-class mail_notification(osv.Model):
-    """ mail_notification is a relational table modeling messages pushed to partners.
-    """
-    _inherit = 'mail.notification'
-    _columns = {
-        'message_id': fields.many2one('mail.message', string='Message',
-                        ondelete='cascade', required=True, select=1),
-    }
-
-    def set_message_read(self, cr, uid, msg_id, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
-        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
-

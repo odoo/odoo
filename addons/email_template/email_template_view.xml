@@ -1,95 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
-
         <record model="ir.ui.view" id="email_template_form">
             <field name="name">email.template.form</field>
             <field name="model">email.template</field>
             <field name="arch" type="xml">
                 <form string="Templates" version="7.0">
-                  <sheet>
-                    <group col="4">
-                        <field name="name" required="1"/>
-                        <field name="model_id" required="1" on_change="onchange_model_id(model_id)"/>
-                        <field name="model" invisible="1"/>
-                    </group>
-                    <notebook>
-                        <page string="Email Details">
-                            <group>
-                                <field name="email_from" required="1"/>
-                                <field name="email_to" required="1"/>
-                                <field name="email_cc"/>
-                                <field name="reply_to"/>
-                                <field name="subject" required="1"/>
-                                <notebook  colspan="4">
-                                    <page string="Body (HTML)">
-                                        <field name="body_html" colspan="4" width="250" height="250" nolabel="1"/>
-                                        <label string="Note: This is Raw HTML." colspan="4"/>
-                                    </page>
-                                </notebook>
-                                <field name="user_signature"/>
-                            <notebook colspan="4">
-                                <page string="Dynamic Values Builder">
-                                    <group>
-                                        <field name="model_object_field"
-                                            domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field)"/>
-                                        <field name="sub_object" readonly="1"/>
-                                        <field name="sub_model_object_field"
-                                            domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]"
-                                            attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}"
-                                            on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
-                                        <field name="null_value" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
-                                        <field name="copyvalue"/>
+                    <sheet>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/><h1><field name="name" required="1"/></h1>
+                            <h3><label for="model_id"/><field name="model_id" required="1" on_change="onchange_model_id(model_id)" class="oe_inline"/></h3>
+                            <field name="model" invisible="1"/>
+                        </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                            <field name="ref_ir_act_window" invisible="1"/>
+                            <button name="create_action" string="Add context action" type="object"
+                                    attrs="{'invisible':[('ref_ir_act_window','!=',False)]}"
+                                    help="Display an option on related documents to open a composition wizard with this template"/>
+                            <button name="unlink_action" string="Remove context action" type="object" 
+                                    attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
+                                    help="Remove the contextual action to use this template on related documents"/>
+                            <button name="%(wizard_email_template_preview)d" string="Preview"
+                                    type="action" target="new"
+                                    context="{'template_id':active_id}"/>
+                        </div>
+                        <notebook>
+                            <page string="Email Details">
+                                <group>
+                                    <group string="Addressing">
+                                      <field name="email_from" required="1"/>
+                                      <field name="email_to" required="1"/>
+                                      <field name="email_cc"/>
+                                      <field name="reply_to"/>
+                                      <field name="user_signature"/>
                                     </group>
-                                </page>
-                            </notebook>
-                            <button name="%(wizard_email_template_preview)d" string="Preview Template"
-                                type="action" colspan="4" target="new" icon="gtk-zoom-fit" context="{'template_id':active_id}"/>
-                            </group>
-                        </page>
-                        <page string="Advanced">
-                            <group colspan="2" col="2">
-                                <group colspan="2" col="2">
-                                    <separator string="Sidebar Button" colspan="2"/>
-                                    <button name="create_action" string="Add sidebar button" type="object" icon="gtk-execute"
-                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','!=',False)]}"
-                                            help="Display a button in the sidebar of related documents to open a composition wizard with this template"
-                                            />
-                                    <field name="ref_ir_act_window" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"/>
-                                    <field name="ref_ir_value" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"/>
-                                    <button name="unlink_action" string="Remove sidebar button" type="object" icon="gtk-delete"
-                                            colspan="2" attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
-                                            help="Remove the sidebar button currently displayed on related documents"
-                                            />
+                                    <group string="Dynamic Value Builder" class="oe_edit_only">
+                                            <field name="model_object_field" domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]" on_change="onchange_sub_model_object_value_field(model_object_field)"/>
+                                            <field name="sub_object" readonly="1"/>
+                                            <field name="sub_model_object_field" domain="[('model_id','=',sub_object),('ttype','!=','one2many'),('ttype','!=','many2many')]" attrs="{'readonly':[('sub_object','=',False)],'required':[('sub_object','!=',False)]}" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field)"/>
+                                            <field name="null_value" on_change="onchange_sub_model_object_value_field(model_object_field,sub_model_object_field,null_value)"/>
+                                            <field name="copyvalue"/>
+                                    </group>
+                                    <group string="Contents" colspan="2">
+                                       <field name="subject" required="1"/>
+                                       <field name="body_html" width="250" height="450" nolabel="1" colspan="2" placeholder="Email contents (in raw HTML format)"/>
+                                    </group>
                                 </group>
-                                <group colspan="2" col="2">
-                                    <separator string="Advanced Options" colspan="2"/>
-                                    <field name="mail_server_id"/>
-                                    <field name="track_campaign_item"/>
-                                    <field name="message_id"/>
-                                    <field name="auto_delete"/>
+                            </page>
+                            <page string="Advanced">
+                                <group>
                                     <field name="lang"/>
+                                    <field name="mail_server_id"/>
+                                    <field name="auto_delete"/>
+                                    <field name="report_template" domain="[('model','=',model)]"/>
+                                    <field name="report_name" class="oe_inline"
+                                           attrs="{'invisible':[('report_template','=',False)]}"/>
+                                    <field name="attachment_ids">
+                                       <tree><field name="name"/></tree>
+                                    </field>
                                 </group>
-                            </group>
-                            <group colspan="2" col="2">
-                                <separator string="Attachments" colspan="2"/>
-                                <notebook colspan="2">
-                                    <page string="Attach Report">
-                                        <group>
-                                            <field name="report_template" colspan="4"
-                                                domain="[('model','=',model)]"/>
-                                            <field name="report_name" colspan="4" />
-                                        </group>
-                                    </page>
-                                    <page string="Attach existing files">
-                                        <field name="attachment_ids" colspan="4" nolabel="1" height="350"/>
-                                    </page>
-                                </notebook>
-                            </group>
-                        </page>
-                    </notebook>
-                   </sheet>
+                            </page>
+                        </notebook>
+                       </sheet>
                 </form>
             </field>
         </record>
@@ -99,9 +71,9 @@
             <field name="model">email.template</field>
             <field name="arch" type="xml">
                 <tree string="Templates">
-                    <field name="model_id"/>
                     <field name="mail_server_id" invisible="1"/>
                     <field name="name"/>
+                    <field name="model_id"/>
                     <field name="subject"/>
                     <field name="email_from"/>
                     <field name="email_to"/>

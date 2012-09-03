@@ -1,10 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
-    <function
+        <function
             eval="('default',False,'warehouse_id', [('purchase.requisition', False)], ref('stock.warehouse0'), True, False, False, False, True)"
             id="purchase_default_set"
             model="ir.values"
             name="set"/>
+        <!-- SUBTYPE -->
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('purchase_requisition.model_purchase_requisition'))]"/>
+        </record>
     </data>
 </openerp>

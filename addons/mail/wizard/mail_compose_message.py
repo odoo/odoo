@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import base64
 import re
 import tools
 
@@ -71,12 +72,12 @@ class mail_compose_message(osv.TransientModel):
         composition_mode = context.get('default_composition_mode', context.get('mail.compose.message.mode'))
         model = context.get('default_model', context.get('active_model'))
         res_id = context.get('default_res_id', context.get('active_id'))
-        active_id = context.get('active_id')
+        message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
         active_ids = context.get('active_ids')
 
         # get default values according to the composition mode
         if composition_mode == 'reply':
-            vals = self.get_message_data(cr, uid, active_id, context=context)
+            vals = self.get_message_data(cr, uid, message_id, context=context)
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
@@ -154,7 +155,7 @@ class mail_compose_message(osv.TransientModel):
         message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context=context)
 
         # create subject
-        re_prefix = _("Re:")
+        re_prefix = _('Re:')
         reply_subject = tools.ustr(message_data.subject or '')
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
             reply_subject = "%s %s" % (re_prefix, reply_subject)
@@ -162,7 +163,7 @@ class mail_compose_message(osv.TransientModel):
         reply_header = _('On %(date)s, %(sender_name)s wrote:') % {
             'date': message_data.date if message_data.date else '',
             'sender_name': message_data.author_id.name }
-        reply_body = '<div>%s<blockquote>%s</blockquote></div>%s' % (reply_header, message_data.body, current_user.signature)
+        reply_body = '<div>%s<blockquote>%s</blockquote></div>' % (reply_header, message_data.body)
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
@@ -223,6 +224,22 @@ class mail_compose_message(osv.TransientModel):
         res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
         return res
 
+    def unlink(self, cr, uid, ids, context=None):
+        # Cascade delete all attachments, as they are owned by the composition wizard
+        for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
+            self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
+        return super(mail_compose_message,self).unlink(cr, uid, ids, context=context)
+
+    def dummy(self, cr, uid, ids, context=None):
+        """ TDE: defined to have buttons that do basically nothing. It is
+            currently impossible to have buttons that do nothing special
+            in views (if type not specified, considered as 'object'). """
+        return True
+
+    #------------------------------------------------------
+    # Wizard validation and send
+    #------------------------------------------------------
+
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
@@ -242,19 +259,18 @@ class mail_compose_message(osv.TransientModel):
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
                     'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
-                    'attachments': [(attach.datas_fname, attach.datas) for attach in wizard.attachment_ids],
+                    'attachments': [(attach.name or attach.datas_fname, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
                     email_dict = self.render_message(cr, uid, wizard, wizard.model, res_id, context=context)
-                    post_values['subject'] = email_dict.get('subject', False)
-                    post_values['body'] = email_dict.get('body', '')
-                    if email_dict.get('partner_ids'):
-                        post_values['partner_ids'] += [(4, id) for id in email_dict.get('partner_ids')]
-                    if email_dict.get('attachments'):
-                        post_values['attachments'] += [(attach.datas_fname, attach.datas) for attach in email_dict.get('attachments')]
+                    new_partner_ids = email_dict.pop('partner_ids', [])
+                    post_values['partner_ids'] += new_partner_ids
+                    new_attachments = email_dict.pop('attachments', [])
+                    post_values['attachments'] += new_attachments
+                    post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, res_ids, msg_type='comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], msg_type='comment', context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
@@ -263,20 +279,9 @@ class mail_compose_message(osv.TransientModel):
             This method is meant to be inherited by email_template that will
             produce a more complete dictionary, with email_to, ...
         """
-        # TDE: TODO: to move into mail.compose.message in email template
-        # mails = tools.email_split(email_dict.get('email_to', '')) + tools.email_split(email_dict.get('email_cc', ''))
-        # for mail in mails:
-        #     partner_search_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)
-        #     if partner_search_ids:
-        #         partner_ids.append((4, 0, partner_search_ids[0]))
-        #     else:
-        #         partner_id = self.pool.get('res.partner').name_create(cr, uid, values['email_to'], context=context)
-        #         partner_ids.append((4, 0, partner_id))
         return {
             'subject': self.render_template(cr, uid, wizard.subject, model, res_id, context),
             'body': self.render_template(cr, uid, wizard.body, model, res_id, context),
-            'partner_ids': [],
-            'attachment_ids': [],
         }
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
@@ -297,25 +302,10 @@ class mail_compose_message(osv.TransientModel):
             context = {}
         def merge(match):
             exp = str(match.group()[2:-1]).strip()
-            result = eval(exp,
-                          {
-                            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
-                            'object' : self.pool.get(model).browse(cr, uid, res_id, context=context),
-                            'context': dict(context), # copy context to prevent side-effects of eval
-                          })
-            if result in (None, False):
-                return ""
-            return tools.ustr(result)
+            result = eval(exp, {
+                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                'object' : self.pool.get(model).browse(cr, uid, res_id, context=context),
+                'context': dict(context), # copy context to prevent side-effects of eval
+                })
+            return result and tools.ustr(result) or ''
         return template and EXPRESSION_PATTERN.sub(merge, template)
-
-    def unlink(self, cr, uid, ids, context=None):
-        # Cascade delete all attachments, as they are owned by the composition wizard
-        for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
-            self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
-        return super(mail_compose_message,self).unlink(cr, uid, ids, context=context)
-
-    def dummy(self, cr, uid, ids, context=None):
-        """ TDE: defined to have buttons that do basically nothing. It is
-            currently impossible to have buttons that do nothing special
-            in views (if type not specified, considered as 'object'). """
-        return True

@@ -59,7 +59,7 @@
         </record>
 
         <record model="ir.ui.view" id="view_mail_tree">
-            <field name="name">mail.message.tree</field>
+            <field name="name">mail.mail.tree</field>
             <field name="model">mail.mail</field>
             <field name="arch" type="xml">
                 <tree string="Emails" colors="grey:state in ('sent', 'cancel');blue:state=='outgoing';red:state=='exception';black:state=='received'">
@@ -113,15 +113,15 @@
         </record>
 
         <record id="action_view_mail_mail" model="ir.actions.act_window">
-            <field name="name">Messages</field>
+            <field name="name">Emails</field>
             <field name="res_model">mail.mail</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_received': 1, 'search_default_type_email': 1}</field>
+            <field name="context">{'search_default_outgoing': 1, 'search_default_type_email': 1}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>
 
         <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Mails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
+        <menuitem name="Emails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
     </data>
 </openerp>
