@@ -118,7 +118,6 @@ class mail_compose_message(osv.TransientModel):
         'body_text': lambda self,cr, uid, context={}: False,
         'body': lambda self,cr, uid, context={}: '',
         'subject': lambda self,cr, uid, context={}: False,
-        'partner_ids': [],
     }
 
     def notify(self, cr, uid, newid, context=None):
