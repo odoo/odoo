@@ -53,51 +53,59 @@ class test_message_compose(common.TransactionCase):
         """ Tests designed for the mail.compose.message wizard updated by email_template. """
         cr, uid = self.cr, self.uid
         mail_compose = self.registry('mail.compose.message')
-        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
+        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a.a'})
         user_admin = self.res_users.browse(cr, uid, uid)
-        group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'I am angry !'})
+        group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
         # Create template on mail.group
+        group_model_id = self.registry('ir.model').search(cr, uid, [('model', '=', 'mail.group')])[0]
         email_template = self.registry('email.template')
         email_template_id = email_template.create(cr, uid, {'model_id': group_model_id,
-            'name': 'Pigs Template', 'subject': '${record.name}',
+            'name': 'Pigs Template', 'subject': '${object.name}',
             'body_html': '${object.description}', 'user_signature': True,
-            'email_to': 'b@b c@c', 'email_cc': 'd@d'})
-        # import pdb
-        # pdb.set_trace()
+            'email_to': 'b@b.b c@c.c', 'email_cc': 'd@d.d'})
 
         # Mail data
-        _subject = 'Pigs'
-        _body_text = 'Pigs rules'
+        _subject1 = 'Pigs'
+        _subject2 = 'Bird'
+        _body_text1 = 'Pigs rules'
+        _body_text_html1 = 'Pigs rules<pre>Admin</pre>'
+        _body_text2 = 'I am angry !'
+        _body_text_html2 = 'I am angry !<pre>Admin</pre>'
 
-        # 3 - Create in mass_mail composition mode that should work with or without email_template installed
+        # CASE1: create in mass_mail composition mode that should work with email_template installed
         compose_id = mail_compose.create(cr, uid,
-            {'subject': _subject, 'body': _body_text},
+            {'subject': 'Forget me subject', 'body': 'Dummy body'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group',
                 'default_res_id': -1, 'default_use_template': True,
-                'active_ids': [self.group_pigs_id], 'default_template_id': email_template_id})
+                'active_ids': [self.group_pigs_id, group_bird_id], 'default_template_id': email_template_id})
         compose = mail_compose.browse(cr, uid, compose_id)
         # print compose.subject
         
 
         # Try the 'onchange_template_id'
-        values = mail_compose.onchange_template_id(cr, uid, [], compose.use_template, compose.template_id, compose.composition_mode, compose.res_id)
-        # print values
-        values = mail_compose.onchange_use_template(cr, uid, [], not compose.use_template, compose.template_id, compose.composition_mode, compose.res_id)
-        # print values
+        values = mail_compose.onchange_template_id(cr, uid, [], compose.use_template, compose.template_id, compose.composition_mode, compose.model, compose.res_id)
+        print values
+        # compose.write(values['value'])
+        values = mail_compose.onchange_use_template(cr, uid, [], not compose.use_template, compose.template_id, compose.composition_mode, compose.model, compose.res_id)
+        print values
 
         compose.refresh()
 
-
-        # # Post the comment, get created message
-        # mail_compose.send_mail(cr, uid, [compose_id], {'default_res_id': -1, 'active_ids': [self.group_pigs_id]})
-        # group_pigs.refresh()
-        # msg = group_pigs.message_ids[0]
-
-        # # Test: last message on Pigs = last created message
-        # test_msg = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [], limit=1))[0]
-        # self.assertEqual(msg.id, test_msg.id, 'Pigs did not receive its mass mailing message')
-        # # Test: mail.message: subject, body
-        # self.assertEqual(msg.subject, _subject, 'mail.message subject is incorrect')
-        # self.assertEqual(msg.body, group_pigs.description, 'mail.message body is incorrect')
+        # Post the comment, get created message
+        mail_compose.send_mail(cr, uid, [compose_id],  {'default_res_id': -1, 'active_ids': [self.group_pigs_id, group_bird_id]})
+        group_pigs.refresh()
+        group_bird.refresh()
+        message_pigs = group_pigs.message_ids[0]
+        message_bird = group_bird.message_ids[0]
+        # Test: subject, body
+        self.assertEqual(message_pigs.subject, _subject1, 'mail.message subject on Pigs incorrect')
+        self.assertEqual(message_bird.subject, _subject2, 'mail.message subject on Bird incorrect')
+        self.assertEqual(message_pigs.body, _body_text_html1, 'mail.message body on Pigs incorrect')
+        self.assertEqual(message_bird.body, _body_text_html2, 'mail.message body on Bird incorrect')
+        # Test: partner_ids
+        print message_pigs.partner_ids
+        print message_pigs.partner_ids
+        self.assertEqual(len(message_pigs.partner_ids), 6, 'mail.message partner_ids incorrect')

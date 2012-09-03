@@ -31,11 +31,8 @@ from tools.translate import _
 _logger = logging.getLogger(__name__)
 
 class mail_mail(osv.Model):
-    """
-    Model holding RFC2822 email messages to send. This model also provides
-    facilities to queue and send new email messages. 
-    """
-
+    """ Model holding RFC2822 email messages to send. This model also provides
+        facilities to queue and send new email messages.  """
     _name = 'mail.mail'
     _description = 'Outgoing Mails'
     _inherits = {'mail.message': 'mail_message_id'}
@@ -64,9 +61,7 @@ class mail_mail(osv.Model):
     def _get_default_from(self, cr, uid, context=None):
         cur = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         if not cur.alias_domain:
-            # TDE temp: impossible to install social module, because mail.group tries to send emails ...
-            # raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
-            pass
+            raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
         return cur.alias_name + '@' + cur.alias_domain
 
     _defaults = {
@@ -127,69 +122,68 @@ class mail_mail(osv.Model):
             message.unlink()
         return True
 
-    def send(self, cr, uid, ids, auto_commit=False, context=None):
-        """Sends the selected emails immediately, ignoring their current
-           state (mails that have already been sent should not be passed
-           unless they should actually be re-sent).
-           Emails successfully delivered are marked as 'sent', and those
-           that fail to be deliver are marked as 'exception', and the
-           corresponding error message is output in the server logs.
+    def _send_get_mail_subject(self, cr, uid, mail, force=False, context=None):
+        """ if void and related document: '<Author> posted on <Resource>'
+            :param mail: mail.mail browse_record """
+        if force or (not mail.subject and mail.model and mail.res_id):
+            return '%s posted on %s' % (mail.author_id.name, mail.record_name)
+        return mail.subject
 
-           :param bool auto_commit: whether to force a commit of the message
-                                    status after sending each message (meant
-                                    only for processing by the scheduler),
-                                    should never be True during normal
-                                    transactions (default: False)
-           :return: True
+    def send(self, cr, uid, ids, auto_commit=False, context=None):
+        """ Sends the selected emails immediately, ignoring their current
+            state (mails that have already been sent should not be passed
+            unless they should actually be re-sent).
+            Emails successfully delivered are marked as 'sent', and those
+            that fail to be deliver are marked as 'exception', and the
+            corresponding error mail is output in the server logs.
+
+            :param bool auto_commit: whether to force a commit of the mail status
+                after sending each mail (meant only for scheduler processing);
+                should never be True during normal transactions (default: False)
+            :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
-        for message in self.browse(cr, uid, ids, context=context):
+        for mail in self.browse(cr, uid, ids, context=context):
             try:
-                body = message.body_html
+                body = mail.body_html
+                subject = self._send_get_mail_subject(cr, uid, mail, context=context)
 
                 # handle attachments
                 attachments = []
-                for attach in message.attachment_ids:
+                for attach in mail.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
-
-                # no subject, res_id, model: '<Author> posted on <Resource>'
-                if not message.subject and message.model and message.res_id:
-                    subject = '%s posted on %s' % (message.author_id.name, message.record_name)
-                else:
-                    subject = message.subject
 
                 # use only sanitized html and set its plaintexted version as alternative
                 body_alternative = tools.html2plaintext(body)
                 content_subtype_alternative = 'plain'
 
-                # build an RFC2822 email.message.Message object and send it
-                # without queuing
+                # build an RFC2822 email.message.Message object and send it without queuing
                 msg = ir_mail_server.build_email(
-                    email_from = message.email_from,
-                    email_to = tools.email_split(message.email_to),
+                    email_from = mail.email_from,
+                    email_to = tools.email_split(mail.email_to),
                     subject = subject,
                     body = body,
                     body_alternative = body_alternative,
-                    email_cc = tools.email_split(message.email_cc),
-                    reply_to = message.reply_to,
+                    email_cc = tools.email_split(mail.email_cc),
+                    reply_to = mail.reply_to,
                     attachments = attachments,
-                    message_id = message.message_id,
-                    references = message.references,
-                    object_id = message.res_id and ('%s-%s' % (message.res_id,message.model)),
+                    message_id = mail.message_id,
+                    references = mail.references,
+                    object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
                     subtype = 'html',
                     subtype_alternative = content_subtype_alternative)
                 res = ir_mail_server.send_email(cr, uid, msg,
-                    mail_server_id=message.mail_server_id.id, context=context)
+                    mail_server_id=mail.mail_server_id.id, context=context)
                 if res:
-                    message.write({'state':'sent', 'message_id': res})
+                    mail.write({'state':'sent', 'message_id': res})
                 else:
-                    message.write({'state':'exception'})
-                message.refresh()
-                if message.state == 'sent':
-                    self._postprocess_sent_message(cr, uid, message, context=context)
+                    mail.write({'state':'exception'})
+                mail.refresh()
+                if mail.state == 'sent':
+                    self._postprocess_sent_message(cr, uid, mail, context=context)
             except Exception:
-                _logger.exception('failed sending mail.mail %s', message.id)
-                message.write({'state':'exception'})
+                _logger.exception('failed sending mail.mail %s', mail.id)
+                mail.write({'state':'exception'})
 
             if auto_commit == True:
                 cr.commit()
