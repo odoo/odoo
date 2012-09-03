@@ -14,9 +14,9 @@
                         <label for="product_qty"/>
                         <div>
                             <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" readonly="1" group="product.group_uom"/>
+                            <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
-                        <field name="location_id" group="group_locations"/>
+                        <field name="location_id" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="do_move_consume" string="Ok" type="object" class="oe_highlight"/>
@@ -47,9 +47,9 @@
                         <label for="product_qty"/>
                         <div>
                             <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" readonly="1" group="product.group_uom"/>
+                            <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
-                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection" group="group_locations"/>
+                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
