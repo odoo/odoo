@@ -222,8 +222,8 @@ openerp.base_import = function (instance) {
                 'do', [this.id, fields, this.import_options()], options);
         },
         import_dryrun: function () {
-            this.call_import({ dryrun: true })
-                .then(this.proxy('render_import_errors'));
+//            this.call_import({ dryrun: true })
+//                .then(this.proxy('render_import_errors'));
         },
         do_import: function () {
             var self = this;
