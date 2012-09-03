@@ -689,7 +689,8 @@
                                                    name="%(stock.track_line)d"
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned"/>
+                                                   states="draft,waiting,confirmed,assigned" 
+                                                   groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="gtk-convert" context="{'scrap': True}"
