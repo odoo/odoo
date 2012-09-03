@@ -45,7 +45,7 @@ openerp.base_import = function (instance) {
         ],
         events: {
             'change input.oe_import_file': 'file_update',
-            'change input:not(.oe_import_file)': 'settings_updated',
+            'change input.oe_import_has_header, .oe_import_options input': 'settings_updated',
             'click a.oe_import_csv': function (e) {
                 e.preventDefault();
             },
@@ -74,6 +74,7 @@ openerp.base_import = function (instance) {
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
+            this.field_label_to_name = {};
         },
         start: function () {
             var self = this;
@@ -121,17 +122,67 @@ openerp.base_import = function (instance) {
                 this.$el.addClass('oe_import_error');
                 this.$('.oe_import_error_report').html(
                     QWeb.render('ImportView.preview.error', result));
-            } else {
-                this.$el.addClass('oe_import_preview');
-                this.$('table').html(
-                    QWeb.render('ImportView.preview', result));
+                return;
             }
+            this.$el.addClass('oe_import_preview');
+            this.$('table').html(QWeb.render('ImportView.preview', result));
+
+            var $fields = this.$('.oe_import_fields input');
+            this.render_fields_matches(result, $fields);
+            $fields.autocomplete({
+                minLength: 0,
+                source: this.generate_fields_completion(result)
+            });
+        },
+        generate_fields_completion: function (root) {
+            // Display nice names to user, but send logical names to server
+            this.field_label_to_name = {};
+            var completions = [];
+            var self = this;
+            function traverse(field, ancestors) {
+                var field_path = ancestors.concat(field);
+                var label = _(field_path).pluck('string').join(' / ');
+                self.field_label_to_name[label] = _(field_path).pluck('name').join('/');
+                completions.push(label);
+
+                var subfields = field.fields;
+                for(var i=0, end=subfields.length; i<end; ++i) {
+                    traverse(subfields[i], field_path);
+                }
+            }
+            _(root.fields).each(function (field) {
+                traverse(field, []);
+            });
+
+            return completions;
+        },
+        render_fields_matches: function (result, $fields) {
+            if (_(result.matches).isEmpty()) { return; }
+            $fields.each(function (index, input) {
+                var match = result.matches[index];
+                if (!match) { return; }
+
+                var current_field = result;
+                input.value = _(match).chain()
+                    .map(function (name) {
+                        // WARNING: does both mapping and folding (over the
+                        //          ``field`` iterator variable)
+                        return current_field = _(current_field.fields).find(function (subfield) {
+                            return subfield.name === name;
+                        });
+                    })
+                    .pluck('string')
+                    .value()
+                    .join(' / ');
+            });
         },
 
         //- import itself
         do_import: function () {
+            var self = this;
             var fields = this.$('.oe_import_fields input').map(function (index, el) {
-                return el.value || false;
+                // Convert user-readable field label to logical db-backed name
+                return self.field_label_to_name[el.value] || false;
             }).get();
             this.Import.call(
                 'do', [this.id, fields, this.import_options()], {
