@@ -131,9 +131,10 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
+                'domain': [('model','=','mail.group'), ('res_id','=',mail_group_id)],
+                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id},
                 'res_model': 'mail.message',
-                'thread_level': 2
+                'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
