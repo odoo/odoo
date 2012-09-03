@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,23 +20,18 @@
 ##############################################################################
 
 from osv import fields, osv
-from tools.translate import _
 
 
-class product_product(osv.osv):
-    _inherit = "product.product"    
+class res_company(osv.Model):
+    _name = "res.company"
+    _inherit = "res.company"
     _columns = {
-        "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials', domain=[('bom_id','=',False)]),
+           "gengo_private_key": fields.text("Gengo Private Key"),
+           "gengo_public_key": fields.text("Gengo Public Key"),
+           "gengo_comment": fields.text("Comments", help="This comment will be automatically be enclosed in each an every request sent to Gengo"),
+           "gengo_auto_approve": fields.boolean("Auto Approve Translation ?", help="Jobs are Automatically Approved by Gengo."),
     }
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'bom_ids': []
-        })
-        return super(product_product, self).copy(cr, uid, id, default, context=context)
 
-
-product_product()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    _defaults = {
+        "gengo_auto_approve": True,
+    }
