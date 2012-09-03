@@ -621,17 +621,30 @@
                 <sheet>
                     <label for="product_id" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" context="{'default_supply_method':'produce'}" class="oe_inline"/>
+                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
                     </h1>
-                    <label for="product_qty" class="oe_edit_only"/>
-                    <h2>
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
-                        <button type="action"
-                            icon="terp-accessories-archiver+"
-                            name="%(mrp.action_change_production_qty)d"
-                            string="Change Qty" states="draft,cancel,confirmed,picking_except" class="oe_inline"/>
-                    </h2>
+
+                    <group>
+                        <group>
+                            <label for="product_qty" class="oe_edit_only"/>
+                            <h2>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                <button type="action"
+                                        icon="terp-accessories-archiver+"
+                                        name="%(mrp.action_change_production_qty)d"
+                                        string="Change Qty" states="draft,cacel,confirmed,picking_except" class="oe_inline"/>
+                            </h2>
+                        </group>
+                        <group>
+                            <label for="bom_id" class="oe_edit_only"/>
+                            <h2>
+                                <field name="bom_id" domain="[('product_id','=',product_id)]" 
+                                       context="{'default_product_id': product_id}" 
+                                       on_change="bom_id_change(bom_id)" class="oe_inline"/>
+                            </h2>
+                        </group>
+                    </group>
                     <div groups="mrp.group_mrp_routings">
                         <label for="routing_id" class="oe_edit_only"/>
                         <h2><field name="routing_id" class="oe_inline"/></h2>
@@ -655,9 +668,6 @@
                     <notebook>
                         <page string="Consumed Products">
                             <group>
-                                <group>
-                                    <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
-                                </group>
                                 <group groups="stock.group_locations">
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]"/>
@@ -670,7 +680,7 @@
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
+                                            <field name="prodlot_id"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
@@ -680,7 +690,8 @@
                                                    name="%(stock.track_line)d"
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned"/>
+                                                   states="draft,waiting,confirmed,assigned" 
+                                                   groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="gtk-convert" context="{'scrap': True}"
