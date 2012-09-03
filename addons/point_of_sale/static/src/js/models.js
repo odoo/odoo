@@ -58,6 +58,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
+            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+            $.when(this.load_server_data())
+                .then(function(){ 
+                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
+                    self.ready.resolve();
+                },function(){
+                    //we failed to load some backend data, or the backend was badly configured.
+                    //the error messages will be displayed in PosWidget
+                    self.ready.reject();
+                });
+        },
+
+        // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
+        load_server_data: function(){
+            var self = this;
 
             var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
@@ -174,17 +189,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                 });
-
-            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(loaded)
-                .then(function(){ 
-                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
-                    self.ready.resolve();
-                },function(){
-                    //we failed to load some backend data, or the backend was badly configured.
-                    //the error messages will be displayed in PosWidget
-                    self.ready.reject();
-                });
+        
+            return loaded;
         },
 
         // logs the usefull posmodel data to the console for debug purposes
