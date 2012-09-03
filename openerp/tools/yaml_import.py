@@ -13,6 +13,7 @@ import yaml_tag
 import yaml
 import re
 from lxml import etree
+from openerp import SUPERUSER_ID
 
 # YAML import needs both safe and unsafe eval, but let's
 # default to /safe/.
@@ -286,20 +287,20 @@ class YamlInterpreter(object):
 
         view_id = record.view
         if view_id and (view_id is not True):
-            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, 1, self.module, record.view)[1]
+            view_id = self.pool.get('ir.model.data').get_object_reference(self.cr, SUPERUSER_ID, self.module, record.view)[1]
 
         if model.is_transient():
             record_dict=self.create_osv_memory_record(record, fields)
         else:
             self.validate_xml_id(record.id)
             try:
-                self.pool.get('ir.model.data')._get_id(self.cr, 1, self.module, record.id)
+                self.pool.get('ir.model.data')._get_id(self.cr, SUPERUSER_ID, self.module, record.id)
                 default = False
             except ValueError:
                 default = True
 
             if self.isnoupdate(record) and self.mode != 'init':
-                id = self.pool.get('ir.model.data')._update_dummy(self.cr, 1, record.model, self.module, record.id)
+                id = self.pool.get('ir.model.data')._update_dummy(self.cr, SUPERUSER_ID, record.model, self.module, record.id)
                 # check if the resource already existed at the last update
                 if id:
                     self.id_map[record] = int(id)
@@ -315,12 +316,12 @@ class YamlInterpreter(object):
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
-                view = model.fields_view_get(self.cr, 1, varg, 'form', context)
+                view = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
                 view_id = etree.fromstring(view['arch'].encode('utf-8'))
 
             record_dict = self._create_record(model, fields, view_id, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
-            id = self.pool.get('ir.model.data')._update(self.cr, 1, record.model, \
+            id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
             self.id_map[record.id] = int(id)
             if config.get('import_partial'):
@@ -328,8 +329,8 @@ class YamlInterpreter(object):
 
     def _create_record(self, model, fields, view=False, parent={}, default=True):
         if view is not False:
-            defaults = default and model._add_missing_default_values(self.cr, 1, {}, context=self.context) or {}
-            fg = model.fields_get(self.cr, 1, context=self.context)
+            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+            fg = model.fields_get(self.cr, SUPERUSER_ID, context=self.context)
         else:
             defaults = {}
             fg = {}
@@ -360,7 +361,7 @@ class YamlInterpreter(object):
                     if (view is not False) and (fg[field_name]['type']=='one2many'):
                         view2 = view.find("field[@name='%s']/form"%(field_name,))
                         if not view2:
-                            view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, 1, False, 'form', self.context)
+                            view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
                             view2 = etree.fromstring(view2['arch'].encode('utf-8'))
 
                     field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
@@ -395,7 +396,7 @@ class YamlInterpreter(object):
 
                 # Evaluation args
                 args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                result = getattr(model, match.group(1))(self.cr, 1, [], *args)
+                result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
                 for key, val in (result or {}).get('value', {}).items():
                     if key not in fields:
                         assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
@@ -491,7 +492,7 @@ class YamlInterpreter(object):
         python, statements = node.items()[0]
         model = self.get_model(python.model)
         statements = statements.replace("\r\n", "\n")
-        code_context = {'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context}
+        code_context = { 'model': model, 'cr': self.cr, 'uid': self.uid, 'log': self._log, 'context': self.context }
         code_context.update({'self': model}) # remove me when no !python block test uses 'self' anymore
         try:
             code_obj = compile(statements, self.filename, 'exec')
@@ -655,7 +656,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        pid = self.pool.get('ir.model.data')._update(self.cr, 1, \
+        pid = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
                 'ir.ui.menu', self.module, values, node.id, mode=self.mode, \
                 noupdate=self.isnoupdate(node), res_id=res and res[0] or False)
 
@@ -666,7 +667,7 @@ class YamlInterpreter(object):
             action_type = node.type or 'act_window'
             action_id = self.get_id(node.action)
             action = "ir.actions.%s,%d" % (action_type, action_id)
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
                     'tree_but_open', 'Menuitem', [('ir.ui.menu', int(parent_id))], action, True, True, xml_id=node.id)
 
     def process_act_window(self, node):
@@ -700,7 +701,7 @@ class YamlInterpreter(object):
 
         if node.target:
             values['target'] = node.target
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
                 'ir.actions.act_window', self.module, values, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
 
@@ -708,7 +709,7 @@ class YamlInterpreter(object):
             keyword = 'client_action_relate'
             value = 'ir.actions.act_window,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', keyword, \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', keyword, \
                     node.id, [node.src_model], value, replace=replace, noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
         # TODO add remove ir.model.data
 
@@ -729,7 +730,7 @@ class YamlInterpreter(object):
 
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, \
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
                 "ir.actions.url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
@@ -737,7 +738,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_action_multi'
             value = 'ir.actions.url,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
                     keyword, node.url, ["ir.actions.url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
@@ -752,7 +753,7 @@ class YamlInterpreter(object):
             else:
                 value = expression
             res[fieldname] = value
-        self.pool.get('ir.model.data').ir_set(self.cr, 1, res['key'], res['key2'], \
+        self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, res['key'], res['key2'], \
                 res['name'], res['models'], res['value'], replace=res.get('replace',True), \
                 isobject=res.get('isobject', False), meta=res.get('meta',None))
 
@@ -781,7 +782,7 @@ class YamlInterpreter(object):
 
         self._set_group_values(node, values)
 
-        id = self.pool.get('ir.model.data')._update(self.cr, 1, "ir.actions.report.xml", \
+        id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, "ir.actions.report.xml", \
                 self.module, values, xml_id, noupdate=self.isnoupdate(node), mode=self.mode)
         self.id_map[xml_id] = int(id)
 
@@ -789,7 +790,7 @@ class YamlInterpreter(object):
             keyword = node.keyword or 'client_print_multi'
             value = 'ir.actions.report.xml,%s' % id
             replace = node.replace or True
-            self.pool.get('ir.model.data').ir_set(self.cr, 1, 'action', \
+            self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
                     keyword, values['name'], [values['model']], value, replace=replace, isobject=True, xml_id=xml_id)
 
     def process_none(self):
@@ -810,8 +811,6 @@ class YamlInterpreter(object):
             is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
                 self._process_node(node)
-            except YamlImportException, e:
-                _logger.exception(e)
             except Exception, e:
                 _logger.exception(e)
                 raise

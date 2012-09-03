@@ -88,7 +88,7 @@
                 <form string="Users" version="7.0">
                     <field name="id" invisible="1"/>
                     <sheet>
-                        <field name="image_medium" widget='image' class="oe_avatar oe_left"/>
+                        <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
@@ -195,9 +195,7 @@
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Users" version="7.0">
-                    <div class="oe_right oe_avatar">
-                        <field name="image_small" widget='image' class="oe_image_small"/>
-                    </div>
+                    <field name="image" widget='image' class="oe_right oe_avatar" options='{"preview_image": "image_small"}'/>
                     <h1>
                         <field name="name" readonly="1" class="oe_inline"/>
                         (<field name="login" readonly="1" class="oe_inline"/>)
