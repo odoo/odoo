@@ -338,7 +338,7 @@
             <field name="no_of_recruitment" version="7.0" position="after">
                 <label for="survey_id" groups="base.group_user"/>
                 <div groups="base.group_user">
-                    <field name="survey_id" class="oe_inline"/>
+                    <field name="survey_id" class="oe_inline" domain="[('type','=','Human Resources')]"/>
                     <button class="oe_inline"
                         string="Interview" icon="gtk-print"
                         name="action_print_survey" type="object"
