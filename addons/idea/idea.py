@@ -67,21 +67,21 @@ class idea_idea(osv.osv):
 
     def idea_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state': 'cancel' })
-        self.message_post(cr, uid, ids, body=_('Idea canceled.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea cancelled.'), subtype="cancelled", context=context)
         return True
 
     def idea_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state': 'open'})
-        self.message_post(cr, uid, ids, body=_('Idea accepted.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea accepted.'), subtype="open", context=context)
         return True
 
     def idea_close(self, cr, uid, ids, context={}):
-        self.message_post(cr, uid, ids, body=_('Idea done.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea closed.'), subtype="closed", context=context)
         self.write(cr, uid, ids, { 'state': 'close' })
         return True
 
     def idea_draft(self, cr, uid, ids, context={}):
-        self.message_post(cr, uid, ids, body=_('Idea reset to draft.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea reset to draft.'), subtype="new", context=context)
         self.write(cr, uid, ids, { 'state': 'draft' })
         return True
 idea_idea()

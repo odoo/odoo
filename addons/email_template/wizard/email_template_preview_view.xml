@@ -6,26 +6,22 @@
             <field name="name">email_template.preview.form</field>
             <field name="model">email_template.preview</field>
             <field name="arch" type="xml">
-                <form string="Email Preview">
-                    <field name="model_id" invisible="1"/>
-                    <field name="res_id" on_change="on_change_res_id(res_id, context)"/>
-                    <group col="2" colspan="4">
-                        <field name="email_to" readonly="1"/>
-                        <field name="email_cc" readonly="1" attrs="{'invisible': [('email_cc','=',False)]}"/>
-                        <field name="reply_to" readonly="1" attrs="{'invisible': [('reply_to','=',False)]}"/>
-                        <field name="subject" readonly="1"/>
+                <form string="Email Preview" version="7.0">
+                    <div>
+                        <h2>Preview of <field name="name" readonly="1" class="oe_inline"/></h2>
+                        <field name="model_id" invisible="1"/>
+                        <h3>Using sample document
+                        <field name="res_id" on_change="on_change_res_id(res_id, context)" class="oe_inline"/>
+                        </h3>
+                    </div>
+                    <group>
+                      <field name="email_from" readonly="1"/>
+                      <field name="email_to" readonly="1"/>
+                      <field name="email_cc" readonly="1" attrs="{'invisible':[('email_cc','=',False)]}"/>
+                      <field name="reply_to" readonly="1" attrs="{'invisible':[('reply_to','=',False)]}"/>
+                      <field name="subject" readonly="1"/>
+                      <field name="body_html" widget="html" readonly="1"/>
                     </group>
-                    <group col="4" colspan="4">
-                        <notebook>
-                            <page string="Body (Text)">
-                                <field name="body" nolabel="1" colspan="4" height="350" width="350" readonly="1"/>
-                            </page>
-                            <page string="Body (Rich/HTML)" attrs="{'invisible': [('body_html','=', False)]}">
-                                <field name="body_html" nolabel="1" colspan="4" height="350" width="350" readonly="1"/>
-                            </page>
-                        </notebook>
-                    </group>
-                    <field name="report_name" colspan="4" readonly="1"/>
                 </form>
             </field>
         </record>

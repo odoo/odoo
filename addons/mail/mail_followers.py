@@ -61,13 +61,20 @@ class mail_notification(osv.Model):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', string='Contact',
-                        ondelete='cascade', required=True, select=1),
+                        ondelete='cascade', required=True),
         'read': fields.boolean('Read'),
+        'message_id': fields.many2one('mail.message', string='Message',
+                        ondelete='cascade', required=True),
     }
 
     _defaults = {
         'read': False,
     }
+
+    def init(self, cr):
+        cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('mail_notification_partner_id_read_message_id',))
+        if not cr.fetchone():
+            cr.execute('CREATE INDEX mail_notification_partner_id_read_message_id ON mail_notification (partner_id, read, message_id)')
 
     def create(self, cr, uid, vals, context=None):
         """ Override of create to check that we can not create a notification
@@ -75,6 +82,11 @@ class mail_notification(osv.Model):
         if self.pool.get('mail.message').check_access_rights(cr, uid, 'read'):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
         return False
+
+    def set_message_read(self, cr, uid, msg_id, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
+        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
 
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
@@ -90,12 +102,7 @@ class mail_notification(osv.Model):
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
         if signature:
-            signature_block = u'\n<pre>%s</pre>\n' % signature
-            insertion_point = body_html.find('</html>')
-            if insertion_point > -1:
-                body_html = body_html[:insertion_point] + signature_block + body_html[insertion_point:]
-            else:
-                body_html += signature_block
+            body_html = tools.append_content_to_html(body_html, signature)
 
         towrite = {
             'mail_message_id': msg.id,

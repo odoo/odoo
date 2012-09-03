@@ -29,7 +29,7 @@ from osv import fields
 import tools
 from tools.translate import _
 from tools.html_sanitize import html_sanitize
-from tools import html2plaintext
+from tools import append_content_to_html
 from urllib import quote as quote
 _logger = logging.getLogger(__name__)
 
@@ -40,10 +40,8 @@ except ImportError:
 
 class email_template(osv.osv):
     "Templates for sending email"
-    _inherit = 'mail.mail'
     _name = "email.template"
     _description = 'Email Templates'
-    _rec_name = 'name' # override mail.message's behavior
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
         """Render the given template text, replace mako expressions ``${expr}``
@@ -103,57 +101,44 @@ class email_template(osv.osv):
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
         return {'value':{'model': mod_name}}
 
-    def name_get(self, cr, uid, ids, context=None):
-        """ Override name_get of mail.message: return directly the template
-            name, and not the generated name from mail.message.common."""
-        return [(record.id, record.name) for record in self.browse(cr, uid, ids, context=context)]
-
     _columns = {
-        'name': fields.char('Name', size=250),
-        'model_id': fields.many2one('ir.model', 'Related document model'),
-        'lang': fields.char('Language Selection', size=250,
+        'name': fields.char('Name'),
+        'model_id': fields.many2one('ir.model', 'Applies to', help="The kind of document with with this template can be used"),
+        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
+                                size=128, select=True, store=True, readonly=True),
+        'lang': fields.char('Language',
                             help="Optional translation language (ISO code) to select when sending out an email. "
                                  "If not set, the english version will be used. "
                                  "This should usually be a placeholder expression "
                                  "that provides the appropriate language code, e.g. "
-                                 "${object.partner_id.lang.code}."),
+                                 "${object.partner_id.lang.code}.",
+                            placeholder="${object.partner_id.lang.code}"),
         'user_signature': fields.boolean('Add Signature',
                                          help="If checked, the user's signature will be appended to the text version "
                                               "of the message"),
-        'report_name': fields.char('Report Filename', size=200, translate=True,
-                                   help="Name to use for the generated report file (may contain placeholders)\n"
-                                        "The extension can be omitted and will then come from the report type."),
-        'report_template':fields.many2one('ir.actions.report.xml', 'Optional report to print and attach'),
-        'ref_ir_act_window':fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
-                                            help="Sidebar action to make this template available on records "
-                                                 "of the related document model"),
-        'ref_ir_value':fields.many2one('ir.values', 'Sidebar Button', readonly=True,
-                                       help="Sidebar button to open the sidebar action"),
-        'track_campaign_item': fields.boolean('Resource Tracking',
-                                              help="Enable this is you wish to include a special tracking marker "
-                                                   "in outgoing emails so you can identify replies and link "
-                                                   "them back to the corresponding resource record. "
-                                                   "This is useful for CRM leads for example"),
-
-        # Overridden mail.message.common fields for technical reasons:
-        'model': fields.related('model_id', 'model', type='char', string='Related Document Model',
-                                size=128, select=True, store=True, readonly=True),
-        # we need a separate m2m table to avoid ID collisions with the original mail.message entries
-        #'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
-        #                                   'attachment_id', 'Files to attach',
-        #                                   help="You may attach files to this template, to be added to all "
-        #                                        "emails created from this template"),
-
-        # Overridden mail.message.common fields to make tooltips more appropriate:
         'subject': fields.char('Subject', translate=True, help="Subject (placeholders may be used here)",),
-        'email_from': fields.char('From', size=128, help="Sender address (placeholders may be used here)"),
-        'email_to': fields.char('To', size=256, help="Comma-separated recipient addresses (placeholders may be used here)"),
-        'email_cc': fields.char('Cc', size=256, help="Carbon copy recipients (placeholders may be used here)"),
-        'reply_to': fields.char('Reply-To', size=250, help="Preferred response address (placeholders may be used here)"),
+        'email_from': fields.char('From', help="Sender address (placeholders may be used here)"),
+        'email_to': fields.char('To', help="Comma-separated recipient addresses (placeholders may be used here)"),
+        'email_cc': fields.char('Cc', help="Carbon copy recipients (placeholders may be used here)"),
+        'reply_to': fields.char('Reply-To', help="Preferred response address (placeholders may be used here)"),
         'mail_server_id': fields.many2one('ir.mail_server', 'Outgoing Mail Server', readonly=False,
                                           help="Optional preferred server for outgoing mails. If not set, the highest "
                                                "priority one will be used."),
-        'body_html': fields.text('Rich-text Contents', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'body_html': fields.text('Body', translate=True, help="Rich-text/HTML version of the message (placeholders may be used here)"),
+        'report_name': fields.char('Report Filename', translate=True,
+                                   help="Name to use for the generated report file (may contain placeholders)\n"
+                                        "The extension can be omitted and will then come from the report type."),
+        'report_template': fields.many2one('ir.actions.report.xml', 'Optional report to print and attach'),
+        'ref_ir_act_window': fields.many2one('ir.actions.act_window', 'Sidebar action', readonly=True,
+                                            help="Sidebar action to make this template available on records "
+                                                 "of the related document model"),
+        'ref_ir_value': fields.many2one('ir.values', 'Sidebar Button', readonly=True,
+                                       help="Sidebar button to open the sidebar action"),
+        'attachment_ids': fields.many2many('ir.attachment', 'email_template_attachment_rel', 'email_template_id',
+                                           'attachment_id', 'Attachments',
+                                           help="You may attach files to this template, to be added to all "
+                                                "emails created from this template"),
+        'auto_delete': fields.boolean('Auto Delete', help="Permanently delete this email after sending it, to save space"),
 
         # Fake fields used to implement the placeholder assistant
         'model_object_field': fields.many2one('ir.model.fields', string="Field",
@@ -167,12 +152,8 @@ class email_template(osv.osv):
                                                   help="When a relationship field is selected as first field, "
                                                        "this field lets you select the target field within the "
                                                        "destination document model (sub-model)."),
-        'null_value': fields.char('Null value', help="Optional value to use if the target field is empty", size=128),
-        'copyvalue': fields.char('Expression', size=256, help="Final placeholder expression, to be copy-pasted in the desired template field."),
-    }
-
-    _defaults = {
-        'track_campaign_item': True
+        'null_value': fields.char('Default Value', help="Optional value to use if the target field is empty"),
+        'copyvalue': fields.char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field."),
     }
 
     def create_action(self, cr, uid, ids, context=None):
@@ -217,7 +198,7 @@ class email_template(osv.osv):
                 if template.ref_ir_value:
                     ir_values_obj = self.pool.get('ir.values')
                     ir_values_obj.unlink(cr, uid, template.ref_ir_value.id, context)
-            except:
+            except Exception:
                 raise osv.except_osv(_("Warning"), _("Deletion of the action record failed."))
         return True
 
@@ -289,32 +270,14 @@ class email_template(osv.osv):
            :param res_id: id of the record to use for rendering the template (model
                           is taken from template definition)
            :returns: a dict containing all relevant fields for creating a new
-                     mail.message entry, with the addition one additional
-                     special key ``attachments`` containing a list of
+                     mail.mail entry, with one extra key ``attachments``, in the
+                     format expected by :py:meth:`mail_thread.message_post`.
         """
         if context is None:
             context = {}
-        values = {
-                  'subject': False,
-                  'body_html': False,
-                  'email_from': False,
-                  'email_to': False,
-                  'email_cc': False,
-                  'reply_to': False,
-                  'auto_delete': False,
-                  'model': False,
-                  'res_id': False,
-                  'mail_server_id': False,
-                  'attachments': False,
-                  'attachment_ids': False,
-                  'message_id': False,
-                  'state': 'outgoing',
-        }
-        if not template_id:
-            return values
-
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
+        values = {'model': template.model_id.model}
 
         for field in ['subject', 'body_html', 'email_from',
                       'email_to', 'email_cc', 'reply_to']:
@@ -322,21 +285,20 @@ class email_template(osv.osv):
                                                  template.model, res_id, context=context) \
                                                  or False
 
-        if values['body_html']:
-            values['body'] = html_sanitize(values['body_html'])
-            values['body_text'] = html2plaintext(values['body_html'])
-
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
-            values['body'] += '\n\n' + signature
+            values['body_html'] = append_content_to_html(values['body_html'], signature)
+
+        if values['body_html']:
+            values['body'] = html_sanitize(values['body_html'])
 
         values.update(mail_server_id = template.mail_server_id.id or False,
                       auto_delete = template.auto_delete,
                       model=template.model,
                       res_id=res_id or False)
 
-        attachments = {}
-        # Add report as a Document
+        attachments = []
+        # Add report in attachments
         if template.report_template:
             report_name = self.render_template(cr, uid, template.report_name, template.model, res_id, context=context)
             report_service = 'report.' + report_xml_pool.browse(cr, uid, template.report_template.id, context).report_name
@@ -352,12 +314,11 @@ class email_template(osv.osv):
             ext = "." + format
             if not report_name.endswith(ext):
                 report_name += ext
-            attachments[report_name] = result
+            attachments.append(report_name, result)
 
-        # Add document attachments
+        # Add template attachments
         for attach in template.attachment_ids:
-            # keep the bytes as fetched from the db, base64 encoded
-            attachments[attach.datas_fname] = attach.datas
+            attachments.append(attach.datas_fname, attach.datas)
 
         values['attachments'] = attachments
         return values
