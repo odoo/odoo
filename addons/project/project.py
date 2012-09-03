@@ -26,6 +26,7 @@ from osv import fields, osv
 from openerp.addons.resource.faces import task as Task
 import time
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 _TASK_STATE = [('draft', 'New'),('open', 'In Progress'),('pending', 'Pending'), ('done', 'Done'), ('cancelled', 'Cancelled')]
 
@@ -853,7 +854,7 @@ class task(base_stage, osv.osv):
         if context is None: context = {}
         # read uom as admin to avoid access rights issues, e.g. for portal/share users,
         # this should be safe (no context passed to avoid side-effects)
-        obj_tm = users_obj.browse(cr, 1, uid, context=context).company_id.project_time_mode_id
+        obj_tm = users_obj.browse(cr, SUPERUSER_ID, uid, context=context).company_id.project_time_mode_id
         tm = obj_tm and obj_tm.name or 'Hours'
 
         res = super(task, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu=submenu)
