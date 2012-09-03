@@ -72,11 +72,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         return !! this.group_by;
     },
     _is_action_enabled: function(action) {
-        if (! this.options.creatable)
+        if (action === 'create' && !this.options.creatable)
             return false;
-        if (_.has(this.fields_view.arch.attrs, action))
-            return JSON.parse(this.fields_view.arch.attrs[action]);
-        return true;
+        return this._super(action);
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
@@ -637,9 +635,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             });
     },
     _is_action_enabled: function(action) {
-        if (_.has(this.fields_view.arch.attrs, action))
-            return JSON.parse(this.fields_view.arch.attrs[action]);
-        return true;
+        return (_.has(this.fields_view.arch.attrs, action)) ? JSON.parse(this.fields_view.arch.attrs[action]) : true;
     }    
 });
 
