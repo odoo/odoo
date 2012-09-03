@@ -1306,7 +1306,7 @@ class account_invoice(osv.osv):
 
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), subtype="cancel", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), subtype="cancelled", context=context)
 account_invoice()
 
 class account_invoice_line(osv.osv):

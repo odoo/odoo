@@ -569,12 +569,12 @@
             <field name="name">paid</field>
             <field name="model_ids" eval="[(4,ref('account.model_account_invoice'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
-            <field name="name">cancel</field>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
             <field name="model_ids" eval="[(4,ref('account.model_account_invoice'))]"/>
             <field name="default" eval="False"/>
         </record>
-		<record id="mail.mail_subtype_email" model="mail.message.subtype">
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
             <field name="model_ids" eval="[(4,ref('account.model_account_invoice')), (4,ref('analytic.model_account_analytic_account'))]"/>
         </record>
         <record id="mail.mail_subtype_comment" model="mail.message.subtype">
