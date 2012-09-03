@@ -379,7 +379,7 @@ class hr_holidays(osv.osv):
             
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            if obj.holiday_status_id.double_validation:
+            if obj.double_validation:
                 self.message_post(cr, uid, [obj.id], 
                     _("The request has been <b>double validated</b>. The validation process is now over."), context=context)
             else:
@@ -390,6 +390,7 @@ class hr_holidays(osv.osv):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
                 _("The request has been <b>refused</b>. The validation process is now over."),  context=context)
+
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"
