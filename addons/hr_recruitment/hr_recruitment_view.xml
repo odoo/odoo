@@ -375,11 +375,12 @@
         <field name="model">hr.recruitment.stage</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
-                <group string="Stage Definition">
+                <group string="Stage Definition" col="4">
                     <field name="name"/>
                     <field name="department_id"/>
                     <field name="sequence"/>
                     <field name="state"/>
+                    <field name="fold"/>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
