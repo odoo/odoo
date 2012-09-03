@@ -183,50 +183,27 @@
             </field>
         </record>
 
-        <record model="ir.ui.view" id="product.product_kanban_view">
-            <field name="name">Product Kanban</field>
+        <record model="ir.ui.view" id="product_kanban_stock_view">
+            <field name="name">Product Kanban Stock</field>
             <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_kanban_view"/>
             <field name="arch" type="xml">
-                <kanban>
-                    <field name="color"/>
-                    <field name="type"/>
-                    <field name="image_medium"/>
-                    <field name="list_price"/>
+                <field name="list_price" position="after">
                     <field name="reception_count"/>
                     <field name="delivery_count"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div class="oe_product_vignette">
-                                <div class="oe_product_img">
-                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" class="oe_product_photo"/></a>
-                                </div>
-                                <div class="oe_product_desc">
-                                    <h4><a type="open"><field name="name"></field></a></h4>
-                                    <ul>
-                                        <li t-if="record.code.raw_value">Code: <field name="code"/></li>
-                                        <li t-if="record.type.raw_value != 'service'">Stock on hand: <field name="qty_available"/> <field name="uom_id"/></li>
-                                        <li t-if="record.type.raw_value != 'service'">Stock available: <field name="virtual_available"/> <field name="uom_id"/></li>
-                                        <li>Price: <field name="lst_price"></field></li>
-                                        <!-- TODO the 'groups' attribute doesn't work in kanban views -->
-                                        <li groups="base.group_user">Cost: <field name="standard_price"></field></li>
-                                    </ul>
-                                    <div groups="base.group_user">
-                                        <a name="%(action_receive_move)d" type="action">
-                                            <t t-if="record.reception_count.value">Receptions(<t t-esc="record.reception_count.value"/>)</t>
-                                        </a>
-                                        <a name="%(action_deliver_move)d" type="action">
-                                            <t t-if="record.delivery_count.value">Deliveries(<t t-esc="record.delivery_count.value"/>)</t>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                $('.oe_product_photo').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_product_photo_wide') } });
-                            </script>
-                            <div></div>
-                        </t>
-                    </templates>
-                </kanban>
+                </field>
+                <xpath expr="//div[@name='tags']" position="inside">
+                    <a name="%(action_receive_move)d" type="action" t-if="record.reception_count.raw_value>0">
+                        <t t-esc="record.reception_count.value"/> Receptions
+                    </a>
+                    <a name="%(action_deliver_move)d" type="action" t-if="record.delivery_count.raw_value>0">
+                        <t t-esc="record.delivery_count.value"/> Deliveries
+                    </a>
+                </xpath>
+                <ul position="inside">
+                    <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
+                    <li t-if="record.type.raw_value != 'service'">Available: <field name="virtual_available"/> <field name="uom_id"/></li>
+                </ul>
             </field>
         </record>
 
