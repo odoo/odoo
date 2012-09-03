@@ -6,6 +6,7 @@ import urlparse
 
 from openerp.tools import config
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 TWENTY_FOUR_HOURS = 24 * 60 * 60
 
@@ -76,9 +77,9 @@ class res_users(osv.osv):
         MailMessage.send(cr, uid, [msg_id], context=context)
 
     def send_reset_password_request(self, cr, uid, email, context=None):
-        ids = self.pool.get('res.users').search(cr, 1, [('user_email', '=', email)], context=context)
+        ids = self.pool.get('res.users').search(cr, SUPERUSER_ID, [('user_email', '=', email)], context=context)
         if ids:
-            self._auth_reset_password_send_email(cr, 1, email, 'reset_password_email', ids[0], context=context)
+            self._auth_reset_password_send_email(cr, SUPERUSER_ID, email, 'reset_password_email', ids[0], context=context)
             return True
         #else:
         #    _m, company_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'main_company')
@@ -109,7 +110,7 @@ class auth_reset_password(osv.TransientModel):
         Users = self.pool.get('res.users')
         data = Users._auth_reset_password_check_token(cr, uid, values.get('token', ''))
         if data:
-            Users.write(cr, 1, data['uid'], {'password': pw}, context=context)
+            Users.write(cr, SUPERUSER_ID, data['uid'], {'password': pw}, context=context)
         else:
             raise osv.except_osv('Error', 'Invalid token')
 
