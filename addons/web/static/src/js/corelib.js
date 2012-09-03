@@ -1323,12 +1323,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
-                    // TODO deprecate or use a deferred on login.do_ask_login()
-                    self.on_session_invalid(function() {
-                        self.rpc(url, payload.params,
-                            function() { deferred.resolve.apply(deferred, arguments); },
-                            function() { deferred.reject.apply(deferred, arguments); });
-                    });
                 } else {
                     deferred.reject(response.error, $.Event());
                 }

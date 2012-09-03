@@ -59,7 +59,12 @@
 				} else {
 					mirror = $(copy).data('ismirror', true).addClass(className || 'autosizejs')[0];
 
-					resize = $ta.css('resize') === 'none' ? 'none' : 'horizontal';
+					// Changed allowed resize only in edit mode by VTA (31/8/2012)
+					if ($ta.attr('disabled')) {
+						$ta.css('resize', 'none');
+					}
+					// Changed horizontal to vertical by VTA (31/8/2012)
+					resize = $ta.css('resize') === 'none' ? 'none' : 'vertical';
 
 					$ta.data('mirror', $(mirror)).css({
 						overflow: hidden,
