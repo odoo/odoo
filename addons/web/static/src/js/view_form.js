@@ -1998,7 +1998,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     on_translate: function() {
         var self = this;
         var trans = new instance.web.DataSet(this, 'ir.translation', this.view.dataset.get_context());
-        return trans.call('translate', [this.view.dataset.model, this.view.datarecord.id, this.name]).then(function(action) {
+        return trans.call('translate_fields', [this.view.dataset.model, this.view.datarecord.id, this.name]).then(function(action) {
             self.do_action(action);
         });
     },
