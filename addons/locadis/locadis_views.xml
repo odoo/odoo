@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+        <record id="product_normal_form_locadis_view" model="ir.ui.view">
+            <field name="name">product.locadis</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="point_of_sale.product_normal_form_pos_view"/>
+            <field name="arch" type='xml'>
+                <group name="pos" position="inside">
+                    <field name="dont_vidange"/>
+                    <field name="extra"/>
+                </group>
+            </field>
+        </record>
+    </data>
+</openerp>
