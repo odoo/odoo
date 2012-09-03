@@ -113,20 +113,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.set_cookie('session_id', '');
         return this.rpc("/web/session/destroy", {});
     },
-    on_session_valid: function() {
-    },
-    /**
-     * Called when a rpc call fail due to an invalid session.
-     * By default, it's a noop
-     */
-    on_session_invalid: function(retry_callback) {
-    },
-    /**
-     * Fetches a cookie stored by an openerp session
-     *
-     * @private
-     * @param name the cookie's name
-     */
     get_cookie: function (name) {
         if (!this.name) { return null; }
         var nameEQ = this.name + '|' + name + '=';
@@ -160,9 +146,8 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     /**
      * Load additional web addons of that instance and init them
      *
-     * @param {Boolean} [no_session_valid_signal=false] prevents load_module from triggering ``on_session_valid``.
      */
-    load_modules: function(no_session_valid_signal) {
+    load_modules: function() {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
             var lang = self.user_context.lang,
@@ -195,9 +180,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             return loaded.then(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
-                if (!no_session_valid_signal) {
-                    self.on_session_valid();
-                }
             });
         });
     },
