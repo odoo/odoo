@@ -11,11 +11,11 @@ openerp.locadis = function(instance){
             console.log('loading');
             var self = this;
 
-            var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
+            var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
                     self.set('user',users[0]);
 
-                    return fetch('res.company',
+                    return self.fetch('res.company',
                     [
                         'currency_id',
                         'email',
@@ -30,15 +30,15 @@ openerp.locadis = function(instance){
                 }).pipe(function(companies){
                     self.set('company',companies[0]);
 
-                    return fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
+                    return self.fetch('res.partner',['contact_address'],[['id','=',companies[0].partner_id[0]]]);
                 }).pipe(function(company_partners){
                     self.get('company').contact_address = company_partners[0].contact_address;
 
-                    return fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
+                    return self.fetch('res.currency',['symbol','position'],[['id','=',self.get('company').currency_id[0]]]);
                 }).pipe(function(currencies){
                     self.set('currency',currencies[0]);
 
-                    return fetch('product.uom', null, null);
+                    return self.fetch('product.uom', null, null);
                 }).pipe(function(units){
                     self.set('units',units);
                     var units_by_id = {};
@@ -47,19 +47,19 @@ openerp.locadis = function(instance){
                     }
                     self.set('units_by_id',units_by_id);
                     
-                    return fetch('product.packaging', null, null);
+                    return self.fetch('product.packaging', null, null);
                 }).pipe(function(packagings){
                     self.set('product.packaging',packagings);
 
-                    return fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
+                    return self.fetch('res.users', ['name','ean13'], [['ean13', '!=', false]]);
                 }).pipe(function(users){
                     self.set('user_list',users);
 
-                    return fetch('account.tax', ['amount', 'price_include', 'type']);
+                    return self.fetch('account.tax', ['amount', 'price_include', 'type']);
                 }).pipe(function(taxes){
                     self.set('taxes', taxes);
 
-                    return fetch(
+                    return self.fetch(
                         'pos.session', 
                         ['id', 'journal_ids','name','user_id','config_id','start_at','stop_at'],
                         [['state', '=', 'opened'], ['user_id', '=', self.session.uid]]
@@ -67,7 +67,7 @@ openerp.locadis = function(instance){
                 }).pipe(function(sessions){
                     self.set('pos_session', sessions[0]);
 
-                    return fetch(
+                    return self.fetch(
                         'pos.config',
                         ['name','journal_ids','shop_id','journal_id',
                          'iface_self_checkout', 'iface_led', 'iface_cashdrawer',
@@ -84,15 +84,15 @@ openerp.locadis = function(instance){
                     self.iface_self_checkout       =  !!pos_config.iface_self_checkout;
                     self.iface_cashdrawer          =  !!pos_config.iface_cashdrawer;
 
-                    return fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
+                    return self.fetch('sale.shop',[],[['id','=',pos_config.shop_id[0]]]);
                 }).pipe(function(shops){
                     self.set('shop',shops[0]);
 
-                    return fetch('pos.category', ['id','name','parent_id','child_id','image'])
+                    return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
                 }).pipe(function(categories){
                     self.db.add_categories(categories);
 
-                    return fetch(
+                    return self.fetch(
                         'product.product', 
                         ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
                          'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 
@@ -103,7 +103,7 @@ openerp.locadis = function(instance){
                 }).pipe(function(products){
                     self.db.add_products(products);
 
-                    return fetch(
+                    return self.fetch(
                         'account.bank.statement',
                         ['account_id','currency','journal_id','state','name','user_id','pos_session_id'],
                         [['state','=','open'],['pos_session_id', '=', self.get('pos_session').id]]
@@ -111,7 +111,7 @@ openerp.locadis = function(instance){
                 }).pipe(function(bank_statements){
                     self.set('bank_statements', bank_statements);
 
-                    return fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
+                    return self.fetch('account.journal', undefined, [['user_id','=', self.get('pos_session').user_id[0]]]);
                 }).pipe(function(journals){
                     self.set('journals',journals);
 
