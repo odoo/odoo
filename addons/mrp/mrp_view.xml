@@ -621,7 +621,7 @@
                 <sheet>
                     <label for="product_id" class="oe_edit_only"/>
                     <h1>
-                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
+                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context="{'default_supply_method':'produce'}"/>
                     </h1>
                     <group>
                         <group>
