@@ -142,7 +142,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['pos_categ_id','!=', false],['sale_ok','=',true]],
                         {pricelist: self.get('shop').pricelist_id[0]} // context for price
                     );
@@ -417,6 +418,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
                 tax:                this.get_tax(),
+                product_description:      this.get_product().get('description'),
+                product_description_sale: this.get_product().get('description_sale'),
             };
         },
         get_price_without_tax: function(){
