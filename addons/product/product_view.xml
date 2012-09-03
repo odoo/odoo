@@ -72,6 +72,8 @@
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
                         </div>
+                        <div class="oe_right oe_button_box" name="buttons">
+                        </div>
                         <notebook>
                             <page string="Information">
                                 <group>
@@ -86,12 +88,11 @@
                                     </group>
                                     <group string="Procurement">
                                         <field name="type"/>
-                                        <field name="procure_method" groups="base.group_user"/>
-                                        <field name="supply_method" groups="base.group_user"/>
+                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
                                     </group>
                                     <group string="Prices">
                                         <field name="list_price"/>
-                                        <field name="cost_method" groups="base.group_user"/>
+                                        <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
@@ -117,28 +118,6 @@
                                     </group>
 
                                 </group>
-                            </page>
-                            <page string="Procurement &amp; Locations" groups="base.group_user">
-                                <group>
-                                    <group name="delay" string="Delays">
-                                        <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                        <field name="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
-                                        <field name="warranty"/>
-                                    </group>
-                                    <group name="store" string="Storage Localisation">
-                                        <field name="loc_rack" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="loc_row" attrs="{'readonly':[('type','=','service')]}"/>
-                                        <field name="loc_case" attrs="{'readonly':[('type','=','service')]}"/>
-                                    </group>
-                                    <group name="misc" string="Miscellaneous">
-                                        <field name="active"/>
-                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                                    </group>
-                                </group>
-
-                            </page>
-                            <page string="Suppliers" groups="base.group_user">
-                                <field name="seller_ids" context="{'uom_id': uom_id}"/>
                             </page>
                             <page string="Descriptions" groups="base.group_user">
                                 <separator string="Description"/>

@@ -23,6 +23,7 @@ import logging
 import os
 import tempfile
 import urllib
+from openerp import SUPERUSER_ID
 
 import werkzeug.urls
 import werkzeug.exceptions
@@ -176,7 +177,7 @@ class OpenIDController(openerpweb.Controller):
             with registry.cursor() as cr:
                 Modules = registry.get('ir.module.module')
 
-                installed = Modules.search_count(cr, 1, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
+                installed = Modules.search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
                 if installed:
 
                     Users = registry.get('res.users')
@@ -196,13 +197,13 @@ class OpenIDController(openerpweb.Controller):
 
                     domain += [('openid_url', '=', openid_url), ('active', '=', True)]
 
-                    ids = Users.search(cr, 1, domain)
+                    ids = Users.search(cr, SUPERUSER_ID, domain)
                     assert len(ids) < 2
                     if ids:
                         user_id = ids[0]
-                        login = Users.browse(cr, 1, user_id).login
+                        login = Users.browse(cr, SUPERUSER_ID, user_id).login
                         key = randomString(utils.KEY_LENGTH, '0123456789abcdef')
-                        Users.write(cr, 1, [user_id], {'openid_key': key})
+                        Users.write(cr, SUPERUSER_ID, [user_id], {'openid_key': key})
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
