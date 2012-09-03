@@ -749,6 +749,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'toggle_layout_outline':
                 current_view.rendering_engine.toggle_layout_debugging();
                 break;
+            case 'translate':
+                this.do_action({
+                    name: "Technical Translation",
+                    res_model : 'ir.translation',
+                    domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
+                    views: [[false, 'list'], [false, 'form']],
+                    type : 'ir.actions.act_window',
+                    view_type : "list",
+                    view_mode : "list"
+                });
+                break;
             case 'fields':
                 this.dataset.call_and_eval(
                         'fields_get', [false, {}], null, 1).then(function (fields) {
@@ -882,10 +893,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
             'files' : [],
             'other' : []
         };
-        if (this.session.uid === 1) {
-            var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
-            this.items.other.push(item);
-        }
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
             var args = [].slice.call(arguments).slice(1);
@@ -1218,16 +1225,6 @@ instance.web.View = instance.web.Widget.extend({
     },
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
-    },
-    on_sidebar_translate: function() {
-        return this.do_action({
-            res_model : 'ir.translation',
-            domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
-            views: [[false, 'list'], [false, 'form']],
-            type : 'ir.actions.act_window',
-            view_type : "list",
-            view_mode : "list"
-        });
     },
     sidebar_context: function () {
         return $.when();

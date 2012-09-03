@@ -483,6 +483,7 @@
     <option value="fvg">Fields View Get</option>
     <option value="manage_filters">Manage Filters</option>
     <t t-if="view_manager.session.uid === 1">
+        <option value="translate">Technical translation</option>
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
