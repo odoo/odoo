@@ -782,9 +782,8 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
         }
         return completion.promise();
     },
-    call_button: function (method, args, callback, error_callback) {
-        var id = args[0][0], index;
-        for(var i=0, len=this.cache.length; i<len; ++i) {
+    evict_from_cache: function (id) {
+        for (var i = 0, len = this.cache.length; i < len; ++i) {
             var record = this.cache[i];
             // if record we call the button upon is in the cache
             if (record.id === id) {
@@ -793,6 +792,9 @@ openerp.web.BufferedDataSet = openerp.web.DataSetStatic.extend({
                 break;
             }
         }
+    },
+    call_button: function (method, args, callback, error_callback) {
+        this.evict_from_cache(args[0][0]);
         return this._super(method, args, callback, error_callback);
     },
     alter_ids: function(n_ids) {

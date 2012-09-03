@@ -2818,6 +2818,12 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
         this.o2m.view.do_save().then(function () {
             _super(name, id, callback);
         });
+    },
+    reload_record: function (record) {
+        // Evict record.id from cache to ensure it will be reloaded correctly
+        this.dataset.evict_from_cache(record.get('id'));
+
+        return this._super(record);
     }
 });
 openerp.web.form.One2ManyList = openerp.web.ListView.List.extend({
