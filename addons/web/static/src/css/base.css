@@ -454,6 +454,9 @@
   -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
+.openerp .oe_background_grey {
+  background: #eeeeee !important;
+}
 .openerp .oe_form_dirty .oe_highlight_on_dirty {
   color: white;
   background: #dc5f59;
@@ -1207,24 +1210,31 @@
 .openerp .oe_secondary_submenu .oe_menu_counter {
   float: right;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  margin: 0px;
+  margin: 1px;
   padding: 1px 4px;
+  border: none;
 }
 .openerp .oe_secondary_submenu .oe_menu_counter:hover {
   cursor: pointer;
-  border: 1px solid #c81010;
-  -moz-box-shadow: 0 0 2px #c81010;
-  -webkit-box-shadow: 0 0 2px #c81010;
-  box-shadow: 0 0 2px #c81010;
+  -moz-transform: scale(1.1);
+  -webkit-transform: scale(1.1);
+  -o-transform: scale(1.1);
+  -ms-transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  background: #7c7bad;
   border-top: 1px solid lightGray;
-  border-bottom: 1px solid lightGray;
+  border-bottom: 1px solid #e0e0e0;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-  -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+  background-color: #7372a7;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#7372a7), to(#8281b1));
+  background-image: -webkit-linear-gradient(top, #7372a7, #8281b1);
+  background-image: -moz-linear-gradient(top, #7372a7, #8281b1);
+  background-image: -ms-linear-gradient(top, #7372a7, #8281b1);
+  background-image: -o-linear-gradient(top, #7372a7, #8281b1);
+  background-image: linear-gradient(to bottom, #7372a7, #8281b1);
 }
 .openerp .oe_secondary_submenu .oe_active a {
   color: white;
@@ -1240,6 +1250,9 @@
 .openerp .oe_secondary_submenu .oe_active .oe_menu_counter {
   background: #eeeeee;
   color: #7c7bad;
+  -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 .openerp .oe_secondary_submenu .oe_menu_toggler:before {
   width: 0;
