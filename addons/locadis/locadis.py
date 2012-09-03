@@ -43,7 +43,6 @@ class product_product(osv.osv):
     _inherit = 'product.product'
     _columns = {
             'dont_vidange': fields.float('Dont Vidange', help="Le prix de ce produit inclus ce montant de vidange"),
-            'extra':        fields.char('Information Supplémentaire', help="Permet de stocker des informations supplémentaires sur le produit",size=256),
     }
     _defaults = {
             'dont_vidange': 0.0,
