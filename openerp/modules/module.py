@@ -162,7 +162,7 @@ def initialize_sys_path():
         return
 
     ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-    ad_paths.append(_ad) # for get_module_path
+    ad_paths.append(os.path.abspath(_ad)) # for get_module_path
     sys.meta_path.append(AddonsImportHook())
 
 def get_module_path(module, downloaded=False, display_warning=True):
