@@ -6,6 +6,7 @@ import simplejson
 
 import openerp
 from openerp.osv import osv, fields
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ class res_users(osv.Model):
         try:
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
-            res = self.search(cr, 1, [('id','=',uid),('oauth_access_token','=',password)])
+            res = self.search(cr, SUPERUSER_ID, [('id','=',uid),('oauth_access_token','=',password)])
             if not res:
                 raise
 
