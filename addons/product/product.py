@@ -499,7 +499,7 @@ class product_product(osv.osv):
             main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
             result[product.id] = {
                 'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_delay': main_supplier.delay if main_supplier else 1,
                 'seller_qty': main_supplier and main_supplier.qty or 0.0,
                 'seller_id': main_supplier and main_supplier.name.id or False
             }
@@ -541,7 +541,7 @@ class product_product(osv.osv):
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
+        'ean13': fields.char('EAN13 Barcode', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),

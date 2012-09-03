@@ -1,0 +1,1390 @@
+# Translation of OpenERP Server.
+# This file contains the translation of the following modules:
+#	* project_scrum
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenERP Server 6.0dev\n"
+"Report-Msgid-Bugs-To: support@openerp.com\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-05-10 17:48+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:01+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.assign.sprint:0
+msgid "_Assign"
+msgstr "_Toewijzen"
+
+#. module: project_scrum
+#: field:project.scrum.meeting,name:0
+msgid "Meeting Name"
+msgstr "Naam vergadering"
+
+#. module: project_scrum
+#: model:process.transition,note:project_scrum.process_transition_backlogtask0
+msgid "From backlog create task."
+msgstr "Maak taak van backlog"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: field:project.scrum.product.backlog,user_id:0
+msgid "Author"
+msgstr "Auteur"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "What did you do since the last meeting?"
+msgstr "Wat heb je gedaan sinds de laatste vergadering?"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Sprint Month"
+msgstr "Sprint maand"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_sprint_all_tree
+msgid ""
+"The scrum agile methodology is used in software development projects. In "
+"this methodology, a sprint is a short period of time (e.g. one month) during "
+"which the team implements a list of product backlogs. The sprint review is "
+"organized when the team presents its work to the customer and product owner."
+msgstr ""
+"De scrum agile methode wordt gebruikt in software ontwikkel projecten. In "
+"deze methode is een sprint een korte periode (bijv. een maand) waarbinnen "
+"het team een lijst van product backlogs implementeert. De sprint review "
+"wordt georganiseerd als het team haar werk presenteert aan de klant en "
+"product owner."
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Group By..."
+msgstr "Groepeer op..."
+
+#. module: project_scrum
+#: model:process.node,note:project_scrum.process_node_productbacklog0
+msgid "Create task from backlogs"
+msgstr "Maak taak van backlogs"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,name:0
+msgid "Sprint Name"
+msgstr "Naam sprint"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,progress:0
+msgid "Progress"
+msgstr "Voortgang"
+
+#. module: project_scrum
+#: field:project.scrum.meeting,user_id:0
+#: view:project.scrum.sprint:0
+#: field:project.scrum.sprint,scrum_master_id:0
+msgid "Scrum Master"
+msgstr "Scrum Master"
+
+#. module: project_scrum
+#: code:addons/project_scrum/project_scrum.py:83
+#, python-format
+msgid "The sprint '%s' has been opened."
+msgstr "De sprint '%s' is geopend."
+
+#. module: project_scrum
+#: constraint:project.project:0
+msgid "Error! project start-date must be lower then project end-date."
+msgstr "Fout! Project startdatum moet liggen voor project einddatum."
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Are your sprint backlog estimate accurate ?"
+msgstr "Is uw sprint backlog inschatting nauwkeurig?"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Retrospective"
+msgstr "Evaluatie"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Send Email"
+msgstr "Email verzenden"
+
+#. module: project_scrum
+#: constraint:project.task:0
+msgid "Error ! You cannot create recursive tasks."
+msgstr "Fout! U kunt geen recursieve taken aanmaken."
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "In Progress Sprints"
+msgstr "Lopende sprints"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "For changing to delegate state"
+msgstr "Hiermee wijzigt u naar de delegeer status"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:62
+#, python-format
+msgid "Product Backlog '%s' is assigned to sprint %s"
+msgstr "Product backlog '%s'is toegewezen aan %s"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.dblc_proj
+msgid "View project's backlog"
+msgstr "Bekijk project backlog"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Set to Draft"
+msgstr "Naar Concept"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_backlog_merge
+msgid "Merge Product Backlogs"
+msgstr "Product Backlogs samenvoegen"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_merge
+#: view:project.scrum.backlog.merge:0
+msgid "Merge Backlogs"
+msgstr "Backlogs samenvoegen"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/mail_compose_message.py:54
+#: code:addons/project_scrum/wizard/project_scrum_email.py:53
+#, python-format
+msgid "Scrum Meeting : %s"
+msgstr "Scrum Meeting : %s"
+
+#. module: project_scrum
+#: view:project.task:0
+msgid "Backlog"
+msgstr "Backlog"
+
+#. module: project_scrum
+#: constraint:project.project:0
+msgid "Error! You cannot assign escalation to the same project!"
+msgstr "Fout! U kunt geen escalatie toewijzen aan hetzelfde project!"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_task
+msgid "Task"
+msgstr "Taak"
+
+#. module: project_scrum
+#: view:postpone.wizard:0
+msgid "Ok"
+msgstr "Ok"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Spent hours"
+msgstr "Gewerkte uren"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_meeting_form
+msgid ""
+"The scrum agile methodology is used in software development projects. In "
+"this methodology, a daily meeting is organized by the scrum master with his "
+"team in order to detect the difficulties the team faced/will face."
+msgstr ""
+"De scrum agile methode wordt gebruikt in software ontwikkeling projecten. In "
+"deze methode wordt dagelijks een meeting georganiseerd door de scrum master "
+"met zijn team om de moeilijkheden te ontdekken die het team heeft/zal "
+"tegenkomen."
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Backlogs Assigned To Current Sprints"
+msgstr "Backlogs toegewezen aan huidige sprints"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "For cancelling the task"
+msgstr "Hiermee annuleert u de taak"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_product_backlog
+#: view:project.scrum.product.backlog:0
+#: field:project.task,product_backlog_id:0
+msgid "Product Backlog"
+msgstr "Product backlog"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_project
+#: field:project.scrum.backlog.merge,project_id:0
+#: field:project.scrum.meeting,project_id:0
+#: view:project.scrum.product.backlog:0
+#: field:project.scrum.product.backlog,project_id:0
+#: view:project.scrum.sprint:0
+#: field:project.scrum.sprint,project_id:0
+msgid "Project"
+msgstr "Project"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Start Task"
+msgstr "Taak starten"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:91
+#: code:addons/project_scrum/wizard/project_scrum_email.py:94
+#: code:addons/project_scrum/wizard/project_scrum_email.py:97
+#, python-format
+msgid "None"
+msgstr "Geen"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Change Stage"
+msgstr "Stadium wijzigen"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,date_stop:0
+msgid "Ending Date"
+msgstr "Einddatum"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Links"
+msgstr "Links"
+
+#. module: project_scrum
+#: help:project.scrum.sprint,effective_hours:0
+msgid "Computed using the sum of the task work done."
+msgstr "Berekend met de som van het werk dat verricht is."
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:92
+#, python-format
+msgid "Task for Today"
+msgstr "Taak voor vandaag"
+
+#. module: project_scrum
+#: field:project.scrum.backlog.assign.sprint,state_open:0
+msgid "Open Backlog"
+msgstr "Open Backlog"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Total Spent Hours"
+msgstr "Totaal gewerkte uren"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Pending Sprints"
+msgstr "Wachtende sprints"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:95
+#, python-format
+msgid "Blocking points encountered:"
+msgstr "Ontdekte blokkeerpunten:"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Backlogs Not Assigned To Sprints."
+msgstr "Backlogs niet toegewezen aan sprints"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Planning"
+msgstr "Planning"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.assign.sprint:0
+#: view:project.scrum.backlog.create.task:0
+msgid "_Cancel"
+msgstr "_Annuleren"
+
+#. module: project_scrum
+#: help:project.scrum.sprint,scrum_master_id:0
+msgid "The person who is maintains the processes for the product"
+msgstr "De persoon die de processen rond het product onderhoudt."
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: field:project.scrum.product.backlog,expected_hours:0
+#: field:project.scrum.sprint,expected_hours:0
+msgid "Planned Hours"
+msgstr "Geplande uren"
+
+#. module: project_scrum
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project_scrum.action_sprint_all_dashboard_tree
+#: model:ir.actions.act_window,name:project_scrum.action_sprint_all_tree
+#: model:ir.ui.menu,name:project_scrum.menu_action_sprint_all_tree
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Sprints"
+msgstr "Sprints"
+
+#. module: project_scrum
+#: field:project.scrum.backlog.assign.sprint,convert_to_task:0
+msgid "Convert To Task"
+msgstr "Omzetten naar taak"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.merge:0
+msgid "Are you sure you want to merge these backlogs?"
+msgstr "Weet u zeker dat u deze Backlogs wilt samenvoegen?"
+
+#. module: project_scrum
+#: help:project.scrum.backlog.create.task,user_id:0
+msgid "Responsible user who can work on task"
+msgstr "Verantwoordelijke gebruiker die aan deze taak kan werken"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: field:project.scrum.product.backlog,state:0
+#: view:project.scrum.sprint:0
+#: field:project.scrum.sprint,state:0
+msgid "State"
+msgstr "Status"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_sprint_task_open
+msgid "View sprint Tasks"
+msgstr "Bekijk sprint taken"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "New"
+msgstr "Nieuw"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,meeting_ids:0
+msgid "Daily Scrum"
+msgstr "Dagelijkse scrum"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.create.task:0
+msgid "C_onvert"
+msgstr "C_onverteren"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Pending Backlogs"
+msgstr "Wachtende backlogs"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_product_backlog_form
+#: model:ir.ui.menu,name:project_scrum.menu_action_product_backlog_form
+#: view:project.scrum.product.backlog:0
+msgid "Product Backlogs"
+msgstr "Product Backlogs"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_mail_compose_message
+msgid "E-mail composition wizard"
+msgstr "E-mail opmaak wizard"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,create_date:0
+msgid "Creation Date"
+msgstr "Datum gemaakt"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Are there anything blocking you?"
+msgstr "Zijn er zaken die u blokkeren?"
+
+#. module: project_scrum
+#: model:ir.ui.menu,name:project_scrum.menu_scrum
+msgid "Scrum"
+msgstr "Scrum"
+
+#. module: project_scrum
+#: field:project.scrum.meeting,question_today:0
+msgid "Tasks for today"
+msgstr "Taken voor vandaag"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:89
+#: field:project.scrum.meeting,question_yesterday:0
+#, python-format
+msgid "Tasks since yesterday"
+msgstr "Taken sinds gisteren"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:39
+#: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:71
+#, python-format
+msgid "Warning"
+msgstr "Waarschuwing"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: selection:project.scrum.product.backlog,state:0
+#: view:project.scrum.sprint:0
+#: selection:project.scrum.sprint,state:0
+msgid "Pending"
+msgstr "Wachtend"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_backlog_assign_sprint
+msgid "Assign sprint to backlogs"
+msgstr "Sprint aan backlogs toewijzen"
+
+#. module: project_scrum
+#: help:project.scrum.sprint,expected_hours:0
+msgid "Estimated time to do the task."
+msgstr "Geschatte tijd om de taak uit te voeren."
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,task_hours:0
+msgid "Task Hours"
+msgstr "Uren taak"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Dates"
+msgstr "Data"
+
+#. module: project_scrum
+#: selection:project.scrum.product.backlog,state:0
+#: selection:project.scrum.sprint,state:0
+msgid "Cancelled"
+msgstr "Geannuleerd"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.dblc_proj2
+msgid "View project's tasks"
+msgstr "Bekijk taken project"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/mail_compose_message.py:55
+#: code:addons/project_scrum/wizard/project_scrum_email.py:56
+#, python-format
+msgid ""
+"Hello  , \n"
+"I am sending you Scrum Meeting : %s for the Sprint  '%s' of Project '%s'"
+msgstr ""
+"Hallo  , \n"
+"Ik stuur je Scrum Meeting : %s voor de Sprint  '%s' van Project '%s'"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+msgid "Daily"
+msgstr "Dagelijks"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,backlog_ids:0
+msgid "Sprint Backlog"
+msgstr "Sprint backlog"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Delegate"
+msgstr "Delegeren"
+
+#. module: project_scrum
+#: view:board.board:0
+msgid "My Board"
+msgstr "Mijn dashboard"
+
+#. module: project_scrum
+#: code:addons/project_scrum/project_scrum.py:90
+#, python-format
+msgid "The sprint '%s' has been closed."
+msgstr "De sprint '%s' is gesloten."
+
+#. module: project_scrum
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project_scrum.action_view_task_progress_graph
+#: view:project.task:0
+msgid "Task Progress"
+msgstr "Voortgang van taak"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: field:project.scrum.meeting,date:0
+msgid "Meeting Date"
+msgstr "Vergaderdatum"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.act_scrum_sprint_2_project_task
+#: view:project.scrum.meeting:0
+#: field:project.scrum.meeting,task_ids:0
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Tasks"
+msgstr "Taken"
+
+#. module: project_scrum
+#: help:project.scrum.backlog.assign.sprint,sprint_id:0
+msgid "Select Sprint to assign backlog."
+msgstr "Sprint selecteren om backlog toe te wijzen."
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,progress:0
+#: help:project.scrum.sprint,progress:0
+msgid "Computed as: Time Spent / Total Time."
+msgstr "Berekend als: Gebruikte tijd / totale tijd"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Month"
+msgstr "Maand"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Draft Backlogs"
+msgstr "Concept backlogs"
+
+#. module: project_scrum
+#: field:project.scrum.meeting,question_blocks:0
+msgid "Blocks encountered"
+msgstr "Ontdekte blokkades"
+
+#. module: project_scrum
+#: help:project.scrum.backlog.assign.sprint,state_open:0
+msgid "Change the state of product backlogs to open if its in draft state"
+msgstr ""
+"De status van de backlogs in open veranderen als ze in concept status zijn"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Total Planned Hours"
+msgstr "Totaal geplande uren"
+
+#. module: project_scrum
+#: help:project.project,product_owner_id:0
+#: help:project.scrum.sprint,product_owner_id:0
+msgid "The person who is responsible for the product"
+msgstr "De persoon die verantwoordelijk is voor het product"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "What do you plan to do till the next meeting?"
+msgstr "Wat ben je van plan te doen tot de volgende vergadering?"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Scrum Sprint"
+msgstr "Scrum sprint"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "In Progress"
+msgstr "In behandeling"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Product owner"
+msgstr "Product owner"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Review"
+msgstr "Evaluatie"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,retrospective:0
+msgid "Sprint Retrospective"
+msgstr "Sprint evaluatie"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,note:0
+msgid "Note"
+msgstr "Opmerking"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: selection:project.scrum.product.backlog,state:0
+#: selection:project.scrum.sprint,state:0
+msgid "Draft"
+msgstr "Concept"
+
+#. module: project_scrum
+#: help:project.task,product_backlog_id:0
+msgid ""
+"Related product backlog that contains this task. Used in SCRUM methodology"
+msgstr ""
+"Gerelateerde product backlog die deze taak bevat. Gebruikt in SCRUM methode"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_postpone_wizard
+#: view:postpone.wizard:0
+#: view:project.scrum.product.backlog:0
+msgid "Postpone"
+msgstr "Uitstellen"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Change Type"
+msgstr "Veraander type"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "For changing to done state"
+msgstr "Hiermee wijzigt u naar de gereed status"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "New Sprints"
+msgstr "Nieuwe sprints"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Optional Info"
+msgstr "Optionele info"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_backlog_create_task
+msgid "Create Tasks from Product Backlogs"
+msgstr "Taken maken van product backlogs"
+
+#. module: project_scrum
+#: help:project.project,sprint_size:0
+msgid "Number of days allocated for sprint"
+msgstr "Aantal toegewezen dagen voor sprint"
+
+#. module: project_scrum
+#: field:project.project,product_owner_id:0
+#: field:project.scrum.sprint,product_owner_id:0
+msgid "Product Owner"
+msgstr "Producteigenaar"
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,sequence:0
+msgid "Gives the sequence order when displaying a list of product backlog."
+msgstr ""
+"Bepaalt de volgorde bij het afbeelden van een lijst van product backlogs."
+
+#. module: project_scrum
+#: model:process.node,name:project_scrum.process_node_productbacklog0
+#: view:project.scrum.product.backlog:0
+msgid "Product backlog"
+msgstr "Product backlog"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.act_scrum_sprint_2_product_backlog
+msgid "Backlogs"
+msgstr "Backlogs"
+
+#. module: project_scrum
+#: help:project.scrum.backlog.assign.sprint,convert_to_task:0
+msgid "Create Task for Product Backlog"
+msgstr "Taak maken voor product backlog"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,active:0
+msgid "Active"
+msgstr "Actief"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_meeting_form
+#: model:ir.ui.menu,name:project_scrum.menu_action_meeting_form
+msgid "Scrum Meetings"
+msgstr "Scrum vergaderingen"
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,expected_hours:0
+msgid "Estimated total time to do the Backlog"
+msgstr "Geschatte totale tijd om de backlog te doen"
+
+#. module: project_scrum
+#: help:project.scrum.backlog.merge,project_id:0
+msgid "Select project for the new product backlog"
+msgstr "Project selecteren voor de nieuwe backlog"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.merge:0
+msgid "Merge"
+msgstr "Samenvoegen"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_sprint_backlog_open
+msgid "View sprint backlog"
+msgstr "Bekijk sprint backlog"
+
+#. module: project_scrum
+#: field:project.scrum.meeting,question_backlog:0
+msgid "Backlog Accurate"
+msgstr "Backlog nauwkeurig"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_to_task
+#: view:project.scrum.backlog.create.task:0
+#: view:project.scrum.product.backlog:0
+msgid "Convert to Task"
+msgstr "Naar taak omzetten"
+
+#. module: project_scrum
+#: help:project.scrum.sprint,project_id:0
+msgid ""
+"If you have [?] in the project name, it means there are no analytic account "
+"linked to this project."
+msgstr ""
+"Wanneer er [?] staat in de projectnaam, dan betekend dit dat er geen "
+"kostenplaats gekoppeld is aan dit project."
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,sequence:0
+msgid "Sequence"
+msgstr "Volgnummer"
+
+#. module: project_scrum
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project_scrum.action_view_backlog_progress_graph
+#: view:project.scrum.product.backlog:0
+msgid "Backlog Progress"
+msgstr "Backlog voortgang"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: selection:project.scrum.product.backlog,state:0
+#: selection:project.scrum.sprint,state:0
+msgid "Done"
+msgstr "Gereed"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.merge:0
+#: view:project.scrum.product.backlog:0
+msgid "Cancel"
+msgstr "Annuleren"
+
+#. module: project_scrum
+#: view:postpone.wizard:0
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Close"
+msgstr "Sluiten"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: selection:project.scrum.product.backlog,state:0
+#: view:project.scrum.sprint:0
+#: selection:project.scrum.sprint,state:0
+msgid "Open"
+msgstr "Open"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+#: field:project.scrum.sprint,effective_hours:0
+msgid "Effective hours"
+msgstr "Effectieve uren"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Information"
+msgstr "Informatie"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_sprint.py:57
+#, python-format
+msgid "Product Backlog '%s' is converted into Task %d."
+msgstr "Product backlog '%s' is omgezet naar taak %d."
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Remaining Hours"
+msgstr "Resterende uren"
+
+#. module: project_scrum
+#: constraint:project.task:0
+msgid "Error ! Task end-date must be greater then task start-date"
+msgstr "Fout! Einddatum van de taak moet voorbij de begindatum liggen"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Responsible"
+msgstr "Verantwoordelijke"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,name:0
+msgid "Feature"
+msgstr "Functionaliteit"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "My Backlogs"
+msgstr "Mijn backlogs"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "In Progress Backlogs"
+msgstr "Lopende Backlogs"
+
+#. module: project_scrum
+#: view:project.task:0
+msgid "View Sprints"
+msgstr "Bekijk sprints"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,help:project_scrum.action_product_backlog_form
+msgid ""
+"The scrum agile methodology is used in software development projects. The "
+"Product Backlog is the list of features to be implemented. A product backlog "
+"can be planified in a development sprint and may be split into several "
+"tasks. The product backlog is managed by the product owner of the project."
+msgstr ""
+"The scrum agile methode wordt gebruikt in software ontwikkel projecten. De "
+"product backlog is de lijst van te implementeren functionaliteiten. Een "
+"product backlog kan worden ingepland in een ontwikkel sprint en kan worden "
+"gesplitst in meer taken. De product backlog wordt beheerd door de product "
+"owner van het project."
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Postpone backlog"
+msgstr "Backlog uitstellen"
+
+#. module: project_scrum
+#: model:process.transition,name:project_scrum.process_transition_backlogtask0
+msgid "Backlog Task"
+msgstr "Backlog taken"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+#: view:project.scrum.sprint:0
+msgid "Planned hours"
+msgstr "Geplande uren"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,date_start:0
+msgid "Starting Date"
+msgstr "Begindatum"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_meeting
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Scrum Meeting"
+msgstr "Scrum vergadering"
+
+#. module: project_scrum
+#: model:ir.actions.report.xml,name:project_scrum.report_scrum_sprint_burndown_chart
+#: view:project.scrum.sprint:0
+msgid "Burndown Chart"
+msgstr "Burndown grafiek"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.scrum.sprint:0
+msgid "Daily Meetings"
+msgstr "Dagelijkse vergaderingen"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Expected hours"
+msgstr "Verwachte uren"
+
+#. module: project_scrum
+#: field:project.project,sprint_size:0
+msgid "Sprint Days"
+msgstr "Sprint dagen"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,progress:0
+msgid "Progress (0-100)"
+msgstr "Voortgang (0-100)"
+
+#. module: project_scrum
+#: view:project.scrum.sprint:0
+msgid "Sprint Info"
+msgstr "Sprint info"
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,active:0
+msgid ""
+"If Active field is set to true, it will allow you to hide the product "
+"backlog without removing it."
+msgstr ""
+"Als het actief veld uit staat, kunt u de product backlog verbergen zonder "
+"deze te verwijderen."
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,task_hours:0
+msgid "Estimated time of the total hours of the tasks"
+msgstr "Geschatte tijd van de totale uren van de taken"
+
+#. module: project_scrum
+#: view:project.project:0
+msgid "Scrum Data"
+msgstr "Scrum gegevens"
+
+#. module: project_scrum
+#: field:project.project,scrum:0
+msgid "Is a Scrum Project"
+msgstr "Is een scrum project"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Edit"
+msgstr "Bewerken"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,tasks_id:0
+msgid "Tasks Details"
+msgstr "Details taak"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_postpone_wizard
+msgid "postpone.wizard"
+msgstr "postpone.wizard"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.merge:0
+msgid ""
+"This wizard merge backlogs and create one new backlog with draft state (Old "
+"backlogs Will be deleted). And it also merge old tasks from backlogs"
+msgstr ""
+"Deze assistent voegt backlogs samen en maakt een nieuwe backlog in concept "
+"status (oude backlogs worden verwijderd). En het voegt ook de oude taken van "
+"backlogs samen."
+
+#. module: project_scrum
+#: view:postpone.wizard:0
+msgid "Postpone Backlog"
+msgstr "Backlog uitstellen"
+
+#. module: project_scrum
+#: view:project.scrum.backlog.merge:0
+msgid "Select the project for merged backlogs"
+msgstr "Het project voor samengevoegde backlogs selecteren"
+
+#. module: project_scrum
+#: view:board.board:0
+#: model:ir.actions.act_window,name:project_scrum.action_view_my_scrum_sprint_tree
+msgid "My Sprint"
+msgstr "Mijn sprint"
+
+#. module: project_scrum
+#: field:project.scrum.product.backlog,effective_hours:0
+msgid "Spent Hours"
+msgstr "Gewerkte uren"
+
+#. module: project_scrum
+#: help:project.scrum.product.backlog,effective_hours:0
+msgid "Computed using the sum of the time spent on every related tasks"
+msgstr "Berekend als de som van de gewerkte tijd aan alle gekoppelde taken"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.open_board_project_scrum
+#: model:ir.ui.menu,name:project_scrum.menu_deshboard_scurm
+msgid "Scrum Dashboard"
+msgstr "Scrum dashboard"
+
+#. module: project_scrum
+#: model:ir.model,name:project_scrum.model_project_scrum_sprint
+msgid "Project Scrum Sprint"
+msgstr "Project scrum sprint"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "Feature Description"
+msgstr "Functionaliteit omschrijving"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:71
+#, python-format
+msgid "Please select any Project."
+msgstr "Selecteer aub een project."
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_email.py:98
+#, python-format
+msgid "Thank you,"
+msgstr "Dank u wel,"
+
+#. module: project_scrum
+#: view:project.scrum.meeting:0
+#: view:project.task:0
+msgid "Current Sprints"
+msgstr "Huidige sprints"
+
+#. module: project_scrum
+#: model:ir.actions.act_window,name:project_scrum.action_scrum_backlog_to_sprint
+#: view:project.scrum.backlog.assign.sprint:0
+msgid "Assign Sprint"
+msgstr "Sprint toewijzen"
+
+#. module: project_scrum
+#: field:project.scrum.backlog.create.task,user_id:0
+msgid "Assign To"
+msgstr "Toewijzen aan"
+
+#. module: project_scrum
+#: view:postpone.wizard:0
+msgid "Are you sure to postpone Backlog ?"
+msgstr "Weet u zeker dat u de backlog wilt uitstellen?"
+
+#. module: project_scrum
+#: view:project.scrum.product.backlog:0
+msgid "For changing to open state"
+msgstr "Hiermee wijzigt u naar de open status"
+
+#. module: project_scrum
+#: field:project.scrum.backlog.assign.sprint,sprint_id:0
+#: view:project.scrum.meeting:0
+#: field:project.scrum.meeting,sprint_id:0
+#: view:project.scrum.product.backlog:0
+#: field:project.scrum.product.backlog,sprint_id:0
+#: view:project.task:0
+#: field:project.task,sprint_id:0
+msgid "Sprint"
+msgstr "Sprint"
+
+#. module: project_scrum
+#: code:addons/project_scrum/wizard/project_scrum_backlog_merger.py:39
+#, python-format
+msgid "Please select at least two product Backlogs"
+msgstr "Selecteer aub tenminste twee product backlogs"
+
+#. module: project_scrum
+#: field:project.scrum.sprint,review:0
+msgid "Sprint Review"
+msgstr "Sprint evaluatie"
+
+#~ msgid "My tasks"
+#~ msgstr "Mijn taken"
+
+#~ msgid "Importance"
+#~ msgstr "Belang"
+
+#~ msgid "Progress (%)"
+#~ msgstr "Voortgang (%)"
+
+#~ msgid "Project Members"
+#~ msgstr "Projectleden"
+
+#~ msgid "Subproject"
+#~ msgstr "Deelproject"
+
+#~ msgid "Team Name"
+#~ msgstr "Teamnaam"
+
+#~ msgid "Priority"
+#~ msgstr "Prioriteit"
+
+#~ msgid "Total Time"
+#~ msgstr "Totale tijd"
+
+#~ msgid "Projects"
+#~ msgstr "Projecten"
+
+#~ msgid "Task Details"
+#~ msgstr "Taakdetails"
+
+#~ msgid "Planned Time"
+#~ msgstr "Geplande tijd"
+
+#~ msgid "Optionnal Info"
+#~ msgstr "Optionele info"
+
+#~ msgid "Low"
+#~ msgstr "Laag"
+
+#~ msgid "Opened tasks"
+#~ msgstr "Geopende taken"
+
+#~ msgid "My opened tasks"
+#~ msgstr "Mijn geopende taken"
+
+#~ msgid "Status"
+#~ msgstr "Status"
+
+#~ msgid "User"
+#~ msgstr "Gebruiker"
+
+#~ msgid "Assigned to"
+#~ msgstr "Toegewezen aan"
+
+#~ msgid "All Tasks"
+#~ msgstr "Alle taken"
+
+#~ msgid "Working Time"
+#~ msgstr "Werktijd"
+
+#~ msgid "Warn Manager"
+#~ msgstr "Waarschuw manager"
+
+#~ msgid "Description"
+#~ msgstr "Omschrijving"
+
+#~ msgid "Users"
+#~ msgstr "Gebruikers"
+
+#~ msgid "Hours Spent"
+#~ msgstr "Gebruikte uren"
+
+#~ msgid "Expected End"
+#~ msgstr "Verwacht einde"
+
+#~ msgid "Delegated To"
+#~ msgstr "Gedelegeerd aan"
+
+#~ msgid "Delay Hours"
+#~ msgstr "Uren vertraging"
+
+#~ msgid "Sum of spent hours of all tasks related to this project."
+#~ msgstr "Totaal van gebruikte uren van alle taken gerelateerd aan dit project"
+
+#~ msgid "Sum of planned hours of all tasks related to this project."
+#~ msgstr "Totaal van geplande uren van alle taken gerelateerd aan dit project"
+
+#~ msgid "Very Low"
+#~ msgstr "Zeer laag"
+
+#~ msgid "Urgent"
+#~ msgstr "Urgent"
+
+#~ msgid "Template"
+#~ msgstr "Sjabloon"
+
+#~ msgid "My opened sprints (Product Owner)"
+#~ msgstr "Mijn geopende sprints (product-eigenaar)"
+
+#~ msgid "Scrum Task"
+#~ msgstr "Scrum taak"
+
+#~ msgid ""
+#~ "Header added at the beginning of the email for the warning message sent to "
+#~ "the customer when a task is closed."
+#~ msgstr ""
+#~ "Koptekst die toegevoegd wordt aan het begin van het waarschuwingsbericht dat "
+#~ "per email naar de klant gestuurd wordt wanneer een taak wordt afgesloten."
+
+#~ msgid "Delegated Tasks"
+#~ msgstr "Gedelegeerde taken"
+
+#~ msgid "Scrum Projects"
+#~ msgstr "Scrum projecten"
+
+#~ msgid "Notes"
+#~ msgstr "Opmerkingen"
+
+#~ msgid ""
+#~ "If you check this field, the project manager will receive a request each "
+#~ "time a task is completed by his team."
+#~ msgstr ""
+#~ "Wanneer u dit veld aanvinkt, zal de projectleider een bericht ontvangen "
+#~ "wanneer een taak afgerond is door één van de teamleden."
+
+#~ msgid ""
+#~ "Estimated time to do the task, usually set by the project manager when the "
+#~ "task is in draft state."
+#~ msgstr ""
+#~ "Geschatte benodigde tijd om de taak uit te voeren, meestal bepaald door de "
+#~ "projectleider tijdens conceptfase."
+
+#~ msgid ""
+#~ "If you check this, the user will have a popup when closing a task that "
+#~ "propose a message to send by email to the customer."
+#~ msgstr ""
+#~ "Als u dit aanvinkt, krijgt de gebruiker een popup als de taak wordt "
+#~ "afgesloten met daarin een voorgesteld bericht dat per email aan de klant kan "
+#~ "worden verzonden."
+
+#~ msgid "Deadline"
+#~ msgstr "Uiterste opleveringsdatum"
+
+#~ msgid "Type"
+#~ msgstr "Soort"
+
+#~ msgid "Computed as: Time Spent + Remaining Time."
+#~ msgstr "Berekend als: Gebruikte uren + resterende uren."
+
+#~ msgid "Internal description of the project."
+#~ msgstr "Interne omschrijving van het project."
+
+#~ msgid "Percent of tasks closed according to the total of tasks todo."
+#~ msgstr "Percentage afgesloten taken van het totaal aantal taken."
+
+#~ msgid "Partner"
+#~ msgstr "Relatie"
+
+#~ msgid "Medium"
+#~ msgstr "Gemiddeld"
+
+#~ msgid "Invalid XML for View Architecture!"
+#~ msgstr "Ongeldige XML voor weergave!"
+
+#~ msgid "Create Tasks"
+#~ msgstr "Maak taken"
+
+#~ msgid "Scrum Tasks"
+#~ msgstr "Scrum taken"
+
+#~ msgid "Contact"
+#~ msgstr "Contactpersoon"
+
+#~ msgid "My opened sprints (Scrum Master)"
+#~ msgstr "Mijn geopende sprints (Scrum meester)"
+
+#~ msgid "Sum of total hours of all tasks related to this project."
+#~ msgstr "Som van de totale uren van alle taken gerelateerd aan dit project"
+
+#~ msgid "Opened Sprints"
+#~ msgstr "Geopende sprints"
+
+#~ msgid "Time Spent"
+#~ msgstr "Bestede tijd"
+
+#~ msgid "Project Manager"
+#~ msgstr "Projectleider"
+
+#~ msgid "Draft Sprints"
+#~ msgstr "Concept sprints"
+
+#~ msgid "My Sprints (Scrum Master)"
+#~ msgstr "Mijn sprints (Scrum meester)"
+
+#~ msgid "Work done"
+#~ msgstr "Afgeronde werkzaamheden"
+
+#~ msgid "My Sprints (Product Owner)"
+#~ msgstr "Mijn sprints"
+
+#~ msgid "Sprints Done"
+#~ msgstr "Sprints uitgevoerd"
+
+#~ msgid "Parent Task"
+#~ msgstr "Hoofdtaak"
+
+#~ msgid "Edit Projects"
+#~ msgstr "Wijzig projecten"
+
+#~ msgid "Scrum Project"
+#~ msgstr "Scrum project"
+
+#~ msgid "Scrum Team"
+#~ msgstr "Scrum team"
+
+#~ msgid "Context"
+#~ msgstr "Context"
+
+#~ msgid "Parent project"
+#~ msgstr "Hoofdproject"
+
+#~ msgid "Total Hours"
+#~ msgstr "Totale uren"
+
+#~ msgid "Opened Backlogs"
+#~ msgstr "Geopende backlogs"
+
+#~ msgid "Created tasks"
+#~ msgstr "Taken gemaakt"
+
+#~ msgid "Error ! You can not create recursive projects."
+#~ msgstr "Fout! U kunt geen recursieve projecten definiëren."
+
+#~ msgid "Scrum Product backlog"
+#~ msgstr "Scrum product backlog"
+
+#~ msgid "Analytic Account"
+#~ msgstr "Kostenplaats"
+
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Ongeldige modelnaam in de definitie van de actie."
+
+#~ msgid ""
+#~ "Total remaining time, can be re-estimated periodically by the assignee of "
+#~ "the task."
+#~ msgstr ""
+#~ "Totaal resterende tijd. Kan periodiek opnieuw worden geschat door de aan "
+#~ "deze taak toegewezen persoon."
+
+#~ msgid "What have you accomplished since yesterday ?"
+#~ msgstr "Wat heeft u sinds gisteren gerealiseerd?"
+
+#~ msgid "Are your Sprint Backlog estimate accurate ?"
+#~ msgstr "Is uw sprint backlog inschatting nauwkeurig?"
+
+#~ msgid "Very urgent"
+#~ msgstr "Zeer urgent"
+
+#~ msgid ""
+#~ "Project's member. Not used in any computation, just for information purpose."
+#~ msgstr "Projectlid. Niet gebruikt in berekeningen, slechts ter informatie."
+
+#~ msgid "Mail Header"
+#~ msgstr "Kopregels mail"
+
+#~ msgid "Is Scrum"
+#~ msgstr "Is Scrum"
+
+#~ msgid "Is there anything blocking you ?"
+#~ msgstr "Is er iets dat u blokkeert?"
+
+#~ msgid "Timebox"
+#~ msgstr "Timebox"
+
+#~ msgid ""
+#~ "Computed as: Total Time - Estimated Time. It gives the difference of the "
+#~ "time estimated by the project manager and the real time to close the task."
+#~ msgstr ""
+#~ "Berekend als: Totale tijd - geschatte tijd. Geeft het verschil tussen de "
+#~ "geschatte tijd van de projectleider en de werkelijke tijd benodigd om de "
+#~ "taak te sluiten."
+
+#~ msgid "Project Name"
+#~ msgstr "Naam project"
+
+#~ msgid "Date Closed"
+#~ msgstr "Datum afgesloten"
+
+#~ msgid ""
+#~ "Link this project to an analytic account if you need financial management on "
+#~ "projects. It enables you to connect projects with budgets, planning, cost "
+#~ "and revenue analysis, timesheets on projects, etc."
+#~ msgstr ""
+#~ "Koppel dit project aan een kostenplaats wanneer u behoefte heeft aan "
+#~ "financieel beheer van projecten. Het geeft u de mogelijkheid om budgetten, "
+#~ "planningen, kosten, opbrengsten, analyses, urenstaten, enz. aan projecten te "
+#~ "verbinden."
+
+#~ msgid "Warn Partner"
+#~ msgstr "Waarschuw relatie"
+
+#~ msgid "Task summary"
+#~ msgstr "Taaksamenvatting"
+
+#~ msgid ""
+#~ "The Object name must start with x_ and not contain any special character !"
+#~ msgstr ""
+#~ "De objectnaam moet beginnen met x_ en mag geen speciale tekens bevatten !"
+
+#~ msgid "Timetable working hours to adjust the gantt diagram report"
+#~ msgstr "Tabel met werkuren om de GANTT overzichten correct weer te geven"
+
+#~ msgid "Running"
+#~ msgstr "In uitvoering"
+
+#~ msgid "What are you working on today ?"
+#~ msgstr "Waar werkt u vandaag aan?"
+
+#~ msgid "Mail Footer"
+#~ msgstr "Mail voetregels"
+
+#~ msgid ""
+#~ "Footer added at the beginning of the email for the warning message sent to "
+#~ "the customer when a task is closed."
+#~ msgstr ""
+#~ "Voetregels die worden toegevoegd aan het emailbericht waarmee de klant wordt "
+#~ "gewaarschuwd als een taak wordt afgesloten."
+
+#~ msgid "Scrum, Agile Development Method"
+#~ msgstr "Scrum, agile development method"

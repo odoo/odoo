@@ -44,6 +44,15 @@
                           interface.
                         </p>
                     </div>
+                    <div attrs="{'invisible' : [('pos_state', '!=', 'opened')]}" class="oe_view_nocontent">
+                        <p class="oe_view_nocontent_create">
+                            Click to continue the session.
+                        </p>
+                        <p>
+                            The session <field name="pos_session_name" class="oe_inline" /> (<field name="pos_session_username" class="oe_inline" />) is "<b><field name="pos_state" class="oe_inline" /></b>"<br/>
+                            You can continue sales from the touchscreen interface by clicking on "<b>Settings</b>" or close the cash register session ?
+                        </p>
+                    </div>
 
                 </form>
             </field>

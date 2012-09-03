@@ -569,7 +569,7 @@ class account_analytic_account(osv.osv):
     _description = 'Analytic Account'
 
     _columns = {
-        'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
+        'use_issues' : fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
 
     def on_change_template(self, cr, uid, ids, template_id, context=None):
@@ -580,8 +580,9 @@ class account_analytic_account(osv.osv):
         return res
 
     def _trigger_project_creation(self, cr, uid, vals, context=None):
+        if context is None: context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res or vals.get('use_issues')
+        return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
 account_analytic_account()
 

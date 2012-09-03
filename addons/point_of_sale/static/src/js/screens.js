@@ -225,13 +225,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // with add_action_button()
         show_action_bar: function(){
             this.pos_widget.action_bar.show();
-            this.$element.css({'bottom':'105px'});
+            this.$el.css({'bottom':'105px'});
         },
 
         // hides the action bar. The actionbar is automatically hidden when it is empty
         hide_action_bar: function(){
             this.pos_widget.action_bar.hide();
-            this.$element.css({'bottom':'0px'});
+            this.$el.css({'bottom':'0px'});
         },
 
         // adds a new button to the action bar. The button definition takes three parameters, all optional :
@@ -250,8 +250,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var self = this;
 
             this.hidden = false;
-            if(this.$element){
-                this.$element.show();
+            if(this.$el){
+                this.$el.show();
             }
 
             if(this.pos_widget.action_bar.get_button_count() > 0){
@@ -311,8 +311,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         // POS initialization.
         hide: function(){
             this.hidden = true;
-            if(this.$element){
-                this.$element.hide();
+            if(this.$el){
+                this.$el.hide();
             }
         },
 
@@ -323,8 +323,8 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         renderElement: function(){
             this._super();
             if(this.hidden){
-                if(this.$element){
-                    this.$element.hide();
+                if(this.$el){
+                    this.$el.hide();
                 }
             }
         },
@@ -332,13 +332,13 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
     module.PopUpWidget = module.PosBaseWidget.extend({
         show: function(){
-            if(this.$element){
-                this.$element.show();
+            if(this.$el){
+                this.$el.show();
             }
         },
         hide: function(){
-            if(this.$element){
-                this.$element.hide();
+            if(this.$el){
+                this.$el.hide();
             }
         },
     });
@@ -350,7 +350,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.pos.proxy.help_needed();
             var self = this;
             
-            this.$element.find('.button').off('click').click(function(){
+            this.$el.find('.button').off('click').click(function(){
                 self.pos_widget.screen_selector.close_popup();
                 self.pos.proxy.help_canceled();
             });
@@ -700,7 +700,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         refresh: function() {
             this.currentOrder = this.pos.get('selectedOrder');
-            $('.pos-receipt-container', this.$element).html(QWeb.render('PosTicket',{widget:this}));
+            $('.pos-receipt-container', this.$el).html(QWeb.render('PosTicket',{widget:this}));
         },
     });
 
@@ -735,11 +735,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             this.validate_button = this.add_action_button({
                     label: 'Validate',
+                    name: 'validation',
                     icon: '/point_of_sale/static/src/img/icons/png48/validate.png',
                     click: function(){
                         self.validateCurrentOrder();
                     },
                 });
+
+            this.updatePaymentSummary();
         },
         close: function(){
             this._super();
@@ -806,6 +809,9 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             this.$('#payment-paid-total').html(paidTotal.toFixed(2));
             this.$('#payment-remaining').html(remaining.toFixed(2));
             this.$('#payment-change').html(change.toFixed(2));
+            if(this.pos_widget.action_bar){
+                this.pos_widget.action_bar.set_button_disabled('validation', remaining > 0);
+            }
         },
         set_numpad_state: function(numpadState) {
         	if (this.numpadState) {
