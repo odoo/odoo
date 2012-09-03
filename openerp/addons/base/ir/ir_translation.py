@@ -331,11 +331,31 @@ class ir_translation(osv.osv):
     def translate(self, cr, uid, model, id, field=None, context=None):
         trans_model = self.pool.get(model)
         domain = ['&', ('res_id', '=', id), ('name', 'ilike', model + ',')]
+        langs_ids = self.pool.get('res.lang').search(cr, uid, [], context=context)
+        langs = [lg.get('code') for lg in self.pool.get('res.lang').read(cr, uid, langs_ids, ['code'], context=context)]
+        main_lang = langs.pop(0)
+        translatable_fields = []
         for f, info in trans_model._all_columns.items():
-            if info.parent_model and info.column.translate:
-                domain_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
-                domain.insert(0, '|')
-                domain.extend(['&', ('res_id', '=', domain_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+            if info.column.translate:
+                if info.parent_model:
+                    domain_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
+                    translatable_fields.append({ 'name': f, 'id': domain_id, 'model': info.parent_model })
+                    domain.insert(0, '|')
+                    domain.extend(['&', ('res_id', '=', domain_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+                else:
+                    translatable_fields.append({ 'name': f, 'id': id, 'model': model })
+        if len(langs):
+            fields = [f.get('name') for f in translatable_fields]
+            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
+            for lg in langs:
+                for f in translatable_fields:
+                    # Check if record exists, else create it (at once)
+                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
+                        SELECT %s, %s, %s, 'field', %s, %s WHERE NOT EXISTS
+                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s);
+                        """
+                    name = "%s,%s" % (f['model'], f['name'])
+                    cr.execute(sql, (lg, record[f['name']], name, f['id'], record[f['name']], lg, name, f['id']))
 
         action = {
             'name': 'Translate',
