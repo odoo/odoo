@@ -380,6 +380,8 @@ class res_partner(osv.osv):
             If only an email address is received and that the regex cannot find
             a name, the name will have the email value.
             If 'force_email' key in context: must find the email address. """
+        if context is None:
+            context = {}
         name, email = self._parse_partner_name(name, context=context)
         if context.get('force_email') and not email:
             raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
