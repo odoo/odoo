@@ -624,9 +624,9 @@
                         <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
                     </h1>
                     <label for="bom_id" class="oe_edit_only"/>
-                    <h1>
+                    <h2>
                          <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" class="oe_inline"/>
-                    </h1>
+                    </h2>
                     <label for="product_qty" class="oe_edit_only"/>
                     <h2>
                         <field name="product_qty" class="oe_inline"/>
