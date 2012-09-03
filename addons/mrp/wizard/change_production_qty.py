@@ -68,12 +68,12 @@ class change_production_qty(osv.osv_memory):
         assert record_id, _('Active Id not found')
         prod_obj = self.pool.get('mrp.production')
         bom_obj = self.pool.get('mrp.bom')
+        move_lines_obj = self.pool.get('stock.move')
         for wiz_qty in self.browse(cr, uid, ids, context=context):
             prod = prod_obj.browse(cr, uid, record_id, context=context)
             prod_obj.write(cr, uid, [prod.id], {'product_qty': wiz_qty.product_qty})
             prod_obj.action_compute(cr, uid, [prod.id])
 
-            move_lines_obj = self.pool.get('stock.move')
             for move in prod.move_lines:
                 bom_point = prod.bom_id
                 bom_id = prod.bom_id.id
@@ -89,11 +89,17 @@ class change_production_qty(osv.osv_memory):
 
                 factor = prod.product_qty * prod.product_uom.factor / bom_point.product_uom.factor
                 res = bom_obj._bom_explode(cr, uid, bom_point, factor / bom_point.product_qty, [])
+                pick_move = {}
+                for move_ln in prod.picking_id.move_lines:
+                    pick_move.update({move_ln.product_id.id: move_ln.id})
                 for r in res[0]:
                     if r['product_id'] == move.product_id.id:
                         move_lines_obj.write(cr, uid, [move.id], {'product_qty' :  r['product_qty']})
+                    if r['product_id'] in pick_move:
+                        move_lines_obj.write(cr, uid, [pick_move[r['product_id']]], {'product_qty' :  r['product_qty']})
+            if prod.move_prod_id:
+                move_lines_obj.write(cr, uid, [prod.move_prod_id.id], {'product_qty' :  wiz_qty.product_qty})
             self._update_product_to_produce(cr, uid, prod, wiz_qty.product_qty, context=context)
-
         return {}
 
 change_production_qty()
