@@ -44,6 +44,7 @@ openerp.base_import = function (instance) {
             {name: 'quoting', label: _lt("Quoting:"), value: '"'}
         ],
         events: {
+            'change .oe_import_grid input': 'import_dryrun',
             'change input.oe_import_file': 'file_update',
             'change input.oe_import_has_header, .oe_import_options input': 'settings_updated',
             'click a.oe_import_csv': function (e) {
@@ -147,6 +148,7 @@ openerp.base_import = function (instance) {
                             .text(item.label));
                 }
             };
+            this.import_dryrun();
         },
         generate_fields_completion: function (root) {
             // Display nice names to user, but send logical names to server
@@ -210,27 +212,35 @@ openerp.base_import = function (instance) {
         },
 
         //- import itself
-        do_import: function () {
+        call_import: function (options) {
             var self = this;
             var fields = this.$('.oe_import_fields input').map(function (index, el) {
                 // Convert user-readable field label to logical db-backed name
                 return self.field_label_to_name[el.value] || false;
             }).get();
-            this.Import.call(
-                'do', [this.id, fields, this.import_options()], {
-                    // maybe could do a dryrun after successful
-                    // preview or something (note: don't go to
-                    // this.result if dryrun=true)
-                    dryrun: false
-                })
-                .then(this.proxy('result'));
+            return this.Import.call(
+                'do', [this.id, fields, this.import_options()], options);
         },
-        result: function (errors) {
-            if (!errors.length) {
-                if (this.getParent().reload_content) {
-                    this.getParent().reload_content();
+        import_dryrun: function () {
+            this.call_import({ dryrun: true })
+                .then(this.proxy('render_import_errors'));
+        },
+        do_import: function () {
+            var self = this;
+            this.call_import({ dryrun: false }).then(function (errors) {
+                if (_.isEmpty(errors)) {
+                    if (self.getParent().reload_content) {
+                        self.getParent().reload_content();
+                    }
+                    self.close();
+                    return;
                 }
-                this.close();
+                self.render_import_errors(errors);
+            });
+        },
+        render_import_errors: function (errors) {
+            if (_.isEmpty(errors)) {
+                this.$el.removeClass('oe_import_error');
                 return;
             }
             // import failed (or maybe just warnings, if we ever get
