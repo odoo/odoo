@@ -8,14 +8,15 @@
             <field name="model">stock.move.consume</field>
             <field name="arch" type="xml">
                 <form string="Consume Move" version="7.0">
-                    <group string="Consume Products">
+                    <seperator string="Consume Products"/>
+                    <group>
                         <field name="product_id" readonly="1"/>
                         <label for="product_qty"/>
                         <div>
-                            <field name="product_qty"/>
-                            <field name="product_uom" nolabel="1" readonly="1"/>
+                            <field name="product_qty" class="oe_inline"/>
+                            <field name="product_uom" class="oe_inline" readonly="1" group="product.group_uom"/>
                         </div>
-                        <field name="location_id"/>
+                        <field name="location_id" group="group_locations"/>
                     </group>
                     <footer>
                         <button name="do_move_consume" string="Ok" type="object" class="oe_highlight"/>
@@ -46,9 +47,9 @@
                         <label for="product_qty"/>
                         <div>
                             <field name="product_qty" class="oe_inline"/>
-                            <field name="product_uom" class="oe_inline" readonly="1"/>
+                            <field name="product_uom" class="oe_inline" readonly="1" group="product.group_uom"/>
                         </div>
-                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection"/>
+                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection" group="group_locations"/>
                     </group>
                     <footer>
                         <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
