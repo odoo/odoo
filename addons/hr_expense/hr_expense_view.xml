@@ -119,7 +119,7 @@
                         <page string="Other Info">
                             <group>
                                 <group string="Accounting Data">
-                                    <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
+                                    <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]" groups= "base.module_account_accountant"/>
                                     <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
                             </group>
