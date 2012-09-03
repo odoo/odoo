@@ -23,6 +23,7 @@ import random
 import time
 from urllib import quote_plus
 import uuid
+from openerp import SUPERUSER_ID
 
 import simplejson
 
@@ -544,7 +545,7 @@ class share_wizard(osv.TransientModel):
                             _logger.debug("Copying rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
                         else:
                             # otherwise we can simply link the rule to keep it dynamic
-                            rule_obj.write(cr, 1, [rule.id], {
+                            rule_obj.write(cr, SUPERUSER_ID, [rule.id], {
                                     'groups': [(4,group_id)]
                                 })
                             _logger.debug("Linking rule %s (%s) on model %s with domain: %s", rule.name, rule.id, model.model, rule.domain_force)
