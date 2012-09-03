@@ -328,7 +328,7 @@ class ir_translation(osv.osv):
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
 
-    def translate(self, cr, uid, model, id, field=None, context=None):
+    def translate_fields(self, cr, uid, model, id, field=None, context=None):
         trans_model = self.pool.get(model)
         domain = ['&', ('res_id', '=', id), ('name', 'ilike', model + ',')]
         langs_ids = self.pool.get('res.lang').search(cr, uid, [], context=context)
@@ -353,9 +353,11 @@ class ir_translation(osv.osv):
                     sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
                         SELECT %s, %s, %s, 'field', %s, %s WHERE NOT EXISTS
                         (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s);
+                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s;
                         """
+                    src = record[f['name']]
                     name = "%s,%s" % (f['model'], f['name'])
-                    cr.execute(sql, (lg, record[f['name']], name, f['id'], record[f['name']], lg, name, f['id']))
+                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
 
         action = {
             'name': 'Translate',
