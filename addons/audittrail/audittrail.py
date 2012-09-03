@@ -25,6 +25,7 @@ from tools.translate import _
 import pooler
 import time
 import tools
+from openerp import SUPERUSER_ID
 
 class audittrail_rule(osv.osv):
     """
@@ -252,10 +253,10 @@ class audittrail_objects_proxy(object_proxy):
         pool = pooler.get_pool(cr.dbname)
         resource_pool = pool.get(model)
         model_pool = pool.get('ir.model')
-        model_ids = model_pool.search(cr, 1, [('model', '=', model)])
+        model_ids = model_pool.search(cr, SUPERUSER_ID, [('model', '=', model)])
         model_id = model_ids and model_ids[0] or False
         assert model_id, _("'%s' Model does not exist..." %(model))
-        model = model_pool.browse(cr, 1, model_id)
+        model = model_pool.browse(cr, SUPERUSER_ID, model_id)
 
         # fields to log. currently only used by log on read()
         field_list = []
@@ -322,7 +323,7 @@ class audittrail_objects_proxy(object_proxy):
         data = {}
         resource_pool = pool.get(model.model)
         # read all the fields of the given resources in super admin mode
-        for resource in resource_pool.read(cr, 1, res_ids):
+        for resource in resource_pool.read(cr, SUPERUSER_ID, res_ids):
             values = {}
             values_text = {}
             resource_id = resource['id']
@@ -332,19 +333,19 @@ class audittrail_objects_proxy(object_proxy):
                     continue
                 values[field] = resource[field]
                 # get the textual value of that field for this record
-                values_text[field] = self.get_value_text(cr, 1, pool, resource_pool, method, field, resource[field])
+                values_text[field] = self.get_value_text(cr, SUPERUSER_ID, pool, resource_pool, method, field, resource[field])
 
                 field_obj = resource_pool._all_columns.get(field).column
                 if field_obj._type in ('one2many','many2many'):
                     # check if an audittrail rule apply in super admin mode
-                    if self.check_rules(cr, 1, field_obj._obj, method):
+                    if self.check_rules(cr, SUPERUSER_ID, field_obj._obj, method):
                         # check if the model associated to a *2m field exists, in super admin mode
-                        x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                        x2m_model_ids = pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', field_obj._obj)])
                         x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
                         assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
-                        x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                        x2m_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, x2m_model_id)
                         #recursive call on x2m fields that need to be checked too
-                        data.update(self.get_data(cr, 1, pool, resource[field], x2m_model, method))
+                        data.update(self.get_data(cr, SUPERUSER_ID, pool, resource[field], x2m_model, method))
             data[(model.id, resource_id)] = {'text':values_text, 'value': values}
         return data
 
@@ -389,12 +390,12 @@ class audittrail_objects_proxy(object_proxy):
             field_obj = field_definition.column
             if field_obj._type in ('one2many','many2many'):
                 # checking if an audittrail rule apply in super admin mode
-                if self.check_rules(cr, 1, field_obj._obj, method):
+                if self.check_rules(cr, SUPERUSER_ID, field_obj._obj, method):
                     # checking if the model associated to a *2m field exists, in super admin mode
-                    x2m_model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', field_obj._obj)])
+                    x2m_model_ids = pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', field_obj._obj)])
                     x2m_model_id = x2m_model_ids and x2m_model_ids[0] or False
                     assert x2m_model_id, _("'%s' Model does not exist..." %(field_obj._obj))
-                    x2m_model = pool.get('ir.model').browse(cr, 1, x2m_model_id)
+                    x2m_model = pool.get('ir.model').browse(cr, SUPERUSER_ID, x2m_model_id)
                     # the resource_ids that need to be checked are the sum of both old and previous values (because we
                     # need to log also creation or deletion in those lists).
                     x2m_old_values_ids = old_values.get(key, {'value': {}})['value'].get(field_name, [])
@@ -402,7 +403,7 @@ class audittrail_objects_proxy(object_proxy):
                     # We use list(set(...)) to remove duplicates.
                     res_ids = list(set(x2m_old_values_ids + x2m_new_values_ids))
                     for res_id in res_ids:
-                        lines.update(self.prepare_audittrail_log_line(cr, 1, pool, x2m_model, res_id, method, old_values, new_values, field_list))
+                        lines.update(self.prepare_audittrail_log_line(cr, SUPERUSER_ID, pool, x2m_model, res_id, method, old_values, new_values, field_list))
             # if the value value is different than the old value: record the change
             if key not in old_values or key not in new_values or old_values[key]['value'][field_name] != new_values[key]['value'][field_name]:
                 data = {
@@ -459,9 +460,9 @@ class audittrail_objects_proxy(object_proxy):
                     vals.update({'method': 'unlink'})
                 # create the audittrail log in super admin mode, only if a change has been detected
                 if lines[(model_id, resource_id)]:
-                    log_id = pool.get('audittrail.log').create(cr, 1, vals)
+                    log_id = pool.get('audittrail.log').create(cr, SUPERUSER_ID, vals)
                     model = pool.get('ir.model').browse(cr, uid, model_id)
-                    self.create_log_line(cr, 1, log_id, model, lines[(model_id, resource_id)])
+                    self.create_log_line(cr, SUPERUSER_ID, log_id, model, lines[(model_id, resource_id)])
         return True
 
     def check_rules(self, cr, uid, model, method):
@@ -475,11 +476,11 @@ class audittrail_objects_proxy(object_proxy):
         """
         pool = pooler.get_pool(cr.dbname)
         if 'audittrail.rule' in pool.models:
-            model_ids = pool.get('ir.model').search(cr, 1, [('model', '=', model)])
+            model_ids = pool.get('ir.model').search(cr, SUPERUSER_ID, [('model', '=', model)])
             model_id = model_ids and model_ids[0] or False
             if model_id:
-                rule_ids = pool.get('audittrail.rule').search(cr, 1, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
-                for rule in pool.get('audittrail.rule').read(cr, 1, rule_ids, ['user_id','log_read','log_write','log_create','log_unlink','log_action','log_workflow']):
+                rule_ids = pool.get('audittrail.rule').search(cr, SUPERUSER_ID, [('object_id', '=', model_id), ('state', '=', 'subscribed')])
+                for rule in pool.get('audittrail.rule').read(cr, SUPERUSER_ID, rule_ids, ['user_id','log_read','log_write','log_create','log_unlink','log_action','log_workflow']):
                     if len(rule['user_id']) == 0 or uid in rule['user_id']:
                         if rule.get('log_'+method,0):
                             return True

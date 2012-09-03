@@ -93,9 +93,8 @@ class mail_alias(osv.Model):
     _defaults = {
         'alias_defaults': '{}',
         'alias_user_id': lambda self,cr,uid,context: uid,
-        
         # looks better when creating new aliases - even if the field is informative only
-        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr,1,[1],None,None)[1]
+        'alias_domain': lambda self,cr,uid,context: self._get_alias_domain(cr, SUPERUSER_ID,[1],None,None)[1]
     }
 
     _sql_constraints = [
