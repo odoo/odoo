@@ -659,8 +659,6 @@
                     <notebook>
                         <page string="Consumed Products">
                             <group>
-                                <group>
-                                </group>
                                 <group groups="stock.group_locations">
                                     <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
                                     <field name="location_dest_id" domain="[('usage','=','internal')]"/>
