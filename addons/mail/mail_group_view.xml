@@ -61,8 +61,8 @@
                         <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
                         <div class="oe_title">
                             <div class="oe_edit_only">
-                                <label for="name" string="Group Name"/> 
-                            </div> 
+                                <label for="name" string="Group Name"/>
+                            </div>
                             <h1><field name="name"/></h1>
                             <div name="alias_box" colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
                                     <field name="alias_id" invisible="1" required="0"/>
@@ -123,7 +123,7 @@
 
         <!-- group record !-->
         <record id="action_view_groups" model="ir.actions.act_window">
-            <field name="name">Groups</field>
+            <field name="name">Join a group</field>
             <field name="res_model">mail.group</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -132,6 +132,6 @@
 
         <!-- left-side menu: Groups !-->
         <menuitem id="mail_group_root" parent="mail_feeds_main" sequence="12" name="My Groups"/>
-        <menuitem id="mail_allgroups" parent="mail_feeds" sequence="12" action="action_view_groups"/>
+        <menuitem id="mail_allgroups" parent="mail_group_root" sequence="100" action="action_view_groups"/>
     </data>
 </openerp>
