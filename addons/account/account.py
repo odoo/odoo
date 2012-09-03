@@ -30,6 +30,8 @@ from osv import fields, osv
 import decimal_precision as dp
 from tools.translate import _
 from tools.float_utils import float_round
+from openerp import SUPERUSER_ID
+
 
 _logger = logging.getLogger(__name__)
 
@@ -819,7 +821,7 @@ class account_journal(osv.osv):
         if not 'sequence_id' in vals or not vals['sequence_id']:
             # if we have the right to create a journal, we should be able to
             # create it's sequence.
-            vals.update({'sequence_id': self.create_sequence(cr, 1, vals, context)})
+            vals.update({'sequence_id': self.create_sequence(cr, SUPERUSER_ID, vals, context)})
         return super(account_journal, self).create(cr, uid, vals, context)
 
     def name_get(self, cr, user, ids, context=None):
@@ -1858,7 +1860,7 @@ class account_tax(osv.osv):
 
     def get_precision_tax():
         def change_digit_tax(cr):
-            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, 'Account')
+            res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, 'Account')
             return (16, res+2)
         return change_digit_tax
 
@@ -3347,13 +3349,11 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         # Install all the templates objects and generate the real objects
         acc_template_ref, taxes_ref, tax_code_ref = self._install_template(cr, uid, obj_wizard.chart_template_id.id, company_id, code_digits=obj_wizard.code_digits, obj_wizard=obj_wizard, context=context)
 
-        # write values of default taxes for product
+        # write values of default taxes for product as super user
         if obj_wizard.sale_tax and taxes_ref:
-            ir_values_obj.set(cr, uid, key='default', key2=False, name="taxes_id", company=company_id,
-                                models =[('product.product',False)], value=[taxes_ref[obj_wizard.sale_tax.id]])
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "taxes_id", [taxes_ref[obj_wizard.sale_tax.id]], for_all_users=True, company_id=company_id)
         if obj_wizard.purchase_tax and taxes_ref:
-                ir_values_obj.set(cr, uid, key='default', key2=False, name="supplier_taxes_id", company=company_id,
-                                models =[('product.product',False)], value=[taxes_ref[obj_wizard.purchase_tax.id]])
+            ir_values_obj.set_default(cr, SUPERUSER_ID, 'product.product', "supplier_taxes_id", [taxes_ref[obj_wizard.purchase_tax.id]], for_all_users=True, company_id=company_id)
 
         # Create Bank journals
         self._create_bank_journals_from_o2m(cr, uid, obj_wizard, company_id, acc_template_ref, context=context)
