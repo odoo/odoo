@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    Copyright (C) 2004-2010 Openerp sa (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -11,7 +11,7 @@
 #
 #    This program is distributed in the hope that it will be useful,
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.See the
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
@@ -19,24 +19,8 @@
 #
 ##############################################################################
 
-from osv import fields, osv
-from tools.translate import _
-
-
-class product_product(osv.osv):
-    _inherit = "product.product"    
-    _columns = {
-        "bom_ids": fields.one2many('mrp.bom', 'product_id','Bill of Materials', domain=[('bom_id','=',False)]),
-    }
-    def copy(self, cr, uid, id, default=None, context=None):
-        if not default:
-            default = {}
-        default.update({
-            'bom_ids': []
-        })
-        return super(product_product, self).copy(cr, uid, id, default, context=context)
-
-
-product_product()
+import res_company
+import ir_translation
+import wizard
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

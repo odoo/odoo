@@ -22,6 +22,7 @@
 from osv import osv, fields
 import tools
 import pooler
+from openerp import SUPERUSER_ID
 
 class decimal_precision(osv.osv):
     _name = 'decimal.precision'
@@ -56,7 +57,7 @@ decimal_precision()
 
 def get_precision(application):
     def change_digit(cr):
-        res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, 1, application)
+        res = pooler.get_pool(cr.dbname).get('decimal.precision').precision_get(cr, SUPERUSER_ID, application)
         return (16, res)
     return change_digit
 
