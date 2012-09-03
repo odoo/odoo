@@ -131,30 +131,62 @@ openerp.base_import = function (instance) {
             this.render_fields_matches(result, $fields);
             $fields.autocomplete({
                 minLength: 0,
+                html: true,
                 source: this.generate_fields_completion(result)
-            });
+            }).data('autocomplete')._renderItem = function (ul, item) {
+                var $item = $('<li>').data('item.autocomplete', item).appendTo(ul);
+
+                if (item.category) {
+                    return $item
+                        .addClass('oe_import_completion_category')
+                        .text(item.label);
+                } else {
+                    return $item.append(
+                        $('<a>')
+                            .toggleClass('oe_import_completion_required', !!item.required)
+                            .text(item.label));
+                }
+            };
         },
         generate_fields_completion: function (root) {
             // Display nice names to user, but send logical names to server
             this.field_label_to_name = {};
-            var completions = [];
+            var basic = [];
+            var regulars = [{label: _t("Normal Fields"), category: true}];
+            var o2m = [{label: _t("Relation Fields (o2m)"), category: true}];
             var self = this;
-            function traverse(field, ancestors) {
+            function traverse(field, ancestors, collection) {
+                var subfields = field.fields;
                 var field_path = ancestors.concat(field);
                 var label = _(field_path).pluck('string').join(' / ');
                 self.field_label_to_name[label] = _(field_path).pluck('name').join('/');
-                completions.push(label);
 
-                var subfields = field.fields;
+                // If non-relational, m2o or m2m, collection is regulars
+                if (!collection) {
+                    if (field.name === 'id') {
+                        collection = basic
+                    } else if (_.isEmpty(subfields)
+                            || _.isEqual(_.pluck(subfields, 'name'), ['id', '.id'])) {
+                        collection = regulars;
+                    } else {
+                        collection = o2m;
+                    }
+                }
+
+                collection.push({
+                    label: label,
+                    required: field.required
+                });
+
                 for(var i=0, end=subfields.length; i<end; ++i) {
-                    traverse(subfields[i], field_path);
+                    traverse(subfields[i], field_path, collection);
                 }
             }
             _(root.fields).each(function (field) {
                 traverse(field, []);
             });
 
-            return completions;
+            return basic.concat(regulars, o2m);
         },
         render_fields_matches: function (result, $fields) {
             if (_(result.matches).isEmpty()) { return; }
