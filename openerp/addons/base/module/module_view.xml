@@ -69,7 +69,7 @@
                         <t t-set="installed" t-value="record.state.raw_value == 'installed'"/>
                         <img t-attf-src="#{record.icon.value}" class="oe_module_icon"/>
                         <div class="oe_module_desc">
-                          <h4><a type="edit"><field name="shortdesc"/></a></h4>
+                          <h4><a type="open"><field name="shortdesc"/></a></h4>
                           <p class="oe_module_name">
                              <t t-if="record.summary.raw_value"><field name="summary"/><br/></t>
                              <i><field name="name" groups="base.group_no_one"/></i>
@@ -133,7 +133,7 @@
                     </group>
                     <notebook>
                         <page string="Description">
-                            <field name="description"/>
+                            <field name="description_html"/>
                         </page>
                         <page string="Technical Data" groups="base.group_no_one">
                             <group col="4">

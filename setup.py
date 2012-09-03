@@ -87,19 +87,15 @@ setuptools.setup(
       scripts          = ['openerp-server'],
       data_files       = data(),
       packages         = setuptools.find_packages(),
+      dependency_links = ['http://download.gna.org/pychart/'],
       #include_package_data = True,
       install_requires = [
-        # TODO the pychart package we include in openerp corresponds to PyChart 1.37.
-        # It seems there is a single difference, which is a spurious print in generate_docs.py.
-        # It is probably safe to move to PyChart 1.39 (the latest one).
-        # (Let setup.py choose the latest one, and we should check we can remove pychart from
-        # our tree.) http://download.gna.org/pychart/
-        # TODO  'pychart',
+          'pychart',
           'babel',
           'docutils',
           'feedparser',
           'gdata',
-          'lxml',
+          'lxml < 3',
           'mako',
           'psycopg2',
           'pydot',

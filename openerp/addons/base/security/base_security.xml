@@ -27,7 +27,6 @@
     
     <record model="res.groups" id="group_multi_currency">
         <field name="name">Multi Currencies</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
     <record model="res.groups" id="group_no_one">
@@ -48,7 +47,6 @@
     </record>
 
     </data>
-
     <data noupdate="1">
 
         <record model="ir.rule" id="res_widget_user_rule">
@@ -60,8 +58,11 @@
         <record model="ir.rule" id="res_partner_rule">
             <field name="name">res.partner company</field>
             <field name="model_id" ref="model_res_partner"/>
-            <!-- Show partners from ancestors and descendants companies (or company-less), this is usually a better
-                 default for multicompany setups. -->
+            <!--
+                Show partners from ancestors and descendants companies
+                (or company-less), this is usually a better default for
+                multicompany setups.
+            -->
             <field name="domain_force">['|','|',('company_id.child_ids','child_of',[user.company_id.id]),('company_id','child_of',[user.company_id.id]),('company_id','=',False)]</field>
         </record>
 
