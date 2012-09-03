@@ -18,21 +18,33 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
 {
-    'name' : 'Contract on Project',
-    'version': '1.1',
-    'author' : 'OpenERP SA',
-    'category': 'Hidden',
-    'website' : 'http://www.openerp.com',
-    'depends' : ['project', 'account_analytic_analysis'],
+    'name': 'Automated Translations through Gengo API',
+    'version': '0.1',
+    'category': 'Tools',
     'description': """
-Add "Contract Data" in project view.
-====================================
+Automated Translations through Gengo API
+----------------------------------------
+    This module will install passive scheduler job for automated translations 
+using the Gengo API. To activate it, you must
+1) Configure your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`
+2) Launch the wizard under `Settings > Application Terms > Gengo: Manual Request of Translation` and follow the wizard.
+
+This wizard will activate the CRON job and the Scheduler and will start the automatic translation via Gengo Services for all the terms where you requested it.
     """,
-    'data': ['analytic_contract_project_view.xml'],
-    'demo': [],
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'depends': ['base'],
+    'init_xml': ['gengo_sync_schedular_data.xml'],
+    'update_xml': [
+        'ir_translation.xml',
+        'res_company_view.xml',
+        'wizard/base_gengo_translations_view.xml',
+           ],
+    'demo_xml': [],
+    'test': [],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

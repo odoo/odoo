@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,23 +19,19 @@
 #
 ##############################################################################
 
+from osv import fields, osv
 
-{
-    'name': 'Projects Management: hr_expense link',
-    'version': '1.1',
-    'category': 'Hidden',
-    'description': """
-This module is for modifying project view to show some data related to the hr_expense module.
-=============================================================================================
-""",
-    'author': 'OpenERP S.A.',
-    'website': 'http://www.openerp.com/',
-    'depends': ['analytic_contract_hr_expense','project'],
-    'data': ['analytic_contract_expense_project_view.xml'],
-    'demo': [],
-    'css' : [],
-    'installable': True,
-    'auto_install': True,
-}
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class res_company(osv.Model):
+    _name = "res.company"
+    _inherit = "res.company"
+    _columns = {
+           "gengo_private_key": fields.text("Gengo Private Key"),
+           "gengo_public_key": fields.text("Gengo Public Key"),
+           "gengo_comment": fields.text("Comments", help="This comment will be automatically be enclosed in each an every request sent to Gengo"),
+           "gengo_auto_approve": fields.boolean("Auto Approve Translation ?", help="Jobs are Automatically Approved by Gengo."),
+    }
+
+    _defaults = {
+        "gengo_auto_approve": True,
+    }

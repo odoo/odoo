@@ -76,33 +76,29 @@
                 </header>
                 <sheet string="Project">
                     <field name="analytic_account_id" invisible="1" required="0"/>
-                    <label for="name" class="oe_edit_only" string="Project Name"/>
-                    <h1>
-                        <field name="name" string="Project Name"/>
-                    </h1>
-                    <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <field name="alias_id" invisible="1" required="0"/>
-                        <label for="alias_name" class="oe_edit_only "/>
-                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only" string="Project Name"/>
+                        <h1>
+                            <field name="name" string="Project Name"/>
+                        </h1>
+                        <div name="options_active">
+                            <field name="use_tasks" class="oe_inline"/>
+                            <label for="use_tasks"/>
+                        </div>
+                    </div>
+                    <div class="oe_right oe_button_box" name="buttons">
+                        <button name="%(act_project_project_2_project_task_all)d" string="Tasks"
+                            type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/>
+                        <button name="%(base.action_attachment)d" string="Documents" type="action"/>
                     </div>
                     <group>
                         <group>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
                             <field name="partner_id" string="Contact" on_change="onchange_partner_id(partner_id)"/>
-                            <field name="privacy_visibility"/>
-                            <field name="analytic_account_id" invisible="1" required="0"/>
                         </group>
                         <group>
-                            <table>
-                                <tr name="use_tasks_row">
-                                    <td><group><field name="use_tasks"/></group></td>
-                                    <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_task_all)d" string="Tasks" type="action" attrs="{'invisible':[('use_tasks','=', 0)]}"/></td>
-                                </tr>
-                                <tr name="use_attachment_row">
-                                    <td/>
-                                    <td><button icon="terp-gtk-go-back-rtl" class="oe_btn_width" name="%(base.action_attachment)d" string="Documents" type="action"/></td>
-                                </tr>
-                            </table>
+                            <field name="privacy_visibility"/>
+                            <field name="analytic_account_id" readonly="1" required="0"/>
                         </group>
                     </group>
                     <notebook>
@@ -126,6 +122,13 @@
                             </field>
                         </page>
                         <page string="Other Info">
+                            <group string="Email Interface" colspan="2">
+                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <field name="alias_id" invisible="1" required="0"/>
+                                    <label for="alias_name" class="oe_edit_only "/>
+                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                </div>
+                            </group>
                             <group>
                                 <group string="Administration">
                                     <field name="planned_hours" widget="float_time"/>
@@ -133,11 +136,13 @@
                                     <field name="resource_calendar_id"/>
                                 </group>
                                 <group string="Miscellaneous" name="misc">
-                                    <field name="company_id" groups="base.group_multi_company" widget="selection" required="1"/>
+                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
+
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                     <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
+
                                 </group>
                             </group>
                         </page>
@@ -245,8 +250,8 @@
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action"> <field name="task_count"/> Tasks</a>
                                     </div>
                                     <table>
-                                      <tr t-if="record.date.raw_value">
-                                        <th class="oe_kanban_project_fields oe_kanban_project_deadline">Deadline</th>
+                                      <tr class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
+                                        <th>Deadline</th>
                                         <td><field name="date"/></td>
                                       </tr>
                                       <tr class="oe_kanban_project_fields oe_kanban_project_progress">
@@ -312,7 +317,7 @@
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
-                <p class="oe_form_nocontent_create">
+                <p class="oe_view_nocontent_create">
                   Click to start a new project.
                 </p>
                 <p>
@@ -688,11 +693,9 @@
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_tasks"/>
+                    <label for="use_tasks"/>
                 </xpath>
             </field>
         </record>
