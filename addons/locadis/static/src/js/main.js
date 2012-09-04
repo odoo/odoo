@@ -133,6 +133,14 @@ openerp.locadis = function(instance){
             return loaded;
         },
     });
+
+    module.Orderline = module.Orderline.extend({
+        export_for_printing: function(){
+            var json = this._super();
+            json.dont_vidange = this.get_product().get('dont_vidange');
+        },
+    });
+
     module.ProductListWidget = module.ProductListWidget.extend({
         template_empty: 'ProductEmptyListWidget',
         get_category: function(){
@@ -140,15 +148,70 @@ openerp.locadis = function(instance){
         },
         renderElement: function(){
             var ss = this.pos_widget.screen_selector;
-            console.log('ss',ss);
-            if(this.get_category().name === 'Root' && ss && ss.get_user_mode() === 'cashier'){
+            if(this.get_category().name === 'Root' && ss && ss.get_user_mode() !== 'cashier'){
                 this.replaceElement(_.str.trim(QWeb.render(this.template_empty,{widget:this})));
             }else{
                 this._super();
             }
         },
     });
+
+    module.BarcodeReader = module.BarcodeReader.extend({
+        parse_ean: function(ean){
+            var parse_result = {
+                type:'unknown', // 
+                prefix:'',
+                ean:ean,
+                base_ean: ean,
+                id:'',
+                value: 0,
+                unit: 'none',
+            };
+
+            function match_prefix(prefix_list, type){
+                for(var i = 0; i < prefix_list.length; i++){
+                    var prefix = prefix_list[i];
+                    if(ean.substring(0,prefix.length) === prefix){
+                        parse_result.prefix = prefix;
+                        parse_result.type = type;
+                        return true;
+                    }
+                }
+                return false;
+            }
+            if(!this.check_ean(ean)){
+                parse_result.type = 'error';
+            }else if(match_prefix( ['275'], 'cashier')){
+                parse_result.id = ean.substring(0,7);
+            }else if(match_prefix( ['278'], 'client')){
+                parse_result.id = ean.substring(0,7);
+            }else if(match_prefix( ['24'], 'weight')){
+                parse_result.id = ean.substring(0,8);
+                parse_result.value = Number(ean.substring(8,12))/100.0;
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.unit = 'Kg';
+            }else if(match_prefix( ['291','292','295'],'price')){
+                parse_result.id = ean.substring(0,7);
+                parse_result.value = Number(ean.substring(7,12))/100.0;
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,7));
+                parse_result.unit = 'euro';
+            }else if(match_prefix( ['295'],'price')){
+                parse_result.id = ean.substring(0,8);
+                parse_result.value = Number(ean.substring(8,12))/100.0;
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,8));
+                parse_result.unit = 'euro';
+            }else if(match_prefix(['980'], 'price')){
+                // bons de vidanges, prix negatif.
+                parse_result.id = ean.substring(0,8);
+                parse_result.value = - Number(ean.substring(8,12))/100.0;
+                parse_result.base_ean = this.sanitize_ean(ean.substring(0,8));
+                parse_result.unit = 'euro';
+            }else{
+                parse_result.type = 'unit';
+                parse_result.prefix = '';
+                parse_result.id = ean;
+            }
+            return parse_result;
+        },
+    });
 };
-            
-        
-    
