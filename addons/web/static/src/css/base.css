@@ -69,7 +69,6 @@
     display: none !important;
   }
 }
-
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
@@ -85,7 +84,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -2637,6 +2636,12 @@
   font: 21px "mnmliconsRegular";
   content: "ö";
   color: #404040;
+}
+.openerp .oe_list_cannot_edit .oe_list_header_handle, .openerp .oe_list_cannot_edit .oe_list_field_handle {
+  display: none !important;
+}
+.openerp .oe_list_cannot_delete .oe_list_header_delete, .openerp .oe_list_cannot_delete .oe_list_record_delete {
+  display: none !important;
 }
 .openerp .tree_header {
   background-color: #f0f0f0;

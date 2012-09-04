@@ -2050,6 +2050,13 @@ $sheet-max-width: 860px
             .oe_list_handle
                 @include text-to-icon("ö")
 
+    .oe_list_cannot_edit
+        .oe_list_header_handle, .oe_list_field_handle
+            display: none !important
+    .oe_list_cannot_delete
+        .oe_list_header_delete, .oe_list_record_delete
+            display: none !important
+
     // }}}
     // Tree view {{{
     .tree_header

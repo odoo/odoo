@@ -250,6 +250,18 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
+
+        // add css classes that reflect the (absence of) access rights
+        if (!this._is_action_enabled('create')) {
+            this.$el.addClass('oe_list_cannot_create');
+        }
+        if (!this._is_action_enabled('edit')) {
+            this.$el.addClass('oe_list_cannot_edit');
+        }
+        if (!this._is_action_enabled('delete')) {
+            this.$el.addClass('oe_list_cannot_delete');
+        }
+
         // Head hook
         // Selecting records
         this.$el.find('.oe_list_record_selector').click(function(){
