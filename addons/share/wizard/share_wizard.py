@@ -856,13 +856,13 @@ class share_wizard(osv.TransientModel):
     
     def send_emails(self, cr, uid, wizard_data, context=None):
         _logger.info('Sending share notifications by email...')
-        mail_message = self.pool.get('mail.message')
+        mail_mail = self.pool.get('mail.mail')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
         if not user.email:
             raise osv.except_osv(_('Email required'), _('The current user must have an email address configured in User Preferences to be able to send outgoing emails.'))
         
         # TODO: also send an HTML version of this mail
-        msg_ids = []
+        mail_ids = []
         for result_line in wizard_data.result_line_ids:
             email_to = result_line.user_id.email
             if not email_to:
@@ -885,10 +885,14 @@ class share_wizard(osv.TransientModel):
             body += "--\n"
             body += _("OpenERP is a powerful and user-friendly suite of Business Applications (CRM, Sales, HR, etc.)\n"
                       "It is open source and can be found on http://www.openerp.com.")
-            msg_ids.append(mail_message.schedule_with_attach(cr, uid, user.email, [email_to], subject, body, model='share.wizard', context=context))
+            mail_ids.append(mail_mail.create(cr, uid, {
+                    'email_from': user.email,
+                    'email_to': email_to,
+                    'subject': subject,
+                    'body_html': '<pre>%s</pre>' % body}, context=context))
         # force direct delivery, as users expect instant notification
-        mail_message.send(cr, uid, msg_ids, context=context)
-        _logger.info('%d share notification(s) sent.', len(msg_ids))
+        mail_mail.send(cr, uid, mail_ids, context=context)
+        _logger.info('%d share notification(s) sent.', len(mail_ids))
 
     def onchange_embed_options(self, cr, uid, ids, opt_title, opt_search, context=None):
         wizard = self.browse(cr, uid, ids[0], context)
