@@ -148,19 +148,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            if (self.is_action_enabled('delete')) {
-                this.sidebar.add_items('other', [
-                    { label: _t('Delete'), callback: self.on_button_delete }
-                ]);
-            }
-            if (self.is_action_enabled('create')) {
-                this.sidebar.add_items('other', [
-                    { label: _t('Duplicate'), callback: self.on_button_duplicate }
-                ]);
-            }
-            this.sidebar.add_items('other', [
+            this.sidebar.add_items('other', _.compact([
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
+                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate },
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
-            ]);
+            ]));
         }
 
         this.has_been_loaded.resolve();

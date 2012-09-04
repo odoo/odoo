@@ -357,19 +357,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
-            if (self.is_action_enabled('create')) {
-                this.sidebar.add_items('other', [
-                    { label: _t("Import"), callback: this.on_sidebar_import }
-                ]);
-            }
-            this.sidebar.add_items('other', [
-                { label: _t("Export"), callback: this.on_sidebar_export }
-            ]);
-            if (self.is_action_enabled('delete')) {
-                this.sidebar.add_items('other', [
-                    { label: _t('Delete'), callback: this.do_delete_selected }
-                ]);
-            }
+            this.sidebar.add_items('other', _.compact([
+                self.is_action_enabled('create') && { label: _t("Import"), callback: this.on_sidebar_import },
+                { label: _t("Export"), callback: this.on_sidebar_export },
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
+            ]));
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
