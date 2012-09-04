@@ -267,16 +267,27 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
-                        <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
-                        <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" class="oe_highlight"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}"/>
-                        <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to"/>
+                        <button string="Cancel" name="survey_req_cancel" type="object"
+                            states="draft,waiting_answer"/>
+                        <button string="Print Survey" name="action_print_survey"  type="object"
+                            states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"
+                            attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
+                        <button string="Send Request" name="survey_req_waiting_answer" type="object"
+                            states="draft" class="oe_highlight"/>
+                        <button string="Answer Survey" name="%(survey.action_view_survey_question_message)d" type="action"
+                            states="waiting_answer"
+                            context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}"
+                            attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        <button string="Done" name="survey_req_done" type="object"
+                            states="waiting_answer"/>
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box" name="button_box">
-                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer"/>
+                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"
+                                states="waiting_answer"
+                                context="{'default_body_text': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',
+                                            'default_subject': 'Reminder to fill up Survey' }"/>
                         </div>
                         <group>
                             <group col="3" colspan="1">

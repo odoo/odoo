@@ -106,7 +106,7 @@ class mail_compose_message(osv.TransientModel):
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
-        'body_text': fields.text('Plain-text editor body'),
+        'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
