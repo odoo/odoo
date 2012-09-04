@@ -16,7 +16,7 @@
                     <field name="version_id" widget="selection"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="stage_id" widget="selection" readonly="1"/>
-                    <field name="state" groups="base.group_no_one"/>
+                    <field name="state" groups="base.group_no_one" invisible="1"/>
                     <field name="categ_ids" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                 </tree>
