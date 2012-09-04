@@ -506,7 +506,7 @@
             <field name="res_model">mrp.bom</field>
             <field name="view_type">form</field>
             <field name="view_id" ref="mrp_bom_component_tree_view"/>
-            <field name="domain">[('bom_id','!=',False)]</field>
+            <field name="domain">[]</field>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
                 Click to add a component to a bill of material.
@@ -529,6 +529,7 @@
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
             parent="menu_mrp_configuration"
+            groups="base.group_no_one"
             sequence="20"/>
 
         <record id="action2" model="ir.actions.act_window">
@@ -623,59 +624,42 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,ready,in_production,done" statusbar_colors='{"picking_except":"red","confirmed":"blue"}'/>
                 </header>
                 <sheet>
-                    <label for="product_id" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context="{'default_supply_method':'produce'}"/>
-                    </h1>
-                    <group>
-                        <group>
-                            <label for="product_qty" class="oe_edit_only"/>
-                            <h2>
-                                <field name="product_qty" class="oe_inline"/>
-                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
-                                <button type="action"
-                                        icon="terp-accessories-archiver+"
-                                        name="%(mrp.action_change_production_qty)d"
-                                        string="Change Qty" states="draft,cacel,confirmed,picking_except" class="oe_inline"/>
-                            </h2>
-                        </group>
-                        <group>
-                            <label for="bom_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="bom_id" domain="[('product_id','=',product_id)]" 
-                                       context="{'default_product_id': product_id}" 
-                                       on_change="bom_id_change(bom_id)" class="oe_inline"/>
-                            </h2>
-                        </group>
-                    </group>
-                    <div groups="mrp.group_mrp_routings">
-                        <label for="routing_id" class="oe_edit_only"/>
-                        <h2><field name="routing_id" class="oe_inline"/></h2>
+                    <div class="oe_title">
+                        <h1>Manufacturing Order <field name="name" class="oe_inline"/></h1>
                     </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="date_planned"/>
-                            <field name="origin"/>
-                        </group>
-                        <group>
-                            <field name="user_id"/>
+                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
+                            <label for="product_qty"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom" groups="product.group_uom" class="oe_inline"/>
+                                <button type="action"
+                                    icon="terp-accessories-archiver+"
+                                    name="%(mrp.action_change_production_qty)d"
+                                    string="(Update)" states="ready,confirmed" class="oe_edit_only oe_link"/>
+                            </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos">
                                 <field name="product_uos_qty" class="oe_inline"/>
                                 <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
+                            <field name="date_planned"/>
+                        </group>
+                        <group>
+                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
+                            <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
+                            <field name="user_id"/>
+                            <field name="origin"/>
+                        </group>
+                        <group groups="stock.group_locations">
+                            <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
+                            <field name="location_dest_id" domain="[('usage','=','internal')]"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Consumed Products">
-                            <group>
-                                <group groups="stock.group_locations">
-                                    <field name="location_src_id" domain="[('usage','=','internal')]" on_change="location_id_change(location_src_id,location_dest_id)"/>
-                                    <field name="location_dest_id" domain="[('usage','=','internal')]"/>
-                                </group>
-                            </group>
                             <group>
                                 <group string="Products to Consume">
                                     <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">

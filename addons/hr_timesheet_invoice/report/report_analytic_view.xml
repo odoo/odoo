@@ -122,13 +122,13 @@
             <field name="search_view_id" ref="account_analytic_line_to_invoice_view_filter"/>
         </record>
 
-        <act_window
-        domain="[('invoice_id','=',False),('to_invoice','&lt;&gt;',False), ('journal_id.type', '=', 'general')]"
-        context="{'search_default_account_id': [active_id], 'default_account_id': active_id,'search_default_to_invoice': 1}"
-        id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice"
-        name="Timesheet Lines to Invoice"
-        res_model="account.analytic.line"
-        src_model="account.analytic.account"/>
+        <record id="act_acc_analytic_acc_2_report_acc_analytic_line_to_invoice" model="ir.actions.act_window">
+            <field name="domain">[]</field>
+            <field name="context">{'search_default_account_id': [active_id], 'default_account_id': active_id,'search_default_to_invoice': 1}</field>
+            <field name="name">To Invoice</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="src_model">account.analytic.account</field>
+        </record>
 
     </data>
 </openerp>

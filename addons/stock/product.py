@@ -32,7 +32,7 @@ class product_product(osv.osv):
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
             ('picking_id.type', '=', 'in'),
-            ('state','in',('draft','confirmed','assigned','pending'))
+            ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
@@ -40,7 +40,7 @@ class product_product(osv.osv):
         moves = move_pool.read_group(cr, uid, [
             ('product_id', 'in', ids),
             ('picking_id.type', '=', 'out'),
-            ('state','in',('draft','confirmed','assigned','pending'))
+            ('state','in',('confirmed','assigned','pending'))
         ], ['product_id'], ['product_id'])
         for move in moves:
             product_id = move['product_id'][0]
@@ -373,7 +373,7 @@ class product_product(osv.osv):
                  "typed as 'internal'."),
         'virtual_available': fields.function(_product_available, multi='qty_available',
             type='float',  digits_compute=dp.get_precision('Product Unit of Measure'),
-            string='Quantity Available',
+            string='Future Quantity',
             help="Forecast quantity (computed as Quantity On Hand "
                  "- Outgoing + Incoming)\n"
                  "In a context with a single Stock Location, this includes "
