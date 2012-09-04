@@ -805,7 +805,6 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
-        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
@@ -842,36 +841,10 @@ class calendar_alarm(osv.osv):
             else:
                 re_dates = [alarm.trigger_date]
 
-            for r_date in re_dates:
-                ref = alarm.model_id.model + ',' + str(alarm.res_id)
-
-                # search for alreay sent requests
-                #if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
-                    #continue
-
-                # Deactivated because of the removing of res.request
-                # TODO: when cleaning calendar module, re-add this in a new mechanism
-                #if alarm.action == 'display':
-                    #value = {
-                       #'name': alarm.name,
-                       #'act_from': alarm.user_id.id,
-                       #'act_to': alarm.user_id.id,
-                       #'body': alarm.description,
-                       #'trigger_date': r_date,
-                       #'ref_doc1': ref
-                    #}
-                    #request_id = request_obj.create(cr, uid, value)
-                    #request_ids = [request_id]
-                    #for attendee in res_obj.attendee_ids:
-                        #if attendee.user_id:
-                            #value['act_to'] = attendee.user_id.id
-                            #request_id = request_obj.create(cr, uid, value)
-                            #request_ids.append(request_id)
-                    #request_obj.request_send(cr, uid, request_ids)
-
+            if re_dates:
                 if alarm.action == 'email':
-                    sub = '[Openobject Reminder] %s' % (alarm.name)
-                    body = """
+                    sub = '[OpenERP Reminder] %s' % (alarm.name)
+                    body = """<pre>
 Event: %s
 Event Date: %s
 Description: %s
@@ -881,20 +854,21 @@ From:
 
 ----
 %s
-
+</pre>
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
                     mail_to = [alarm.user_id.email]
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.email)
                     if mail_to:
-                        mail_message.schedule_with_attach(cr, uid,
-                            tools.config.get('email_from', False),
-                            mail_to,
-                            sub,
-                            body,
-                            context=context
-                        )
+                        vals = {
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'email_to': mail_to,
+                            'email_from': tools.config.get('email_from', mail_to),
+                        }
+                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
             else:
