@@ -360,17 +360,6 @@ class base_stage(object):
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
 
-    def message_thread_followers(self, cr, uid, ids, context=None):
-        res = {}
-        for case in self.browse(cr, uid, ids, context=context):
-            l=[]
-            if case.email_cc:
-                l.append(case.email_cc)
-            if case.user_id and case.user_id.email:
-                l.append(case.user_id.email)
-            res[case.id] = l
-        return res
-
     # ******************************
     # Notifications
     # ******************************

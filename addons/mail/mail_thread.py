@@ -211,6 +211,15 @@ class mail_thread(osv.AbstractModel):
     # Mail gateway
     #------------------------------------------------------
 
+    def message_capable_models(self, cr, uid, context=None):
+        """ Used by the plugin addon, based for plugin_outlook and others. """
+        ret_dict = {}
+        for model_name in self.pool.obj_list():
+            model = self.pool.get(model_name)
+            if 'mail.thread' in getattr(model, '_inherit', []):
+                ret_dict[model_name] = model._description
+        return ret_dict
+
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message. """
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
@@ -378,9 +387,7 @@ class mail_thread(osv.AbstractModel):
            for a given thread model, if the message did not belong to
            an existing thread.
            The default behavior is to create a new record of the corresponding
-           model (based on some very basic info extracted from the message),
-           then attach the message to the newly created record
-           (by calling ``message_append_dict``).
+           model (based on some very basic info extracted from the message).
            Additional behavior may be implemented by overriding this method.
 
            :param dict msg_dict: a map containing the email details and
@@ -413,9 +420,8 @@ class mail_thread(osv.AbstractModel):
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         """Called by ``message_process`` when a new message is received
-           for an existing thread. The default behavior is to create a
-           new mail.message in the given thread (by calling
-           ``message_append_dict``)
+           for an existing thread. The default behavior is to update the record
+           with update_vals taken from the incoming email.
            Additional behavior may be implemented by overriding this
            method.
            :param dict msg_dict: a map containing the email details and
