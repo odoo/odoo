@@ -15,6 +15,10 @@ class pos_session_opening(osv.osv_memory):
         'pos_state' : fields.selection(pos_session.POS_SESSION_STATE,
                                        'Session State', readonly=True),
         'show_config' : fields.boolean('Show Config', readonly=True),
+        'pos_session_name' : fields.related('pos_session_id', 'name',
+                                            type='char', size=64, readonly=True),
+        'pos_session_username' : fields.related('pos_session_id', 'user_id', 'name',
+                                                type='char', size=64, readonly=True)
     }
 
     def open_ui(self, cr, uid, ids, context=None):
@@ -66,7 +70,9 @@ class pos_session_opening(osv.osv_memory):
     def on_change_config(self, cr, uid, ids, config_id, context=None):
         result = {
             'pos_session_id': False,
-            'pos_state': False
+            'pos_state': False,
+            'pos_session_username' : False,
+            'pos_session_name' : False,
         }
         if not config_id:
             return {'value': result}
@@ -76,8 +82,11 @@ class pos_session_opening(osv.osv_memory):
             ('config_id', '=', config_id),
         ], context=context)
         if session_ids:
-            result['pos_state'] = proxy.browse(cr, uid, session_ids[0], context=context).state
-            result['pos_session_id'] = session_ids[0]
+            session = proxy.browse(cr, uid, session_ids[0], context=context)
+            result['pos_state'] = session.state
+            result['pos_session_id'] = session.id
+            result['pos_session_name'] = session.name
+            result['pos_session_username'] = session.user_id.name
         return {'value' : result}
 
     def default_get(self, cr, uid, fieldnames, context=None):

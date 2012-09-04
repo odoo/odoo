@@ -33,6 +33,19 @@
                         <button string="Cancel" type="object" name="cancel" class="oe_link"/>
                     </header>
                     <separator string="Human Resources Management"/>
+                    <group name="recruitment_grp">
+                        <label for="id" string="Talent Management"/>
+                        <div name="recruitment">
+                            <div>
+                                <field name="module_hr_recruitment" class="oe_inline"/>
+                                <label for="module_hr_recruitment"/>
+                            </div>
+                            <div>
+                                <field name="module_hr_evaluation" class="oe_inline"/>
+                                <label for="module_hr_evaluation"/>
+                            </div>
+                        </div>
+                    </group>
                     <group>
                         <label for="id" string="Additional Features"/>
                         <div>
@@ -43,21 +56,6 @@
                             <div>
                                 <field name="module_hr_expense" class="oe_inline"/>
                                 <label for="module_hr_expense"/>
-                            </div>
-                            <div>
-                                <field name="module_hr_evaluation" class="oe_inline"/>
-                                <label for="module_hr_evaluation"/>
-                            </div>
-                            <div>
-                                <field name="module_hr_contract" class="oe_inline"/>
-                                <label for="module_hr_contract"/>
-                            </div>
-                            <div name="hr_payroll">
-                                <field name="module_hr_payroll" class="oe_inline"/>
-                                <label for="module_hr_payroll"/>
-                                <button name="%(open_payroll_modules)d" type="action"
-                                    string="Install your country's payroll" icon="gtk-go-forward"
-                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}" class="oe_link"/>
                             </div>
                         </div>
                     </group>
@@ -78,12 +76,19 @@
                             </div>
                         </div>
                     </group>
-                    <group name="recruitment_grp">
-                        <label for="id" string="Recruitment"/>
-                        <div name="recruitment">
+                    <group name="contract_grp">
+                        <label for="id" string="Contracts"/>
+                        <div>
                             <div>
-                                <field name="module_hr_recruitment" class="oe_inline"/>
-                                <label for="module_hr_recruitment"/>
+                                <field name="module_hr_contract" class="oe_inline"/>
+                                <label for="module_hr_contract"/>
+                            </div>
+                            <div name="hr_payroll">
+                                <field name="module_hr_payroll" class="oe_inline"/>
+                                <label for="module_hr_payroll"/>
+                                <button name="%(open_payroll_modules)d" type="action"
+                                    string="Install your country's payroll" icon="gtk-go-forward"
+                                    attrs="{'invisible': [('module_hr_payroll','=',False)]}" class="oe_link"/>
                             </div>
                         </div>
                     </group>
