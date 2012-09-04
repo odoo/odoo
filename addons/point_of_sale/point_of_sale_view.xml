@@ -608,35 +608,21 @@
             <field name="domain">[('date_order','like',time.strftime('%Y-%m'))]</field>
         </record>
 
-        <record id="product_normal_form_pos_view" model="ir.ui.view">
-            <field name="name">product.normal.pos.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                  <group name="status" position="after">
-                      <group name="pos" string="Point of Sale">
-                          <field name="pos_categ_id"/>
-                          <field name="to_weight" />
-                      </group>
-                  </group>
-            </field>
-        </record>
-
-
         <record id="product_normal_form_view" model="ir.ui.view">
             <field name="name">product.normal.form.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
-                <group name="misc" position="after">
-                    <group name="pos" colspan="2" col="2">
-                        <separator string="Point of Sale" colspan="2"/>
+                <group name="sale" position="inside">
+                    <group name="pos" string="Point of Sale">
+                        <field name="pos_categ_id"/>
+                        <field name="to_weight" />
                         <field name="income_pdt"/>
                         <field name="expense_pdt"/>
                     </group>
                 </group>
                 <field name="ean13" position="after">
-                    <button name="edit_ean" type="object" string="Edit" />
+                    <button name="edit_ean" type="object" string="Set a Custom EAN" class="oe_link oe_edit_only"/>
                 </field>
             </field>
         </record>
@@ -930,7 +916,7 @@
                                 </field>
                             </group>
 
-                            <div attrs="{'invisible': [('state', '=', 'closed')]}">
+                            <div attrs="{'invisible': [('state', '!=', 'closed')]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -947,7 +933,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', 'in', ('opening_control', 'closed'))]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '!=', 'closed')]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>
@@ -1068,10 +1054,18 @@
             <field name="name">pos.ean_wizard</field>
             <field name="model">pos.ean_wizard</field>
             <field name="arch" type="xml">
-                <form string="Ean13 Generator" version="7.0">
-                    <field name="ean13_pattern"/>
+                <form string="Ean13 Generator" version="7.0">  
+                    <p class="oe_grey">
+                        Enter a reference for this product, it will be converted
+                        automatically to a valid EAN number.
+                    </p>
+                    <group>
+                        <field name="ean13_pattern" class="oe_inline"/>
+                    </group>
                     <footer>
-                        <button name="sanitize_ean13" type="object" string="Apply"/>
+                        <button name="sanitize_ean13" type="object" string="Apply" class="oe_highlight"/> or 
+                         <button icon="gtk-stop" special="cancel"
+                            string="Cancel" class="oe_link"/>
                     </footer>
                 </form>
             </field>
