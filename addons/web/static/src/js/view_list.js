@@ -2115,6 +2115,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
     }
 });
 instance.web.list.Handle = instance.web.list.Column.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        // Handle overrides the field to not be form-editable.
+        this.modifiers.readonly = true;
+    },
     /**
      * Return styling hooks for a drag handle
      *
