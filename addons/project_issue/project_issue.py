@@ -363,7 +363,6 @@ class project_issue(base_stage, osv.osv):
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        result = {}
         if not task_id:
             return {'value':{}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
