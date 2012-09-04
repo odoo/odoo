@@ -409,6 +409,21 @@ class res_partner(osv.osv):
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
 
+    def find_or_create(self, cr, uid, email, context=None):
+        """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
+            to create one
+            
+            :param str email: email-like string, which should contain at least one email,
+                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
+        assert email, 'an email is required for find_or_create to work'
+        emails = tools.email_split(email)
+        if emails:
+            email = emails[0]
+        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        if not ids:
+            return self.name_create(cr, uid, email, context=context)[0]
+        return ids[0]
+
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)
         for partner in partners:
