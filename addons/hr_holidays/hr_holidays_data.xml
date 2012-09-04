@@ -49,5 +49,29 @@ Once validated, they are visible in the employee's calendar. HR officers can def
             <field name="limit">True</field>
             <field name="color_name">brown</field>
         </record>
+        <!--Sub type data -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_approved" model="mail.message.subtype">
+            <field name="name">approved</field>
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+        </record>
+        <record id="mail.mail_subtype_refused" model="mail.message.subtype">
+            <field name="name">refused</field>
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
+        </record>
     </data>
 </openerp>
