@@ -55,6 +55,12 @@ openerp.web.list_editable = function (instance) {
             instance.web.bus.off('resize', this, this.resize_fields);
             this._super();
         },
+        do_hide: function () {
+            if (this.editor.is_editing()) {
+                this.cancel_edition(true);
+            }
+            this._super();
+        },
         /**
          * Handles the activation of a record in editable mode (making a record
          * editable), called *after* the record has become editable.
@@ -249,7 +255,7 @@ openerp.web.list_editable = function (instance) {
             var position = $cell.position();
 
             // jquery does not understand !important
-            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important')
+            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important');
             field.$el.css({
                 top: position.top,
                 left: position.left,
@@ -354,14 +360,17 @@ openerp.web.list_editable = function (instance) {
                 'class': 'oe_form_container',
                 version: '7.0'
             });
-            _(view.arch.children).each(function (widget) {
-                var modifiers = JSON.parse(widget.attrs.modifiers || '{}');
-                widget.attrs.nolabel = true;
-                if (modifiers['tree_invisible'] || widget.tag === 'button') {
-                    modifiers.invisible = true;
-                }
-                widget.attrs.modifiers = JSON.stringify(modifiers);
-            });
+            _(view.arch.children).chain()
+                .zip(this.columns)
+                .each(function (ar) {
+                    var widget = ar[0], column = ar[1];
+                    var modifiers = _.extend({}, column.modifiers);
+                    widget.attrs.nolabel = true;
+                    if (modifiers['tree_invisible'] || widget.tag === 'button') {
+                        modifiers.invisible = true;
+                    }
+                    widget.attrs.modifiers = JSON.stringify(modifiers);
+                });
             return view;
         },
         handle_onwrite: function (source_record) {

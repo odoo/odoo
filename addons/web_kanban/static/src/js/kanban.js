@@ -42,6 +42,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.limit = options.limit || 80;
         this.add_group_mutex = new $.Mutex();
     },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.$el.on('click', '.oe_kanban_dummy_cell', function() {
+            if (self.$buttons) {
+                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 150);
+            }
+        });
+    },
     destroy: function() {
         this._super.apply(this, arguments);
         $('html').off('click.kanban');

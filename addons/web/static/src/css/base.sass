@@ -36,7 +36,7 @@ $sheet-max-width: 860px
     padding: 0
     margin: 0
     background: none
-    @include radius(none)
+    @include radius(0)
     @include box-shadow(none)
 
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
@@ -251,6 +251,8 @@ $sheet-max-width: 860px
     // Jquery ui Overrides {{{
     .ui-widget-content a
         color: $link-color
+    .oe_bounce_container
+        display: inline-block
 
     // Modal box
     &.ui-dialog
@@ -1909,6 +1911,8 @@ $sheet-max-width: 860px
                     background-color: #d2d2ff
                 td.oe_readonly
                     background-color: #eee
+
+    $row-height: 27px
     .oe_list_editable
         .oe_list_content
             td.oe_list_field_cell
@@ -1923,12 +1927,11 @@ $sheet-max-width: 860px
             display: none
         .oe_form_field
             input
-                height: 27px
+                height: $row-height
             input, textarea
+                @include radius(0)
                 border: 1px solid #aaf
-                border-radius: 0px
-                margin: 0px
-                -webkit-border-radius: 0px
+                margin: 0
             textarea
                 height: 60px
             &.oe_form_field_float,&.oe_form_view_integer
@@ -2013,6 +2016,7 @@ $sheet-max-width: 860px
         > tbody
             cursor: pointer
             > tr
+                height: $row-height
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px

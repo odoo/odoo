@@ -1995,7 +1995,7 @@ instance.web.list.Column = instance.web.Class.extend({
         if (!(aggregation_func in this)) {
             return {};
         }
-        var C = function (label, fn) {
+        var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;
         };
@@ -2115,6 +2115,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
     }
 });
 instance.web.list.Handle = instance.web.list.Column.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        // Handle overrides the field to not be form-editable.
+        this.modifiers.readonly = true;
+    },
     /**
      * Return styling hooks for a drag handle
      *
