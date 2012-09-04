@@ -88,8 +88,8 @@ def amount_to_text(number, currency):
     end_word = english_number(int(list[1]))
     cents_number = int(list[1])
     cents_name = (cents_number > 1) and 'Cents' or 'Cent'
-    final_result = start_word +' '+units_name+' and ' + end_word +' '+cents_name
-    return final_result
+
+    return ' '.join(filter(None, [start_word, units_name, (start_word or units_name) and (end_word or cents_name) and 'and', end_word, cents_name]))
 
 
 #-------------------------------------------------------------
