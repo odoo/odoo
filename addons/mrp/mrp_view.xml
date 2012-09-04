@@ -345,32 +345,31 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <label for="product_id" class="oe_edit_only"/>
+                    <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
+                    <h1>
+                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                    </h1>
+                    <h2>
+                        <field name="product_qty" class="oe_inline"/>
+                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                    </h2>
+                    <group>
+                        <label for="name"/>
+                        <h2>
+                            <field name="name" class="oe_inline"/>
+                        </h2>
+                    </group>
                     <group>
                         <group>
-                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
-                            <label for="product_qty"/>
-                            <div>
-                                <field name="product_qty" class="oe_inline"/>
-                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                            </div>
-                        </group>
-                        <group>
-                            <field name="name"/>
+                            <field name="routing_id" class="oe_inline"/>
                             <field name="code" string="Reference"/>
                             <field name="type"/>
-                        </group>
-                    </group>
-                    <div groups="mrp.group_mrp_routings">
-                        <label for="routing_id" class="oe_edit_only"/>
-                        <h2><field name="routing_id" class="oe_inline"/></h2>
-                    </div>
-                    <group>
-                        <group>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sale order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
                             </p>
+                        </group>
+                        <group>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
