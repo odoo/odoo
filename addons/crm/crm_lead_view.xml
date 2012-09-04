@@ -299,7 +299,7 @@
                     <field name="needaction_pending"/>
                     <templates>
                         <t t-name="lead_details">
-                            <ul class="oe_kanban_tooltip">
+                            <ul class="oe_kanban_tooltip oe_semantic_html_override_ul">
                                 <li t-if="record.phone.raw_value"><b>Phone:</b> <field name="phone"/></li>
                                 <li><b>Probability:</b> <field name="probability"/>%%</li>
                                 <li><b>Creation date:</b> <field name="create_date"/></li>
@@ -308,7 +308,7 @@
                         </t>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban oe_semantic_html_override">
                                     <span class="oe_e">í</span>
                                     <ul class="oe_dropdown_menu">
                                         <li><a type="edit" >Edit...</a></li>

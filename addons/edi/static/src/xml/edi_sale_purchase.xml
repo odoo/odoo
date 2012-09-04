@@ -151,7 +151,7 @@
                      reference <strong><t t-esc="doc.name"/></strong> on the transfer:
                      <br/><br/>
                 </p>
-                <ul class="oe_edi_nested_block_pay oe_edi_pay_wire_nested">
+                <ul class="oe_edi_nested_block_pay oe_edi_pay_wire_nested oe_semantic_html_override_ul">
                 <t t-foreach="doc.company_address.bank_ids" t-as="bank_info">
                     <li><t t-esc="bank_info[1]"/></li>
                 </t>

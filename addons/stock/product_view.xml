@@ -200,7 +200,7 @@
                         <t t-esc="record.delivery_count.value"/> Deliveries
                     </a>
                 </xpath>
-                <ul position="inside">
+                <ul position="inside" class="oe_semantic_html_override_ul">
                     <li t-if="record.type.raw_value != 'service'">On hand: <field name="qty_available"/> <field name="uom_id"/></li>
                     <li t-if="record.type.raw_value != 'service'">Available: <field name="virtual_available"/> <field name="uom_id"/></li>
                 </ul>

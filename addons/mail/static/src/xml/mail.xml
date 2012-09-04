@@ -99,7 +99,7 @@
         container, holding the composition form. Then come the various
         messages. Then comes the 'more' button.
         -->
-    <ul t-name="mail.thread" class="oe_mail oe_mail_thread">
+    <ul t-name="mail.thread" class="oe_mail oe_mail_thread oe_semantic_html_override">
         <div class="oe_mail_thread_action">
             <!-- contains the composition box (form + image) -->
             <t t-call="mail.compose_message"/>
@@ -114,12 +114,12 @@
 
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
-        <div t-attf-class="oe_mail_msg_#{record.type}">
+        <div t-attf-class="oe_mail_msg_#{record.type} oe_semantic_html_override">
             <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.mini_url"/>
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
-                    <ul class="oe_dropdown_menu">
+                    <ul class="oe_dropdown_menuoe_semantic_html_override_ul">
                         <t t-if="display['show_delete']">
                                 <li t-if="record.is_author"><a href="#" class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         </t>

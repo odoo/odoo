@@ -271,14 +271,14 @@
                 <field name="categ_ids"/>
                 <templates>
                     <t t-name="kanban-tooltip">
-                        <ul class="oe_kanban_tooltip">
+                        <ul class="oe_kanban_tooltip oe_semantic_html_override_ul">
                             <li t-if="record.type_id.raw_value"><b>Degree:</b> <field name="type_id"/></li>
                             <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
                             <li t-if="record.department_id.raw_value"><b>Departement:</b> <field name="department_id"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
