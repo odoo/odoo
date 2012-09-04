@@ -523,9 +523,9 @@
   padding: 0;
   margin: 0;
   background: none;
-  -moz-border-radius: none;
-  -webkit-border-radius: none;
-  border-radius: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -538,9 +538,9 @@
   padding: 0;
   margin: 0;
   background: none;
-  -moz-border-radius: none;
-  -webkit-border-radius: none;
-  border-radius: none;
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -2479,10 +2479,11 @@
   height: 27px;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
+  -moz-border-radius: 0;
+  -webkit-border-radius: 0;
+  border-radius: 0;
   border: 1px solid #aaaaff;
-  border-radius: 0px;
-  margin: 0px;
-  -webkit-border-radius: 0px;
+  margin: 0;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
   height: 60px;
@@ -2582,6 +2583,7 @@
   cursor: pointer;
 }
 .openerp .oe_list_content > tbody > tr {
+  height: 27px;
   border-top: 1px solid #dddddd;
 }
 .openerp .oe_list_content > tbody > tr > td.oe_list_field_cell {

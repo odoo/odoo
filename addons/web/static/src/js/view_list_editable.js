@@ -249,7 +249,7 @@ openerp.web.list_editable = function (instance) {
             var position = $cell.position();
 
             // jquery does not understand !important
-            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important')
+            field.$el.attr('style', 'width: '+$cell.outerWidth()+'px !important');
             field.$el.css({
                 top: position.top,
                 left: position.left,
