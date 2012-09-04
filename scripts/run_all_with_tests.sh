@@ -1,7 +1,7 @@
 DATABASE=trunk
 dropdb ${DATABASE}
 REPOSITORIES=../../addons/trunk
-MODULES=`python -c "import os; print ','.join(os.listdir('${REPOSITORIES}'))"`
+MODULES=`python -c "import os; print ','.join(list(set(os.listdir('${REPOSITORIES}')) - set(['document_ftp'])))"`
 createdb ${DATABASE}
 rm openerp-server.log
 ./openerp-server \
