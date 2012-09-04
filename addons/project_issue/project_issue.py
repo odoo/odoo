@@ -240,7 +240,7 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', '|', ('fold', '=', False), ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
