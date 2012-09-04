@@ -28,5 +28,40 @@
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
+        
+        <!--
+            Mail: mail.message.subtype
+        -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_confirmed" model="mail.message.subtype">
+            <field name="name">confirmed</field>
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_ready" model="mail.message.subtype">
+            <field name="name">ready</field>
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_running" model="mail.message.subtype">
+            <field name="name">running</field>
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('procurement.model_procurement_order'))]"/>
+        </record>
     </data>
 </openerp>

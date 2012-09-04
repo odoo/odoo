@@ -30,5 +30,39 @@
         <field name="start_stop">done</field>
     </record>
 
+    <!-- SUBTYPE -->
+    <record id="mail.mail_subtype_new" model="mail.message.subtype">
+        <field name="name">new</field>
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_started" model="mail.message.subtype">
+        <field name="name">started</field>
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_pending" model="mail.message.subtype">
+        <field name="name">pending</field>
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+    </record>
+    <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+        <field name="name">cancelled</field>
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+        <field name="name">closed</field>
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_email" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+    </record>
+    <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+    </record>
+    <record id="mail.mail_subtype_other" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('mrp_operations.model_mrp_production_workcenter_line'))]"/>
+    </record>
 </data>
 </openerp>
