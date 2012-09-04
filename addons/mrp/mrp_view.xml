@@ -345,77 +345,74 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
-                    </h1>
-                    <h2>
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                    </h2>
-                    <group>
-                        <label for="name"/>
-                        <h2>
-                            <field name="name" class="oe_inline"/>
-                        </h2>
-                    </group>
-                    <group>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Bill of Material <field name="name" class="oe_inline"/></h1>
+                        </div>
                         <group>
-                            <field name="routing_id" class="oe_inline"/>
-                            <field name="code" string="Reference"/>
-                            <field name="type"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sale order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
-                            </p>
-                        </group>
-                        <group>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
-                            <label for="product_uos_qty" groups="product.group_uos"/>
-                            <div groups="product.group_uos" >
-                                <field name="product_uos_qty"
-                                    class="oe_inline"/>
-                                <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
-                                <field name="product_uos" class="oe_inline"/>
-                            </div>
-                        </group>
-                    </group>
-                    <notebook>
-                        <page string="Components">
-                            <field name="bom_lines" widget="one2many_list">
-                                <tree string="Components" editable="bottom">
-                                    <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
-                                    <field name="name" invisible="1"/>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Properties" groups="product.group_mrp_properties">
                             <group>
-                                <group>
-                                    <field name="position"/>
-                                    <field name="bom_id"/>
-                                    <field name="sequence"/>
-                                    <field name="active"/>
-                                </group>
-                                <group>
-                                    <field name="date_start"/>
-                                    <field name="date_stop"/>
-                                    <field name="product_rounding"/>
-                                    <field name="product_efficiency"/>
-                                </group>
+                                <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                                <label for="product_qty"/>
+                                <div>
+                                    <field name="product_qty" class="oe_inline"/>
+                                    <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                                </div>
+                                <label for="product_uos_qty" groups="product.group_uos"/>
+                                <div groups="product.group_uos" >
+                                    <field name="product_uos_qty"
+                                        class="oe_inline"/>
+                                    <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
+                                    <field name="product_uos" class="oe_inline"/>
+                                </div>
                             </group>
-                            <separator string="Properties"/>
-                            <field name="property_ids" widget="many2many_tags"/>
-                        </page>
-                    </notebook>
-                    <div class="oe_chatter">
-                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                         <field name="message_follower_ids" widget="mail_followers"/>
-                    </div>
+                            <group>
+                                <field name="routing_id" class="oe_inline"/>
+                                <field name="code" string="Reference"/>
+                                <field name="type"/>
+                                <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                    When processing a sale order for this product, the delivery order
+                                    will contain the raw materials, instead of the finished product.
+                                </p>
+                                <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Components">
+                                <field name="bom_lines" widget="one2many_list">
+                                    <tree string="Components" editable="bottom">
+                                        <field name="product_id" on_change="onchange_product_id(product_id, name)"/>
+                                        <field name="product_qty"/>
+                                        <field name="product_uom" groups="product.group_uom"/>
+                                        <field name="name" invisible="1"/>
+                                        <field name="date_start"/>
+                                        <field name="date_stop"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Properties" groups="product.group_mrp_properties">
+                                <group>
+                                    <group>
+                                        <field name="position"/>
+                                        <field name="bom_id"/>
+                                        <field name="sequence"/>
+                                        <field name="active"/>
+                                    </group>
+                                    <group>
+                                        <field name="date_start"/>
+                                        <field name="date_stop"/>
+                                        <field name="product_rounding"/>
+                                        <field name="product_efficiency"/>
+                                    </group>
+                                </group>
+                                <separator string="Properties"/>
+                                <field name="property_ids" widget="many2many_tags"/>
+                            </page>
+                        </notebook>
+                        <div class="oe_chatter">
+                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                             <field name="message_follower_ids" widget="mail_followers"/>
+                        </div>
+                    </sheet>
                 </form>
             </field>
         </record>
