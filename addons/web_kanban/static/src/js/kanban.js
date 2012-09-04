@@ -633,7 +633,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
                 self.view.dataset.ids.push(id);
                 self.do_add_records(records, true);
             });
-    }    
+    }
 });
 
 instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
