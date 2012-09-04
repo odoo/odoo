@@ -185,7 +185,7 @@ class hr_applicant(base_stage, osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
-                        domain="['&','|',('fold', '=', False), ('department_id', '=', department_id), ('department_id', '=', False)]"),
+                        domain="['&', '|', ('fold', '=', False), ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
