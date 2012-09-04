@@ -1498,11 +1498,34 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
+    // Sheet and padding 
     .oe_form_nosheet
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
             padding: 8px
+    .oe_form_sheetbg
+        padding: 8px 0
+    .oe_form_sheet_width
+        min-width: 650px
+        max-width: $sheet-max-width
+        margin: 0 auto
+    .oe_form_sheet
+        background: white
+        min-height: 330px
+        padding: 16px
+    // Sheet inline mode
+    .oe_application
+        .oe_form_sheetbg
+            background: url(/web/static/src/img/form_sheetbg.png)
+            border-bottom: 1px solid #ddd
+        .oe_form_sheet
+            border: 1px solid $tag-border
+            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            .ui-tabs
+                margin: 0 -16px
+            .oe_notebook_page
+                padding: 0 16px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1532,115 +1555,92 @@ $sheet-max-width: 860px
                 padding: 2px 0
             .oe_form_group_cell div div
                 padding: 1px 0
-                
-
-    ul.oe_form_steps, ul.oe_form_steps_clickable
-        display: inline-block
-        padding-right: 18px
-        li 
+        ul.oe_form_steps, ul.oe_form_steps_clickable
             display: inline-block
-            margin-right: -20px
-            @include vertical-gradient(#fcfcfc, #dedede)
-            &:first-child .label
-                border-left: 1px solid #cacaca
-                padding-left: 14px
-            &:last-child
-                border-right: 1px solid #cacaca
-                .label
-                    padding-right: 14px
-                .arrow
-                    display: none
-            .label 
-                color: #4c4c4c
-                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
-                padding: 7px
+            padding-right: 18px
+            li 
                 display: inline-block
-                padding-left: 24px
-                margin: 0
-                position: relative
-            .arrow
-                width: 17px
-                display: inline-block
-                vertical-align: top
-                overflow: hidden
-                margin-left: -5px
-                span 
-                    position: relative
-                    width: 24px
-                    height: 24px
+                margin-right: -20px
+                @include vertical-gradient(#fcfcfc, #dedede)
+                &:first-child .label
+                    border-left: 1px solid #cacaca
+                    padding-left: 14px
+                &:last-child
+                    border-right: 1px solid #cacaca
+                    .label
+                        padding-right: 14px
+                    .arrow
+                        display: none
+                .label 
+                    color: #4c4c4c
+                    text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
+                    padding: 7px
                     display: inline-block
-                    margin-left: -12px
-                    margin-top: 3px
-                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
-                    @include skew-gradient(#fcfcfc, #dedede)
-                    @include radius(3px)
-                    @include transform(rotate(45deg))
-        li.oe_active
-            @include vertical-gradient(#729fcf, #3465a4)
-            .arrow span 
-                @include skew-gradient(#729fcf, #3465a4)
-            .label
-                color: white
-                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
-
-    ul.oe_form_steps_clickable
-        li
-            cursor: pointer
-            &:hover 
-                @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-                .label
-                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                    padding-left: 24px
+                    margin: 0
+                    position: relative
+                .arrow
+                    width: 17px
+                    display: inline-block
+                    vertical-align: top
+                    overflow: hidden
+                    margin-left: -5px
+                    span 
+                        position: relative
+                        width: 24px
+                        height: 24px
+                        display: inline-block
+                        margin-left: -12px
+                        margin-top: 3px
+                        box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
+                        @include skew-gradient(#fcfcfc, #dedede)
+                        @include radius(3px)
+                        @include transform(rotate(45deg))
+            li.oe_active
+                @include vertical-gradient(#729fcf, #3465a4)
                 .arrow span 
+                    @include skew-gradient(#729fcf, #3465a4)
+                .label
+                    color: white
+                    text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+        ul.oe_form_steps_clickable
+            li
+                cursor: pointer
+                &:hover 
                     @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-            .label
-                color: $link-color
-        li.oe_active
-            &:hover 
-                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    .label
+                        text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                    .arrow span 
+                        @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
                 .label
-                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
-                .arrow span 
-                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    color: $link-color
+            li.oe_active
+                &:hover 
+                    @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    .label
+                        text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                    .arrow span 
+                        @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+        .oe_subtotal_footer
+            width: 1% !important
+            td.oe_form_group_cell
+                text-align: right
+                padding: 0 !important
+            td.oe_form_group_cell_label
+                border-right: none
+            .oe_subtotal_footer_separator
+                width: 108px
+                border-top: 1px solid #cacaca
+                font-weight: bold
+                font-size: 18px
+            label:after
+                content: ":"
+            label.oe_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 11px 2px 0px !important
+            label.oe_form_label_help
+                font-weight: normal
 
-    .oe_form .oe_subtotal_footer
-        width: 1% !important
-        td.oe_form_group_cell
-            text-align: right
-            padding: 0 !important
-        td.oe_form_group_cell_label
-            border-right: none
-        .oe_subtotal_footer_separator
-            width: 108px
-            border-top: 1px solid #cacaca
-            font-weight: bold
-            font-size: 18px
-        label:after
-            content: ":"
-        label.oe_subtotal_footer_separator
-            font-weight: bold !important
-            padding: 2px 11px 2px 0px !important
-        label.oe_form_label_help
-            font-weight: normal
-    // no sheet in popups
-    .oe_application
-        .oe_form_sheetbg
-            background: url(/web/static/src/img/form_sheetbg.png)
-            padding: 8px 0
-            border-bottom: 1px solid #ddd
-        .oe_form_sheet_width
-            min-width: 650px
-            max-width: $sheet-max-width
-            margin: 0 auto
-        .oe_form_sheet
-            background: white
-            min-height: 330px
-            padding: 16px
-            border: 1px solid $tag-border
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-            .ui-tabs
-                margin: 0 -16px
-            .oe_notebook_page
-                padding: 0 16px
     // }}}
     // FormView.group {{{
     .oe_form

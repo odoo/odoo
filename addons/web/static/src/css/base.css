@@ -69,7 +69,6 @@
     display: none !important;
   }
 }
-
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
@@ -1933,6 +1932,35 @@
   margin: -16px -16px 0 -16px;
   padding: 8px;
 }
+.openerp .oe_form_sheetbg {
+  padding: 8px 0;
+}
+.openerp .oe_form_sheet_width {
+  min-width: 650px;
+  max-width: 860px;
+  margin: 0 auto;
+}
+.openerp .oe_form_sheet {
+  background: white;
+  min-height: 330px;
+  padding: 16px;
+}
+.openerp .oe_application .oe_form_sheetbg {
+  background: url(/web/static/src/img/form_sheetbg.png);
+  border-bottom: 1px solid #dddddd;
+}
+.openerp .oe_application .oe_form_sheet {
+  border: 1px solid #afafb6;
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+.openerp .oe_application .oe_form_sheet .ui-tabs {
+  margin: 0 -16px;
+}
+.openerp .oe_application .oe_form_sheet .oe_notebook_page {
+  padding: 0 16px;
+}
 .openerp .oe_form header {
   position: relative;
   border-bottom: 1px solid #cacaca;
@@ -1972,11 +2000,11 @@
 .openerp .oe_form div.oe_form_configuration .oe_form_group_cell div div {
   padding: 1px 0;
 }
-.openerp ul.oe_form_steps, .openerp ul.oe_form_steps_clickable {
+.openerp .oe_form ul.oe_form_steps, .openerp .oe_form ul.oe_form_steps_clickable {
   display: inline-block;
   padding-right: 18px;
 }
-.openerp ul.oe_form_steps li, .openerp ul.oe_form_steps_clickable li {
+.openerp .oe_form ul.oe_form_steps li, .openerp .oe_form ul.oe_form_steps_clickable li {
   display: inline-block;
   margin-right: -20px;
   background-color: #fcfcfc;
@@ -1987,20 +2015,20 @@
   background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
   background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
 }
-.openerp ul.oe_form_steps li:first-child .label, .openerp ul.oe_form_steps_clickable li:first-child .label {
+.openerp .oe_form ul.oe_form_steps li:first-child .label, .openerp .oe_form ul.oe_form_steps_clickable li:first-child .label {
   border-left: 1px solid #cacaca;
   padding-left: 14px;
 }
-.openerp ul.oe_form_steps li:last-child, .openerp ul.oe_form_steps_clickable li:last-child {
+.openerp .oe_form ul.oe_form_steps li:last-child, .openerp .oe_form ul.oe_form_steps_clickable li:last-child {
   border-right: 1px solid #cacaca;
 }
-.openerp ul.oe_form_steps li:last-child .label, .openerp ul.oe_form_steps_clickable li:last-child .label {
+.openerp .oe_form ul.oe_form_steps li:last-child .label, .openerp .oe_form ul.oe_form_steps_clickable li:last-child .label {
   padding-right: 14px;
 }
-.openerp ul.oe_form_steps li:last-child .arrow, .openerp ul.oe_form_steps_clickable li:last-child .arrow {
+.openerp .oe_form ul.oe_form_steps li:last-child .arrow, .openerp .oe_form ul.oe_form_steps_clickable li:last-child .arrow {
   display: none;
 }
-.openerp ul.oe_form_steps li .label, .openerp ul.oe_form_steps_clickable li .label {
+.openerp .oe_form ul.oe_form_steps li .label, .openerp .oe_form ul.oe_form_steps_clickable li .label {
   color: #4c4c4c;
   text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede;
   padding: 7px;
@@ -2009,14 +2037,14 @@
   margin: 0;
   position: relative;
 }
-.openerp ul.oe_form_steps li .arrow, .openerp ul.oe_form_steps_clickable li .arrow {
+.openerp .oe_form ul.oe_form_steps li .arrow, .openerp .oe_form ul.oe_form_steps_clickable li .arrow {
   width: 17px;
   display: inline-block;
   vertical-align: top;
   overflow: hidden;
   margin-left: -5px;
 }
-.openerp ul.oe_form_steps li .arrow span, .openerp ul.oe_form_steps_clickable li .arrow span {
+.openerp .oe_form ul.oe_form_steps li .arrow span, .openerp .oe_form ul.oe_form_steps_clickable li .arrow span {
   position: relative;
   width: 24px;
   height: 24px;
@@ -2036,7 +2064,7 @@
   -o-transform: rotate(45deg);
   -ms-transform: rotate(45deg);
 }
-.openerp ul.oe_form_steps li.oe_active, .openerp ul.oe_form_steps_clickable li.oe_active {
+.openerp .oe_form ul.oe_form_steps li.oe_active, .openerp .oe_form ul.oe_form_steps_clickable li.oe_active {
   background-color: #729fcf;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#729fcf), to(#3465a4));
   background-image: -webkit-linear-gradient(top, #729fcf, #3465a4);
@@ -2045,20 +2073,20 @@
   background-image: -o-linear-gradient(top, #729fcf, #3465a4);
   background-image: linear-gradient(to bottom, #729fcf, #3465a4);
 }
-.openerp ul.oe_form_steps li.oe_active .arrow span, .openerp ul.oe_form_steps_clickable li.oe_active .arrow span {
+.openerp .oe_form ul.oe_form_steps li.oe_active .arrow span, .openerp .oe_form ul.oe_form_steps_clickable li.oe_active .arrow span {
   background-color: #3465a4;
   background: -moz-linear-gradient(135deg, #3465a4, #729fcf);
   background: -o-linear-gradient(135deg, #729fcf, #3465a4);
   background: -webkit-gradient(linear, left top, right bottom, from(#729fcf), to(#3465a4));
 }
-.openerp ul.oe_form_steps li.oe_active .label, .openerp ul.oe_form_steps_clickable li.oe_active .label {
+.openerp .oe_form ul.oe_form_steps li.oe_active .label, .openerp .oe_form ul.oe_form_steps_clickable li.oe_active .label {
   color: white;
   text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4;
 }
-.openerp ul.oe_form_steps_clickable li {
+.openerp .oe_form ul.oe_form_steps_clickable li {
   cursor: pointer;
 }
-.openerp ul.oe_form_steps_clickable li:hover {
+.openerp .oe_form ul.oe_form_steps_clickable li:hover {
   background-color: #e8e8e8;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e8e8e8), to(#cacaca));
   background-image: -webkit-linear-gradient(top, #e8e8e8, #cacaca);
@@ -2067,10 +2095,10 @@
   background-image: -o-linear-gradient(top, #e8e8e8, #cacaca);
   background-image: linear-gradient(to bottom, #e8e8e8, #cacaca);
 }
-.openerp ul.oe_form_steps_clickable li:hover .label {
+.openerp .oe_form ul.oe_form_steps_clickable li:hover .label {
   text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede;
 }
-.openerp ul.oe_form_steps_clickable li:hover .arrow span {
+.openerp .oe_form ul.oe_form_steps_clickable li:hover .arrow span {
   background-color: #e8e8e8;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#e8e8e8), to(#cacaca));
   background-image: -webkit-linear-gradient(top, #e8e8e8, #cacaca);
@@ -2079,10 +2107,10 @@
   background-image: -o-linear-gradient(top, #e8e8e8, #cacaca);
   background-image: linear-gradient(to bottom, #e8e8e8, #cacaca);
 }
-.openerp ul.oe_form_steps_clickable li .label {
+.openerp .oe_form ul.oe_form_steps_clickable li .label {
   color: #7c7bad;
 }
-.openerp ul.oe_form_steps_clickable li.oe_active:hover {
+.openerp .oe_form ul.oe_form_steps_clickable li.oe_active:hover {
   background-color: #4c85c2;
   background-image: -webkit-gradient(linear, left top, left bottom, from(#4c85c2), to(#284d7d));
   background-image: -webkit-linear-gradient(top, #4c85c2, #284d7d);
@@ -2091,10 +2119,10 @@
   background-image: -o-linear-gradient(top, #4c85c2, #284d7d);
   background-image: linear-gradient(to bottom, #4c85c2, #284d7d);
 }
-.openerp ul.oe_form_steps_clickable li.oe_active:hover .label {
+.openerp .oe_form ul.oe_form_steps_clickable li.oe_active:hover .label {
   text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4;
 }
-.openerp ul.oe_form_steps_clickable li.oe_active:hover .arrow span {
+.openerp .oe_form ul.oe_form_steps_clickable li.oe_active:hover .arrow span {
   background-color: #284d7d;
   background: -moz-linear-gradient(135deg, #284d7d, #4c85c2);
   background: -o-linear-gradient(135deg, #4c85c2, #284d7d);
@@ -2125,31 +2153,6 @@
 }
 .openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
   font-weight: normal;
-}
-.openerp .oe_application .oe_form_sheetbg {
-  background: url(/web/static/src/img/form_sheetbg.png);
-  padding: 8px 0;
-  border-bottom: 1px solid #dddddd;
-}
-.openerp .oe_application .oe_form_sheet_width {
-  min-width: 650px;
-  max-width: 860px;
-  margin: 0 auto;
-}
-.openerp .oe_application .oe_form_sheet {
-  background: white;
-  min-height: 330px;
-  padding: 16px;
-  border: 1px solid #afafb6;
-  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-}
-.openerp .oe_application .oe_form_sheet .ui-tabs {
-  margin: 0 -16px;
-}
-.openerp .oe_application .oe_form_sheet .oe_notebook_page {
-  padding: 0 16px;
 }
 .openerp .oe_form .oe_form_button {
   margin: 2px;
