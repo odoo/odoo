@@ -35,8 +35,7 @@ class mail_compose_message(osv.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
 
-        The behavior of the wizard can be modified through the context key 
-        mail.compose.message.mode:
+        The behavior of the wizard depends on the composition_mode field:
         - 'reply': reply to a previous message. The wizard is pre-populated 
             via ``get_message_data``.
         - 'comment': new post on a record. The wizard is pre-populated via
@@ -56,10 +55,11 @@ class mail_compose_message(osv.TransientModel):
                 - default_model or active_model
                 - default_res_id or active_id
             - reply: active_id of a message the user replies to
-                - active_id: ID of a mail.message to which we are replying
+                - default_parent_id or message_id or active_id: ID of the
+                    mail.message we reply to
                 - message.res_model or default_model
                 - message.res_id or default_res_id
-            - mass_mailing mode: model and IDs of records the user mass-mails
+            - mass_mail: model and IDs of records the user mass-mails
                 - active_ids: record IDs
                 - default_model or active_model
         """
@@ -118,7 +118,6 @@ class mail_compose_message(osv.TransientModel):
         'body_text': lambda self,cr, uid, context={}: False,
         'body': lambda self,cr, uid, context={}: '',
         'subject': lambda self,cr, uid, context={}: False,
-        'partner_ids': [],
     }
 
     def notify(self, cr, uid, newid, context=None):

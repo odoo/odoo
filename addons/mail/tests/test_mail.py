@@ -354,7 +354,7 @@ class test_mail(common.TransactionCase):
         # CASE1: comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
-            {'mail.compose.message.mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
         compose = mail_compose.browse(cr, uid, compose_id)
         # Test: mail.compose.message: model, res_id
         self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
@@ -379,7 +379,7 @@ class test_mail(common.TransactionCase):
         message.write({'subject': _subject})
         compose_id = mail_compose.create(cr, uid,
             {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
-            {'mail.compose.message.mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'active_id': message.id})
+            {'default_composition_mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'default_parent_id': message.id})
         compose = mail_compose.browse(cr, uid, compose_id)
 
         # Test: form view methods

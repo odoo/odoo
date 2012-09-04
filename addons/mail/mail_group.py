@@ -28,12 +28,8 @@ from osv import fields
 from tools.translate import _
 
 class mail_group(osv.Model):
-    """
-    A mail_group is a collection of users sharing messages in a discussion
-    group. Group users are users that follow the mail group, using the
-    subscription/follow mechanism of OpenSocial. A mail group has nothing
-    in common with res.users.group.
-    """
+    """ A mail_group is a collection of users sharing messages in a discussion
+        group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
@@ -131,9 +127,10 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
+                'domain': [('model','=','mail.group'), ('res_id','=',mail_group_id)],
+                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id},
                 'res_model': 'mail.message',
-                'thread_level': 2
+                'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)

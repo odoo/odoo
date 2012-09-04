@@ -36,12 +36,12 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         if context is None:
             context = {}
         # set as comment, perform overrided document-like action that calls get_record_data
-        old_mode = context.get('mail.compose.message.mode', 'forward')
-        context['mail.compose.message.mode'] = 'comment'
+        old_mode = context.get('default_composition_mode', 'forward')
+        context['default_composition_mode'] = 'comment'
         res = super(crm_lead_forward_to_partner, self).default_get(cr, uid, fields, context=context)
         # back to forward mode
-        context['mail.compose.message.mode'] = old_mode
-        res['composition_mode'] = context['mail.compose.message.mode']
+        context['default_composition_mode'] = old_mode
+        res['composition_mode'] = context['default_composition_mode']
         return res
 
     def _get_composition_mode_selection(self, cr, uid, context=None):

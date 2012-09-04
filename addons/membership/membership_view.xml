@@ -88,11 +88,11 @@
             <field name="arch" type="xml">
                 <page string="Information" position="after">
                     <page string="Membership">
-                        <group>
+                        <group col="1">
                             <group>
                                 <field name="membership" readonly="0"/>
                             </group>
-                            <group>
+                            <group attrs="{'invisible':[('membership','=',False)]}">
                                 <field name="membership_date_from" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
                                 <field name="membership_date_to" readonly="0" attrs="{'required':[('membership','=',True)]}"/>
                             </group>
@@ -269,18 +269,6 @@
 
         <!-- MEMBERSHIP/REPORTING -->
         <menuitem name="Reporting" id="base.menu_report_association" parent="base.menu_association" sequence="20"/>
-
-        <!-- View for product.product object inherited from product module -->
-        <record model="ir.ui.view" id="view_product_form_inherit1">
-            <field name="name">product.normal.form</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <field name="list_price" position="after">
-                    <field name="member_price" groups="base.group_user"/>
-                </field>
-            </field>
-        </record>
 
     </data>
 </openerp>

@@ -19,7 +19,7 @@
                                             attrs="{'invisible':[('partner_assigned_id','=',False)]}"
                                             name="%(crm_lead_forward_to_partner_act)d"
                                             icon="terp-mail-forward" type="action"
-                                            context="{'mail.compose.message.mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
+                                            context="{'default_composition_mode': 'forward', 'default_partner_ids': [partner_assigned_id]}"/>
                                     </div>
                                 </group>
                                 <group string="Geo Assignation">

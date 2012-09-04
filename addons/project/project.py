@@ -1160,6 +1160,45 @@ class task(base_stage, osv.osv):
         return result
 
     # ---------------------------------------------------
+    # mail gateway
+    # ---------------------------------------------------
+
+    def message_new(self, cr, uid, msg, custom_values=None, context=None):
+        """ Override to updates the document according to the email. """
+        if custom_values is None: custom_values = {}
+        custom_values.update({
+            'name': subject,
+            'planned_hours': 0.0,
+            'subject': msg.get('subject'),
+        })
+        return super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+
+    def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
+        """ Override to update the task according to the email. """
+        if update_vals is None: update_vals = {}
+        act = False
+        maps = {
+            'cost':'planned_hours',
+        }
+        for line in msg['body'].split('\n'):
+            line = line.strip()
+            res = tools.misc.command_re.match(line)
+            if res:
+                match = res.group(1).lower()
+                field = maps.get(match)
+                if field:
+                    try:
+                        update_vals[field] = float(res.group(2).lower())
+                    except (ValueError, TypeError):
+                        pass
+                elif match.lower() == 'state' \
+                        and res.group(2).lower() in ['cancel','close','draft','open','pending']:
+                    act = 'do_%s' % res.group(2).lower()
+        if act:
+            getattr(self,act)(cr, uid, ids, context=context)
+        return super(project_tasks,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
+
+    # ---------------------------------------------------
     # OpenChatter methods and notifications
     # ---------------------------------------------------
 
