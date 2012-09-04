@@ -55,6 +55,12 @@ openerp.web.list_editable = function (instance) {
             instance.web.bus.off('resize', this, this.resize_fields);
             this._super();
         },
+        do_hide: function () {
+            if (this.editor.is_editing()) {
+                this.cancel_edition(true);
+            }
+            this._super();
+        },
         /**
          * Handles the activation of a record in editable mode (making a record
          * editable), called *after* the record has become editable.
