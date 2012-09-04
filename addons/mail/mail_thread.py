@@ -656,7 +656,6 @@ class mail_thread(osv.Model):
             subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)])
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
-
         # TDE: temp, must check followers widget
         return []
         # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
