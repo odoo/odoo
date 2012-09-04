@@ -654,6 +654,7 @@ class BaseModel(object):
     may be set to False.
     """
     __metaclass__ = MetaModel
+    _auto = True # create database backend
     _register = False # Set to false if the model shouldn't be automatically discovered.
     _name = None
     _columns = {}
@@ -5076,6 +5077,7 @@ class Model(BaseModel):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = False # True in a TransientModel
 
@@ -5088,6 +5090,7 @@ class TransientModel(BaseModel):
        records they created. The super-user has unrestricted access
        to all TransientModel records.
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = True
 

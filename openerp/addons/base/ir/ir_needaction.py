@@ -21,7 +21,7 @@
 
 from osv import osv
 
-class ir_needaction_mixin(osv.Model):
+class ir_needaction_mixin(osv.AbstractModel):
     '''Mixin class for objects using the need action feature.
 
     Need action feature can be used by models that have to be able to
