@@ -442,6 +442,8 @@ class hr_timesheet_sheet(osv.osv):
         return True
 
     def name_get(self, cr, uid, ids, context=None):
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         if not len(ids):
             return []
         return [(r['id'], r['date_from'] + ' - ' + r['date_to']) \
