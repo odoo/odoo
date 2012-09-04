@@ -12,6 +12,8 @@ class pad_common(osv.osv_memory):
     def pad_generate_url(self, cr, uid, context=None):
         pad_server = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.pad_server
         # make sure pad server in the form of http://hostname
+        if not pad_server:
+            return ''
         if not pad_server.startswith('http'):
             pad_server = 'http://' + pad_server
         pad_server = pad_server.rstrip('/')

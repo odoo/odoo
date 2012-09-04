@@ -27,15 +27,10 @@ class account_journal(osv.osv):
     _columns = {
         'journal_user': fields.boolean('PoS Payment Method', help="Check this box if this journal define a payment method that can be used in point of sales."),
 
-        'opening_control': fields.boolean('Opening Control', help="If you want the journal should be control at opening, check this option"),
-        'closing_control': fields.boolean('Closing Control', help="If you want the journal should be control at closing, check this option"),
-
         'amount_authorized_diff' : fields.float('Amount Authorized Difference'),
         'self_checkout_payment_method' : fields.boolean('Self Checkout Payment Method'),
     }
     _defaults = {
-        'opening_control' : False,
-        'closing_control' : False,
         'self_checkout_payment_method' : False,
     }
 
@@ -46,6 +41,7 @@ class account_cash_statement(osv.osv):
     _columns = {
         'pos_session_id' : fields.many2one('pos.session'),
     }
+
 account_cash_statement()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

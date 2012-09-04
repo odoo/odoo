@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<openerp>
+  <data>
+
+    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
+
+    <!-- Note Stage Form View -->
+    <record model="ir.ui.view" id="view_note_stage_form">
+      <field name="name">note.stage.form</field>
+      <field name="model">note.stage</field>
+      <field name="arch" type="xml">
+        <form string="Stage of Notes" version="7.0">
+          <group>
+            <field name="name"/>
+          </group>
+        </form>
+      </field>
+    </record>
+
+    <!-- Note Stage Tree View -->
+    <record model="ir.ui.view" id="view_note_stage_tree">
+      <field name="name">note.stage.tree</field>
+      <field name="model">note.stage</field>
+      <field name="field_parent"></field>
+      <field name="arch" type="xml">
+        <tree string="Stages of notes" editable="bottom">
+              <field name="sequence" widget="handle"/>
+              <field name="name"/>
+              <field name="fold"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Note Stage Action -->
+    <record model="ir.actions.act_window" id="action_note_stage">
+      <field name="name">Stages</field>
+      <field name="res_model">note.stage</field>
+      <field name="view_mode">tree,form</field>
+      <field name="domain">[('user_id','=',uid)]</field>
+    </record>
+
+    <menuitem name="Categories"
+      id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
+
+    <!-- New Note Kanban View -->
+    <record model="ir.ui.view" id="view_note_note_kanban">
+      <field name="name">note.note.kanban</field>
+      <field name="model">note.note</field>
+      <field name="arch" type="xml">
+        <kanban default_group_by="stage_id">
+          <field name="color"/>
+          <field name="sequence"/>
+          <field name="name"/>
+          <field name="stage_id"/>
+          <field name="active"/>
+          <field name="note"/>
+          <field name="follower_ids"/>
+          <templates>
+            <t t-name="kanban-box">
+              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                <!-- dropdown menu -->
+                <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                  <span class="oe_e">í</span>
+                  <ul class="oe_dropdown_menu">
+                    <li><a type="edit">Edit...</a></li>
+                    <li><a type="delete">Delete</a></li>
+                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                  </ul>
+                </div>
+
+                <!-- kanban note -->
+                <div class="oe_kanban_content">
+                  <!-- title -->
+                  <field name="name"/>
+                </div>
+
+                <div class="oe_kanban_project_avatars">
+                  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
+                    <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
+                  </t>
+                </div>
+              </div>
+              <div class="oe_clear"></div>
+            </t>
+          </templates>
+        </kanban>
+      </field>
+    </record>
+
+    <!-- New Note Form View -->
+    <record model="ir.ui.view" id="view_note_note_form">
+      <field name="name">note.note.form</field>
+      <field name="model">note.note</field>
+      <field name="arch" type="xml">
+        <form string="Note" version="7.0">
+          <header>
+              <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+          </header>
+          <field name="note"/>
+          <field name="note_pad_url" invisible="1"/>
+          <div class="oe_chatter">
+              <field name="message_ids" widget="mail_thread"/>
+          </div>
+        </form>
+      </field>
+    </record>
+
+    <!-- Search Note  -->
+    <record model="ir.ui.view" id="view_note_note_filter">
+      <field name="name">note.note.search</field>
+      <field name="model">note.note</field>
+      <field name="arch" type="xml">
+        <search string="Notes">
+          <field name="note" string="Note"/>
+          <field name="stage_id"/>
+          <group expand="0" string="Group By...">
+            <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
+            <filter icon="terp-stock_symbol-selection" string="Stage" help="By Note Category" context="{'group_by':'stage_id'}"/>
+          </group>
+        </search>
+      </field>
+    </record>
+
+    <!-- Note Action -->
+    <record model="ir.actions.act_window" id="action_note_note">
+      <field name="name">Notes</field>
+      <field name="res_model">note.note</field>
+      <field name="view_type">form</field>
+      <field name="view_mode">kanban,tree,form</field>
+      <field name="search_view_id" ref="view_note_note_filter"/>
+    </record>
+
+    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+
+  </data>
+</openerp>

@@ -38,7 +38,7 @@ class crm_configuration(osv.osv_memory):
         'module_import_google': fields.boolean("Google (Contacts and Calendar)",
             help="""Import google contact in partner address and add google calendar events details in Meeting.
                 This installs the module import_google."""),
-        'module_google_map': fields.boolean("add google maps on customer",
+        'module_google_map': fields.boolean("add google maps on customers",
             help="""Locate customers on Google Map.
                 This installs the module google_map."""),
         'group_fund_raising': fields.boolean("Manage Fund Raising",
