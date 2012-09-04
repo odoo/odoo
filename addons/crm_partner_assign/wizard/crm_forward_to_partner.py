@@ -89,11 +89,6 @@ class crm_lead_forward_to_partner(osv.osv_memory):
             lead = self.pool.get(model).browse(cr, uid, res_id, context=context)
             body = self._get_message_body(cr, uid, lead, history_mode, context=context)
             return {'value': {'body': body}}
-    
-    def on_change_partner_ids(self, cr, uid, ids, partner_ids, context=None):
-        """ TDE-TODO: Keep void; maybe we could check that partner_ids have
-            email  defined. """
-        return {}
 
     def create(self, cr, uid, values, context=None):
         """ TDE-HACK: remove 'type' from context, because when viewing an
@@ -106,9 +101,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
         return new_id
 
     def action_forward(self, cr, uid, ids, context=None):
-        """
-            Forward the lead to a partner
-        """
+        """ Forward the lead to a partner """
         if context is None:
             context = {}
         res = {'type': 'ir.actions.act_window_close'}
@@ -126,7 +119,7 @@ class crm_lead_forward_to_partner(osv.osv_memory):
 
         self.send_mail(cr, uid, ids, context=context)
         # for case in lead.browse(cr, uid, lead_ids, context=context):
-            # TDE: WHAT TO DO WITH THAT ?
+            # TODO: WHAT TO DO WITH THAT ?
             # if (this.send_to == 'partner' and this.partner_id):
             #     lead.assign_partner(cr, uid, [case.id], this.partner_id.id, context=context)
 
