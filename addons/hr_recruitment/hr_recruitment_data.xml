@@ -471,7 +471,7 @@ You can automatically receive job application though an email gateway, see the H
         <field name="name">hired</field>
         <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
     </record>
-    <record id="mail.mail_subtype_refused   " model="mail.message.subtype">
+    <record id="mail.mail_subtype_refused" model="mail.message.subtype">
         <field name="name">refused</field>
         <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
         <field name="default" eval="False"/>
