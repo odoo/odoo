@@ -420,7 +420,17 @@ class survey_question_wiz(osv.osv_memory):
                         if user_email and resp_email:
                             user_name = user_obj.browse(cr, uid, uid, context=context).name
                             mail = "Hello " + survey_data.responsible_id.name + ",\n\n " + str(user_name) + " has given the Response Of " + survey_data.title + " Survey.\nThe Response has been attached herewith.\n\n Thanks."
-                            mail_message.schedule_with_attach(cr, uid, user_email, [resp_email], "Survey Answer Of " + str(user_name) , mail, attachments=attachments, context=context)
+                            vals = {'state': 'outgoing',
+                                    'subject': "Survey Answer Of " + user_name,
+                                    'body_html': '<pre>%s</pre>' % mail,
+                                    'email_to': [resp_email],
+                                    'email_from': user_email}
+                            if attachments:
+                                vals['attachment_ids'] = [(0,0,{'name': a_name,
+                                                                'datas_fname': a_name,
+                                                                'datas': str(a_content).encode('base64')})
+                                                                for a_name, a_content in attachments]
+                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
