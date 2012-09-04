@@ -525,11 +525,11 @@ def Project():
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>cancelled</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="cancel", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="cancelled", context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="close", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="closed", context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly

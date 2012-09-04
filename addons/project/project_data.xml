@@ -99,12 +99,12 @@
             <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_close" model="mail.message.subtype">
-            <field name="name">close</field>
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
             <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
         </record>
-        <record id="mail.mail_subtype_cancel" model="mail.message.subtype">
-            <field name="name">cancel</field>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
             <field name="model_ids" eval="[(4,ref('project.model_project_project'))]"/>
             <field name="default" eval="False"/>
         </record>

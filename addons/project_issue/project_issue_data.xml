@@ -30,7 +30,32 @@
         <record model="project.issue.version" id="type3">
             <field name="name">v3.0</field>
         </record>
-
+        
+        <!--Sub type Data -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="name">new</field>
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_stage_change" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_converted" model="mail.message.subtype">
+            <field name="name">converted</field>
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+        </record>
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
