@@ -346,16 +346,14 @@
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
                     <label for="product_id" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
-                    </h1>
                     <group>
                         <group>
-                            <label for="product_qty" class="oe_edit_only"/>
-                            <h2>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                            <label for="product_qty"/>
+                            <div>
                                 <field name="product_qty" class="oe_inline"/>
                                 <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                            </h2>
+                            </div>
                         </group>
                         <group>
                             <field name="name"/>
