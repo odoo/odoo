@@ -148,12 +148,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            if (self._is_action_enabled('delete')) {
+            if (self.is_action_enabled('delete')) {
                 this.sidebar.add_items('other', [
                     { label: _t('Delete'), callback: self.on_button_delete }
                 ]);
             }
-            if (self._is_action_enabled('create')) {
+            if (self.is_action_enabled('create')) {
                 this.sidebar.add_items('other', [
                     { label: _t('Duplicate'), callback: self.on_button_duplicate }
                 ]);
@@ -3485,7 +3485,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
             form_view_options: {'not_interactible_on_create':true},
-            readonly: !this._is_action_enabled('edit') || self.o2m.get("effective_readonly")
+            readonly: !this.is_action_enabled('edit') || self.o2m.get("effective_readonly")
         });
     },
     do_button_action: function (name, id, callback) {
@@ -3573,7 +3573,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
-        this._super(this.view._is_action_enabled('create') ? (count > 0 ? count - 1 : 0) : this.records.length);
+        this._super(this.view.is_action_enabled('create') ? (count > 0 ? count - 1 : 0) : this.records.length);
 
         // magical invocation of wtf does that do
         if (this.view.o2m.get('effective_readonly')) {
@@ -3586,7 +3586,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         }).length;
         if (this.options.selectable) { columns++; }
         if (this.options.deletable) { columns++; }
-        if (this.view._is_action_enabled('create')) {
+        if (this.view.is_action_enabled('create')) {
             var $cell = $('<td>', {
                 colspan: columns,
                 'class': 'oe_form_field_one2many_list_row_add'

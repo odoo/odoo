@@ -252,13 +252,13 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         // add css classes that reflect the (absence of) access rights
-        if (!this._is_action_enabled('create')) {
+        if (!this.is_action_enabled('create')) {
             this.$el.addClass('oe_list_cannot_create');
         }
-        if (!this._is_action_enabled('edit')) {
+        if (!this.is_action_enabled('edit')) {
             this.$el.addClass('oe_list_cannot_edit');
         }
-        if (!this._is_action_enabled('delete')) {
+        if (!this.is_action_enabled('delete')) {
             this.$el.addClass('oe_list_cannot_delete');
         }
 
@@ -363,7 +363,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
-            if (self._is_action_enabled('create')) {
+            if (self.is_action_enabled('create')) {
                 this.sidebar.add_items('other', [
                     { label: _t("Import"), callback: this.on_sidebar_import }
                 ]);
@@ -371,7 +371,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar.add_items('other', [
                 { label: _t("Export"), callback: this.on_sidebar_export }
             ]);
-            if (self._is_action_enabled('delete')) {
+            if (self.is_action_enabled('delete')) {
                 this.sidebar.add_items('other', [
                     { label: _t('Delete'), callback: this.do_delete_selected }
                 ]);

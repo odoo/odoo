@@ -649,7 +649,7 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget._is_action_enabled('create')">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
@@ -725,12 +725,12 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <t t-if="widget._is_action_enabled('edit')">
+            <t t-if="widget.is_action_enabled('edit')">
                 <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
                     <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
                 </div>
             </t>
-            <t t-if="widget._is_action_enabled('create')">
+            <t t-if="widget.is_action_enabled('create')">
                 <button type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
             </t>
         </span>

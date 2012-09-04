@@ -71,7 +71,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             return JSON.parse(this.fields_view.arch.attrs.quick_create);
         return !! this.group_by;
     },
-    _is_action_enabled: function(action) {
+    is_action_enabled: function(action) {
         if (action === 'create' && !this.options.creatable)
             return false;
         return this._super(action);
@@ -735,7 +735,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
-            if ((type === 'edit' || type === 'delete') && ! self.view._is_action_enabled(type)) {
+            if ((type === 'edit' || type === 'delete') && ! self.view.is_action_enabled(type)) {
                 self.view.open_record(self.id);
             } else if (_.str.startsWith(type, 'switch_')) {
                 self.view.do_switch_view(type.substr(7));

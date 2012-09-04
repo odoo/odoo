@@ -750,7 +750,7 @@ openerp.web.list_editable = function (instance) {
 
     instance.web.ListView.List.include(/** @lends instance.web.ListView.List# */{
         row_clicked: function (event) {
-            if (!this.view.editable() || ! this.view._is_action_enabled('edit')) {
+            if (!this.view.editable() || ! this.view.is_action_enabled('edit')) {
                 return this._super.apply(this, arguments);
             }
             var record_id = $(event.currentTarget).data('id');
