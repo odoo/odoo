@@ -16,7 +16,7 @@
                     <field name="effective_hours" widget="float_time"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="state" invisible="context.get('set_visible',False)" groups="base.group_no_one"/>
+                    <field name="state" invisible="1" groups="base.group_no_one"/>
                 </tree>
             </field>
         </record>
