@@ -58,6 +58,21 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             
             // We fetch the backend data on the server asynchronously. this is done only when the pos user interface is launched,
             // Any change on this data made on the server is thus not reflected on the point of sale until it is relaunched. 
+            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
+            $.when(this.load_server_data())
+                .then(function(){ 
+                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
+                    self.ready.resolve();
+                },function(){
+                    //we failed to load some backend data, or the backend was badly configured.
+                    //the error messages will be displayed in PosWidget
+                    self.ready.reject();
+                });
+        },
+
+        // loads all the needed data on the sever. returns a deferred indicating when all the data has loaded. 
+        load_server_data: function(){
+            var self = this;
 
             var loaded = fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
                 .pipe(function(users){
@@ -142,7 +157,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
                     return fetch(
                         'product.product', 
-                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type'],
+                        ['name', 'list_price','price','pos_categ_id', 'taxes_id', 'ean13', 
+                         'to_weight', 'uom_id', 'uos_id', 'uos_coeff', 'mes_type', 'description_sale', 'description'],
                         [['pos_categ_id','!=', false],['sale_ok','=',true]],
                         {pricelist: self.get('shop').pricelist_id[0]} // context for price
                     );
@@ -173,17 +189,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                     }
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
                 });
-
-            // when all the data has loaded, we compute some stuff, and declare the Pos ready to be used. 
-            $.when(loaded)
-                .then(function(){ 
-                    //self.log_loaded_data(); //Uncomment if you want to log the data to the console for easier debugging
-                    self.ready.resolve();
-                },function(){
-                    //we failed to load some backend data, or the backend was badly configured.
-                    //the error messages will be displayed in PosWidget
-                    self.ready.reject();
-                });
+        
+            return loaded;
         },
 
         // logs the usefull posmodel data to the console for debug purposes
@@ -417,6 +424,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 price_with_tax :    this.get_price_with_tax(),
                 price_without_tax:  this.get_price_without_tax(),
                 tax:                this.get_tax(),
+                product_description:      this.get_product().get('description'),
+                product_description_sale: this.get_product().get('description_sale'),
             };
         },
         get_price_without_tax: function(){

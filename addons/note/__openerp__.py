@@ -19,39 +19,45 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Membership Management',
+    'name': 'Notes',
     'version': '0.1',
-    'category': 'Association',
+    'category': 'Tools',
     'description': """
-This module allows you to manage all operations for managing memberships.
-=========================================================================
+This module allows users to create their own notes inside OpenERP
+=================================================================
 
-It supports different kind of members:
---------------------------------------
-    * Free member
-    * Associated member (e.g.: a group subscribes to a membership for all subsidiaries)
-    * Paid members
-    * Special member prices
+Use notes to write meeting minutes, organize ideas, organize personnal todo
+lists, etc. Each user manages his own personnal notes. Notes are available to
+their authors only, but they can share notes to others users so that several
+people can work on the same note in real time. It's very efficient to share
+meeting minutes.
 
-It is integrated with sales and accounting to allow you to automatically
-invoice and send propositions for membership renewal.
-    """,
+Notes can be found in the 'Home' menu.
+""",
     'author': 'OpenERP SA',
-    'depends': ['base', 'product', 'account', 'process'],
-    'data': [
-        'security/ir.model.access.csv',
-        'wizard/membership_invoice_view.xml',
-        'membership_view.xml',
-        'report/report_membership_view.xml',
-        'process/membership_process.xml',
+    'website': 'http://openerp.com',
+    'summary': 'Sticky Notes, Collaborative',
+    'depends': [
+        'base_tools',
+        'mail',
+        'pad',
     ],
-    'demo': ['membership_demo.xml'],
-    'test': ['test/test_membership.yml'],
+    'data': [
+        'security/note_security.xml',
+        'security/ir.model.access.csv',
+        'note_data.xml',
+        'note_view.xml',
+    ],
+    'demo': [
+        'note_demo.xml',
+    ],
+    'css': [
+        'static/src/css/note.css',
+    ],
     'installable': True,
+    'application': True,
     'auto_install': False,
-    'certificate': '0042907796381',
-    'images': ['images/members.jpeg','images/membership_list.jpeg', 'images/membership_products.jpeg'],
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

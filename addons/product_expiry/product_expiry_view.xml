@@ -21,14 +21,14 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view" />
             <field name="arch" type="xml">
-                <notebook position="inside">
-                    <page string="Dates">
+                <group name="inventory">
+                    <group string="Dates">
                         <field name="life_time" />
                         <field name="use_time" />
                         <field name="removal_time" />
                         <field name="alert_time" />
-                    </page>
-                </notebook>
+                    </group>
+                </group>
             </field>
         </record>
     </data>

@@ -186,19 +186,23 @@
                 <search string="Search Analytic Lines">
                     <field name="name" string="Analytic Line"/>
                     <field name="date"/>
-                    <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" icon="terp-camera_test" help="Analytic Journal Items related to a sale journal."/>
-                    <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" icon="terp-purchase" help="Analytic Journal Items related to a purchase journal."/>
-                    <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]" icon="terp-folder-orange"/>
+                    <filter name="sales" string="Sales" domain="[('journal_id.type','=','sale')]" help="Analytic Journal Items related to a sale journal."/>
+                    <filter name="purchases" string="Purchases" domain="[('journal_id.type','=','purchase')]" help="Analytic Journal Items related to a purchase journal."/>
+                    <filter name="others" string="Others" domain="[('journal_id.type','in',('cash','general','situation'))]"/>
                     <separator/>
-                    <filter string="My Entries" domain="[('user_id','=',uid)]" icon="terp-personal"/>
+                    <filter string="My Entries" domain="[('user_id','=',uid)]"/>
                     <field name="account_id"/>
                     <field name="user_id"/>
                     <group string="Group By..." expand="0">
-                        <filter string="Account" context="{'group_by':'account_id'}" icon="terp-folder-green"/>
-                        <filter string="Journal" context="{'group_by':'journal_id'}" icon="terp-folder-orange"/>
-                        <filter string="User" context="{'group_by':'user_id'}" icon="terp-personal"/>
-                        <filter string="Fin.Account" context="{'group_by':'general_account_id'}" icon="terp-folder-green"/>
-                        <filter string="Product" context="{'group_by':'product_id'}" icon="terp-accessories-archiver"/>
+                        <filter string="Analytic Account" context="{'group_by':'account_id'}"/>
+                        <filter string="Fin. Account" context="{'group_by':'general_account_id'}"/>
+                        <filter string="Journal" context="{'group_by':'journal_id'}" name="group_journal"/>
+                        <separator/>
+                        <filter string="Product" context="{'group_by':'product_id'}"/>
+                        <filter string="User" context="{'group_by':'user_id'}"/>
+                        <separator/>
+                        <filter string="Date" context="{'group_by':'date'}" name="group_date"/>
+
                     </group>
                 </search>
             </field>
@@ -356,16 +360,6 @@
         <menuitem groups="analytic.group_analytic_accounting"
             action="action_account_analytic_journal_tree"
             id="account_analytic_journal_print" parent="account.next_id_40"/>
-
-
-        <act_window
-            context="{'search_default_account_id': [active_id], 'search_default_user_id': False, 'default_account_id': active_id}"
-            id="act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal"
-            name="All Analytic Entries"
-            res_model="account.analytic.line"
-            src_model="account.analytic.account"
-            view_mode="tree,form"
-            view_type="form"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">
             <field name="name">account.journal.form.1</field>
