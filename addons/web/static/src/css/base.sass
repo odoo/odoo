@@ -381,15 +381,13 @@ $sheet-max-width: 860px
         color: white
         background: #DC5F59
     button.oe_highlight
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-    button.oe_highlight:active
-        @include vertical-gradient(#b33630, #dc5f59)
-        @include box-shadow(none)
+        border: 1px solid #795151
+        @include vertical-gradient(#df3f3f, #a21a1a)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
     button.oe_highlight:hover
-        @include vertical-gradient(#DF6B66, #BF3A33)
-        //@include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
-        @include box-shadow(0 0 1px rgba(0, 0, 0, 0.2))
+        @include vertical-gradient(lighten(#e04f4f, 5%), lighten(#a21a1a, 5%))
+    button.oe_highlight:active
+        @include vertical-gradient(lighten(#a21a1a, 2%), lighten(#df3f3f, 2%))
     .oe_background_grey
         background: #eee !important
 
@@ -955,11 +953,10 @@ $sheet-max-width: 860px
                 @include transform(scale(1.1))
         .oe_active
             border-top: 1px solid lightGray
-            border-bottom: 1px solid #e0e0e0
+            border-bottom: 1px solid #dedede
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            @include box-shadow((inset 0 2px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(0, 0, 0, 0.2)))
-            //background: $link-color
-            @include vertical-gradient(darken($link-color, 3%), lighten($link-color, 2%))
+            @include box-shadow((inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2)))
+            background: $link-color
             a
                 color: white
             .oe_menu_label
@@ -1513,10 +1510,13 @@ $sheet-max-width: 860px
         header
             position: relative
             border-bottom: 1px solid #cacaca
+            padding-left: 2px
             @include vertical-gradient(#fcfcfc, #dedede)
             ul
                 display: inline-block
                 float: right
+            .oe_form_button
+                margin: 3px 2px
         div.oe_chatter
             min-width: 650px
             max-width: $sheet-max-width
@@ -1533,7 +1533,7 @@ $sheet-max-width: 860px
             label
                 min-width: 150px
             .oe_form_group_cell_label
-                padding: 2px 0
+                padding: 1px 0
             .oe_form_group_cell div div
                 padding: 1px 0
                 
@@ -1652,13 +1652,13 @@ $sheet-max-width: 860px
             margin: 2px
         td.oe_form_group_cell_label
             border-right: 1px solid #ddd
-            padding: 4px 0px 4px 0px
+            padding: 2px 0px
             label
                 line-height: 18px
                 display: block
                 min-width: 140px
         td.oe_form_group_cell + .oe_form_group_cell
-            padding-left: 6px
+            padding: 2px 0 2px 8px
         .oe_form_group
             width: 100%
             margin: 9px 0 9px 0
@@ -1670,7 +1670,7 @@ $sheet-max-width: 860px
         .oe_form_label_help[for], .oe_form_label[for]
             font-weight: bold
             white-space: nowrap
-            padding-right: 6px
+            padding-right: 8px
             span
                 font-size: 80%
                 color: darkGreen
@@ -1733,7 +1733,6 @@ $sheet-max-width: 860px
             width: 100%
             display: inline-block
             padding: 2px 2px 2px 0px
-            line-height: 1em
             input
                 margin: 0px
         input[type="text"], input[type="password"], input[type="file"], select
