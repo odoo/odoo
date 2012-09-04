@@ -12,8 +12,6 @@
                    <filter string="Services" icon="terp-accessories-archiver" domain="[('type','=','service')]"/>
                    <filter string="Products" icon="terp-accessories-archiver" domain="['|',('type','=','product'),('type','=','consu')]" help="Both stockable and consumable products"/>
                    <separator/>
-                   <filter string="To Sell" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
-                   <separator/>
                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
@@ -71,6 +69,12 @@
                             </h1>
                             <label for="categ_id" class="oe_edit_only"/>
                             <h2><field name="categ_id"/></h2>
+                            <div name="options" groups="base.group_user">
+                                <field name="sale_ok"/>
+                                <label for="sale_ok"/>
+                                <field name="purchase_ok"/>
+                                <label for="purchase_ok"/>
+                            </div>
                         </div>
                         <div class="oe_right oe_button_box" name="buttons">
                         </div>
@@ -78,57 +82,77 @@
                             <page string="Information">
                                 <group>
                                     <group>
-                                        <field name="default_code"/>
-                                        <field name="ean13" placeholder="e.g. 5901234123457"/>
-                                        <field groups="product.group_product_variant" name="variants"/>
-                                    </group>
-                                    <group groups="base.group_user">
-                                        <field name="sale_ok"/>
-                                        <field name="purchase_ok"/>
-                                    </group>
-                                    <group string="Procurement">
                                         <field name="type"/>
-                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
-                                    </group>
-                                    <group string="Prices">
+                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                         <field name="list_price"/>
-                                        <field name="cost_method" groups="product.group_costing_method"/>
-                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="default_code"/>
+                                        <label for="ean13"/>
+                                        <div name="ean">
+                                            <field name="ean13" placeholder="e.g. 5901234123457"/>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <field groups="product.group_product_variant" name="variants"/>
                                         <field name="price_margin" groups="product.group_product_variant"/>
                                         <field name="price_extra" groups="product.group_product_variant"/>
                                     </group>
-
+                                </group>
+                                <field name="description" placeholder="describe the product's characteristics for internal use..."/>
+                            </page>
+                            <page string="Procurements" groups="base.group_user">
+                                <group name="procurement">
+                                    <group>
+                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
+                                        <field name="cost_method" groups="product.group_costing_method"/>
+                                        <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
+                                    </group>
+                                    <group>
+                                        <field name="uom_po_id" groups="product.group_uom"/>
+                                    </group>
+                                </group>
+                                <separator string="Notes for Suppliers"/>
+                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
+                            </page>
+                            <page string="Inventory" groups="base.group_user">
+                                <group name="inventory">
+                                    <group name="status" string="Status">
+                                        <field name="state"/>
+                                        <field name="product_manager"/>
+                                    </group>
+                                    <group name="store" string="Storage Localisation">
+                                        <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                        <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                                        <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                                    </group>
                                     <group groups="product.group_stock_packaging" string="Weights">
                                         <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                         <field name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                                     </group>
-
-                                    <group name="uom" groups="product.group_uom" string="Unit of Measure">
-                                        <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)"/>
-                                        <field name="uom_po_id"/>
+                                </group>
+                            </page>
+                            <page string="Sales" attrs="{'readonly':[('sale_ok','=',0)]}">
+                                <group name="sale">
+                                    <group string="Sale Conditions">
+                                        <label for="sale_delay"/>
+                                        <div>
+                                            <field name="sale_delay" class="oe_inline"/> days
+                                        </div>
+                                        <label for="warranty"/>
+                                        <div>
+                                            <field name="warranty" class="oe_inline"/> months
+                                        </div>
+                                    </group>
+                                    <group groups="product.group_uos" string="Unit of Measure">
                                         <field name="uos_id"/>
                                         <field name="uos_coeff"/>
                                         <field name="mes_type"/>
                                     </group>
-
-                                    <group name="status" string="Status">
-                                        <field name="state"/>
-                                        <field name="product_manager"/>
-                                    </group>
-
                                 </group>
-                            </page>
-                            <page string="Descriptions" groups="base.group_user">
-                                <separator string="Description"/>
-                                <field name="description"/>
-                                <separator string="Sale Description"/>
-                                <field name="description_sale" placeholder="This note will be displayed on quotations..."/>
-                                <separator string="Purchase Description"/>
-                                <field name="description_purchase" placeholder="This note will be displayed on requests for quotation..."/>
-                            </page>
-                            <page groups="product.group_stock_packaging" string="Packaging">
-                                <field name="packaging">
+                                <field name="packaging" groups="product.group_stock_packaging">
                                     <form string="Packaging" version="7.0">
                                         <group col="4">
                                             <field name="ean"/>
@@ -150,6 +174,8 @@
                                         <field name="name"/>
                                     </form>
                                 </field>
+                                <separator string="Notes on Quotations"/>
+                                <field name="description_sale" placeholder="note to be displayed on quotations..."/>
                             </page>
                         </notebook>
                     </sheet>
@@ -162,42 +188,30 @@
         </record>
 
         <!-- Product Kanban View  -->
-        <record model="ir.ui.view" id="product_kanban_view">
+
+        <record model="ir.ui.view" id="product.product_kanban_view">
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
                 <kanban>
                     <field name="color"/>
                     <field name="type"/>
-                    <field name="image_medium"/>
+                    <field name="image_small"/>
                     <field name="list_price"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <t t-if="record.type.raw_value!='service' and record.qty_available.raw_value lte 0" t-set="border">oe_kanban_color_red</t>
-                            <div t-attf-class="#{kanban_color(record.color.raw_value)} #{border || ''}">
-                                <div class="oe_kanban_box oe_kanban_color_border">
-                                    <div class="oe_kanban_box_header oe_kanban_color_bgdark oe_kanban_color_border oe_kanban_draghandle oe_kanban_title">
-                                        <field name="name"/>
-                                    </div>
-                                    <div class="oe_kanban_box_content oe_kanban_color_bglight oe_kanban_box_show_onclick_trigger">
-                                        <img t-att-src="kanban_image('product.product', 'image_medium', record.id.value)" width="48" style="float: left; padding: 0 4px 4px 0"/>
-                                        Code: <field name="code"/>
-                                        <div t-if="record.type.raw_value == 'service'">No Stock</div>
-                                        <t t-if="record.type.raw_value != 'service'">
-                                            <div>Stock: <field name="qty_available"/> on hand, <field name="virtual_available"/> available</div>
-                                            <div t-if="record.list_price.raw_value != 0">Public Price: <field name="lst_price"/></div>
-                                            <!-- TODO would deserve to be hidden at the field level -->
-                                            <div groups="base.group_user">Cost : <field name="standard_price"/></div>
-                                        </t>
-                                        <div class="oe_kanban_clear"/>
-                                    </div>
-                                    <div class="oe_kanban_buttons_set oe_kanban_color_border oe_kanban_color_bglight oe_kanban_box_show_onclick">
-                                        <div class="oe_kanban_left">
-                                            <a string="Edit" icon="gtk-edit" type="edit"/>
-                                            <a string="Change Color" icon="color-picker" type="color" name="color"/>
-                                        </div>
-                                        <div class="oe_kanban_clear"/>
-                                    </div>
+                            <div class="oe_kanban_vignette">
+                                <a type="open"><img t-att-src="kanban_image('product.product', 'image_small', record.id.value)" class="oe_kanban_image"/></a>
+                                <div class="oe_kanban_details">
+                                    <h4>
+                                        <a type="open">
+                                             <t t-if="record.code.raw_value">[<field name="code"/>]</t> <field name="name"/>
+                                        </a>
+                                    </h4>
+                                    <div name="tags"/>
+                                    <ul>
+                                        <li>Price: <field name="lst_price"></field></li>
+                                    </ul>
                                 </div>
                             </div>
                         </t>
@@ -227,7 +241,7 @@
             <field name="name">Products</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="view_type">form</field>
             <field name="context">{"search_default_filter_to_sell":1}</field>
             <field name="view_id" ref="product_product_tree_view"/>
@@ -250,7 +264,7 @@
         <record id="open_view_product_tree1" model="ir.actions.act_window.view">
             <field name="sequence" eval="2"/>
             <field name="view_mode">tree</field>
-           <field name="view_id" ref="product_product_tree_view"/>
+            <field name="view_id" ref="product_product_tree_view"/>
             <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
@@ -264,8 +278,8 @@
         <record id="open_view_product_kanban1" model="ir.actions.act_window.view">
             <field name="sequence" eval="1"/>
             <field name="view_mode">kanban</field>
-           <field name="view_id" ref="product_kanban_view"/>
-            <field name="act_window_id" ref="product_normal_action"/>
+            <field name="view_id" ref="product_kanban_view"/>
+            <field name="act_window_id" ref="product_normal_action_sell"/>
         </record>
 
         <menuitem id="base.menu_product" name="Products" parent="base.menu_base_partner" sequence="9"/>
@@ -534,7 +548,7 @@
             <field name="model">product.packaging</field>
             <field name="arch" type="xml">
                 <tree string="Packaging">
-                    <field name="sequence" invisible="1"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="ean"/>
                     <field name="qty"/>
                     <field name="ul"/>
@@ -606,7 +620,7 @@
             <field name="model">product.supplierinfo</field>
             <field name="arch" type="xml">
                 <tree string="Supplier Information">
-                    <field name="sequence" string="Seq"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="min_qty"/>
@@ -716,7 +730,10 @@
                             <group>
                                 <group name="delay" string="Delays">
                                     <field name="sale_delay" attrs="{'readonly':[('sale_ok','=',0)]}"/>
-                                    <field name="produce_delay"/>
+                                    <label for="produce_delay"/>
+                                    <div>
+                                        <field name="produce_delay" class="oe_inline"/> days
+                                    </div>
                                     <field name="warranty"/>
                                 </group>
                                 <group name="store" string="Storage Localisation">

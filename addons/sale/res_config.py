@@ -56,7 +56,7 @@ class sale_configuration(osv.osv_memory):
             help ="""Allows you to add delivery methods in sale orders and delivery orders.
                 You can define your own carrier and delivery grids for prices.
                 This installs the module delivery."""),
-        'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
+        'time_unit': fields.many2one('product.uom', 'the default working time unit for services is'),
         'default_picking_policy' : fields.boolean("deliver all at once when all products are available.",
             help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
         'group_sale_pricelist':fields.boolean("use pricelists to adapt your price per customers",

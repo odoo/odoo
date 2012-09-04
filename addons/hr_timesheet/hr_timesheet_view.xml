@@ -77,7 +77,17 @@
                 </search>
             </field>
         </record>
-        
+
+        <record model="ir.actions.act_window" id="act_analytic_cost_revenue">
+            <field name="context">{'search_default_account_id': [active_id], 'default_account_id': active_id, 'search_default_group_date': 1, 'search_default_group_journal': 1}</field>
+            <field name="name">Costs &amp; Revenues</field>
+            <field name="res_model">account.analytic.line</field>
+            <field name="src_model">account.analytic.account</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+        </record>
+
+ 
         <record id="account_analytic_account_timesheet_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
@@ -86,6 +96,12 @@
                 <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_timesheets"/>
                     <label for="use_timesheets"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button string="Costs and Revenues"
+                        name="%(act_analytic_cost_revenue)d"
+                        type="action"/>
+
                 </xpath>
             </field>
         </record>
