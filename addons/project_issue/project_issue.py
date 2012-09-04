@@ -508,7 +508,7 @@ class project_issue(base_stage, osv.osv):
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>converted</b> to task.")
-        return self.message_post(cr, uid, ids, body=message, subtype="converted", context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Project issue <b>created</b>.")

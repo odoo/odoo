@@ -42,10 +42,14 @@
             <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_converted" model="mail.message.subtype">
-            <field name="name">converted</field>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
             <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
             <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
         </record>
         <record id="mail.mail_subtype_email" model="mail.message.subtype">
             <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>

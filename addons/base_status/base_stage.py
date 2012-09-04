@@ -401,13 +401,13 @@ class base_stage(object):
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, subtype="closed", context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
+            msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            self.message_post(cr, uid, [id], body=msg, subtype="cancelled", context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
