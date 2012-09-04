@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+      <record id="note_note_global" model="ir.rule">
+        <field name="name">My notes</field>
+        <field ref="model_note_note" name="model_id"/>
+        <field eval="1" name="global"/>
+        <field name="domain_force">[('follower_ids','=',user.id)]</field>
+      </record>
+</data>
+</openerp>
+
