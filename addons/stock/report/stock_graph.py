@@ -22,6 +22,7 @@ from pychart import *
 import pychart.legend
 import time
 from report.misc import choice_colors
+import tools
 
 #
 # Draw a graph for stocks
@@ -41,7 +42,7 @@ class stock_graph(object):
             product_name=product_name.replace('/', '//')
         if product_id not in self._datas:
             self._datas[product_id] = {}
-        self._names[product_id] = product_name
+        self._names[product_id] = tools.ustr(product_name)
         for (dt,stock) in datas:
             if not dt in self._datas[product_id]:
                 self._datas[product_id][dt]=0
