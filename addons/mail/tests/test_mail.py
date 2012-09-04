@@ -85,6 +85,7 @@ class test_mail(common.TransactionCase):
         self.mail_message = self.registry('mail.message')
         self.mail_notification = self.registry('mail.notification')
         self.mail_followers = self.registry('mail.followers')
+        self.mail_message_subtype = self.registry('mail.message.subtype')
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
@@ -538,3 +539,37 @@ class test_mail(common.TransactionCase):
         msg1.refresh()
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
+        
+    def test_60_message_subtype(self):
+        """ Tests designed for message_subtype. """
+        cr, uid = self.cr, self.uid
+        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
+        user_admin = self.res_users.browse(cr, uid, uid)
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        
+        # 0 - Admin
+        p_a_id = user_admin.partner_id.id
+        # Subscribe #1,
+        self.mail_group_model_id = self.ir_model.search(cr, uid, [('model','=', 'mail.group')])[0]
+        subtype_ids = self.mail_message_subtype.search(cr, uid, [])
+        self.mail_message_subtype.write(cr,uid,subtype_ids,{'model_ids':[(4,self.mail_group_model_id )]})
+        group_pigs.message_subscribe_users([uid])
+
+        # Mail data
+        _subject = 'Pigs'
+        _mail_subject = '%s posted on %s' % (user_admin.name, group_pigs.name)
+        _body1 = 'Pigs rules'
+        _mail_body1 = 'Pigs rules\n<pre>Admin</pre>\n'
+        _mail_bodyalt1 = 'Pigs rules\nAdmin'
+        _body2 = '<html>Pigs rules</html>'
+        _mail_body2 = '<html>Pigs rules\n<pre>Admin</pre>\n</html>'
+        _mail_bodyalt2 = 'Pigs rules\nAdmin\n'
+        filter_subtype_id = self.mail_message_subtype.search(cr, uid, [('default','=',True)])
+        # Post comment with body and subject, comment preference
+        msg_id = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body1, subject=_subject, msg_type='comment',subtype='email')
+        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id)])
+        self.assertTrue(len(notif_ids) >= 1,"subtype is email and show notification on wall")
+        # New post: test automatic subject, signature in html, add a partner, email preference, parent_id previous message
+        msg_id2 = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body2,subject=_subject, msg_type='email', subtype='other')
+        notif_ids2 = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id2)])
+        self.assertTrue(len(notif_ids2) == 0,"subtype is false cannot show notification on wall")
