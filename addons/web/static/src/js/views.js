@@ -1364,7 +1364,8 @@ instance.web.View = instance.web.Widget.extend({
      * like: <form string="" create="false" edit="false" delete="false">
      */
     is_action_enabled: function(action) {
-        return (_.has(this.fields_view.arch.attrs, action)) ? JSON.parse(this.fields_view.arch.attrs[action]) : true;
+        var attrs = this.fields_view.arch.attrs;
+        return (action in attrs) ? JSON.parse(attrs[action]) : true;
     }
 });
 
