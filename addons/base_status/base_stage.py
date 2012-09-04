@@ -297,55 +297,31 @@ class base_stage(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        mail_message = self.pool.get('mail.message')
-        for case in self.browse(cr, uid, ids, context=context):
-            if not destination and not case.email_from:
-                return False
-            if not case.user_id.email:
-                return False
-            if destination and case.section_id.user_id:
-                case_email = case.section_id.user_id.email
-            else:
-                case_email = case.user_id.email
-
-            src = case_email
-            dest = case.user_id.email or ""
-            body = case.description or ""
-            for message in case.message_ids:
-                if message.email_from and message.body:
-                    body = message.body
-                    break
-
-            if not destination:
-                src, dest = dest, case.email_from
-                if body and case.user_id.signature:
-                    if body:
-                        body += '\n\n%s' % (case.user_id.signature)
-                    else:
-                        body = '\n\n%s' % (case.user_id.signature)
-
-            body = self.format_body(body)
-
-            attach_to_send = {}
-
-            if attach:
-                attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
-                attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                attach_to_send = dict(map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send))
-
-            # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-            mail_message.schedule_with_attach(cr, uid,
-                src,
-                [dest],
-                subject,
-                body,
-                model=self._name,
-                reply_to=case.section_id.reply_to,
-                res_id=case.id,
-                attachments=attach_to_send,
-                context=context
-            )
+        if 'message_post' in self:
+            for case in self.browse(cr, uid, ids, context=context):
+                if destination:
+                    recipient_id = case.user_id.partner_id.id
+                else:
+                    if not case.email_from:
+                        return False
+                    recipient_id = self.pool.get('res.partner').find_or_create(cr, uid, case.email_from, context=context)
+                
+                body = case.description or ""
+                for message in case.message_ids:
+                    if message.type == 'email' and message.body:
+                        body = message.body
+                        break
+                body = self.format_body(body)
+                attach_to_send = {}
+                if attach:
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
+                    attach_to_send = dict(map(lambda x: (x['datas_fname'], x['datas'].decode('base64')), attach_to_send))
+ 
+                subject = "Reminder: [%s] %s" % (case.id, case.name)
+                self.message_post(cr, uid, case.id, body=body,
+                    subject=subject, attachments=attach_to_send, 
+                    partner_ids=[recipient_id], context=context)
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
