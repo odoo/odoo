@@ -55,26 +55,12 @@ Once validated, they are visible in the employee's calendar. HR officers can def
             <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_submitted" model="mail.message.subtype">
-            <field name="name">submitted</field>
-            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
-            <field name="default" eval="False"/>
-        </record>    
-        <record id="mail.mail_subtype_pending" model="mail.message.subtype">
-            <field name="name">pending</field>
-            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mail_subtype_double_validated" model="mail.message.subtype">
-            <field name="name">double validated</field>
+        <record id="mail.mail_subtype_approved" model="mail.message.subtype">
+            <field name="name">approved</field>
             <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
         </record>
-        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
-        </record>
-        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
+        <record id="mail.mail_subtype_refused" model="mail.message.subtype">
+            <field name="name">refused</field>
             <field name="model_ids" eval="[(4,ref('hr_holidays.model_hr_holidays'))]"/>
             <field name="default" eval="False"/>
         </record>

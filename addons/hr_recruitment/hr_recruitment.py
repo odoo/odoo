@@ -475,12 +475,12 @@ class hr_applicant(base_stage, osv.Model):
                 self.message_post(cr, uid, [applicant.id], body=message, subtype="closed", context=context)
             else:
                 message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, subtype="closed", context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="hired", context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, subtype="cancelled", context=context)
+        return self.message_post(cr, uid, ids, body=msg, subtype="refused", context=context)
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         message =_("Applicant has been set as <b>new</b>.")
