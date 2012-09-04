@@ -301,10 +301,35 @@ the rule to mark CC(mail to any other person defined in actions)."),
         }
         return self.format_body(body % data)
 
-    def email_send(self, cr, uid, obj, partner_ids, body, context=None):
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
+        """ send email
+            @param self: The object pointer
+            @param cr: the current row, from the database cursor,
+            @param uid: the current user’s ID for security checks,
+            @param email: pass the emails
+            @param emailfrom: Pass name the email From else False
+            @param context: A standard dictionary for contextual values """
+
+        if not emailfrom:
+            emailfrom = tools.config.get('email_from', False)
+
+        if context is None:
+            context = {}
+
+        mail_message = self.pool.get('mail.message')
         body = self.format_mail(obj, body)
-        subject = '[%d] %s' % (obj.id, tools.ustr(obj.name))
-        return obj.message_post(cr, uid, obj.id, subject=name, body=body, partner_ids=partner_ids, context=context)
+        if not emailfrom:
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+                emailfrom = obj.user_id.email
+
+        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        emailfrom = tools.ustr(emailfrom)
+        reply_to = emailfrom
+        if not emailfrom:
+            raise osv.except_osv(_('Error!'),
+                    _("No email ID found for your company address."))
+        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+
 
     def do_check(self, cr, uid, action, obj, context=None):
         """ check Action
@@ -391,23 +416,32 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if action.act_method:
             getattr(model_obj, 'act_method')(cr, uid, [obj.id], action, context)
 
-        # Email: find partner_ids
-        res_partner_obj = self.pool.get('res.partner')
-        partner_ids = []
-        if action.act_mail_to_user and obj._columns.get('user_id') and obj.user_id:
-            partner_ids.append(obj.user_id.partner_id.id)
-        if action.act_mail_to_watchers and action.act_email_cc:
-            partner_ids += [res_partner_obj.find_or_create(cr, uid, mail, context=context)
-                for mail in action.act_email_cc.split(',') if mail]
-        if action.act_mail_to_email and action.act_mail_to_email:
-            partner_ids += [res_partner_obj.find_or_create(cr, uid, mail, context=context)
-                for mail in action.act_mail_to_email.split(',') if mail]
+        emails = []
+        if hasattr(obj, 'user_id') and action.act_mail_to_user:
+            if obj.user_id:
+                emails.append(obj.user_id.email)
+
+        if action.act_mail_to_watchers:
+            emails += (action.act_email_cc or '').split(',')
+        if action.act_mail_to_email:
+            emails += (action.act_mail_to_email or '').split(',')
+
+        locals_for_emails = {
+            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
+            'obj' : obj,
+        }
+
         if action.act_email_to:
-            emails = safe_eval(action.act_email_to, {}, locals_for_emails)
-            partner_ids += [res_partner_obj.find_or_create(cr, uid, mail, context=context)
-                for mail in emails if mail]
-        if partner_ids:
-            self.email_send(cr, uid, obj, partner_ids, action.act_mail_body, context=context)
+            emails.append(safe_eval(action.act_email_to, {}, locals_for_emails))
+
+        emails = filter(None, emails)
+        if len(emails) and action.act_mail_body:
+            emails = list(set(emails))
+            email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
+            emails = tools.email_split(','.join(filter(None, emails)))
+            email_froms = tools.email_split(email_from)
+            if email_froms:
+                self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
         return True
 
     def _action(self, cr, uid, ids, objects, scrit=None, context=None):

@@ -45,6 +45,23 @@ class base_action_rule(osv.osv):
                                               help="Check this if you want the rule to send an email to the partner."),
     }
 
+    def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
+        mail_message = self.pool.get('mail.message')
+        body = self.format_mail(obj, body)
+        if not emailfrom:
+            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+                emailfrom = obj.user_id.email
+
+        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        emailfrom = tools.ustr(emailfrom)
+        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
+            reply_to = obj.section_id.alias_id.name_get()[0][1]
+        else:
+            reply_to = emailfrom
+        if not emailfrom:
+            raise osv.except_osv(_('Error!'), _("There is no email for your company address."))
+        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
+
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)
 
@@ -93,14 +110,16 @@ class base_action_rule(osv.osv):
 
         model_obj.write(cr, uid, [obj.id], write, context)
         super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
+        emails = []
 
-        # Post a message if act_mail_to_partner and act_mail_body
-        if not action.act_mail_body or not action.act_mail_to_partner:
-            return True
-        if obj._columns.get('email_from') and obj.email_from:
-            partner_ids = [self.pool.get('res.partner').find_or_create(cr, uid, obj.email_from, context=context)]
-            self.email_send(cr, uid, obj, partner_ids, action.act_mail_body, context=context)
+        if hasattr(obj, 'email_from') and action.act_mail_to_partner:
+            emails.append(obj.email_from)
+        emails = filter(None, emails)
+        if len(emails) and action.act_mail_body:
+            emails = list(set(emails))
+            self.email_send(cr, uid, obj, emails, action.act_mail_body)
         return True
+
 
     def state_get(self, cr, uid, context=None):
         """Gets available states for crm"""
