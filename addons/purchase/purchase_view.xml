@@ -73,7 +73,7 @@
         parent="base.menu_purchase_root" sequence="6"/>
 
     <record id="action_invoice_pending" model="ir.actions.act_window">
-        <field name="name">Based on Draft Invoices</field>
+        <field name="name">On Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
@@ -95,7 +95,7 @@
         </field>
     </record>
 
-     <menuitem name="Based on Draft Invoices"
+     <menuitem
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
@@ -177,7 +177,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="purchase_confirm" states="draft,sent" string="Confirm Quotation" class="oe_highlight"/>
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
@@ -508,7 +508,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Based on Purchase Order Lines</field>
+            <field name="name">On Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
@@ -562,11 +562,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[@string='Descriptions']" position="before">
-                    <page string="Suppliers" groups="base.group_user">
-                         <field name="seller_ids" context="{'uom_id': uom_id}"/>
-                    </page>
-                </xpath>
+                <group name="procurement" position="after">
+                     <separator string="Suppliers"/>
+                     <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                </group>
             </field>
         </record>
     </data>
