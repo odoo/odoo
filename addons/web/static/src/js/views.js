@@ -749,6 +749,17 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
             case 'toggle_layout_outline':
                 current_view.rendering_engine.toggle_layout_debugging();
                 break;
+            case 'translate':
+                this.do_action({
+                    name: "Technical Translation",
+                    res_model : 'ir.translation',
+                    domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
+                    views: [[false, 'list'], [false, 'form']],
+                    type : 'ir.actions.act_window',
+                    view_type : "list",
+                    view_mode : "list"
+                });
+                break;
             case 'fields':
                 this.dataset.call_and_eval(
                         'fields_get', [false, {}], null, 1).then(function (fields) {
@@ -882,10 +893,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
             'files' : [],
             'other' : []
         };
-        if (this.session.uid === 1) {
-            var item = { label: _t("Translate"), callback: view.on_sidebar_translate, title: _t("Technical translation") };
-            this.items.other.push(item);
-        }
         this.fileupload_id = _.uniqueId('oe_fileupload');
         $(window).on(this.fileupload_id, function() {
             var args = [].slice.call(arguments).slice(1);
@@ -1050,119 +1057,6 @@ instance.web.Sidebar = instance.web.Widget.extend({
     }
 });
 
-instance.web.TranslateDialog = instance.web.Dialog.extend({
-    dialog_title: {toString: function () { return _t("Translations"); }},
-    init: function(view) {
-        // TODO fme: should add the language to fields_view_get because between the fields view get
-        // and the moment the user opens the translation dialog, the user language could have been changed
-        this.view_language = view.session.user_context.lang;
-        this['on_button_' + _t("Save")] = this.on_btn_save;
-        this['on_button_' + _t("Close")] = this.on_btn_close;
-        this._super(view, {
-            width: '80%',
-            height: '80%',
-            destroy_on_close: false,
-        });
-        this.view = view;
-        this.view_type = view.fields_view.type || '';
-        this.$fields_form = null;
-        this.$view_form = null;
-        this.$sidebar_form = null;
-        this.translatable_fields_keys = _.map(this.view.translatable_fields || [], function(i) { return i.name; });
-        this.languages = null;
-        this.languages_loaded = $.Deferred();
-        (new instance.web.DataSetSearch(this, 'res.lang', this.view.dataset.get_context(),
-            [['translatable', '=', '1']])).read_slice(['code', 'name'], { sort: 'id' }).then(this.on_languages_loaded);
-    },
-    start: function() {
-        var self = this;
-        this._super();
-        return $.when(this.languages_loaded).then(function() {
-            self.$el.html(instance.web.qweb.render('TranslateDialog', { widget: self }));
-            self.$fields_form = self.$el.find('.oe_translation_form');
-            self.$fields_form.find('.oe_trad_field').change(function() {
-                $(this).toggleClass('touched', ($(this).val() != $(this).attr('data-value')));
-            });
-        });
-    },
-    on_languages_loaded: function(langs) {
-        this.languages = langs;
-        this.languages_loaded.resolve();
-    },
-    do_load_fields_values: function(callback) {
-        var self = this,
-            deffered = [];
-        this.$fields_form.find('.oe_trad_field').val('').removeClass('touched');
-        _.each(self.languages, function(lg) {
-            var deff = $.Deferred();
-            deffered.push(deff);
-            var callback = function(values) {
-                _.each(self.translatable_fields_keys, function(f) {
-                    var value = values[0][f] || '';
-                    self.$fields_form.find('.oe_trad_field[name="' + lg.code + '-' + f + '"]').val(value).attr('data-value', value);
-                });
-                deff.resolve();
-            };
-            if (lg.code === self.view_language) {
-                var values = {};
-                _.each(self.translatable_fields_keys, function(field) {
-                    values[field] = self.view.fields[field].get_value();
-                });
-                callback([values]);
-            } else {
-                self.view.dataset.read_ids([self.view.datarecord.id], self.translatable_fields_keys, {
-                    context: { 'lang': lg.code }
-                }).then(callback);
-            }
-        });
-        $.when.apply(null, deffered).then(callback);
-    },
-    open: function(field) {
-        var self = this;
-        this._super();
-        $.when(this.languages_loaded).then(function() {
-            if (self.view.translatable_fields && self.view.translatable_fields.length) {
-                self.do_load_fields_values(function() {
-                    if (field) {
-                        var $field_input = self.$el.find('tr[data-field="' + field.name + '"] td:nth-child(2) *:first-child');
-                        self.$el.scrollTo($field_input);
-                        $field_input.focus();
-                    }
-                });
-            } else {
-                sup.call(self);
-            }
-        });
-    },
-    on_btn_save: function() {
-        var trads = {};
-        var self = this;
-        var trads_mutex = new $.Mutex();
-        self.$fields_form.find('.oe_trad_field.touched').each(function() {
-            var field = $(this).attr('name').split('-');
-            if (!trads[field[0]]) {
-                trads[field[0]] = {};
-            }
-            trads[field[0]][field[1]] = $(this).val();
-        });
-        _.each(trads, function(data, code) {
-            if (code === self.view_language) {
-                _.each(data, function(value, field) {
-                    self.view.fields[field].set_value(value);
-                });
-            }
-            trads_mutex.exec(function() {
-                return self.view.dataset.write(self.view.datarecord.id, data, { context : { 'lang': code } });
-            });
-        });
-        this.close();
-        return trads_mutex;
-    },
-    on_btn_close: function() {
-        this.close();
-    }
-});
-
 instance.web.View = instance.web.Widget.extend({
     // name displayed in view switchers
     display_name: '',
@@ -1213,12 +1107,6 @@ instance.web.View = instance.web.Widget.extend({
             action: null,
             action_views_ids: {}
         });
-    },
-    open_translate_dialog: function(field) {
-        if (!this.translate_dialog) {
-            this.translate_dialog = new instance.web.TranslateDialog(this);
-        }
-        this.translate_dialog.open(field);
     },
     /**
      * Fetches and executes the action identified by ``action_data``.
@@ -1337,16 +1225,6 @@ instance.web.View = instance.web.Widget.extend({
     },
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
-    },
-    on_sidebar_translate: function() {
-        return this.do_action({
-            res_model : 'ir.translation',
-            domain : [['type', '!=', 'object'], '|', ['name', '=', this.dataset.model], ['name', 'ilike', this.dataset.model + ',']],
-            views: [[false, 'list'], [false, 'form']],
-            type : 'ir.actions.act_window',
-            view_type : "list",
-            view_mode : "list"
-        });
     },
     sidebar_context: function () {
         return $.when();
