@@ -388,22 +388,23 @@
             action="action_hr_evaluation_interview_tree"/>
 
       <!-- Email Compose message Action-->
+      <!-- TDE TODO: add context values -->
       <act_window
-      id="evaluation_reminders" name="Appraisal Reminders"
-      res_model="mail.compose.message"
-      src_model="hr.evaluation.interview"
-      view_type="form" view_mode="form"
-      target="new" multi="True"
-      key2="client_action_multi"
-      context="{'mail.compose.message.mode':'mass_mail'}"/>
+        id="evaluation_reminders" name="Appraisal Reminders"
+        res_model="mail.compose.message"
+        src_model="hr.evaluation.interview"
+        view_type="form" view_mode="form"
+        target="new" multi="True"
+        key2="client_action_multi"
+        context="{'default_composition_mode': 'mass_mail'}"/>
 
       <!-- Appraisal Interviews Button on Employee Form -->
       <act_window
-      context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
-      id="act_hr_employee_2_hr__evaluation_interview"
-      name="Appraisal Interviews"
-      res_model="hr.evaluation.interview"
-      src_model="hr.employee"/>
+        context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
+        id="act_hr_employee_2_hr__evaluation_interview"
+        name="Appraisal Interviews"
+        res_model="hr.evaluation.interview"
+        src_model="hr.employee"/>
 
     </data>
 </openerp>
