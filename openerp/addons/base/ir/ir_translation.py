@@ -330,18 +330,18 @@ class ir_translation(osv.osv):
 
     def translate_fields(self, cr, uid, model, id, field=None, context=None):
         trans_model = self.pool.get(model)
-        domain = ['&', ('res_id', '=', id), ('name', 'ilike', model + ',')]
-        langs_ids = self.pool.get('res.lang').search(cr, uid, [], context=context)
-        langs = [lg.get('code') for lg in self.pool.get('res.lang').read(cr, uid, langs_ids, ['code'], context=context)]
-        main_lang = langs.pop(0)
+        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
+        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
+        langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
+        main_lang = 'en_US'
         translatable_fields = []
         for f, info in trans_model._all_columns.items():
             if info.column.translate:
                 if info.parent_model:
-                    domain_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
-                    translatable_fields.append({ 'name': f, 'id': domain_id, 'model': info.parent_model })
+                    parent_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
+                    translatable_fields.append({ 'name': f, 'id': parent_id, 'model': info.parent_model })
                     domain.insert(0, '|')
-                    domain.extend(['&', ('res_id', '=', domain_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
                 else:
                     translatable_fields.append({ 'name': f, 'id': id, 'model': model })
         if len(langs):
@@ -351,22 +351,21 @@ class ir_translation(osv.osv):
                 for f in translatable_fields:
                     # Check if record exists, else create it (at once)
                     sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
-                        SELECT %s, %s, %s, 'field', %s, %s WHERE NOT EXISTS
-                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s);
-                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s;
+                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
+                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
+                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
                         """
-                    src = record[f['name']]
+                    src = record[f['name']] or None
                     name = "%s,%s" % (f['model'], f['name'])
                     cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
 
         action = {
             'name': 'Translate',
-            'view_type': 'list',
-            'view_mode': 'list',
             'res_model': 'ir.translation',
             'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
             'domain': domain,
-            'views': [(False, 'list'), (False, 'form')],
         }
         if field:
             info = trans_model._all_columns[field]
