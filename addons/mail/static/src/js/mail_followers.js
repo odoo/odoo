@@ -9,7 +9,7 @@ openerp_mail_followers = function(session, mail) {
      * mail_followers Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of a list of records as a vetical
+     * This widget handles the display of a list of records as a vertical
      * list, with an image on the left. The widget itself is a floatting
      * right-sided box.
      * This widget is mainly used to display the followers of records
@@ -65,25 +65,17 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            if (this.getParent().fields.message_is_follower === undefined) {
-                // TDE: TMP, need to change all form views
-                this.message_is_follower = false;
-            }
-            else {
-                this.message_is_follower = this.getParent().fields.message_is_follower.get_value();
-            }
             return this.fetch_followers(value_);
         },
 
         fetch_followers: function (value_) {
-            return this.ds_follow.call('read', [value_ || this.get_value(), ['name']]).then(this.proxy('display_followers'));
+            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', 'user_ids']]).then(this.proxy('display_followers'));
         },
 
-        /**
-         * Display the followers.
-         * TODO: replace the is_follower check by fields read */
+        /** Display the followers, evaluate is_follower directly */
         display_followers: function (records) {
             var self = this;
+            this.message_is_follower = _.indexOf(_.flatten(_.pluck(records, 'user_ids')), this.session.uid) != -1;
             var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
             this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
             _(records).each(function (record) {
@@ -99,11 +91,13 @@ openerp_mail_followers = function(session, mail) {
         },
 
         do_follow: function () {
-            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
+            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
+            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
         },
 
         do_unfollow: function () {
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
+            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
         },
     });
 };

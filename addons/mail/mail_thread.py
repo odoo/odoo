@@ -158,17 +158,16 @@ class mail_thread(osv.AbstractModel):
             'mail_followers', 'res_id', 'partner_id',
             reference_column='res_model', string='Followers'),
         'message_comment_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model','=',self._name),('type','in',('comment','email'))],
-            string='Related Messages', 
-            help="All messages related to the current document."),
+            domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
+            string='Comments and emails', 
+            help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
-            string='Related Messages', 
-            help="All messages related to the current document."),
+            string='Messages', 
+            help="Messages and communication history"),
         'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
-            string='Has Unread Messages', type='boolean',
-            help="When checked, new messages require your attention.",
-            multi="_get_message_data"),
+            type='boolean', string='Unread Messages', multi="_get_message_data",
+            help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
             type='text', string='Summary', multi="_get_message_data",
             help="Holds the Chatter summary (number of messages, ...). "\
@@ -181,7 +180,7 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """ Override of create to subscribe the current user. """
+        """ Override to subscribe the current user. """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
@@ -215,11 +214,8 @@ class mail_thread(osv.AbstractModel):
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message. """
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
-        mails = tools.email_split(s)
-        result = []
-        for email in mails:
-            result += self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)
-        return result
+        return [partner_id for email in tools.email_split(s)
+                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)]
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
@@ -551,16 +547,16 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. As this module inherit from \
-                        mail.thread, the message will be managed by this \
-                        module instead of by the res.log mechanism. Please \
-                        use the mail.thread OpenChatter API instead of the \
-                        now deprecated res.log.")
+        _logger.warning("log() is deprecated. As this module inherit from "\
+                        "mail.thread, the message will be managed by this "\
+                        "module instead of by the res.log mechanism. Please "\
+                        "use mail_thread.message_post() instead of the "\
+                        "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=False,
-            msg_type='notification', parent_id=False, attachments=None, context=None, **kwargs):
-        """ Post a new message in an existing message thread, returning the new
+            type='notification', parent_id=False, attachments=None, context=None, **kwargs):
+        """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
 
@@ -568,7 +564,7 @@ class mail_thread(osv.AbstractModel):
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str subject: optional subject
-            :param str msg_type: mail_message.type
+            :param str type: mail_message.type
             :param int parent_id: optional ID of parent message in this thread
             :param tuple(str,str) attachments: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
@@ -601,7 +597,7 @@ class mail_thread(osv.AbstractModel):
             'res_id': thread_id or False,
             'body': body,
             'subject': subject,
-            'type': msg_type,
+            'type': type,
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
         })
@@ -615,40 +611,37 @@ class mail_thread(osv.AbstractModel):
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
-        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
-        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        if not user_ids: user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Add partners to the records followers.
-
             :param partner_ids: a list of partner_ids to subscribe
-            :param return: new value of followers, for Chatter
+            :param return: new value of followers if read_back key in context
         """
         self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
-        # TDE: temp, must check followers widget
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         return []
-        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, unsubscribe uid instead. """
-        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
-        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        if not user_ids: user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers.
-
             :param partner_ids: a list of partner_ids to unsubscribe
-            :param return: new value of followers, for Chatter
+            :param return: new value of followers if read_back key in context
         """
         self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
-        # TDE: temp, must check followers widget
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         return []
-        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
     # Thread state
@@ -679,4 +672,3 @@ class mail_thread(osv.AbstractModel):
                 partner_id = %s
         ''', (ids, self._name, partner_id))
         return True
-

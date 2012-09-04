@@ -250,7 +250,7 @@ class test_mail(common.TransactionCase):
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
         # CASE1: post comment, body and subject specified
-        msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, msg_type='comment')
+        msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment')
         message = self.mail_message.browse(cr, uid, msg_id)
         mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
         mail = self.mail_mail.browse(cr, uid, mail_ids[0])
@@ -280,7 +280,7 @@ class test_mail(common.TransactionCase):
 
         # CASE2: post an email with attachments, parent_id, partner_ids
         # TESTS: automatic subject, signature in body_html, attachments propagation
-        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, msg_type='email',
+        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         mail_ids = self.mail_mail.search(cr, uid, [], limit=1)

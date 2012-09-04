@@ -44,10 +44,6 @@ class mail_group(osv.Model):
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-
     _columns = {
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
@@ -88,6 +84,10 @@ class mail_group(osv.Model):
     def _get_default_employee_group(self, cr, uid, context=None):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         return ref and ref[1] or False
+
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     def _get_menu_parent(self, cr, uid, context=None):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
@@ -156,3 +156,12 @@ class mail_group(osv.Model):
             self._subscribe_users(cr, uid, ids, vals.get('group_ids'), context=context)
         return result
 
+    def action_follow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_subscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_subscribe_users(cr, uid, ids, context=context)
+
+    def action_unfollow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_unsubscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_unsubscribe_users(cr, uid, ids, context=context)

@@ -269,7 +269,7 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], msg_type='comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 
