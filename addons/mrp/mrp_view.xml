@@ -345,23 +345,30 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
+                    <label for="product_id" class="oe_edit_only"/>
                     <h1>
                         <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
                     </h1>
+                    <group>
+                        <group>
+                            <label for="product_qty" class="oe_edit_only"/>
+                            <h2>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                            </h2>
+                        </group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code" string="Reference"/>
+                            <field name="type"/>
+                        </group>
+                    </group>
                     <div groups="mrp.group_mrp_routings">
                         <label for="routing_id" class="oe_edit_only"/>
                         <h2><field name="routing_id" class="oe_inline"/></h2>
                     </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="code" string="Reference"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
                             <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
                                 When processing a sale order for this product, the delivery order
                                 will contain the raw materials, instead of the finished product.
