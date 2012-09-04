@@ -25,6 +25,7 @@ import datetime, time
 from itertools import groupby
 from operator import itemgetter
 
+import math
 import netsvc
 from osv import fields, osv
 from tools.translate import _
@@ -112,7 +113,7 @@ class hr_holidays(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Description', required=True, size=64),
+        'name': fields.char('Description', size=64),
         'state': fields.selection([('draft', 'To Submit'), ('cancel', 'Cancelled'),('confirm', 'To Approve'), ('refuse', 'Refused'), ('validate1', 'Second Approval'), ('validate', 'Approved')],
             'State', readonly=True, help='The state is set to \'To Submit\', when a holiday request is created.\
             \nThe state is \'To Approve\', when holiday request is confirmed by user.\
@@ -123,8 +124,6 @@ class hr_holidays(osv.osv):
         'date_to': fields.datetime('End Date', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'holiday_status_id': fields.many2one("hr.holidays.status", "Leave Type", required=True,readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'employee_id': fields.many2one('hr.employee', "Employee", select=True, invisible=False, readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help='Leave Manager can let this field empty if this leave request/allocation is for every employee'),
-        #'manager_id': fields.many2one('hr.employee', 'Leave Manager', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
-        #'notes': fields.text('Notes',readonly=True, states={'draft':[('readonly',False)]}),
         'manager_id': fields.many2one('hr.employee', 'First Approval', invisible=False, readonly=True, help='This area is automatically filled by the user who validate the leave'),
         'notes': fields.text('Reasons',readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
         'number_of_days_temp': fields.float('Number of Days', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
@@ -134,8 +133,8 @@ class hr_holidays(osv.osv):
         'parent_id': fields.many2one('hr.holidays', 'Parent'),
         'linked_request_ids': fields.one2many('hr.holidays', 'parent_id', 'Linked Requests',),
         'department_id':fields.related('employee_id', 'department_id', string='Department', type='many2one', relation='hr.department', readonly=True, store=True),
-        'category_id': fields.many2one('hr.employee.category', "Category", help='Category of Employee'),
-        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Type', help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category', required=True),
+        'category_id': fields.many2one('hr.employee.category', "Category", help='Category of Employee', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}),
+        'holiday_type': fields.selection([('employee','By Employee'),('category','By Employee Category')], 'Allocation Mode', readonly=True, states={'draft':[('readonly',False)], 'confirm':[('readonly',False)]}, help='By Employee: Allocation/Request for individual Employee, By Employee Category: Allocation/Request for group of employees in category', required=True),
         'manager_id2': fields.many2one('hr.employee', 'Second Approval', readonly=True, help='This area is automaticly filled by the user who validate the leave with second level (If Leave type need second validation)'),
         'double_validation': fields.related('holiday_status_id', 'double_validation', type='boolean', relation='hr.holidays.status', string='Apply Double Validation'),
     }
@@ -147,15 +146,10 @@ class hr_holidays(osv.osv):
         'holiday_type': 'employee'
     }
     _sql_constraints = [
-        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "You have to select an employee or a category."),
+        ('type_value', "CHECK( (holiday_type='employee' AND employee_id IS NOT NULL) or (holiday_type='category' AND category_id IS NOT NULL))", "The employee or employee category of this request is missing."),
         ('date_check2', "CHECK ( (type='add') OR (date_from <= date_to))", "The start date must be before the end date !"),
         ('date_check', "CHECK ( number_of_days_temp >= 0 )", "The number of days must be greater than 0 !"),
     ]
-    
-    def create(self, cr, uid, vals, context=None):
-        obj_id = super(hr_holidays, self).create(cr, uid, vals, context=context)
-        self.create_notificate(cr, uid, [obj_id], context=context)
-        return obj_id
     
     def _create_resource_leave(self, cr, uid, leaves, context=None):
         '''This method will create entry in resource calendar leave object at the time of holidays validated '''
@@ -201,8 +195,8 @@ class hr_holidays(osv.osv):
 
     def unlink(self, cr, uid, ids, context=None):
         for rec in self.browse(cr, uid, ids, context=context):
-            if rec.state<>'draft':
-                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is not in draft state !'))
+            if rec.state not in ['draft', 'cancel', 'confirm']:
+                raise osv.except_osv(_('Warning!'),_('You cannot delete a leave which is in %s state!')%(rec.state))
         return super(hr_holidays, self).unlink(cr, uid, ids, context)
 
     def onchange_date_from(self, cr, uid, ids, date_to, date_from):
@@ -210,7 +204,7 @@ class hr_holidays(osv.osv):
         if date_to and date_from:
             diff_day = self._get_number_of_days(date_from, date_to)
             result['value'] = {
-                'number_of_days_temp': round(diff_day)+1
+                'number_of_days_temp': round(math.floor(diff_day))+1
             }
             return result
         result['value'] = {
@@ -244,29 +238,30 @@ class hr_holidays(osv.osv):
             self.unlink(cr, uid, to_unlink, context=context)
         return True
 
-    def holidays_validate(self, cr, uid, ids, context=None):
+    def holidays_first_validate(self, cr, uid, ids, context=None):
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        self.holidays_validate_notificate(cr, uid, ids, context=context)
+        self.holidays_first_validate_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'validate1', 'manager_id': manager})
 
-    def holidays_validate2(self, cr, uid, ids, context=None):
+    def holidays_validate(self, cr, uid, ids, context=None):
         self.check_holidays(cr, uid, ids, context=context)
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
         self.write(cr, uid, ids, {'state':'validate'})
         data_holiday = self.browse(cr, uid, ids)
-        holiday_ids = []
         for record in data_holiday:
-            if record.holiday_status_id.double_validation:
-                holiday_ids.append(record.id)
+            if record.double_validation:
+                self.write(cr, uid, [record.id], {'manager_id2': manager})
+            else:
+                self.write(cr, uid, [record.id], {'manager_id': manager})
             if record.holiday_type == 'employee' and record.type == 'remove':
                 meeting_obj = self.pool.get('crm.meeting')
                 meeting_vals = {
-                    'name': record.name,
+                    'name': record.name or _('Leave Request'),
                     'categ_ids': record.holiday_status_id.categ_id and [(6,0,[record.holiday_status_id.categ_id.id])] or [],
                     'duration': record.number_of_days_temp * 8,
                     'description': record.notes,
@@ -301,25 +296,27 @@ class hr_holidays(osv.osv):
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'confirm', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'validate', cr)
                     wf_service.trg_validate(uid, 'hr.holidays', leave_id, 'second_validate', cr)
-        if holiday_ids:
-            self.holidays_valid2_notificate(cr, uid, holiday_ids, context=context)
-            self.write(cr, uid, holiday_ids, {'manager_id2': manager})
+        self.holidays_validate_notificate(cr, uid, ids, context=context)
         return True
 
     def holidays_confirm(self, cr, uid, ids, context=None):
         self.check_holidays(cr, uid, ids, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
+            if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
+                self.message_subscribe(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
         self.holidays_confirm_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
-    def holidays_refuse(self, cr, uid, ids, approval, context=None):
+    def holidays_refuse(self, cr, uid, ids, context=None):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])
         manager = ids2 and ids2[0] or False
-        if approval == 'first_approval':
-            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id': manager})
-        else:
-            self.write(cr, uid, ids, {'state': 'refuse', 'manager_id2': manager})
-        self.holidays_refuse_notificate(cr, uid, ids, approval, context=context)
+        for holiday in self.browse(cr, uid, ids, context=context):
+            if holiday.state == 'validate1':
+                self.write(cr, uid, [holiday.id], {'state': 'refuse', 'manager_id': manager})
+            else:
+                self.write(cr, uid, [holiday.id], {'state': 'refuse', 'manager_id2': manager})
+        self.holidays_refuse_notificate(cr, uid, ids, context=context)
         self.holidays_cancel(cr, uid, ids, context=context)
         return True
 
@@ -333,7 +330,7 @@ class hr_holidays(osv.osv):
             # If a category that created several holidays, cancel all related
             wf_service = netsvc.LocalService("workflow")
             for request in record.linked_request_ids or []:
-                wf_service.trg_validate(uid, 'hr.holidays', request.id, 'cancel', cr)
+                wf_service.trg_validate(uid, 'hr.holidays', request.id, 'refuse', cr)
 
         self._remove_resource_leave(cr, uid, ids, context=context)
         return True
@@ -367,39 +364,33 @@ class hr_holidays(osv.osv):
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, ids, 
-                        _("The %s request has been <b>created</b> and is waiting for confirmation.")
-                        % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
+                _("The request has been <b>created</b> and is waiting confirmation."), context=context)
         return True
     
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id], _("The %s request has been <b>confirmed</b> and is waiting for validation by the manager.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
+            self.message_post(cr, uid, [obj.id],
+                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), context=context)
     
+    def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id],
+                _("The request has been <b>approved</b>. A second validation is necessary and is now pending."), context=context)
+            
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            if obj.holiday_status_id.double_validation:
+            if obj.double_validation:
                 self.message_post(cr, uid, [obj.id], 
-                    _("The %s request has been <b>approved</b>. A second validation is necessary and is now pending.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
+                    _("The request has been <b>double validated</b>. The validation process is now over."), context=context)
             else:
-                self.message_post(cr, uid, [obj.id], 
-                    _("The %s request has been <b>approved</b>. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
+                self.message_post(cr, uid, [obj.id],
+                    _("The request has been <b>approved</b>. The validation process is now over."), context=context)
     
-    def holidays_valid2_notificate(self, cr, uid, ids, context=None):
+    def holidays_refuse_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id], 
-                    _("The %s request has been <b>double validated</b>. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
-    
-    def holidays_refuse_notificate(self, cr, uid, ids, approval, context=None):
-        for obj in self.browse(cr, uid, ids):
-            self.message_post(cr, uid, [obj.id], 
-                    _("The %s request has been <b>refused</b>. The validation process is now over.")
-                    % ('leave' if obj.type == 'remove' else 'allocation',), context=context)
-    
-hr_holidays()
+            self.message_post(cr, uid, [obj.id],
+                _("The request has been <b>refused</b>. The validation process is now over."),  context=context)
+
 
 class resource_calendar_leaves(osv.osv):
     _inherit = "resource.calendar.leaves"

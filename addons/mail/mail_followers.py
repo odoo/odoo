@@ -102,12 +102,7 @@ class mail_notification(osv.Model):
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
         if signature:
-            signature_block = u'\n<pre>%s</pre>\n' % signature
-            insertion_point = body_html.find('</html>')
-            if insertion_point > -1:
-                body_html = body_html[:insertion_point] + signature_block + body_html[insertion_point:]
-            else:
-                body_html += signature_block
+            body_html = tools.append_content_to_html(body_html, signature)
 
         towrite = {
             'mail_message_id': msg.id,
