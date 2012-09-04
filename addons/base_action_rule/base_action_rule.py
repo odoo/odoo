@@ -320,7 +320,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
                     'subject': '[%d] %s' % (obj.id, tools.ustr(obj.name)),
                     'body_html': '<pre>%s</pre>' % body,
                     'res_id': obj.id,
-                    'model': obj._table
+                    'model': obj._table_name,
+                    'auto_delete': True
                 }, context=context)
 
 
