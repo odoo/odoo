@@ -166,5 +166,34 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="lot_stock_id" ref="stock_location_stock"/>
             <field name="lot_output_id" ref="stock_location_output"/>
         </record>
+
+        <!--
+    Mail: mail.message.subtype
+    -->
+        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
+        </record>
+        <record id="mail.mail_subtype_delivered" model="mail.message.subtype">
+            <field name="name">delivered</field>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_out'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_received" model="mail.message.subtype">
+            <field name="name">received</field>
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('stock.model_stock_picking_in')),(4,ref('stock.model_stock_picking_out'))]"/>
+        </record>
     </data>
 </openerp>
