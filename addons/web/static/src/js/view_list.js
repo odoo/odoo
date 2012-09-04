@@ -1995,7 +1995,7 @@ instance.web.list.Column = instance.web.Class.extend({
         if (!(aggregation_func in this)) {
             return {};
         }
-        var C = function (label, fn) {
+        var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;
         };
