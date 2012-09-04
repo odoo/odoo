@@ -399,7 +399,6 @@
             action="action_hr_evaluation_interview_tree"/>
 
       <!-- Email Compose message Action-->
-      <!-- TDE TODO: add context values -->
       <act_window
         id="evaluation_reminders" name="Appraisal Reminders"
         res_model="mail.compose.message"
@@ -407,7 +406,9 @@
         view_type="form" view_mode="form"
         target="new" multi="True"
         key2="client_action_multi"
-        context="{'default_composition_mode': 'mass_mail'}"/>
+        context="{'default_composition_mode': 'mass_mail',
+                    'default_body_text': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',
+                    'default_subject': 'Reminder to fill up Survey'}"/>
 
       <!-- Appraisal Interviews Button on Employee Form -->
       <act_window

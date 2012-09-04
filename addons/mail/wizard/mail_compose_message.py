@@ -81,7 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
