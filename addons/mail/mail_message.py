@@ -135,7 +135,7 @@ class mail_message(osv.Model):
     _defaults = {
         'type': 'email',
         'date': lambda *a: fields.datetime.now(),
-        'author_id': lambda s,cr,uid,ctx={}: self._get_default_author(cr, uid, ctx),
+        'author_id': lambda s,cr,uid,ctx={}: s._get_default_author(cr, uid, ctx),
         'body': '',
     }
 
