@@ -460,6 +460,40 @@ You can automatically receive job application though an email gateway, see the H
         <field name="alias_model_id" ref="model_hr_applicant"/>
         <field name="alias_user_id" ref="base.user_root"/>
     </record>
-    
+
+    <!--Data for the sub type -->
+    <record id="mail.mail_subtype_new" model="mail.message.subtype">
+        <field name="name">new</field>
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+        <field name="name">closed</field>
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+    </record>
+    <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+        <field name="name">cancelled</field>
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="default" eval="False"/>
+        </record>
+    <record id="mail.mail_subtype_stage_change" model="mail.message.subtype">
+        <field name="name">stage change</field>
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_in_progress" model="mail.message.subtype">
+        <field name="name">in progress</field>
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.mail_subtype_email" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+    </record>
+    <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+    </record>
+    <record id="mail.mail_subtype_other" model="mail.message.subtype">
+        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+    </record>    
 </data>
 </openerp>

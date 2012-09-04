@@ -457,14 +457,14 @@ class hr_applicant(base_stage, osv.Model):
         """ Override of the (void) default notification method. """
         if not stage_id: return True
         stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change", context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been set <b>in progress</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="in progress", context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         if context is None:
@@ -472,23 +472,23 @@ class hr_applicant(base_stage, osv.Model):
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
-                self.message_post(cr, uid, [applicant.id], body=message, context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="closed", context=context)
             else:
                 message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="closed", context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, subtype="cancelled", context=context)
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         message =_("Applicant has been set as <b>new</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="new", context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been <b>created</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="new", context=context)
 
 
 class hr_job(osv.osv):
