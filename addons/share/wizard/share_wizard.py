@@ -775,8 +775,8 @@ class share_wizard(osv.TransientModel):
             if res_id <= 0:
                 raise osv.except_osv(_('Record id not found'), _('The share engine has not been able to fetch a record_id for your invitation.'))
             self.pool.get(model.model).message_subscribe(cr, uid, [res_id], new_ids + existing_ids, context=context)
-            self.send_invite_email(cr, uid, wizard_data, context=context)
-            self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
+            # self.send_invite_email(cr, uid, wizard_data, context=context)
+            # self.send_invite_note(cr, uid, model.model, res_id, wizard_data, context=context)
         
         # CLOSE
         #  A. Not invite: as before
@@ -820,9 +820,10 @@ class share_wizard(osv.TransientModel):
             elif tmp_idx == len(wizard_data.result_line_ids)-2:
                 body += ' and'
         body += '.'
-        return self.pool.get(model_name).message_post(cr, uid, [res_id], _('System Notification'), body, context=context)
+        return self.pool.get(model_name).message_post(cr, uid, [res_id], body=body, context=context)
     
     def send_invite_email(self, cr, uid, wizard_data, context=None):
+        # TDE Note: not updated because will disappear
         message_obj = self.pool.get('mail.message')
         notification_obj = self.pool.get('mail.notification')
         user = self.pool.get('res.users').browse(cr, UID_ROOT, uid)
