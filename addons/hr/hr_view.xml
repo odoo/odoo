@@ -198,25 +198,6 @@
             </field>
         </record>
 
-        <record id="open_view_employee_list_my_kanban" model="ir.actions.act_window.view">
-            <field name="sequence" eval="0"/>
-            <field name="view_mode">kanban</field>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record>
-        <record id="open_view_employee_list_my_tree2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="1"/>
-            <field name="view_mode">tree</field>
-            <field name="view_id" ref="view_employee_tree"/>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record>
-
-        <record id="open_view_employee_list_my_form2" model="ir.actions.act_window.view">
-            <field name="sequence" eval="2"/>
-            <field name="view_mode">form</field>
-            <field name="view_id" ref="view_employee_form"/>
-            <field name="act_window_id" ref="open_view_employee_list_my"/>
-        </record>
-
         <menuitem action="open_view_employee_list_my" id="menu_open_view_employee_list_my" sequence="3" parent="menu_hr_main"/>
 
         <record id="ir_ui_view_sc_employee" model="ir.ui.view_sc">
