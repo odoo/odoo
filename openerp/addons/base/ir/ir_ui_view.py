@@ -78,6 +78,8 @@ class view(osv.osv):
         'field_parent': fields.char('Child Field',size=64),
         'xml_id': fields.function(osv.osv.get_xml_id, type='char', size=128, string="External ID",
                                   help="ID of the view defined in xml file"),
+        'groups_id': fields.many2many('res.groups', 'ir_ui_view_group_rel', 'view_id', 'group_id',
+            string='Groups', help="If this field is empty, the view applies to all users. Otherwise, the view applies to the users of those groups only."),
     }
     _defaults = {
         'arch': '<?xml version="1.0"?>\n<tree string="My view">\n\t<field name="name"/>\n</tree>',
@@ -167,20 +169,25 @@ class view(osv.osv):
            :rtype: list of tuples
            :return: [(view_arch,view_id), ...]
         """
+        user_groups = frozenset(self.pool.get('res.users').browse(cr, 1, uid, context).groups_id)
         if self.pool._init:
             # Module init currently in progress, only consider views from modules whose code was already loaded 
-            query = """SELECT v.arch, v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
+            query = """SELECT v.id FROM ir_ui_view v LEFT JOIN ir_model_data md ON (md.model = 'ir.ui.view' AND md.res_id = v.id)
                        WHERE v.inherit_id=%s AND v.model=%s AND md.module in %s  
                        ORDER BY priority"""
             query_params = (view_id, model, tuple(self.pool._init_modules))
         else:
             # Modules fully loaded, consider all views
-            query = """SELECT v.arch, v.id FROM ir_ui_view v
+            query = """SELECT v.id FROM ir_ui_view v
                        WHERE v.inherit_id=%s AND v.model=%s  
                        ORDER BY priority"""
             query_params = (view_id, model)
         cr.execute(query, query_params)
-        return cr.fetchall()
+        view_ids = [v[0] for v in cr.fetchall()]
+        # filter views based on user groups
+        return [(view.arch, view.id)
+                for view in self.browse(cr, 1, view_ids, context)
+                if not (view.groups_id and user_groups.isdisjoint(view.groups_id))]
 
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):

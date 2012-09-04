@@ -599,8 +599,15 @@
                             <field name="xml_id"/>
                         </group>
                     </group>
-                    <field name="arch"/>
-                  </sheet>  
+                    <notebook>
+                        <page string="Architecture">
+                            <field name="arch"/>
+                        </page>
+                        <page string="Groups">
+                            <field name="groups_id"/>
+                        </page>
+                    </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
