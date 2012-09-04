@@ -471,18 +471,10 @@ property or property parameter."),
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of attendee’s IDs.
         @param email_from: Email address for user sending the mail
-        @param context: A standard dictionary for contextual values
         @return: True
         """
-        if context is None:
-            context = {}
-
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -508,17 +500,18 @@ property or property parameter."),
                 }
                 body = html_invitation % body_vals
                 if mail_to and email_from:
-                    attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    mail_message.schedule_with_attach(cr, uid,
-                        email_from,
-                        mail_to,
-                        sub,
-                        body,
-                        attachments=attach and {'invitation.ics': attach} or None,
-                        content_subtype='html',
-                        reply_to=email_from,
-                        context=context
-                    )
+                    ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
+                    vals = {'email_from': email_from,
+                            'email_to': mail_to,
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'auto_delete': True}
+                    if ics_file:
+                        vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
+                                                        'datas_fname': 'invitation.ics',
+                                                        'datas': str(ics_file).encode('base64')})]
+                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
