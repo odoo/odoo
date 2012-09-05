@@ -126,7 +126,6 @@ openerp.locadis = function(instance){
                         }
                     }
                     self.set({'cashRegisters' : new module.CashRegisterCollection(self.get('bank_statements'))});
-                    self.log_loaded_data();
                 });
             
         
