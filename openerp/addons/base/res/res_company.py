@@ -24,6 +24,7 @@ from osv import fields
 import os
 import tools
 import openerp
+from openerp import SUPERUSER_ID
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
@@ -156,7 +157,7 @@ class res_company(osv.osv):
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,

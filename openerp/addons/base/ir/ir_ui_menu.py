@@ -28,6 +28,7 @@ import tools
 import openerp.modules
 from osv import fields, osv
 from tools.translate import _
+from openerp import SUPERUSER_ID
 
 def one_in(setA, setB):
     """Check the presence of an element of setA in setB
@@ -59,7 +60,7 @@ class ir_ui_menu(osv.osv):
         """
         with self.cache_lock:
             modelaccess = self.pool.get('ir.model.access')
-            user_groups = set(self.pool.get('res.users').read(cr, 1, uid, ['groups_id'])['groups_id'])
+            user_groups = set(self.pool.get('res.users').read(cr, SUPERUSER_ID, uid, ['groups_id'])['groups_id'])
             result = []
             for menu in self.browse(cr, uid, ids, context=context):
                 # this key works because user access rights are all based on user's groups (cfr ir_model_access.check)

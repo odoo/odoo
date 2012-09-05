@@ -35,6 +35,7 @@ from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 from socket import gethostname
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -271,7 +272,7 @@ class act_window(osv.osv):
         :return: A read() view of the ir.actions.act_window
         """
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id (cr, 1, module, xml_id)
+        data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, res_id, [], context)
 

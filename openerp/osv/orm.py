@@ -63,6 +63,7 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -773,7 +774,7 @@ class BaseModel(object):
             }
             if getattr(f, 'serialization_field', None):
                 # resolve link to serialization_field if specified by name
-                serialization_field_id = ir_model_fields_obj.search(cr, 1, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
+                serialization_field_id = ir_model_fields_obj.search(cr, SUPERUSER_ID, [('model','=',vals['model']), ('name', '=', f.serialization_field)])
                 if not serialization_field_id:
                     raise except_orm(_('Error'), _("Serialization field `%s` not found for sparse field `%s`!") % (f.serialization_field, k))
                 vals['serialization_field_id'] = serialization_field_id[0]
@@ -1824,6 +1825,10 @@ class BaseModel(object):
             if node.getchildren()[0].tag == 'node':
                 node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, None, context)
                 fields.update(node_fields)
+                if not node.get("create"):
+                    fn = getattr(self.pool.get(node.getchildren()[1].get('object')), 'check_create')
+                    if not fn(cr, user, raise_exception=False):
+                        node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
@@ -1831,6 +1836,10 @@ class BaseModel(object):
             fields = self.fields_get(cr, user, None, context)
         fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, node)
+        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+            for action, fn in (('create', 'check_create'), ('delete', 'check_unlink'), ('edit', 'check_write')):
+                if not node.get(action) and not getattr(self, fn)(cr, user, raise_exception=False):
+                    node.set(action, 'false')
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
