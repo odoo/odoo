@@ -215,13 +215,13 @@ instance.web.ActionManager = instance.web.Widget.extend({
             return this.do_action(action_client, on_close, clear_breadcrumbs);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
-            return self.rpc("/web/action/load", { action_id: action }, function(result) {
-                self.do_action(result.result, on_close, clear_breadcrumbs);
+            return self.rpc("/web/action/load", { action_id: action }).pipe(function(result) {
+                return self.do_action(result.result, on_close, clear_breadcrumbs);
             });
         }
         if (!action.type) {
             console.error("No type for action", action);
-            return null;
+            return $.Deferred().reject();
         }
         var type = action.type.replace(/\./g,'_');
         var popup = action.target === 'new';
@@ -236,7 +236,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }, action.flags || {});
         if (!(type in this)) {
             console.error("Action manager can't handle action of type " + action.type, action);
-            return null;
+            return $.Deferred().reject();
         }
         return this[type](action, on_close, clear_breadcrumbs);
     },
@@ -250,7 +250,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             var $e = $.Event("about_to_destroy");
             this.inner_widget.trigger("about_to_destroy", $e);
             if ($e.isDefaultPrevented()) {
-                return;
+                return $.Deferred().reject();
             } else if (clear_breadcrumbs) {
                 this.clear_breadcrumbs();
             }

@@ -731,6 +731,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Number} id database id of the terminal menu to select
      */
     open_menu: function (id) {
+        this.current_menu = id;
+        this.session.active_id = id;
         var $clicked_menu, $sub_menu, $main_menu;
         $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
         this.trigger('open_menu', id, $clicked_menu);
@@ -803,16 +805,15 @@ instance.web.Menu =  instance.web.Widget.extend({
                 }
             }
         }
-        this.open_menu(id);
-        this.current_menu = id;
-        this.session.active_id = id;
         if (action_id) {
             this.trigger('menu_click', {
                 action_id: action_id,
                 needaction: needaction,
-                id: id
+                id: id,
+                previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
         }
+        this.open_menu(id);
     },
     /**
      * Jquery event handler for menu click
@@ -1095,13 +1096,15 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_menu_action: function(options) {
         var self = this;
-        this.rpc("/web/action/load", { action_id: options.action_id })
-            .then(function (result) {
+        return this.rpc("/web/action/load", { action_id: options.action_id })
+            .pipe(function (result) {
                 var action = result.result;
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
-                self.action_manager.do_action(action, null, true);
+                return $.when(self.action_manager.do_action(action, null, true)).fail(function() {
+                    self.menu.open_menu(options.previous_menu_id);
+                });
             });
     },
     do_action: function(action) {
