@@ -3,12 +3,9 @@ openerp.locadis = function(instance){
     var module = instance.point_of_sale;
     var QWeb = instance.web.qweb;
 
-    console.log('PosModel?', module.PosModel);
-
     module.PosModel = module.PosModel.extend({
         // all this copy paste just to load the product.dont_vidange field ... :(
         load_server_data: function(){
-            console.log('loading');
             var self = this;
 
             var loaded = self.fetch('res.users',['name','company_id'],[['id','=',this.session.uid]]) 
@@ -155,6 +152,7 @@ openerp.locadis = function(instance){
         },
     });
 
+    /*
     module.BarcodeReader = module.BarcodeReader.extend({
         parse_ean: function(ean){
             var parse_result = {
@@ -213,4 +211,5 @@ openerp.locadis = function(instance){
             return parse_result;
         },
     });
+   */ 
 };
