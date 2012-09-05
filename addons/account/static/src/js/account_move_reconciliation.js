@@ -81,25 +81,28 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         this.$el.find('span.oe_pager_index_extend').html(index).end()
                    .find('span.oe_pager_count_extend').html(this.dataset.ids.length);
     },
+
+    do_search_move_line: function(partner_ids){
+        var viewmanager = this.getParent();
+        viewmanager.action.context.next_partner_only = true;
+        viewmanager.action.context.partner_id = partner_ids;
+        viewmanager.searchview.do_search();
+    },
     
     on_pager_action: function(action) {
         var self = this
-        var viewmanager = self.getParent();
-        viewmanager.action.context.next_partner_only = true;
         if (this.dataset.ids.length == 0){
             self.datarecord = {}
-            viewmanager.action.context.partner_id = [];
-            viewmanager.searchview.do_search();
             _(this.fields).each(function (field, f) {
                 field.set_value(self.datarecord[f] || false);
             });
             self.do_update_pager();
+            self.do_search_move_line([]);
         }
         else{        
             $.when(this._super(action)).then(function() {
                 var id = self.get_fields_values().partner_id;
-                viewmanager.action.context.partner_id = [id];
-                viewmanager.searchview.do_search();
+                self.do_search_move_line([id]);
             });
         }
     },
