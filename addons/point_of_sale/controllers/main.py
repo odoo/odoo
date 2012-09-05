@@ -72,19 +72,19 @@ class PointOfSaleController(openerpweb.Controller):
         return getattr(self, method)(request, **kwargs)
 
     @openerpweb.jsonrequest
-    def scan_item_success(self, request):
+    def scan_item_success(self, request, ean):
         """
         A product has been scanned with success
         """
-        print 'scan_item_success'
+        print 'scan_item_success: ' + str(ean)
         return 
 
     @openerpweb.jsonrequest
-    def scan_item_error_unrecognized(self, request):
+    def scan_item_error_unrecognized(self, request, ean):
         """
         A product has been scanned without success
         """
-        print 'scan_item_error_unrecognized'
+        print 'scan_item_error_unrecognized: ' + str(ean)
         return 
 
     @openerpweb.jsonrequest

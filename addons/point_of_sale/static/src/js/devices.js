@@ -57,13 +57,13 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
         scan_item_success: function(ean){
-            this.message('scan_item_success',ean);
+            this.message('scan_item_success',{ean: ean});
         },
 
         // a product has been scanned but not recognized
         // ean is a parsed ean object
         scan_item_error_unrecognized: function(ean){
-            this.message('scan_item_error_unrecognized',ean);
+            this.message('scan_item_error_unrecognized',{ean: ean});
         },
 
         //the client is asking for help
