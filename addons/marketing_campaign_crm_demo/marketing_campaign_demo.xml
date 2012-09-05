@@ -40,7 +40,10 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello,Thanks for generous interest you have shown in the openERP.Regards,OpenERP Team,</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>Thanks for the genuine interest you have shown in OpenERP.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
             <field name="name">For OpenERP OnDemand Free Trial 2010</field>
         </record>
         <record id="email_template_2" model="email.template">
@@ -50,11 +53,11 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello,We have very good offer that might suit you.
-            We propose you to subscribe to the OpenERP Discovery Day on May 2010.
-            If any further information required kindly revert back.
-            We really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>We have very good offer that might suit you.
+            We suggest you subscribe to the OpenERP Discovery Day on May 2010.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
             <field name="name">For OpenERP Discovery Day on May 2010</field>
         </record>
 
@@ -65,10 +68,10 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello,Thanks for showing intrest and for subscribing to the OpenERP Discovery Day.
-             If any further information required kindly revert back.
-             I really appreciate your co-operation on this.
-             Regards,OpenERP Team,</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>Thanks for showing interest and for subscribing to the OpenERP Discovery Day.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
             <field name="name">For OpenERP Discovery Day</field>
         </record>
 
@@ -79,10 +82,10 @@
            <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
              <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello,Thanks for showing intrest and buying the OpenERP book.
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>Thanks for showing interest and buying the OpenERP book.</p>
             If any further information required kindly revert back.
-            I really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
+            <p>Regards,OpenERP Team,</p>]]></field>
             <field name="name">For OpenERP book</field>
         </record>
 
@@ -92,12 +95,12 @@
             <field model="ir.actions.act_window" name="ref_ir_act_window" search="[('name', '=', u'For OpenERP OnDemand Free Trial 2010 Mail Form')]"/>
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello, We have very good offer that might suit you.
-            For our gold partners,We are arranging free technical training on june,2010.
-            If any further information required kindly revert back.
-            I really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
-            <field name="name">For technical training to Gold partners</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>We have very good offer that might suit you.
+            For our gold partners,We are arranging free technical training on june,2010.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
+            <field name="name">technical training to gold partners</field>
         </record>
 
           <record id="email_template_6" model="email.template">
@@ -107,12 +110,12 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello, We have very good offer that might suit you.
-            For our silver partners,We are  paid technical training on june,2010.
-            If any further information required kindly revert back.
-            I really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
-            <field name="name">For training to Silver partners</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>We have very good offer that might suit you.
+            For our silver partners,We are  paid technical training on june,2010.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
+            <field name="name">training to silver partners</field>
         </record>
 
         <record id="email_template_7" model="email.template">
@@ -122,12 +125,12 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello, We have very good offer that might suit you.
-            For our silver partners,We are  offering Gold partnership.
-            If any further information required kindly revert back.
-            I really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
-            <field name="name">For gold partnership to silver partners</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>We have very good offer that might suit you.
+            For our silver partners, we are  offering Gold partnership.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
+            <field name="name">gold partnership to silver partners</field>
         </record>
 
         <record id="email_template_8" model="email.template">
@@ -137,9 +140,12 @@
             <field model="ir.values" name="ref_ir_value" search="[('name', '=', u'Send Mail (For OpenERP OnDemand Free Trial 2010)')]"/>
             <field name="model_id" ref="crm.model_crm_lead"/>
             <field eval="0" name="user_signature"/>
-            <field name="body">Hello, Thanks for showing intrest and for subscribing to technical training.If any further information required kindly revert back.I really appreciate your co-operation on this.
-            Regards,OpenERP Team,</field>
-            <field name="name">For subscribing to technical training</field>
+            <field name="body_html"><![CDATA[<p>Hello,</p>
+            <p>Thanks for showing interest and for subscribing to technical training.</p>
+            If any further information required kindly revert back.I really appreciate your co-operation on this.</p>
+            <p>If any further information is required, do not hesitate to reply to this message.</p>
+            <p>Regards,OpenERP Team,</p>]]></field>
+            <field name="name">subscribing to technical training</field>
         </record>
         <!-- Report -->
 

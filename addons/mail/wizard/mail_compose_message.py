@@ -81,7 +81,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
+            vals = {'model': model, 'res_id': res_id}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -106,7 +106,7 @@ class mail_compose_message(osv.TransientModel):
             'mail_compose_message_ir_attachments_rel',
             'wizard_id', 'attachment_id', 'Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
-        'body_text': fields.text('Plain-text editor body'),
+        'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
             help="Type of message, usually 'html' or 'plain', used to select "\
                   "plain-text or rich-text contents accordingly"),
@@ -269,7 +269,7 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], msg_type='comment', context=context, **post_values)
+                active_model_pool.message_post(cr, uid, [res_id], type='comment', context=context, **post_values)
 
         return {'type': 'ir.actions.act_window_close'}
 

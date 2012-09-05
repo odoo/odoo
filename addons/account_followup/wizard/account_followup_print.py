@@ -213,8 +213,6 @@ class account_followup_print_all(osv.osv_memory):
         mod_obj = self.pool.get('ir.model.data')
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
-        line_obj = self.pool.get('account_followup.stat')
-        mail_message = self.pool.get('mail.message')
 
         if context is None:
             context = {}
@@ -241,7 +239,6 @@ class account_followup_print_all(osv.osv_memory):
                     if (not dest) and partner.type=='default':
                         if partner.email:
                             dest = [partner.email]
-                src = tools.config.options['email_from']
                 if not data.partner_lang:
                     body = data.email_body
                 else:
@@ -281,7 +278,12 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        mail_message.schedule_with_attach(cr, uid, src, dest, sub, body, context=context)
+                        vals = {'state': 'outgoing',
+                                'subject': sub,
+                                'body_html': '<pre>%s</pre>' % body,
+                                'email_to': dest,
+                                'email_from': data_user.email or tools.config.options['email_from']}
+                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )

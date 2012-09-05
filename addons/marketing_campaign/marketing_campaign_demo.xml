@@ -3,29 +3,29 @@
     <data>
         <!-- Email tempalte -->
         <record id="email_template_1" model="email.template">
-            <field name="name">Template for New Partner</field>
+            <field name="name">welcome new partner</field>
             <field name="email_from">info@openerp.com</field>
-            <field name="subject">Welcome in OpenERP Partner Channel!</field>
+            <field name="subject">Welcome to the OpenERP Partner Channel!</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Hello, We are very happy to send Welcome message.</field>
+            <field name="body_html">Hello, you will receive your welcome pack via email shortly.</field>
         </record>
         <record id="email_template_2" model="email.template">
-            <field name="name">Template for Silver Partner</field>
+            <field name="name">congrats silver partner</field>
             <field name="email_from">info@openerp.com</field>
-            <field name="subject">Congratulation! You become now our Silver Partner.</field>
+            <field name="subject">Congratulations! You are now a Silver Partner!</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Hello, We are happy to announce that you now become our Silver Partner.</field>
+            <field name="body_html">Hi, we are delighted to welcome you among our Silver Partners as of today!</field>
         </record>
 
         <record id="email_template_3" model="email.template">
-            <field name="name">Template for Gold Partner</field>
+            <field name="name">congrats gold partner</field>
             <field name="email_from">info@openerp.com</field>
-            <field name="subject">Congratulation! You become our Gold Partner.</field>
+            <field name="subject">Congratulations! You are now one of our Gold Partners!</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
-            <field name="body">Hello, We are happy to announce that you become our Gold Partner.</field>
+            <field name="body_html">Hi, we are delighted to let you know that you have entered the select circle of our Gold Partners</field>
         </record>
 
 

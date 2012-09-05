@@ -671,24 +671,6 @@ class crm_lead(base_stage, osv.osv):
             partner_ids[lead.id] = partner_id
         return partner_ids
 
-    def _send_mail_to_salesman(self, cr, uid, lead, context=None):
-        """
-        Send mail to salesman with updated Lead details.
-        @ lead: browse record of 'crm.lead' object.
-        """
-        #TOFIX: mail template should be used here instead of fix subject, body text.
-        message = self.pool.get('mail.message')
-        email_to = lead.user_id and lead.user_id.email
-        if not email_to:
-            return False
-
-        email_from = lead.section_id and lead.section_id.user_id and lead.section_id.user_id.email or email_to
-        partner = lead.partner_id and lead.partner_id.name or lead.partner_name
-        subject = "lead %s converted into opportunity" % lead.name
-        body = "Info \n Id : %s \n Subject: %s \n Partner: %s \n Description : %s " % (lead.id, lead.name, lead.partner_id.name, lead.description)
-        return message.schedule_with_attach(cr, uid, email_from, [email_to], subject, body)
-
-
     def allocate_salesman(self, cr, uid, ids, user_ids, team_id=False, context=None):
         index = 0
         for lead_id in ids:

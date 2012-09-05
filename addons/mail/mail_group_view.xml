@@ -33,8 +33,8 @@
                                     <h4><a type="open"><field name="name"/></a></h4>
                                     <ul>
                                         <li><t t-raw="record.message_summary.raw_value"/></li>
-                                        <li t-if="! record.message_is_follower.raw_value"><a name="message_subscribe_users" string="Join" type="object" class="oe_group_join">Not following</a></li>
-                                        <li t-if="record.message_is_follower.raw_value"><a name="message_unsubscribe_users" string="Leave" type="object" class="oe_group_leave">Following</a></li>
+                                        <li t-if="! record.message_is_follower.raw_value"><a name="action_follow" string="Join" type="object" class="oe_group_join">Not following</a></li>
+                                        <li t-if="record.message_is_follower.raw_value"><a name="action_unfollow" string="Leave" type="object" class="oe_group_leave">Following</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -81,7 +81,6 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_is_follower" invisible="1"/>
                         <field name="message_ids" widget="mail_thread"
                                 options='{"thread_level": 1}'/>
                         <field name="message_follower_ids" widget="mail_followers"/>

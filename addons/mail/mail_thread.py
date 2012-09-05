@@ -29,7 +29,6 @@ import time
 import tools
 import xmlrpclib
 
-from email.utils import parsedate
 from email.message import Message
 from mail_message import decode
 from osv import osv, fields
@@ -42,24 +41,20 @@ def decode_header(message, header, separator=' '):
     return separator.join(map(decode,message.get_all(header, [])))
 
 class many2many_reference(fields.many2many):
-    """ many2many_reference is an override of fields.many2many. It manages
-        many2many-like table where one id is given by two fields, res_model
-        and res_id.
-    """
+    """ many2many_reference manages many2many fields where one id is found
+        by a reference-like key (a char column in addition to the foreign id).
+        The reference_column attribute on the many2many fields is used;
+        if not defined, ``res_model`` is used. """
     
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
-        """ Add in where:
-            - ``mail_followers``.res_model = 'crm.lead'
-        """
-        # reference column name: given by attribute or res_model
-        ref_col_name = self.ref_col_name if self.ref_col_name else 'res_model'
-        values.update({'ref_col_name': ref_col_name, 'ref_col_value': model._name})
-
+        """ Add in where condition like mail_followers.res_model = 'crm.lead' """
+        reference_column = self.reference_column if self.reference_column else 'res_model'
+        values.update(reference_column=reference_column, reference_value=model._name)
         query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
                     FROM %(rel)s, %(from_c)s \
                     WHERE %(rel)s.%(id1)s IN %%s \
                     AND %(rel)s.%(id2)s = %(tbl)s.id \
-                    AND %(rel)s.%(ref_col_name)s = \'%(ref_col_value)s\' \
+                    AND %(rel)s.%(reference_column)s = \'%(reference_value)s\' \
                     %(where_c)s  \
                     %(order_by)s \
                     %(limit)s \
@@ -68,41 +63,41 @@ class many2many_reference(fields.many2many):
         return query, where_params
 
     def set(self, cr, model, id, name, values, user=None, context=None):
-        """ Override to add the res_model field in queries. """
+        """ Override to add the reference field in queries. """
         if not values: return
         rel, id1, id2 = self._sql_names(model)
         obj = model.pool.get(self._obj)
         # reference column name: given by attribute or res_model
-        ref_col_name = self.ref_col_name if self.ref_col_name else 'res_model'
+        reference_column = self.reference_column if self.reference_column else 'res_model'
         for act in values:
             if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
                 continue
             if act[0] == 0:
                 idnew = obj.create(cr, user, act[2], context=context)
-                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, idnew, model._name))
+                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, idnew, model._name))
             elif act[0] == 3:
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+ref_col_name+'=%s', (id, act[1], model._name))
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+reference_column+'=%s', (id, act[1], model._name))
             elif act[0] == 4:
                 # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+ref_col_name+'=%s', (id, act[1], model._name))
+                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+reference_column+'=%s', (id, act[1], model._name))
                 if not cr.fetchone():
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, act[1], model._name))
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, act[1], model._name))
             elif act[0] == 5:
-                cr.execute('delete from '+rel+' where '+id1+' = %s AND '+ref_col_name+'=%s', (id, model._name))
+                cr.execute('delete from '+rel+' where '+id1+' = %s AND '+reference_column+'=%s', (id, model._name))
             elif act[0] == 6:
                 d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
                 if d1:
                     d1 = ' and ' + ' and '.join(d1)
                 else:
                     d1 = ''
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+ref_col_name+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
+                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+reference_column+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
                 for act_nbr in act[2]:
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+ref_col_name+') VALUES (%s,%s,%s)', (id, act_nbr, model._name))
+                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, act_nbr, model._name))
             # cases 1, 2: performs write and unlink -> default implementation is ok
             else:
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
-class mail_thread(osv.Model):
+class mail_thread(osv.AbstractModel):
     ''' mail_thread model is meant to be inherited by any model that needs to
         act as a discussion topic on which messages can be attached. Public
         methods are prefixed with ``message_`` in order to avoid name
@@ -161,19 +156,18 @@ class mail_thread(osv.Model):
             type='boolean', string='Is a Follower', multi='_get_message_data'),
         'message_follower_ids': many2many_reference('res.partner',
             'mail_followers', 'res_id', 'partner_id',
-            ref_col_name='res_model', string='Followers'),
+            reference_column='res_model', string='Followers'),
         'message_comment_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model','=',self._name),('type','in',('comment','email'))],
-            string='Related Messages', 
-            help="All messages related to the current document."),
+            domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
+            string='Comments and emails', 
+            help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model','=',self._name)],
-            string='Related Messages', 
-            help="All messages related to the current document."),
+            string='Messages', 
+            help="Messages and communication history"),
         'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
-            string='Has Unread Messages', type='boolean',
-            help="When checked, new messages require your attention.",
-            multi="_get_message_data"),
+            type='boolean', string='Unread Messages', multi="_get_message_data",
+            help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
             type='text', string='Summary', multi="_get_message_data",
             help="Holds the Chatter summary (number of messages, ...). "\
@@ -186,7 +180,7 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def create(self, cr, uid, vals, context=None):
-        """ Override of create to subscribe the current user. """
+        """ Override to subscribe the current user. """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)
         self.message_subscribe_users(cr, uid, [thread_id], [uid], context=context)
         return thread_id
@@ -217,14 +211,20 @@ class mail_thread(osv.Model):
     # Mail gateway
     #------------------------------------------------------
 
+    def message_capable_models(self, cr, uid, context=None):
+        """ Used by the plugin addon, based for plugin_outlook and others. """
+        ret_dict = {}
+        for model_name in self.pool.obj_list():
+            model = self.pool.get(model_name)
+            if 'mail.thread' in getattr(model, '_inherit', []):
+                ret_dict[model_name] = model._description
+        return ret_dict
+
     def _message_find_partners(self, cr, uid, message, header_fields=['From'], context=None):
         """ Find partners related to some header fields of the message. """
         s = ', '.join([decode(message.get(h)) for h in header_fields if message.get(h)])
-        mails = tools.email_split(s)
-        result = []
-        for email in mails:
-            result += self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)
-        return result
+        return [partner_id for email in tools.email_split(s)
+                for partner_id in self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', email)], context=context)]
 
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
@@ -387,9 +387,7 @@ class mail_thread(osv.Model):
            for a given thread model, if the message did not belong to
            an existing thread.
            The default behavior is to create a new record of the corresponding
-           model (based on some very basic info extracted from the message),
-           then attach the message to the newly created record
-           (by calling ``message_append_dict``).
+           model (based on some very basic info extracted from the message).
            Additional behavior may be implemented by overriding this method.
 
            :param dict msg_dict: a map containing the email details and
@@ -422,9 +420,8 @@ class mail_thread(osv.Model):
 
     def message_update(self, cr, uid, ids, msg_dict, update_vals=None, context=None):
         """Called by ``message_process`` when a new message is received
-           for an existing thread. The default behavior is to create a
-           new mail.message in the given thread (by calling
-           ``message_append_dict``)
+           for an existing thread. The default behavior is to update the record
+           with update_vals taken from the incoming email.
            Additional behavior may be implemented by overriding this
            method.
            :param dict msg_dict: a map containing the email details and
@@ -556,23 +553,23 @@ class mail_thread(osv.Model):
     #------------------------------------------------------
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
-        _logger.warning("log() is deprecated. As this module inherit from \
-                        mail.thread, the message will be managed by this \
-                        module instead of by the res.log mechanism. Please \
-                        use the mail.thread OpenChatter API instead of the \
-                        now deprecated res.log.")
+        _logger.warning("log() is deprecated. As this module inherit from "\
+                        "mail.thread, the message will be managed by this "\
+                        "module instead of by the res.log mechanism. Please "\
+                        "use mail_thread.message_post() instead of the "\
+                        "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=False,
-            msg_type='notification', parent_id=False, attachments=None, subtype='other', context=None, **kwargs):
-        """ Post a new message in an existing message thread, returning the new
+            type='notification', parent_id=False, attachments=None, subtype='other', context=None, **kwargs):
+        """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
             :param int thread_id: thread ID to post into, or list with one ID
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
             :param str subject: optional subject
-            :param str msg_type: mail_message.type
+            :param str type: mail_message.type
             :param int parent_id: optional ID of parent message in this thread
             :param tuple(str,str) attachments: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
@@ -608,11 +605,11 @@ class mail_thread(osv.Model):
                 if self._name in [model.model for model in subtype_browse.model_ids]:
                     values['subtype_id']=subtype_browse.id
         values.update( {
-            'model': thread_id and context.get('thread_model', self._name) or False,
+            'model': context.get('thread_model', self._name) if thread_id else False,
             'res_id': thread_id or False,
             'body': body,
             'subject': subject,
-            'type': msg_type,
+            'type': type,
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
         })
@@ -626,16 +623,14 @@ class mail_thread(osv.Model):
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
-        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
-        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        if not user_ids: user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids,subtype_ids = None, context=None):
         """ Add partners to the records followers.
-
             :param partner_ids: a list of partner_ids to subscribe
-            :param return: new value of followers, for Chatter
+            :param return: new value of followers if read_back key in context
         """
         self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         if not subtype_ids:
@@ -643,28 +638,27 @@ class mail_thread(osv.Model):
             subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)])
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
-        # TDE: temp, must check followers widget
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         return []
-        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, unsubscribe uid instead. """
-        # isinstance: because using message_subscribe_users called in a view set the context as user_ids
-        if not user_ids or isinstance(user_ids, dict): user_ids = [uid]
+        if not user_ids: user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
         """ Remove partners from the records followers.
-
             :param partner_ids: a list of partner_ids to unsubscribe
-            :param return: new value of followers, for Chatter
+            :param return: new value of followers if read_back key in context
         """
         self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
-        # TDE: temp, must check followers widget
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         return []
-        # return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
 
     #------------------------------------------------------
     # Thread state

@@ -123,64 +123,6 @@
     </div>
 </div>
             ]]></field>
-            <field name="body"><![CDATA[
-Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
-
-A new invoice is available for ${object.partner_id.name}:
-       | Invoice number: *${object.number}*
-       | Invoice total: *${object.amount_total} ${object.currency_id.name}*
-       | Invoice date: ${object.date_invoice}
-       % if object.origin:
-       | Order reference: ${object.origin}
-       % endif
-       | Your contact: ${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
-
-You can view the invoice document, download it and pay online using the following link:
-    ${ctx.get('edi_web_url_view') or 'n/a'}
-
-% if object.company_id.paypal_account and object.type in ('out_invoice', 'in_refund'):
-<% 
-comp_name = quote(object.company_id.name)
-inv_number = quote(object.number)
-paypal_account = quote(object.company_id.paypal_account)
-inv_amount = quote(str(object.amount_total))
-cur_name = quote(object.currency_id.name)
-paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Invoice%%20%s"\
-             "&invoice=%s&amount=%s&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Invoice_PayNow_%s" % \
-             (paypal_account,comp_name,inv_number,inv_number,inv_amount,cur_name,cur_name)
-%>
-It is also possible to directly pay with Paypal:
-    ${paypal_url}
-% endif
-
-If you have any question, do not hesitate to contact us.
-
-
-Thank you for choosing ${object.company_id.name}!
-
-
---
-${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
-${object.company_id.name}
-% if object.company_id.street:
-${object.company_id.street or ''}
-% endif
-% if object.company_id.street2:
-${object.company_id.street2}
-% endif
-% if object.company_id.city or object.company_id.zip:
-${object.company_id.zip or ''} ${object.company_id.city or ''}
-% endif
-% if object.company_id.country_id:
-${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
-% endif
-% if object.company_id.phone:
-Phone: ${object.company_id.phone}
-% endif
-% if object.company_id.website:
-${object.company_id.website or ''}
-% endif
-            ]]></field>
         </record>
     </data>
 </openerp>

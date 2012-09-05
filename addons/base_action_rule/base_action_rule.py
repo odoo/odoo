@@ -302,33 +302,27 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return self.format_body(body % data)
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
-        """ send email
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param email: pass the emails
-            @param emailfrom: Pass name the email From else False
-            @param context: A standard dictionary for contextual values """
-
         if not emailfrom:
-            emailfrom = tools.config.get('email_from', False)
-
-        if context is None:
-            context = {}
-
-        mail_message = self.pool.get('mail.message')
+            emailfrom = tools.config.get('email_from')
         body = self.format_mail(obj, body)
-        if not emailfrom:
-            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
-                emailfrom = obj.user_id.email
-
-        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        if not emailfrom and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+            emailfrom = obj.user_id.email
         emailfrom = tools.ustr(emailfrom)
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No email ID found for your company address."))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+                                 _("Missing default email address or missing email on responsible user"))
+        return self.pool.get('mail.mail').create(cr, uid,
+                {   'email_from': emailfrom,
+                    'email_to': emails.join(','),
+                    'reply_to': reply_to,
+                    'state': 'outgoing',
+                    'subject': '[%d] %s' % (obj.id, tools.ustr(obj.name)),
+                    'body_html': '<pre>%s</pre>' % body,
+                    'res_id': obj.id,
+                    'model': obj._table_name,
+                    'auto_delete': True
+                }, context=context)
 
 
     def do_check(self, cr, uid, action, obj, context=None):
