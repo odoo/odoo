@@ -141,14 +141,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.$sidebar);
-            if(this.fields_view.toolbar) {
+            if (this.fields_view.toolbar) {
                 this.sidebar.add_toolbar(this.fields_view.toolbar);
             }
-            this.sidebar.add_items('other', [
-                { label: _t('Delete'), callback: self.on_button_delete },
-                { label: _t('Duplicate'), callback: self.on_button_duplicate },
+            this.sidebar.add_items('other', _.compact([
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: self.on_button_delete },
+                self.is_action_enabled('create') && { label: _t('Duplicate'), callback: self.on_button_duplicate },
                 { label: _t('Set Default'), callback: function (item) { self.open_defaults_dialog(); } }
-            ]);
+            ]));
         }
 
         this.has_been_loaded.resolve();
@@ -3473,7 +3473,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 return self.o2m.dataset.read_ids.apply(self.o2m.dataset, arguments);
             },
             form_view_options: {'not_interactible_on_create':true},
-            readonly: self.o2m.get("effective_readonly")
+            readonly: !this.is_action_enabled('edit') || self.o2m.get("effective_readonly")
         });
     },
     do_button_action: function (name, id, callback) {
@@ -3561,7 +3561,11 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
 });
 instance.web.form.One2ManyList = instance.web.ListView.List.extend({
     pad_table_to: function (count) {
-        this._super(count > 0 ? count - 1 : 0);
+        if (!this.view.is_action_enabled('create')) {
+            this._super(count);
+        } else {
+            this._super(count > 0 ? count - 1 : 0);
+        }
 
         // magical invocation of wtf does that do
         if (this.view.o2m.get('effective_readonly')) {
@@ -3574,6 +3578,11 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
         }).length;
         if (this.options.selectable) { columns++; }
         if (this.options.deletable) { columns++; }
+
+        if (!this.view.is_action_enabled('create')) {
+            return;
+        }
+
         var $cell = $('<td>', {
             colspan: columns,
             'class': 'oe_form_field_one2many_list_row_add'

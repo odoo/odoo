@@ -250,6 +250,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
+
+        // add css classes that reflect the (absence of) access rights
+        this.$el.toggleClass('oe_list_cannot_create', !this.is_action_enabled('create'))
+                .toggleClass('oe_list_cannot_edit', !this.is_action_enabled('edit'))
+                .toggleClass('oe_list_cannot_delete', !this.is_action_enabled('delete'));
+
         // Head hook
         // Selecting records
         this.$el.find('.oe_list_record_selector').click(function(){
@@ -351,11 +357,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
-            this.sidebar.add_items('other', [
-                { label: _t("Import"), callback: this.on_sidebar_import },
+            this.sidebar.add_items('other', _.compact([
+                self.is_action_enabled('create') && { label: _t("Import"), callback: this.on_sidebar_import },
                 { label: _t("Export"), callback: this.on_sidebar_export },
-                { label: _t('Delete'), callback: this.do_delete_selected }
-            ]);
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
+            ]));
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }

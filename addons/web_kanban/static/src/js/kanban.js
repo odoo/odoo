@@ -74,18 +74,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         return $.when();
     },
     _is_quick_create_enabled: function() {
-        if (! this.options.quick_creatable)
+        if (!this.options.quick_creatable || !this.is_action_enabled('create'))
             return false;
         if (this.fields_view.arch.attrs.quick_create !== undefined)
             return JSON.parse(this.fields_view.arch.attrs.quick_create);
         return !! this.group_by;
     },
-    _is_create_enabled: function() {
-        if (! this.options.creatable)
+    is_action_enabled: function(action) {
+        if (action === 'create' && !this.options.creatable)
             return false;
-        if (this.fields_view.arch.attrs.create !== undefined)
-            return JSON.parse(this.fields_view.arch.attrs.create);
-        return true;
+        return this._super(action);
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
@@ -738,16 +736,19 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             trigger: 'hover'
         });
 
-        // If no draghandle is found, make the whole card as draghandle
+        // If no draghandle is found, make the whole card as draghandle (provided one can edit)
         if (!this.$el.find('.oe_kanban_draghandle').length) {
-            this.$el.children(':first').addClass('oe_kanban_draghandle');
+            this.$el.children(':first')
+                .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
         this.$el.find('.oe_kanban_action').click(function() {
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
-            if (_.str.startsWith(type, 'switch_')) {
+            if ((type === 'edit' || type === 'delete') && ! self.view.is_action_enabled(type)) {
+                self.view.open_record(self.id);
+            } else if (_.str.startsWith(type, 'switch_')) {
                 self.view.do_switch_view(type.substr(7));
             } else if (typeof self[method] === 'function') {
                 self[method]($action);
