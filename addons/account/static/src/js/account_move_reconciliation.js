@@ -36,6 +36,9 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     },
     do_reconcilation:function(event){
         var self = this
+        if (!self.datarecord.id){
+            return false;
+        }
         var list_view = this.getParent().views['list'].controller
         ids = list_view.get_selected_ids()
         if (ids.length == 0) {
@@ -66,6 +69,9 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         
     do_nothing_to_reconcile:function(){
         var self = this;
+        if (!self.datarecord.id){
+            return false;
+        }
         this.dataset.call(event.target.name, [[self.datarecord.id], self.dataset.context]).then(function() {
             self.dataset.read_slice().done(function(){
                 self.on_pager_action('next');
@@ -91,6 +97,7 @@ instance.account.extend_form_view = instance.web.FormView.extend({
     
     on_pager_action: function(action) {
         var self = this
+        
         if (this.dataset.ids.length == 0){
             self.datarecord = {}
             _(this.fields).each(function (field, f) {
