@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-08-21 19:49+0000\n"
+"PO-Revision-Date: 2012-09-02 14:55+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:05+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-03 05:36+0000\n"
+"X-Generator: Launchpad (build 15890)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -35,6 +35,10 @@ msgid ""
 "value for all products in this category. It can also directly be set on each "
 "product"
 msgstr ""
+"Gerçek-zamanlı envanter değerlendirmesi yaparken, gelen tüm stokların "
+"hareketlerine karşılık gelen ait öğe günlükleri bu hesaba işlenecektir, "
+"kaynak konumda özel bir değerlendirme hesabı yoksa. Bu kategorideki ürünler "
+"için bu varsayılan değerdir. Her ürüne doğrudan da ayarlanabilir."
 
 #. module: stock
 #: field:stock.location,chained_location_id:0
@@ -340,6 +344,8 @@ msgid ""
 "Can not create Journal Entry, Input Account defined on this product and "
 "Valuation account on category of this product are same."
 msgstr ""
+"Günlük Girişi oluşturulamıyor, bu ürünün tanımlı Giriş Hesabı ve bu ürünün "
+"kategorisindeki Değerlendirme Hesabı ile aynıdır."
 
 #. module: stock
 #: selection:stock.return.picking,invoice_state:0
@@ -656,6 +662,12 @@ msgid ""
 "queries regarding your account, please contact us.\n"
 "Thank you in advance.\n"
 msgstr ""
+"Kayıtlarımız aşağıdaki ödemenin hala yapılmadığını göstermektedir. Eğer "
+"tutar\n"
+"önceden ödenmişse, lütfen bu notu dikkate almayın. Ancak, hesabınızla "
+"ilgili\n"
+"sorunuz varsa lütfen bizimle iletişim kurun.\n"
+"Şimdiden teşekkürler.\n"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -670,6 +682,9 @@ msgid ""
 "according to the original purchase order. You can validate the shipment "
 "totally or partially."
 msgstr ""
+"Gelen Nakliyeler tedarikçinizden alacağınız bütün siparişlerin listesidir. "
+"Gelen bir nakliye orijinal satınalma siparişine göre alınacak bütün ürünleri "
+"içerir. Nakliyeyi tamamen ya da parçalı olarak doğrulayabilirsiniz."
 
 #. module: stock
 #: field:stock.move.split.lines,wizard_exist_id:0
@@ -688,6 +703,8 @@ msgid ""
 "There is no inventory Valuation account defined on the product category: "
 "\"%s\" (id: %d)"
 msgstr ""
+"Ürün kategorisi üzerinde tanımlı hiçbir stok değerlemesi hesabı yoktur: "
+"\"%s\" (id: %d)"
 
 #. module: stock
 #: view:report.stock.move:0
@@ -1177,6 +1194,8 @@ msgid ""
 "The uom rounding does not allow you to ship \"%s %s\", only roundings of "
 "\"%s %s\" is accepted by the uom."
 msgstr ""
+"Ölçü biriminin yuvarlatılması \"%s%s\" sevkiyatını yüklemenize izin vermez, "
+"\"%s %s\" yuvarlatılması yalnızca ölçü birimince kabul edilir."
 
 #. module: stock
 #: view:stock.move:0
@@ -1526,7 +1545,7 @@ msgstr "Genel Bilgiler"
 #. module: stock
 #: view:report.stock.inventory:0
 msgid "Analysis including future moves (similar to virtual stock)"
-msgstr ""
+msgstr "İnceleme gelecekteki hareketleri içerir (sanal stokla aynı)"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action3 view:stock.tracking:0
@@ -1967,6 +1986,8 @@ msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Valuation account on category of this product are same."
 msgstr ""
+"Günlük Girişi oluşturulamıyor, bu üründe tanımlanan Çıkış Hesabı bu ürün "
+"kategorisindeki Değerlendirme hesabı ile aynı."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2048,6 +2069,8 @@ msgid ""
 "This field is for internal purpose. It is used to decide if the column "
 "prodlot has to be shown on the move_ids field or not"
 msgstr ""
+"Bu alan iç amaçlar içindir. prodlot sütununun move_ids alanında gösterilip "
+"gösterilmeyeceğine karar vermek için kullanılır."
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -2120,6 +2143,7 @@ msgstr "Oluşturma"
 msgid ""
 "Analysis of current inventory (only moves that have already been processed)"
 msgstr ""
+"Geçerli envanterin incelenmesi (yalnızca önceden işlenmiş hareketler)"
 
 #. module: stock
 #: field:stock.partial.move.line,cost:0
@@ -2137,7 +2161,7 @@ msgstr "Stok Giriş Hes."
 #. module: stock
 #: view:report.stock.move:0
 msgid "Shipping type specify, goods coming in or going out"
-msgstr ""
+msgstr "Nakliye türü belirtin, giren ya da çıkan ürünler"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -4162,7 +4186,7 @@ msgstr ""
 #, python-format
 msgid ""
 "Production lot quantity %d of %s is larger than available quantity (%d) !"
-msgstr ""
+msgstr "Ürün partisi miktarı %d (%s in) mevcut (%d) miktarından çoktur!"
 
 #. module: stock
 #: constraint:product.category:0
@@ -4188,7 +4212,7 @@ msgstr "Fiziksel Lokasyon"
 #. module: stock
 #: view:stock.picking:0 selection:stock.picking,state:0
 msgid "Ready to Process"
-msgstr ""
+msgstr "İşlenmeye Hazır"
 
 #. module: stock
 #: help:stock.location,posx:0 help:stock.location,posy:0

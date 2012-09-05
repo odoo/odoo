@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-24 09:30+0000\n"
-"Last-Translator: fatalx <mysdrasticx@hotmail.com>\n"
+"PO-Revision-Date: 2012-09-02 16:13+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:37+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-03 05:36+0000\n"
+"X-Generator: Launchpad (build 15890)\n"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -201,17 +201,35 @@ msgid ""
 "side.\n"
 "     "
 msgstr ""
+"\n"
+"    1. Takvim Görünümüne Git\n"
+"    2. Dosya -> Yeni -> Takvim\n"
+"\n"
+"    3. Formu doldur\n"
+"        - türü : CalDav\n"
+"        - adı : Ne isterseniz (örn : Toplantı)\n"
+"        - url : "
+"http://HOST:PORT/webdav/DB_NAME/calendars/users/USER/c/Meetings (ie : "
+"http://localhost:8069/webdav/db_1/calendars/users/demo/c/Meetings) bu "
+"pencerenin enüstünde verilen\n"
+"        - işareti kaldır \"User SSL\"\n"
+"        - Kullanıcı adı : Kullanıcı adınız (örn : Demo)\n"
+"        - Yenile : oluşumun her seferinde veriyi sunucu ile senkronize "
+"etmesini isterseniz\n"
+"    4. Tamam'ı tıklayın ve openerp parolanızı girin\n"
+"    5. Verdiğiniz isimle yeni bir takvim adı sol tarafta görünmelidir.\n"
+"     "
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:879
 #, python-format
 msgid "Please provide proper configuration of \"%s\" in Calendar Lines"
-msgstr ""
+msgstr "Lütfen Kalender Öğelerinde '%s' için doğru yapılandırma yapın"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "Caldav's host name configuration"
-msgstr ""
+msgstr "Caldav sunucu adı yapılandırması"
 
 #. module: caldav
 #: field:caldav.browse,url:0
@@ -221,7 +239,7 @@ msgstr "Caldav Sunucusu"
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Datetime In UTC"
-msgstr ""
+msgstr "UTC Tarihzamanı"
 
 #. module: caldav
 #: selection:user.preference,device:0
@@ -254,7 +272,7 @@ msgstr "\"%s\" Satırı birden çok oluşturulamıyor"
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Webcal Calendar"
-msgstr ""
+msgstr "Webcal Takvimi"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -297,22 +315,22 @@ msgstr "Etkinlik"
 #: field:document.directory,calendar_collection:0
 #: field:user.preference,collection:0
 msgid "Calendar Collection"
-msgstr ""
+msgstr "Takvim Bilgi Toplaması"
 
 #. module: caldav
 #: constraint:document.directory:0
 msgid "Error! You can not create recursive Directories."
-msgstr ""
+msgstr "Hata! Yinelenen Dizinler oluşturamazsınız."
 
 #. module: caldav
 #: view:user.preference:0
 msgid "_Open"
-msgstr ""
+msgstr "_Aç"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "Next"
-msgstr ""
+msgstr "Sonraki"
 
 #. module: caldav
 #: field:basic.calendar,type:0
@@ -320,73 +338,73 @@ msgstr ""
 #: field:basic.calendar.fields,type_id:0
 #: field:basic.calendar.lines,name:0
 msgid "Type"
-msgstr ""
+msgstr "Tür"
 
 #. module: caldav
 #: help:calendar.event.export,name:0
 msgid "Save in .ics format"
-msgstr ""
+msgstr ".ics biçiminde Saklayın"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Hata !"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attributes
 msgid "Calendar attributes"
-msgstr ""
+msgstr "Takvim öznitelikleri"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_caldav_browse
 msgid "Caldav Browse"
-msgstr ""
+msgstr "Caldav Tarama"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Android based device"
-msgstr ""
+msgstr "Android temelli aygıt"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "Configure your openerp hostname. For example : "
-msgstr ""
+msgstr "Openerp sunucu adını yapılandırın. Örnek olarak: "
 
 #. module: caldav
 #: field:basic.calendar,create_date:0
 msgid "Created Date"
-msgstr ""
+msgstr "Oluşturulma Tarihi"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Attributes Mapping"
-msgstr ""
+msgstr "Öznitelik Eşleştirmesi"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_document_directory
 msgid "Directory"
-msgstr ""
+msgstr "Dizin"
 
 #. module: caldav
 #: field:calendar.event.subscribe,url_path:0
 msgid "Provide path for remote calendar"
-msgstr ""
+msgstr "Uzak takvim için yol belirtin."
 
 #. module: caldav
 #: field:basic.calendar.lines,domain:0
 msgid "Domain"
-msgstr ""
+msgstr "Alan Adı"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "_Subscribe"
-msgstr ""
+msgstr "_Abone Ol"
 
 #. module: caldav
 #: field:basic.calendar,user_id:0
 msgid "Owner"
-msgstr ""
+msgstr "Sahibi"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -395,7 +413,7 @@ msgstr ""
 #: model:ir.ui.menu,name:caldav.menu_calendar
 #: field:user.preference,calendar:0
 msgid "Calendar"
-msgstr ""
+msgstr "Takvim"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
@@ -403,57 +421,58 @@ msgstr ""
 msgid ""
 "Please install python-vobject from http://vobject.skyhouseconsulting.com/"
 msgstr ""
+"Lütfen http://vobject.skyhouseconsulting.com/ dan python-vobject'i kurun"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:63
 #, python-format
 msgid "Invalid format of the ics, file can not be imported"
-msgstr ""
+msgstr "Geçersiz ics biçimi, dosya içeaktarılamıyor"
 
 #. module: caldav
 #: selection:user.preference,service:0
 msgid "CalDAV"
-msgstr ""
+msgstr "CalDAV"
 
 #. module: caldav
 #: field:basic.calendar.fields,field_id:0
 msgid "OpenObject Field"
-msgstr ""
+msgstr "OpenObject Alanı"
 
 #. module: caldav
 #: field:basic.calendar.alias,res_id:0
 msgid "Res. ID"
-msgstr ""
+msgstr "Res. ID"
 
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Message..."
-msgstr ""
+msgstr "Mesaj..."
 
 #. module: caldav
 #: view:basic.calendar:0
 #: field:basic.calendar,has_webcal:0
 msgid "WebCal"
-msgstr ""
+msgstr "WebCal"
 
 #. module: caldav
 #: view:document.directory:0
 #: model:ir.actions.act_window,name:caldav.action_calendar_collection_form
 #: model:ir.ui.menu,name:caldav.menu_calendar_collection
 msgid "Calendar Collections"
-msgstr ""
+msgstr "Takvim Bilgi Toplaması"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:815
 #: sql_constraint:basic.calendar.alias:0
 #, python-format
 msgid "The same filename cannot apply to two records!"
-msgstr ""
+msgstr "Aynı dosya iki kayıta uygulanamaz!"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory cannot be parent of itself!"
-msgstr ""
+msgstr "Dizin kendisinin üstü olamaz!"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -461,17 +480,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:caldav.action_caldav_form
 #: model:ir.ui.menu,name:caldav.menu_caldav_directories
 msgid "Calendars"
-msgstr ""
+msgstr "Takvimler"
 
 #. module: caldav
 #: field:basic.calendar,collection_id:0
 msgid "Collection"
-msgstr ""
+msgstr "Bilgi Toplama"
 
 #. module: caldav
 #: field:basic.calendar,write_date:0
 msgid "Write Date"
-msgstr ""
+msgstr "Yazım Tarihi"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:32
@@ -503,54 +522,54 @@ msgstr ""
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "The directory name must be unique !"
-msgstr ""
+msgstr "Dizin adı benzersiz olmalı"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "User Preference"
-msgstr ""
+msgstr "Kullanıcı Yeğlemesi"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
 #, python-format
 msgid "Please provide Proper URL !"
-msgstr ""
+msgstr "Lütfen doğru URL girin!"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_timezone
 msgid "basic.calendar.timezone"
-msgstr ""
+msgstr "temel.takvim.zamandilimi"
 
 #. module: caldav
 #: field:basic.calendar.fields,expr:0
 msgid "Expression"
-msgstr ""
+msgstr "Deyim"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_attendee
 msgid "basic.calendar.attendee"
-msgstr ""
+msgstr "temel.takvim.katılımcı"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alias
 msgid "basic.calendar.alias"
-msgstr ""
+msgstr "temel.takvim.ad"
 
 #. module: caldav
 #: view:calendar.event.import:0
 #: field:calendar.event.import,file_path:0
 msgid "Select ICS file"
-msgstr ""
+msgstr "ICS dosyası seç"
 
 #. module: caldav
 #: field:user.preference,device:0
 msgid "Software/Devices"
-msgstr ""
+msgstr "Yazılım/Aygıtlar"
 
 #. module: caldav
 #: field:basic.calendar.lines,mapping_ids:0
 msgid "Fields Mapping"
-msgstr ""
+msgstr "Alan Eşleşmeleri"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:141
@@ -588,32 +607,32 @@ msgstr ""
 #. module: caldav
 #: view:caldav.browse:0
 msgid "Browse caldav"
-msgstr ""
+msgstr "Caldav'ı tara"
 
 #. module: caldav
 #: field:user.preference,host_name:0
 msgid "Host Name"
-msgstr ""
+msgstr "Barındırıcı Adı"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar
 msgid "basic.calendar"
-msgstr ""
+msgstr "temel.takvim"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "Other Info"
-msgstr ""
+msgstr "Diğer Bilgi"
 
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Other"
-msgstr ""
+msgstr "Diğer"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "My Calendar(s)"
-msgstr ""
+msgstr "Takvim(lerim)im"
 
 #. module: caldav
 #: help:basic.calendar,has_webcal:0
@@ -625,12 +644,12 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.fields,fn:0
 msgid "Function"
-msgstr ""
+msgstr "İşlev"
 
 #. module: caldav
 #: view:user.preference:0
 msgid "database.my.openerp.com  or companyserver.com"
-msgstr ""
+msgstr "veritabanı.benim.openerp.com  ya da firmasunucusu.com"
 
 #. module: caldav
 #: view:basic.calendar:0
@@ -638,7 +657,7 @@ msgstr ""
 #: view:caldav.browse:0
 #: field:caldav.browse,description:0
 msgid "Description"
-msgstr ""
+msgstr "Açıklama"
 
 #. module: caldav
 #: help:basic.calendar.alias,cal_line_id:0
@@ -648,28 +667,28 @@ msgstr ""
 #. module: caldav
 #: field:basic.calendar.fields,mapping:0
 msgid "Mapping"
-msgstr ""
+msgstr "Eşleştirme"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_import.py:86
 #, python-format
 msgid "Import Sucessful"
-msgstr ""
+msgstr "İçeaktarma Başarılı"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "_Import"
-msgstr ""
+msgstr "_İçeaktar"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_calendar_event_import
 msgid "Event Import"
-msgstr ""
+msgstr "Olay İçeaktar"
 
 #. module: caldav
 #: selection:basic.calendar.fields,fn:0
 msgid "Interval in hours"
-msgstr ""
+msgstr "Saat olara aralık"
 
 #. module: caldav
 #: field:calendar.event.export,name:0
@@ -679,52 +698,52 @@ msgstr "Dosya adı"
 #. module: caldav
 #: view:calendar.event.subscribe:0
 msgid "Subscribe to Remote Calendar"
-msgstr ""
+msgstr "Uzak Takvime Üye ol"
 
 #. module: caldav
 #: help:basic.calendar,calendar_color:0
 msgid "For supporting clients, the color of the calendar entries"
-msgstr ""
+msgstr "Müşterileri desteklemek için, takvim giriş renkleri"
 
 #. module: caldav
 #: field:basic.calendar,name:0
 #: field:basic.calendar.attributes,name:0
 #: field:basic.calendar.fields,name:0
 msgid "Name"
-msgstr ""
+msgstr "Adı"
 
 #. module: caldav
 #: selection:basic.calendar.attributes,type:0
 #: selection:basic.calendar.lines,name:0
 msgid "Alarm"
-msgstr ""
+msgstr "Uyarı"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_alarm
 msgid "basic.calendar.alarm"
-msgstr ""
+msgstr "temel.takvim.uyarı"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:1293
 #, python-format
 msgid "Attendee must have an Email Id"
-msgstr ""
+msgstr "Katılımcının bir Eposta Id'i olmalı"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_export_values
 msgid "Export .ics File"
-msgstr ""
+msgstr ".ics Dosyası Dışaaktar"
 
 #. module: caldav
 #: code:addons/caldav/calendar.py:41
 #, python-format
 msgid "vobject Import Error!"
-msgstr ""
+msgstr "vobject İçeaktarım Hatası!"
 
 #. module: caldav
 #: field:calendar.event.export,file_path:0
 msgid "Save ICS file"
-msgstr ""
+msgstr "ICS dosyası sakla"
 
 #. module: caldav
 #: code:addons/caldav/wizard/caldav_browse.py:50
@@ -789,12 +808,12 @@ msgstr ""
 #. module: caldav
 #: selection:user.preference,device:0
 msgid "Sunbird/Thunderbird"
-msgstr ""
+msgstr "Sunbird/Thunderbird"
 
 #. module: caldav
 #: field:basic.calendar,calendar_order:0
 msgid "Order"
-msgstr ""
+msgstr "Sırala"
 
 #. module: caldav
 #: code:addons/caldav/wizard/calendar_event_subscribe.py:59
@@ -805,40 +824,41 @@ msgstr "Hata!"
 #. module: caldav
 #: field:basic.calendar,calendar_color:0
 msgid "Color"
-msgstr ""
+msgstr "Renk"
 
 #. module: caldav
 #: view:basic.calendar:0
 msgid "MY"
-msgstr ""
+msgstr "BENİM"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_fields
 msgid "Calendar fields"
-msgstr ""
+msgstr "Takvim alanları"
 
 #. module: caldav
 #: view:calendar.event.import:0
 msgid "Import Message"
-msgstr ""
+msgstr "İleti İçeaktar"
 
 #. module: caldav
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe
 #: model:ir.actions.act_window,name:caldav.action_calendar_event_subscribe_values
 msgid "Subscribe"
-msgstr ""
+msgstr "Üye Ol"
 
 #. module: caldav
 #: sql_constraint:document.directory:0
 msgid "Directory must have a parent or a storage"
-msgstr ""
+msgstr "Dizinin bir üst dizini ya da depolaması olmalıdır"
 
 #. module: caldav
 #: model:ir.model,name:caldav.model_basic_calendar_todo
 msgid "basic.calendar.todo"
-msgstr ""
+msgstr "temel.takvim.yapılacak"
 
 #. module: caldav
 #: help:basic.calendar,calendar_order:0
 msgid "For supporting clients, the order of this folder among the calendars"
 msgstr ""
+"Müşterileri desteklemek için, bu klasörün takvimler arasındaki sırası"

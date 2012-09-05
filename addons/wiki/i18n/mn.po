@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
-"Last-Translator: ub121 <ubs121@gmail.com>\n"
+"PO-Revision-Date: 2012-09-03 09:10+0000\n"
+"Last-Translator: gobi <Unknown>\n"
 "Language-Team: Mongolian <mn@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:07+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-04 05:08+0000\n"
+"X-Generator: Launchpad (build 15890)\n"
 
 #. module: wiki
 #: field:wiki.groups,template:0
@@ -31,7 +31,7 @@ msgstr "Вики хуудсууд"
 #. module: wiki
 #: field:wiki.groups,method:0
 msgid "Display Method"
-msgstr ""
+msgstr "Харуулах Арга"
 
 #. module: wiki
 #: view:wiki.wiki:0 field:wiki.wiki,create_uid:0
@@ -57,7 +57,7 @@ msgstr "Хэсэг"
 #. module: wiki
 #: help:wiki.wiki,toc:0
 msgid "Indicates that this pages have a table of contents or not"
-msgstr ""
+msgstr "Энэ хуудсууд нь гарчигийн хүснэгттэй эсэхийг илэрхийлнэ"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_history view:wiki.wiki.history:0
@@ -77,17 +77,17 @@ msgstr "Агуулга"
 #. module: wiki
 #: field:wiki.wiki,child_ids:0
 msgid "Child Pages"
-msgstr ""
+msgstr "Дэд хуудсууд"
 
 #. module: wiki
 #: field:wiki.wiki,parent_id:0
 msgid "Parent Page"
-msgstr ""
+msgstr "Эцэг хуудас"
 
 #. module: wiki
 #: view:wiki.wiki:0 field:wiki.wiki,write_uid:0
 msgid "Last Contributor"
-msgstr ""
+msgstr "Сүүлийн Хувь Нэмэр оруулагс"
 
 #. module: wiki
 #: field:wiki.create.menu,menu_parent_id:0
@@ -98,7 +98,7 @@ msgstr "Толгой цэс"
 #: code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "There is no section in this Page"
-msgstr ""
+msgstr "Энэ хуудасанд хэсэг алга"
 
 #. module: wiki
 #: field:wiki.groups,name:0 view:wiki.wiki:0 field:wiki.wiki,group_id:0
@@ -113,7 +113,7 @@ msgstr "Гарчиг"
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_create_menu
 msgid "Wizard Create Menu"
-msgstr ""
+msgstr "Меню үүсгэх харилцах цонх"
 
 #. module: wiki
 #: field:wiki.wiki,history_id:0
@@ -123,19 +123,19 @@ msgstr "Түүхэн бичлэгүүд"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Page Content"
-msgstr ""
+msgstr "Хуудсын агуулга"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:237 code:addons/wiki/wizard/wiki_make_index.py:52
 #, python-format
 msgid "Warning !"
-msgstr ""
+msgstr "Анхааруулга !"
 
 #. module: wiki
 #: code:addons/wiki/wiki.py:237
 #, python-format
 msgid "There are no changes in revisions"
-msgstr ""
+msgstr "Хувилбаруудад өөрчлөлт алга"
 
 #. module: wiki
 #: help:wiki.wiki,section:0
@@ -155,7 +155,7 @@ msgstr "Тодорхойлолт"
 #. module: wiki
 #: field:wiki.wiki,review:0
 msgid "Needs Review"
-msgstr ""
+msgstr "Үзлэг шаардлагатай"
 
 #. module: wiki
 #: help:wiki.wiki,review:0
@@ -163,6 +163,8 @@ msgid ""
 "Indicates that this page should be reviewed, raising the attention of other "
 "contributors"
 msgstr ""
+"Энэ хуудсыг үзлэг хийх шаардлагатай эсэхийг илэрхийлж бусад туслалцаа "
+"оруулагчдын анхаарлыг татна"
 
 #. module: wiki
 #: view:wiki.create.menu:0 view:wiki.make.index:0
@@ -172,12 +174,12 @@ msgstr "Цэсний мэдээлэл"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_wiki_history
 msgid "Page History"
-msgstr ""
+msgstr "Хуудасны Түүх"
 
 #. module: wiki
 #: selection:wiki.groups,method:0
 msgid "Tree"
-msgstr ""
+msgstr "Мод"
 
 #. module: wiki
 #: view:wiki.groups:0
@@ -187,7 +189,7 @@ msgstr "Хуудсын загвар"
 #. module: wiki
 #: field:wiki.wiki,tags:0
 msgid "Keywords"
-msgstr ""
+msgstr "Түлхүүр үгс"
 
 #. module: wiki
 #: model:ir.actions.act_window,help:wiki.action_wiki
@@ -197,17 +199,23 @@ msgid ""
 "(CRM, Sales, etc.). You can use keywords to ease access to your wiki pages. "
 "There is a basic wiki editing for text format."
 msgstr ""
+"Вики хуудсуудын тусламжтайгаа санаа, оноо, асуулт зэрэгийг хамт "
+"ажиллагсадтайгаа хуваалцдаг. Нэг юмуу хэд хэдэн модультай холбогдсон шинэ "
+"баримтыг үүсгэж болно. Вики хуудасруу хандах явдлыг хялбар болгох үүднээс "
+"түлхүүр үгүүдийг хуудсуудад хэрэглэж болно. Вики хуудсыг бичих текстийг "
+"хэлбэржүүлэх суурь ойлголт байдаг."
 
 #. module: wiki
 #: code:addons/wiki/wizard/wiki_show_diff.py:54
 #, python-format
 msgid "Warning"
-msgstr ""
+msgstr "Анхааруулга"
 
 #. module: wiki
 #: help:wiki.groups,home:0
 msgid "Required to select home page if display method is Home Page"
 msgstr ""
+"Хэрэв харуулах арга нь нүүр хуудас гэсэн бол нүүр хуудсыг сонгох хэрэгтэй."
 
 #. module: wiki
 #: field:wiki.wiki.history,create_date:0
@@ -224,7 +232,7 @@ msgstr "Сонгосон хуудас дээр индекс үүсгэх үү ? 
 #: model:ir.actions.act_window,name:wiki.action_view_wiki_show_diff_values
 #: view:wizard.wiki.history.show_diff:0
 msgid "Difference"
-msgstr ""
+msgstr "Ялгаа"
 
 #. module: wiki
 #: field:wiki.groups,page_ids:0
@@ -234,12 +242,12 @@ msgstr "Хуудсууд"
 #. module: wiki
 #: view:wiki.groups:0
 msgid "Group Description"
-msgstr ""
+msgstr "Бүлгийн Тодорхойлолт"
 
 #. module: wiki
 #: view:wiki.wiki.page.open:0
 msgid "Want to open a wiki page? "
-msgstr ""
+msgstr "Вики хуудсыг нээмээр байна уу? "
 
 #. module: wiki
 #: field:wiki.groups,section:0
@@ -254,7 +262,7 @@ msgstr "Текст муж"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Meta Information"
-msgstr ""
+msgstr "Meta мэдээлэл"
 
 #. module: wiki
 #: field:wiki.wiki,create_date:0
@@ -269,7 +277,7 @@ msgstr "Тэмдэглэгээ"
 #. module: wiki
 #: selection:wiki.groups,method:0
 msgid "List"
-msgstr ""
+msgstr "Жагсаалт"
 
 #. module: wiki
 #: field:wiki.wiki,summary:0 field:wiki.wiki.history,summary:0
@@ -294,12 +302,12 @@ msgstr "wiki.wiki"
 #. module: wiki
 #: help:wiki.groups,method:0
 msgid "Define the default behaviour of the menu created on this group"
-msgstr ""
+msgstr "Энэ бүлэг дээр үүсгэгдсэн менюны хэвийн үйл ажиллагааг тодорхойл"
 
 #. module: wiki
 #: view:wizard.wiki.history.show_diff:0
 msgid "Close"
-msgstr ""
+msgstr "Хаах"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wizard_wiki_history_show_diff
@@ -314,22 +322,22 @@ msgstr "Вики Id"
 #. module: wiki
 #: field:wiki.groups,home:0 selection:wiki.groups,method:0
 msgid "Home Page"
-msgstr ""
+msgstr "Нүүр Хуудас"
 
 #. module: wiki
 #: help:wiki.wiki,parent_id:0
 msgid "Allows you to link with the other page with in the current topic"
-msgstr ""
+msgstr "Идэвхтэй сэдэв дахь өөр хуудастай холбох боломжийг олгоно"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Modification Information"
-msgstr ""
+msgstr "Өөрчлөлтийн Мэдээлэл"
 
 #. module: wiki
 #: help:wiki.wiki,group_id:0
 msgid "Topic, also called Wiki Group"
-msgstr ""
+msgstr "Сэдэв нь мөн Вики Бүлэг гэж яригддаг"
 
 #. module: wiki
 #: model:ir.ui.menu,name:wiki.menu_wiki_configuration view:wiki.wiki:0
@@ -357,12 +365,12 @@ msgstr "Индекс үүсгэх"
 #: code:addons/wiki/wizard/wiki_show_diff.py:54
 #, python-format
 msgid "You need to select minimum 1 or maximum 2 history revision!"
-msgstr ""
+msgstr "Хамгийн багадаа 1 эсвэл 2 өөрчлөлтийн түүхийг сонгох хэрэгтэй!"
 
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Group By..."
-msgstr ""
+msgstr "Бүлэглэх..."
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_create_menu
@@ -386,7 +394,7 @@ msgstr "Вики группүүд"
 #. module: wiki
 #: view:wiki.wiki:0
 msgid "Topic"
-msgstr ""
+msgstr "Сэдэв"
 
 #. module: wiki
 #: field:wiki.wiki.history,write_uid:0
@@ -403,12 +411,12 @@ msgstr "Агуулгын хүснэгт"
 #. module: wiki
 #: view:wiki.groups:0 view:wiki.wiki.page.open:0
 msgid "Open Wiki Page"
-msgstr ""
+msgstr "Вики Хуудас Нээх"
 
 #. module: wiki
 #: model:ir.model,name:wiki.model_wiki_wiki_page_open
 msgid "wiz open page"
-msgstr ""
+msgstr "хуудас нээх харилцах цонх"
 
 #. module: wiki
 #: view:wiki.create.menu:0 view:wiki.make.index:0 view:wiki.wiki.page.open:0
@@ -428,9 +436,9 @@ msgstr "Хянах хэрэгтэй"
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.action_wiki_review
 msgid "Pages Waiting Review"
-msgstr ""
+msgstr "Үзлэг хүлээж буй хуудсууд"
 
 #. module: wiki
 #: model:ir.actions.act_window,name:wiki.act_wiki_group_open
 msgid "Search Page"
-msgstr ""
+msgstr "Хуудас хайх"

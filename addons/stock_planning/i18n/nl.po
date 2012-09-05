@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-08-24 11:44+0000\n"
+"PO-Revision-Date: 2012-09-04 06:56+0000\n"
 "Last-Translator: Erwin <Unknown>\n"
 "Language-Team: Dutch <nl@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:06+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-05 05:07+0000\n"
+"X-Generator: Launchpad (build 15901)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -838,6 +838,11 @@ msgid ""
 "manual procurement with this forecast when some periods are exceptional for "
 "usual minimum stock rules."
 msgstr ""
+"Deze hoeveelheid voor de verkoopprognose is een indicatie voor de voorraad "
+"planner om een handmatige verwerving te maken of om een automatische "
+"verwerving mogelijk te maken. U kunt handmatige verwerving gebruiken met "
+"deze prognose, in periodes waar er afwijkingen zijn ten opzichte van de "
+"normale minimale voorraad regels."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,help:stock_planning.action_view_stock_planning_form
@@ -853,6 +858,15 @@ msgid ""
 "can trigger the procurement of what is missing to reach your desired "
 "quantities"
 msgstr ""
+"De Master Procurement Schedule is veelal de belangrijkste aandrijver van de "
+"magazijn aanvulopdrachten of is een aanvulling op de automatische MPR "
+"planner (minimale voorraadregels, etc.). Elke MPR regel geeft u een "
+"voorberekend overzicht van de inkomende en uitgaande hoeveelheden van een "
+"bepaald product voor een bepaalde voorraaadperiode, gebaseerd op de huidige "
+"en toekomstige voorraad niveaus, alsmede de geplande voorraad mutaties. De "
+"prognose kan handmatig worden aangepast en wanneer tevreden over de "
+"(gesimuleerde) voorraadhoeveelheden, kan deze een verwerving in gang zetten "
+"om de ontbrekende hoeveelheden bij te vullen."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:685
@@ -1040,6 +1054,8 @@ msgid ""
 "Warehouse used as source in supply pick move created by 'Supply from Another "
 "Warehouse'."
 msgstr ""
+"Magazijn welke wordt gebruikt als bron, bij een mutatie \"lever vanuit ander "
+"magazijn\"."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_planning
@@ -1052,6 +1068,9 @@ msgid ""
 "Shows which warehouse this forecast concerns. If during stock planning you "
 "will need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Geeft aan voor welk magazijn deze prognose betreft. Indien u tijdens de "
+"voorraadplanning een verkoopprognose nodig hebt, selecteer dan nu een "
+"magazijn."
 
 #. module: stock_planning
 #: code:addons/stock_planning/stock_planning.py:661
@@ -1071,6 +1090,9 @@ msgid ""
 "observe Stock simulation. This value should be equal or greater than "
 "Confirmed In."
 msgstr ""
+"Geef de hoeveelheid in (volgens planning), welke binnen gaat komen. Verander "
+"deze waarde en bekijk de voorraad simulatie. de waarde moet gelijk of groter "
+"zijn dan de waarde \"bevestigd inkomend\"."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period4_per_company:0
@@ -1257,6 +1279,11 @@ msgid ""
 "between Planned In and Confirmed In. For current period Already In is also "
 "calculated. This value is used to create procurement for lacking quantity."
 msgstr ""
+"Resterende hoeveelheid naar gepland inkomende hoeveelheid. Deze is het "
+"berekende verschil tussen gepland en bevestigd inkomend. Voor de huidige "
+"periode is de waarde van reeds binnengekomen ook meegenomen in de "
+"berekening. Deze waarde is gebruikt om een verwerving te maken voor de "
+"ontbrekende hoeveelheid."
 
 #. module: stock_planning
 #: help:stock.planning,outgoing_left:0
@@ -1265,6 +1292,10 @@ msgid ""
 "difference between Planned Out and Confirmed Out. For current period Already "
 "Out is also calculated"
 msgstr ""
+"Dit is de hoeveelheid welke uitgaand wordt verwacht, behalve de reeds "
+"bevestigde uitgaande leveringen, in de geselecteerde periode. Dit is het "
+"verschil tussen gepland uitgaand en bevestigd uitgaand. Voor de huidige "
+"periode is de waarde voor reeds uitgaand ook meegenomen in de berekening."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
