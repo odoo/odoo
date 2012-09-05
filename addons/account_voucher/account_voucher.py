@@ -334,9 +334,15 @@ class account_voucher(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
-        self.create_send_note(cr, uid, [voucher], context=context)
-        return voucher
+        if context is None:
+            context = {}
+        bank_line_id = context.get('bank_statement_line_id', False)
+        bank_line_obj = self.pool.get("account.bank.statement.line")
+        voucher_id =  super(account_voucher, self).create(cr, uid, vals, context=context)
+        if bank_line_id:
+            bank_line_obj.write(cr, uid, bank_line_id, {'voucher_id': voucher_id})
+        self.create_send_note(cr, uid, [voucher_id], context=context)
+        return voucher_id
 
     def compute_tax(self, cr, uid, ids, context=None):
         tax_pool = self.pool.get('account.tax')
@@ -1496,49 +1502,31 @@ class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
    
     def action_payment_reconcile(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        ctx = dict(context)
         statement_id = ids[0]
         statement = self.browse(cr, uid, statement_id, context=context)
+        ctx['bank_statement_line_id'] = statement.id
+        ctx.update({
+            'line_type': statement.type, 
+            'type': statement.amount > 0 and 'payment' or 'receipt', 
+            'partner_id': statement.partner_id and statement.partner_id.id or False, 
+            'journal_id': statement.statement_id.journal_id and statement.statement_id.journal_id.id or False, 
+            'amount': abs(statement.amount), 
+            'reference': statement.ref, 
+            'date': statement.date, 
+            'name': statement.name
+        })
         voucher = statement.voucher_id or False
         voucher_id = voucher and voucher.id or False
-        if not voucher:
-            voucher_obj = self.pool.get('account.voucher')
-            sign = 1
-            type = 'general'
-            ttype = statement.amount < 0 and 'payment' or 'receipt'
-            if statement.journal_id.type in ('sale', 'sale_refund'):
-                type = 'customer'
-                ttype = 'receipt'
-            elif statement.journal_id.type in ('purchase', 'purhcase_refund'):
-                type = 'supplier'
-                ttype = 'payment'
-                sign = -1
-
-            result = voucher_obj.onchange_partner_id(cr, uid, [], partner_id=statement.partner_id.id, journal_id=statement.journal_id.id, amount=sign*statement.amount, currency_id= False, ttype=ttype, date=statement.date, context=context)
-            voucher_res = { 'type': ttype,
-                            'name': statement.name,
-                            'partner_id': statement.partner_id.id,
-                            'journal_id': statement.journal_id.id,
-                            'account_id': result.get('account_id', statement.journal_id.default_credit_account_id.id),
-                            'company_id': statement.company_id.id,
-                            'date': statement.date,
-                            'amount': sign*statement.amount,
-                            }
-            voucher_id = voucher_obj.create(cr, uid, voucher_res, context=context)
-            self.write(cr, uid, statement_id, {'voucher_id':voucher_id}, context=context)
-        mod_obj = self.pool.get('ir.model.data')
-        if voucher and voucher.type == 'customer':
-            res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_receipt_form')
-        else:
-            res = mod_obj.get_object_reference(cr, uid, 'account_voucher', 'view_vendor_payment_form')
-        view_id = res and res[1] or False
         return {
            'name': _('Payment Entry'),
            'res_model': 'account.voucher',
            'view_type': 'form',
            'view_mode': 'form',
            'target':'new',
-           'view_id':view_id,  
-           'context': context,
+           'context': ctx,
            'res_id':voucher_id,
            'type': 'ir.actions.act_window'
         }
