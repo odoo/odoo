@@ -576,8 +576,15 @@
                             <field name="xml_id"/>
                         </group>
                     </group>
-                    <field name="arch"/>
-                  </sheet>  
+                    <notebook>
+                        <page string="Architecture">
+                            <field name="arch"/>
+                        </page>
+                        <page string="Groups">
+                            <field name="groups_id"/>
+                        </page>
+                    </notebook>
+                  </sheet>
                 </form>
             </field>
         </record>
@@ -1150,6 +1157,7 @@
                     <filter icon="terp-gdu-smart-failing"
                         string="Untranslated"
                         domain="['|',('value', '=', False),('value','=','')]"/>
+                    <field name="name" operator="="/>
                     <field name="lang"/>
                     <field name="src"/>
                     <field name="value"/>
@@ -1190,12 +1198,12 @@
             <field name="name">Translations</field>
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
-                <tree string="Translations">
-                    <field name="src"/>
+                <tree string="Translations" editable="bottom">
+                    <field name="src" readonly="True"/>
                     <field name="value"/>
-                    <field name="name"/>
-                    <field name="lang"/>
-                    <field name="type"/>
+                    <field name="name" readonly="True"/>
+                    <field name="lang" readonly="True"/>
+                    <field name="type" readonly="True"/>
                 </tree>
             </field>
         </record>

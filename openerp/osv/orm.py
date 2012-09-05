@@ -1825,8 +1825,11 @@ class BaseModel(object):
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
-                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, None, context)
+                node_model = self.pool.get(node.getchildren()[0].get('object'))
+                node_fields = node_model.fields_get(cr, user, None, context)
                 fields.update(node_fields)
+                if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
+                    node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
@@ -1834,6 +1837,10 @@ class BaseModel(object):
             fields = self.fields_get(cr, user, None, context)
         fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, node)
+        if node.tag in ('kanban', 'tree', 'form', 'gantt'):
+            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if not node.get(action) and not self.check_access_rights(cr, user, operation, raise_exception=False):
+                    node.set(action, 'false')
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
             if k not in fields_def:
