@@ -36,7 +36,7 @@ class mail_compose_message(osv.TransientModel):
         at model and view levels to provide specific features.
 
         The behavior of the wizard depends on the composition_mode field:
-        - 'reply': reply to a previous message. The wizard is pre-populated 
+        - 'reply': reply to a previous message. The wizard is pre-populated
             via ``get_message_data``.
         - 'comment': new post on a record. The wizard is pre-populated via
             ``get_record_data``
@@ -63,7 +63,6 @@ class mail_compose_message(osv.TransientModel):
                 - active_ids: record IDs
                 - default_model or active_model
         """
-        # get some important values from context
         if context is None:
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
@@ -81,7 +80,7 @@ class mail_compose_message(osv.TransientModel):
         elif composition_mode == 'comment' and model and res_id:
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
-            vals = {'model': model, 'res_id': res_id}
+            vals = {'model': model, 'res_id': res_id, 'content_subtype': 'html'}
         else:
             vals = {'model': model, 'res_id': res_id}
         if composition_mode:
@@ -114,10 +113,10 @@ class mail_compose_message(osv.TransientModel):
 
     _defaults = {
         'composition_mode': 'comment',
-        'content_subtype': lambda self,cr, uid, context={}: 'plain',
-        'body_text': lambda self,cr, uid, context={}: False,
-        'body': lambda self,cr, uid, context={}: '',
-        'subject': lambda self,cr, uid, context={}: False,
+        'content_subtype': lambda self, cr, uid, ctx={}: 'plain',
+        'body_text': lambda self, cr, uid, ctx={}: False,
+        'body': lambda self, cr, uid, ctx={}: '',
+        'subject': lambda self, cr, uid, ctx={}: False,
     }
 
     def notify(self, cr, uid, newid, context=None):
@@ -144,13 +143,10 @@ class mail_compose_message(osv.TransientModel):
             :param int message_id: id of the mail.message to which the user
                 is replying.
         """
+        if not message_id:
+            return {}
         if context is None:
             context = {}
-        result = {}
-        if not message_id:
-            return result
-
-        current_user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         message_data = self.pool.get('mail.message').browse(cr, uid, message_id, context=context)
 
         # create subject
@@ -159,15 +155,16 @@ class mail_compose_message(osv.TransientModel):
         if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # create the reply in the body
-        reply_header = _('On %(date)s, %(sender_name)s wrote:') % {
+        reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
             'date': message_data.date if message_data.date else '',
-            'sender_name': message_data.author_id.name }
-        reply_body = '<div>%s<blockquote>%s</blockquote></div>' % (reply_header, message_data.body)
+            'sender_name': message_data.author_id.name,
+            'body': message_data.body,
+            }
         # get partner_ids from original message
         partner_ids = [partner.id for partner in message_data.partner_ids] if message_data.partner_ids else []
 
         # update the result
-        result.update({
+        result = {
             'model': message_data.model,
             'res_id': message_data.res_id,
             'parent_id': message_data.id,
@@ -175,11 +172,11 @@ class mail_compose_message(osv.TransientModel):
             'subject': reply_subject,
             'partner_ids': partner_ids,
             'content_subtype': 'html',
-        })
+        }
         return result
 
     def toggle_content_subtype(self, cr, uid, ids, context=None):
-        """ hit toggle formatting mode button: calls onchange_formatting to 
+        """ hit toggle formatting mode button: calls onchange_formatting to
             emulate an on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
             content_st_new_value = 'plain' if record.content_subtype == 'html' else 'html'
@@ -209,17 +206,18 @@ class mail_compose_message(osv.TransientModel):
             warning_msg += '\n- %s' % (partner.name)
         return {'warning': {
                     'title': _('Partners email addresses not found'),
-                    'message': warning_msg }
+                    'message': warning_msg,
+                    }
                 }
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ onchange_partner_ids (value format: [[6, False, [3, 4]]]). The
+        """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
             basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
         """
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
-            return 
+            return
         res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
         return res
 
@@ -227,7 +225,7 @@ class mail_compose_message(osv.TransientModel):
         # Cascade delete all attachments, as they are owned by the composition wizard
         for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
             self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
-        return super(mail_compose_message,self).unlink(cr, uid, ids, context=context)
+        return super(mail_compose_message, self).unlink(cr, uid, ids, context=context)
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
@@ -258,13 +256,13 @@ class mail_compose_message(osv.TransientModel):
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
                     'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
-                    'attachments': [(attach.name or attach.datas_fname, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
+                    'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }
                 # mass mailing: render and override default values
                 if mass_mail_mode and wizard.model:
-                    email_dict = self.render_message(cr, uid, wizard, wizard.model, res_id, context=context)
+                    email_dict = self.render_message(cr, uid, wizard, res_id, context=context)
                     new_partner_ids = email_dict.pop('partner_ids', [])
-                    post_values['partner_ids'] += new_partner_ids
+                    post_values['partner_ids'] += [(4, partner_id) for partner_id in new_partner_ids]
                     new_attachments = email_dict.pop('attachments', [])
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
@@ -273,14 +271,13 @@ class mail_compose_message(osv.TransientModel):
 
         return {'type': 'ir.actions.act_window_close'}
 
-    def render_message(self, cr, uid, wizard, model, res_id, context=None):
-        """ Generate an email from the template for given (model, res_id) pair.
-            This method is meant to be inherited by email_template that will
-            produce a more complete dictionary, with email_to, ...
-        """
+    def render_message(self, cr, uid, wizard, res_id, context=None):
+        """ Generate an email from the template for given (wizard.model, res_id)
+            pair. This method is meant to be inherited by email_template that
+            will produce a more complete dictionary. """
         return {
-            'subject': self.render_template(cr, uid, wizard.subject, model, res_id, context),
-            'body': self.render_template(cr, uid, wizard.body, model, res_id, context),
+            'subject': self.render_template(cr, uid, wizard.subject, wizard.model, res_id, context),
+            'body': self.render_template(cr, uid, wizard.body, wizard.model, res_id, context),
         }
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
@@ -302,8 +299,8 @@ class mail_compose_message(osv.TransientModel):
         def merge(match):
             exp = str(match.group()[2:-1]).strip()
             result = eval(exp, {
-                'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
-                'object' : self.pool.get(model).browse(cr, uid, res_id, context=context),
+                'user': self.pool.get('res.users').browse(cr, uid, uid, context=context),
+                'object': self.pool.get(model).browse(cr, uid, res_id, context=context),
                 'context': dict(context), # copy context to prevent side-effects of eval
                 })
             return result and tools.ustr(result) or ''

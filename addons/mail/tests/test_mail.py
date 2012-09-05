@@ -19,8 +19,6 @@
 #
 ##############################################################################
 
-import tools
-
 from openerp.tests import common
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
@@ -93,10 +91,9 @@ class test_mail(common.TransactionCase):
         self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
 
         # groups@.. will cause the creation of new mail groups
-        self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model','=', 'mail.group')])[0]
+        self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model', '=', 'mail.group')])[0]
         self.mail_alias.create(self.cr, self.uid, {'alias_name': 'groups',
                                                    'alias_model_id': self.mail_group_model_id})
-        
         # create a 'pigs' group that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
@@ -104,10 +101,10 @@ class test_mail(common.TransactionCase):
     def test_00_message_process(self):
         cr, uid = self.cr, self.uid
         # Incoming mail creates a new mail_group "frogs"
-        self.assertEqual(self.mail_group.search(cr, uid, [('name','=','frogs')]), [])
+        self.assertEqual(self.mail_group.search(cr, uid, [('name', '=', 'frogs')]), [])
         mail_frogs = MAIL_TEMPLATE.format(to='groups@example.com, other@gmail.com', subject='frogs', extra='')
         self.mail_thread.message_process(cr, uid, None, mail_frogs)
-        frog_groups = self.mail_group.search(cr, uid, [('name','=','frogs')])
+        frog_groups = self.mail_group.search(cr, uid, [('name', '=', 'frogs')])
         self.assertTrue(len(frog_groups) == 1)
 
         # Previously-created group can be emailed now - it should have an implicit alias group+frogs@...
@@ -121,11 +118,11 @@ class test_mail(common.TransactionCase):
 
         # Even with a wrong destination, a reply should end up in the correct thread
         mail_reply = MAIL_TEMPLATE.format(to='erroneous@example.com>', subject='Re: news',
-                                          extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n'%frog_group.id)
+                                          extra='In-Reply-To: <12321321-openerp-%d-mail.group@example.com>\n' % frog_group.id)
         self.mail_thread.message_process(cr, uid, None, mail_reply)
         frog_group.refresh()
         self.assertTrue(len(frog_group.message_ids) == 3, 'Group should contain 3 messages now')
-        
+
         # No model passed and no matching alias must raise
         mail_spam = MAIL_TEMPLATE.format(to='noone@example.com', subject='spam', extra='')
         self.assertRaises(Exception,
@@ -192,7 +189,7 @@ class test_mail(common.TransactionCase):
         self.assertEqual(follower_ids, set([partner_bert_id]), 'Bert should be the follower of dummy mail.thread data')
         fol_obj_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', group_dummy_id)])
         follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
-        self.assertEqual(follower_ids,set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the followers of dummy mail.group data')
+        self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the followers of dummy mail.group data')
 
     def test_11_message_followers(self):
         """ Tests designed for the subscriber API. """
@@ -252,9 +249,8 @@ class test_mail(common.TransactionCase):
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment')
         message = self.mail_message.browse(cr, uid, msg_id)
         sent_email = self._build_email_kwargs
-
-        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id','=',msg_id)]), 'mail.mail notifications should have been auto-deleted!')
-        
+        # Test: notifications have been deleted
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id)]), 'mail.mail notifications should have been auto-deleted!')
         # Test: mail_message: subject is _subject, body is _body1 (no formatting done)
         self.assertEqual(message.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message.body, _body1, 'mail.message body incorrect')
@@ -279,7 +275,7 @@ class test_mail(common.TransactionCase):
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         sent_email = self._build_email_kwargs
-        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id','=',msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
@@ -300,11 +296,11 @@ class test_mail(common.TransactionCase):
         # Test: sent_email: email_to should contain b@b, c@c, not a@a (writer)
         self.assertEqual(set(sent_email['email_to']), set(['b@b', 'c@c']), 'sent_email email_to incorrect')
         # Test: attachments
-        for i in range(len(message.attachment_ids)):
-            self.assertEqual(message.attachment_ids[i].name, _attachments[i][0], 'mail.message attachment name incorrect')
-            self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertEqual(message.attachment_ids[i].datas.decode('base64'), _attachments[i][1], 'mail.message attachment data incorrect')
+        for attach in message.attachment_ids:
+            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
+            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
+            self.assertIn((attach.name, attach.datas.decode('base64')), _attachments,
+                'mail.message attachment name / data incorrect')
 
     def test_21_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
@@ -313,19 +309,19 @@ class test_mail(common.TransactionCase):
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
         user_admin = self.res_users.browse(cr, uid, uid)
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        group_bird_id = self.mail_group.create(cr, uid, {'name': 'Bird', 'description': 'Bird resistance'})
+        group_bird = self.mail_group.browse(cr, uid, group_bird_id)
 
         # Mail data
         _subject = 'Pigs'
-        _subject_reply = 'Re: Pigs'
-        _mail_subject = '%s posted on %s' % (user_admin.name, group_pigs.name)
         _body_text = 'Pigs rules'
-        _msg_body1 = '<pre>Pigs rules</pre>'
-        _body_html = '<html>Pigs rules</html>'
-        _msg_body2 = '<html>Pigs rules</html>'
+        _msg_reply = 'Re: Pigs'
+        _msg_body = '<pre>Pigs rules</pre>'
         _attachments = [
-            {'name': 'First', 'datas': 'My first attachment'.encode('base64')},
-            {'name': 'Second', 'datas': 'My second attachment'.encode('base64')}
+            {'name': 'First', 'datas_fname': 'first.txt', 'datas': 'My first attachment'.encode('base64')},
+            {'name': 'Second', 'datas_fname': 'second.txt', 'datas': 'My second attachment'.encode('base64')}
             ]
+        _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
         # Create partners
         # 0 - Admin
@@ -340,23 +336,27 @@ class test_mail(common.TransactionCase):
         # Subscribe #1
         group_pigs.message_subscribe([p_b_id])
 
-        # CASE1: comment group_pigs with body_text and subject
+        # ----------------------------------------
+        # CASE1: comment on group_pigs
+        # ----------------------------------------
+
+        # 1. Comment group_pigs with body_text and subject
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body_text': _body_text, 'partner_ids': [(4, p_c_id), (4, p_d_id)]},
             {'default_composition_mode': 'comment', 'default_model': 'mail.group', 'default_res_id': self.group_pigs_id})
         compose = mail_compose.browse(cr, uid, compose_id)
-        # Test: mail.compose.message: model, res_id
+        # Test: mail.compose.message: composition_mode, model, res_id
+        self.assertEqual(compose.composition_mode,  'comment', 'mail.compose.message incorrect composition_mode')
         self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
 
-        # Post the comment, get created message
+        # 2. Post the comment, get created message
         mail_compose.send_mail(cr, uid, [compose_id])
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-
         # Test: mail.message: subject, body inside pre
         self.assertEqual(message.subject,  False, 'mail.message incorrect subject')
-        self.assertEqual(message.body, _msg_body1, 'mail.message incorrect body')
+        self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
         # Test: mail.message: partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
         msg_pids = [partner.id for partner in message.partner_ids]
         test_pids = [p_a_id, p_b_id, p_c_id, p_d_id]
@@ -364,114 +364,165 @@ class test_mail(common.TransactionCase):
         self.assertEqual(len(notif_ids), 4, 'mail.message: too much notifications created')
         self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
 
-        # CASE2: reply to last comment (update its subject) with attachments
+        # ----------------------------------------
+        # CASE2: reply to last comment with attachments
+        # ----------------------------------------
+
+        # 1. Update last comment subject, reply with attachments
         message.write({'subject': _subject})
         compose_id = mail_compose.create(cr, uid,
             {'attachment_ids': [(0, 0, _attachments[0]), (0, 0, _attachments[1])]},
             {'default_composition_mode': 'reply', 'default_model': 'mail.thread', 'default_res_id': self.group_pigs_id, 'default_parent_id': message.id})
         compose = mail_compose.browse(cr, uid, compose_id)
-
-        # Test: form view methods
         # Test: model, res_id, parent_id, content_subtype
         self.assertEqual(compose.model,  'mail.group', 'mail.compose.message incorrect model')
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
         self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
 
-        # Post the comment, get created message
+        # 2. Post the comment, get created message
         mail_compose.send_mail(cr, uid, [compose_id])
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-        # Test: subject as Re:.., body in html
-        self.assertEqual(message.subject, _subject_reply, 'mail.message incorrect subject')
+        # Test: mail.message: subject as Re:.., body in html
+        self.assertEqual(message.subject, _msg_reply, 'mail.message incorrect subject')
         self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote></div>', message.body, 'mail.message body is incorrect')
-        # Test: attachments
-        for i in range(len(message.attachment_ids)):
-            self.assertEqual(message.attachment_ids[i].name, _attachments[i]['name'], 'mail.message attachment name incorrect')
-            self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
-            self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertEqual(message.attachment_ids[i].datas.decode('base64'), _attachments[i]['datas'].decode('base64'), 'mail.message attachment data incorrect')
+        # Test: mail.message: attachments
+        for attach in message.attachment_ids:
+            self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
+            self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
+            self.assertIn((attach.name, attach.datas.decode('base64')), _attachments_test,
+                'mail.message attachment name / data incorrect')
 
-        # CASE3 - Create in mass_mail composition mode that should work with or without email_template installed
+        # ----------------------------------------
+        # CASE3: mass_mail on Pigs and Bird
+        # ----------------------------------------
+
+        # 1. mass_mail on pigs and bird
         compose_id = mail_compose.create(cr, uid,
             {'subject': _subject, 'body': '${object.description}'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group', 'default_res_id': -1,
-                'active_ids': [self.group_pigs_id]})
+                'active_ids': [self.group_pigs_id, group_bird_id]})
         compose = mail_compose.browse(cr, uid, compose_id)
+        # Test: content_subtype is html
+        self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message content_subtype incorrect')
 
-        # Post the comment, get created message
-        mail_compose.send_mail(cr, uid, [compose_id], {'default_res_id': -1, 'active_ids': [self.group_pigs_id]})
+        # 2. Post the comment, get created message for each group
+        mail_compose.send_mail(cr, uid, [compose_id],
+            context={'default_res_id': -1, 'active_ids': [self.group_pigs_id, group_bird_id]})
         group_pigs.refresh()
-        message = group_pigs.message_ids[0]
-        # Test: last message on Pigs = last created message
-        test_msg = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [], limit=1))[0]
-        self.assertEqual(message.id, test_msg.id, 'Pigs did not receive its mass mailing message')
+        group_bird.refresh()
+        message1 = group_pigs.message_ids[0]
+        message2 = group_bird.message_ids[0]
+        # Test: Pigs and Bird did receive their message
+        test_msg_ids = self.mail_message.search(cr, uid, [], limit=2)
+        self.assertIn(message1.id, test_msg_ids, 'Pigs did not receive its mass mailing message')
+        self.assertIn(message2.id, test_msg_ids, 'Bird did not receive its mass mailing message')
         # Test: mail.message: subject, body
-        self.assertEqual(message.subject, _subject, 'mail.message subject is incorrect')
-        self.assertEqual(message.body, group_pigs.description, 'mail.message body is incorrect')
+        self.assertEqual(message1.subject, _subject, 'mail.message subject incorrect')
+        self.assertEqual(message1.body, group_pigs.description, 'mail.message body incorrect')
+        self.assertEqual(message2.subject, _subject, 'mail.message subject incorrect')
+        self.assertEqual(message2.body, group_bird.description, 'mail.message body incorrect')
 
     def test_30_message_read(self):
         """ Tests designed for message_read. """
         # TDE NOTE: this test is not finished, as the message_read method is not fully specified.
-        # It wil be updated as soon as we have fixed specs !
-        cr, uid  = self.cr, self.uid
+        # It will be updated as soon as we have fixed specs !
+        cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        def _compare_structures(struct1, struct2, n=0):
+            # print '%scompare structure' % ('\t' * n)
+            self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
+            for x in range(len(struct1)):
+                # print '%s' % ('\t' * n), struct1[x]['id'], struct2[x]['id'], struct1[x].get('subject') or ''
+                self.assertEqual(struct1[x]['id'], struct2[x]['id'], 'message_read failure %s' % struct1[x].get('subject'))
+                _compare_structures(struct1[x]['child_ids'], struct2[x]['child_ids'], n + 1)
+            # print '%send compare' % ('\t' * n)
 
-        # Test message_read_tree_flatten that flattens a thread according to a given thread_level
+        # ----------------------------------------
+        # CASE1: Flattening test
+        # ----------------------------------------
+
+        # Create dummy message structure
         import copy
-        tree = [{'id': 1, 'child_ids':[
-                    {'id': 3, 'child_ids': [] },
-                    {'id': 4, 'child_ids': [
-                        {'id': 5, 'child_ids': []},
-                        {'id': 12, 'child_ids': []},
-                        ] },
-                    {'id': 8, 'child_ids': [
-                        {'id': 10, 'child_ids': []},
-                        ] },
-                    ] },
-                {'id': 2, 'child_ids': [
+        tree = [{'id': 2, 'child_ids': [
+                    {'id': 6, 'child_ids': [
+                        {'id': 8, 'child_ids': []},
+                        ]},
+                    ]},
+                {'id': 1, 'child_ids':[
                     {'id': 7, 'child_ids': [
                         {'id': 9, 'child_ids': []},
-                        ] },
-                    ] },
-                {'id': 6, 'child_ids': [
-                    {'id': 11, 'child_ids': [] },
-                    ] },
+                        ]},
+                    {'id': 4, 'child_ids': [
+                        {'id': 10, 'child_ids': []},
+                        {'id': 5, 'child_ids': []},
+                        ]},
+                    {'id': 3, 'child_ids': []},
+                    ]},
                 ]
+        # Test: completely flat
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 0)
-        self.assertTrue(len(new_tree) == 12, 'Flattening wrongly produced')
+        self.assertEqual(len(new_tree), 10, 'message_read_tree_flatten wrong in flat')
+        # Test: 1 thread level
+        tree_test = [{'id': 2, 'child_ids': [
+                        {'id': 8, 'child_ids': []}, {'id': 6, 'child_ids': []},
+                    ]},
+                    {'id': 1, 'child_ids': [
+                        {'id': 10, 'child_ids': []}, {'id': 9, 'child_ids': []},
+                        {'id': 7, 'child_ids': []}, {'id': 5, 'child_ids': []},
+                        {'id': 4, 'child_ids': []}, {'id': 3, 'child_ids': []},
+                    ]},
+                    ]
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 1)
-        self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 6 and len(new_tree[1]['child_ids']) == 2 and len(new_tree[2]['child_ids']) == 1,
-            'Flattening wrongly produced')
+        _compare_structures(new_tree, tree_test)
+        # Test: 2 thread levels
         new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 2)
-        self.assertTrue(len(new_tree) == 3 and len(new_tree[0]['child_ids']) == 3 and len(new_tree[0]['child_ids'][1]) == 2,
-            'Flattening wrongly produced')
+        _compare_structures(new_tree, tree)
 
-        # Add a few messages to pigs group
-        msgid1 = group_pigs.message_post(body='My Body', subject='1', parent_id=False)
-        msgid2 = group_pigs.message_post(body='My Body', subject='1-1', parent_id=msgid1)
-        msgid3 = group_pigs.message_post(body='My Body', subject='1-2', parent_id=msgid1)
-        msgid4 = group_pigs.message_post(body='My Body', subject='2', parent_id=False)
-        msgid5 = group_pigs.message_post(body='My Body', subject='1-1-1', parent_id=msgid2)
-        msgid6 = group_pigs.message_post(body='My Body', subject='2-1', parent_id=msgid4)
+        # ----------------------------------------
+        # CASE2: message_read test
+        # ----------------------------------------
 
-        # First try: read flat
-        first_try_ids = [msgid6, msgid5, msgid4, msgid3, msgid2, msgid1]
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0)
-        self.assertTrue(all(elem['id'] in first_try_ids for elem in tree) and len(tree) == 6,
-            'Incorrect structure and/or number of childs in purely flat message_read')
+        # 1. Add a few messages to pigs group
+        msgid1 = group_pigs.message_post(body='1', subject='1', parent_id=False)
+        msgid2 = group_pigs.message_post(body='2', subject='1-1', parent_id=msgid1)
+        msgid3 = group_pigs.message_post(body='3', subject='1-2', parent_id=msgid1)
+        msgid4 = group_pigs.message_post(body='4', subject='2', parent_id=False)
+        msgid5 = group_pigs.message_post(body='5', subject='1-1-1', parent_id=msgid2)
+        msgid6 = group_pigs.message_post(body='6', subject='2-1', parent_id=msgid4)
 
-        # Second try: read with thread_level 1
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1)
-        self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 3, 'Incorrect number of child in message_read')
+        # Test: read all messages flat
+        tree_test = [{'id': msgid6, 'child_ids': []}, {'id': msgid5, 'child_ids': []},
+                        {'id': msgid4, 'child_ids': []}, {'id': msgid3, 'child_ids': []},
+                        {'id': msgid2, 'child_ids': []}, {'id': msgid1, 'child_ids': []}]
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0, limit=10)
+        _compare_structures(tree, tree_test)
+        # Test: read with 1 level of thread
+        tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
+                    {'id': msgid1, 'child_ids': [
+                        {'id': msgid5, 'child_ids': []}, {'id': msgid3, 'child_ids': []},
+                        {'id': msgid2, 'child_ids': []},
+                    ]},
+                    ]
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1, limit=10)
+        _compare_structures(tree, tree_test)
+        # Test: read with 2 levels of thread
+        tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
+                    {'id': msgid1, 'child_ids': [
+                        {'id': msgid3, 'child_ids': []},
+                        {'id': msgid2, 'child_ids': [{'id': msgid5, 'child_ids': []}, ]},
+                    ]},
+                    ]
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2, limit=10)
+        _compare_structures(tree, tree_test)
 
-        # Third try: read with thread_level 2
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2)
-        self.assertTrue(len(tree) == 2 and len(tree[1]['child_ids']) == 2 and len(tree[1]['child_ids'][0]['child_ids']) == 1, 'Incorrect number of child in message_read')
+        # 2. Test expandables
+        # TDE FIXME: add those tests when expandables are specified and implemented
 
     def test_40_needaction(self):
         """ Tests for mail.message needaction. """
-        cr, uid  = self.cr, self.uid
+        cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         user_admin = self.res_users.browse(cr, uid, uid)
 
@@ -480,7 +531,7 @@ class test_mail(common.TransactionCase):
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
             ])
-        na_count = self.mail_message._needaction_count(cr, uid, domain = [])
+        na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
         # Post 4 message on group_pigs
@@ -492,11 +543,11 @@ class test_mail(common.TransactionCase):
             ('partner_id', '=', user_admin.partner_id.id),
             ('read', '=', False)
             ])
-        na_count = self.mail_message._needaction_count(cr, uid, domain = [])
+        na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
         # Check there are 4 needaction on mail.message with particular domain
-        na_count = self.mail_message._needaction_count(cr, uid, domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
         self.assertEqual(na_count, 4, 'posted message count does not match needaction count')
 
     def test_50_thread_parent_resolution(self):
@@ -505,7 +556,7 @@ class test_mail(common.TransactionCase):
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         msg1 = group_pigs.message_post(body='My Body', subject='1')
         msg2 = group_pigs.message_post(body='My Body', subject='2')
-        msg1, msg2 = self.mail_message.browse(cr, uid, [msg1,msg2])
+        msg1, msg2 = self.mail_message.browse(cr, uid, [msg1, msg2])
         self.assertTrue(msg1.message_id, "New message should have a proper message_id")
 
         # Reply to msg1, make sure the reply is properly attached using the various reply identification mechanisms
