@@ -1242,7 +1242,7 @@ import io, StringIO
 class ean_wizard(osv.osv_memory):
     _name = 'pos.ean_wizard'
     _columns = {
-        'ean13_pattern': fields.char('Ean13 Pattern', size=32, required=True, translate=True),
+        'ean13_pattern': fields.char('Reference', size=32, required=True, translate=True),
     }
     def sanitize_ean13(self, cr, uid, ids, context):
         for r in self.browse(cr,uid,ids):
@@ -1306,7 +1306,7 @@ class product_product(osv.osv):
 
     def edit_ean(self, cr, uid, ids, context):
         return {
-            'name': "Edit Ean",
+            'name': _("Assign a Custom EAN"),
             'type': 'ir.actions.act_window',
             'view_type': 'form',
             'view_mode': 'form',
