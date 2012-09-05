@@ -185,8 +185,8 @@
                     <span class="product-price">
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
-                    <t t-if="widget.get_product_image()">
-                        <img t-att-src="'data:image/png;base64,'+ widget.get_product_image()" />
+                    <t t-if="widget.get_product_image_url()">
+                        <img t-att-src="widget.get_product_image_url()" />
                     </t>
                 </div>
             </div>
@@ -313,17 +313,15 @@
         </div>
     </t>
 
-    <t t-name="ReceiptPopupWidget">
+    <t t-name="ChooseReceiptPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">Welcome Mr. John Smith <br /> Choose your type of receipt:</p>
+                <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
                 <div class = "button big-left receipt">
                     Ticket
                 </div>
                 <div class = "button big-right invoice">
                     Invoice
-                </div>
-                <div class="footer">
                 </div>
             </div>
         </div>

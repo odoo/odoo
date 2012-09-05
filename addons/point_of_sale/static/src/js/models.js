@@ -227,6 +227,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
 
         // saves the order locally and try to send it to the backend. 'record' is a bizzarely defined JSON version of the Order
         push_order: function(record) {
+            console.log('PUSHING NEW ORDER:',record);
             this.db.add_order(record);
             this.flush();
         },
@@ -242,10 +243,15 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         // and remove the successfully sent ones from the db once
         // it has been confirmed that they have been sent correctly.
         flush: function() {
+            //TODO make the mutex work 
+            console.log('FLUSH');
             //this makes sure only one _int_flush is called at the same time
+            /*
             return this.flush_mutex.exec(_.bind(function() {
                 return this._flush(0);
             }, this));
+            */
+            this._flush(0);
         },
         // attempts to send an order of index 'index' in the list of order to send. The index
         // is used to skip orders that failed. do not call this method outside the mutex provided
@@ -254,6 +260,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             var self = this;
             var orders = this.db.get_orders();
             self.set('nbr_pending_operations',orders.length);
+            console.log('TRYING TO FLUSH ORDER:',index,'Of',orders.length);
 
             var order  = orders[index];
             if(!order){
@@ -269,6 +276,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 })
                 .done(function(){
                     //remove from db if success
+                    console.log('Order successfully sent');
                     self.db.remove_order(order.id);
                     self._flush(index);
                 });
@@ -547,6 +555,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.pos =     attributes.pos; 
             this.selected_orderline = undefined;
             this.screen_data = {};  // see ScreenSelector
+            this.receipt_type = 'receipt';  // 'receipt' || 'invoice'
             return this;
         },
         generateUniqueId: function() {
@@ -617,6 +626,13 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         },
         getDueLeft: function() {
             return this.getTotal() - this.getPaidTotal();
+        },
+        // sets the type of receipt 'receipt'(default) or 'invoice'
+        set_receipt_type: function(type){
+            this.receipt_type = type;
+        },
+        get_receipt_type: function(){
+            return this.receipt_type;
         },
         // the client related to the current order.
         set_client: function(client){
