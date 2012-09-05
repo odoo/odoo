@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.tests import common
+from openerp.tools.html_sanitize import html_sanitize
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -268,8 +269,8 @@ class test_mail(common.TransactionCase):
         _mail_body1 = 'Pigs rules\n<pre>Admin</pre>\n'
         _mail_bodyalt1 = 'Pigs rules\nAdmin'
         _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = '<html>Pigs rules\n<pre>Admin</pre>\n</html>'
-        _mail_bodyalt2 = 'Pigs rules\nAdmin\n'
+        _mail_body2 = html_sanitize('<html>Pigs rules\n<pre>Admin</pre>\n</html>')
+        _mail_bodyalt2 = 'Pigs rules\nAdmin'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
         # CASE1: post comment, body and subject specified
@@ -306,7 +307,7 @@ class test_mail(common.TransactionCase):
 
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
-        self.assertEqual(message.body, _body2, 'mail.message body incorrect')
+        self.assertEqual(message.body, html_sanitize(_body2), 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
         # Test: sent_email: email send by server: correct subject, body, body_alternative
         self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
