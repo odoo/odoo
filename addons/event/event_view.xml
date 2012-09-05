@@ -124,7 +124,7 @@
                                 <group>
                                     <label for="address_id" string="Location Address"/>
                                     <div>
-                                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}"/>
+                                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}" on_change="on_change_address_id(address_id)" />
                                         <field name="street" placeholder="Street..."/>
                                         <div>
                                             <field name="zip" class="oe_inline" placeholder="Zip"/>
@@ -143,7 +143,7 @@
                                 </group>
                             </group>
                         </div>
-                        <!-- <div class="oe_right" style="height: 200px"></div> -->
+                        <div class="oe_google_map" style="height: 200px"></div>
                         <notebook>
                             <page string="Event Description">
                                 <field name="note" colspan="4" nolabel="1"/>

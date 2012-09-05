@@ -10,5 +10,16 @@
             <div class="shadow-top"></div>
         </div>
     </t>
+
+    <t t-extend="OrderlineWidget">
+        
+        <t t-jquery=".info-list" t-operation="append">
+            <t t-if="widget.dont_vidange">
+                <li class="info">
+                    Vidange: <t t-esc="widget.format_currency(widget.dont_vidange)" />
+                </li>
+            </t>
+        </t>
+    </t>
     
 </templates>
