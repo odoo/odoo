@@ -65,7 +65,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         return $.when();
     },
     _is_quick_create_enabled: function() {
-        if (! this.options.quick_creatable)
+        if (!this.options.quick_creatable || !this.is_action_enabled('create'))
             return false;
         if (this.fields_view.arch.attrs.quick_create !== undefined)
             return JSON.parse(this.fields_view.arch.attrs.quick_create);
