@@ -52,9 +52,9 @@ openerp.base = function(instance) {
             client.on('connection_failed', this, this.action_fallback);
             this.client = client;
             
-            client.replace(this.$element).
+            client.replace(this.$el).
                 done(function() {
-                    client.$element.removeClass('openerp');
+                    client.$el.removeClass('openerp');
                 }).
                 fail(function() {
                     console.log('fail', this);
