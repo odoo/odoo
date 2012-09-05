@@ -11,29 +11,13 @@
         <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
         </record>
-        <record id="base.user_jsmith" model="res.users">
-            <field name="name">John Smith (Cashier)</field>
-            <field name="login">jsmith</field>
+        <record id="base.user_root" model="res.users">
             <field name="ean13">0410300000004</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
         </record>
-        <record id="base.user_jdoe" model="res.users">
-            <field name="name">John Doe (Cashier)</field>
-            <field name="login">jdoe</field>
+        <record id="base.user_demo" model="res.users">
             <field name="ean13">0410400000003</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
-        </record>
-        <record id="base.user_jbloggs" model="res.users">
-            <field name="name">Joe Bloggs (Client)</field>
-            <field name="login">jbloggs</field>
-            <field name="ean13">0420100000005</field>
-            <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
-        </record>
-        <record id="base.user_bsoap" model="res.users">
-            <field name="name">Bob Soap (Client)</field>
-            <field name="login">bsoap</field>
-            <field name="ean13">0420200000004</field>
-            <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
         </record>
 
         <record model="pos.config" id="pos_config_main">
