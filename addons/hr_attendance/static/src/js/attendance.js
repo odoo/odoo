@@ -14,12 +14,12 @@ openerp.hr_attendance = function(instance) {
                             }
             this._super(parent);
             this.session = parent.session;
-            this.parent_element = parent.$element ;            
+            this.parent_element = parent.$el ;            
         },
         renderElement: function(){
-            this.$element = $(QWeb.render(this.template,this.titles));            
-            this.parent_element.prepend(this.$element);
-            this.$oe_attendance_slider = this.$element.find(".oe_attendance_slider");
+            this.$el = $(QWeb.render(this.template,this.titles));            
+            this.parent_element.prepend(this.$el);
+            this.$oe_attendance_slider = this.$el.find(".oe_attendance_slider");
             this.$oe_attendance_slider.click(this.do_update_attendance);
         },
         do_update_attendance: function() {
@@ -62,11 +62,11 @@ openerp.hr_attendance = function(instance) {
         check_attendance: function(){
             var self = this;
             self.employee = false;
-            this.$element.find(".oe_attendance_status").hide();
+            this.$el.find(".oe_attendance_status").hide();
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [['user_id','=', self.session.uid]]);
             return employee.read_slice(['id','name','state']).pipe(function(res) {
                 if(_.isEmpty(res)) return;
-                self.$element.find(".oe_attendance_status").show();
+                self.$el.find(".oe_attendance_status").show();
                 self.employee = res[0];
                 self.do_slide(self.employee.state);
             });
