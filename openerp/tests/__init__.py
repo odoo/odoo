@@ -17,6 +17,7 @@ fast_suite = [
 
 checks = [
     test_expression,
+    test_html_sanitize,
     test_orm,
     test_view_validation,
     test_misc,
