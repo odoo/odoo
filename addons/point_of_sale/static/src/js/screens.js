@@ -787,6 +787,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 });
 
             this.updatePaymentSummary();
+            this.$('.paymentline-amout input').last().focus();
         },
         close: function(){
             this._super();
@@ -874,7 +875,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
     		this.numpadState.set({mode: 'payment'});
     	},
         set_value: function(val) {
-        	this.currentPaymentLines.last().set({amount: val});
+        	this.currentPaymentLines.last().set_amount(val);
         },
     });
 
