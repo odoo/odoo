@@ -52,47 +52,12 @@
 
 <!--                      User                        -->
 
-        <record id="res_users_editor_demo" model="res.users">
-            <field name="password">editor_demo</field>
-            <field name="name">OpenERP Editor</field>
-            <field name="login">editor_demo</field>
-            <field name="company_id" ref="res_company_oerp_editor"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_editor'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
+        <record id="base.user_root" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_editor')),(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be'))]"/>
         </record>
-        <record id="res_users_sales_demo_us" model="res.users">
-            <field name="password">sales_demo_us</field>
-            <field name="name">OpenERP Salesman US</field>
-            <field name="login">sales_demo_us</field>
-            <field name="company_id" ref="res_company_oerp_us"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_us'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
+        <record id="base.user_demo" model="res.users">
+            <field name="company_ids" eval="[(4, ref('res_company_oerp_us')),(4, ref('res_company_oerp_be')),(4, ref('res_company_odoo'))]"/>
         </record>
-        <record id="res_users_sales_demo_be" model="res.users">
-            <field name="password">sales_demo_be</field>
-            <field name="name">OpenERP Salesman BE</field>
-            <field name="login">sales_demo_be</field>
-            <field name="company_id" ref="res_company_oerp_be"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_be'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-        <record id="res_users_sales_demo_in" model="res.users">
-            <field name="password">sales_demo_in</field>
-            <field name="name">OpenERP Salesman IN</field>
-            <field name="login">sales_demo_in</field>
-            <field name="company_id" ref="res_company_oerp_in"/>
-            <field name="company_ids" eval="[(4, ref('res_company_oerp_in'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-        <record id="res_users_odoo_demo" model="res.users">
-            <field name="password">odoo_demo</field>
-            <field name="name">Odoo</field>
-            <field name="login">odoo_demo</field>
-            <field name="company_id" ref="res_company_odoo"/>
-            <field name="company_ids" eval="[(4, ref('res_company_odoo'))]"/>
-            <field name="groups_id" eval="[(6,0,[ref('base.group_user'),ref('base.group_sale_manager'),ref('project.group_project_user'),ref('account.group_account_invoice')])]"/>
-        </record>
-
 
         <!--
     Resource: product.product
