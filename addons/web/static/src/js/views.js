@@ -113,6 +113,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         while (this.breadcrumbs.length) {
             this.remove_breadcrumb(0);
         }
+        this.inner_widget = null;
     },
     remove_breadcrumb: function(index) {
         var item = this.breadcrumbs.splice(index, 1)[0];
@@ -208,14 +209,14 @@ instance.web.ActionManager = instance.web.Widget.extend({
             }
         });
     },
-    do_action: function(action, on_close) {
+    do_action: function(action, on_close, clear_breadcrumbs) {
         if (_.isString(action) && instance.web.client_actions.contains(action)) {
             var action_client = { type: "ir.actions.client", tag: action };
-            return this.do_action(action_client);
+            return this.do_action(action_client, on_close, clear_breadcrumbs);
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }, function(result) {
-                self.do_action(result.result, on_close);
+                self.do_action(result.result, on_close, clear_breadcrumbs);
             });
         }
         if (!action.type) {
@@ -237,14 +238,23 @@ instance.web.ActionManager = instance.web.Widget.extend({
             console.error("Action manager can't handle action of type " + action.type, action);
             return null;
         }
-        return this[type](action, on_close);
+        return this[type](action, on_close, clear_breadcrumbs);
     },
     null_action: function() {
         this.dialog_stop();
         this.clear_breadcrumbs();
     },
-    ir_actions_common: function(action, on_close) {
+    ir_actions_common: function(action, on_close, clear_breadcrumbs) {
         var self = this, klass, widget, post_process;
+        if (this.inner_widget && (action.type === 'ir.actions.client' || action.target !== 'new')) {
+            var $e = $.Event("about_to_destroy");
+            this.inner_widget.trigger("about_to_destroy", $e);
+            if ($e.isDefaultPrevented()) {
+                return;
+            } else if (clear_breadcrumbs) {
+                this.clear_breadcrumbs();
+            }
+        }
         if (action.type === 'ir.actions.client') {
             var ClientWidget = instance.web.client_actions.get_object(action.tag);
             widget = new ClientWidget(this, action.params);
@@ -287,17 +297,17 @@ instance.web.ActionManager = instance.web.Widget.extend({
             this.inner_widget.appendTo(this.$el);
         }
     },
-    ir_actions_act_window: function (action, on_close) {
+    ir_actions_act_window: function (action, on_close, clear_breadcrumbs) {
         var self = this;
         if (action.target !== 'new') {
             if(action.menu_id) {
                 this.dialog_stop();
                 return this.getParent().do_action(action, function () {
                     instance.webclient.menu.open_menu(action.menu_id);
-                });
+                }, clear_breadcrumbs);
             }
         }
-        return this.ir_actions_common(action, on_close);
+        return this.ir_actions_common(action, on_close, clear_breadcrumbs);
     },
     ir_actions_client: function (action, on_close) {
         return this.ir_actions_common(action, on_close);
@@ -314,7 +324,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             action_id: action.id,
             context: action.context || {}
         }).then(function (action) {
-            self.do_action(action, on_closed)
+            self.do_action(action, on_closed, clear_breadcrumbs)
         });
     },
     ir_actions_report_xml: function(action, on_closed) {
@@ -412,8 +422,10 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         var self = this;
         var view = this.views[view_type];
         var view_promise;
-        if(!view)
+        var form = this.views['form'];
+        if (!view || (form && form.controller && !form.controller.can_be_discarded())) {
             return $.Deferred().reject();
+        }
 
         if (!no_store) {
             this.views_history.push(view_type);
@@ -471,6 +483,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             options.initial_mode = 'edit';
         }
         var controller = new viewclass(this, this.dataset, view.view_id, options);
+
+        if (view_type === 'form') {
+            this.on('about_to_destroy', this, function(e) {
+                controller.trigger('about_to_destroy', e);
+            });
+        }
 
         controller.on('history_back', this, function() {
             var am = self.getParent();
