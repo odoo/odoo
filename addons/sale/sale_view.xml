@@ -262,8 +262,6 @@
                                     <field name="sequence" widget="handle"/>
                                     <field name="state" invisible="1"/>
                                     <field name="delay" invisible="1"/>
-                                    <field name="tax_id" invisible="1"/>
-                                    <field name="type" invisible="1"/>
                                     <field name="th_weight" invisible="1"/>
                                     <field name="product_packaging" invisible="1"/>
                                     <field name="product_id"
@@ -271,6 +269,7 @@
                                         groups="base.group_user" 
                                         on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                                     <field name="name"/>
+                                    <field name="type"/>
                                     <field name="product_uom_qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                         on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
@@ -281,6 +280,7 @@
                                     <field name="product_uos" string="UoS" groups="product.group_uos"/>
                                     <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_unit"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
@@ -354,6 +354,20 @@
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
+            </field>
+        </record>
+
+        <!-- inherited view to make the order lines list in the form non-editable
+             for the members of some usability groups -->
+        <record id="view_order_form_editable_list" model="ir.ui.view">
+            <field name="name">sale.order.form.editable.list</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('product.group_uos'), ref('product.group_stock_packaging'), ref('sale.group_mrp_properties')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
             </field>
         </record>
 
