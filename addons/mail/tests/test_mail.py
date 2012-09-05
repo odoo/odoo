@@ -19,7 +19,6 @@
 #
 ##############################################################################
 
-import base64
 import tools
 
 from openerp.tests import common
@@ -252,17 +251,13 @@ class test_mail(common.TransactionCase):
         # CASE1: post comment, body and subject specified
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment')
         message = self.mail_message.browse(cr, uid, msg_id)
-        mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
-        mail = self.mail_mail.browse(cr, uid, mail_ids[0])
         sent_email = self._build_email_kwargs
+
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id','=',msg_id)]), 'mail.mail notifications should have been auto-deleted!')
         
         # Test: mail_message: subject is _subject, body is _body1 (no formatting done)
         self.assertEqual(message.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message.body, _body1, 'mail.message body incorrect')
-        # Test: mail_mail: subject is _subject, body_html is _mail_body1 (signature appended)
-        self.assertEqual(mail.subject, _subject, 'mail.mail subject incorrect')
-        self.assertEqual(mail.body_html, _mail_body1, 'mail.mail body_html incorrect')
-        self.assertEqual(mail.mail_message_id.id, msg_id, 'mail_mail.mail_message_id is not the id of its related mail_message)')
         # Test: sent_email: email send by server: correct subject, body; body_alternative
         self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
         self.assertEqual(sent_email['body'], _mail_body1, 'sent_email body incorrect')
@@ -283,18 +278,13 @@ class test_mail(common.TransactionCase):
         msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
-        mail_ids = self.mail_mail.search(cr, uid, [], limit=1)
-        mail = self.mail_mail.browse(cr, uid, mail_ids[0])
         sent_email = self._build_email_kwargs
+        self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id','=',msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
         self.assertEqual(message.subject, False, 'mail.message subject incorrect')
         self.assertEqual(message.body, _body2, 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
-        # Test: mail_mail: subject is False, body_html is _mail_body2 (signature appended)
-        self.assertEqual(mail.subject, False, 'mail.mail subject is incorrect')
-        self.assertEqual(mail.body_html, _mail_body2, 'mail.mail body_html incorrect')
-        self.assertEqual(mail.mail_message_id.id, msg_id2, 'mail_mail.mail_message_id incorrect')
         # Test: sent_email: email send by server: correct subject, body, body_alternative
         self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
         self.assertEqual(sent_email['body'], _mail_body2, 'sent_email body incorrect')
@@ -314,7 +304,7 @@ class test_mail(common.TransactionCase):
             self.assertEqual(message.attachment_ids[i].name, _attachments[i][0], 'mail.message attachment name incorrect')
             self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
             self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertEqual(base64.b64decode(message.attachment_ids[i].datas), _attachments[i][1], 'mail.message attachment data incorrect')
+            self.assertEqual(message.attachment_ids[i].datas.decode('base64'), _attachments[i][1], 'mail.message attachment data incorrect')
 
     def test_21_message_compose_wizard(self):
         """ Tests designed for the mail.compose.message wizard. """
@@ -333,8 +323,8 @@ class test_mail(common.TransactionCase):
         _body_html = '<html>Pigs rules</html>'
         _msg_body2 = '<html>Pigs rules</html>'
         _attachments = [
-            {'name': 'First', 'datas': base64.b64encode('My first attachment')},
-            {'name': 'Second', 'datas': base64.b64encode('My second attachment')}
+            {'name': 'First', 'datas': 'My first attachment'.encode('base64')},
+            {'name': 'Second', 'datas': 'My second attachment'.encode('base64')}
             ]
 
         # Create partners
@@ -400,7 +390,7 @@ class test_mail(common.TransactionCase):
             self.assertEqual(message.attachment_ids[i].name, _attachments[i]['name'], 'mail.message attachment name incorrect')
             self.assertEqual(message.attachment_ids[i].res_model, 'mail.group', 'mail.message attachment res_model incorrect')
             self.assertEqual(message.attachment_ids[i].res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertEqual(base64.b64decode(message.attachment_ids[i].datas), base64.b64decode(_attachments[i]['datas']), 'mail.message attachment data incorrect')
+            self.assertEqual(message.attachment_ids[i].datas.decode('base64'), _attachments[i]['datas'].decode('base64'), 'mail.message attachment data incorrect')
 
         # CASE3 - Create in mass_mail composition mode that should work with or without email_template installed
         compose_id = mail_compose.create(cr, uid,
@@ -491,8 +481,7 @@ class test_mail(common.TransactionCase):
             ('read', '=', False)
             ])
         na_count = self.mail_message._needaction_count(cr, uid, domain = [])
-        self.assertEqual(len(notif_ids), na_count,
-            'Number of unread notifications (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
+        self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
         # Post 4 message on group_pigs
         for dummy in range(4):
@@ -504,13 +493,11 @@ class test_mail(common.TransactionCase):
             ('read', '=', False)
             ])
         na_count = self.mail_message._needaction_count(cr, uid, domain = [])
-        self.assertEqual(len(notif_ids), na_count,
-            'Number of unread notifications after posting messages (%s) does not match the needaction count (%s)' % (len(notif_ids), na_count))
+        self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
         # Check there are 4 needaction on mail.message with particular domain
         na_count = self.mail_message._needaction_count(cr, uid, domain = [('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
-        self.assertEqual(na_count, 4,
-            'Number of posted message (4) does not match the needaction count with domain mail.group - group pigs (%s)' % (na_count))
+        self.assertEqual(na_count, 4, 'posted message count does not match needaction count')
 
     def test_50_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""

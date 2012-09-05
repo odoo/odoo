@@ -54,8 +54,12 @@ class mail_mail(osv.Model):
         'email_from': fields.char('From', help='Message sender, taken from user preferences.'),
         'email_to': fields.text('To', help='Message recipients'),
         'email_cc': fields.char('Cc', help='Carbon copy message recipients'),
-        'reply_to':fields.char('Reply-To', help='Preferred response address for the message'),
+        'reply_to': fields.char('Reply-To', help='Preferred response address for the message'),
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
+
+        # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
+        # and during unlink() we will cascade delete the parent and its attachments 
+        'notification': fields.boolean('Is Notification') 
     }
 
     def _get_default_from(self, cr, uid, context=None):
@@ -68,6 +72,19 @@ class mail_mail(osv.Model):
         'state': 'outgoing',
         'email_from': lambda self, cr, uid, ctx=None: self._get_default_from(cr, uid, ctx),
     }
+
+    def create(self, cr, uid, values, context=None):
+        if 'notification' not in values and values.get('mail_message_id'):
+            values['notification'] = True
+        return super(mail_mail,self).create(cr, uid, values, context=context)
+
+    def unlink(self, cr, uid, ids, context=None):
+        # cascade-delete the parent message for all mails that are not created for a notification
+        ids_to_cascade = self.search(cr, uid, [('notification','=',False),('id','in',ids)])
+        parent_msg_ids = [m.mail_message_id.id for m in self.browse(cr, uid, ids_to_cascade, context=context)]
+        res = super(mail_mail,self).unlink(cr, uid, ids, context=context)
+        self.pool.get('mail.message').unlink(cr, uid, parent_msg_ids, context=context)
+        return res
 
     def mark_outgoing(self, cr, uid, ids, context=None):
         return self.write(cr, uid, ids, {'state':'outgoing'}, context=context)
@@ -106,20 +123,17 @@ class mail_mail(osv.Model):
             _logger.exception("Failed processing mail queue")
         return res
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        """Perform any post-processing necessary after sending ``message``
+    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+        """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
-        attachment if the ``auto_delete`` flag of the message was set.
+        attachment if the ``auto_delete`` flag of the mail was set.
         Overridden by subclasses for extra post-processing behaviors. 
 
-        :param browse_record message: the message that was just sent
+        :param browse_record mail: the mail that was just sent
         :return: True
         """
-        if message.auto_delete:
-            self.pool.get('ir.attachment').unlink(cr, uid,
-                [x.id for x in message.attachment_ids],
-                context=context)
-            message.unlink()
+        if mail.auto_delete:
+            mail.unlink()
         return True
 
     def _send_get_mail_subject(self, cr, uid, mail, force=False, context=None):
