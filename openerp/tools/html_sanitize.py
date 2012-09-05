@@ -1,17 +1,22 @@
 
-from pyquery import PyQuery as pq
+import lxml.html
 import re
 
 def html_sanitize(x):
     if not x:
         return x
-    root = pq("<div />")
     if type(x) == str:
         x = unicode(x, "utf8", "replace")
-    root.html(x)
-    result = handle_element(root[0])
-    new = pq(result)
-    return new.html()
+    root = lxml.html.fromstring("<div>%s</div>" % x)
+    result = handle_element(root)
+    res = ""
+    for el in children(result[0]):
+        if type(el) == str or type(el) == unicode:
+            res += el
+        else:
+            el.tail = ""
+            res += lxml.html.tostring(el)
+    return res
 
 to_remove = set(["script", "head", "meta", "title", "link", "img"])
 to_unwrap = set(["html", "body"])
@@ -33,7 +38,7 @@ def handle_element(el):
         return []
     if el.tag in to_unwrap:
         return reduce(lambda x,y: x+y, [handle_element(x) for x in children(el)])
-    new = pq("<%s />" % el.tag)[0]
+    new = lxml.html.fromstring("<%s />" % el.tag)
     for i in children(el):
         append_to(handle_element(i), new)
     if el.tag in special:
