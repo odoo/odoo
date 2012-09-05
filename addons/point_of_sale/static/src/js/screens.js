@@ -188,7 +188,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return true;
                 }
             }
-            this.pos.proxy.scan_item_unrecognized(ean);
+            this.pos.proxy.scan_item_error_unrecognized(ean);
             return false;
         },
         
@@ -206,7 +206,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     return true;
                 }
             }
-            this.pos.proxy.scan_item_unrecognized(ean);
+            this.pos.proxy.scan_item_error_unrecognized(ean);
             return false;
             //TODO start the transaction
         },
