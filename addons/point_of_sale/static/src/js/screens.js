@@ -357,6 +357,35 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
     });
 
+    module.ChooseReceiptPopupWidget = module.PopUpWidget.extend({
+        template:'ChooseReceiptPopupWidget',
+        show: function(){
+            console.log('show');
+            this._super();
+            this.renderElement();
+            var self = this;
+            var currentOrder = self.pos.get('selectedOrder');
+            
+            this.$('.button.receipt').off('click').click(function(){
+                currentOrder.set_receipt_type('receipt');
+                self.pos_widget.screen_selector.set_current_screen('products');
+            });
+
+            this.$('.button.invoice').off('click').click(function(){
+                currentOrder.set_receipt_type('invoice');
+                self.pos_widget.screen_selector.set_current_screen('products');
+            });
+        },
+        get_client_name: function(){
+            var client = this.pos.get('selectedOrder').get_client();
+            if( client ){
+                return client.name;
+            }else{
+                return '';
+            }
+        },
+    });
+
     module.ErrorPopupWidget = module.PopUpWidget.extend({
         template:'ErrorPopupWidget',
         show: function(){
@@ -492,9 +521,12 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var product = this.get_product();
             return (product ? product.get('list_price') : 0) || 0;
         },
-        get_product_image: function(){
+        get_product_image_url: function() {
             var product = this.get_product();
-            return product ? product.get('image') : undefined;
+            if(!product){
+                return "";
+            }
+            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+product.get('id');
         },
         get_product_weight: function(){
             return this.weight || 0;
@@ -536,12 +568,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
                     var cashregister = selfCheckoutRegisters[0] || this.pos.get('cashRegisters').models[0];
                     currentOrder.addPaymentLine(cashregister);
-
-                    self.pos.push_order(currentOrder.exportAsJSON()).then(function() {
-                        currentOrder.destroy();
-                        self.pos.proxy.transaction_end();
-                        self.pos_widget.screen_selector.set_current_screen(self.next_screen);
-                    });
+                    self.pos.push_order(currentOrder.exportAsJSON())
+                    currentOrder.destroy();
+                    self.pos.proxy.transaction_end();
+                    self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                 }else if(payment === 'payment_rejected'){
                     clearInterval(this.intervalID);
                     //TODO show a tryagain thingie ? 
@@ -571,19 +601,33 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
 
         show_numpad:     false,
         show_leftpane:   false,
+        barcode_product_action: function(ean){
+            self.pos.proxy.transaction_start();
+            this._super(ean);
+        },
 
         barcode_client_action: function(ean){
+            self.pos.proxy.transaction_start();
             this._super(ean);
-            this.pos_widget.screen_selector.set_current_screen(this.next_screen);
+            this.pos_widget.screen_selector.show_popup('choose-receipt');
         },
         
         show: function(){
             this._super();
             var self = this;
+
+            this.add_action_button({
+                    label: 'help',
+                    icon: '/point_of_sale/static/src/img/icons/png48/help.png',
+                    click: function(){ 
+                        $('.goodbye-message').css({opacity:1}).hide();
+                    },
+                });
+
             $('.goodbye-message').css({opacity:1}).show();
             setTimeout(function(){
                 $('.goodbye-message').animate({opacity:0},500,'swing',function(){$('.goodbye-message').hide();});
-            },3000);
+            },5000);
         },
     });
     

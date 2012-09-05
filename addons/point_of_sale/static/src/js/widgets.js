@@ -667,7 +667,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         show: function(){ this.$el.show(); },
         hide: function(){ this.$el.hide(); },
-
     });
 
 
@@ -758,6 +757,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.screen_selector.set_default_screen();
 
+                window.screen_selector = self.screen_selector;
+
                 self.pos.barcode_reader.connect();
 
                 instance.webclient.set_content_full_screen(true);
@@ -831,6 +832,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {});
             this.error_session_popup.appendTo($('.point-of-sale'));
 
+            this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
+            this.choose_receipt_popup.appendTo($('.point-of-sale'));
+
             // --------  Misc ---------
 
             this.notification = new module.SynchNotificationWidget(this,{});
@@ -890,6 +894,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error': this.error_popup,
                     'error-product': this.error_product_popup,
                     'error-session': this.error_session_popup,
+                    'choose-receipt': this.choose_receipt_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
@@ -965,9 +970,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         try_close: function() {
             var self = this;
-            self.pos.flush().then(function() {
-                self.close();
-            });
+            //TODO : do the close after the flush...
+            self.pos.flush()
+            self.close();
         },
         close: function() {
             var self = this;

@@ -166,4 +166,9 @@ class PointOfSaleController(openerpweb.Controller):
         print 'print_receipt' + str(receipt)
         return
 
+    @openerpweb.jsonrequest
+    def print_pdf_invoice(self, request, pdfinvoice):
+        print 'print_pdf_invoice' + str(pdfinvoice)
+        return
+
 
