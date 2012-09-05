@@ -168,7 +168,7 @@ class res_company(osv.osv):
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
         'rml_footer': fields.function(_get_rml_footer, fnct_inv=_set_rml_footer, type='text', string='General Information Footer', store=True),
-        'rml_header': fields.text('RML Header and Footer', required=True),
+        'rml_header': fields.text('RML Header', required=True),
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
@@ -332,37 +332,37 @@ class res_company(osv.osv):
 
     _header_main = """
 <header>
-<pageTemplate>
-    <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
-    <pageGraphics>
-        <!-- You Logo - Change X,Y,Width and Height -->
-        <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
-        <setFont name="DejaVu Sans" size="8"/>
-        <fill color="black"/>
-        <stroke color="black"/>
-        <lines>1.3cm %s 20cm %s</lines>
+    <pageTemplate>
+        <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
+        <pageGraphics>
+            <!-- You Logo - Change X,Y,Width and Height -->
+            <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
+            <setFont name="DejaVu Sans" size="8"/>
+            <fill color="black"/>
+            <stroke color="black"/>
+            <lines>1.3cm %s 20cm %s</lines>
 
-        <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
+            <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
 
 
-        <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-        <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
-        <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
-        <drawString x="1.3cm" y="%s">Phone:</drawString>
-        <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
-        <drawString x="1.3cm" y="%s">Mail:</drawString>
-        <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
-        <lines>1.3cm %s 7cm %s</lines>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
+            <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
+            <drawString x="1.3cm" y="%s">Phone:</drawString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
+            <drawString x="1.3cm" y="%s">Mail:</drawString>
+            <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
+            <lines>1.3cm %s 7cm %s</lines>
 
-        <!--page bottom-->
+            <!--page bottom-->
 
-        <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
-        <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
-        <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
-        <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]
-        <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
-    </pageGraphics>
-</pageTemplate>
+            <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
+            <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
+            <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
+            <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]
+            <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
+        </pageGraphics>
+    </pageTemplate>
 </header>"""
 
     _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.2cm', '26.8cm', '26.4cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
