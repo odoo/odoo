@@ -111,17 +111,6 @@
 .openerp h4 {
   margin: 4px 0;
 }
-.openerp .oe_semantic_html_override_ul {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_semantic_html_override_ul ul, .openerp .oe_semantic_html_override_ul ol, .openerp .oe_semantic_html_override_ul li {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_semantic_html_override_ul li {
-  list-style-type: none;
-}
 .openerp .oe_semantic_html_override ul, .openerp .oe_semantic_html_override ol {
   margin: 0;
   padding: 0;
@@ -1325,16 +1314,15 @@
   width: 100%;
   table-layout: fixed;
 }
-.openerp .oe_view_manager table.oe_view_manager_header ul, .openerp .oe_view_manager table.oe_view_manager_header ol {
-  margin: 0;
+.openerp .oe_view_manager table.oe_view_manager_header ul {
   padding: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
-.openerp .oe_view_manager table.oe_view_manager_header ul ul, .openerp .oe_view_manager table.oe_view_manager_header ul ol, .openerp .oe_view_manager table.oe_view_manager_header ul li, .openerp .oe_view_manager table.oe_view_manager_header ol ul, .openerp .oe_view_manager table.oe_view_manager_header ol ol, .openerp .oe_view_manager table.oe_view_manager_header ol li {
-  margin: 0;
-  padding: 0;
-}
-.openerp .oe_view_manager table.oe_view_manager_header ul li, .openerp .oe_view_manager table.oe_view_manager_header ol li {
+.openerp .oe_view_manager table.oe_view_manager_header ul li {
   list-style-type: none;
+  margin: 0;
 }
 .openerp .oe_view_manager table.oe_view_manager_header .oe_header_row {
   clear: both;
@@ -1445,11 +1433,15 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
+.openerp .oe_view_manager .oe_view_manager_switch {
+  margin-left: 8px;
+}
 .openerp .oe_view_manager .oe_view_manager_switch li {
   text-align: center;
   width: 24px;
   height: 24px;
   line-height: 16px;
+  padding: 0;
 }
 .openerp .oe_view_manager .oe_view_manager_switch li a {
   position: relative;
