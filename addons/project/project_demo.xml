@@ -7,49 +7,6 @@
             <field name="groups_id" eval="[(4, ref('base.group_sale_salesman')),(4, ref('group_project_user'))]"/>
         </record>
 
-        <record id="base.user_niv" model="res.users">
-            <field name="name">Nicolas</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]"/>
-            <field name="login">niv</field>
-            <field name="password">niv</field>
-        </record>
-        <record id="base.user_al" model="res.users">
-            <field name="name">Antony</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_manager')])]"/>
-            <field name="login">al</field>
-            <field name="password">al</field>
-        </record>
-        <record id="base.user_qdp" model="res.users">
-            <field name="name">Quentin</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]"/>
-            <field name="login">qdp</field>
-            <field name="password">qdp</field>
-        </record>
-        <record id="base.user_fpi" model="res.users">
-            <field name="name">Francois</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]"/>
-            <field name="login">fpi</field>
-            <field name="password">fpi</field>
-        </record>
-        <record id="base.user_jth" model="res.users">
-            <field name="name">Julien</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]"/>
-            <field name="login">jth</field>
-            <field name="password">jth</field>
-        </record>
-        <record id="base.user_mit" model="res.users">
-            <field name="name">Minh</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user'), ref('project.group_project_user')])]"/>
-            <field name="login">mit</field>
-            <field name="password">mit</field>
-        </record>
-        <record id="base.user_vad" model="res.users">
-            <field name="name">Valérie</field>
-            <field name="groups_id" eval="[(6, 0, [ref('base.group_user')])]"/>
-            <field name="login">vad</field>
-            <field name="password">vad</field>
-        </record>
-
         <!-- Categories -->
         <record id="project_category_01" model="project.category">
             <field name="name">Contact's suggestion</field>
@@ -90,10 +47,9 @@
             <field name="parent_id" ref="all_projects_account"/>
             <field name="privacy_visibility">followers</field>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_niv'),
-                    ref('base.user_al'),
-                    ref('base.user_qdp')])]"/>
-            <field name="user_id" ref="base.user_al"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="description">Implement new website for Sale and Warehouse Management for a customer.</field>
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_analysis'),ref('project_tt_specification'),ref('project_tt_negotiation'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_deployment')])]"/>
@@ -102,7 +58,7 @@
         <record id="project_project_2" model="project.project">
             <field name="name">Research &amp; Development</field>
             <field name="parent_id" ref="all_projects_account"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
         </record>
@@ -114,9 +70,8 @@
             <field name="user_id" ref="base.user_demo"/>
             <field name="alias_model">project.task</field>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_fpi'),
-                    ref('base.user_jth'),
-                    ref('base.user_mit')])]"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_specification'),ref('project_tt_development'),ref('project_tt_testing'),ref('project_tt_merge'),ref('project_tt_deployment')])]"/>
         </record>
 
@@ -128,8 +83,8 @@
             <field name="alias_model">project.task</field>
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_design'),ref('project_tt_development'),ref('project_tt_testing')])]"/>
             <field name="members" eval="[(6, 0, [
-                    ref('base.user_niv'),
-                    ref('base.user_mit')])]"/>
+                    ref('base.user_root'),
+                    ref('base.user_demo')])]"/>
         </record>
 
         <record id="project_project_5" model="project.project">
@@ -141,7 +96,7 @@
             <field name="type_ids" eval="[(6, 0, [ref('project_tt_development')])]"/>
             <field name="members" eval="[(6, 0, [
                     ref('base.user_root'),
-                    ref('base.user_qdp')])]"/>
+                    ref('base.user_demo')])]"/>
         </record>
 
 
@@ -149,7 +104,7 @@
         <record id="project_task_1" model="project.task">
             <field name="planned_hours" eval="40.0"/>
             <field name="remaining_hours" eval="40.0"/>
-            <field name="user_id" ref="base.user_niv"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">4</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Prepare Requirements Document</field>
@@ -159,7 +114,7 @@
         <record id="project_task_2" model="project.task">
             <field name="planned_hours" eval="32.0"/>
             <field name="remaining_hours" eval="32.0"/>
-            <field name="user_id" ref="base.user_niv"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">4</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Make SRS</field>
@@ -168,7 +123,7 @@
         <record id="project_task_3" model="project.task">
             <field name="planned_hours" eval="10.0"/>
             <field name="remaining_hours" eval="10.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">4</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Budget Planning</field>
@@ -179,7 +134,7 @@
         <record id="project_task_4" model="project.task">
             <field name="planned_hours" eval="60.0"/>
             <field name="remaining_hours" eval="60.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">4</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Develop module for Sale Management</field>
@@ -193,7 +148,7 @@
         <record id="project_task_5" model="project.task">
             <field name="planned_hours" eval="76.0"/>
             <field name="remaining_hours" eval="76.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Develop module for Warehouse</field>
@@ -207,7 +162,7 @@
         <record id="project_task_6" model="project.task">
             <field name="planned_hours" eval="24.0"/>
             <field name="remaining_hours" eval="24.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Integrate Modules</field>
@@ -216,7 +171,7 @@
         <record id="project_task_7" model="project.task">
             <field name="planned_hours" eval="15.0"/>
             <field name="remaining_hours" eval="5.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_1"/>
             <field name="name">Internal testing + Software Install</field>
@@ -225,7 +180,7 @@
         <record id="project_task_8" model="project.task">
             <field name="planned_hours" eval="22.0"/>
             <field name="remaining_hours" eval="22.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">New portal system</field>
@@ -237,7 +192,7 @@
         <record id="project_task_9" model="project.task">
             <field name="planned_hours" eval="18.0"/>
             <field name="remaining_hours" eval="18.0"/>
-            <field name="user_id" ref="base.user_al"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Document history management</field>
@@ -246,7 +201,7 @@
         <record id="project_task_10" model="project.task">
             <field name="planned_hours" eval="38.0"/>
             <field name="remaining_hours" eval="38.0"/>
-            <field name="user_id" ref="base.user_fpi"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Social network integration</field>
@@ -256,7 +211,7 @@
         <record id="project_task_11" model="project.task">
             <field name="planned_hours" eval="16.0"/>
             <field name="remaining_hours" eval="16.0"/>
-            <field name="user_id" ref="base.user_fpi"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">User interface improvements</field>
@@ -270,7 +225,7 @@
         <record id="project_task_12" model="project.task">
             <field name="planned_hours" eval="40.0"/>
             <field name="remaining_hours" eval="40.0"/>
-            <field name="user_id" ref="base.user_fpi"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_2"/>
             <field name="name">Improve+clean code and functionality</field>
@@ -282,7 +237,7 @@
         <record id="project_task_13" model="project.task">
             <field name="planned_hours" eval="12.0"/>
             <field name="remaining_hours" eval="12.0"/>
-            <field name="user_id" ref="base.user_mit"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Design Use Cases</field>
@@ -293,7 +248,7 @@
         <record id="project_task_14" model="project.task">
             <field name="planned_hours" eval="12.0"/>
             <field name="remaining_hours" eval="12.0"/>
-            <field name="user_id" ref="base.user_mit"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Dataflow Design</field>
@@ -302,7 +257,7 @@
         <record id="project_task_15" model="project.task">
             <field name="planned_hours" eval="55.0"/>
             <field name="remaining_hours" eval="55.0"/>
-            <field name="user_id" ref="base.user_fpi"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">User Interface design</field>
@@ -316,7 +271,7 @@
             <field name="sequence" eval="10"/>
             <field name="planned_hours" eval="80.0"/>
             <field name="remaining_hours" eval="80.0"/>
-            <field name="user_id" ref="base.user_mit"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Set target for all deparments</field>
@@ -327,7 +282,7 @@
         <record id="project_task_17" model="project.task">
             <field name="planned_hours" eval="34.0"/>
             <field name="remaining_hours" eval="34.0"/>
-            <field name="user_id" ref="base.user_niv"/>
+            <field name="user_id" ref="base.user_demo"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Integration of core components</field>
@@ -338,7 +293,7 @@
         <record id="project_task_18" model="project.task">
             <field name="planned_hours" eval="16.0"/>
             <field name="remaining_hours" eval="16.0"/>
-            <field name="user_id" ref="base.user_niv"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="priority">2</field>
             <field name="project_id" ref="project.project_project_3"/>
             <field name="name">Deploy and review on live system</field>
@@ -458,7 +413,7 @@ Thanks,</field>
             <field name="body_text">Ok, I have checked the mail,
 I will update the document and let you know.</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_qdp"/>
+            <field name="user_id" ref="base.user_demo"/>
         </record>
 
 

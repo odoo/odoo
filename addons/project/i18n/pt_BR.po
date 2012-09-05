@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-07 04:48+0000\n"
-"X-Generator: Launchpad (build 15745)\n"
+"X-Launchpad-Export-Date: 2012-08-28 05:55+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: project
 #: view:report.project.task.user:0
@@ -369,7 +369,7 @@ msgstr ""
 #. module: project
 #: view:project.task:0
 msgid "Show only tasks having a deadline"
-msgstr ""
+msgstr "Mostrar apenas tarefas que tem um prazo final"
 
 #. module: project
 #: selection:project.task,state:0 selection:project.task.history,state:0
@@ -742,7 +742,7 @@ msgstr "Julho"
 #. module: project
 #: view:project.task.history.burndown:0
 msgid "Burndown Chart of Tasks"
-msgstr ""
+msgstr "Gráficos de Tarefas Concluídas"
 
 #. module: project
 #: field:project.task,date_start:0 field:report.project.task.user,date_start:0
@@ -1039,7 +1039,7 @@ msgstr "Data inicial"
 #: selection:project.task.history,kanban_state:0
 #: selection:project.task.history.cumulative,kanban_state:0
 msgid "Ready To Pull"
-msgstr ""
+msgstr "Pronto para prosseguir"
 
 #. module: project
 #: view:project.task:0 field:project.task,parent_ids:0
@@ -1060,6 +1060,8 @@ msgid ""
 "If the task has a progress of 99.99% you should close the task if it's "
 "finished or reevaluate the time"
 msgstr ""
+"Se uma tarefa tem um progresso de 99.99% você deve fechar a tarefa se foi "
+"concluída, ou reavaliar o prazo"
 
 #. module: project
 #: view:project.project:0
@@ -1074,6 +1076,11 @@ msgid ""
 " * Blocked indicates something is preventing the progress of this task\n"
 " * Ready To Pull indicates the task is ready to be pulled to the next stage"
 msgstr ""
+"O Painel Kanban de tarefas indica uma situação especial a seguir:\n"
+" * Normal é a situação padrão\n"
+" * Bloqueada indica que algo está impedindo o progresso dessa tarefa\n"
+" * Pronto para prosseguir indica que a tarefa está pronta para seguir ao "
+"próximo estágio"
 
 #. module: project
 #: view:project.project:0
@@ -1088,7 +1095,7 @@ msgstr "Cobrança"
 #. module: project
 #: view:project.task:0
 msgid "For changing to delegate state"
-msgstr ""
+msgstr "Para mudar para Situação Delegada"
 
 #. module: project
 #: field:project.task,priority:0 field:report.project.task.user,priority:0
@@ -1115,7 +1122,7 @@ msgstr "project.task.reevaluate"
 #: code:addons/project/wizard/project_task_delegate.py:81
 #, python-format
 msgid "CHECK: %s"
-msgstr ""
+msgstr "VERIFICAR: %s"
 
 #. module: project
 #: view:project.project:0
@@ -1149,7 +1156,7 @@ msgstr "Baixo"
 #: field:project.task,kanban_state:0 field:project.task.history,kanban_state:0
 #: field:project.task.history.cumulative,kanban_state:0
 msgid "Kanban State"
-msgstr ""
+msgstr "Situação Kanban"
 
 #. module: project
 #: view:project.project:0
@@ -1178,6 +1185,8 @@ msgid ""
 "Project's members are users who can have an access to the tasks related to "
 "this project."
 msgstr ""
+"Membros do projeto são usuários que podem acessar as tarefas relacionadas a "
+"este projeto"
 
 #. module: project
 #: view:project.project:0 field:project.task,manager_id:0
@@ -1230,7 +1239,7 @@ msgstr ""
 #: code:addons/project/wizard/mail_compose_message.py:45
 #, python-format
 msgid "Please specify the Customer or email address of Customer."
-msgstr ""
+msgstr "Por favor especifique o Cliente ou o email de um Cliente"
 
 #. module: project
 #: selection:report.project.task.user,month:0
@@ -1283,7 +1292,7 @@ msgstr "Novembro"
 #. module: project
 #: model:ir.actions.act_window,name:project.action_create_initial_projects_installer
 msgid "Create your Firsts Projects"
-msgstr ""
+msgstr "Crie seus Primeiros Projetos"
 
 #. module: project
 #: code:addons/project/project.py:229
@@ -1294,7 +1303,7 @@ msgstr "O Projeto '%s' foi concluído."
 #. module: project
 #: view:project.task.history.cumulative:0
 msgid "Tasks's Cumulative Flow"
-msgstr ""
+msgstr "Fluxo de Tarefas Acumuladas"
 
 #. module: project
 #: view:project.task:0
@@ -1309,7 +1318,7 @@ msgstr "Outubro"
 #. module: project
 #: view:project.task:0
 msgid "Validate planned time and open task"
-msgstr ""
+msgstr "Validar o tempo planejado e abrir tarefa"
 
 #. module: project
 #: help:project.task,delay_hours:0
@@ -1470,7 +1479,7 @@ msgstr "Estado"
 #: code:addons/project/project.py:925
 #, python-format
 msgid "Delegated User should be specified"
-msgstr ""
+msgstr "É necessário especificar o usuário delegado"
 
 #. module: project
 #: code:addons/project/project.py:862
@@ -1558,11 +1567,13 @@ msgid ""
 "Child task still open.\n"
 "Please cancel or complete child task first."
 msgstr ""
+"Tarefa filha ainda aberta.\n"
+"Por favor cancele ou finalize a tarefa filha primeiro."
 
 #. module: project
 #: view:project.task.type:0
 msgid "Stages common to all projects"
-msgstr ""
+msgstr "Estágios comuns para todos os projetos"
 
 #. module: project
 #: constraint:project.task:0
@@ -1683,6 +1694,8 @@ msgid ""
 "If you check this field, this stage will be proposed by default on each new "
 "project. It will not assign this stage to existing projects."
 msgstr ""
+"Se você marcar este campo, este estágio será proposto por padrão em cada "
+"novo projeto. Isto não irá associar este estágio a projetos existentes."
 
 #. module: project
 #: view:board.board:0
@@ -1846,6 +1859,8 @@ msgid ""
 "The stages can be common to all project or specific to one project. Each "
 "task will follow the different stages in order to be closed."
 msgstr ""
+"Os estágios podem ser comuns a todos os projetos ou específico a um projeto. "
+"Cada tarefa seguirá os estágios diferentes para ser fechado."
 
 #. module: project
 #: help:project.project,sequence:0
@@ -1867,7 +1882,7 @@ msgstr "ID"
 #: model:ir.actions.act_window,name:project.action_view_task_history_burndown
 #: model:ir.ui.menu,name:project.menu_action_view_task_history_burndown
 msgid "Burndown Chart"
-msgstr ""
+msgstr "Gráfico de Burndown"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_res_users_2_project_task_opened
@@ -1887,7 +1902,7 @@ msgstr "Ano Atual"
 #. module: project
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Erro! Você não pode criar recursivamente a membros associados."
 
 #. module: project
 #: field:project.project,priority:0 field:project.project,sequence:0
@@ -1976,7 +1991,7 @@ msgstr "A tarefa '%s' está cancelada."
 #. module: project
 #: view:project.task:0 view:res.partner:0
 msgid "For changing to open state"
-msgstr ""
+msgstr "Para alterar para Aberto"
 
 #. module: project
 #: model:ir.model,name:project.model_res_partner view:project.project:0

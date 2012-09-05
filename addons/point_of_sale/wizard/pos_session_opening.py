@@ -6,15 +6,23 @@ import netsvc
 
 from openerp.addons.point_of_sale.point_of_sale import pos_session
 
+
 class pos_session_opening(osv.osv_memory):
     _name = 'pos.session.opening'
 
     _columns = {
         'pos_config_id' : fields.many2one('pos.config', 'Point of Sale', required=True),
         'pos_session_id' : fields.many2one('pos.session', 'PoS Session'),
-        'pos_state' : fields.selection(pos_session.POS_SESSION_STATE,
-                                       'Session State', readonly=True),
+        'pos_state' : fields.related('pos_session_id', 'state',
+                                     type='selection',
+                                     selection=pos_session.POS_SESSION_STATE,
+                                     string='Session State', readonly=True),
+        'pos_state_str' : fields.char('State', 32, readonly=True),
         'show_config' : fields.boolean('Show Config', readonly=True),
+        'pos_session_name' : fields.related('pos_session_id', 'name',
+                                            type='char', size=64, readonly=True),
+        'pos_session_username' : fields.related('pos_session_id', 'user_id', 'name',
+                                                type='char', size=64, readonly=True)
     }
 
     def open_ui(self, cr, uid, ids, context=None):
@@ -66,18 +74,26 @@ class pos_session_opening(osv.osv_memory):
     def on_change_config(self, cr, uid, ids, config_id, context=None):
         result = {
             'pos_session_id': False,
-            'pos_state': False
+            'pos_state': False,
+            'pos_state_str' : '',
+            'pos_session_username' : False,
+            'pos_session_name' : False,
         }
         if not config_id:
-            return {'value': result}
+            return {'value' : result}
         proxy = self.pool.get('pos.session')
         session_ids = proxy.search(cr, uid, [
-            ('state', '<>', 'closed'),
+            ('state', '!=', 'closed'),
             ('config_id', '=', config_id),
         ], context=context)
         if session_ids:
-            result['pos_state'] = proxy.browse(cr, uid, session_ids[0], context=context).state
-            result['pos_session_id'] = session_ids[0]
+            session = proxy.browse(cr, uid, session_ids[0], context=context)
+            result['pos_state'] = str(session.state)
+            result['pos_state_str'] = dict(pos_session.POS_SESSION_STATE).get(session.state, '')
+            result['pos_session_id'] = session.id
+            result['pos_session_name'] = session.name
+            result['pos_session_username'] = session.user_id.name
+
         return {'value' : result}
 
     def default_get(self, cr, uid, fieldnames, context=None):
