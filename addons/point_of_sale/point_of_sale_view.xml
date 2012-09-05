@@ -916,7 +916,7 @@
                                 </field>
                             </group>
 
-                            <div attrs="{'invisible': [('state', '=', 'closed')]}">
+                            <div attrs="{'invisible': [('state', '!=', 'closed')]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -933,7 +933,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', 'in', ('opening_control', 'closed'))]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible' : [('state', '!=', 'closed')]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>
