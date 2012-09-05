@@ -99,7 +99,7 @@ class email_template(osv.osv):
         mod_name = False
         if model_id:
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
-        return {'value':{'model': mod_name}}
+        return {'value': {'model': mod_name}}
 
     _columns = {
         'name': fields.char('Name'),
@@ -320,7 +320,7 @@ class email_template(osv.osv):
 
         # Add template attachments
         for attach in template.attachment_ids:
-            attachments.append(attach.datas_fname, attach.datas)
+            attachments.append((attach.datas_fname, attach.datas))
 
         values['attachments'] = attachments
         return values

@@ -42,10 +42,12 @@
                     <xpath expr="//button[@class='oe_mail_compose_message_attachment']" position="before">
                         <button icon="/email_template/static/src/img/email_template.png"
                             type="object" name="toggle_template" string=""
-                            help="Use a message template"/>
+                            help="Use a message template"
+                            attrs="{'invisible':[('content_subtype','!=','html')]}"/>
                         <button icon="/email_template/static/src/img/email_template_save.png"
                             type="object" name="save_as_template" string=""
-                            help="Save as a new template"/>
+                            help="Save as a new template"
+                            attrs="{'invisible':[('content_subtype','!=','html')]}"/>
                     </xpath>
                 </data>
             </field>
