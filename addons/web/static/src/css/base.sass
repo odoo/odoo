@@ -127,9 +127,10 @@ $sheet-max-width: 860px
 @mixin ul-html-override()
     margin: 0
     padding: 0
-    li
+    ul, ol, li
         margin: 0
         padding: 0
+    li
         list-style-type: none
 
 @mixin semantic-html-override()
@@ -199,9 +200,11 @@ $sheet-max-width: 860px
         vertical-align: middle
     h4
         margin: 4px 0
+    .oe_semantic_html_override_ul
+        @include ul-html-override
     .oe_semantic_html_override
         @include semantic-html-override
-    .oe_semantic_html_override_ul
+    ul.oe_semantic_html_override
         @include ul-html-override
     // }}}
     // Button style {{{
