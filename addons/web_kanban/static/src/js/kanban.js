@@ -726,9 +726,10 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             trigger: 'hover'
         });
 
-        // If no draghandle is found, make the whole card as draghandle
+        // If no draghandle is found, make the whole card as draghandle (provided one can edit)
         if (!this.$el.find('.oe_kanban_draghandle').length) {
-            this.$el.children(':first').addClass('oe_kanban_draghandle');
+            this.$el.children(':first')
+                .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
         this.$el.find('.oe_kanban_action').click(function() {
