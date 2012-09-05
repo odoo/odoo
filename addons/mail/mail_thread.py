@@ -24,7 +24,6 @@ import dateutil
 import email
 import logging
 import pytz
-import re
 import time
 import tools
 import xmlrpclib
@@ -32,20 +31,19 @@ import xmlrpclib
 from email.message import Message
 from mail_message import decode
 from osv import osv, fields
-from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
 _logger = logging.getLogger(__name__)
 
 def decode_header(message, header, separator=' '):
-    return separator.join(map(decode,message.get_all(header, [])))
+    return separator.join(map(decode, message.get_all(header, [])))
 
 class many2many_reference(fields.many2many):
     """ many2many_reference manages many2many fields where one id is found
         by a reference-like key (a char column in addition to the foreign id).
         The reference_column attribute on the many2many fields is used;
         if not defined, ``res_model`` is used. """
-    
+
     def _get_query_and_where_params(self, cr, model, ids, values, where_params):
         """ Add in where condition like mail_followers.res_model = 'crm.lead' """
         reference_column = self.reference_column if self.reference_column else 'res_model'
@@ -119,7 +117,7 @@ class mail_thread(osv.AbstractModel):
     _description = 'Email Thread'
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
-        res = dict( (id, dict(message_unread=False, message_summary='')) for id in ids)
+        res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         notif_obj = self.pool.get('mail.notification')
@@ -149,7 +147,7 @@ class mail_thread(osv.AbstractModel):
         ], context=context)
         for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
             res[notif.message_id.res_id] = True
-        return [('id','in',res.keys())]
+        return [('id', 'in', res.keys())]
 
     _columns = {
         'message_is_follower': fields.function(_get_message_data,
@@ -159,13 +157,13 @@ class mail_thread(osv.AbstractModel):
             reference_column='res_model', string='Followers'),
         'message_comment_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
-            string='Comments and emails', 
+            string='Comments and emails',
             help="Comments and emails"),
         'message_ids': fields.one2many('mail.message', 'res_id',
-            domain=lambda self: [('model','=',self._name)],
-            string='Messages', 
+            domain=lambda self: [('model', '=', self._name)],
+            string='Messages',
             help="Messages and communication history"),
-        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread, 
+        'message_unread': fields.function(_get_message_data, fnct_search=_search_unread,
             type='boolean', string='Unread Messages', multi="_get_message_data",
             help="If checked new messages require your attention."),
         'message_summary': fields.function(_get_message_data, method=True,
@@ -229,7 +227,7 @@ class mail_thread(osv.AbstractModel):
     def _message_find_user_id(self, cr, uid, message, context=None):
         from_local_part = tools.email_split(decode(message.get('From')))[0]
         # FP Note: canonification required, the minimu: .lower()
-        user_ids = self.pool.get('res.users').search(cr, uid, ['|', 
+        user_ids = self.pool.get('res.users').search(cr, uid, ['|',
             ('login', '=', from_local_part),
             ('email', '=', from_local_part)], context=context)
         return user_ids[0] if user_ids else uid
@@ -453,7 +451,7 @@ class mail_thread(osv.AbstractModel):
                 filename = part.get_filename() # None if normal part
                 encoding = part.get_content_charset() # None if attachment
                 # 1) Explicit Attachments -> attachments
-                if filename or part.get('content-disposition','').strip().startswith('attachment'):
+                if filename or part.get('content-disposition', '').strip().startswith('attachment'):
                     attachments.append((filename or 'attachment', part.get_payload(decode=True)))
                     continue
                 # 2) text/plain -> <pre/>
@@ -515,7 +513,7 @@ class mail_thread(osv.AbstractModel):
         if 'Subject' in message:
             msg_dict['subject'] = decode(message.get('Subject'))
 
-        # Envelope fields not stored in  mail.message but made available for message_new() 
+        # Envelope fields not stored in  mail.message but made available for message_new()
         msg_dict['from'] = decode(message.get('from'))
         msg_dict['to'] = decode(message.get('to'))
         msg_dict['cc'] = decode(message.get('cc'))
@@ -524,7 +522,7 @@ class mail_thread(osv.AbstractModel):
             author_ids = self._message_find_partners(cr, uid, message, ['From'], context=context)
             if author_ids:
                 msg_dict['author_id'] = author_ids[0]
-        partner_ids = self._message_find_partners(cr, uid, message, ['From','To','Cc'], context=context)
+        partner_ids = self._message_find_partners(cr, uid, message, ['From', 'To', 'Cc'], context=context)
         msg_dict['partner_ids'] = partner_ids
 
         if 'Date' in message:
@@ -535,16 +533,16 @@ class mail_thread(osv.AbstractModel):
             msg_dict['date'] = date_server_datetime_str
 
         if 'In-Reply-To' in message:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id','=',decode(message['In-Reply-To']))])
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', '=', decode(message['In-Reply-To']))])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
 
         if 'References' in message and 'parent_id' not in msg_dict:
-            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id','in',
+            parent_ids = self.pool.get('mail.message').search(cr, uid, [('message_id', 'in',
                                                                          [x.strip() for x in decode(message['References']).split()])])
             if parent_ids:
                 msg_dict['parent_id'] = parent_ids[0]
-        
+
         msg_dict['body'], msg_dict['attachments'] = self._message_extract_payload(message)
         return msg_dict
 
@@ -574,7 +572,7 @@ class mail_thread(osv.AbstractModel):
             :param int parent_id: optional ID of parent message in this thread
             :param tuple(str,str) attachments: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
-            :return: ID of newly created mail.message 
+            :return: ID of newly created mail.message
         """
         context = context or {}
         attachments = attachments or []
@@ -595,10 +593,10 @@ class mail_thread(osv.AbstractModel):
                 'res_model': context.get('thread_model') or self._name,
                 'res_id': thread_id,
             }
-            attachment_ids.append((0,0, data_attach))
+            attachment_ids.append((0, 0, data_attach))
 
         values = kwargs
-        values.update( {
+        values.update({
             'model': context.get('thread_model', self._name) if thread_id else False,
             'res_id': thread_id or False,
             'body': body,
@@ -607,7 +605,7 @@ class mail_thread(osv.AbstractModel):
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
         })
-        for x in ('from','to','cc'): values.pop(x, None) # Avoid warnings 
+        for x in ('from', 'to', 'cc'): values.pop(x, None) # Avoid warnings 
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
     #------------------------------------------------------
@@ -630,7 +628,6 @@ class mail_thread(osv.AbstractModel):
         if context and context.get('read_back'):
             return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
         return []
-        
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
@@ -655,10 +652,9 @@ class mail_thread(osv.AbstractModel):
 
     def message_mark_as_unread(self, cr, uid, ids, context=None):
         """ Set as unread. """
-        notobj = self.pool.get('mail.notification')
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
-            UPDATE mail_notification SET 
+            UPDATE mail_notification SET
                 read=false
             WHERE
                 message_id IN (SELECT id from mail_message where res_id=any(%s) and model=%s limit 1) and
@@ -668,10 +664,9 @@ class mail_thread(osv.AbstractModel):
 
     def message_mark_as_read(self, cr, uid, ids, context=None):
         """ Set as read. """
-        notobj = self.pool.get('mail.notification')
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         cr.execute('''
-            UPDATE mail_notification SET 
+            UPDATE mail_notification SET
                 read=true
             WHERE
                 message_id IN (SELECT id FROM mail_message WHERE res_id=ANY(%s) AND model=%s) AND
