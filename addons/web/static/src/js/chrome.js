@@ -1049,11 +1049,15 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_logout: function() {
         var self = this;
-        this.session.session_logout().then(function () {
-            $(window).unbind('hashchange', self.on_hashchange);
-            self.do_push_state({});
-            window.location.reload();
-        });
+        var $e = $.Event("about_to_destroy");
+        this.action_manager.inner_widget.trigger("about_to_destroy", $e);
+        if (!$e.isDefaultPrevented()) {
+            this.session.session_logout().then(function () {
+                $(window).unbind('hashchange', self.on_hashchange);
+                self.do_push_state({});
+                window.location.reload();
+            });
+        }
     },
     bind_hashchange: function() {
         var self = this;
