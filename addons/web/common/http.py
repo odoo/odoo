@@ -523,7 +523,6 @@ class Root(object):
         Loads all addons at the specified addons path, returns a mapping of
         static URLs to the corresponding directories
         """
-        openerp_addons_namespace = getattr(self.config, 'openerp_addons_namespace', True)
 
         for addons_path in self.config.addons_path:
             for module in os.listdir(addons_path):
@@ -534,7 +533,7 @@ class Root(object):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if openerp_addons_namespace:
+                        if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
                         else:
                             m = __import__(module)

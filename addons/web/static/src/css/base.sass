@@ -36,7 +36,7 @@ $sheet-max-width: 860px
     padding: 0
     margin: 0
     background: none
-    @include radius(none)
+    @include radius(0)
     @include box-shadow(none)
 
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
@@ -95,10 +95,23 @@ $sheet-max-width: 860px
     background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
 
 @mixin transform($transform)
-    -moz-transform: $transform
     -webkit-transform: $transform
-    -o-transform: $transform
+    -moz-transform: $transform
     -ms-transform: $transform
+    -o-transform: $transform
+    transform: $transform
+
+@mixin keyframes($name)
+    @-webkit-keyframes #{$name}
+        @content
+    @-moz-keyframes #{$name}
+        @content
+    @-ms-keyframes #{$name}
+        @content
+    @-o-keyframes #{$name}
+        @content
+    @keyframes #{$name}
+        @content
 
 // Transforms the (readable) text of an inline element into an mmlicons icon,
 // allows for actual readable text in-code (and in readers?) with iconic looks
@@ -114,42 +127,16 @@ $sheet-max-width: 860px
 @mixin ul-html-override()
     margin: 0
     padding: 0
+    ul, ol, li
+        margin: 0
+        padding: 0
     li
         list-style-type: none
 
 @mixin semantic-html-override()
-    ul, li, ol
+    ul, ol
         @include ul-html-override()
 
-// }}}
-// CSS animation bounces {{{
-@-moz-keyframes bounce
-    0%
-        -moz-transform: scale(0)
-        opacity: 0
-    50%
-        -moz-transform: scale(1.3)
-        opacity: 0.4
-    75%
-        -moz-transform: scale(0.9)
-        opacity: 0.7
-    100%
-        -moz-transform: scale(1)
-        opacity: 1
-
-@-webkit-keyframes bounce
-    0%
-        -webkit-transform: scale(0)
-        opacity: 0
-    50%
-        -webkit-transform: scale(1.3)
-        opacity: 0.4
-    75%
-        -webkit-transform: scale(0.9)
-        opacity: 0.7
-    100%
-        -webkit-transform: scale(1)
-        opacity: 1
 // }}}
 
 @media print
@@ -215,6 +202,8 @@ $sheet-max-width: 860px
         margin: 4px 0
     .oe_semantic_html_override
         @include semantic-html-override
+    ul.oe_semantic_html_override
+        @include ul-html-override
     // }}}
     // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
@@ -258,6 +247,8 @@ $sheet-max-width: 860px
     // Jquery ui Overrides {{{
     .ui-widget-content a
         color: $link-color
+    .oe_bounce_container
+        display: inline-block
 
     // Modal box
     &.ui-dialog
@@ -429,6 +420,7 @@ $sheet-max-width: 860px
             @include radius(3px)
             @include box-shadow(0 1px 3px rgba(0, 0, 0, 0.3))
             border: none
+            margin-bottom: 10px
     .oe_avatar + div
         margin-left: 5px
     .oe_image_small > img
@@ -482,6 +474,7 @@ $sheet-max-width: 860px
         .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
             font-style: italic
             text-decoration: none
+        margin-bottom: 1px
     // }}}
     // Tooltips {{{
     &.oe_tooltip
@@ -932,9 +925,9 @@ $sheet-max-width: 860px
         margin: 0
         width: 100%
         display: inline-block
-        > li
+        li
             position: relative
-            padding: 1px 0 1px 20px
+            padding: 1px 0 1px 20px !important
             a
                 display: block
                 color: #4c4c4c
@@ -1019,7 +1012,14 @@ $sheet-max-width: 860px
         table.oe_view_manager_header
             width: 100%
             table-layout: fixed
-            @include semantic-html-override
+            ul
+                padding: 0
+                margin-right: 0
+                margin-top: 0
+                margin-bottom: 0
+                li
+                    list-style-type: none
+                    margin: 0
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -1104,11 +1104,13 @@ $sheet-max-width: 860px
         // }}}
         // ViewManager.switches {{{
         .oe_view_manager_switch
+            margin-left: 8px
             li
                 text-align: center
                 width: 24px
                 height: 24px
                 line-height: 16px
+                padding: 0
                 a
                     position: relative
             .oe_vm_switch_list:after, .oe_vm_switch_tree:after
@@ -1509,11 +1511,34 @@ $sheet-max-width: 860px
             display: none !important
         .oe_form .oe_form_field_date
             width: auto
+    // Sheet and padding 
     .oe_form_nosheet
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
             padding: 8px
+    .oe_form_sheetbg
+        padding: 8px 0
+    .oe_form_sheet_width
+        min-width: 650px
+        max-width: $sheet-max-width
+        margin: 0 auto
+    .oe_form_sheet
+        background: white
+        min-height: 330px
+        padding: 16px
+    // Sheet inline mode
+    .oe_application
+        .oe_form_sheetbg
+            background: url(/web/static/src/img/form_sheetbg.png)
+            border-bottom: 1px solid #ddd
+        .oe_form_sheet
+            border: 1px solid $tag-border
+            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            .ui-tabs
+                margin: 0 -16px
+            .oe_notebook_page
+                padding: 0 16px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form
@@ -1529,9 +1554,11 @@ $sheet-max-width: 860px
             max-width: $sheet-max-width
             margin: 0 auto
             padding: 16px 0 48px
+        .oe_grey
+            color: #aaa
+            max-width: 650px
+            margin: 0 0 10px 0
         div.oe_form_configuration
-            div.oe_horizontal_separator 
-                margin: 12px 0 8px 0
             p, ul, ol
                 color: #aaa
                 max-width: 650px
@@ -1541,117 +1568,92 @@ $sheet-max-width: 860px
                 padding: 2px 0
             .oe_form_group_cell div div
                 padding: 1px 0
-                
-
-    ul.oe_form_steps, ul.oe_form_steps_clickable
-        display: inline-block
-        padding-right: 18px
-        li 
+        ul.oe_form_steps, ul.oe_form_steps_clickable
             display: inline-block
-            margin-right: -20px
-            @include vertical-gradient(#fcfcfc, #dedede)
-            &:first-child .label
-                border-left: 1px solid #cacaca
-                padding-left: 14px
-            &:last-child
-                border-right: 1px solid #cacaca
-                .label
-                    padding-right: 14px
-                .arrow
-                    display: none
-            .label 
-                color: #4c4c4c
-                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
-                padding: 7px
+            padding-right: 18px
+            li 
                 display: inline-block
-                padding-left: 24px
-                margin: 0
-                position: relative
-                z-index: 10
-            .arrow
-                width: 17px
-                display: inline-block
-                vertical-align: top
-                overflow: hidden
-                margin-left: -5px
-                span 
-                    position: relative
-                    z-index: 11
-                    width: 24px
-                    height: 24px
+                margin-right: -20px
+                @include vertical-gradient(#fcfcfc, #dedede)
+                &:first-child .label
+                    border-left: 1px solid #cacaca
+                    padding-left: 14px
+                &:last-child
+                    border-right: 1px solid #cacaca
+                    .label
+                        padding-right: 14px
+                    .arrow
+                        display: none
+                .label 
+                    color: #4c4c4c
+                    text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
+                    padding: 7px
                     display: inline-block
-                    margin-left: -12px
-                    margin-top: 3px
-                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
-                    @include skew-gradient(#fcfcfc, #dedede)
-                    @include radius(3px)
-                    @include transform(rotate(45deg))
-        li.oe_active
-            @include vertical-gradient(#729fcf, #3465a4)
-            .arrow span 
-                @include skew-gradient(#729fcf, #3465a4)
-            .label
-                color: white
-                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
-
-    ul.oe_form_steps_clickable
-        li
-            cursor: pointer
-            &:hover 
-                @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-                .label
-                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                    padding-left: 24px
+                    margin: 0
+                    position: relative
+                .arrow
+                    width: 17px
+                    display: inline-block
+                    vertical-align: top
+                    overflow: hidden
+                    margin-left: -5px
+                    span 
+                        position: relative
+                        width: 24px
+                        height: 24px
+                        display: inline-block
+                        margin-left: -12px
+                        margin-top: 3px
+                        box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
+                        @include skew-gradient(#fcfcfc, #dedede)
+                        @include radius(3px)
+                        @include transform(rotate(45deg))
+            li.oe_active
+                @include vertical-gradient(#729fcf, #3465a4)
                 .arrow span 
+                    @include skew-gradient(#729fcf, #3465a4)
+                .label
+                    color: white
+                    text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+        ul.oe_form_steps_clickable
+            li
+                cursor: pointer
+                &:hover 
                     @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-            .label
-                color: $link-color
-        li.oe_active
-            &:hover 
-                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    .label
+                        text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                    .arrow span 
+                        @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
                 .label
-                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
-                .arrow span 
-                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    color: $link-color
+            li.oe_active
+                &:hover 
+                    @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                    .label
+                        text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                    .arrow span 
+                        @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+        .oe_subtotal_footer
+            width: 1% !important
+            td.oe_form_group_cell
+                text-align: right
+                padding: 0 !important
+            td.oe_form_group_cell_label
+                border-right: none
+            .oe_subtotal_footer_separator
+                width: 108px
+                border-top: 1px solid #cacaca
+                font-weight: bold
+                font-size: 18px
+            label:after
+                content: ":"
+            label.oe_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 11px 2px 0px !important
+            label.oe_form_label_help
+                font-weight: normal
 
-    .oe_form .oe_subtotal_footer
-        width: 1% !important
-        td.oe_form_group_cell
-            text-align: right
-            padding: 0 !important
-        td.oe_form_group_cell_label
-            border-right: none
-        .oe_subtotal_footer_separator
-            width: 108px
-            border-top: 1px solid #cacaca
-            font-weight: bold
-            font-size: 18px
-        label:after
-            content: ":"
-        label.oe_subtotal_footer_separator
-            font-weight: bold !important
-            padding: 2px 11px 2px 0px !important
-        label.oe_form_label_help
-            font-weight: normal
-    // no sheet in popups
-    .oe_application
-        .oe_form_sheetbg
-            background: url(/web/static/src/img/form_sheetbg.png)
-            padding: 8px 0
-            border-bottom: 1px solid #ddd
-        .oe_form_sheet_width
-            min-width: 650px
-            max-width: $sheet-max-width
-            margin: 0 auto
-        .oe_form_sheet
-            background: white
-            min-height: 330px
-            padding: 16px
-            border: 1px solid $tag-border
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
-            .ui-tabs
-                margin: 0 -16px
-            .oe_notebook_page
-                padding: 0 16px
     // }}}
     // FormView.group {{{
     .oe_form
@@ -1663,7 +1665,7 @@ $sheet-max-width: 860px
             label
                 line-height: 18px
                 display: block
-                min-width: 160px
+                min-width: 140px
         td.oe_form_group_cell + .oe_form_group_cell
             padding-left: 6px
         .oe_form_group
@@ -1692,7 +1694,7 @@ $sheet-max-width: 860px
     .oe_horizontal_separator
         font-weight: bold
         font-size: 20px
-        margin: 8px 0px 8px 0px
+        margin: 15px 0px 10px 0px
         color: $section-title-color
     .oe_horizontal_separator:empty
         height: 5px
@@ -1749,7 +1751,7 @@ $sheet-max-width: 860px
         input[type="text"], input[type="password"], input[type="file"], select, textarea
             @include box-sizing(border)
             background: white
-            min-width: 70px
+            min-width: 60px
             color: #1f1f1f
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
@@ -1866,6 +1868,12 @@ $sheet-max-width: 860px
             line-height: 14px
             float: right
             padding-left: 2px
+    &.ui-autocomplete
+        li.oe_m2o_dropdown_option a
+            font-style: italic
+            padding-left: 2em
+        li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option
+            margin-top: 10px
     // }}}
     // FormView.fieldstatus {{{
     .oe_form_field_status
@@ -1919,6 +1927,8 @@ $sheet-max-width: 860px
                     background-color: #d2d2ff
                 td.oe_readonly
                     background-color: #eee
+
+    $row-height: 27px
     .oe_list_editable
         .oe_list_content
             td.oe_list_field_cell
@@ -1933,12 +1943,11 @@ $sheet-max-width: 860px
             display: none
         .oe_form_field
             input
-                height: 27px
+                height: $row-height
             input, textarea
+                @include radius(0)
                 border: 1px solid #aaf
-                border-radius: 0px
-                margin: 0px
-                -webkit-border-radius: 0px
+                margin: 0
             textarea
                 height: 60px
             &.oe_form_field_float,&.oe_form_view_integer
@@ -2023,6 +2032,7 @@ $sheet-max-width: 860px
         > tbody
             cursor: pointer
             > tr
+                height: $row-height
                 border-top: 1px solid #ddd
                 > td.oe_list_field_cell
                     padding: 3px 6px
@@ -2061,6 +2071,13 @@ $sheet-max-width: 860px
             cursor: ns-resize
             .oe_list_handle
                 @include text-to-icon("ö")
+
+    .oe_list_cannot_edit
+        .oe_list_header_handle, .oe_list_field_handle
+            display: none !important
+    .oe_list_cannot_delete
+        .oe_list_record_delete
+            display: none !important
 
     // }}}
     // Tree view {{{

@@ -44,14 +44,14 @@ instance.web_mobile.ListView = instance.web_mobile.MobileWidget.extend({
                 if(res['html_name_get']){
                     additional = res['display'];
                 }
-                self.$element.html(self.render({'records': res, 'data': additional }));
-                self.$element.find("[data-role=header]").find('h1').html(self.action.name);
-                self.$element.find("[data-role=header]").find('#home').click(function(){
+                self.$el.html(self.render({'records': res, 'data': additional }));
+                self.$el.find("[data-role=header]").find('h1').html(self.action.name);
+                self.$el.find("[data-role=header]").find('#home').click(function(){
                     $.mobile.changePage("#oe_menu", "slide", false, true);
                 });
-                self.$element.find("a#list-id").click(self.on_list_click);
+                self.$el.find("a#list-id").click(self.on_list_click);
                 $.mobile.changePage("#"+self.element_id, "slide", false, true);
-                self.$element.find("a#list-id").find('span').addClass('desc');
+                self.$el.find("a#list-id").find('span').addClass('desc');
             });
         });
     },
