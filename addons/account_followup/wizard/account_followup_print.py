@@ -233,12 +233,7 @@ class account_followup_print_all(osv.osv_memory):
                     total_amt += line.debit - line.credit
                 dest = False
                 if partner:
-                    if partner.type=='contact':
-                        if adr.email:
-                            dest = [partner.email]
-                    if (not dest) and partner.type=='default':
-                        if partner.email:
-                            dest = [partner.email]
+                    dest = [partner.email]
                 if not data.partner_lang:
                     body = data.email_body
                 else:
