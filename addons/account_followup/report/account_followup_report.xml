@@ -5,9 +5,8 @@
         <record id="view_account_followup_stat_tree" model="ir.ui.view">
             <field name="name">account_followup.stat.tree</field>
             <field name="model">account_followup.stat</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up lines">
+                <tree string="Follow-up lines">
                     <field name="partner_id"/>
                     <field name="date_move"/>
                     <field name="date_move_last"/>
@@ -26,49 +25,37 @@
       <record id="view_account_followup_stat_graph" model="ir.ui.view">
            <field name="name">account_followup.stat.graph</field>
            <field name="model">account_followup.stat</field>
-           <field name="type">graph</field>
            <field name="arch" type="xml">
-               <graph string="Follow-Up lines" type="bar">
+               <graph string="Follow-up lines" type="bar">
                   <field name="partner_id"/>
                   <field name="balance" operator="+"/>
                </graph>
            </field>
       </record>
-	 <record id="view_account_followup_stat_search" model="ir.ui.view">
-        <field name="name">account_followup.stat.search</field>
-        <field name="model">account_followup.stat</field>
-        <field name="type">search</field>
-        <field name="arch" type="xml">
-            <search string="Follow-ups Sent">
-              <group>
-              <filter icon="terp-go-year" string="This Fiscal year"
-			              name="fiscalyear"
-			              domain="[('period_id','in','current_year')]"
-                            help="Follow up Entries with period in current year"/>
-              <separator orientation="vertical"/>
-              <filter icon="terp-camera_test" string="Not Litigation"
-              			   domain="[('blocked','=', False)]"
-                           help = "Including journal entries marked as a litigation"/>
-              <separator orientation="vertical"/>
-              <field name="partner_id"/>
-              <field name="balance" />
-              <field name="date_move" />
-              <field name="date_move_last" />
-              </group>
-              <newline/>
-                <group expand="1" string="Group By...">
-                    <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
-                    <separator orientation="vertical"/>
-                    <filter string="Litigation" icon="terp-camera_test"  context="{'group_by':'blocked'}" />
-                    <separator orientation="vertical"/>
-                    <filter string="Followup Level" icon="terp-stock_effects-object-colorize" name="followup_level" context="{'group_by':'followup_id'}" />
-                    <filter string="Latest Followup Date" icon="terp-go-month" context="{'group_by':'date_followup'}" />
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
-                    <filter string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}" />
-                </group>
-            </search>
-        </field>
-    </record>
+        <record id="view_account_followup_stat_search" model="ir.ui.view">
+            <field name="name">account_followup.stat.search</field>
+            <field name="model">account_followup.stat</field>
+            <field name="arch" type="xml">
+                <search string="Follow-ups Sent">
+                    <field name="date_move"/>
+                    <field name="date_move_last"/>
+                    <filter icon="terp-go-year" string="This Fiscal year" name="fiscalyear" domain="[('period_id','in','current_year')]"
+                        help="Follow-up Entries with period in current year"/>
+                    <separator/>
+                    <filter icon="terp-camera_test" string="Not Litigation" domain="[('blocked','=', False)]"
+                        help = "Including journal entries marked as a litigation"/>
+                    <field name="partner_id"/>
+                    <field name="balance"/>
+                    <group expand="1" string="Group By...">
+                        <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}" />
+                        <filter string="Litigation" icon="terp-camera_test"  context="{'group_by':'blocked'}" />
+                        <filter string="Follow-up Level" icon="terp-stock_effects-object-colorize" name="followup_level" context="{'group_by':'followup_id'}" />
+                        <filter string="Latest Follow-up Date" icon="terp-go-month" context="{'group_by':'date_followup'}" />
+                        <filter string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}" />
+                    </group>
+                </search>
+            </field>
+        </record>
         <record id="action_followup_stat" model="ir.actions.act_window">
             <field name="name">Follow-ups Sent</field>
             <field name="res_model">account_followup.stat</field>
@@ -76,7 +63,6 @@
             <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_followup_level':1}</field>
             <field name="search_view_id" ref="view_account_followup_stat_search"/>
-            <field name="help">Follow up on the reminders sent over to your partners for unpaid invoices.</field>
         </record>
 
         <menuitem action="action_followup_stat" id="menu_action_followup_stat_follow" parent="account.next_id_22" groups="account.group_account_user"/>

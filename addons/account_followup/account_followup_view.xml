@@ -4,9 +4,8 @@
         <record id="view_account_followup_followup_line_tree" model="ir.ui.view">
             <field name="name">account_followup.followup.line.tree</field>
             <field name="model">account_followup.followup.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up Steps">
+                <tree string="Follow-up Steps">
                     <field name="name"/>
                     <field name="delay"/>
                     <field name="start"/>
@@ -17,9 +16,8 @@
         <record id="view_account_followup_followup_line_form" model="ir.ui.view">
             <field name="name">account_followup.followup.line.form</field>
             <field name="model">account_followup.followup.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up Steps" version="7.0">
+                <form string="Follow-up Steps" version="7.0">
                     <group col="4">
                        <field name="name"/>
                        <field name="delay"/>
@@ -41,9 +39,8 @@
         <record id="view_account_followup_followup_form" model="ir.ui.view">
             <field name="name">account_followup.followup.form</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Follow-Up" version="7.0">
+                <form string="Follow-up" version="7.0">
                     <group col="4">
                         <field name="name"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
@@ -56,9 +53,8 @@
         <record id="view_account_followup_followup_tree" model="ir.ui.view">
             <field name="name">account_followup.followup.tree</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Follow-Up">
+                <tree string="Follow-up">
                     <field name="name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
@@ -68,33 +64,38 @@
         <record id="view_account_followup_filter" model="ir.ui.view">
             <field name="name">account.followup.select</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
-                <search string="Search Followup">
-                   <group>
-                        <field name="name"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                   </group>
-               </search>
+                <search string="Search Follow-up">
+                    <field name="name" string="Follow-up"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </search>
             </field>
         </record>
 
         <record id="action_account_followup_definition_form" model="ir.actions.act_window">
-            <field name="name">Follow-Ups</field>
+            <field name="name">Follow-ups</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account_followup.followup</field>
             <field name="search_view_id" ref="view_account_followup_filter"/>
             <field name="view_type">form</field>
-            <field name="help">Define follow up levels and their related messages and delay. For each step, specify the message and the day of delay. Use the legend to know the using code to adapt the email content to the good context (good name, good date) and you can manage the multi language of messages.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define follow-up levels and their related messages.
+              </p><p>
+                For each step, specify the message and the day of delay. Use
+                the legend to know the using code to adapt the email content to
+                the good context (good name, good date) and you can manage the
+                multi language of messages.
+              </p>
+            </field>
         </record>
         <menuitem action="action_account_followup_definition_form" id="account_followup_menu" parent="account.menu_configuration_misc"/>
 
-        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Followup Report"/>
+        <report auto="False" id="account_followup_followup_report" menu="False" model="account_followup.followup" name="account_followup.followup.print" rml="account_followup/report/account_followup_print.rml" string="Follow-up Report"/>
 
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>
             <field name="model">account.move.line</field>
-            <field name="type">tree</field>
             <field eval="32" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'validate'" editable="bottom" string="Partner entries">
@@ -150,7 +151,6 @@
             <field name="name">res.company.followup.form.inherit</field>
             <field name="inherit_id" ref="account.view_company_inherit_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="overdue_msg" nolabel="1" colspan="4" position="after">
                     <separator string="Follow-up Message" colspan="4"/>

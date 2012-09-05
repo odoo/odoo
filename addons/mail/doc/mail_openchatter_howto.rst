@@ -38,19 +38,18 @@ Make your module inheriting from the ``mail.thread`` class.
     # inherit from mail.thread allows the use of OpenChatter
     _inherit = ['mail.thread']
 
-Use the thread viewer widget inside your form view by using the ThreadView widget on the message_ids field inherited from mail.thread.
+Use the thread viewer widget inside your form view by using the mail_thread widget on the message_ids field inherited from mail.thread.
 
 ::
 
   <record model="ir.ui.view" id="my_task_form_view">
     <field name="name">My Task</field>
     <field name="model">my.task</field>
-    <field name="type">form</field>
     <field name="priority">1</field>
     <field name="arch" type="xml">
       <form>
       [...]
-      <field name="message_ids" colspan="4" widget="ThreadView" nolabel="1"/>
+      <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
       </form>
     </field>
   </record>
@@ -131,7 +130,7 @@ The drawback of this method is that it is no longer possible to those subscriber
 Messages display management
 ++++++++++++++++++++++++++++
 
-By default, the ThreadView widget shows all messages related to the current document beside the document, in the History and comments section. However, you may want to display other messages in the widget. For example, the OpenChatter on res.users model shows
+By default, the mail_thread widget shows all messages related to the current document beside the document, in the History and comments section. However, you may want to display other messages in the widget. For example, the OpenChatter on res.users model shows
 
  - messages related to the user, as usual (messages with ``model = res.users, res_id = current_document_id``)
  - messages directly pushed to this user (containing @login)

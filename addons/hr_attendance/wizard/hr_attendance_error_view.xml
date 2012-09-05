@@ -5,19 +5,19 @@
         <record id="view_hr_attendance_error" model="ir.ui.view">
             <field name="name">Attendance Report Error</field>
             <field name="model">hr.attendance.error</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Print Attendance Report Error" version="7.0">
-                <header>
-                    <button name="print_report" string="Print" type="object" icon="gtk-print" colspan="2"/>
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel' colspan="2"/>
-                </header>
                 <group string="Analysis Information" col="4">
                     <field name="init_date"/>
                     <field name="end_date"/>
                     <field name="max_delay"/>
                 </group>
                 <label string="Bellow this delay, the error is considered to be voluntary" colspan="2"/>
+                <footer>
+                    <button name="print_report" string="Print" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

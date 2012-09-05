@@ -7,12 +7,12 @@
         <record id="view_survey_send_invitation" model="ir.ui.view">
             <field name="name">Send Invitation</field>
             <field name="model">survey.send.invitation</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Send Invitation" version="7.0">
                     <header>
-                        <button icon="gtk-go-forward" name="action_send" string="_Send" type="object"/>
-                        <button icon="gtk-cancel" special="cancel" string="_Cancel"/>
+                        <button name="action_send" string="_Send" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
                         <separator string="Select Partner" colspan="4"/>
@@ -52,12 +52,8 @@
         <record id="view_survey_send_invitation_log" model="ir.ui.view">
             <field name="name">survey send invitation log</field>
             <field name="model">survey.send.invitation.log</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User creation" version="7.0">
-                    <header>
-                        <button icon="gtk-ok" special="cancel" string="_Ok"/>
-                    </header>
                     <group string="Results :">
                         <field name="note"/>
                     </group>

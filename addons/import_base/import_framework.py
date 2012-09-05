@@ -30,7 +30,7 @@ import logging
 import StringIO
 import traceback
 pp = pprint.PrettyPrinter(indent=4)
-
+_logger = logging.getLogger(__name__)
 
 
 
@@ -60,7 +60,6 @@ class import_framework(Thread):
         self.context = context or {}
         self.email = email_to_notify
         self.table_list = []
-        self.logger = logging.getLogger(module_name)
         self.initialize()
 
     """
@@ -165,7 +164,7 @@ class import_framework(Thread):
                 data_i is a map external field_name => value
                 and each data_i have a external id => in data_id['id']
         """
-        self.logger.info(' Importing %s into %s' % (table, model))
+        _logger.info(' Importing %s into %s' % (table, model))
         if not datas:
             return (0, 'No data found')
         mapping['id'] = 'id_new'
@@ -187,8 +186,8 @@ class import_framework(Thread):
 
         model_obj = self.obj.pool.get(model)
         if not model_obj:
-            raise ValueError(_("%s is not a valid model name") % model)
-        self.logger.debug(_(" fields imported : ") + str(fields))
+            raise ValueError(_("%s is not a valid model name.") % model)
+        _logger.debug(_(" fields imported : ") + str(fields))
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for (field, field_name) in self_dependencies:
             self._import_self_dependencies(model_obj, field, datas)
@@ -431,9 +430,9 @@ class import_framework(Thread):
             'auto_delete' : True})
         email_obj.send(self.cr, self.uid, [email_id])
         if error:
-            self.logger.error(_("Import failed due to an unexpected error"))
+            _logger.error(_("Import failed due to an unexpected error"))
         else:
-            self.logger.info(_("Import finished, notification email sended"))
+            _logger.info(_("Import finished, notification email sended"))
 
     def get_email_subject(self, result, error=False):
         """

@@ -42,8 +42,10 @@ from osv import fields,osv
 import pooler
 from tools.translate import _
 from service import security
+import logging
 
 magic_md5 = '$1$'
+_logger = logging.getLogger(__name__)
 
 def gen_salt( length=8, symbols=ascii_letters + digits ):
     seed()
@@ -137,7 +139,7 @@ class users(osv.osv):
 
     def set_pw(self, cr, uid, id, name, value, args, context):
         if not value:
-            raise osv.except_osv(_('Error'), _("Please specify the password !"))
+            raise osv.except_osv(_('Error!'), _("You have to specify a password."))
 
         obj = pooler.get_pool(cr.dbname).get('res.users')
         if not hasattr(obj, "_salt_cache"):
@@ -179,9 +181,8 @@ class users(osv.osv):
             cr = pooler.get_db(db).cursor()
             return self._login(cr, db, login, password)
         except Exception:
-            import logging
-            logging.getLogger('netsvc').exception('Could not authenticate')
-            return Exception('Access Denied')
+            _logger.exception('Cannot authenticate.')
+            return Exception('Access denied.')
         finally:
             if cr is not None:
                 cr.close()
@@ -195,9 +196,9 @@ class users(osv.osv):
         else:
             # Return early if no one has a login name like that.
             return False
-    
+
         stored_pw = self.maybe_encrypt(cr, stored_pw, id)
-        
+
         if not stored_pw:
             # means couldn't encrypt or user is not active!
             return False
@@ -209,16 +210,16 @@ class users(osv.osv):
             obj._salt_cache = {}
         salt = obj._salt_cache[id] = stored_pw[len(magic_md5):11]
         encrypted_pw = encrypt_md5(password, salt)
-    
+
         # Check if the encrypted password matches against the one in the db.
         cr.execute("""UPDATE res_users
-                        SET date=now() AT TIME ZONE 'UTC'
+                        SET login_date=now() AT TIME ZONE 'UTC'
                         WHERE id=%s AND password=%s AND active
-                        RETURNING id""", 
+                        RETURNING id""",
                    (int(id), encrypted_pw.encode('utf-8')))
         res = cr.fetchone()
         cr.commit()
-    
+
         if res:
             return res[0]
         else:
@@ -248,13 +249,13 @@ class users(osv.osv):
                 stored_login = cr.fetchone()
                 if stored_login:
                     stored_login = stored_login[0]
-        
+
                 res = self._login(cr, db, stored_login, passwd)
                 if not res:
                     raise security.ExceptionNoTb('AccessDenied')
             else:
                 salt = self._salt_cache[db][uid]
-                cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active', 
+                cr.execute('SELECT COUNT(*) FROM res_users WHERE id=%s AND password=%s AND active',
                     (int(uid), encrypt_md5(passwd, salt)))
                 res = cr.fetchone()[0]
         finally:
@@ -270,10 +271,10 @@ class users(osv.osv):
             else:
                 self._uid_cache[db] = {uid: passwd}
         return bool(res)
-    
+
     def maybe_encrypt(self, cr, pw, id):
         """ Return the password 'pw', making sure it is encrypted.
-        
+
         If the password 'pw' is not encrypted, then encrypt all active passwords
         in the db. Returns the (possibly newly) encrypted password for 'id'.
         """
@@ -295,4 +296,5 @@ class users(osv.osv):
         return pw
 
 users()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

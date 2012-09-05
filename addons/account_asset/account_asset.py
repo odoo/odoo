@@ -213,13 +213,13 @@ class account_asset_asset(osv.osv):
 
     _columns = {
         'account_move_line_ids': fields.one2many('account.move.line', 'asset_id', 'Entries', readonly=True, states={'draft':[('readonly',False)]}),
-        'name': fields.char('Asset', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'name': fields.char('Asset Name', size=64, required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'code': fields.char('Reference', size=32, readonly=True, states={'draft':[('readonly',False)]}),
-        'purchase_value': fields.float('Gross value ', required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'purchase_value': fields.float('Gross Value', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'currency_id': fields.many2one('res.currency','Currency',required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'company_id': fields.many2one('res.company', 'Company', required=True, readonly=True, states={'draft':[('readonly',False)]}),
         'note': fields.text('Note'),
-        'category_id': fields.many2one('account.asset.category', 'Asset category', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'category_id': fields.many2one('account.asset.category', 'Asset Category', required=True, change_default=True, readonly=True, states={'draft':[('readonly',False)]}),
         'parent_id': fields.many2one('account.asset.asset', 'Parent Asset', readonly=True, states={'draft':[('readonly',False)]}),
         'child_ids': fields.one2many('account.asset.asset', 'parent_id', 'Children Assets'),
         'purchase_date': fields.date('Purchase Date', required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -233,7 +233,7 @@ class account_asset_asset(osv.osv):
             "  * Linear: Calculated on basis of: Gross Value / Number of Depreciations\n" \
             "  * Degressive: Calculated on basis of: Remaining Value * Degressive Factor"),
         'method_number': fields.integer('Number of Depreciations', readonly=True, states={'draft':[('readonly',False)]}, help="Calculates Depreciation within specified interval"),
-        'method_period': fields.integer('Period Length', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
+        'method_period': fields.integer('Number of Months in a Period', required=True, readonly=True, states={'draft':[('readonly',False)]}, help="State here the time during 2 depreciations, in months"),
         'method_end': fields.date('Ending Date', readonly=True, states={'draft':[('readonly',False)]}),
         'method_progress_factor': fields.float('Degressive Factor', readonly=True, states={'draft':[('readonly',False)]}),
         'value_residual': fields.function(_amount_residual, method=True, digits_compute=dp.get_precision('Account'), string='Residual Value'),
@@ -270,7 +270,7 @@ class account_asset_asset(osv.osv):
         return True
 
     _constraints = [
-        (_check_recursion, 'Error ! You can not create recursive assets.', ['parent_id']),
+        (_check_recursion, 'Error ! You cannot create recursive assets.', ['parent_id']),
         (_check_prorata, 'Prorata temporis can be applied only for time method "number of depreciations".', ['prorata']),
     ]
 
@@ -316,6 +316,19 @@ class account_asset_asset(osv.osv):
         asset_id = super(account_asset_asset, self).create(cr, uid, vals, context=context)
         self.compute_depreciation_board(cr, uid, [asset_id], context=context)
         return asset_id
+    
+    def open_entries(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({'search_default_asset_id': ids, 'default_asset_id': ids})
+        return {
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'res_model': 'account.move.line',
+            'view_id': False,
+            'type': 'ir.actions.act_window',
+            'context': context,
+        }
 
 account_asset_asset()
 
@@ -331,7 +344,7 @@ class account_asset_depreciation_line(osv.osv):
 
     _columns = {
         'name': fields.char('Depreciation Name', size=64, required=True, select=1),
-        'sequence': fields.integer('Sequence of the depreciation', required=True),
+        'sequence': fields.integer('Sequence', required=True),
         'asset_id': fields.many2one('account.asset.asset', 'Asset', required=True),
         'parent_state': fields.related('asset_id', 'state', type='char', string='State of Asset'),
         'amount': fields.float('Depreciation Amount', required=True),

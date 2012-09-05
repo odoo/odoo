@@ -29,7 +29,7 @@ from tools.translate import _
 import logging
 import decimal_precision as dp
 
-_logger = logging.getLogger('mps') 
+_logger = logging.getLogger(__name__)
 
 
 def rounding(fl, round_value):
@@ -52,11 +52,11 @@ class stock_period(osv.osv):
     _defaults = {
         'state': 'draft'
     }
-    
+
     def button_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
-    
+
     def button_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'})
         return True
@@ -143,7 +143,7 @@ class stock_sale_forecast(osv.osv):
             if t['state'] in ('draft'):
                 unlink_ids.append(t['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('Cannot delete a validated sales forecast!'))
+                raise osv.except_osv(_('Invalid Action!'), _('Cannot delete a validated sales forecast.'))
         osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
         return True
 
@@ -172,7 +172,7 @@ class stock_sale_forecast(osv.osv):
         res = {'value': ret}
         return res
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0, 
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_qty=0.0,
                      active_uom=False, product_id=False):
         ret = {}
         if product_uom and product_id:
@@ -430,7 +430,7 @@ class stock_planning(osv.osv):
             result['warehouse_id'] = False
         return {'value': result}
 
-    def onchange_uom(self, cr, uid, ids, product_uom=False, product_id=False, active_uom=False, 
+    def onchange_uom(self, cr, uid, ids, product_uom=False, product_id=False, active_uom=False,
                      planned_outgoing=0.0, to_procure=0.0):
         ret = {}
         if not product_uom:
@@ -623,7 +623,7 @@ class stock_planning(osv.osv):
     def procure_incomming_left(self, cr, uid, ids, context, *args):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
-                raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
+                raise osv.except_osv(_('Error!'), _('Incoming Left must be greater than 0.'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             proc_id = self.pool.get('procurement.order').create(cr, uid, {
@@ -667,11 +667,11 @@ class stock_planning(osv.osv):
     def internal_supply(self, cr, uid, ids, context, *args):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.incoming_left <= 0:
-                raise osv.except_osv(_('Error !'), _('Incoming Left must be greater than 0 !'))
+                raise osv.except_osv(_('Error!'), _('Incoming Left must be greater than 0.'))
             if not obj.supply_warehouse_id:
-                raise osv.except_osv(_('Error !'), _('You must specify a Source Warehouse !'))
+                raise osv.except_osv(_('Error!'), _('You must specify a Source Warehouse.'))
             if obj.supply_warehouse_id.id == obj.warehouse_id.id:
-                raise osv.except_osv(_('Error !'), _('You must specify a Source Warehouse different than calculated (destination) Warehouse !'))
+                raise osv.except_osv(_('Error!'), _('You must specify a Source Warehouse different than calculated (destination) Warehouse.'))
             uom_qty, uom, uos_qty, uos = self._qty_to_standard(cr, uid, obj, context)
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             picking_id = self.pool.get('stock.picking').create(cr, uid, {

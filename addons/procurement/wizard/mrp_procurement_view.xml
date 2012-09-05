@@ -7,15 +7,17 @@
         <record id="view_compute_procurment_wizard" model="ir.ui.view">
             <field name="name">Compute Procurements</field>
             <field name="model">procurement.order.compute</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Parameters" version="7.0">
-                    <header>
+                    <group>
+                        <label string="This wizard will schedule procurements."/>
+                    </group>
+                    <footer>
                         <button name="procure_calculation" string="Compute Procurements"
-                            type="object" icon="gtk-ok" />
-                        <button icon='gtk-cancel' special="cancel" string="Cancel" />
-                    </header>
-                    <label string="This wizard will schedule procurements."/>
+                            type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </footer>
                 </form>
             </field>
         </record>

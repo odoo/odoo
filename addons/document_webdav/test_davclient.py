@@ -42,8 +42,9 @@ from tools import config
 from xmlrpclib import Transport, ProtocolError
 import StringIO
 import base64
+from openerp import SUPERUSER_ID
 
-log = logging.getLogger('http-client')
+_logger = logging.getLogger(__name__)
 
 class HTTP11(httplib.HTTP):
         _http_vsn = 11
@@ -62,16 +63,16 @@ class PersistentTransport(Transport):
         if not self._http.has_key(host):
                 host, extra_headers, x509 = self.get_host_info(host)
                 self._http[host] = HTTP11(host)
-                log.debug("New connection to %s", host)
+                _logger.debug("New connection to %s", host)
         return self._http[host]
 
     def get_host_info(self, host):
         host, extra_headers, x509 = Transport.get_host_info(self,host)
         if extra_headers == None:
                 extra_headers = []
-                
+
         extra_headers.append( ( 'Connection', 'keep-alive' ))
-        
+
         return host, extra_headers, x509
 
     def _parse_response(self, file, sock, response):
@@ -122,9 +123,9 @@ class PersistentTransport(Transport):
 
         resp = h._conn.getresponse()
         # TODO: except BadStatusLine, e:
-        
+
         errcode, errmsg, headers = resp.status, resp.reason, resp.msg
-        
+
 
         if errcode != 200:
             raise ProtocolError(
@@ -145,7 +146,7 @@ class PersistentTransport(Transport):
 class CompressedTransport(PersistentTransport):
     def send_content(self, connection, request_body):
         connection.putheader("Content-Type", "text/xml")
-        
+
         if len(request_body) > 512 or True:
             buffer = StringIO.StringIO()
             output = gzip.GzipFile(mode='wb', fileobj=buffer)
@@ -170,13 +171,13 @@ class SafePersistentTransport(PersistentTransport):
         if not self._http.has_key(host):
                 host, extra_headers, x509 = self.get_host_info(host)
                 self._http[host] = httplib.HTTPS(host, None, **(x509 or {}))
-                log.debug("New connection to %s", host)
+                _logger.debug("New connection to %s", host)
         return self._http[host]
 
 class AuthClient(object):
     def getAuth(self, atype, realm):
         raise NotImplementedError("Cannot authenticate for %s" % atype)
-        
+
     def resolveFailedRealm(self, realm):
         """ Called when, using a known auth type, the realm is not in cache
         """
@@ -191,11 +192,11 @@ class BasicAuthClient(AuthClient):
             return super(BasicAuthClient,self).getAuth(atype, realm)
 
         if not self._realm_dict.has_key(realm):
-            log.debug("realm dict: %r", self._realm_dict)
-            log.debug("missing key: \"%s\"" % realm)
+            _logger.debug("realm dict: %r", self._realm_dict)
+            _logger.debug("missing key: \"%s\"" % realm)
             self.resolveFailedRealm(realm)
         return 'Basic '+ self._realm_dict[realm]
-        
+
     def addLogin(self, realm, username, passwd):
         """ Add some known username/password for a specific login.
             This function should be called once, for each realm
@@ -210,7 +211,7 @@ class BasicAuthClient(AuthClient):
 class addAuthTransport:
     """ Intermediate class that authentication algorithm to http transport
     """
-    
+
     def setAuthClient(self, authobj):
         """ Set the authentication client object.
             This method must be called before any request is issued, that
@@ -218,7 +219,7 @@ class addAuthTransport:
         """
         assert isinstance(authobj, AuthClient)
         self._auth_client = authobj
-        
+
 
     def request(self, host, handler, request_body, verbose=0):
         # issue XML-RPC request
@@ -226,7 +227,7 @@ class addAuthTransport:
         h = self.make_connection(host)
         if verbose:
             h.set_debuglevel(1)
-        
+
         tries = 0
         atype = None
         realm = None
@@ -239,14 +240,14 @@ class addAuthTransport:
                 # This line will bork if self.setAuthClient has not
                 # been issued. That is a programming error, fix your code!
                 auths = self._auth_client.getAuth(atype, realm)
-                log.debug("sending authorization: %s", auths)
+                _logger.debug("sending authorization: %s", auths)
                 h.putheader('Authorization', auths)
             self.send_content(h, request_body)
 
             resp = h._conn.getresponse()
             #  except BadStatusLine, e:
             tries += 1
-    
+
             if resp.status == 401:
                 if 'www-authenticate' in resp.msg:
                     (atype,realm) = resp.msg.getheader('www-authenticate').split(' ',1)
@@ -255,10 +256,10 @@ class addAuthTransport:
                         log.warning("Why have data on a 401 auth. message?")
                     if realm.startswith('realm="') and realm.endswith('"'):
                         realm = realm[7:-1]
-                    log.debug("Resp: %r %r", resp.version,resp.isclosed(), resp.will_close)
-                    log.debug("Want to do auth %s for realm %s", atype, realm)
+                    _logger.debug("Resp: %r %r", resp.version,resp.isclosed(), resp.will_close)
+                    _logger.debug("Want to do auth %s for realm %s", atype, realm)
                     if atype != 'Basic':
-                        raise ProtocolError(host+handler, 403, 
+                        raise ProtocolError(host+handler, 403,
                                         "Unknown authentication method: %s" % atype, resp.msg)
                     continue # with the outer while loop
                 else:
@@ -268,17 +269,17 @@ class addAuthTransport:
             if resp.status != 200:
                 raise ProtocolError( host + handler,
                     resp.status, resp.reason, resp.msg )
-    
+
             self.verbose = verbose
-    
+
             try:
                 sock = h._conn.sock
             except AttributeError:
                 sock = None
-    
+
             return self._parse_response(h.getfile(), sock, resp)
 
-        raise ProtocolError(host+handler, 403, "No authentication",'')
+        raise ProtocolError(host+handler, 403, "No authentication.",'')
 
 class PersistentAuthTransport(addAuthTransport,PersistentTransport):
     pass
@@ -302,7 +303,7 @@ class HTTPSConnection(httplib.HTTPSConnection):
             self.sock = ssl.wrap_socket(sock, self.key_file, self.cert_file,
                                 ca_certs=ca_certs,
                                 cert_reqs=cert_reqs)
-        
+
 
         def getpeercert(self):
                 import ssl
@@ -315,15 +316,15 @@ class HTTPSConnection(httplib.HTTPSConnection):
                         lf = (len(ssl.PEM_FOOTER)+1)
                         if cert[0-lf] != '\n':
                                 cert = cert[:0-lf]+'\n'+cert[0-lf:]
-                        log.debug("len-footer: %s cert: %r", lf, cert[0-lf])
-                
+                        _logger.debug("len-footer: %s cert: %r", lf, cert[0-lf])
+
                 return cert
 
 
 class DAVClient(object):
     """An instance of a WebDAV client, connected to the OpenERP server
     """
-    
+
     def __init__(self, user=None, passwd=None, dbg=0, use_ssl=False, useragent=False, timeout=None):
         if use_ssl:
             self.host = config.get_misc('httpsd', 'interface', False)
@@ -353,20 +354,20 @@ class DAVClient(object):
 
     def get_creds(self, obj, cr, uid):
         """Read back the user credentials from cr, uid
-        
+
         @param obj is any orm object, in order to use its pool
         @param uid is the numeric id, which we will try to reverse resolve
-        
+
         note: this is a hackish way to get the credentials. It is expected
         to break if "base_crypt" is used.
         """
         ruob = obj.pool.get('res.users')
-        res = ruob.read(cr, 1, [uid,], ['login', 'password'])
+        res = ruob.read(cr, SUPERUSER_ID, [uid,], ['login', 'password'])
         assert res, "uid %s not found" % uid
         self.user = res[0]['login']
         self.passwd = res[0]['password']
         if self.passwd.startswith('$1$'):
-            # md5 by base crypt. We cannot decode, wild guess 
+            # md5 by base crypt. We cannot decode, wild guess
             # that passwd = login
             self.passwd = self.user
         return True
@@ -390,7 +391,7 @@ class DAVClient(object):
         import base64
         dbg = self.dbg
         hdrs.update(self.hdrs)
-        log.debug("Getting %s http://%s:%d/%s", method, self.host, self.port, path)
+        _logger.debug("Getting %s http://%s:%d/%s", method, self.host, self.port, path)
         conn = httplib.HTTPConnection(self.host, port=self.port, timeout=self.timeout)
         conn.set_debuglevel(dbg)
         if not path:
@@ -402,42 +403,42 @@ class DAVClient(object):
                 r1 = conn.getresponse()
         except httplib.BadStatusLine, bsl:
                 log.warning("Bad status line: %s", bsl.line)
-                raise Exception('Bad status line')
+                raise Exception('Bad status line.')
         if r1.status == 401: # and r1.headers:
                 if 'www-authenticate' in r1.msg:
                         (atype,realm) = r1.msg.getheader('www-authenticate').split(' ',1)
                         data1 = r1.read()
                         if not self.user:
                                 raise Exception('Must auth, have no user/pass!')
-                        log.debug("Ver: %s, closed: %s, will close: %s", r1.version,r1.isclosed(), r1.will_close)
-                        log.debug("Want to do auth %s for realm %s", atype, realm)
+                        _logger.debug("Ver: %s, closed: %s, will close: %s", r1.version,r1.isclosed(), r1.will_close)
+                        _logger.debug("Want to do auth %s for realm %s", atype, realm)
                         if atype == 'Basic' :
                                 auths = base64.encodestring(self.user + ':' + self.passwd)
                                 if auths[-1] == "\n":
                                         auths = auths[:-1]
-                                hdrs['Authorization']= 'Basic '+ auths 
+                                hdrs['Authorization']= 'Basic '+ auths
                                 #sleep(1)
                                 conn.request(method, path, body, hdrs )
                                 r1 = conn.getresponse()
                         else:
                                 raise Exception("Unknown auth type %s" %atype)
                 else:
-                        log.warning("Got 401, cannot auth")
+                        _logger.warning("Got 401, cannot auth")
                         raise Exception('No auth')
 
-        log.debug("Reponse: %s %s",r1.status, r1.reason)
+        _logger.debug("Reponse: %s %s",r1.status, r1.reason)
         data1 = r1.read()
         if method != 'GET':
-            log.debug("Body:\n%s\nEnd of body", data1)
+            _logger.debug("Body:\n%s\nEnd of body", data1)
             try:
                 ctype = r1.msg.getheader('content-type')
                 if ctype and ';' in ctype:
                     ctype, encoding = ctype.split(';',1)
                 if ctype == 'text/xml':
                     doc = xml.dom.minidom.parseString(data1)
-                    log.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
+                    _logger.debug("XML Body:\n %s", doc.toprettyxml(indent="\t"))
             except Exception:
-                log.warning("could not print xml", exc_info=True)
+                _logger.warning("Cannot print XML.", exc_info=True)
                 pass
         conn.close()
         return r1.status, r1.msg, data1
@@ -474,11 +475,11 @@ class DAVClient(object):
         s, m, d = self._http_request(path, method='OPTIONS', hdrs=hdrs)
         assert s == 200, "Status: %r" % s
         assert 'OPTIONS' in m.getheader('Allow')
-        log.debug('Options: %r', m.getheader('Allow'))
-        
+        _logger.debug('Options: %r', m.getheader('Allow'))
+
         if expect:
             self._assert_headers(expect, m)
-    
+
     def _parse_prop_response(self, data):
         """ Parse a propfind/propname response
         """
@@ -488,15 +489,15 @@ class DAVClient(object):
                 if node.nodeType == node.TEXT_NODE:
                     rc.append(node.data)
             return ''.join(rc)
-        
+
         def getElements(node, namespaces=None, strict=False):
             for cnod in node.childNodes:
                 if cnod.nodeType != node.ELEMENT_NODE:
                     if strict:
-                        log.debug("Found %r inside <%s>", cnod, node.tagName)
+                        _logger.debug("Found %r inside <%s>", cnod, node.tagName)
                     continue
                 if namespaces and (cnod.namespaceURI not in namespaces):
-                    log.debug("Ignoring <%s> in <%s>", cnod.tagName, node.localName)
+                    _logger.debug("Ignoring <%s> in <%s>", cnod.tagName, node.localName)
                     continue
                 yield cnod
 
@@ -533,11 +534,11 @@ class DAVClient(object):
                             assert htver == 'HTTP/1.1'
                             rstatus = int(sta)
                         else:
-                            log.debug("What is <%s> inside a <propstat>?", pno.tagName)
-                    
+                            _logger.debug("What is <%s> inside a <propstat>?", pno.tagName)
+
                 else:
-                    log.debug("Unknown node: %s", cno.tagName)
-                
+                    _logger.debug("Unknown node: %s", cno.tagName)
+
             res.setdefault(href,[]).append((status, res_nss))
 
         return res
@@ -558,7 +559,7 @@ class DAVClient(object):
                     propstr += '<ns%d:%s xmlns:ns%d="%s" />' %(nscount, p, nscount, ns)
                     nscount += 1
             propstr += '</prop>'
-                
+
         body="""<?xml version="1.0" encoding="utf-8"?>
             <propfind xmlns="DAV:">%s</propfind>""" % propstr
         hdrs = { 'Content-Type': 'text/xml; charset=utf-8',
@@ -566,7 +567,7 @@ class DAVClient(object):
                 'Depth': depth,
                 }
 
-        s, m, d = self._http_request(self.davpath + path, method='PROPFIND', 
+        s, m, d = self._http_request(self.davpath + path, method='PROPFIND',
                                     hdrs=hdrs, body=body)
         assert s == 207, "Bad status: %s" % s
         ctype = m.getheader('Content-Type').split(';',1)[0]
@@ -578,7 +579,7 @@ class DAVClient(object):
         else:
             assert len(res) >= 1
         return res
-        
+
 
     def gd_propname(self, path, depth=0):
         body="""<?xml version="1.0" encoding="utf-8"?>
@@ -587,7 +588,7 @@ class DAVClient(object):
                 'Accept': 'text/xml',
                 'Depth': depth
                 }
-        s, m, d = self._http_request(self.davpath + path, method='PROPFIND', 
+        s, m, d = self._http_request(self.davpath + path, method='PROPFIND',
                                     hdrs=hdrs, body=body)
         assert s == 207, "Bad status: %s" % s
         ctype = m.getheader('Content-Type').split(';',1)[0]
@@ -605,7 +606,7 @@ class DAVClient(object):
 
     def gd_lsl(self, path):
         """ Return a list of 'ls -l' kind of data for a folder
-        
+
             This is based on propfind.
         """
 
@@ -616,7 +617,7 @@ class DAVClient(object):
 
         propnames = [ l[1] for l in lspairs]
         propres = self.gd_propfind(path, props=propnames, depth=1)
-        
+
         res = []
         for href, pr in propres.items():
             lsline = {}
@@ -637,10 +638,10 @@ class DAVClient(object):
                         if lsp[1] in davprops:
                             lsline[lsp[0]] = lsp[2]
                 else:
-                    log.debug("Strange status: %s", st)
-            
+                    _logger.debug("Strange status: %s", st)
+
             res.append(lsline)
-            
+
         return res
 
     def gd_get(self, path, crange=None, mime=None, compare=None):
@@ -651,7 +652,7 @@ class DAVClient(object):
             if isinstance(crange, tuple):
                 crange = [crange,]
             if not isinstance(crange, list):
-                raise TypeError("Range must be a tuple or list of tuples")
+                raise TypeError("Range must be a tuple or list of tuples.")
             rs = []
             for r in crange:
                 rs.append('%d-%d' % r)
@@ -683,13 +684,13 @@ class DAVClient(object):
         return ctype, rrange, d
 
     def gd_put(self, path, body=None, srcpath=None, mime=None, noclobber=False, ):
-        """ HTTP PUT 
+        """ HTTP PUT
             @param noclobber will prevent overwritting a resource (If-None-Match)
             @param mime will set the content-type
         """
         hdrs = { }
         if not (body or srcpath):
-            raise ValueError("PUT must have something to send")
+            raise ValueError("PUT must have something to send.")
         if (not body) and srcpath:
             fd = open(srcpath, 'rb')
             body = fd.read()
@@ -698,7 +699,7 @@ class DAVClient(object):
             hdrs['Content-Type'] = mime
         if noclobber:
             hdrs['If-None-Match'] = '*'
-        s, m, d = self._http_request(self.davpath + path, method='PUT', 
+        s, m, d = self._http_request(self.davpath + path, method='PUT',
                             hdrs=hdrs, body=body)
         assert s == (201), "Bad status: %s" % s
         etag = m.getheader('ETag')

@@ -144,13 +144,13 @@ class account_common_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
+                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        raise (_('Error'), _('not implemented'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def check_report(self, cr, uid, ids, context=None):
         if context is None:

@@ -9,28 +9,28 @@
 -
   In order to test the flow, I confirmed the purchase order.
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase11}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_11}
 -
   I check that the order which was initially in the draft state has transmit to confirm state for double validation it should not an Approve state.
 -
-  !assert {model: purchase.order, id: order_purchase11, severity: error, string: Purchase Order should not be in Approved state.}:
+  !assert {model: purchase.order, id: purchase_order_11, severity: error, string: Purchase Order should not be in Approved state.}:
     - state != 'approved'
 -
   I Approved the purchase order.
 -
-  !workflow {model: purchase.order, action: purchase_approve, ref: order_purchase11}
+  !workflow {model: purchase.order, action: purchase_approve, ref: purchase_order_11}
 -
   I check that the order which was initially in the confirmed state has transmit to approved state.
 -
-  !assert {model: purchase.order, id: order_purchase11, severity: error, string: Purchase Order should be in Approved state.}:
+  !assert {model: purchase.order, id: purchase_order_11, severity: error, string: Purchase Order should be in Approved state.}:
     - state == 'approved'
 -
   I confirmed the purchase order of amount of less than Limit amount.
 -
-  !workflow {model: purchase.order, action: purchase_confirm, ref: order_purchase12}
+  !workflow {model: purchase.order, action: purchase_confirm, ref: purchase_order_12}
 -
   I check that the order is in approved state.
 -
-  !assert {model: purchase.order, id: order_purchase12, severity: error, string: Purchase Order should be in Approved state.}:
+  !assert {model: purchase.order, id: purchase_order_12, severity: error, string: Purchase Order should be in Approved state.}:
     - state == 'approved'
 

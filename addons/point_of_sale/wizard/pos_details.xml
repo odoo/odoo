@@ -6,20 +6,18 @@
         <record id="view_pos_details" model="ir.ui.view">
             <field name="name">POS Details</field>
             <field name="model">pos.details</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="POS Details" version="7.0">
-                    <header>
-                            <button icon='gtk-cancel' special="cancel"
-                                    string="Close" />
-                            <button name="print_report" string="Print Report"
-                                    colspan="1" type="object" icon="gtk-print" />
-                    </header>
                     <group col="4" string="Dates">
                         <field name="date_start"/>
                         <field name="date_end"/>
                     </group>
                     <field name="user_ids"/>
+                    <footer>
+                        <button name="print_report" type="object" string="Print Report" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

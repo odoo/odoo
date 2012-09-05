@@ -7,12 +7,12 @@
         <record id="view_survey_print" model="ir.ui.view">
             <field name="name">Survey Print</field>
             <field name="model">survey.print</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Print" version="7.0">
                     <header>
-                        <button colspan="1" icon="gtk-print" name="action_next" string="Print" type="object"/>
-                        <button colspan="1" icon="gtk-cancel" special="cancel" string="Cancel"/>
+                        <button name="action_next" string="Print" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
                         <separator string="Survey" colspan="4"/>
@@ -38,7 +38,7 @@
         </record>
 
         <menuitem name="Print Surveys" id="menu_print_survey_form" sequence="1"
-            action="action_view_survey_print" parent="menu_reporting"
+            action="action_view_survey_print" parent="base.next_id_10"
             groups="base.group_tool_manager" icon="STOCK_PRINT"/>
 
     </data>

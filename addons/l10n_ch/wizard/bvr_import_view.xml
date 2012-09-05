@@ -5,16 +5,16 @@
         <record id="bvr_import_view" model="ir.ui.view">
             <field name="name">BVR Import Wizard</field>
             <field name="model">bvr.import.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="BVR Import" version="7.0">
-                    <header>
-                        <button name="import_bvr" string="Import" type="object" icon="gtk-ok" colspan="2"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"  colspan="2"/>
-                    </header>
                     <group>
                         <field name="file"/>
                     </group>
+                    <footer>
+                        <button name="import_bvr" string="Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -29,15 +29,14 @@
             <field name="target">new</field>
         </record>
         
-        <record model="ir.ui.view" id="view_bank_statement_form">
+        <record model="ir.ui.view" id="view_bank_statement_form_bvr">
             <field name="name">account.bank.statement.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
-                <field name="balance_end_real" position="after">
-                    <button name="%(wizard_bvr_import)d" icon="gtk-execute" string="Import BVR" type="action" colspan="2"/>
-                </field>
+                <xpath expr="//div[@name='import_buttons']" position="inside">
+                    <button name="%(wizard_bvr_import)d" icon="gtk-execute" string="Import BVR" type="action"/>
+                </xpath>
             </field>
         </record>
     </data>

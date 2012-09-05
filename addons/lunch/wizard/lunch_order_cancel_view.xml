@@ -7,16 +7,16 @@
         <record id="view_lunch_order_cancel" model="ir.ui.view">
             <field name="name">lunch.order.cancel.form</field>
             <field name="model">lunch.order.cancel</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Cancel Order" version="7.0">
-                    <header>
-                        <button  icon="gtk-ok" name="cancel" string="Yes" type="object"/>
-                        <button  icon="gtk-cancel" special="cancel" string="No"/>
-                    </header>
                     <group col="4" >
                         <label string="Are you sure you want to cancel this order ?"/>
                    </group>
+                    <footer>
+                        <button  name="cancel" string="Yes" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>

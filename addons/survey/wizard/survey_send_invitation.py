@@ -71,7 +71,7 @@ class survey_send_invitation(osv.osv_memory):
             if sur.state != 'open':
                 msg +=  sur.title + "\n"
         if msg:
-            raise osv.except_osv(_('Warning !'), _('%sSurvey is not in open state') % msg)
+            raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
         data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                     \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
                     \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,'''
@@ -191,7 +191,7 @@ class survey_send_invitation(osv.osv_memory):
         if skipped:
             note += "%d contacts where ignored (an email address is missing).\n\n" % (skipped)
         if error:
-            note += 'E-Mail not send successfully:\n====================\n%s\n' % (error)
+            note += 'Email not send successfully:\n====================\n%s\n' % (error)
         context.update({'note' : note})
         return {
             'view_type': 'form',

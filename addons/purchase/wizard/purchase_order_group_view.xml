@@ -4,15 +4,11 @@
         <record id="view_purchase_order_group" model="ir.ui.view">
             <field name="name">Merger Purchase Orders</field>
             <field name="model">purchase.order.group</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge orders" version="7.0">
-                    <header>
-                        <button name="merge_orders" string="Merge orders" type="object" icon="gtk-convert"/>
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                    </header>
-                    <separator string="Are you sure you want to merge these orders?"/>
-                    <label string="
+                    <group>
+                        <separator string="Are you sure you want to merge these orders?"/>
+                        <label string="
 Please note that: &#10; &#10;
 Orders will only be merged if: &#10;
 * Purchase Orders are in draft &#10;
@@ -21,6 +17,13 @@ Orders will only be merged if: &#10;
 Lines will only be merged if: &#10;
 * Order lines are exactly the same except for the product,quantity and unit &#10;
 " colspan="4"/>
+                    </group>
+                    
+                    <footer>
+                        <button name="merge_orders" string="Merge orders" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

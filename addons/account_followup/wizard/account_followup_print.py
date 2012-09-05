@@ -28,10 +28,10 @@ from tools.translate import _
 
 class account_followup_print(osv.osv_memory):
     _name = 'account.followup.print'
-    _description = 'Print Followup & Send Mail to Customers'
+    _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'date': fields.date('Follow-up Sending Date', required=True, help="This field allow you to select a forecast date to plan your follow-ups"),
-        'followup_id': fields.many2one('account_followup.followup', 'Follow-up', required=True),
+        'followup_id': fields.many2one('account_followup.followup', 'Follow-Up', required=True),
     }
 
     def _get_followup(self, cr, uid, context=None):
@@ -71,14 +71,14 @@ account_followup_print()
 
 class account_followup_stat_by_partner(osv.osv):
     _name = "account_followup.stat.by.partner"
-    _description = "Followup Statistics by Partner"
+    _description = "Follow-up Statistics by Partner"
     _rec_name = 'partner_id'
     _auto = False
     _columns = {
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'date_move':fields.date('First move', readonly=True),
         'date_move_last':fields.date('Last move', readonly=True),
-        'date_followup':fields.date('Latest followup', readonly=True),
+        'date_followup':fields.date('Latest follow-up', readonly=True),
         'max_followup_id': fields.many2one('account_followup.followup.line',
                                     'Max Follow Up Level', readonly=True, ondelete="cascade"),
         'balance':fields.float('Balance', readonly=True),
@@ -90,7 +90,7 @@ class account_followup_stat_by_partner(osv.osv):
         # Here we don't have other choice but to create a virtual ID based on the concatenation
         # of the partner_id and the company_id, because if a partner is shared between 2 companies,
         # we want to see 2 lines for him in this table. It means that both company should be able
-        # to send him followups separately . An assumption that the number of companies will not
+        # to send him follow-ups separately . An assumption that the number of companies will not
         # reach 10 000 records is made, what should be enough for a time.
         cr.execute("""
             create or replace view account_followup_stat_by_partner as (
@@ -118,15 +118,15 @@ account_followup_stat_by_partner()
 
 class account_followup_print_all(osv.osv_memory):
     _name = 'account.followup.print.all'
-    _description = 'Print Followup & Send Mail to Customers'
+    _description = 'Print Follow-up & Send Mail to Customers'
     _columns = {
         'partner_ids': fields.many2many('account_followup.stat.by.partner', 'partner_stat_rel', 'osv_memory_id', 'partner_id', 'Partners', required=True),
-        'email_conf': fields.boolean('Send email confirmation'),
+        'email_conf': fields.boolean('Send Email Confirmation'),
         'email_subject': fields.char('Email Subject', size=64),
         'partner_lang': fields.boolean('Send Email in Partner Language', help='Do not change message text, if you want to send email in partner language, or configure from company'),
-        'email_body': fields.text('Email body'),
+        'email_body': fields.text('Email Body'),
         'summary': fields.text('Summary', required=True, readonly=True),
-        'test_print': fields.boolean('Test Print', help='Check if you want to print followups without changing followups level.')
+        'test_print': fields.boolean('Test Print', help='Check if you want to print follow-ups without changing follow-ups level.')
     }
     def _get_summary(self, cr, uid, context=None):
         if context is None:
@@ -289,15 +289,15 @@ class account_followup_print_all(osv.osv_memory):
                     msg += partner.name + '\n'
                     msg_unsent += msg
             if not msg_unsent:
-                summary = _("All E-mails have been successfully sent to Partners:.\n\n%s") % msg_sent
+                summary = _("All Emails have been successfully sent to Partners:.\n\n%s") % msg_sent
             else:
-                msg_unsent = _("E-Mail not sent to following Partners, E-mail not available !\n\n%s") % msg_unsent
-                msg_sent = msg_sent and _("\n\nE-Mail sent to following Partners successfully. !\n\n%s") % msg_sent
+                msg_unsent = _("Email not sent to following Partners, Email not available !\n\n%s") % msg_unsent
+                msg_sent = msg_sent and _("\n\nEmail sent to following Partners successfully. !\n\n%s") % msg_sent
                 line = '=========================================================================='
                 summary = msg_unsent + line + msg_sent
             context.update({'summary': summary})
         else:
-            context.update({'summary': '\n\n\nE-Mail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
+            context.update({'summary': '\n\n\nEmail has not been sent to any partner. If you want to send it, please tick send email confirmation on wizard.'})
 
         return {
             'name': _('Followup Summary'),

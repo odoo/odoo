@@ -27,19 +27,6 @@ from tools.translate import _
 import tools
 
 
-def _reopen(self,res_id,model):
-    return {'type': 'ir.actions.act_window',
-            'view_mode': 'form',
-            'view_type': 'form',
-            'res_id': res_id,
-            'res_model': self._name,
-            'target': 'new',
-
-            # save original model in context, otherwise
-            # it will be lost on the action's context switch
-            'context': {'mail.compose.target.model': model}
-    }
-
 class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
 
@@ -87,6 +74,8 @@ class mail_compose_message(osv.osv_memory):
             else:
                 # render the mail as one-shot
                 values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
+                # get partner_ids back
+                values['dest_partner_ids'] = values['partner_ids']
                 # retrofit generated attachments in the expected field format
                 if values['attachments']:
                     attachment = values.pop('attachments')
@@ -110,18 +99,24 @@ class mail_compose_message(osv.osv_memory):
 
         return {'value': values}
 
-
     def template_toggle(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
-            had_template = record.use_template
-            record.write({'use_template': not(had_template)})
-            if had_template:
+            values = {}
+            use_template = record.use_template
+            # simulate an on_change on use_template
+            values.update(self.onchange_use_template(cr, uid, ids, not use_template, context=context)['value'])
+            record.write(values)
+            return False
+
+    def onchange_use_template(self, cr, uid, ids, use_template, context=None):
+        values = {'use_template': use_template}
+        for record in self.browse(cr, uid, ids, context=context):
+            if not use_template:
                 # equivalent to choosing an empty template
-                onchange_defaults = self.on_change_template(cr, uid, record.id, not(had_template),
-                                                            False, email_from=record.email_from,
-                                                            email_to=record.email_to, context=context)
-                record.write(onchange_defaults['value'])
-            return _reopen(self, record.id, record.model)
+                onchange_template_values = self.on_change_template(cr, uid, record.id, use_template,
+                    False, email_from=record.email_from, email_to=record.email_to, context=context)
+                values.update(onchange_template_values['value'])
+        return {'value': values}
 
     def save_as_template(self, cr, uid, ids, context=None):
         if context is None:
@@ -153,7 +148,7 @@ class mail_compose_message(osv.osv_memory):
                           'use_template': True})
 
         # _reopen same wizard screen with new template preselected
-        return _reopen(self, record.id, model)
+        return False
 
     # override the basic implementation 
     def render_template(self, cr, uid, template, model, res_id, context=None):

@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record id="message_blogpost0" model="mail.message">
+            <field name="subject">Internal company announce</field>
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html"><![CDATA[Your monthly meal vouchers arrived. You can get them at Christine's office.
+This month you also have 250 EUR of eco-checks for all employees that worked with us since 1 year minimum.]]></field>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="message_blogpost0_comment0" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html"><![CDATA[Great.]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="message_blogpost0_comment1" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html"><![CDATA[Yes, that's a good news.]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
+        <record id="message_blogpost0_comment2" model="mail.message">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="group_all_employees"/>
+            <field name="content_subtype">html</field>
+            <field name="body_html"><![CDATA[Sure: Curabitur tempor bibendum diam, et euismod ante rutrum vel.
+
+In quis purus neque. Integer sodales dolor eu elit fringilla blandit. Maecenas lacus nisi, facilisis sit amet viverra eu, tristique vel augue.
+Donec viverra congue dui eu blandit. In lacinia molestie nulla, ut sagittis risus feugiat eu.
+
+Check the file in attachment for more information !  (third comment)]]></field>
+            <field name="parent_id" ref="message_blogpost0"/>
+            <field name="type">comment</field>
+            <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record model="ir.config_parameter" id="user_mail_alias">
+            <field name="key">mail.catchall.domain</field>
+            <field name="value">demo.openerp.com</field>
+        </record>
+
+    </data>
+</openerp>

@@ -4,7 +4,6 @@
         <record id="view_account_sequence_installer" model="ir.ui.view">
             <field name="name">account.sequence.installer.view</field>
             <field name="model">account.sequence.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <data>
@@ -47,7 +46,6 @@
     
         <record id="account_seq_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_seq_installer"/>
-            <field name="category_id" ref="account.category_accounting_configuration"/>
             <field name="sequence">3</field>
             <field name="type">automatic</field>
         </record>

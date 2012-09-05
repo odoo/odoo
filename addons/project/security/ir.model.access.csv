@@ -1,19 +1,22 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_project,project.project,model_project_project,project.group_project_user,1,1,1,1
-access_account_analytic_account,account.analytic.account,analytic.model_account_analytic_account,project.group_project_user,1,1,1,1
+access_project_project,project.project,model_project_project,project.group_project_user,1,0,0,0
+access_project_project_manager,project.project,model_project_project,project.group_project_manager,1,1,1,1
+access_account_analytic_account_user,account.analytic.account,analytic.model_account_analytic_account,project.group_project_user,1,0,0,0
+access_account_analytic_account,account.analytic.account,analytic.model_account_analytic_account,project.group_project_manager,1,1,1,1
 access_project_task_type_user,project.task.type user,model_project_task_type,project.group_project_user,1,1,1,1
 access_project_task,project.task,model_project_task,project.group_project_user,1,1,1,1
 access_project_task_work,project.task.work,model_project_task_work,project.group_project_user,1,1,1,1
 access_report_project_task_user,report.project.task.user,model_report_project_task_user,project.group_project_manager,1,1,1,1
-access_project_vs_hours,project.vs.hours,model_project_vs_hours,project.group_project_user,1,1,1,1
-access_task_by_days,task.by.days,model_task_by_days,project.group_project_user,1,1,1,1
 access_partner_task user,base.res.partner user,base.model_res_partner,project.group_project_user,1,0,0,0
 access_task_on_partner,project.task on partners,model_project_task,base.group_user,1,0,0,0
 access_project_on_partner,project.project on partners,model_project_project,base.group_user,1,0,0,0
-access_project_task_sale_user,project.task salesman,model_project_task,base.group_sale_salesman,1,0,0,0
+access_project_task_sale_user,project.task salesman,model_project_task,base.group_sale_salesman,1,1,1,1
+access_project_task_type_sale_user,project.task.type salesman,project.model_project_task_type,base.group_sale_salesman,1,1,1,1
+access_project_task_history_sale_user,project.task.history salesman,project.model_project_task_history,base.group_sale_salesman,1,1,1,1
 access_project_project_sale_user,project.project salesman,model_project_project,base.group_sale_salesman,1,0,0,0
 access_account_analytic_line_project,account.analytic.line project,analytic.model_account_analytic_line,project.group_project_manager,1,1,1,1
 access_project_task_history,project.task.history project,project.model_project_task_history,project.group_project_user,1,1,1,0
 access_project_task_history_cumulative,project.task.history project,project.model_project_task_history_cumulative,project.group_project_manager,1,0,0,0
 access_resource_calendar,project.resource_calendar manager,resource.model_resource_calendar,project.group_project_manager,1,0,0,0
-access_mail_message_project_user,project.mail.message.user,mail.model_mail_message,project.group_project_user,1,1,1,0
+access_project_category,project.project_category,model_project_category,,1,0,0,0
+access_project_category_manager,project.project_category,model_project_category,project.group_project_manager,1,1,1,1

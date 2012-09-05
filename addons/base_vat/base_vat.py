@@ -23,11 +23,12 @@ import logging
 import string
 import datetime
 import re
+_logger = logging.getLogger(__name__)
 
 try:
     import vatnumber
 except ImportError:
-    logging.getLogger('base_vat').warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
+    _logger.warning("VAT validation partially unavailable because the `vatnumber` Python library cannot be found. "
                                           "Install it to support more countries, for example with `easy_install vatnumber`.")
     vatnumber = None
 
@@ -107,7 +108,7 @@ class res_partner(osv.osv):
     def button_check_vat(self, cr, uid, ids, context=None):
         if not self.check_vat(cr, uid, ids, context=context):
             msg = self._construct_constraint_msg(cr, uid, ids, context=context)
-            raise osv.except_osv(_('Error'), msg)
+            raise osv.except_osv(_('Error!'), msg)
 
     def check_vat(self, cr, uid, ids, context=None):
         user_company = self.pool.get('res.users').browse(cr, uid, uid).company_id

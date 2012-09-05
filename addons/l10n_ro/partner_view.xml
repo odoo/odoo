@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
-	<data>
-		<record model="ir.ui.view" id="res_partner_form_ro">
-			<field name="name">res.partner.form.ro</field>
-			<field name="inherit_id" ref="base_vat.view_partner_form"/>
-			<field name="model">res.partner</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="vat" position="after">
-					<field name="nrc"/>
-				</field>
-			</field>
-		</record>
-	</data>
+    <data>
+        <record model="ir.ui.view" id="res_partner_form_ro">
+            <field name="name">res.partner.form.ro</field>
+            <field name="inherit_id" ref="base_vat.view_partner_form"/>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <field name="vat" position="after">
+                    <field name="nrc"/>
+                </field>
+            </field>
+        </record>
+    </data>
 </openerp>

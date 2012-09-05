@@ -8,7 +8,6 @@
     <record model="ir.ui.view" id="view_account_asset_category_form">
         <field name="name">account.asset.category.form</field>
         <field name="model">account.asset.category</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset category" version="7.0">
                 <group>
@@ -47,7 +46,6 @@
     <record model="ir.ui.view" id="view_account_asset_category_tree">
         <field name="name">account.asset.category.tree</field>
         <field name="model">account.asset.category</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset category">
                 <field name="name"/>
@@ -61,10 +59,9 @@
     <record model="ir.ui.view" id="view_account_asset_category_search">
         <field name="name">account.asset.category.search</field>
         <field name="model">account.asset.category</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Asset Category">
-                <field name="name"/>
+                <field name="name" string="Asset Category"/>
                 <field name="journal_id"/>
             </search>
         </field>
@@ -77,70 +74,96 @@
     <record model="ir.ui.view" id="view_account_asset_asset_form">
         <field name="name">account.asset.asset.form</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset" version="7.0">
                 <header>
-                    <button name="validate" states="draft" string="Confirm Asset" type="object"/>
-                    <button name="set_to_close" states="open" string="Set to Close" type="object"/>
-                    <button name="set_to_draft" states="open" string="Set to Draft" type="object"/> 
+                    <button name="validate" states="draft" string="Confirm Asset" type="object" class="oe_highlight"/>
+                    <button name="set_to_close" states="open" string="Set to Close" type="object" class="oe_highlight"/>
+                    <button name="set_to_draft" states="open" string="Set to Draft" type="object" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,open"/>
                 </header>
                 <sheet>
-                    <label for="name"/>
-                    <h1><field name="name"/></h1>
-                    <label for="category_id"/>
-                    <h2><field name="category_id" on_change="onchange_category_id(category_id)"/></h2>
+                    <div class="oe_button_box oe_right">
+                        <button name="open_entries" string="Entries" type="object" class="oe_inline"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" class="oe_inline"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id" on_change="onchange_category_id(category_id)"/>
+                            <field name="code"/>
+                            <field name="parent_id"/>
+                        </group>
+                        <group>
+                            <field name="purchase_date"/>
+                            <field name="currency_id"/>
+                            <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
+                        </group>
+                    </group>
                     <notebook colspan="4">
                         <page string="General">
-                        <group>
-                            <group>
-                                <field name="code"/>
-                                <field name="company_id" widget="selection"
-                                   groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
-                            </group>
-                            <group>
-                                <field name="purchase_value"/>
-                                <field name="salvage_value"/>
-                                <field name="value_residual"/>
-                                <field name="currency_id"/>
-                            </group>
-                            <group>
-                                <field name="partner_id"/>
-                                <field name="purchase_date"/>
-                                <field name="parent_id"/>
-                            </group>
-                            <group>
-                                <field name="method_time" on_change="onchange_method_time(method_time)"/>
-                                <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
-                                <field name="method_period"/>
-                                <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
-                                <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" colspan="2"/>
-                            </group>
-                            <group>
-                                <field name="method"/>
-                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
-                                <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
-                            </group>
-                        </group>
+	                        <group>
+	                            <group>
+	                                <field name="purchase_value"/>
+	                                <field name="salvage_value"/>
+	                                <field name="value_residual"/>
+                                    <field name="partner_id"/>
+	                            </group>
+	                            <group>
+	                                <field name="method"/>
+	                                <field name="method_progress_factor" attrs="{'invisible':[('method','=','linear')], 'required':[('method','=','degressive')]}"/>
+                                    <label for="method_time"/>
+                                    <div>
+	                                    <field name="method_time" on_change="onchange_method_time(method_time)" class="oe_inline"/>
+	                                    <button name="%(action_asset_modify)d" states="open" string="Change Duration" type="action" icon="terp-stock_effects-object-colorize" class="oe_inline" colspan="1"/>
+                                    </div>
+	                                <field name="prorata" attrs="{'invisible': [('method_time','=','end')]}"/>
+	                                <field name="method_number" attrs="{'invisible':[('method_time','=','end')], 'required':[('method_time','=','number')]}"/>
+	                                <field name="method_period"/>
+	                                <field name="method_end" attrs="{'required': [('method_time','=','end')], 'invisible':[('method_time','=','number')]}"/>
+	                            </group>
+	                        </group>
                         </page>
                         <page string="Depreciation Board">
                             <field name="depreciation_line_ids" mode="tree,graph">
-                               <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
-                                  <field name="depreciation_date"/>
-                                  <field name="sequence" invisible="1"/>
-                                  <field name="depreciated_value" readonly="1"/>
-                                  <field name="amount"/>
-                                  <field name="remaining_value" readonly="1"/>
-                                  <field name="move_check"/>
-                                  <field name="parent_state" invisible="1"/>
-                                  <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
-                               </tree>
-                               <graph type="bar">
-                                  <field name="name"/>
-                                  <field name="amount"/>
-                                  <field name="depreciated_value"/>
-                               </graph>
+                                <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
+                                    <field name="depreciation_date"/>
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="depreciated_value" readonly="1"/>
+                                    <field name="amount"/>
+                                    <field name="remaining_value" readonly="1"/>
+                                    <field name="move_check"/>
+                                    <field name="parent_state" invisible="1"/>
+                                    <button name="create_move" attrs="{'invisible':['|',('move_check','!=',False),('parent_state','!=','open')]}" icon="gtk-execute" string="Create Move" type="object"/>
+                                </tree>
+                                <form string="Depreciation Lines"> 
+                                    <group>
+                                        <group>
+                                            <field name="asset_id" invisible="1"/>
+                                            <field name="parent_state" invisible="1"/>
+                                            <field name="name"/>
+                                            <field name="amount"/>
+                                            <field name="move_id"/>
+                                            <field name="move_check"/>
+                                            <field name="parent_state" invisible="1"/>
+                                        </group>
+                                        <group>
+                                            <field name="sequence"/>
+                                            <field name="depreciation_date"/>
+                                            <field name="depreciated_value" readonly="1"/>
+                                            <field name="remaining_value" readonly="1"/>
+                                        </group>
+                                    </group>
+                                </form>
+                                <graph type="bar">
+                                    <field name="name"/>
+                                    <field name="amount"/>
+                                    <field name="depreciated_value"/>
+                                </graph>
                             </field>
                             <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
                         </page>
@@ -149,18 +172,17 @@
                             <field name="history_ids" readonly="1"/>
                         </page>
                         <page string="Notes">
-                            <field name="note"/>
+                            <field name="note" placeholder="Add an internal note here..."/>
                         </page>
                     </notebook>
-              </sheet>
-           </form>
-       </field>
+                </sheet>
+            </form>
+        </field>
     </record>
 
     <record model="ir.ui.view" id="view_account_asset_asset_tree">
         <field name="name">account.asset.asset.tree</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets" colors="blue:(state == 'draft');grey:(state == 'close')">
@@ -180,7 +202,6 @@
     <record model="ir.ui.view" id="view_account_asset_asset_hierarchy_tree">
         <field name="name">account.asset.asset.hierarchy</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">tree</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
             <tree string="Assets">
@@ -200,18 +221,14 @@
     <record id="view_account_asset_search" model="ir.ui.view">
         <field name="name">account.asset.asset.search</field>
         <field name="model">account.asset.asset</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Account Asset">
-                <group col="10" colspan="12">
-                    <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
-                    <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
-                    <field name="category_id"/>
-                    <field name="purchase_date"/>
-                    <field name="partner_id"/>
-                </group>
+                <field name="name" string="Asset"/>
+                <field name="purchase_date"/>
+                <filter icon="terp-check" string="Current" domain="[('state','in', ('draft','open'))]" help="Assets in draft and open states"/>
+                <filter icon="terp-dialog-close" string="Closed" domain="[('state','=', 'close')]" help="Assets in closed state"/>
+                <field name="category_id"/>
+                <field name="partner_id"/>
             </search>
         </field>
     </record>
@@ -223,7 +240,6 @@
     <record model="ir.ui.view" id="view_account_asset_history_form">
         <field name="name">account.asset.history.form</field>
         <field name="model">account.asset.history</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Asset History" version="7.0">
                 <group>
@@ -248,7 +264,6 @@
     <record model="ir.ui.view" id="view_account_asset_history_tree">
         <field name="name">account.asset.history.tree</field>
         <field name="model">account.asset.history</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Asset history">
                 <field name="date"/>
@@ -273,7 +288,6 @@
     <record id="view_account_move_line_form_inherit" model="ir.ui.view">
         <field name="name">Journal Items (form)</field>
         <field name="model">account.move.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="account.view_move_line_form"/>
         <field name="arch" type="xml">
             <field name="statement_id" position="after">
@@ -285,7 +299,6 @@
     <record id="view_account_move_line_filter_inherit" model="ir.ui.view">
         <field name="name">Journal Items (Search)</field>
         <field name="model">account.move.line</field>
-        <field name="type">search</field>
         <field name="inherit_id" ref="account.view_account_move_line_filter"/>
         <field name="arch" type="xml">
             <field name="account_id" position="after">

@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-		<record id="procurement_action_board" model="ir.actions.act_window">
+        <record id="procurement_action_board" model="ir.actions.act_window">
             <field name="name">Procurement Exceptions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">procurement.order</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('state','=','exception')]</field>
-			<field name="view_id" ref="procurement.procurement_tree_view_board"/>
+            <field name="view_id" ref="procurement.procurement_tree_view_board"/>
         </record>
         <record id="board_mrp_procurement_form" model="ir.ui.view">
             <field name="name">board.mrp.procurement.form</field>
             <field name="model">board.board</field>
-			<field name="inherit_id" ref="stock.board_warehouse_form"/>
-            <field name="type">form</field>
+            <field name="inherit_id" ref="stock.board_warehouse_form"/>
             <field name="arch" type="xml">
-      		<xpath expr="/form/board/column/action[@string='Incoming Shipments']" position="before">
-				<action name="%(procurement_action_board)d" string="Procurements in Exception"/>
-			</xpath>
+              <xpath expr="/form/board/column/action[@string='Incoming Shipments']" position="before">
+                <action name="%(procurement_action_board)d" string="Procurements in Exception"/>
+            </xpath>
             </field>
         </record>
     </data>

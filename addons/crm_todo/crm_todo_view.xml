@@ -5,7 +5,6 @@
     <record id="crm_todo_opportunity_add" model="ir.ui.view">
         <field name="name">Opportunities - Tasks</field>
         <field name="model">crm.lead</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="crm.crm_case_form_view_oppor" />
         <field name="arch" type="xml">
             <data>
@@ -34,7 +33,6 @@
     <record model="ir.ui.view" id="project_task_crm_tree">
         <field name="name">project.task.tree.crm</field>
         <field name="model">project.task</field>
-        <field name="type">tree</field>
         <field name="priority">20</field>
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
@@ -58,7 +56,7 @@
         id="menu_crm_todo"
         parent="base.menu_sales"
         action="crm_todo_action"
-        sequence="5"/>
+        sequence="6"/>
 
 
     </data>

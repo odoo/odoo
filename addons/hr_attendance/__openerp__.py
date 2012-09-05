@@ -34,7 +34,7 @@ actions(Sign in/Sign out) performed by them.
     'author': 'OpenERP SA',
     'images': ['images/hr_attendances.jpeg'],
     'depends': ['hr'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'hr_attendance_view.xml',
         'hr_attendance_report.xml',
@@ -44,7 +44,7 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
     ],
-    'demo_xml': ['hr_attendance_demo.xml'],
+    'demo': ['hr_attendance_demo.xml'],
     'test': [
         'test/attendance_process.yml',
         'test/hr_attendance_report.yml',

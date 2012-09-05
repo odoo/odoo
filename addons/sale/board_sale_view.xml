@@ -14,7 +14,6 @@
         <record id="view_turnover_by_month_tree" model="ir.ui.view">
             <field name="name">turnover.by.month.tree</field>
             <field name="model">account.invoice.report</field>
-            <field name="type">tree</field>
             <field name="priority" eval="32"/>
             <field name="arch" type="xml">
                 <tree string="Monthly Turnover">
@@ -27,7 +26,6 @@
             <field name="name">turnover.by.month.graph</field>
             <field name="model">account.invoice.report</field>
             <field name="priority" eval="32"/>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Monthly Turnover" type="bar">
                     <field name="month"/>
@@ -49,7 +47,6 @@
         <record id="board_sales_form" model="ir.ui.view">
             <field name="name">board.sales.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Sales Dashboard" version="7.0">
                     <board style="2-1">

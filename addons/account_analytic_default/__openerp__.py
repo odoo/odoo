@@ -20,30 +20,31 @@
 ##############################################################################
 
 {
-    'name'      : 'Account Analytic Defaults',
-    'version'   : '1.0',
-    "category": 'Accounting & Finance',
-    'description': """Set default values for your analytic accounts
-Allows to automatically select analytic accounts based on criterions:
-=====================================================================
+    'name': 'Account Analytic Defaults',
+    'version': '1.0',
+    'category': 'Accounting & Finance',
+    'description': """
+Set default values for your analytic accounts.
+==============================================
 
-* Product
-* Partner
-* User
-* Company
-* Date
+Allows to automatically select analytic accounts based on criterions:
+---------------------------------------------------------------------
+    * Product
+    * Partner
+    * User
+    * Company
+    * Date
     """,
-    'author'    : 'OpenERP SA',
-    'website'   : 'http://www.openerp.com',
-    'images'   : ['images/analytic_defaults.jpeg'],
-    'depends'   : ['sale'],
-    'init_xml'  : [],
-    'update_xml': [
+    'author': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'images': ['images/analytic_defaults.jpeg'],
+    'depends': ['sale'],
+    'data': [
         'security/ir.model.access.csv', 
         'security/account_analytic_default_security.xml', 
         'account_analytic_default_view.xml'
     ],
-    'demo_xml'  : [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0074229833581',

@@ -1,0 +1,56 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+
+        <!--  FOLLOWERS !-->
+        <record model="ir.ui.view" id="view_followers_tree">
+            <field name="name">mail.followers.tree</field>
+            <field name="model">mail.followers</field>
+            <field name="type">tree</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Followers">
+                    <field name="res_model"/>
+                    <field name="res_id"/>
+                    <field name="user_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- NOTIFICATION !-->
+        <record model="ir.ui.view" id="view_notification_tree">
+            <field name="name">mail.notification.tree</field>
+            <field name="model">mail.notification</field>
+            <field name="priority">10</field>
+            <field name="arch" type="xml">
+                <tree string="Notifications">
+                    <field name="user_id"/>
+                    <field name="message_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="action_view_followers" model="ir.actions.act_window">
+            <field name="name">Followers</field>
+            <field name="res_model">mail.followers</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_view_notifications" model="ir.actions.act_window">
+            <field name="name">Pushed notif</field>
+            <field name="res_model">mail.notification</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Add followers related menu entries in Settings/Email -->
+        <menuitem name="Followers" id="menu_email_followers" parent="base.menu_email"
+                    action="action_view_followers" sequence="30" groups="base.group_no_one"/> -->
+        
+        <!-- Add notifications related menu entry in Settings/Email -->
+        <menuitem name="Notifications" id="menu_email_notifications" parent="base.menu_email"
+                    action="action_view_notifications" sequence="35" groups="base.group_no_one"/>
+
+    </data>
+</openerp>

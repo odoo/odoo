@@ -52,13 +52,13 @@
     period_id: account.period_1
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 1000.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
 -
   I validate the invoice.
 -
@@ -88,7 +88,7 @@
     company_id: base.main_company
     journal_id: bank_journal_USD1
     name: 'payment: Case EUR/USD'
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_5
     date: !eval time.strftime("%Y-02-01")
     payment_option: 'with_writeoff'
@@ -107,11 +107,11 @@
         self.pool.get('account.voucher.line').write(cr, uid, [line_id], {'amount': amount})
     assert (voucher.state=='draft'), "Voucher is not in draft state"
 -
-  I check that writeoff amount computed is 50.0
+  I check that writeoff amount computed is -50.0
 -
   !python {model: account.voucher}: |
     voucher = self.browse(cr, uid, ref('account_voucher_eur_usd_case'))
-    assert (voucher.writeoff_amount == 50.0), "Writeoff amount is not 50.0"
+    assert (voucher.writeoff_amount == -50.0), "Writeoff amount is not -50.0"
 -
   I confirm the voucher
 -

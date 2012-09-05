@@ -5,17 +5,17 @@
         <record id="account_budget_crossvered_summary_report_view" model="ir.ui.view">
              <field name="name">account.budget.crossvered.summary.report.form</field>
              <field name="model">account.budget.crossvered.summary.report</field>
-             <field name="type">form</field>
              <field name="arch" type="xml">
                  <form string="Select Dates Period" version="7.0">
-                     <header>
-                         <button name="check_report" string="Print" type="object" icon="gtk-print" default_focus="1"/>
-                         <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                     </header>
                     <group string="This wizard is used to print summary of budgets">
                         <field name="date_from"/>
                         <field name="date_to"/>
                     </group>
+                     <footer>
+                         <button name="check_report" string="Print" type="object" default_focus="1" class="oe_highlight"/>
+                         or
+                         <button string="Cancel" class="oe_link" special="cancel"/>
+                     </footer>
                 </form>
             </field>
         </record>

@@ -38,7 +38,7 @@
         <!--Email template -->
         <record id="email_template_edi_purchase" model="email.template">
             <field name="name">Automated Purchase Order Notification Mail</field>
-            <field name="email_from">${object.validator.user_email or ''}</field>
+            <field name="email_from">${object.validator.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="email_to">${object.partner_id.email}</field>
             <field name="model_id" ref="purchase.model_purchase_order"/>
@@ -61,7 +61,7 @@
        % if object.partner_ref:
        &nbsp;&nbsp;Your reference: ${object.partner_ref}<br />
        % endif
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.user_email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.validator.email or ''}?subject=Order%20${object.name}">${object.validator.name}</a>
     </p>
 
     <p>
@@ -121,7 +121,7 @@ Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'pu
        % if object.partner_ref:
        | Your reference: ${object.partner_ref}<br />
        % endif
-       | Your contact: ${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
+       | Your contact: ${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
 
 You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} and download it using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
@@ -132,7 +132,7 @@ Thank you!
 
 
 --
-${object.validator.name} ${object.validator.user_email and '<%s>'%(object.validator.user_email) or ''}
+${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
 ${object.company_id.name}
 % if object.company_id.street:
 ${object.company_id.street or ''}

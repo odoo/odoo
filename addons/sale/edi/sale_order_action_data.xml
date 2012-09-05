@@ -37,7 +37,7 @@
         <!--Email template -->
         <record id="email_template_edi_sale" model="email.template">
             <field name="name">Automated Sale Order Notification Mail</field>
-            <field name="email_from">${object.user_id.user_email or ''}</field>
+            <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="email_to">${object.partner_invoice_id.email}</field>
             <field name="model_id" ref="sale.model_sale_order"/>
@@ -60,7 +60,7 @@
        % if object.client_order_ref:
        &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />
        % endif
-       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.user_email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
+       &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
     </p>
 
     <p>
@@ -139,7 +139,7 @@ Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confi
        % if object.client_order_ref:
        | Your reference: ${object.client_order_ref}<br />
        % endif
-       | Your contact: ${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
+       | Your contact: ${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
 
 You can view the ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'}, download it and even pay online using the following link:
     ${ctx.get('edi_web_url_view') or 'n/a'}
@@ -166,7 +166,7 @@ Thank you for choosing ${object.company_id.name}!
 
 
 --
-${object.user_id.name} ${object.user_id.user_email and '<%s>'%(object.user_id.user_email) or ''}
+${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
 ${object.company_id.name}
 % if object.company_id.street:
 ${object.company_id.street or ''}

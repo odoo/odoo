@@ -5,7 +5,6 @@
             <field name="name">Calendar Collections : Form</field>
             <field name="model">document.directory</field>
             <field name="priority">40</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Calendar Collections" version="7.0">
                     <group col="4">
@@ -24,7 +23,6 @@
         <record model="ir.ui.view" id="view_calendar_collection_tree">
             <field name="name">Calendar Collections : Tree</field>
             <field name="model">document.directory</field>
-            <field name="type">tree</field>
             <field name="priority">40</field>
             <field name="arch" type="xml">
                 <tree string="Calendar Collections" toolbar="1">
@@ -78,7 +76,6 @@
         <record model="ir.ui.view" id="view_caldav_form">
             <field name="name">Calendar : Form</field>
             <field name="model">basic.calendar</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Calendar" version="7.0">
                     <group col="4">
@@ -138,7 +135,6 @@
         <record model="ir.ui.view" id="view_caldav_tree">
             <field name="name">Calendar : Tree</field>
             <field name="model">basic.calendar</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Calendars" toolbar="1">
                     <field name="name"/>
@@ -155,18 +151,17 @@
         <record model="ir.ui.view" id="view_caldav_search">
             <field name="name">Calendar: Search</field>
             <field name="model">basic.calendar</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Calendars">
+                    <field name="name" string="Calendar"/>
                     <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
+                    <separator/>
                     <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
                     <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <separator/>
+                    <filter string="My Calendar(s)" icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)"/>
                     <field name="type"/>
-                    <field name="user_id" widget="selection">
-                        <filter icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)" string="MY"/>
-                    </field>
+                    <field name="user_id"/>
                     <field name="collection_id"/>
                 </search>
             </field>
@@ -178,7 +173,6 @@
             <field name="res_model">basic.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">"Calendars" allow you to Customize calendar event and todo attribute with any of OpenERP model.Caledars provide iCal Import/Export functionality.Webdav server that provides remote access to calendar.Help You to synchronize Meeting with Calendars client.You can access Calendars using CalDAV clients, like sunbird, Calendar Evaluation, Mobile.</field>
         </record>
 
         <record id="action_caldav_view1" model="ir.actions.act_window.view">

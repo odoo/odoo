@@ -37,7 +37,7 @@ class hr_contract_be(osv.osv):
         'additional_net_amount': fields.float('Net supplements', digits_compute=dp.get_precision('Payroll')),
         'retained_net_amount': fields.float('Net retained ', digits_compute=dp.get_precision('Payroll')),
     }
-    
+
 hr_contract_be()
 
 class hr_employee_be(osv.osv):
@@ -50,7 +50,7 @@ class hr_employee_be(osv.osv):
         'resident_bool': fields.boolean('Nonresident', help="if recipient lives in a foreign country"),
         'disabled_children_number': fields.integer('Number of disabled children'),
     }
-    
+
 hr_employee_be()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

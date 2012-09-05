@@ -3,19 +3,18 @@
         <record id="view_account_configuration_installer" model="ir.ui.view">
             <field name="name">account.installer.form</field>
             <field name="model">account.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
-                <button name="action_skip" position="replace"/>
-                <button name="action_next" position="attributes">
-                    <attribute name="string">Continue</attribute>
-                </button>
+                <footer position="replace">
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
+                </footer>
                 <separator string="title" position="replace">
-                    <group string="Select an Accounting Setup">
-                        <label colspan="2" string="This will automatically configure your taxes and accounts."/>
+                    <group>
                         <field name="charts"/>
                     </group>
                     <group string="Configure your Fiscal Year" groups="account.group_account_user">
@@ -42,14 +41,8 @@
             <field name="target">new</field>
         </record>
 
-        <record id="category_accounting_configuration" model="ir.actions.todo.category">
-            <field name="name">Accounting</field>
-            <field name="sequence">5</field>
-        </record>
-
         <record id="account_configuration_installer_todo" model="ir.actions.todo">
             <field name="action_id" ref="action_account_configuration_installer"/>
-            <field name="category_id" ref="category_accounting_configuration"/>
             <field name="sequence">3</field>
             <field name="type">automatic</field>
         </record>

@@ -4,7 +4,7 @@
         <!-- Email tempalte -->
         <record id="email_template_1" model="email.template">
             <field name="name">Template for New Partner</field>
-            <field name="email_from">info@tinyerp.com</field>
+            <field name="email_from">info@openerp.com</field>
             <field name="subject">Welcome in OpenERP Partner Channel!</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -12,7 +12,7 @@
         </record>
         <record id="email_template_2" model="email.template">
             <field name="name">Template for Silver Partner</field>
-            <field name="email_from">info@tinyerp.com</field>
+            <field name="email_from">info@openerp.com</field>
             <field name="subject">Congratulation! You become now our Silver Partner.</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>
@@ -21,7 +21,7 @@
 
         <record id="email_template_3" model="email.template">
             <field name="name">Template for Gold Partner</field>
-            <field name="email_from">info@tinyerp.com</field>
+            <field name="email_from">info@openerp.com</field>
             <field name="subject">Congratulation! You become our Gold Partner.</field>
             <field name="email_to">${object.email or ''}</field>
             <field name="model_id" ref="base.model_res_partner"/>

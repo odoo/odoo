@@ -4,28 +4,21 @@
         <record id="hr_contract_form_l10n_be_inherit" model="ir.ui.view">
             <field name="name">hr.contract.form.inherit</field>
             <field name="model">hr.contract</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="inherit_id" ref="hr_contract.hr_contract_view_form"/>
             <field name="arch" type="xml">
             <data>
-                 <xpath expr="//page[@name='information']/group/group[@name='right_column']" position="before">
+                 <xpath expr="//field[@name='struct_id']" position="after">
                     <field name="travel_reimbursement_amount"/>
                     <field name="car_company_amount"/>
+                    <field name="car_employee_deduction"/>
                     <field name="misc_onss_deduction"/>
                     <field name="meal_voucher_amount"/>
+                    <field name="meal_voucher_employee_deduction"/>
                     <field name="misc_advantage_amount"/>
-                    <separator string="Miscellaneous" colspan="2"/>
                     <field name="additional_net_amount"/>
                     <field name="retained_net_amount"/>
-                 </xpath>
-                 <xpath expr="//field[@name='trial_date_end']" position="after">
-                    <group colspan="2" col="2">
-                        <separator string="by Worker" colspan="2"/>
-                        <field name="insurance_employee_deduction"/>
-                        <field name="meal_voucher_employee_deduction"/>
-                        <field name="car_employee_deduction"/>
-                    </group>
+                    <field name="insurance_employee_deduction"/>
                  </xpath>
             </data>
             </field>
@@ -34,7 +27,6 @@
        <!-- <record id="view_employee_marital_required_form" model="ir.ui.view">
             <field name="name">hr.employee.inherit.form</field>
             <field name="model">hr.employee</field>
-            <field name="type">form</field>
             <field name="priority">25</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">

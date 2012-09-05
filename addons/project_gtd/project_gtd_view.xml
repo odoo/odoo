@@ -4,7 +4,6 @@
     <record model="ir.ui.view" id="view_gtd_context_tree">
         <field name="name">project.gtd.context.tree</field>
         <field name="model">project.gtd.context</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Context">
                 <field name="sequence" invisible="1"/>
@@ -16,7 +15,6 @@
     <record model="ir.ui.view" id="view_gtd_context_form">
         <field name="name">project.gtd.context.form</field>
         <field name="model">project.gtd.context</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Context" version="7.0">
                 <group col="4">
@@ -39,7 +37,6 @@
     <record model="ir.ui.view" id="view_gtd_timebox_tree">
         <field name="name">project.gtd.timebox.tree</field>
         <field name="model">project.gtd.timebox</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Timebox">
                 <field name="sequence" invisible="1"/>
@@ -52,7 +49,6 @@
     <record model="ir.ui.view" id="view_gtd_timebox_form">
         <field name="name">project.gtd.timebox.form</field>
         <field name="model">project.gtd.timebox</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Timeboxes" version="7.0">
                 <group col="4" string="Timebox Definition">
@@ -78,7 +74,6 @@
     <record model="ir.ui.view" id="project_task_tree">
         <field name="name">project.task.tree.timebox</field>
         <field name="model">project.task</field>
-        <field name="type">tree</field>
         <field name="inherit_id" ref="project.view_task_tree2" />
         <field name="arch" type="xml">
             <field name="remaining_hours" position="after">
@@ -94,12 +89,11 @@
     <record model="ir.ui.view" id="project_task">
         <field name="name">project.task.form.timebox</field>
         <field name="model">project.task</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="project.view_task_form2" />
         <field name="arch" type="xml">
             <field name="progress" position="after">
-                <field name="context_id" widget="selection"/>
-                <field name="timebox_id" widget="selection"/>
+                <field name="context_id" widget="selection" options='{"no_open": true}'/>
+                <field name="timebox_id" widget="selection" options='{"no_open": true}'/>
             </field>
         </field>
     </record>
@@ -107,30 +101,18 @@
     <record id="view_task_gtd_search" model="ir.ui.view">
         <field name="name">project.task.gtd.search</field>
         <field name="model">project.task</field>
-        <field name="type">search</field>
         <field name="priority">50</field>
         <field name="arch" type="xml">
            <search string="My Tasks">
+                <field name="name" string="My Tasks"/>
                 <filter name="open" string="In Progress" domain="[('state','in',('draft','open'))]" help="In Progress and draft tasks" icon="terp-camera_test"/>
                 <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                <separator orientation="vertical"/>
-                <filter
-                    domain="[('timebox_id','=', False)]"
-                    help="Tasks having no timebox assigned yet" string="Inbox"/>
-                <separator orientation="vertical"/>
-                <separator name="gtdsep"/>
-                <field name="name"/>
-                <field name="context_id" widget="selection"
-                    context="{'context_show': True}">
-                    <filter string="Show Context"
-                        name="context_show"
-                        context="{'context_show': True}"
-                        domain="[]" icon="terp-camera_test"
-                        help="Show the context field"/>
-                    <filter string="Show Deadlines" context="{'deadline_visible': False}"
-                        domain="[]" help="Show only tasks having a deadline"
-                        icon="terp-gnome-cpu-frequency-applet+"/>
-                </field>
+                <separator/>
+                <filter string="Inbox" domain="[('timebox_id','=', False)]" help="Tasks having no timebox assigned yet"/>
+                <group expand="0" string="Display">
+                    <filter string="Show Context" name="context_show" context="{'context_show': True}" domain="[]" icon="terp-camera_test" help="Show the context field"/>
+                    <filter string="Show Deadlines" context="{'deadline_visible': False}" domain="[]" help="Show only tasks having a deadline" icon="terp-gnome-cpu-frequency-applet+"/>
+                </group>
             </search>
         </field>
     </record>

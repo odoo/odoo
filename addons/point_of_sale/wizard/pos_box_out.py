@@ -52,10 +52,13 @@ class pos_box_out(osv.osv_memory):
         'journal_id': fields.selection(pos_box_entries.get_journal, "Cash Register", required=True, size=-1),
         'product_id': fields.selection(_get_expense_product, "Operation", required=True, size=-1),
         'amount': fields.float('Amount', digits=(16, 2), required=True),
+        'session_id' : fields.many2one('pos.session', 'Session'),
+        'user_id' : fields.many2one('res.users', 'User'),
     }
     _defaults = {
-         'journal_id': 1,
-         'product_id': 1,
+        'journal_id': 1,
+        'product_id': 1,
+        'user_id' : lambda obj, cr, uid, context: uid,
     }
     def get_out(self, cr, uid, ids, context=None):
 
@@ -83,9 +86,9 @@ class pos_box_out(osv.osv_memory):
             product = product_obj.browse(cr, uid, data['product_id'], context=context)
             acc_id = product.property_account_expense or product.categ_id.property_account_expense_categ
             if not acc_id:
-                raise osv.except_osv(_('Error !'), _('please check that account is set to %s')%(product.name))
+                raise osv.except_osv(_('Error!'), _('please check that account is set to %s.')%(product.name))
             if not statement_ids:
-                raise osv.except_osv(_('Error !'), _('You have to open at least one cashbox'))
+                raise osv.except_osv(_('Error!'), _('You have to open at least one cashbox.'))
             vals['statement_id'] = statement_ids[0]
             vals['journal_id'] = data['journal_id']
             vals['account_id'] = acc_id.id

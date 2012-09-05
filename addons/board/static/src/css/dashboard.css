@@ -1,0 +1,80 @@
+.openerp .oe_dashboard_links {
+  text-align: right;
+  margin: 0 4px 6px 0;
+}
+.openerp .oe_dashboard {
+  width: 100%;
+}
+.openerp .oe_dashboard .oe_action {
+  margin: 0 8px 8px 0;
+  background-color: white;
+  border: 1px solid;
+  border-color: #e5e5e5 #dbdbdb #d2d2d2;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  -moz-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+.openerp .oe_dashboard .oe_action .oe_header {
+  font-size: 16px;
+  vertical-align: middle;
+  margin: 0;
+  padding: 12px;
+  -moz-border-radius: 3px 3px 0 0;
+  -webkit-border-radius: 3px 3px 0 0;
+  border-radius: 3px 3px 0 0;
+}
+.openerp .oe_dashboard .oe_action .oe_header:hover {
+  cursor: move;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_icon {
+  float: right;
+  cursor: pointer;
+  color: #b3b3b3;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_icon:hover {
+  color: #666666;
+  text-decoration: none;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_close:after {
+  content: "×";
+  margin-left: 4px;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_minimize:after {
+  content: "-";
+  margin-left: 4px;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_maximize:after {
+  content: "+";
+  margin-left: 4px;
+}
+.openerp .oe_dashboard .oe_action .oe_header .oe_header_text {
+  visibility: hidden;
+  cursor: text;
+}
+.openerp .oe_dashboard .oe_action .oe_header span {
+  cursor: pointer;
+}
+.openerp .oe_dashboard .oe_action .oe_header_empty {
+  padding-top: 0;
+  padding-bottom: 2px;
+}
+.openerp .oe_dashboard .oe_action .oe_button_create {
+  margin-left: 4px;
+  padding: 0 4px 0 4px;
+  height: 16px !important;
+}
+.openerp .oe_dashboard .oe_action .oe_content {
+  padding: 0 12px 12px 12px;
+}
+.openerp .oe_dashboard .oe_action .oe_content .oe_view_manager_header {
+  display: none;
+}
+.openerp .oe_dashboard .oe_action .oe_content .oe_list_content > thead {
+  border-bottom: 1px;
+}
+.openerp .oe_dashboard .oe_action .oe_content .oe_list_content > tbody tr:nth-child(odd) {
+  background: transparent;
+}

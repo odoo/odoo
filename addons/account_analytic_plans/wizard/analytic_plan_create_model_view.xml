@@ -4,14 +4,14 @@
         <record id="view_analytic_plan_create_model_msg" model="ir.ui.view">
             <field name="name">analytic.plan.create.model.msg.form</field>
             <field name="model">analytic.plan.create.model</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Distribution Model Saved" version="7.0">
-                <header>
-                    <button string="Ok" icon='gtk-execute' type="object" name="activate" default_focus="1"/>
-                    <button special="cancel" string="Cancel" icon='gtk-ok' />
-                </header>
                 <label string="Save This Distribution as a Model"/>
+                <footer>
+                    <button string="Ok" type="object" name="activate" default_focus="1" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
@@ -19,12 +19,8 @@
         <record id="view_analytic_plan_create_model" model="ir.ui.view">
             <field name="name">analytic.plan.create.model.form</field>
             <field name="model">analytic.plan.create.model</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Distribution Model Saved" version="7.0">
-                <header>
-                    <button special="cancel" string="Ok" icon='gtk-ok'/>
-                </header>
                 <label string="This distribution model has been saved.You will be able to reuse it later."/>
             </form>
             </field>

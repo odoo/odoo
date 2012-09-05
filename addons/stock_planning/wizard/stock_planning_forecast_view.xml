@@ -6,13 +6,8 @@
         <record id="view_stock_sale_forecast_createlines_form" model="ir.ui.view">
             <field name="name">stock.sale.forecast.createlines</field>
             <field name="model">stock.sale.forecast.createlines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Create Forecasts Lines" version="7.0">
-                    <header>
-                        <button icon="gtk-execute" name="create_forecast" string="Create" type="object" />
-                        <button icon="gtk-cancel"  special="cancel" string="Close"/>
-                    </header>
                     <group col="4">
                         <field name="period_id"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
@@ -20,6 +15,11 @@
                         <field name="copy_forecast"/>
                         <field name="product_categ_id" widget="selection"/>
                     </group>
+                    <footer>
+                        <button name="create_forecast" string="Create" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

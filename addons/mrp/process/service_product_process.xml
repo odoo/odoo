@@ -1,47 +1,47 @@
 <?xml version="1.0" ?>
 <openerp>
-	<data>
+    <data>
 
 
-		<!--
-			Process Node
-		-->
+        <!--
+            Process Node
+        -->
 
 
-		<record id="process_node_servicemts0" model="process.node">
-			<field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
-			<field name="model_id" ref="mrp.model_procurement_order"/>
-			<field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Assignment from stock.&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>
-			<field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
-			<field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
+        <record id="process_node_servicemts0" model="process.node">
+            <field name="menu_id" ref="procurement.menu_stock_procurement_action"/>
+            <field name="model_id" ref="mrp.model_procurement_order"/>
+            <field eval="&quot;&quot;&quot;state&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Assignment from stock.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;Make to stock&quot;&quot;&quot;" name="name"/>
+            <field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state in ('draft', 'confirmed', 'cancel', 'exception', 'running', 'done', 'waiting')&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
 
-		<record id="process_node_orderrfq0" model="process.node">
-			<field name="menu_id" ref="purchase.menu_purchase_form_action"/>
-			<field name="model_id" ref="purchase.model_purchase_order"/>
-			<field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
-			<field eval="&quot;&quot;&quot;Request for Quotation.&quot;&quot;&quot;" name="note"/>
-			<field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
-			<field name="subflow_id" ref="purchase.process_process_purchaseprocess0"/>
-			<field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
-			<field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
-			<field eval="0" name="flow_start"/>
-		</record>
+        <record id="process_node_orderrfq0" model="process.node">
+            <field name="menu_id" ref="purchase.menu_purchase_form_action"/>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field eval="&quot;&quot;&quot;subflow&quot;&quot;&quot;" name="kind"/>
+            <field eval="&quot;&quot;&quot;Request for Quotation.&quot;&quot;&quot;" name="note"/>
+            <field eval="&quot;&quot;&quot;RFQ&quot;&quot;&quot;" name="name"/>
+            <field name="subflow_id" ref="purchase.process_process_purchaseprocess0"/>
+            <field name="process_id" ref="procurement.process_process_serviceproductprocess0"/>
+            <field eval="&quot;&quot;&quot;object.state=='draft'&quot;&quot;&quot;" name="model_states"/>
+            <field eval="0" name="flow_start"/>
+        </record>
 
-		<!--
-			Process Transition
-		-->
+        <!--
+            Process Transition
+        -->
 
-		<record id="process_transition_servicerfq0" model="process.transition">
-			<field eval="[(6,0,[])]" name="transition_ids"/>
-			<field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
-			<field eval="&quot;&quot;&quot;If the service has a 'Buy' supply method, this creates a RFQ, a subcontracting demand for instance.&quot;&quot;&quot;" name="note"/>
-			<field model="process.node" name="target_node_id" ref="process_node_orderrfq0"/>
-			<field model="process.node" name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
-		</record>
+        <record id="process_transition_servicerfq0" model="process.transition">
+            <field eval="[(6,0,[])]" name="transition_ids"/>
+            <field eval="&quot;&quot;&quot;To Buy&quot;&quot;&quot;" name="name"/>
+            <field eval="&quot;&quot;&quot;If the service has a 'Buy' supply method, this creates a RFQ, a subcontracting demand for instance.&quot;&quot;&quot;" name="note"/>
+            <field model="process.node" name="target_node_id" ref="process_node_orderrfq0"/>
+            <field model="process.node" name="source_node_id" ref="procurement.process_node_serviceonorder0"/>
+        </record>
 
-	</data>
+    </data>
 </openerp>

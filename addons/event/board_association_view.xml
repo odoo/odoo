@@ -5,7 +5,6 @@
         <record model ="ir.ui.view" id="view_report_event_reg_graph">
             <field name="name">Registration Event report</field>
             <field name="model">report.event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Events Filling Status" type="bar" >
                     <field name="event_id"/>
@@ -46,7 +45,6 @@
         <record model="ir.ui.view" id="board_associations_manager_form">
             <field name="name">board.associations.manager.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Association Dashboard" version="7.0">
                     <board style="2-1">

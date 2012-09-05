@@ -49,7 +49,7 @@ class idea_idea(osv.osv):
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
         'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft':[('readonly',False)]}),
         'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
-        'category_ids': fields.many2many('idea.category', 'Tags', readonly=True, states={'draft':[('readonly',False)]}),
+        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'New'),
             ('open', 'Accepted'),
             ('cancel', 'Refused'),

@@ -1,54 +1,80 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        <menuitem
-            id="menu_hr_recruitment_recruitment"
-            name="Recruitment"
-            parent="hr.menu_hr_configuration"
-            sequence="40" />
 
-        <act_window
-            domain="[('applicant_id', '=', active_id)]"
-            id="act_hr_applicant_to_meeting"
-            name="Meetings"
-            res_model="crm.meeting"
-            src_model="hr.applicant"
-            view_mode="tree,form,calendar,graph"
-            view_type="form"/>
+    <menuitem name="Recruitment"
+        id="menu_hr_recruitment_recruitment"
+        parent="hr.menu_hr_configuration"
+        sequence="40"/>
 
-    # ------------------------------------------------------
-    # Job Categories
-    # ------------------------------------------------------
+    <act_window
+        id="act_hr_applicant_to_meeting"
+        name="Meetings"
+        res_model="crm.meeting"
+        src_model="hr.applicant"
+        view_mode="tree,form,calendar,graph"
+        view_type="form"/>
 
-    <record id="hr_job_categ_action" model="ir.actions.act_window">
-        <field name="name">Applicant Categories</field>
-        <field name="res_model">crm.case.categ</field>
-        <field name="view_type">form</field>
-        <field name="view_id" ref="crm.crm_case_categ_tree-view"/>
-        <field name="domain">[('object_id.model', '=', 'hr.applicant')]</field>
-        <field name="context" eval="{'object_id': ref('model_hr_applicant')}"/>
-    </record>
-    # ------------------------------------------------------
-    # Stage
-    # ------------------------------------------------------
+    <!-- Stage -->
     <record id="hr_job_stage_act" model="ir.actions.act_window">
         <field name="name">Recruitment / Applicants Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
         <field name="domain">[]</field>
         <field name="context">{}</field>
-        <field name="help">Define here your stages of the recruitment process, for example: qualification call, first interview, second interview, refused, hired.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new stage in the recruitment process.
+          </p><p>
+            Define here your stages of the recruitment process, for example:
+            qualification call, first interview, second interview, refused,
+            hired.
+          </p>
+        </field>
     </record>
 
 
-    # ------------------------------------------------------
-    # Jobs
-    # ------------------------------------------------------
+    <!-- Jobs -->
+    <!-- Applicant Read/Unread actions -->
+    <record id="actions_server_applicant_unread" model="ir.actions.server">
+        <field name="name">Mark unread</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_applicant_unread" model="ir.values">
+        <field name="name">action_project_unread</field>
+        <field name="action_id" ref="actions_server_applicant_unread"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_unread'))"/>
+        <field name="key">action</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="model">hr.applicant</field>
+        <field name="key2">client_action_multi</field>
+    </record>
+
+    <record id="actions_server_applicant_read" model="ir.actions.server">
+        <field name="name">Mark read</field>
+        <field name="condition">True</field>
+        <field name="type">ir.actions.server</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="state">code</field>
+        <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+    </record>
+    <record id="action_applicant_read" model="ir.values">
+        <field name="name">action_project_read</field>
+        <field name="action_id" ref="actions_server_applicant_read"/>
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_applicant_read'))"/>
+        <field name="key">action</field>
+        <field name="model_id" ref="model_hr_applicant"/>
+        <field name="model">hr.applicant</field>
+        <field name="key2">client_action_multi</field>
+    </record>
 
     <record model="ir.ui.view" id="crm_case_tree_view_job">
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Applicants" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
                 <field name="needaction_pending" invisible="1"/>
@@ -77,25 +103,14 @@
     <record model="ir.ui.view" id="crm_case_form_view_job">
         <field name="name">Jobs - Recruitment Form</field>
         <field name="model">hr.applicant</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
-                <button name="%(action_hr_recruitment_hired_employee)d" string="Hire" type="action"
-                        states="open,pending"/>
-                <button name="case_open" string="Open" type="object"
-                        states="draft,pending"/>
-                <button name="case_pending" string="Pending" type="object"
-                        states="open"/>
-                <button name="case_reset" string="Reset to New" type="object"
-                        states="done,cancel"/>
+                <button name="case_close_with_emp" string="Hire" type="object"
+                        states="open,pending" class="oe_highlight"/>
                 <button name="case_cancel" string="Refuse" type="object"
-                        states="draft,open,pending"/>
-                <button name="stage_previous" string="Previous" type="object"
-                        states="open" icon="gtk-go-back"/>
-                <button name="stage_next" string="Next" type="object"
-                        states="open" icon="gtk-go-forward"/>
-                <field name="stage_id" widget="statusbar"/>
+                        states="draft,open,pending" class="oe_highlight"/>
+                <field name="stage_id" widget="statusbar" clickable="True"/>
             </header>
             <sheet>
                 <div class="oe_right oe_button_box">
@@ -113,62 +128,64 @@
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name"/></h1>
                     <label for="partner_name" class="oe_edit_only"/>
-                    <h2><field name="partner_name"/></h2>
-                    <field name="type_id" placeholder="Degree"/>
+                    <h2>
+                        <field name="partner_name" class="oe_inline"/>
+                    </h2>
                 </div>
-
                 <group>
                     <group>
-                        <field name="user_id"/>
-                        <field name="title_action"/>
-                        <field name="date_action"/>
+                        <field name="partner_id"
+                                on_change="onchange_partner_id(partner_id, email_from)"/>
+                        <field name="email_from" widget="email"/>
+                        <field name="partner_phone"/>
+                        <field name="partner_mobile"/>
+                        <field name="type_id" placeholder="Degree"/>
                     </group>
                     <group>
-                        <field name="job_id" on_change="onchange_job(job_id)"/>
-                        <field name="priority" string="Appreciation"/>
+                        <field name="user_id"/>
+                        <label for="title_action"/>
+                        <div>
+                            <field name="date_action"/> -
+                            <field name="title_action" class="oe_inline" placeholder="e.g. Call for interview"/>
+                        </div>
+                        <field name="priority"/>
+                        <field name="state" invisible="1"/>
+                        <field name="source_id"/>
+                        <field name="reference"/>
+                    </group>
+                    <group string="Job">
                         <field name="survey" invisible="1"/>
                         <field name="response" invisible="1"/>
-                        <field name="department_id" widget="selection" on_change="onchange_department_id(department_id)"/>
-                        <field name="state" groups="base.group_no_one"/>
+                        <field name="job_id" on_change="onchange_job(job_id)"/>
+                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                        <label for="availability"/>
+                        <div>
+                            <field name="availability" class="oe_inline"/> <label string="Day(s)" class="oe_inline"/>
+                        </div>
+                    </group>
+                    <group string="Contract">
+                        <label for="salary_expected"/>
+                        <div>
+                            <field name="salary_expected" class="oe_inline"/>,
+                            <field name="salary_expected_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        </div>
+                        <label for="salary_proposed"/>
+                        <div>
+                            <field name="salary_proposed" class="oe_inline"/>,
+                            <field name="salary_proposed_extra" class="oe_inline" placeholder="Extra advantages..."/>
+                        </div>
                     </group>
                 </group>
-                <notebook>
-                    <page string="Application">
-                        <group>
-                            <group string="Contact">
-                                <label for="partner_id"/>
-                                <div>
-                                    <field name="partner_id" class="oe_inline"
-                                        on_change="onchange_partner_id(partner_id, email_from)"/>
-                                    <button class="oe_inline"
-                                        string="Create" help="Create a new contact for this applicant" icon="gtk-index"
-                                        name="%(action_hr_recruitment_partner_create)d" type="action"
-                                        attrs="{'invisible':[('partner_id','!=',False)]}"/>
-                                </div>
-                                <field name="email_from" widget="email"/>
-                                <field name="partner_phone"/>
-                                <field name="partner_mobile"/>
-                            </group>
-                            <group string="Reference">
-                                <field name="source_id"/>
-                                <field name="reference"/>
-                            </group>
-                            <group string="Contract">
-                                <field name="salary_expected"/>
-                                <field name="salary_expected_extra"/>
-                                <field name="salary_proposed"/>
-                                <field name="salary_proposed_extra"/>
-                                <field name="availability"/>
-                            </group>
-                        </group>
-                        <separator string="Details"/>
-                        <field name="description"/>
-                   </page>
-                </notebook>
+                <group>
+                    <field name="categ_ids" widget="many2many_tags"/>
+                </group>
+                <separator string="Application Summary"/>
+                <field name="description" placeholder="Feedback of interviews..."/>
             </sheet>
-            <footer>
-                <field name="message_ids" widget="ThreadView"/>
-            </footer>
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+                <field name="message_follower_ids" widget="mail_followers"/>
+            </div>
           </form>
         </field>
     </record>
@@ -176,7 +193,6 @@
     <record model="ir.ui.view" id="crm_case_graph_view_job">
         <field name="name">Jobs - Recruitment Graph</field>
         <field name="model">hr.applicant</field>
-        <field name="type">graph</field>
         <field name="arch" type="xml">
               <graph string="Cases By Stage and Estimates" type="bar" orientation="vertical">
                 <field name="job_id"/>
@@ -189,46 +205,31 @@
     <record id="view_crm_case_jobs_filter" model="ir.ui.view">
         <field name="name">Jobs - Recruitment Search</field>
         <field name="model">hr.applicant</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Jobs">
-               <filter icon="terp-document-new" string="New" name="filter_new" 
-                   domain="[('state','=','draft')]"
-                   help="All Initial Jobs"
-               />
-               <filter icon="terp-camera_test" string="In Progress" name="filter_inprogress"
-                   domain="[('state','=','open')]"
-                   help="Open Jobs"
-               />
-               <filter icon="terp-gtk-media-pause" string="Pending"
-                   domain="[('state','=','pending')]"
-                   help="Pending Jobs"
-               />
-               <separator orientation="vertical"/>
-               <filter icon="terp-gtk-jump-to-ltr" string="Next Actions"
-                    context="{'invisible_next_action':False, 'invisible_next_date':False}"
-                    domain="[('date_action','&lt;&gt;',False)]"
-                    help="Filter and view on next actions and date"/>
-               <separator orientation="vertical"/>
-               <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-               <field name="job_id" widget="selection"/>
-               <field name="user_id">
-                    <filter domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-" />
-               </field>
-               <newline/>
+                <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <separator/>
+                <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
+                <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
+                <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]" help="Pending Jobs"/>
+                <separator/>
+                <filter string="Unassigned Recruitments" domain="[('user_id','=',False)]" help="Unassigned Recruitments" icon="terp-personal-"/>
+                <separator/>
+                <filter icon="terp-gtk-jump-to-ltr" string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
+                    domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
+                <field name="job_id"/>
+                <field name="user_id"/>
                 <group expand="0" string="Group By...">
                     <filter string="Responsible" icon="terp-personal" domain="[]"  context="{'group_by':'user_id'}"/>
                     <filter string="Department" icon="terp-personal+" domain="[]" context="{'group_by':'department_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Job" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'job_id'}"/>
                     <filter string="Degree" icon="terp-gtk-select-all" domain="[]" context="{'group_by':'type_id'}"/>
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
-                    <separator orientation="vertical" groups="base.group_no_one"/>
                     <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
            </search>
@@ -236,32 +237,28 @@
     </record>
 
     <!-- CRM Lead Calendar View -->
-
     <record model="ir.ui.view" id="hr_applicant_calendar_view">
         <field name="name">Hr Applicants Calendar</field>
         <field name="model">hr.applicant</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Applicants"
                 date_start="date_action" color="user_id">
-                <field name="name" />
-                <field name="partner_name" />
+                <field name="name"/>
+                <field name="partner_name"/>
                 <field name="title_action"/>
             </calendar>
         </field>
     </record>
 
-    <!-- hr Applicant Kanban View -->
-
+    <!-- Hr Applicant Kanban View -->
     <record model="ir.ui.view" id="hr_kanban_view_applicant">
         <field name="name">Hr Applicants kanban</field>
         <field name="model">hr.applicant</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban default_group_by="stage_id">
+                <field name="stage_id"/>
                 <field name="color"/>
-                <field name="state" groups="base.group_no_one"/>
                 <field name="priority"/>
                 <field name="survey"/>
                 <field name="user_id"/>
@@ -269,82 +266,78 @@
                 <field name="partner_name"/>
                 <field name="type_id"/>
                 <field name="job_id"/>
-                 <field name="title_action"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <t t-if="record.priority.raw_value == '1'" t-set="border">oe_kanban_color_green</t>
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_project oe_kanban_auto_height">
-                                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                                    <span class="oe_e">i</span>
-                                    <ul class="oe_dropdown_menu">
-                                        <li><a type="edit">Edit...</a></li>
-                                        <li><a type="delete">Delete</a></li>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                <field name="title_action"/>
+                <field name="department_id"/>
+                <field name="categ_ids"/>
+                <templates>
+                    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.type_id.raw_value"><b>Degree:</b> <field name="type_id"/></li>
+                            <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
+                            <li t-if="record.department_id.raw_value"><b>Departement:</b> <field name="department_id"/></li>
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <li><a type="edit">Edit...</a></li>
+                                    <li><a type="delete">Delete</a></li>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+                            </div>
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                <div>
+                                    <b><field name="name"/></b><br/>
+                                    <field name="job_id"/><br/>
+                                    <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
+                                    <t t-if="record.title_action.raw_value"><field name="title_action"/><br/></t>
+                                    <field name="date_action"/>
                                 </div>
-                                <div class="oe_kanban_content" >
-                                    <h3 class="oe_kanban_ellipsis"><field name="name"/>
-                                    </h3> 
-                                    <div style="margin-bottom:2;padding-top:5px;white-space: nowrap;" >                               
-                                        <field name="partner_name"/>
-                                        <div class="oe_kanban_right">
-                                          <span class="oe_kanban_highlight">
-                                            <t t-set="priority" t-value="record.priority.raw_value || 5"/>
-                                            <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
-                                               <img src="/web/static/src/img/icons/star-off.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['2']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                            <a type="object" name="set_priority" args="['1']">
-                                               <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16"/>
-                                            </a>
-                                         </span>
-                                     </div>
-                                  </div>
-                                  <div style="white-space: nowrap;" >
-                                        <div t-if="record.type_id.raw_value">
-                                          (<field name="type_id"/>)
-                                        </div>
-                                  </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.job_id.raw_value">Applied for <field name="job_id" /></t> 
-                                   </div>
-                                   <div style="padding-top:5px;white-space: nowrap;" >
-                                      <t t-if="record.title_action.raw_value">
-                                          <field name="title_action" /> on 
-                                           <field name="date_action" />
-                                       </t>
-                                    </div>
-                                    <div align="left" width="22" style="padding-top:5px;white-space: nowrap;" >
-                                      <div align="right">
-                                           <img t-att-src="kanban_image('res.users', 'avatar', record.user_id.raw_value[0])" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
-                                      </div>
+                                <div class="oe_kanban_right">
+                                    <t t-set="priority" t-value="record.priority.raw_value || 5"/>
+                                    <a type="object" name="set_priority" args="['3']" t-if="priority gt 3">
+                                        <img src="/web/static/src/img/icons/star-off.png" width="16" height="16" title="Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['5']" t-if="priority lte 3">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 3 ? 'on' : 'off'}.png" width="16" height="16" title="Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['2']">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority lte 2 ? 'on' : 'off'}.png" width="16" height="16" title="Very Good"/>
+                                    </a>
+                                    <a type="object" name="set_priority" args="['1']">
+                                        <img t-attf-src="/web/static/src/img/icons/star-#{priority == 1 ? 'on' : 'off'}.png" width="16" height="16" title="Excellent"/>
+                                    </a>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar"/>
+
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <div class="oe_left oe_tags">
+                                        <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
+                                            <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
+                                        </t>
                                     </div>
                                 </div>
                             </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
 
-    # ------------------------------------------------------
-    # HR Job
-    # ------------------------------------------------------
-
+    <!-- HR Job -->
     <record id="hr_job_survey" model="ir.ui.view">
         <field name="name">hr.job.form1</field>
         <field name="model">hr.job</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="hr.view_hr_job_form"/>
         <field name="arch" type="xml">
-            <field name="expected_employees" version="7.0" position="after">
-                <label for="survey_id" />
-                <div>
+            <field name="no_of_recruitment" version="7.0" position="after">
+                <label for="survey_id" groups="base.group_user"/>
+                <div groups="base.group_user">
                     <field name="survey_id" class="oe_inline"/>
                     <button class="oe_inline"
                         string="Interview" icon="gtk-print"
@@ -352,15 +345,20 @@
                         attrs="{'invisible':[('survey_id','=',False)]}"/>
                 </div>
             </field>
+            <xpath expr="/form/sheet/h1" version="7.0" position="after">
+                <div colspan="4" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                    <field name="alias_id" invisible="1" required="0"/>
+                    <label for="alias_name" class="oe_edit_only"/>
+                    <field name="alias_name" nolabel="1" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" nolabel="1" class="oe_inline"/>
+                </div>
+            </xpath>
         </field>
     </record>
 
-<!-- Stage Tree View -->
-
+    <!-- Stage Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_tree">
         <field name="name">hr.recruitment.stage.tree</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Stages">
                 <field name="sequence" invisible="1"/>
@@ -371,12 +369,10 @@
         </field>
     </record>
 
-<!-- Stage Form View -->
-
+    <!-- Stage Form View -->
     <record model="ir.ui.view" id="hr_recruitment_stage_form">
         <field name="name">hr.recruitment.stage.form</field>
         <field name="model">hr.recruitment.stage</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
                 <group string="Stage Definition">
@@ -391,14 +387,20 @@
         </field>
     </record>
 
-<!-- Stage Action -->
-
+    <!-- Stage Action -->
     <record id="hr_recruitment_stage_act" model="ir.actions.act_window">
         <field name="name">Stages</field>
         <field name="res_model">hr.recruitment.stage</field>
         <field name="view_type">form</field>
         <field name="view_id" ref="hr_recruitment_stage_tree"/>
-        <field name="help"> Check if the following stages are matching your recruitment process. Don't forget to specify the department if your recruitment process is different according to the job position.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to add a new stage in the recruitment process.
+          </p><p>
+            Don't forget to specify the department if your recruitment process
+            is different according to the job position.
+          </p>
+        </field>
     </record>
 
     <menuitem
@@ -408,12 +410,10 @@
         action="hr_recruitment_stage_act"
         sequence="1" groups="base.group_no_one"/>
 
-<!-- Degree Tree View -->
-
+    <!-- Degree Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_tree">
         <field name="name">hr.recruitment.degree.tree</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Degree">
                 <field name="sequence" invisible="1"/>
@@ -422,12 +422,10 @@
         </field>
     </record>
 
-<!-- Degree Form View -->
-
+    <!-- Degree Form View -->
     <record model="ir.ui.view" id="hr_recruitment_degree_form">
         <field name="name">hr.recruitment.degree.form</field>
         <field name="model">hr.recruitment.degree</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Degree" version="7.0">
                 <group>
@@ -438,8 +436,7 @@
         </field>
     </record>
 
-<!-- Degree Action -->
-
+    <!-- Degree Action -->
     <record id="hr_recruitment_degree_action" model="ir.actions.act_window">
         <field name="name">Degree</field>
         <field name="res_model">hr.recruitment.degree</field>
@@ -454,12 +451,10 @@
             action="hr_recruitment_degree_action"
             sequence="5" groups="base.group_no_one"/>
 
-<!-- Source Tree View -->
-
+    <!-- Source Tree View -->
     <record model="ir.ui.view" id="hr_recruitment_source_tree">
         <field name="name">hr.recruitment.source.tree</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Sources of Applicants">
                 <field name="name"/>
@@ -469,7 +464,6 @@
     <record model="ir.ui.view" id="hr_recruitment_source_form">
         <field name="name">hr.recruitment.source.form</field>
         <field name="model">hr.recruitment.source</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Sources of Applicants">
                 <field name="name"/>
@@ -482,29 +476,12 @@
         <field name="view_type">form</field>
     </record>
 
-     <menuitem
-            id="menu_hr_recruitment_source"
-            parent="menu_hr_recruitment_recruitment"
-            action="hr_recruitment_source_action"
-            sequence="10" groups="base.group_no_one"/>
-
-    <record model="ir.ui.view" id="crm_meeting_form_view">
-        <field name="name">CRM - Meetings Form</field>
-        <field name="model">crm.meeting</field>
-        <field name="type">form</field>
-        <field name="inherit_id" ref="crm.crm_case_form_view_meet"/>
-        <field name="arch" type="xml">
-            <field name="partner_id" position="before">
-                <field name="applicant_id" attrs="{'invisible': [('categ_id','!=',%(hr_recruitment.categ_meet_interview)d)]}"/>
-            </field>
-            <field name="partner_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
-            </field>
-            <field name="section_id" position="attributes">
-                <attribute name="attrs">{'invisible': [('categ_id','=',%(hr_recruitment.categ_meet_interview)d)]}</attribute>
-            </field>
-        </field>
-    </record>
+    <menuitem
+        id="menu_hr_recruitment_source"
+        parent="menu_hr_recruitment_recruitment"
+        action="hr_recruitment_source_action"
+        groups="base.group_no_one"
+        sequence="10"/>
 
     </data>
 </openerp>

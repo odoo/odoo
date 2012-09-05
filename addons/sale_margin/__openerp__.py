@@ -19,24 +19,25 @@
 ##############################################################################
 
 {
-    "name": "Margins in Sales Orders",
-    "version":"1.0",
-    "category" : "Sales Management",
-    "description": """
+    'name': 'Margins in Sales Orders',
+    'version':'1.0',
+    'category' : 'Sales Management',
+    'description': """
 This module adds the 'Margin' on sales order.
 =============================================
 
-This gives the profitability by calculating the difference between the Unit Price and Cost Price.
+This gives the profitability by calculating the difference between the Unit
+Price and Cost Price.
     """,
-    "author":"OpenERP SA",
-    "images":["images/sale_margin.jpeg"],
-    "depends":["sale"],
-    "demo_xml":[],
+    'author':'OpenERP SA',
+    'images':['images/sale_margin.jpeg'],
+    'depends':['sale'],
+    'demo':[],
     'test': ['test/sale_margin.yml'],
-    "update_xml":["security/ir.model.access.csv","sale_margin_view.xml"],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "001165700015525701661",
+    'data':['security/ir.model.access.csv','sale_margin_view.xml'],
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '001165700015525701661',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

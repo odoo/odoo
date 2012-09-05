@@ -15,7 +15,6 @@
         <record model="ir.ui.view" id="view_purchase_order_monthly_categ_tree">
             <field name="name">purchase.order.monthly.categ.tree</field>
             <field name="model">purchase.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Monthly Purchase by Category">
                     <field name="month"/>
@@ -38,7 +37,6 @@
         <record model="ir.ui.view" id="view_purchase_order_monthly_categ_graph">
             <field name="name">purchase.order.monthly.categ.graph</field>
             <field name="model">purchase.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Monthly Purchase by Category" type="bar">
                     <field name="month"/>
@@ -60,7 +58,6 @@
         <record id="board_purchase_form" model="ir.ui.view">
             <field name="name">board.purchase.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Purchase Dashboard" version="7.0">
                     <board style="2-1">

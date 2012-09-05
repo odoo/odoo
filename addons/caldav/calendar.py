@@ -34,6 +34,7 @@ import logging
 from caldav_node import res_node_calendar
 from orm_utils import get_last_modified
 from tools.safe_eval import safe_eval as eval
+_logger = logging.getLogger(__name__)
 
 try:
     import vobject
@@ -240,7 +241,6 @@ def map_data(cr, uid, obj, context=None):
 
 class CalDAV(object):
     __attribute__ = {}
-    _logger = logging.getLogger('document.caldav')
 
     def ical_set(self, name, value, type):
         """ set calendar Attribute
@@ -306,7 +306,7 @@ class CalDAV(object):
             if cal_data.name.lower() == 'organizer':
                 dmail = { 'name': cal_data.params.get('CN', ['',])[0],
                             'email': cal_data.value.lower().replace('mailto:',''),
-                            # TODO: company? 
+                            # TODO: company?
                 }
                 self.ical_set(cal_data.name.lower(), mailto2str(dmail), 'value')
                 continue
@@ -382,7 +382,7 @@ class CalDAV(object):
                                 ical.contents['vevent'].append(revents)
                         #END
                         if data.get('recurrent_uid', None):
-                            # Change the UID value in case of modified event from any recurrent event 
+                            # Change the UID value in case of modified event from any recurrent event
                             uidval = openobjectid2uid(cr, data['recurrent_uid'], model)
                         vevent.add('uid').value = uidval
                     elif field == 'attendee' and data[map_field]:
@@ -412,7 +412,7 @@ class CalDAV(object):
                         if exfield:
                             # Set exdates according to timezone value
                             # This is the case when timezone mapping comes after the exdate mapping
-                            # and we have exdate value available 
+                            # and we have exdate value available
                             exfield.params['TZID'] = [tzval.title()]
                             exdates_updated = []
                             for exdate in exdates:
@@ -432,7 +432,7 @@ class CalDAV(object):
                                 if tzval:
                                     # Set exdates according to timezone value
                                     # This is the case when timezone mapping comes before the exdate mapping
-                                    # and we have timezone value available 
+                                    # and we have timezone value available
                                     exfield.params['TZID'] = [tzval.title()]
                                     exdates_updated = []
                                     for exdate in exdates:
@@ -448,7 +448,7 @@ class CalDAV(object):
                                 dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
                                 dtfield.value = parser.parse(data[map_field])
-                                
+
                         elif map_type == 'utc'and data[map_field]:
                             if tzval:
                                 local = pytz.timezone (tzval.title())
@@ -554,7 +554,7 @@ class CalDAV(object):
             @param data_id: Get Data’s ID or False
             @param context: A standard dictionary for contextual values
         """
-        
+
         ical_data = content
         self.__attribute__ = get_attribute_mapping(cr, uid, self._calname, context)
         parsedCal = vobject.readOne(ical_data)
@@ -602,7 +602,7 @@ class Calendar(CalDAV, osv.osv):
             'calendar_order': fields.integer('Order', help="For supporting clients, the order of this folder among the calendars"),
             'has_webcal': fields.boolean('WebCal', required=True, help="Also export a <name>.ics entry next to the calendar folder, with WebCal content."),
     }
-    
+
     _defaults = {
         'has_webcal': False,
     }
@@ -635,7 +635,7 @@ class Calendar(CalDAV, osv.osv):
                     node = res_node_calendar('%s.ics' %data.id, parent, ctx, data, line.object_id.model, data.id)
                     res.append(node)
         return res
-        
+
 
     def get_cal_max_modified(self, cr, uid, ids, parent=None, domain=None, context=None):
         if context is None:
@@ -725,14 +725,14 @@ class Calendar(CalDAV, osv.osv):
                 objs.append(cal_children[child.name.lower()])
             elif child.name.upper() == 'CALSCALE':
                 if child.value.upper() != 'GREGORIAN':
-                    self._logger.warning('How do I handle %s calendars?',child.value)
+                    _logger.warning('How do I handle %s calendars?',child.value)
             elif child.name.upper() in ('PRODID', 'VERSION'):
                 pass
             elif child.name.upper().startswith('X-'):
-                self._logger.debug("skipping custom node %s", child.name)
+                _logger.debug("Skipping custom node %s.", child.name)
             else:
-                self._logger.debug("skipping node %s", child.name)
-        
+                _logger.debug("Skipping node %s.", child.name)
+
         res = []
         for obj_name in list(set(objs)):
             obj = self.pool.get(obj_name)
@@ -781,25 +781,25 @@ class basic_calendar_line(osv.osv):
         """
 
         cr.execute("SELECT COUNT(id) FROM basic_calendar_lines \
-                                WHERE name=%s AND calendar_id=%s", 
+                                WHERE name=%s AND calendar_id=%s",
                                 (vals.get('name'), vals.get('calendar_id')))
         res = cr.fetchone()
         if res:
             if res[0] > 0:
-                raise osv.except_osv(_('Warning !'), _('Can not create line "%s" more than once') % (vals.get('name')))
+                raise osv.except_osv(_('Warning!'), _('Cannot create line "%s" more than once.') % (vals.get('name')))
         return super(basic_calendar_line, self).create(cr, uid, vals, context=context)
 
 basic_calendar_line()
 
 class basic_calendar_alias(osv.osv):
     """ Mapping of client filenames to ORM ids of calendar records
-    
+
         Since some clients insist on putting arbitrary filenames on the .ics data
-        they send us, and they won't respect the redirection "Location:" header, 
+        they send us, and they won't respect the redirection "Location:" header,
         we have to store those filenames and allow clients to call our calendar
         records with them.
         Note that adding a column to all tables that would possibly hold calendar-
-        mapped data won't work. The user is always allowed to specify more 
+        mapped data won't work. The user is always allowed to specify more
         calendars, on any arbitrary ORM object, without need to alter those tables'
         data or structure
     """
@@ -810,7 +810,7 @@ class basic_calendar_alias(osv.osv):
                         select=1, help='The calendar/line this mapping applies to'),
         'res_id': fields.integer('Res. ID', required=True, select=1),
         }
-        
+
     _sql_constraints = [ ('name_cal_uniq', 'UNIQUE(cal_line_id, name)',
                 _('The same filename cannot apply to two records!')), ]
 
@@ -856,7 +856,7 @@ class basic_calendar_fields(osv.osv):
     }
 
     _sql_constraints = [
-        ( 'name_type_uniq', 'UNIQUE(name, type_id)', 'Can not map a field more than once'),
+        ( 'name_type_uniq', 'UNIQUE(name, type_id)', 'Cannot map a field more than once.'),
     ]
 
     def check_line(self, cr, uid, vals, name, context=None):
@@ -876,7 +876,7 @@ class basic_calendar_fields(osv.osv):
             line = line_obj.browse(cr, uid, l_id, context=context)[0]
             line_rel = line.object_id.model
             if (relation != 'NULL') and (not relation == line_rel):
-                raise osv.except_osv(_('Warning !'), _('Please provide proper configuration of "%s" in Calendar Lines') % (name))
+                raise osv.except_osv(_('Warning!'), _('Please provide proper configuration of "%s" in Calendar Lines.') % (name))
         return True
 
     def create(self, cr, uid, vals, context=None):
@@ -1192,7 +1192,7 @@ class Alarm(CalDAV, osv.osv_memory):
                 elif isinstance(child.value, datetime):
                     # TODO
                     # remember, spec says this datetime is in UTC
-                    raise NotImplementedError("we cannot parse absolute triggers")
+                    raise NotImplementedError("Cannot parse absolute triggers.")
                 if not seconds:
                     duration = abs(days)
                     related = days > 0 and 'after' or 'before'
@@ -1290,7 +1290,7 @@ class Attendee(CalDAV, osv.osv_memory):
                         attendee_add.params['CN'] = cn_val
             if not attendee['email']:
                 attendee_add.value = 'MAILTO:'
-                #raise osv.except_osv(_('Error !'), _('Attendee must have an Email Id'))
+                #raise osv.except_osv(_('Error!'), _('Attendee must have an Email Id'))
             elif attendee['email']:
                 attendee_add.value = 'MAILTO:' + attendee['email']
         return vevent

@@ -2,21 +2,23 @@
 <openerp>
     <data>
 
-     
         <record id="view_base_report_sxw" model="ir.ui.view">
             <field name="name">Base Report sxw</field>
             <field name="model">base.report.sxw</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Get a report">
-                <separator string="Select your report" colspan="4"/>
-                <field name="report_id"/>
-                 <separator string="" colspan="4"/>
-                   <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                   <button name="get_report" string="Continue" type="object" icon="gtk-ok"/>
+            <form string="Get a report" version="7.0">
+                <group string="Select your report">
+                    <field name="report_id"/>
+                </group>
+                <footer>
+                    <button name="get_report" string="Continue" type="object" class="oe_highlight"/>
+                    <button name="upload_report" string="Upload the modified report" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
-       </record>
+        </record>
 
         <record id="action_view_base_report_sxw" model="ir.actions.act_window">
             <field name="name">Base Report sxw</field>
@@ -30,7 +32,6 @@
         <record id="view_base_report_file_sxw" model="ir.ui.view">
             <field name="name">Base Report File sxw</field>
             <field name="model">base.report.file.sxw</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
             <form string="Get a report">
             <separator string="The .SXW report" colspan="4"/>
@@ -41,28 +42,20 @@
             <field name="file_sxw_upload"/>
             <newline/>
             <label colspan="4" string="This is the template of your requested report.&#10;Save it as a .SXW file and open it with OpenOffice.&#10;Don't forget to install the OpenERP SA OpenOffice package to modify it.&#10;Once it is modified, re-upload it in OpenERP using this wizard." align="0.0"/>
-              <separator string="" colspan="4"/>
-              <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-              <button name="upload_report" string="Upload the modified report" type="object" icon="gtk-go-forward"/>
-
             </form>
             </field>
-       </record>
+        </record>
+
         <record id="view_base_report_file_rml" model="ir.ui.view">
             <field name="name">Base Report File sxw</field>
             <field name="model">base.report.rml.save</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Save RML FIle">
-                <separator string="The RML Report" colspan="4"/>
-                <field name="file_rml"/>
-                <newline/>
-                 <separator string="" colspan="4"/>
-               <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-            </form>
+                <form string="Save RML FIle">
+                    <separator string="The RML Report"/>
+                    <field name="file_rml"/>
+                </form>
             </field>
        </record>
-
 
     </data>
 </openerp>

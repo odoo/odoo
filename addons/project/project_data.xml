@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <!-- This will set the unit of measure used in projects and tasks.-->
+        <record id="base.main_company" model="res.company">
+            <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
+        </record>
 
         <!-- Requests Links -->
         <record id="req_link_project" model="res.request.link">
@@ -21,43 +25,73 @@
         <function id="parent_project_default_set" model="ir.values" name="set" eval="('default',False,'parent_id', [('project.project', False)], all_projects_account, True, False, False, False, True)"/>
 
         <!-- Task Stages -->
-        <record id="project_tt_specification" model="project.task.type">
+
+        <record id="project_tt_analysis" model="project.task.type">
             <field name="sequence">1</field>
-            <field name="name">Design</field>
+            <field name="name">Analysis</field>
+            <field name="state">draft</field>
+            <field name="case_default" eval="False"/>
+        </record>
+        <record id="project_tt_specification" model="project.task.type">
+            <field name="sequence">2</field>
+            <field name="name">Specification</field>
             <field name="state">draft</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_development" model="project.task.type">
+        <record id="project_tt_design" model="project.task.type">
             <field name="sequence">2</field>
+            <field name="name">Design</field>
+            <field name="state">open</field>
+            <field name="case_default" eval="True"/>
+        </record>
+        <record id="project_tt_negotiation" model="project.task.type">
+            <field name="sequence">3</field>
+            <field name="name">Negotiation</field>
+            <field name="state">pending</field>
+            <field name="case_default" eval="False"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="project_tt_development" model="project.task.type">
+            <field name="sequence">4</field>
             <field name="name">Development</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_testing" model="project.task.type">
-            <field name="sequence">3</field>
+            <field name="sequence">5</field>
             <field name="name">Testing</field>
             <field name="state">open</field>
             <field name="case_default" eval="True"/>
         </record>
-        <record id="project_tt_pending" model="project.task.type">
-            <field name="sequence">4</field>
-            <field name="name">Pending</field>
-            <field name="state">pending</field>
-            <field name="case_default" eval="True"/>
+        <record id="project_tt_merge" model="project.task.type">
+            <field name="sequence">6</field>
+            <field name="name">Merge</field>
+            <field name="state">open</field>
+            <field name="case_default" eval="False"/>
             <field name="fold" eval="True"/>
         </record>
-        <record id="project_tt_merge" model="project.task.type">
-            <field name="sequence">5</field>
+        <record id="project_tt_deployment" model="project.task.type">
+            <field name="sequence">7</field>
             <field name="name">Deployment</field>
             <field name="state">done</field>
             <field name="case_default" eval="True"/>
         </record>
         <record id="project_tt_cancel" model="project.task.type">
-            <field name="sequence">6</field>
+            <field name="sequence">7</field>
             <field name="name">Cancelled</field>
             <field name="state">cancelled</field>
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+
+        <!-- notify all employees of module installation -->
+        <function model="mail.group" name="message_append_note">
+            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
+            <value eval="[ref('mail.group_all_employees')]"/>
+            <value>Module Project Management has been installed</value>
+            <value>Manage multi-level projects and tasks.  You can delegate tasks, track the work done on tasks, and review your planning based on the entered data.
+
+You can manage todo lists on tasks by installing the module "Todo Lists", which supports the methodology Getting Things Done (GTD).  You can also manage issues/bugs in projects by installing the module "Issues Tracker."</value>
+        </function>
     </data>
 </openerp>

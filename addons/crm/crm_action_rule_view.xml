@@ -6,7 +6,6 @@
             <field name="name">base.action.rule.form.inherit</field>
             <field name="model">base.action.rule</field>
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <group name="partner" position="after">
                     <group col="2" colspan="2">
@@ -22,12 +21,11 @@
             <field name="name">base.action.rule.form2.inherit</field>
             <field name="model">base.action.rule</field>
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <group name="partner" position="after">
                     <group col="2" colspan="2">
                         <separator colspan="4" string="Condition Case Fields"/>
-                        <field name="trg_section_id" select="1" widget="selection"/>
+                        <field name="trg_section_id"  widget="selection"/>
                         <field name="trg_categ_id"/>
                     </group>
                 </group>
@@ -38,7 +36,6 @@
             <field name="name">base.action.rule.form3.inherit</field>
             <field name="model">base.action.rule</field>
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="act_user_id" position="after">
                     <field name="act_section_id"/>
@@ -51,7 +48,6 @@
             <field name="name">base.action.rule.form4.inherit</field>
             <field name="model">base.action.rule</field>
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="act_mail_to_user" position="after">
                     <field name="act_mail_to_partner"/>

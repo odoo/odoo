@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -105,6 +105,7 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Yapılandırma hatası! Seçilen para birimi öntanımlı hesaplarla aynı olmalı."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -139,7 +140,7 @@ msgstr "Geçersiz BBA Yapılı İletişim !"
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "Seçilen günlük ve dönem aynı firmaya ait olmalıdır."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -147,6 +148,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Günlük Girişinizin tarihi tanımlanan dönem içinde değil! Tarihi "
+"değiştirmelisiniz ya da günlükten bu kıstlamayı kaldırmalısınız."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -249,6 +252,9 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Günlük Girişlerinize ait seçilmiş hesap ikincil bir para biriminin "
+"sağlanmasına zorluyor. Hesaptan ikincil para birimini kaldırmanız ya da "
+"çoklu-para birimli bir günlük seçmelisiniz."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -363,7 +369,7 @@ msgstr "Bu dağıtımı Model olarak kaydet"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -406,7 +412,7 @@ msgstr "Hesap3 No"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Hesap görünümde analitik satır oluşturamazsınız."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -427,7 +433,7 @@ msgstr "Hesap4 No"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
@@ -513,11 +519,14 @@ msgid ""
 "analytic accounts for each plan set. Then, you must attach a plan set to "
 "your account journals."
 msgstr ""
+"Çoklu analitik planları ortamını ayarlamak için, her plan seti için kök "
+"analiz hesabı tanımlamalısınız. Sonra, hesap günlüklerinize bir plan seti "
+"eklemelisiniz."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0

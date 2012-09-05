@@ -3,31 +3,31 @@
 # Portions of this file are under the following copyright and license:
 #
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#   Copyright (c) 2003-2004 Danny Brewer
+#   d29583@groovegarden.com
 #
-# 
+#   This library is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public
+#   License along with this library; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#   See:  http://www.gnu.org/licenses/lgpl.html
+#
+#
 # and other portions are under the following copyright and license:
 #
 #
 #    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
+#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -145,7 +145,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         self.aSearchResult =self.sock.execute( database, uid, self.password, self.dModel[modelSelectedItem], 'name_search', self.win.getEditText("txtSearchName"))
         self.win.removeListBoxItems("lstResource", 0, self.win.getListBoxItemCount("lstResource"))
         if self.aSearchResult == []:
-            ErrorDialog("No search result found !!!", "", "Search ERROR" )
+            ErrorDialog("No search result found.", "", "Search Error.")
             return
 
         for result in self.aSearchResult:
@@ -172,7 +172,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         docinfo = oDoc2.getDocumentInfo()
 
         if oDoc2.getURL() == "":
-            ErrorDialog("Please save your file", "", "Saving ERROR" )
+            ErrorDialog("You should save your file.", "", "Saving Error.")
             return None
 
         url = oDoc2.getURL()
@@ -180,7 +180,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
             url = self.doc2pdf(url[7:])
 
         if url == None:
-            ErrorDialog( "Ploblem in creating PDF", "", "PDF Error" )
+            ErrorDialog( "Problem in creating PDF.", "", "PDF Error.")
             return None
 
         url = url[7:]
@@ -193,7 +193,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         docinfo = oDoc2.getDocumentInfo()
 
         if self.win.getListBoxSelectedItem("lstResourceType") == "":
-            ErrorDialog("Please select resource type", "", "Selection ERROR" )
+            ErrorDialog("You have to select a resource type.", "", "Selection Error." )
             return
 
         res = self.send_attachment( docinfo.getUserFieldValue(3), docinfo.getUserFieldValue(2) )
@@ -201,11 +201,11 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
 
     def btnOkWithInformation_clicked(self,oActionEvent):
         if self.win.getListBoxSelectedItem("lstResourceType") == "":
-            ErrorDialog( "Please select resource type", "", "Selection ERROR" )
+            ErrorDialog( "You have to select a resource type.", "", "Selection Error." )
             return
 
         if self.win.getListBoxSelectedItem("lstResource") == "" or self.win.getListBoxSelectedItem("lstmodel") == "":
-            ErrorDialog("Please select Model and Resource","","Selection ERROR")
+            ErrorDialog("You have to select Model and Resource.", "", "Selection Error.")
             return
 
         resourceid = None
@@ -215,7 +215,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
                 break
 
         if resourceid == None:
-            ErrorDialog("No resource selected !!!", "", "Resource ERROR" )
+            ErrorDialog("No resource is selected.", "", "Resource Error." )
             return
 
         res = self.send_attachment( self.dModel[self.win.getListBoxSelectedItem('lstmodel')], resourceid )

@@ -5,7 +5,6 @@
         <record id="view_inventory_tree" model="ir.ui.view">
             <field name="name">multi_company.default.tree</field>
             <field name="model">multi_company.default</field>
-            <field name="type">tree</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <tree string="Multi Company">
@@ -22,21 +21,21 @@
         <record id="view_inventory_form" model="ir.ui.view">
             <field name="name">multi_company.default.form</field>
             <field name="model">multi_company.default</field>
-            <field name="type">form</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <form string="Multi Company">
-                    <group col="6" colspan="4">
-                        <field name="name" colspan="6"/>
-                        <separator string="Matching" colspan="6"/>
-                        <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="object_id"/>
-                        <field name="field_id" domain="[('model_id','=',object_id)]"/>
-                        <separator string="Condition" colspan="6"/>
-                        <field name="expression" colspan="4"/>
-                        <field name="sequence"/>
-                        <separator string="Returning" colspan="6"/>
-                        <field name="company_dest_id"/>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="company_dest_id"/>
+                        </group>
+                        <group>
+                            <field name="object_id"/>
+                            <field name="field_id" domain="[('model_id','=',object_id)]"/>
+                            <field name="expression"/>
+                            <field name="sequence"/>
+                        </group>
                     </group>
                 </form>
             </field>
@@ -45,13 +44,12 @@
         <record id="view_inventory_search" model="ir.ui.view">
             <field name="name">multi_company.default.search</field>
             <field name="model">multi_company.default</field>
-            <field name="type">search</field>
             <field name="priority" eval="8"/>
             <field name="arch" type="xml">
                 <search string="Multi Company">
-                    <field name="name"/>
-                    <field name="company_id" widget="selection"/>
-                    <field name="company_dest_id" widget="selection"/>
+                    <field name="name" string="Multi Company"/>
+                    <field name="company_id"/>
+                    <field name="company_dest_id"/>
                     <field name="object_id"/>
                 </search>
             </field>
@@ -70,7 +68,7 @@
             parent="base.menu_custom"
             sequence="50"/>
 
-        <menuitem id="menu_action_inventory_form" 
+        <menuitem id="base.menu_action_inventory_form" 
             action="action_inventory_form"
             parent="menu_custom_multicompany"/>
     </data>

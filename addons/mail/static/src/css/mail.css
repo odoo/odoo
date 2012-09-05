@@ -1,12 +1,22 @@
-
-/* ------------------------------ */
-/* Wall                           */
-/* ------------------------------ */
+/* ------------------------------------------------------------ */
+/* Wall
+/* ------------------------------------------------------------ */
 
 .openerp div.oe_mail_wall {
     overflow: auto;
     padding: 0;
     background: white;
+}
+
+.openerp div.oe_mail_wall_main {
+    float: left;
+    width: 560px;
+    margin: 8px;
+}
+
+.openerp div.oe_mail_wall_aside {
+    margin-left: 565px;
+    margin: 8px;
 }
 
 .openerp div.oe_mail_wall_action {
@@ -21,36 +31,32 @@
     clear: both; 
 }
 
-.openerp .oe_mail_wall_action textarea {
+.openerp div.oe_mail_wall_action .oe_mail_msg_content {
+    width: 484px;
+}
+
+.openerp div.oe_mail_wall_action textarea.oe_mail_compose_textarea,
+.openerp div.oe_mail_wall_action div.oe_mail_compose_message_body_text textarea {
     width: 474px;
     height: 60px;
     padding: 4px;
-    margin-bottom: 8px;
-    float: right;
+    margin-bottom: 2px;
 }
 
-/* 2 columns view */
-.openerp div.oe_mail_wall_main {
-    float: left;
-    width: 560px;
-    margin: 8px;
-}
-
-.openerp div.oe_mail_wall_aside {
-    margin-left: 565px;
-    margin: 8px;
-}
-
-/* Threads */
-.openerp .oe_mail_wall_threads {
+.openerp ul.oe_mail_wall_threads {
     margin-top: 8px;
 }
-.openerp .oe_mail_wall_threads textarea {
-    height: 40px;
+
+/* Specific display of threads in the wall */
+/* ------------------------------------------------------------ */
+
+.openerp ul.oe_mail_wall_threads .oe_mail_msg_content textarea {
+    width: 434px;
+    height: 30px;
     padding: 4px;
 }
 
-.openerp .oe_mail_wall_thread:first .oe_mail_msg_notification {
+.openerp li.oe_mail_wall_thread:first .oe_mail_msg_notification {
     border-top: 0;
 }
 
@@ -64,7 +70,7 @@
     width: 486px;
 }
 
-.openerp div.oe_mail_msg_content li{
+.openerp div.oe_mail_msg_content > li {
     float: left;
     margin-right: 3px;
 }
@@ -79,38 +85,30 @@
 }
 
 
-/* ------------------------------ */
-/* RecordThread                   */
-/* ------------------------------ */
+/* ------------------------------------------------------------ */
+/* RecordThread
+/* ------------------------------------------------------------ */
 
-.openerp div.oe_mail_recthread {
+.openerp .oe_form div.oe_chatter {
     overflow: auto;
 }
 
-/* Left-side CSS */
-.openerp div.oe_mail_recthread_actions {
-    margin-bottom: 8px;
+.openerp div.oe_mail_recthread {
+    /*overflow: auto;*/
 }
 
-.openerp div.oe_mail_recthread_followers {
-    margin-bottom: 8px;
-}
-
-.openerp div.oe_mail_recthread_followers img.oe_mail_msg_image {
-    width: 28px;
-    height: 28px;
-    margin: 4px;
-}
-
-/* RecordThread: 2 columns view */
-.openerp div.oe_mail_recthread_left {
+.openerp div.oe_mail_recthread_main {
     float: left;
     width: 560px;
 }
 
-.openerp div.oe_mail_recthread_right {
+.openerp div.oe_mail_recthread_aside {
     float: right;
     width: 250px;
+}
+
+.openerp div.oe_mail_recthread_actions {
+    margin-bottom: 8px;
 }
 
 .openerp div.oe_mail_recthread_actions button {
@@ -144,16 +142,17 @@
   background-image: linear-gradient(to bottom, #dc5f59, #b33630);
 }
 
-.openerp textarea.oe_mail_action_textarea {
-    height: 60px;
-    padding: 5px;
+.openerp div.oe_mail_recthread_followers {
+    margin-bottom: 8px;
 }
 
-/* ------------------------------ */
-/* ThreadDisplay                  */
-/* ------------------------------ */
+
+/* ------------------------------------------------------------ */
+/* Thread
+/* ------------------------------------------------------------ */
 
 .openerp div.oe_mail_thread_action {
+    display: none;
     white-space: normal;
     padding: 8px;
     background: #eee;
@@ -166,6 +165,26 @@
     clear: both; 
 }
 
+/* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
+.openerp .oe_mail_msg_content textarea.oe_mail_compose_textarea,
+.openerp .oe_mail_msg_content div.oe_mail_compose_message_body_text textarea {
+    width: 474px;
+    height: 60px;
+    padding: 4px;
+    font-size: 12px;
+    border: 1px solid #cccccc;
+}
+
+/* default textarea (oe_mail_compose_textarea), and body_text textarea for compose form view */
+.openerp .oe_mail_msg_content textarea.oe_mail_compose_textarea:focus,
+.openerp .oe_mail_msg_content div.oe_mail_compose_message_body_text textarea:focus {
+    outline: 0;
+    border-color: rgba(82, 168, 236, 0.8);
+    -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+    -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+    -box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+
 .openerp div.oe_mail_thread_display {
     white-space: normal;
 }
@@ -174,7 +193,7 @@
     margin-left: 66px;
 }
 
-.openerp div.oe_mail_thread_subthread .oe_mail_thread_msg:last-child {
+.openerp div.oe_mail_thread_subthread li.oe_mail_thread_msg:last-child {
     margin-bottom: 8px;
 }
 
@@ -183,16 +202,21 @@
     border-bottom: 1px solid #D2D9E7;
 }
 
-.openerp .oe_mail_thread_msg:after {
+.openerp li.oe_mail_thread_msg:after {
     content: "";
     display: block;
     clear: both; 
 }
 
-.openerp .oe_mail_thread_msg > div:after {
+.openerp li.oe_mail_thread_msg > div:after {
     content: "";
     display: block;
     clear: both; 
+}
+
+.openerp div.oe_mail_msg {
+    padding: 0;
+    margin: 0 0 4px 0;
 }
 
 .openerp .oe_mail_msg_notification, 
@@ -201,11 +225,6 @@
     padding: 8px;
     background: white;
     border-top: 1px solid #ccc;
-}
-
-.openerp .oe_email_icon {
-    width: 50px;
-    height: 50px;
 }
 
 .openerp div.oe_mail_thread_subthread .oe_mail_msg_comment {
@@ -230,9 +249,18 @@
     clear: both; 
 }
 
-.openerp img.oe_mail_msg_image {
+.openerp img.oe_mail_icon {
     width: 50px;
     height: 50px;
+}
+
+.openerp img.oe_mail_thumbnail {
+    width: 28px;
+    height: 28px;
+    margin: 4px;
+}
+
+.openerp img.oe_mail_frame {
     text-align: center;
     overflow: hidden;
     -moz-border-radius: 3px;
@@ -247,48 +275,60 @@
     clip: rect(5px, 40px, 45px, 0px);
 }
 
-/* ------------------------------ */
-/* Styling (should be openerp)    */
-/* ------------------------------ */
+.openerp .oe_mail_invisible {
+    display: none;
+}
 
-.openerp input.oe_mail, textarea.oe_mail {
-    width: 432px;
-    padding: 4px;
-    font-size: 12px;
+/* ------------------------------------------------------------ */
+/* mail.compose.message form view & OpenERP hacks
+/* ------------------------------------------------------------ */
+
+/* form_view: delete white background */
+.openerp .oe_mail_msg_content div.oe_formview {
+    background-color: transparent;
+}
+
+.openerp .oe_mail_msg_content div.oe_form_nosheet {
+    margin: 0px;
+}
+
+.openerp .oe_mail_msg_content table.oe_form_group {
+    margin: 0px;
+}
+
+.openerp .oe_mail_msg_content table.oe_form_field,
+.openerp .oe_mail_msg_content div.oe_form_field {
+    padding: 0px;
+}
+
+.openerp .oe_mail_msg_content td.oe_form_group_cell {
+    vertical-align: bottom;
+}
+
+/* subject: change width */
+.openerp .oe_mail_msg_content .oe_form .oe_form_field input {
+    width: 472px;
+}
+
+/* body_html: cleditor */
+.openerp .oe_mail_msg_content div.cleditorMain {
     border: 1px solid #cccccc;
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-    transition: border linear 0.2s, box-shadow linear 0.2s;
-    -moz-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
 }
 
-.openerp input.oe_mail:focus, textarea.oe_mail:focus {
-    outline: 0;
-    border-color: rgba(82, 168, 236, 0.8);
-    -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
-    -webkit-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
-    -box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(82, 168, 236, 0.6);
+/* destination_partner_ids */
+.openerp .oe_mail_msg_content div.text-core {
+    height: 22px !important;
+    width: 472px;
 }
 
-.openerp div.oe_mail_msg {
-    padding: 0;
-    margin: 0 0 4px 0;
+/* buttons */
+.openerp .oe_mail_msg_content .oe_mail_compose_message_icons button.oe_form_button {
+    padding: 1px;
 }
 
-.openerp .oe_mail_oe_bold {
-    font-weight: bold;
-}
-
-/* ------------------------------ */
-/* Messages layout                */
-/* ------------------------------ */
+/* ------------------------------------------------------------ */
+/* Messages layout
+/* ------------------------------------------------------------ */
 
 .openerp .oe_mail_msg .oe_mail_msg_title {
     margin: 0;
@@ -309,19 +349,28 @@
     color: #888;
 }
 
+.openerp .oe_mail_msg_footer li {
+  float: left;
+  margin-right: 3px;
+}
+
 .openerp .oe_mail_msg_body {
     margin-bottom: .5em;
     text-align: justify;
 }
 
-.openerp .oe_mail_msg_tail {
-    display: none;
+.openerp .oe_mail_msg_body span.oe_mail_msg_tail {
+    display: inline;
+}
+
+.openerp .oe_mail_oe_bold {
+    font-weight: bold;
 }
 
 /* Read more/less link */
-.openerp .oe_mail_msg_content .expand,
-.openerp .oe_mail_msg_content .reduce {
-    font-weight: bold;
+.openerp .oe_mail_msg_content .oe_mail_reduce {
+    position: absolute;
+    right: 0;
 }
 
 /* Dropdown menu */
@@ -360,35 +409,3 @@
     padding: 0;
     list-style-type: square;
 }
-
-
-/* ------------------------------ */
-/* Group Form                     */
-/* ------------------------------ */
-
-div.oe_mail_group_advanced_details {
-  display: none;
-}
-
-.oe_form_sheetbg.openerp_mail_group_sheet {
-  min-height: 0px;
-  max-height: none;
-}
-
-.oe_form_sheetbg.openerp_mail_group_sheet .oe_form_sheet {
-  min-height: 0px;
-  max-height: none;
-  padding: 0px 18px;
-  max-width: 80%;
-}
-
-/* Resize group logo */
-.oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_image > img {
-  max-width: 100px;
-  max-height: 100px;
-}
-
-/* Resize group description */
-.oe_form_sheetbg.openerp_mail_group_sheet .oe_form_field_text > textarea {
-  height: 40px;
-} 
