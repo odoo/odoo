@@ -101,7 +101,9 @@ instance.web.ActionManager = instance.web.Widget.extend({
     select_breadcrumb: function(index, subindex) {
         for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
             if (i > index) {
-                this.remove_breadcrumb(i);
+                if (this.remove_breadcrumb(i) === false) {
+                    return false;
+                }
             }
         }
         var item = this.breadcrumbs[index];
@@ -110,10 +112,11 @@ instance.web.ActionManager = instance.web.Widget.extend({
         return true;
     },
     clear_breadcrumbs: function() {
-        while (this.breadcrumbs.length) {
-            this.remove_breadcrumb(0);
+        for (var i = this.breadcrumbs.length - 1; i >= 0; i--) {
+            if (this.remove_breadcrumb(0) === false) {
+                break;
+            }
         }
-        this.inner_widget = null;
     },
     remove_breadcrumb: function(index) {
         var item = this.breadcrumbs.splice(index, 1)[0];
@@ -122,9 +125,19 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 return item.widget === it.widget;
             });
             if (!dups.length) {
-                item.destroy();
+                var $e = $.Event("about_to_destroy");
+                item.widget.trigger("about_to_destroy", $e);
+                if ($e.isDefaultPrevented()) {
+                    this.inner_widget = item.widget;
+                    this.breadcrumbs.splice(index, 0, item);
+                    return false;
+                } else {
+                    item.destroy();
+                }
             }
         }
+        var last_widget = this.breadcrumbs.slice(-1)[0];
+        this.inner_widget =  last_widget && last_widget.widget;
     },
     get_title: function() {
         var titles = [];
