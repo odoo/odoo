@@ -484,7 +484,7 @@
                                     <field name="name"/>
                                     <field name="user_id"/>
                                     <field name="stage_id"/>
-                                    <field name="state" groups="base.group_no_one" invisible="1"/>
+                                    <field name="state" invisible="1"/>
                                     <field name="effective_hours" widget="float_time"/>
                                     <field name="progress" widget="progressbar"/>
                                     <field name="remaining_hours" widget="float_time"/>
@@ -500,7 +500,7 @@
                                 <field name="planned_hours" widget="float_time" attrs="{'readonly':[('state','!=','draft')]}"
                                     groups="project.group_time_work_estimation_tasks"
                                     on_change="onchange_planned(planned_hours, effective_hours)"/>
-                                <field name="state" groups="base.group_no_one" invisible="1"/>
+                                <field name="state" invisible="1"/>
                             </group>
                         </page>
                     </notebook>
@@ -609,7 +609,7 @@
                     <field name="remaining_hours" widget="float_time" sum="Remaining Hours" on_change="onchange_remaining(remaining_hours,planned_hours)" invisible="context.get('set_visible',False)" groups="project.group_time_work_estimation_tasks"/>
                     <field name="date_deadline" invisible="context.get('deadline_visible',True)"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="state" invisible="1" groups="base.group_no_one"/>
+                    <field name="state" invisible="1"/>
                     <field name="date_start" invisible="1" groups="base.group_no_one"/>
                     <field name="date_end" invisible="1" groups="base.group_no_one"/>
                     <field name="progress" widget="progressbar" invisible="context.get('set_visible',False)"/>

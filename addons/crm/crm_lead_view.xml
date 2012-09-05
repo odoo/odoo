@@ -211,7 +211,7 @@
                                 <field name="type_id" widget="selection"/>
                                 <field name="channel_id" widget="selection"/>
                                 <field name="referred"/>
-                                <field name="state" groups="base.group_no_one" invisible="1"/>
+                                <field name="state" invisible="1"/>
                             </group>
                             <group string="Mailings">
                                 <field name="opt_out" />
@@ -257,7 +257,7 @@
                     <field name="stage_id"/>
                     <field name="user_id" invisible="1"/>
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
-                    <field name="state" groups="base.group_no_one" invisible="1"/>
+                    <field name="state" invisible="1"/>
                     <field name="type_id" invisible="1"/>
                     <field name="referred" invisible="1"/>
                     <field name="channel_id" invisible="1"/>
@@ -514,7 +514,7 @@
                                     <field name="day_open" groups="base.group_no_one"/>
                                     <field name="day_close" groups="base.group_no_one"/>
                                     <field name="referred"/>
-                                    <field name="state" groups="base.group_no_one" invisible="1"/>
+                                    <field name="state" invisible="1"/>
                                     <field name="type" invisible="1"/>
                                 </group>
                                 <group string="References">
@@ -561,7 +561,7 @@
                     <field name="section_id" invisible="context.get('invisible_section', True)" />
                     <field name="user_id"/>
                     <field name="priority" invisible="1"/>
-                    <field name="state" groups="base.group_no_one" invisible="1"/>
+                    <field name="state" invisible="1"/>
                     <field name="needaction_pending" invisible="1"/>
                 </tree>
             </field>
