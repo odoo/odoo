@@ -40,6 +40,7 @@ import openerp.tools as tools
 import openerp.modules
 import openerp.exceptions
 from openerp.service import http_server
+from openerp import SUPERUSER_ID
 
 #.apidoc title: Exported Service methods
 #.apidoc module-mods: member-order: bysource
@@ -72,8 +73,8 @@ def _initialize_db(serv, id, db_name, demo, lang, user_password):
 
         if lang:
             modobj = pool.get('ir.module.module')
-            mids = modobj.search(cr, 1, [('state', '=', 'installed')])
-            modobj.update_translations(cr, 1, mids, lang)
+            mids = modobj.search(cr, SUPERUSER_ID, [('state', '=', 'installed')])
+            modobj.update_translations(cr, SUPERUSER_ID, mids, lang)
 
         cr.execute('UPDATE res_users SET password=%s, lang=%s, active=True WHERE login=%s', (
             user_password, lang, 'admin'))

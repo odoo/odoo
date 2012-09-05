@@ -134,7 +134,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     @param name name of the file
     @param mode file open mode
     @param subdir subdirectory
-    @param pathinfo if True returns tupple (fileobject, filepath)
+    @param pathinfo if True returns tuple (fileobject, filepath)
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
@@ -142,44 +142,60 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
-    if name.replace(os.path.sep, '/').startswith('addons/'):
+    if os.path.isabs(name):
+        # It is an absolute path
+        # Is it below 'addons_path' or 'root_path'?
+        name = os.path.normcase(os.path.normpath(name))
+        for root in adps + [rtp]:
+            if name.startswith(root):
+                base = root.rstrip(os.sep)
+                name = name[len(base) + 1:]
+                break
+        else:
+            # It is outside the OpenERP root: skip zipfile lookup.
+            base, name = os.path.split(name)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo)
+
+    if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
-        name = name[7:]
+        name2 = name[7:]
+    elif subdir:
+        name = os.path.join(subdir, name)
+        if name.replace(os.sep, '/').startswith('addons/'):
+            subdir = 'addons'
+            name2 = name[7:]
+        else:
+            name2 = name
 
-    # First try to locate in addons_path
+    # First, try to locate in addons_path
     if subdir:
-        subdir2 = subdir
-        if subdir2.replace(os.path.sep, '/').startswith('addons/'):
-            subdir2 = subdir2[7:]
-
-        subdir2 = (subdir2 != 'addons' or None) and subdir2
-
         for adp in adps:
             try:
-                if subdir2:
-                    fn = os.path.join(adp, subdir2, name)
-                else:
-                    fn = os.path.join(adp, name)
-                fn = os.path.normpath(fn)
-                fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
-                if pathinfo:
-                    return fo, fn
-                return fo
+                return _fileopen(name2, mode=mode, basedir=adp,
+                                 pathinfo=pathinfo)
             except IOError:
                 pass
 
-    if subdir:
-        name = os.path.join(rtp, subdir, name)
-    else:
-        name = os.path.join(rtp, name)
+    # Second, try to locate in root_path
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo)
 
-    name = os.path.normpath(name)
 
-    # Check for a zipfile in the path
-    head = name
+def _fileopen(path, mode, basedir, pathinfo):
+    name = os.path.normpath(os.path.join(basedir, path))
+    # Give higher priority to module directories, which is
+    # a more common case than zipped modules.
+    if os.path.isfile(name):
+        fo = open(name, mode)
+        if pathinfo:
+            return (fo, name)
+        return fo
+
+    # Support for loading modules in zipped form.
+    # This will not work for zipped modules that are sitting
+    # outside of known addons paths.
+    head = os.path.normpath(path)
     zipname = False
-    name2 = False
-    while True:
+    while os.sep in head:
         head, tail = os.path.split(head)
         if not tail:
             break
@@ -187,9 +203,10 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             zipname = os.path.join(tail, zipname)
         else:
             zipname = tail
-        if zipfile.is_zipfile(head+'.zip'):
+        zpath = os.path.join(basedir, head + '.zip')
+        if zipfile.is_zipfile(zpath):
             from cStringIO import StringIO
-            zfile = zipfile.ZipFile(head+'.zip')
+            zfile = zipfile.ZipFile(zpath)
             try:
                 fo = StringIO()
                 fo.write(zfile.read(os.path.join(
@@ -197,20 +214,14 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                         os.sep, '/')))
                 fo.seek(0)
                 if pathinfo:
-                    return fo, name
+                    return (fo, name)
                 return fo
             except Exception:
-                name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
                 pass
-    for i in (name2, name):
-        if i and os.path.isfile(i):
-            fo = file(i, mode)
-            if pathinfo:
-                return fo, i
-            return fo
-    if os.path.splitext(name)[1] == '.rml':
-        raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
-    raise IOError, 'File not found : %s' % name
+    # Not found
+    if name.endswith('.rml'):
+        raise IOError('Report %r doesn\'t exist or deleted' % name)
+    raise IOError('File not found: %s' % name)
 
 
 #----------------------------------------------------------

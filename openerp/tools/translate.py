@@ -43,6 +43,7 @@ import misc
 from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -214,7 +215,7 @@ class GettextAlias(object):
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
                     pool = pooler.get_pool(cr.dbname)
-                    res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
+                    res = pool.get('ir.translation')._get_source(cr, SUPERUSER_ID, None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -872,7 +873,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         if not ids:
             # lets create the language with locale information
-            lang_obj.load_lang(cr, 1, lang=lang, lang_name=lang_name)
+            lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
 
 
         # now, the serious things: we read the language file
