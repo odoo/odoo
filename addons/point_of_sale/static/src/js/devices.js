@@ -236,7 +236,20 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
             this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
             this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
+
+            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
+                var self = this;
+                window.simulate_ean = function(ean,strict){
+                    ean = ean.toString();
+                    if(!strict){
+                        ean = self.sanitize_ean(ean);
+                    }
+                    console.log('SIMULATE EAN: ',ean);
+                    self.on_ean(ean);
+                }
+            }
         },
+
         save_callbacks: function(){
             var callbacks = {};
             for(name in this.action_callback){
@@ -244,6 +257,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             this.action_callback_stack.push(callbacks);
         },
+
         restore_callbacks: function(){
             if(this.action_callback_stack.length){
                 var callbacks = this.action_callback_stack.pop();
@@ -380,6 +394,23 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return parse_result;
         },
 
+        on_ean: function(ean){
+            var parse_result = this.parse_ean(ean);
+
+            if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
+                console.warn('WARNING: barcode checksum error:',parse_result);
+            }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+                if(this.action_callback['product']){
+                    this.action_callback['product'](parse_result);
+                }
+                //this.trigger("codebar",parse_result );
+            }else{
+                if(this.action_callback[parse_result.type]){
+                    this.action_callback[parse_result.type](parse_result);
+                }
+            }
+        },
+
         // starts catching keyboard events and tries to interpret codebar 
         // calling the callbacks when needed.
         connect: function(){
@@ -410,21 +441,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         //We have found what seems to be a valid codebar
-                        var parse_result = self.parse_ean(codeNumbers.join(''));
-
-                        if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            console.warn('WARNING: barcode checksum error:',parse_result);
-                        }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
-                            if(self.action_callback['product']){
-                                self.action_callback['product'](parse_result);
-                            }
-                            //this.trigger("codebar",parse_result );
-                        }else{
-                            if(self.action_callback[parse_result.type]){
-                                self.action_callback[parse_result.type](parse_result);
-                            }
-                        }
-
+                        self.on_ean(codeNumbers.join(''));
                         codeNumbers = [];
                     }
                 } else {
