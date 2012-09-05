@@ -86,20 +86,22 @@ instance.account.extend_form_view = instance.web.FormView.extend({
         var self = this
         var viewmanager = self.getParent();
         viewmanager.action.context.next_partner_only = true;
-        //TODO: if no records, than it's not working, it giving error
         if (this.dataset.ids.length == 0){
-            self.dataset.index = null;
+            self.datarecord = {}
             viewmanager.action.context.partner_id = [];
             viewmanager.searchview.do_search();
-            self.reload();
-            return
+            _(this.fields).each(function (field, f) {
+                field.set_value(self.datarecord[f] || false);
+            });
+            self.do_update_pager();
         }
-        
-        $.when(this._super(action)).then(function() {
-            var id = self.get_fields_values().partner_id;
-            viewmanager.action.context.partner_id = [id];
-            viewmanager.searchview.do_search();
-        });
+        else{        
+            $.when(this._super(action)).then(function() {
+                var id = self.get_fields_values().partner_id;
+                viewmanager.action.context.partner_id = [id];
+                viewmanager.searchview.do_search();
+            });
+        }
     },
   })
 
