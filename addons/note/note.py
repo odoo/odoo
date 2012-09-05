@@ -46,6 +46,9 @@ class note_note(osv.osv):
     _pad_fields = ['note_pad']
     _description = "Note"
 
+    def _set_note_first_line(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'note': value}, context=context)
+
     def _get_note_first_line(self, cr, uid, ids, name, args, context=None):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
@@ -68,7 +71,7 @@ class note_note(osv.osv):
         return result
 
     _columns = {
-        'name': fields.function(_get_note_first_line, string='Note Summary', type="text", store=True),
+        'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type="text"),
         'note': fields.text('Pad Content'),
         'note_pad_url': fields.char('Pad Url', size=250),
         'sequence': fields.integer('Sequence'),

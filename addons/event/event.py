@@ -258,6 +258,25 @@ class event_event(osv.osv):
             }
             return {'value': dic}
 
+    def on_change_address_id(self, cr, uid, ids, address_id, context=None):
+        values = {
+            'street' : False,
+            'city' : False,
+            'zip' : False,
+        }
+        if isinstance(address_id, (long, int)):
+            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
+
+            values.update({
+                'street' : address.street,
+
+                'city' : address.city,
+                'zip' : address.zip,
+            })
+
+        return {'value' : values}
+
+
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------

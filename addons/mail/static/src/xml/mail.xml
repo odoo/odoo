@@ -79,7 +79,7 @@
         container, holding the composition form. Then come the various
         messages. Then comes the 'more' button.
         -->
-    <ul t-name="mail.thread" class="oe_mail oe_mail_thread">
+    <ul t-name="mail.thread" class="oe_mail oe_mail_thread oe_semantic_html_override">
         <div class="oe_mail_thread_action">
             <!-- contains the composition box (form + image) -->
             <t t-call="mail.compose_message"/>
@@ -94,7 +94,7 @@
 
     <!-- default layout -->
     <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg">
-        <div t-attf-class="oe_mail_msg_#{record.type}">
+        <div t-attf-class="oe_mail_msg_#{record.type} oe_semantic_html_override">
             <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.avatar"/>
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
