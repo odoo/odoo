@@ -26,6 +26,7 @@ import logging
 import os
 import re
 import shutil
+import sys
 import tempfile
 import urllib
 import zipfile
@@ -646,23 +647,24 @@ class module(osv.osv):
 
             self.update_list(cr, uid, context=context)
 
-            # FIXME restart server if ugrade...
-
             ids = self.search(cr, uid, [('name', 'in', urls.keys())], context=context)
-
-            def install_or_upgrade(cr, uid, ids, context=None):
-                bystate = defaultdict(list)
-                names = []
-                for m in self.read(cr, uid, ids, ['state', 'name'], context=context):
-                    bystate[m['state']].append(m['id'])
-                    names.append(m['name'])
-
-                self.button_install(cr, uid, bystate['uninstalled'], context=context)
-                self.button_upgrade(cr, uid, bystate['installed'], context=context)
-
-            return self._button_immediate_function(cr, uid, ids, install_or_upgrade, context=context)
+            if self.search_count(cr, uid, [('id', 'in', ids), ('state', '=', 'installed')], context=context):
+                # if any to update
+                return self.restart_server(cr, uid, context)     # in fact will never return...
+            return self.button_immediate_install(cr, uid, ids, context=context)
         finally:
             shutil.rmtree(tmp)
+
+    def restart_server(self, cr, uid, context=None):
+        raise NotImplementedError('# FIXME')
+        # TODO send a signal to will wait all threads (include us) like ctrl-c
+        # catch the case of gunicorn and force all workers to die...
+
+        strip_args = ['-d', '-u']
+        a = sys.argv[:]
+        args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+
+        os.execv(sys.executable, [sys.executable] + args)
 
     def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:
