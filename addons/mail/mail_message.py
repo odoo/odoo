@@ -241,7 +241,8 @@ class mail_message(osv.Model):
                     'type': 'expandable',
                     'domain': [('id', '<=', msg.id)] + domain,
                     'context': context,
-                    'thread_level': thread_level  # should be improve accodting to level of records
+                    'thread_level': thread_level,  # should be improve accodting to level of records
+                    'id': -1,
                 })
                 break
 
