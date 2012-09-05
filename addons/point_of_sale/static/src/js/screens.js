@@ -621,6 +621,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     icon: '/point_of_sale/static/src/img/icons/png48/help.png',
                     click: function(){ 
                         $('.goodbye-message').css({opacity:1}).hide();
+                        self.help_button_action();
                     },
                 });
 
