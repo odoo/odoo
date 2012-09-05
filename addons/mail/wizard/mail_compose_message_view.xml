@@ -6,34 +6,43 @@
             <field name="model">mail.compose.message</field>
             <field name="arch" type="xml">
                 <form string="Compose Email" version="7.0">
+                    <field name="composition_mode" nolabel="1" invisible="1"/>
+                    <field name="model" nolabel="1" invisible="1"/>
+                    <field name="res_id" nolabel="1" invisible="1"/>
+                    <field name="parent_id" nolabel="1" invisible="1"/>
+                    <field name="content_subtype" nolabel="1" invisible="1"/>
                     <group>
-                        <field name="composition_mode" invisible="1"/>
-                        <field name="model" invisible="1"/>
-                        <field name="res_id" invisible="1"/>
-                        <field name="author_id"/>
-                        <field name="partner_ids"/>
-                        <field name="subject" widget="char" size="512"/>
-                        <field name="message_id"/>
+                        <field name="subject" placeholder="Subject..."/>
+                        <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
+                                context="{'force_create':True}"
+                                on_change="onchange_partner_ids(partner_ids)"/>
                     </group>
-                    <notebook colspan="4">
+                    <notebook>
                         <page string="Body">
-                            <field name="body" colspan="4" nolabel="1" height="300" width="300"/>
+                            <field name="body_text" nolabel="1"
+                                attrs="{'invisible':[('content_subtype', '=', 'html')]}"/>
+                            <field name="body" nolabel="1"
+                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                         </page>
                         <page string="Attachments">
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
                     <footer>
-                        <button name="send_mail" string="Send" type="object" class="oe_highlight"  />
+                        <button string="Send" name="send_mail" type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
+                        <div class="oe_right">
+                            <button string="" name="toggle_content_subtype" type="object" icon="/mail/static/src/img/formatting.png" 
+                                help="Toggle advanced formatting mode"/>
+                        </div>
                     </footer>
                 </form>
             </field>
         </record>
 
         <record model="ir.ui.view" id="email_compose_message_wizard_form_chatter">
-            <field name="name">mail.compose.message.form</field>
+            <field name="name">mail.compose.message.form.chatter</field>
             <field name="model">mail.compose.message</field>
             <field name="priority">18</field>
             <field name="arch" type="xml">

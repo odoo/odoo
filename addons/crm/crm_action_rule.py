@@ -46,21 +46,11 @@ class base_action_rule(osv.osv):
     }
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=tools.config.get('email_from', False), context=None):
-        mail_message = self.pool.get('mail.message')
-        body = self.format_mail(obj, body)
-        if not emailfrom:
-            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
-                emailfrom = obj.user_id.email
-
-        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
-        emailfrom = tools.ustr(emailfrom)
-        if hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
+        mail_id = super(base_action_rule, self).email_send(cr, uid, obj, emails, body, emailfrom=emailfrom, context=context)
+        if mail_id and hasattr(obj, 'section_id') and obj.section_id and obj.section_id.alias_id:
             reply_to = obj.section_id.alias_id.name_get()[0][1]
-        else:
-            reply_to = emailfrom
-        if not emailfrom:
-            raise osv.except_osv(_('Error!'), _("There is no email for your company address."))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model=obj._name, reply_to=reply_to, res_id=obj.id)
+            self.pool.get('mail.mail').write(cr, uid, [mail_id], {'reply_to': reply_to}, context=context)
+        return mail_id
 
     def do_check(self, cr, uid, action, obj, context=None):
         ok = super(base_action_rule, self).do_check(cr, uid, action, obj, context=context)

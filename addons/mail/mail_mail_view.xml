@@ -12,7 +12,7 @@
                         <div>
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="terp-mail-replied"
-                                context="{'mail.compose.message.mode':'reply', 'message_id':active_id}" states='received,sent,exception,cancel'/>
+                                context="{'default_composition_mode':'reply', 'default_parent_id': active_id}" states='received,sent,exception,cancel'/>
                         </div>
                         <notebook colspan="4">
                             <page string="Message Details">

@@ -16,5 +16,33 @@
             <field name="customer_name">50%</field>
             <field name="factor">50.0</field>
         </record>
+        <!-- Sub Type Data -->
+        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+        </record>
+        <record id="mail.mail_subtype_pending" model="mail.message.subtype">
+            <field name="name">pending</field>
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_open" model="mail.message.subtype">
+            <field name="name">open</field>
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+        </record>
+        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+            <field name="name">cancelled</field>
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mail_subtype_email" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+        </record>
+        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+        </record>
+        <record id="mail.mail_subtype_other" model="mail.message.subtype">
+            <field name="model_ids" eval="[(4,ref('hr_timesheet_invoice.model_account_analytic_account'))]"/>
+        </record>
     </data>
 </openerp>

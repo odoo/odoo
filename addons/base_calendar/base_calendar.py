@@ -471,18 +471,10 @@ property or property parameter."),
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of attendee’s IDs.
         @param email_from: Email address for user sending the mail
-        @param context: A standard dictionary for contextual values
         @return: True
         """
-        if context is None:
-            context = {}
-
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -508,17 +500,18 @@ property or property parameter."),
                 }
                 body = html_invitation % body_vals
                 if mail_to and email_from:
-                    attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    mail_message.schedule_with_attach(cr, uid,
-                        email_from,
-                        mail_to,
-                        sub,
-                        body,
-                        attachments=attach and {'invitation.ics': attach} or None,
-                        content_subtype='html',
-                        reply_to=email_from,
-                        context=context
-                    )
+                    ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
+                    vals = {'email_from': email_from,
+                            'email_to': mail_to,
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'auto_delete': True}
+                    if ics_file:
+                        vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
+                                                        'datas_fname': 'invitation.ics',
+                                                        'datas': str(ics_file).encode('base64')})]
+                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -812,7 +805,6 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
-        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
@@ -849,36 +841,10 @@ class calendar_alarm(osv.osv):
             else:
                 re_dates = [alarm.trigger_date]
 
-            for r_date in re_dates:
-                ref = alarm.model_id.model + ',' + str(alarm.res_id)
-
-                # search for alreay sent requests
-                #if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
-                    #continue
-
-                # Deactivated because of the removing of res.request
-                # TODO: when cleaning calendar module, re-add this in a new mechanism
-                #if alarm.action == 'display':
-                    #value = {
-                       #'name': alarm.name,
-                       #'act_from': alarm.user_id.id,
-                       #'act_to': alarm.user_id.id,
-                       #'body': alarm.description,
-                       #'trigger_date': r_date,
-                       #'ref_doc1': ref
-                    #}
-                    #request_id = request_obj.create(cr, uid, value)
-                    #request_ids = [request_id]
-                    #for attendee in res_obj.attendee_ids:
-                        #if attendee.user_id:
-                            #value['act_to'] = attendee.user_id.id
-                            #request_id = request_obj.create(cr, uid, value)
-                            #request_ids.append(request_id)
-                    #request_obj.request_send(cr, uid, request_ids)
-
+            if re_dates:
                 if alarm.action == 'email':
-                    sub = '[Openobject Reminder] %s' % (alarm.name)
-                    body = """
+                    sub = '[OpenERP Reminder] %s' % (alarm.name)
+                    body = """<pre>
 Event: %s
 Event Date: %s
 Description: %s
@@ -888,20 +854,21 @@ From:
 
 ----
 %s
-
+</pre>
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
                     mail_to = [alarm.user_id.email]
                     for att in alarm.attendee_ids:
                         mail_to.append(att.user_id.email)
                     if mail_to:
-                        mail_message.schedule_with_attach(cr, uid,
-                            tools.config.get('email_from', False),
-                            mail_to,
-                            sub,
-                            body,
-                            context=context
-                        )
+                        vals = {
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'email_to': mail_to,
+                            'email_from': tools.config.get('email_from', mail_to),
+                        }
+                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
             else:

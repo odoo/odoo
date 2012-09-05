@@ -28,8 +28,7 @@ class mail_message_subtype(osv.osv):
     _description = 'mail_message_subtype'
     _columns = {
                 'name': fields.char(' Message Subtype ', size = 128,
-                        required = True, select = 1,
-                        help = 'Subtype Of Message'),
+                        required = True, help = 'Subtype Of Message'),
                 'model_ids': fields.many2many('ir.model',
                                               'mail_message_subtyp_message_rel',
                                               'message_subtype_id', 'model_id', 'Model',

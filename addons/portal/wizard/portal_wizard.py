@@ -171,7 +171,7 @@ class wizard(osv.osv_memory):
                 'url': wiz.portal_id.url or _("(missing url)"),
                 'db': cr.dbname,
             }
-            mail_message_obj = self.pool.get('mail.message')
+            mail_mail_obj = self.pool.get('mail.mail')
             dest_uids = user_obj.search(cr, ROOT_UID, login_cond)
             dest_users = user_obj.browse(cr, ROOT_UID, dest_uids)
             for dest_user in dest_users:
@@ -184,10 +184,12 @@ class wizard(osv.osv_memory):
                 email_to = dest_user.email
                 subject = _(WELCOME_EMAIL_SUBJECT) % data
                 body = _(WELCOME_EMAIL_BODY) % data
-                res = mail_message_obj.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
-                if not res:
-                    _logger.warning(
-                        'Failed to send email from %s to %s', email_from, email_to)
+                mail_id = mail_mail_obj.create(cr, uid, {
+                            'email_from': email_from ,
+                            'email_to': email_to,
+                            'subject': subject,
+                            'state': 'outgoing',
+                            'body_html': '<pre>%s</pre>' % body}, context=context)
         
         return {'type': 'ir.actions.act_window_close'}
 

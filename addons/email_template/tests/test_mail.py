@@ -71,23 +71,50 @@ class test_message_compose(common.TransactionCase):
         _subject1 = 'Pigs'
         _subject2 = 'Bird'
         _body_text1 = 'Pigs rules'
-        _body_text_html1 = 'Pigs rules<pre>Admin</pre>'
+        _body_text_html1 = 'Fans of Pigs, unite !\n<pre>Admin</pre>\n'
         _body_text2 = 'I am angry !'
         _body_text_html2 = 'I am angry !<pre>Admin</pre>'
 
-        # CASE1: create in mass_mail composition mode that should work with email_template installed
+        # CASE1: create in comment
+        compose_id = mail_compose.create(cr, uid,
+            {'subject': 'Forget me subject', 'body': 'Dummy body'},
+            {'default_composition_mode': 'comment', 'default_model': 'mail.group',
+                'default_res_id': self.group_pigs_id, 'default_use_template': True,
+                'active_ids': [self.group_pigs_id, group_bird_id] })
+        compose = mail_compose.browse(cr, uid, compose_id)
+
+        # Perform 'onchange_template_id' with 'use_template' set
+        values = mail_compose.onchange_template_id(cr, uid, [], compose.use_template, email_template_id, compose.composition_mode, compose.model, compose.res_id)
+        compose.write(values.get('value', {}), {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        compose.refresh()
+        message_pids = [partner.id for partner in compose.partner_ids]
+        partner_ids = self.res_partner.search(cr, uid, [('email', 'in', ['b@b.b', 'c@c.c', 'd@d.d'])])
+        partners = self.res_partner.browse(cr, uid, partner_ids)
+        # Test: subject, body, partner_ids
+        self.assertEqual(compose.subject, _subject1, 'mail.compose.message subject incorrect')
+        self.assertEqual(compose.body, _body_text_html1, 'mail.compose.message body incorrect')
+        self.assertEqual(set(message_pids), set(partner_ids), 'mail.compose.message partner_ids incorrect')
+
+        # Perform 'onchange_use_template': use_template is not set anymore
+        values = mail_compose.onchange_use_template(cr, uid, [], not compose.use_template, compose.template_id, compose.composition_mode, compose.model, compose.res_id)
+        compose.write(values.get('value', {}), {'default_composition_mode': 'comment', 'default_model': 'mail.group'})
+        compose.refresh()
+        # Test: subject, body, partner_ids
+        self.assertEqual(compose.subject, False, 'mail.compose.message subject incorrect')
+        self.assertEqual(compose.body, '', 'mail.compose.message body incorrect')
+
+        # CASE12 create in mass_mail composition
         compose_id = mail_compose.create(cr, uid,
             {'subject': 'Forget me subject', 'body': 'Dummy body'},
             {'default_composition_mode': 'mass_mail', 'default_model': 'mail.group',
                 'default_res_id': -1, 'default_use_template': True,
-                'active_ids': [self.group_pigs_id, group_bird_id], 'default_template_id': email_template_id})
+                'active_ids': [self.group_pigs_id, group_bird_id] })
         compose = mail_compose.browse(cr, uid, compose_id)
-        # print compose.subject
-        
 
-        # Try the 'onchange_template_id'
-        values = mail_compose.onchange_template_id(cr, uid, [], compose.use_template, compose.template_id, compose.composition_mode, compose.model, compose.res_id)
+        # Test 'onchange_template_id' with 'use_template' set
+        values = mail_compose.onchange_template_id(cr, uid, [], compose.use_template, email_template_id, compose.composition_mode, compose.model, compose.res_id)
         print values
+        # self.assertEqual()
         # compose.write(values['value'])
         values = mail_compose.onchange_use_template(cr, uid, [], not compose.use_template, compose.template_id, compose.composition_mode, compose.model, compose.res_id)
         print values

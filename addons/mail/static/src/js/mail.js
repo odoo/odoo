@@ -17,9 +17,15 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
-        // #FIXME TODO: CHECK WITH NEW BRANCH
+        // TDE FIXME TODO: CHECK WITH NEW BRANCH
         do_action: function(action, on_close) {
-            if (action.res_model == 'mail.compose.message' && this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
+            if (action.res_model == 'mail.compose.message' &&
+                this.fields && this.fields.message_ids &&
+                this.fields.message_ids.view.get("actual_mode") != 'create') {
+                // debug
+                console.groupCollapsed('FormView do_action on mail.compose.message');
+                console.log('message_ids field:', this.fields.message_ids);
+                console.groupEnd();
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
                 thread.instantiate_composition_form('comment', true, false, 0, action.context);
@@ -40,14 +46,11 @@ openerp.mail = function(session) {
      * the various Chatter widgets.
      *
      * Some regular expressions not used anymore, kept because I want to
-     * - (^|\s)@((\w|@|\.)*): @login@log.log, supports inner '@' for
-     *   logins that are emails
+     * - (^|\s)@((\w|@|\.)*): @login@log.log
      *      1. '(void)'
      *      2. login@log.log
      * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
-     *   for internal links to model ir.attachment, id=3, and with
-     *   optional label 'My Label'. Note that having a '|Label' is not
-     *   mandatory, because the regex should still be correct.
+     *   for internal links
      *      1. '(void)'
      *      2. 'ir'
      *      3. 'attachment'
@@ -62,7 +65,7 @@ openerp.mail = function(session) {
             return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
 
-        /** checks if tue current user is the message author */
+        /** check if the current user is the message author */
         is_author: function (widget, message_user_id) {
             return (widget.session && widget.session.uid != 0 && widget.session.uid == message_user_id);
         },
@@ -71,7 +74,6 @@ openerp.mail = function(session) {
          * - :name - shortcut to an image
          */
         do_replace_expressions: function (string) {
-            var self = this;
             var icon_list = ['al', 'pinky']
             /* special shortcut: :name, try to find an icon if in list */
             var regex_login = new RegExp(/(^|\s):((\w)*)/g);
@@ -93,8 +95,7 @@ openerp.mail = function(session) {
      * ------------------------------------------------------------
      * 
      * This widget handles the display of a form to compose a new message.
-     * This form is an OpenERP form_view, build on a mail.compose.message
-     * wizard.
+     * This form is a mail.compose.message form_view.
      */
 
     mail.ComposeMessage = session.web.Widget.extend({
@@ -102,14 +103,10 @@ openerp.mail = function(session) {
         
         /**
          * @param {Object} parent parent
-         * @param {Object} [options] 
-         * @param {Object} [options.context] context
-         * @param {String} [context.res_model] res_model of document [REQUIRED]
-         * @param {Number} [context.res_id] res_id of record [REQUIRED]
-         * @param {String} [context.composition_mode] mail.compose.message.mode
-         *      (see composition wizard)
-         * @param {Number} [context.msg_id] id of a message in case we are in
-         *      reply mode
+         * @param {Object} [options]
+         * @param {Object} [options.context] context passed to the
+         *  mail.compose.message DataSetSearch. Please refer to this model
+         *  for more details about fields and default values.
          */
         init: function (parent, options) {
             var self = this;
@@ -120,9 +117,9 @@ openerp.mail = function(session) {
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
             this.options.form_view_id = options.form_view_id || false;
             // debug
-            console.groupCollapsed('New ComposeMessage: model', this.options.context.default_res_model, ', id', this.options.context.default_res_id);
-            console.log('context:', this.options.context);
-            console.groupEnd();
+            // console.groupCollapsed('New ComposeMessage: model', this.options.context.default_res_model, ', id', this.options.context.default_res_id);
+            // console.log('context:', this.options.context);
+            // console.groupEnd();
         },
 
         start: function () {
@@ -132,33 +129,22 @@ openerp.mail = function(session) {
             this.$el.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$el.find('div.oe_mail_msg_content').empty();
             // create a context for the dataset and default_get of the wizard
-            var context = this._update_context({});
-            console.log(context);
+            var context = _.extend({}, this.options.context);
             this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
             // find the id of the view to display in the chatter form
-            var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
-            return data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).pipe(this.proxy('create_form_view'));
-        },
-
-        /** Update the context of the compose wizard */
-        _update_context: function (dest_context) {
-            // TDE TOCHECK: after posting, back to reply mode !
-            _.extend(dest_context, this.options.context, {
-                'mail.compose.message.mode': this.options.context.composition_mode,
-            });
-            if (this.options.context.composition_mode == 'comment') {
-                // _.extend(dest_context, {'default_res_id': this.options.res_id});
+            if (this.options.form_view_id) {
+                return this.create_form_view();
             }
-            else if (this.options.context.composition_mode == 'reply') {
-                _.extend(dest_context, {'active_id': this.options.context.msg_id});
+            else {
+                var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
+                return data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).pipe(this.proxy('create_form_view'));
             }
-            return dest_context
         },
 
         /** Create a FormView, then append it to the to widget DOM. */
-        create_form_view: function (form_view_id) {
-            this.options.form_view_id = form_view_id[1] || false;
+        create_form_view: function (new_form_view_id) {
             var self = this;
+            this.options.form_view_id = (new_form_view_id && new_form_view_id[1]) || this.options.form_view_id;
             // destroy previous form_view if any
             if (this.form_view) { this.form_view.destroy(); }
             // create the FormView
@@ -177,26 +163,20 @@ openerp.mail = function(session) {
         },
 
         /**
-         * Reinitialize the widget field values to the default values. The
-         * purpose is to avoid to destroy and re-build a form view. Default
-         * values are therefore given as for an on_change. */
-        refresh: function (options_update_values) {
-            var self = this;
-            this.options.context = _.extend(this.options.context, options_update_values || {});
+         * Reinitialize the widget field values to the default values obtained
+         * using default_get on mail.compose.message. This allows to reinitialize
+         * the widget without having to rebuild a complete form view.
+         * @param {Object} new_context: context of the refresh */
+        refresh: function (new_context) {
             if (! this.form_view) return;
-            this.ds_compose.context = this._update_context(this.ds_compose.context);
+            var self = this;
+            this.options.context = _.extend(this.options.context, new_context || {});
+            this.ds_compose.context = _.extend(this.ds_compose.context, this.options.context);
             return this.ds_compose.call('default_get', [
                 ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
                     'model', 'res_id', 'parent_id', 'content_subtype'],
                 this.ds_compose.get_context(),
             ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
-        },
-
-        /**
-         * Override-hack of do_action: clean the form */
-        do_action: function(action, on_close) {
-            console.log('compose_message do_action', action, on_close);
-            return this._super(action, on_close);
         },
 
         /**
@@ -223,9 +203,6 @@ openerp.mail = function(session) {
      * - - sub message (parent_id = root message)
      * - - - sub sub message (parent id = sub message)
      * - - sub message (parent_id = root message)
-     * This widget has 2 ways of initialization, either you give records
-     * to be rendered, either it will fetch [limit] messages related to
-     * [res_model]:[res_id].
      */
 
     mail.Thread = session.web.Widget.extend({
@@ -234,71 +211,54 @@ openerp.mail = function(session) {
         /**
          * @param {Object} parent parent
          * @param {Object} [options]
-         * @param {String} [options.res_model] res_model of document [REQUIRED]
-         * @param {Number} [options.res_id] res_id of record [REQUIRED]
-         * @param {Number} [options.uid] user id [REQUIRED]
-         * @param {Bool}   [options.parent_id=false] parent_id of message
-         * @param {Number} [options.thread_level=0] number of levels in the thread
-         *      (only 0 or 1 currently)
-         * @param {Bool}   [options.is_wall=false] thread is displayed in the wall
-         * @param {Number} [options.msg_more_limit=150] number of character to
+         * @param {Object} [options.context] context of the thread. It should
+            contain at least default_model, default_res_id. Please refer to
+            the ComposeMessage widget for more information about it.
+         * @param {Number} [options.thread_level=0] number of thread levels
+         * @param {Number} [options.message_ids=null] ids for message_fetch
+         * @param {Number} [options.message_data=null] already formatted message
+            data, for subthreads getting data from their parent
+         * @param {Boolean} [options.composer] use the advanced composer, or
+            the default basic textarea if not set
+         * @param {Number} [options.truncate_limit=250] number of character to
          *      display before having a "show more" link; note that the text
          *      will not be truncated if it does not have 110% of the parameter
-         *      (ex: 110 characters needed to be truncated and be displayed as
-         *      a 100-characters message)
-         * @param {Number} [options.limit=100] maximum number of messages to fetch
-         * @param {Number} [options.offset=0] offset for fetching messages
-         * @param {Number} [options.records=null] records to show instead of fetching messages
          */
         init: function(parent, options) {
-            console.log(parent);
             this._super(parent);
             // options
             this.options = options || {};
             this.options.domain = options.domain || [];
-            this.options.context = options.context || {};
-            // check in parents, should not define multiple times
-            this.options.context.res_model = options.context.res_model || 'mail.thread';
-            this.options.context.res_id = options.context.res_id || false;
-            this.options.context.parent_id = options.context.parent_id || false;
+            this.options.context = _.extend({
+                default_model: 'mail.thread',
+                default_res_id:  0,
+                default_parent_id: false }, options.context || {});
             this.options.thread_level = options.thread_level || 0;
             this.options.composer = options.composer || false;
-            // TDE: not sure, here for testing / compatibility
-            this.options.records = options.records || null;
-            this.options.ids = options.ids || null;
+            this.options.message_ids = options.message_ids || null;
+            this.options.message_data = options.message_data || null;
             // datasets and internal vars
-            this.ds_post = new session.web.DataSetSearch(this, this.options.context.res_model);
-            this.ds_notif = new session.web.DataSetSearch(this, 'mail.notification');
-            this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
+            this.ds_thread = new session.web.DataSetSearch(this, this.options.context.default_model);
+            this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
+            this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
             // display customization vars
-            this.display = {};
-            this.display.truncate_limit = options.truncate_limit || 250;
-            this.display.show_header_compose = options.show_header_compose || false;
-            this.display.show_reply = options.show_reply || false;
-            this.display.show_delete = options.show_delete || false;
-            this.display.show_hide = options.show_hide || false;
-            this.display.show_reply_by_email = options.show_reply_by_email || false;
-            this.display.show_more = options.show_more || false;
-            // for search view
-            this.search = {'domain': [], 'context': {}, 'groupby': {}}
-            this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
-            // debug
-            console.groupCollapsed('New Thread: model', this.options.context.res_model, 'id', this.options.context.res_id, 'parent_id', this.options.context.parent_id, 'thread level', this.options.thread_level);
-            console.log('records:', this.options.records, 'ids:', this.options.ids);
-            console.log('options:', this.options);
-            console.log('display:', this.display);
-            console.groupEnd();
+            this.display = {
+                truncate_limit: options.truncate_limit || 250,
+                show_header_compose: options.show_header_compose || false,
+                show_reply: options.show_reply || false,
+                show_delete: options.show_delete || false,
+                show_hide: options.show_hide || false,
+                show_reply_by_email: options.show_reply_by_email || false,
+                show_more: options.show_more || false,
+            }
         },
         
         start: function() {
+            // TDE TODO: check for deferred, not sure it is correct
             this._super.apply(this, arguments);
             this.bind_events();
-            // display messages: either given by parent, either fetch new ones
-            if (this.options.records) var display_done = this.message_display(this.options.records);
-            else var display_done = this.message_fetch();
-            // customize display
-            this.display_user_avatar();
-            $.when(display_done).then(this.proxy('do_customize_display'));
+            // fetch and display message, using message_ids if set
+            var display_done = $.when(this.message_fetch(true, [], {})).then(this.proxy('do_customize_display'));
             // add message composition form view
             if (this.display.show_header_compose && this.options.composer) {
                 var compose_done = this.instantiate_composition_form();
@@ -309,6 +269,7 @@ openerp.mail = function(session) {
         /** Customize the display
          * - show_header_compose: show the composition form in the header */
         do_customize_display: function() {
+            this.display_user_avatar();
             if (this.display.show_header_compose) { this.$el.find('div.oe_mail_thread_action').eq(0).show(); }
         },
 
@@ -366,7 +327,10 @@ openerp.mail = function(session) {
                 event.stopPropagation();
                 var msg_id = event.srcElement.dataset.msg_id;
                 if (! msg_id) return false;
-                self.compose_message_widget.refresh({'composition_mode': 'reply', 'msg_id': parseInt(msg_id)});
+                self.compose_message_widget.refresh({
+                    'default_composition_mode': 'reply',
+                    'default_parent_id': parseInt(msg_id),
+                    'default_content_subtype': 'html'} );
             });
         },
 
@@ -375,24 +339,26 @@ openerp.mail = function(session) {
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
         do_action: function(action, on_close) {
-            console.log('thread do_action', action, on_close, this);
             this.message_clean();
             this.message_fetch();
             if (this.compose_message_widget) {
-                this.compose_message_widget.refresh(); }
+                this.compose_message_widget.refresh({
+                    'default_composition_mode': 'comment',
+                    'default_parent_id': this.options.default_parent_id,
+                    'default_content_subtype': 'plain'} );
+            }
             return this._super(action, on_close);
         },
 
-        /** Instantiate the composition form, with parameters coming from thread parameters */
-        instantiate_composition_form: function(mode, formatting, msg_id, context) {
+        /** Instantiate the composition form, with every parameters in context
+            or in the widget context. */
+        instantiate_composition_form: function(context) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'context': {
-                    'default_model': this.options.context.res_model, 'default_res_id': this.options.context.res_id,
-                    'composition_mode': mode || 'comment', 'msg_id': msg_id }
-                });
+                'context': _.extend(context || {}, this.options.context),
+            });
             var composition_node = this.$el.find('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node);
@@ -405,35 +371,33 @@ openerp.mail = function(session) {
         },
 
         /** Fetch messages
-         * @param {Array} additional_domain
-         * @param {Object} additional_context
+         * @param {Bool} initial_mode: initial mode: try to use message_data or
+         *  message_ids, if nothing available perform a message_read; otherwise
+         *  directly perform a message_read
+         * @param {Array} additional_domain: added to options.domain
+         * @param {Object} additional_context: added to options.context
          */
-        message_fetch: function (additional_domain, additional_context) {
+        message_fetch: function (initial_mode, additional_domain, additional_context) {
             var self = this;
-            // Update the domain and context
-            this.search['domain'] = _.union(this.options.domain, this.search_results.domain);
-            this.search['context'] = _.extend(this.options.context, this.search_results.context);
-            if (additional_domain) var fetch_domain = this.search['domain'].concat(additional_domain);
-            else var fetch_domain = this.search['domain'];
-            if (additional_context) var fetch_context = _.extend(this.search['context'], additional_context);
-            else var fetch_context = this.search['context'];
-
-            // TODO first use: use IDS, otherwise set false
-
-            var read_defer = this.ds_msg.call('message_read',
-                [false, fetch_domain, this.options.thread_level, undefined, fetch_context]
+            // domain and context: options + additional
+            fetch_domain = _.flatten([this.options.domain, additional_domain || []], true)
+            fetch_context = _.extend(this.options.context, additional_context || {})
+            // if message_ids is set: try to use it
+            if (initial_mode && this.options.message_data) {
+                return this.message_display(this.options.message_data);
+            }
+            return this.ds_message.call('message_read',
+                [(initial_mode && this.options.message_ids) || false, fetch_domain, this.options.thread_level, undefined, fetch_context]
                 ).then(this.proxy('message_display'));
-            return read_defer;
         },
 
         /* Display a list of records
-         * - */
+         * A specific case is done for 'expandable' messages that are messages
+            displayed under a 'show more' button form
+         */
         message_display: function (records) {
             var self = this;
             var _expendable = false;
-            console.groupCollapsed('message_display');
-            console.log('records', records)
-            console.groupEnd();
             _(records).each(function (record) {
                 if (record.type == 'expandable') {
                     _expendable = true;
@@ -443,14 +407,19 @@ openerp.mail = function(session) {
                 }
                 else {
                     self.display_record(record);
+                    // if (self.options.thread_level >= 0) {
                     self.thread = new mail.Thread(self, {
-                        'context': { 'res_model': record.model, 'res_id': record.res_id, 'parent_id': record.id},
+                        'context': {
+                            'default_model': record.model,
+                            'default_id': record.res_id,
+                            'default_parent_id': record.id },
+                        'message_data': record.child_ids, 'thread_level': self.options.thread_level-1,
                         'show_header_compose': false, 'show_reply': self.options.thread_level > 1,
                         'show_hide': self.display.show_hide, 'show_delete': self.display.show_delete,
-                        'uid': self.options.uid, 'records': record.child_ids, 'thread_level': (self.options.thread_level-1),
                     });
                     self.$el.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$el.find('div.oe_mail_thread_subthread:last'));
+                    // }
                 }
             });
             if (! _expendable) {
@@ -522,7 +491,7 @@ openerp.mail = function(session) {
 
         /** Action: 'shows more' to fetch new messages */
         do_message_fetch: function () {
-            return this.message_fetch(this.fetch_more_domain, this.fetch_more_context);
+            return this.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
         },
 
         // TDE: keep currently because need something similar
@@ -572,19 +541,18 @@ openerp.mail = function(session) {
 
     /** mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
-        // QWeb template to use when rendering the object
         template: 'mail.record_thread',
 
         init: function() {
             this._super.apply(this, arguments);
             this.options.domain = this.options.domain || [];
-            this.options.context = {'res_model': 'mail.thread', 'res_id': false, 'parent_id': false};
+            this.options.context = {'default_model': 'mail.thread', 'default_res_id': false};
             this.options.thread_level = this.options.thread_level || 0;
             this.thread_list = [];
         },
 
         start: function() {
-            // this._super.apply(this, arguments);
+            this._super.apply(this, arguments);
             // NB: all the widget should be modified to check the actual_mode property on view, not use
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
@@ -608,14 +576,14 @@ openerp.mail = function(session) {
                 return;
             }
             // update context
-            this.options.context['res_id'] = this.view.datarecord.id;
-            this.options.context['res_model'] = this.view.model;
+            _.extend(this.options.context, {
+                default_res_id: this.view.datarecord.id,
+                default_model: this.view.model });
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
             for (var i in this.thread_list) { this.thread_list[i].destroy(); }
-            console.log(this);
             var thread = new mail.Thread(self, {
-                'context': this.options.context, 'uid': this.session.uid,
+                'context': this.options.context,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
                 'show_delete': true, 'composer': true });
             this.thread_list.push(thread);
@@ -644,7 +612,7 @@ openerp.mail = function(session) {
          * @param {Object} [options]
          * @param {Number} [options.domain] domain on the Wall, is an array.
          * @param {Number} [options.domain] context, is an object. It should
-         *      contain res_model, res_id, parent_id, to give it to the threads.
+         *      contain default_model, default_res_id, to give it to the threads.
          */
         init: function (parent, options) {
             this._super(parent);
@@ -653,7 +621,7 @@ openerp.mail = function(session) {
             this.options.context = options.context || {};
             this.options.thread_level = options.thread_level || 1;
             this.thread_list = [];
-            this.ds_msg = new session.web.DataSet(this, 'mail.message');
+            this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
             // for search view
             this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
@@ -662,27 +630,13 @@ openerp.mail = function(session) {
         start: function () {
             this._super.apply(this, arguments);
             var search_view_ready = this.load_search_view({}, false);
-            var thread_displayed = this.display_thread();
+            var thread_displayed = this.message_display();
             return (search_view_ready && thread_displayed);
         },
 
         destroy: function () {
-            for (var i in this.thrad_list) { this.thread_list[i].destroy(); }
+            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
             this._super.apply(this, arguments);
-        },
-
-        /**
-         * Override-hack of do_action: automatically reload the chatter.
-         * Normally it should be called only when clicking on 'Post/Send'
-         * in the composition form. */
-        //TDE: still useful ? TO CHECK
-        do_action: function(action, on_close) {
-            console.log('wall do_action');
-            if (this.compose_message_widget) {
-                this.compose_message_widget.refresh(); }
-            this.message_clean();
-            this.display_thread();
-            return this._super(action, on_close);
         },
 
         /**
@@ -717,7 +671,7 @@ openerp.mail = function(session) {
                 self.search_results['domain'] = results.domain;
                 self.search_results['groupby'] = results.group_by;
                 self.message_clean();
-                return self.display_thread();
+                return self.message_display();
             });
         },
 
@@ -726,14 +680,12 @@ openerp.mail = function(session) {
             this.$el.find('ul.oe_mail_wall_threads').empty();
         },
 
-        /** Display comments
-         * @param {Array} records tree structure of records
-         */
-        display_thread: function () {
+        /** Display the Wall threads */
+        message_display: function () {
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
             var thread = new mail.Thread(this, {
-                'domain': this.options.domain, 'context': this.options.context, 'uid': this.session.uid,
+                'domain': this.options.domain, 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'composer': true,
                 // display options
                 'show_header_compose': true,  'show_reply': this.options.thread_level > 0,

@@ -28,12 +28,8 @@ from osv import fields
 from tools.translate import _
 
 class mail_group(osv.Model):
-    """
-    A mail_group is a collection of users sharing messages in a discussion
-    group. Group users are users that follow the mail group, using the
-    subscription/follow mechanism of OpenSocial. A mail group has nothing
-    in common with res.users.group.
-    """
+    """ A mail_group is a collection of users sharing messages in a discussion
+        group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
     _name = 'mail.group'
     _inherit = ['mail.thread']
@@ -47,10 +43,6 @@ class mail_group(osv.Model):
 
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
-
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
 
     _columns = {
         'description': fields.text('Description'),
@@ -93,6 +85,10 @@ class mail_group(osv.Model):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
         return ref and ref[1] or False
 
+    def _get_default_image(self, cr, uid, context=None):
+        image_path = openerp.modules.get_module_resource('mail', 'static/src/img', 'groupdefault.png')
+        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
+
     def _get_menu_parent(self, cr, uid, context=None):
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'mail_group_root')
         return ref and ref[1] or False
@@ -131,9 +127,10 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model','=','mail.group'),('res_id','=',mail_group_id)],
+                'domain': [('model','=','mail.group'), ('res_id','=',mail_group_id)],
+                'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id},
                 'res_model': 'mail.message',
-                'thread_level': 2
+                'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
             newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
@@ -159,3 +156,12 @@ class mail_group(osv.Model):
             self._subscribe_users(cr, uid, ids, vals.get('group_ids'), context=context)
         return result
 
+    def action_follow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_subscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_subscribe_users(cr, uid, ids, context=context)
+
+    def action_unfollow(self, cr, uid, ids, context=None):
+        """ Wrapper because message_unsubscribe_users take a user_ids=None
+            that receive the context without the wrapper. """
+        return self.message_unsubscribe_users(cr, uid, ids, context=context)

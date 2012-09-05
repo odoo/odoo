@@ -19,34 +19,45 @@
 #
 ##############################################################################
 
-
 {
-    'name': 'Tasks-Mail Integration',
-    'version': '1.1',
-    'author': 'OpenERP SA',
-    'website': 'http://www.openerp.com',
-    'category': 'Project Management',
-    'images': ['images/project_mailgate_task.jpeg'],
-    'depends': ['project', 'mail'],
+    'name': 'Notes',
+    'version': '0.1',
+    'category': 'Tools',
     'description': """
-This module can automatically create Project Tasks based on incoming emails.
-============================================================================
+This module allows users to create their own notes inside OpenERP
+=================================================================
 
-Allows creating tasks based on new emails arriving at a given mailbox,
-similarly to what the CRM application has for Leads/Opportunities.
+Use notes to write meeting minutes, organize ideas, organize personnal todo
+lists, etc. Each user manages his own personnal notes. Notes are available to
+their authors only, but they can share notes to others users so that several
+people can work on the same note in real time. It's very efficient to share
+meeting minutes.
 
-There are two common alternatives to configure the mailbox integration:
------------------------------------------------------------------------
-    * Install the ``fetchmail`` module and configure a new mailbox, then select
-      ``Project Tasks`` as the target for incoming emails.
-    * Set it up manually on your mail server based on the 'mail gateway' script
-      provided in the ``mail`` module - and connect it to the `project.task` model.
-    """,
-    'data': [],
-    'demo': [],
+Notes can be found in the 'Home' menu.
+""",
+    'author': 'OpenERP SA',
+    'website': 'http://openerp.com',
+    'summary': 'Sticky Notes, Collaborative',
+    'depends': [
+        'base_tools',
+        'mail',
+        'pad',
+    ],
+    'data': [
+        'security/note_security.xml',
+        'security/ir.model.access.csv',
+        'note_data.xml',
+        'note_view.xml',
+    ],
+    'demo': [
+        'note_demo.xml',
+    ],
+    'css': [
+        'static/src/css/note.css',
+    ],
     'installable': True,
+    'application': True,
     'auto_install': False,
-    'certificate': '001075048780413258261',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -7,15 +7,12 @@
         <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
-        <field name="body">
-        hello ${object.name},
-
-        The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}. For any further information please contact our event department.
-
-        we thank you for your participation
-
-        best regards
-        </field>
+        <field name="body_html"><![CDATA[
+        <p>Hello ${object.name},</p>
+        <p>The event ${object.event_id.name} that you registered for is confirmed and will be held from ${object.event_id.date_begin} to ${object.event_id.date_end}.
+        For any further information please contact our event department.</p>
+        <p>Thank you for your participation!</p>
+        <p>Best regards</p>]]></field>
         </record>
 
     </data>
@@ -27,15 +24,12 @@
         <field name="email_from" >${object.user_id.email or object.company_id.email or 'noreply@' + object.company_id.name + '.com'}</field>
         <field name="email_to" >${object.email}</field>
         <field name="subject">Your registration at ${object.event_id.name}</field>
-        <field name="body">
-        hello ${object.name},
-
-        We confirm you that your registration to the event ${object.event_id.name} has been recorded. You will automatically receive an email providing you more practical information (such as the schedule, the plan...) as soon as the event will be confirmed to be held.
-
-        we thank you for your participation
-
-        best regards
-        </field>
+        <field name="body_html"><![CDATA[
+        <p>Hello ${object.name},</p>
+        <p>We confirm that your registration to the event ${object.event_id.name} has been recorded.
+        You will automatically receive an email providing you more practical information (such as the schedule, the agenda...) as soon as the event is confirmed.</p>
+        <p>Thank you for your participation!</p>
+        <p>Best regards</p>]]></field>
         </record>
 
         <!-- Default Values -->

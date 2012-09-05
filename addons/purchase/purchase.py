@@ -732,7 +732,7 @@ class purchase_order(osv.osv):
     # --------------------------------------
 
     def needaction_domain_get(self, cr, uid, ids, context=None):
-        return [('state','=','draft')]
+        return [('state', '=', 'draft')]
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), subtype="new", context=context)

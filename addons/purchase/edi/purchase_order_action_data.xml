@@ -108,51 +108,6 @@
     </div>
 </div>
             ]]></field>
-            <field name="body"><![CDATA[
-Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
-
-Here is a ${object.state in ('draft', 'sent') and 'request for quotation' or 'purchase order confirmation'} from ${object.company_id.name}:
-       | Order number: *${object.name}*
-       | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
-       | Order date: ${object.date_order}
-       % if object.origin:
-       | Order reference: ${object.origin}
-       % endif
-       % if object.partner_ref:
-       | Your reference: ${object.partner_ref}<br />
-       % endif
-       | Your contact: ${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
-
-You can view the ${object.state in ('draft', 'sent') and 'request for quotation' or 'order confirmation'} and download it using the following link:
-    ${ctx.get('edi_web_url_view') or 'n/a'}
-
-If you have any question, do not hesitate to contact us.
-
-Thank you!
-
-
---
-${object.validator.name} ${object.validator.email and '<%s>'%(object.validator.email) or ''}
-${object.company_id.name}
-% if object.company_id.street:
-${object.company_id.street or ''}
-% endif
-% if object.company_id.street2:
-${object.company_id.street2}
-% endif
-% if object.company_id.city or object.company_id.zip:
-${object.company_id.zip or ''} ${object.company_id.city or ''}
-% endif
-% if object.company_id.country_id:
-${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
-% endif
-% if object.company_id.phone:
-Phone: ${object.company_id.phone}
-% endif
-% if object.company_id.website:
-${object.company_id.website or ''}
-% endif
-            ]]></field>
         </record>
     </data>
 </openerp>

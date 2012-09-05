@@ -96,6 +96,10 @@ class res_users(osv.Model):
         alias_pool.unlink(cr, uid, alias_ids, context=context)
         return res
 
+    def message_post(self, cr, uid, thread_id, **kwargs):
+        partner_id = self.pool.get('res.users').browse(cr, uid, thread_id)[0].partner_id.id
+        return self.pool.get('res.partner').message_post(cr, uid, partner_id, **kwargs)
+
 class res_users_mail_group(osv.Model):
     """ Update of res.users class
         - if adding groups to an user, check mail.groups linked to this user

@@ -126,67 +126,6 @@
     </div>
 </div>
             ]]></field>
-            <field name="body"><![CDATA[
-Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name or ''},
-
-Here is your ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} from ${object.company_id.name}:
-       | Order number: *${object.name}*
-       | Order total: *${object.amount_total} ${object.pricelist_id.currency_id.name}*
-       | Order date: ${object.date_order}
-       % if object.origin:
-       | Order reference: ${object.origin}
-       % endif
-       % if object.client_order_ref:
-       | Your reference: ${object.client_order_ref}<br />
-       % endif
-       | Your contact: ${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
-
-You can view the ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'}, download it and even pay online using the following link:
-    ${ctx.get('edi_web_url_view') or 'n/a'}
-
-% if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state not in ('draft', 'sent'):
-<%
-comp_name = quote(object.company_id.name)
-order_name = quote(object.name)
-paypal_account = quote(object.company_id.paypal_account)
-order_amount = quote(str(object.amount_total))
-cur_name = quote(object.pricelist_id.currency_id.name)
-paypal_url = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amount=%s" \
-             "&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow_%s" % \
-             (paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_name)
-%>
-It is also possible to directly pay with Paypal:
-    ${paypal_url}
-% endif
-
-If you have any question, do not hesitate to contact us.
-
-
-Thank you for choosing ${object.company_id.name}!
-
-
---
-${object.user_id.name} ${object.user_id.email and '<%s>'%(object.user_id.email) or ''}
-${object.company_id.name}
-% if object.company_id.street:
-${object.company_id.street or ''}
-% endif
-% if object.company_id.street2:
-${object.company_id.street2}
-% endif
-% if object.company_id.city or object.company_id.zip:
-${object.company_id.zip or ''} ${object.company_id.city or ''}
-% endif
-% if object.company_id.country_id:
-${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) or ''} ${object.company_id.country_id.name or ''}
-% endif
-% if object.company_id.phone:
-Phone: ${object.company_id.phone}
-% endif
-% if object.company_id.website:
-${object.company_id.website or ''}
-% endif
-            ]]></field>
         </record>
     </data>
 </openerp>

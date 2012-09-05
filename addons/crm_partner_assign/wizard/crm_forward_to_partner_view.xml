@@ -16,7 +16,7 @@
                             on_change="on_change_history_mode(history_mode, model, res_id)"/>
                         <field name="subject" colspan="4"/>
                         <field name="partner_ids" colspan="4" widget="many2many_tags"
-                            on_change="on_change_partner_ids(partner_ids)"/>
+                            on_change="onchange_partner_ids(partner_ids)"/>
                         <notebook colspan="4">
                             <page string="Body">
                                 <field name="body"/>
@@ -51,7 +51,7 @@
             key2="client_action_multi" name="Mass forward to partner"
             res_model="crm.lead.forward.to.partner" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"
-            context="{'mail.compose.message.mode' : 'mass_mail'}"
+            context="{'default_composition_mode' : 'mass_mail'}"
             view_id="crm_lead_forward_to_partner_form"
         />
 
