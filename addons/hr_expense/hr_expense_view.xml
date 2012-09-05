@@ -89,7 +89,7 @@
                                 <form string="Expense Lines" version="7.0">
                                     <group>
                                         <group>
-                                            <field name="product_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                            <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
                                             <field name="name"/>
                                             <field name="ref"/>
                                             <field domain="[('type','=','normal')]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
@@ -99,12 +99,24 @@
                                             <label for="unit_quantity"/>
                                             <div>
                                                 <field name="unit_quantity" class="oe_inline"/> 
-                                                <field name="uom_id" on_change="onchange_product_id(product_id, uom_id, parent.employee_id, context)" class="oe_inline"/>
+                                                <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)" class="oe_inline"/>
                                             </div>
                                             <field name="date_value" />
                                         </group>
                                     </group>
                                 </form>
+                                <tree string="Expense Lines" editable="bottom">
+                                    <field name="sequence" invisible="1"/>
+                                    <field name="product_id" on_change="onchange_product_id(product_id, context)" context="{'default_hr_expense_ok':1}"/>
+                                    <field name="date_value" string="Expense Date"/>
+                                    <field name="name"/>
+                                    <field name="ref"/>
+                                    <field domain="[('type','in',['normal','contract']), ('parent_id','!=',False)]" name="analytic_account" groups="analytic.group_analytic_accounting"/>
+                                    <field name="uom_id" on_change="onchange_uom(product_id, uom_id, context)"/>
+                                    <field name="unit_amount"/>
+                                    <field name="unit_quantity"/>
+                                    <field name="total_amount" sum="Total"/>
+                                </tree>
                             </field>
                             <group>
                                 <div>

@@ -9,13 +9,21 @@
             <field name="model">make.procurement</field>
             <field name="arch" type="xml">
                 <form string="Procurement Request" version="7.0">
-                    <group col="4" string="This wizard will plan the procurement for this product. This procurement may generate task, production orders or purchase orders."/>
-                     <group>
-                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
-                        <field name="qty"/>
-                        <field name="uom_id" groups="product.group_uom"/>
-                        <field name="date_planned"/>
+                    <p class="oe_gray">
+                        Fill is this for to launch a procurement request for this
+                        product. According to the product configuration, this may
+                        trigger a draft purchase order, a manufacturing order or
+                        a new task.
+                    </p>
+                    <group>
                         <field name="warehouse_id" groups="stock.group_locations"/>
+                        <field name="product_id" on_change="onchange_product_id(product_id)"/>
+                        <label for="qty"/>
+                        <div>
+                            <field name="qty" class="oe_inline"/>
+                            <field name="uom_id" groups="product.group_uom"/>
+                        </div>
+                        <field name="date_planned"/>
                     </group>
                     <footer>
                         <button name="make_procurement" string="Ask New Products" type="object"  class="oe_highlight"  />
@@ -26,13 +34,13 @@
             </field>
         </record>
 
-        <act_window name="Procurement Request"
-            res_model="make.procurement"
-            src_model="product.product"
-            view_mode="form"
-            target="new"
-            key2="client_action_multi"
-            id="act_make_procurement"/>
+        <record model="ir.actions.act_window" id="act_make_procurement">
+            <field name="name">Procurement Request</field>
+            <field name="res_model">make.procurement</field>
+            <field name="src_model">product.product</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
 
     </data>
 </openerp>

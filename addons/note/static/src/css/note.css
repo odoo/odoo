@@ -1,0 +1,78 @@
+.openerp .oe_notes .oe_fold_column .oe_kanban_card {
+    text-decoration:none;
+    color:#000;
+    display:block;
+    padding:1em;
+    margin-right: 1em;
+    margin-bottom: 1em;
+
+    -moz-box-shadow:5px 5px 7px rgba(33,33,33,1);
+    -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+    box-shadow: 5px 5px 7px rgba(33,33,33,.7);
+}
+
+.openerp .oe_notes .oe_kanban_record .oe_kanban_card   {
+    -webkit-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -moz-transform:rotate(-2deg);
+}
+
+.openerp .oe_notes .oe_kanban_record:nth-of-type(even) .oe_kanban_card   {
+    -webkit-transform: rotate(1deg);
+    -o-transform: rotate(1deg);
+    -moz-transform:rotate(1deg);
+}
+
+.openerp .oe_notes .oe_kanban_record:nth-of-type(3n) .oe_kanban_card   {
+    -webkit-transform: rotate(4deg);
+    -o-transform: rotate(4deg);
+    -moz-transform:rotate(4deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(even) .oe_kanban_record .oe_kanban_card   {
+    -webkit-transform: rotate(2deg);
+    -o-transform: rotate(2deg);
+    -moz-transform:rotate(2deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(even) .oe_kanban_record:nth-of-type(even) .oe_kanban_card   {
+    -webkit-transform: rotate(-3deg);
+    -o-transform: rotate(-3deg);
+    -moz-transform:rotate(-3deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(even) .oe_kanban_record:nth-of-type(3n) .oe_kanban_card   {
+    -webkit-transform: rotate(1deg);
+    -o-transform: rotate(1deg);
+    -moz-transform:rotate(1deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(3n) .oe_kanban_record .oe_kanban_card   {
+    -webkit-transform: rotate(-2deg);
+    -o-transform: rotate(-2deg);
+    -moz-transform:rotate(-2deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(3n) .oe_kanban_record:nth-of-type(even) .oe_kanban_card   {
+    -webkit-transform: rotate(1deg);
+    -o-transform: rotate(1deg);
+    -moz-transform:rotate(1deg);
+}
+
+.openerp .oe_notes .oe_kanban_column:nth-of-type(3n) .oe_kanban_record:nth-of-type(3n) .oe_kanban_card   {
+    -webkit-transform: rotate(-1deg);
+    -o-transform: rotate(-1deg);
+    -moz-transform:rotate(-1deg);
+}
+
+.openerp .oe_notes .oe_kanban_column .oe_fold_column .oe_kanban_card:hover,
+.openerp .oe_notes .oe_kanban_column .oe_fold_column .oe_kanban_card:focus {
+    box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -moz-box-shadow:10px 10px 7px rgba(0,0,0,.7);
+    -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7);
+    -webkit-transform: rotate(0);
+    -moz-transform: rotate(0);
+    -o-transform: rotate(0);
+    position:relative;
+    z-index:5;
+}
