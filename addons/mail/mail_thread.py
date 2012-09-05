@@ -443,6 +443,9 @@ class mail_thread(osv.AbstractModel):
             encoding = message.get_content_charset()
             body = message.get_payload(decode=True)
             body = tools.ustr(body, encoding, errors='replace')
+            if message.get_content_type() == 'text/plain':
+                # text/plain -> <pre/>
+                body = tools.append_content_to_html(u'', body)
         else:
             alternative = (message.get_content_type() == 'multipart/alternative')
             for part in message.walk():

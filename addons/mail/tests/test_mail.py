@@ -62,6 +62,25 @@ Content-Transfer-Encoding: quoted-printable
 ------=_Part_4200734_24778174.1344608186754--
 """
 
+MAIL_TEMPLATE_PLAINTEXT = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: Sylvie Lelitre <sylvie.lelitre@agrolait.com>
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: text/plain
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+Please call me as soon as possible this afternoon!
+
+--
+Sylvie
+"""
+
+
 class test_mail(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
@@ -128,6 +147,14 @@ class test_mail(common.TransactionCase):
         self.assertRaises(Exception,
                           self.mail_thread.message_process,
                           cr, uid, None, mail_spam)
+
+        # plain text content should be wrapped and stored as html
+        test_msg_id = '<deadcafe.1337@smtp.agrolait.com>'
+        mail_text = MAIL_TEMPLATE_PLAINTEXT.format(to='groups@example.com', subject='frogs', extra='', msg_id=test_msg_id)
+        self.mail_thread.message_process(cr, uid, None, mail_text)
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id','=',test_msg_id)])[0])
+        self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
+                         'plaintext mail incorrectly parsed')
 
     def test_10_many2many_reference_field(self):
         """ Tests designed for the many2many_reference field (follower_ids).
