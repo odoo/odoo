@@ -1,32 +1,27 @@
-.oe_attendance_status{
-    height:14px;
-    width:100px;
-    background-color:white;
-    padding: 5px 10px 7px;
-    margin:3px;
-    -webkit-border-radius:4px;
+
+.openerp .oe_attendance_status {
+    height: 32px;
+    width: 32px;
+    display: inline-block;
 }
-.oe_attendance_present{
+.openerp .oe_attendance_signin {
     float:left;
-    text-shadow: grey 0px 1px 0px;
-    color:green;
+    height: 32px;
+    width: 32px;
+    background: url(/hr_attendance/static/src/img/emp-in32.png);
+    cursor: pointer;
 }
-.oe_attendance_absent{
-    float:right;
-    text-shadow: grey 0px 1px 0px;
-    color:red;
-}
-.oe_attendance_slider{
-    cursor:pointer;
-    width: 60px;
-    background-color: gray;
-    position: relative;
-    top: -4px;
-    left: -8px;
-    height: 24px;
-    -webkit-border-radius:4px;
-}
-.oe_attendance_text{
-    visibility:hidden;
+.openerp .oe_attendance_status.oe_attendance_signed .oe_attendance_signin {
+    display: none;
 }
 
+.openerp .oe_attendance_signout {
+    float:right;
+    height: 32px;
+    width: 32px;
+    background: url(/hr_attendance/static/src/img/emp-out32.png);
+    cursor: pointer;
+}
+.openerp .oe_attendance_status.oe_attendance_nosigned .oe_attendance_signout {
+    display: none;
+}
