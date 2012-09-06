@@ -113,7 +113,7 @@ class stock_change_product_qty(osv.osv_memory):
         for data in self.browse(cr, uid, ids, context=context):
             location_name = location_obj.browse(cr, uid, data.location_id.id, context=context).name
             message = _("<b>Quantity has been changed</b> to <em>%s %s </em> for <em>%s</em> location.") % (data.new_quantity, data.product_id.uom_id.name, location_name)
-            prod_obj.message_append_note(cr, uid, [data.product_id.id], body=message, context=context)
+            prod_obj.message_post(cr, uid, [data.product_id.id], body=message, context=context)
 
 stock_change_product_qty()
 
