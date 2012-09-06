@@ -582,8 +582,8 @@ class task(base_stage, osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+            search_domain += ['|', ('project_ids', '=', project_id)]
+        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search

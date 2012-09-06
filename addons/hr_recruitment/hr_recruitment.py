@@ -131,8 +131,8 @@ class hr_applicant(base_stage, osv.Model):
         department_id = self._resolve_department_id_from_context(cr, uid, context=context)
         search_domain = []
         if department_id:
-            search_domain += ['|', '&', ('department_id', '=', department_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('department_id', '=', False), ('fold', '=', False)]
+            search_domain += ['|', ('department_id', '=', department_id)]
+        search_domain += ['|', ('id', 'in', ids), ('department_id', '=', False)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search

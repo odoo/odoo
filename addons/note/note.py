@@ -64,7 +64,7 @@ class note_note(osv.osv):
         stage_obj = self.pool.get('note.stage')
 
         # only show stage groups not folded and owned by user
-        search_domain = [('fold', '=', False),('user_id', '=', uid)]
+        search_domain = [('user_id', '=', uid)]
 
         stage_ids = stage_obj._search(cr, uid, search_domain, order=self._order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
