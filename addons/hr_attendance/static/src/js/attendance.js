@@ -2,7 +2,7 @@
 openerp.hr_attendance = function (instance) {
     
     var QWeb = instance.web.qweb;
-    _t = instance.web._t;
+    var _t = instance.web._t;
 
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
         template: 'AttendanceSlider',
