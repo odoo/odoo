@@ -230,7 +230,7 @@ sale_order_line()
 
 class purchase_order_line(osv.osv):
     _inherit = 'purchase.order.line'
-    def product_id_change(self,cr, uid, ids, pricelist, product, qty, uom,
+    def onchange_product_id(self,cr, uid, ids, pricelist, product, qty, uom,
             partner_id, date_order=False, fiscal_position=False, date_planned=False,
             name=False, price_unit=False, notes=False, context=None):
         warning = {}
@@ -257,6 +257,8 @@ class purchase_order_line(osv.osv):
             warning['message'] = message and message +'\n\n'+result['warning']['message'] or result['warning']['message']
 
         return {'value': result.get('value',{}), 'warning':warning}
+
+    product_id_change = onchange_product_id
 
 purchase_order_line()
 
