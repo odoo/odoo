@@ -818,7 +818,7 @@ class users_view(osv.osv):
         for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
-                tips = ['%s' % (g.comment or '') for g in gs]
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
                 res[name_selection_groups(map(int, gs))] = {
                     'type': 'selection',
                     'string': app and app.name or _('Other'),
