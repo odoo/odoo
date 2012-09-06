@@ -170,7 +170,7 @@ class split_in_production_lot(osv.osv_memory):
         'product_uom': fields.many2one('product.uom', 'Unit of Measure'),
         'line_ids': fields.one2many('stock.move.split.lines', 'wizard_id', 'Serial Numbers'),
         'line_exist_ids': fields.one2many('stock.move.split.lines', 'wizard_exist_id', 'Serial Numbers'),
-        'use_exist' : fields.boolean('Existing Lots', help="Check this option to select existing lots in the list below, otherwise you should enter new ones line by line."),
+        'use_exist' : fields.boolean('Existing Serial Number', help="Check this option to select existing serial number in the list below, otherwise you should enter new ones line by line."),
         'location_id': fields.many2one('stock.location', 'Source Location')
      }
 
