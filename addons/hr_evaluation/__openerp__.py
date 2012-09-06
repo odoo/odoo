@@ -38,11 +38,10 @@ created and it can be defined which level of employee hierarchy fills what and
 final review and evaluation is done by the manager. Every evaluation filled by
 the employees can be viewed in the form of pdf file.
          """,
-    'demo': ['hr_evaluation_demo.xml'],
-    'data': [
+    "demo": ["hr_evaluation_demo.xml"],
+    "data": [
         'security/ir.model.access.csv',
         'security/hr_evaluation_security.xml',
-#        'wizard/hr_evaluation_mail_view.xml',
         'hr_evaluation_view.xml',
         'report/hr_evaluation_report_view.xml',
         'board_hr_evaluation_view.xml',

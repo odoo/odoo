@@ -208,7 +208,7 @@
             <field name="name">event.event.tree</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <tree string="Events" fonts="bold:needaction_pending==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
+                <tree string="Events" fonts="bold:message_unread==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
                     <field name="type"/>
                     <field name="date_begin"/>
@@ -219,7 +219,7 @@
                     <field name="main_speaker_id" groups="base.extended"/>
                     <field name="user_id"/>
                     <field name="state"/>
-                    <field name="needaction_pending" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -326,7 +326,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -421,7 +421,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" fonts="bold:needaction_pending==True">
+                <tree string="Registration" fonts="bold:message_unread==True">
                     <field name="create_date"/>
                     <field name="partner_id"/>
                     <field name="name"/>
@@ -431,7 +431,7 @@
                     <field name="user_id"/>
                     <field name="origin"/>
                     <field name="state"/>
-                    <field name="needaction_pending" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -516,7 +516,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <field name="name" string="Participant" filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>
