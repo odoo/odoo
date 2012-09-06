@@ -958,6 +958,20 @@ instance.web.Client = instance.web.Widget.extend({
     has_uncommitted_changes: function() {
         return false;
     },
+    trigger_children: function(events) {
+        // TODO: In the future, if we have more valid use cases in other objects, let's
+        //       put this back in the EventDispatcherMixin as an option of trigger()
+        var children = this.getChildren();
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.__eventDispatcherMixin) {
+                child.__edispatcherEvents.trigger.apply(child.__edispatcherEvents, arguments);
+                instance.webclient // Yuck!
+                    .trigger_children.apply(child, arguments);
+            }
+        }
+        return this;
+    },
 });
 
 instance.web.WebClient = instance.web.Client.extend({
