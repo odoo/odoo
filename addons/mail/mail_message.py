@@ -20,9 +20,11 @@
 ##############################################################################
 
 import logging
-from email.header import decode_header
-from osv import osv, fields
 import tools
+
+from email.header import decode_header
+from operator import itemgetter
+from osv import osv, fields
 
 _logger = logging.getLogger(__name__)
 
@@ -45,7 +47,7 @@ class mail_message(osv.Model):
     _message_record_name_length = 18
 
     def _shorten_name(self, name):
-        if len(name) <= (self._message_record_name_length+3):
+        if len(name) <= (self._message_record_name_length + 3):
             return name
         return name[:self._message_record_name_length] + '...'
 
@@ -73,7 +75,7 @@ class mail_message(osv.Model):
         return res
 
     def _search_unread(self, cr, uid, obj, name, domain, context=None):
-        """ Search for messages unread by the current user. Condition is 
+        """ Search for messages unread by the current user. Condition is
             inversed because we search unread message on a read column. """
         if domain[0][2]:
             read_cond = '(read = false or read is null)'
@@ -136,7 +138,7 @@ class mail_message(osv.Model):
     _defaults = {
         'type': 'email',
         'date': lambda *a: fields.datetime.now(),
-        'author_id': lambda self,cr,uid,ctx: self._get_default_author(cr, uid, ctx),
+        'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
     }
 
@@ -170,12 +172,13 @@ class mail_message(osv.Model):
         """ Given a tree with several roots of following structure :
             [   {'id': 1, 'child_ids': [
                     {'id': 11, 'child_ids': [...] },],
-                },
                 {...}   ]
-            Flatten it to have a maximum number of level, with 0 being
-            completely flat.
+            Flatten it to have a maximum number of levels, 0 being flat and
+            sort messages in a level according to a key of the messages.
             Perform the flattening at leafs if above the maximum depth, then get
             back in the tree.
+            :param context: ``sort_key``: key for sorting (id by default)
+            :param context: ``sort_reverse``: reverser order for sorting (True by default)
         """
         def _flatten(msg_dict):
             """ from    {'id': x, 'child_ids': [{child1}, {child2}]}
@@ -184,19 +187,22 @@ class mail_message(osv.Model):
             child_ids = msg_dict.pop('child_ids', [])
             msg_dict['child_ids'] = []
             return [msg_dict] + child_ids
+            # return sorted([msg_dict] + child_ids, key=itemgetter('id'), reverse=True)
+        context = context or {}
         # Depth-first flattening
         for message in messages:
             if message.get('type') == 'expandable':
                 continue
-            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level+1, level, context=context)
+            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level + 1, level, context=context)
         # Flatten if above maximum depth
         if current_level < level:
-            return messages
-        new_list = []
-        for message in messages:
-            for flat_message in _flatten(message):
-                new_list.append(flat_message)
-        return new_list
+            return_list = messages
+        else:
+            return_list = []
+            for message in messages:
+                for flat_message in _flatten(message):
+                    return_list.append(flat_message)
+        return sorted(return_list, key=itemgetter(context.get('sort_key', 'id')), reverse=context.get('sort_reverse', True))
 
     def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
         """ If IDs are provided, fetch these records. Otherwise use the domain
@@ -214,7 +220,7 @@ class mail_message(osv.Model):
         result = []
         tree = {} # key: ID, value: record
         for msg in messages:
-            if len(result)<(limit-1):
+            if len(result) < (limit - 1):
                 record = self._message_dict_get(cr, uid, msg, context=context)
                 if thread_level and msg.parent_id:
                     while msg.parent_id:
@@ -234,9 +240,10 @@ class mail_message(osv.Model):
             else:
                 result.append({
                     'type': 'expandable',
-                    'domain': [('id','<=', msg.id)]+domain,
+                    'domain': [('id', '<=', msg.id)] + domain,
                     'context': context,
-                    'thread_level': thread_level  # should be improve accodting to level of records
+                    'thread_level': thread_level,  # should be improve accodting to level of records
+                    'id': -1,
                 })
                 break
 
@@ -280,7 +287,7 @@ class mail_message(osv.Model):
             if not (rmod and rid):
                 continue
             document_ids.append(id)
-            model_record_ids.setdefault(rmod,set()).add(rid)
+            model_record_ids.setdefault(rmod, set()).add(rid)
         for model, mids in model_record_ids.items():
             model_obj = self.pool.get(model)
             mids = model_obj.exists(cr, uid, mids)
@@ -293,10 +300,22 @@ class mail_message(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
-            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s'% values)
+            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s' % values)
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.notify(cr, uid, newid, context=context)
         return newid
+
+    def unlink(self, cr, uid, ids, context=None):
+        # cascade-delete attachments that are directly attached to the message (should only happen
+        # for mail.messages that act as parent for a standalone mail.mail record.
+        attachments_to_delete = []
+        for mail in self.browse(cr, uid, ids, context=context):
+            for attach in mail.attachment_ids:
+                if attach.res_model == 'mail.message' and attach.res_id == mail.id:
+                    attachments_to_delete.append(attach.id)
+        if attachments_to_delete:
+            self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
+        return super(mail_message,self).unlink(cr, uid, ids, context=context)
 
     def notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids.
@@ -328,4 +347,4 @@ class mail_message(osv.Model):
         if default is None:
             default = {}
         default.update(message_id=False, headers=False)
-        return super(mail_message,self).copy(cr, uid, id, default=default, context=context)
+        return super(mail_message, self).copy(cr, uid, id, default=default, context=context)

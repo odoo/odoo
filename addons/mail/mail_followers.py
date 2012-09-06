@@ -104,11 +104,12 @@ class mail_notification(osv.Model):
         if signature:
             body_html = tools.append_content_to_html(body_html, signature)
 
-        towrite = {
+        mail_values = {
             'mail_message_id': msg.id,
             'email_to': [],
-            'auto_delete': False,
+            'auto_delete': True,
             'body_html': body_html,
+            'state': 'outgoing',
         }
 
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
@@ -127,10 +128,10 @@ class mail_notification(osv.Model):
             # Partner wants to receive only emails
             if partner.notification_email_send == 'email' and msg.type != 'email':
                 continue
-            if partner.email not in towrite['email_to']:
-                towrite['email_to'].append(partner.email)
-        if towrite['email_to']:
-            towrite['email_to'] = ', '.join(towrite['email_to'])
-            email_notif_id = mail_mail.create(cr, uid, towrite, context=context)
+            if partner.email not in mail_values['email_to']:
+                mail_values['email_to'].append(partner.email)
+        if mail_values['email_to']:
+            mail_values['email_to'] = ', '.join(mail_values['email_to'])
+            email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
             mail_mail.send(cr, uid, [email_notif_id], context=context)
         return True

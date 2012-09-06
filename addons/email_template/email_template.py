@@ -99,7 +99,7 @@ class email_template(osv.osv):
         mod_name = False
         if model_id:
             mod_name = self.pool.get('ir.model').browse(cr, uid, model_id, context).model
-        return {'value':{'model': mod_name}}
+        return {'value': {'model': mod_name}}
 
     _columns = {
         'name': fields.char('Name'),
@@ -154,6 +154,10 @@ class email_template(osv.osv):
                                                        "destination document model (sub-model)."),
         'null_value': fields.char('Default Value', help="Optional value to use if the target field is empty"),
         'copyvalue': fields.char('Placeholder Expression', help="Final placeholder expression, to be copy-pasted in the desired template field."),
+    }
+
+    _defaults = {
+        'auto_delete': True,
     }
 
     def create_action(self, cr, uid, ids, context=None):
@@ -277,14 +281,12 @@ class email_template(osv.osv):
             context = {}
         report_xml_pool = self.pool.get('ir.actions.report.xml')
         template = self.get_email_template(cr, uid, template_id, res_id, context)
-        values = {'model': template.model_id.model}
-
+        values = {}
         for field in ['subject', 'body_html', 'email_from',
                       'email_to', 'email_cc', 'reply_to']:
             values[field] = self.render_template(cr, uid, getattr(template, field),
                                                  template.model, res_id, context=context) \
                                                  or False
-
         if template.user_signature:
             signature = self.pool.get('res.users').browse(cr, uid, uid, context).signature
             values['body_html'] = append_content_to_html(values['body_html'], signature)
@@ -292,8 +294,8 @@ class email_template(osv.osv):
         if values['body_html']:
             values['body'] = html_sanitize(values['body_html'])
 
-        values.update(mail_server_id = template.mail_server_id.id or False,
-                      auto_delete = template.auto_delete,
+        values.update(mail_server_id=template.mail_server_id.id or False,
+                      auto_delete=template.auto_delete,
                       model=template.model,
                       res_id=res_id or False)
 
@@ -318,7 +320,7 @@ class email_template(osv.osv):
 
         # Add template attachments
         for attach in template.attachment_ids:
-            attachments.append(attach.datas_fname, attach.datas)
+            attachments.append((attach.datas_fname, attach.datas))
 
         values['attachments'] = attachments
         return values

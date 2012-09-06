@@ -19,22 +19,19 @@
 #
 ##############################################################################
 
-import base64
 import tools
 
 from osv import osv
 from osv import fields
-from tools.translate import _
 
 class mail_compose_message(osv.osv_memory):
     _inherit = 'mail.compose.message'
-    _compose_fields = ['body', 'body_html', 'subject', 'partner_ids', 'attachment_ids']
 
     def _get_templates(self, cr, uid, context=None):
         if context is None:
             context = {}
         model = False
-        email_template_obj= self.pool.get('email.template')
+        email_template_obj = self.pool.get('email.template')
         message_id = context.get('default_parent_id', context.get('message_id', context.get('active_id')))
 
         if context.get('default_composition_mode') == 'reply' and message_id:
@@ -54,6 +51,9 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         result['template_id'] = context.get('default_template_id', context.get('mail.compose.template_id', False))
+        # force html when using templates
+        if result.get('use_template'):
+            result['content_subtype'] = 'html'
         return result
 
     _columns = {
@@ -67,34 +67,50 @@ class mail_compose_message(osv.osv_memory):
             - use_template set in mass_mailing: we cannot render, so return the template values
             - use_template set: return rendered values """
         if use_template and template_id and composition_mode == 'mass_mail':
-            values = self.pool.get('email.template').read(cr, uid, template_id, self._compose_fields, context)
+            values = self.pool.get('email.template').read(cr, uid, template_id, ['subject', 'body_html'], context)
+            values.pop('id')
         elif use_template and template_id:
             values = self.generate_email_for_composer(cr, uid, template_id, res_id, context=context)
+            # transform attachments into attachment_ids
+            values['attachment_ids'] = []
+            ir_attach_obj = self.pool.get('ir.attachment')
+            for attach_fname, attach_datas in values.pop('attachments', []):
+                data_attach = {
+                    'name': attach_fname,
+                    'datas': attach_datas,
+                    'datas_fname': attach_fname,
+                    'res_model': model,
+                    'res_id': res_id,
+                }
+                values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:
-            values = self.default_get(cr, uid, self._compose_fields, context=context)
+            values = self.default_get(cr, uid, ['body', 'body_html', 'subject', 'partner_ids', 'attachment_ids'], context=context)
 
         if values.get('body_html'):
             values['body'] = values.pop('body_html')
         values.update(use_template=use_template, template_id=template_id)
-
         return {'value': values}
 
     def toggle_template(self, cr, uid, ids, context=None):
-        """ hit toggle template mode button: calls onchange_use_template to 
-            emulate an on_change, then writes the value to update the form. """
+        """ hit toggle template mode button: calls onchange_use_template to
+            emulate an on_change, then writes the values to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
             onchange_res = self.onchange_use_template(cr, uid, ids, not record.use_template,
-                record.template_id, record.composition_mode, record.model, record.res_id, context=context)['value']
-            record.write(onchange_res.get('value', {}))
+                record.template_id, record.composition_mode, record.model, record.res_id, context=context).get('value', {})
+            # update partner_ids and attachment_ids
+            onchange_res['partner_ids'] = [(4, partner_id) for partner_id in onchange_res.pop('partner_ids', [])]
+            onchange_res['attachment_ids'] = [(4, attachment_id) for attachment_id in onchange_res.pop('attachment_ids', [])]
+            record.write(onchange_res)
         return True
 
     def onchange_use_template(self, cr, uid, ids, use_template, template_id, composition_mode, model, res_id, context=None):
         """ onchange_use_template (values: True or False).  If use_template is
-            False, we do like an onchange with template_id False for values """
+            False, we do as an onchange with template_id False for values """
         values = self.onchange_template_id(cr, uid, ids, use_template,
             template_id, composition_mode, model, res_id, context=context)
+        # force html when using templates
         if use_template:
-            values['content_subtype'] = 'html'
+            values['value']['content_subtype'] = 'html'
         return values
 
     def save_as_template(self, cr, uid, ids, context=None):
@@ -112,7 +128,7 @@ class mail_compose_message(osv.osv_memory):
             values = {
                 'name': template_name,
                 'subject': record.subject or False,
-                'body': record.body or False,
+                'body_html': record.body or False,
                 'model_id': model_id or False,
                 'attachment_ids': [(6, 0, [att.id for att in record.attachment_ids])]
             }
@@ -127,61 +143,29 @@ class mail_compose_message(osv.osv_memory):
     def generate_email_for_composer(self, cr, uid, template_id, res_id, context=None):
         """ Call email_template.generate_email(), get fields relevant for
             mail.compose.message, transform email_cc and email_to into partner_ids """
-        fields = ['body', 'body_html', 'subject', 'email_to', 'email_cc', 'attachment_ids']
         template_values = self.pool.get('email.template').generate_email(cr, uid, template_id, res_id, context=context)
-        values = {field: template_values[field] for field in fields if template_values.get(field)}
-
+        # filter template values
+        fields = ['body', 'body_html', 'subject', 'email_to', 'email_cc', 'attachments']
+        values = dict((field, template_values[field]) for field in fields if template_values.get(field))
+        values['body'] = values.pop('body_html', '')
         # transform email_to, email_cc into partner_ids
         values['partner_ids'] = []
         mails = tools.email_split(values.pop('email_to', '') + ' ' + values.pop('email_cc', ''))
         for mail in mails:
-            partner_search_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', mail)], context=context)
-            if partner_search_ids:
-                values['partner_ids'].append((4, partner_search_ids[0]))
-            else:
-                partner_id = self.pool.get('res.partner').name_create(cr, uid, mail, context=context)[0]
-                partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-                values['partner_ids'].append((4, partner_id))
-
-        # transform attachments into attachment_ids
-        values['attachment_ids'] = []
-        for attach_fname, attach_datas in template_values.get('attachments', []):
-            data_attach = {
-                'name': attach_fname,
-                'datas': attach_datas,
-                'datas_fname': attach_fname,
-                'res_model': model,
-                'res_id': res_id,
-            }
-            values['attachment_ids'].append((0, 0, data_attach))
-
+            partner_id = self.pool.get('res.partner').find_or_create(cr, uid, mail, context=context)
+            values['partner_ids'].append(partner_id)
         return values
 
-    def render_message(self, cr, uid, wizard, model, res_id, context=None):
+    def render_message(self, cr, uid, wizard, res_id, context=None):
         """ Generate an email from the template for given (model, res_id) pair.
             This method is meant to be inherited by email_template that will
             produce a more complete dictionary, with email_to, ...
         """
-        # render the template to get the email
-        fields = ['body', 'body_html', 'subject', 'email_to', 'email_cc', 'partner_ids', 'attachment_ids']
-        template_values = self.pool.get('email.template').generate_email(cr, uid, wizard.template_id, res_id, context=context)
-        template_values = {field: template_values[field] for field in fields if template_values.get(field)}
-
-        # transform email_to, email_cc into partner_ids
-        partner_ids = []
-        mails = tools.email_split(template_values.pop('email_to', '') + ' ' + template_values.pop('email_cc', ''))
-        for mail in mails:
-            partner_search_ids = self.pool.get('res.partner').search(cr, uid, [('email', 'ilike', mail)], context=context)
-            if partner_search_ids:
-                partner_ids.append((4, partner_search_ids[0]))
-            else:
-                partner_id = self.pool.get('res.partner').name_create(cr, uid, mail, context=context)[0]
-                partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
-                partner_ids.append((4, partner_id))
-
+        # generate the composer email
+        values = self.generate_email_for_composer(cr, uid, wizard.template_id, res_id, context=context)
         # get values to return
-        email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, model, res_id, context)
-        email_dict.update(template_values, partner_ids=partner_ids)
+        email_dict = super(mail_compose_message, self).render_message(cr, uid, wizard, res_id, context)
+        email_dict.update(values)
         return email_dict
 
     def render_template(self, cr, uid, template, model, res_id, context=None):
