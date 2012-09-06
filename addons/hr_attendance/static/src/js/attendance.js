@@ -18,11 +18,13 @@ openerp.hr_attendance = function (instance) {
         },
         start: function() {
             var self = this;
-            this.on("change:signed_in", this, function() {
+            var tmp = function() {
                 this.$el.toggleClass("oe_attendance_nosigned", ! this.get("signed_in"));
                 this.$el.toggleClass("oe_attendance_signed", this.get("signed_in"));
                 this.$el.attr("title", tips["" + this.get("signed_in")].toString());
-            });
+            };
+            this.on("change:signed_in", this, tmp);
+            _.bind(tmp, this)();
             this.$(".oe_attendance_signin").click(function() {
                 self.do_update_attendance();
             });
