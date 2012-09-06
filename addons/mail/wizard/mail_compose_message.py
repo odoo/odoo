@@ -221,12 +221,6 @@ class mail_compose_message(osv.TransientModel):
         res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
         return res
 
-    def unlink(self, cr, uid, ids, context=None):
-        # Cascade delete all attachments, as they are owned by the composition wizard
-        for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
-            self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
-        return super(mail_compose_message, self).unlink(cr, uid, ids, context=context)
-
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
             currently impossible to have buttons that do nothing special

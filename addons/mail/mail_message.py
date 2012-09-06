@@ -310,11 +310,11 @@ class mail_message(osv.Model):
         attachments_to_delete = []
         for mail in self.browse(cr, uid, ids, context=context):
             for attach in mail.attachment_ids:
-                if attach.res_model == 'mail.message' and attach.res_id == mail.id:
+                if attach.res_model == self._name and attach.res_id == mail.id:
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
-        return super(mail_message,self).unlink(cr, uid, ids, context=context)
+        return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
     def notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids.
