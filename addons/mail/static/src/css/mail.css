@@ -307,6 +307,22 @@
     padding: 1px;
 }
 
+/* attachment button: override of openerp values */
+.openerp .oe_mail_msg_content .oe_mail_compose_message_icons div.oe_hidden_input_file {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+}
+.openerp .oe_mail_msg_content .oe_mail_compose_message_icons input.oe_form_binary_file {
+    bottom: 0px;
+    top: auto;
+    left: auto;
+    right: 24px;
+    height: 24px;
+    width: 24px;
+    min-width: 24px;
+}
+
 /* ------------------------------------------------------------ */
 /* Messages layout
 /* ------------------------------------------------------------ */
@@ -376,7 +392,7 @@
 }
 
 /* Attachments list */
-.openerp ul.oe_mail_msg_attachments {
+.openerp .oe_mail_msg_content ul.oe_mail_msg_attachments {
     display: none;
     width: 100%;
     border-top: 1px solid #CCC;
@@ -384,7 +400,7 @@
     padding: .5em 0;
     list-style-position: inside;
 }
-.openerp ul.oe_mail_msg_attachments li {
+.openerp .oe_mail_msg_content ul.oe_mail_msg_attachments li {
     float: none;
     margin: 0;
     padding: 0;

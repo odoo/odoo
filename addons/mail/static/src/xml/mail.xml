@@ -74,6 +74,20 @@
     </t>
 
     <!--
+        mail.compose_message.add_attachment template
+        Small template to be inserted in the composition form to add attachments
+        -->
+    <t t-name="mail.compose_message.add_attachment">
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+            <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+            <input type="hidden" name="model" t-att-value="widget.options.context.default_model"/>
+            <input type="hidden" name="id" t-att-value="widget.options.context.default_res_id"/>
+            <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+        </t>
+    </t>
+
+    <!--
         thread template
         This template holds a thread of comments. It begins with an actions
         container, holding the composition form. Then come the various
@@ -142,15 +156,23 @@
                     </ul>
                     <t t-if="record.attachment_ids.length > 0">
                         <div class="oe_clear"></div>
-                        <ul class="oe_mail_msg_attachments">
-                            <t t-foreach="record.attachments" t-as="attachment">
-                                <li> <a t-att-href="attachment.url"><t t-raw="attachment.name"/></a> </li>
-                            </t>
-                        </ul>
+                        <t t-call="mail.thread.message.attachments"/>
                     </t>
                 </div>
             </div>
         </div>
     </li>
+
+    <!--
+        mail.thread.message.attachments template
+        Template used to display attachments in a mail.message
+        -->
+    <t t-name="mail.thread.message.attachments">
+        <ul class="oe_mail_msg_attachments">
+            <t t-foreach="record.attachment_ids" t-as="attachment">
+                <li><a t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a></li>
+            </t>
+        </ul>
+    </t>
 
 </template>

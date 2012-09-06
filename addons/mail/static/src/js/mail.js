@@ -39,6 +39,27 @@ openerp.mail = function(session) {
 
     /**
      * ------------------------------------------------------------
+     * Sidebar
+     * ------------------------------------------------------------
+     *
+     * Override of sidebar do_attachment_new method, to catch attachments added
+     * through the sidebar and show them in the Chatter composition form.
+     */
+
+    // session.web.Sidebar = session.web.Sidebar.extend({
+    //     do_attachment_new: function(attachment) {
+    //         this._super(attachment);
+    //         var message_ids = this.getParent().fields.message_ids || undefined;
+    //         if (! message_ids) { return; }
+    //         var compose_message_widget = message_ids.thread.compose_message_widget;
+    //         if (! compose_message_widget) { return; }
+    //         compose_message_widget.attachments.push(attachment);
+    //         compose_message_widget.display_attachments();
+    //     },
+    // });
+
+    /**
+     * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 
@@ -60,12 +81,17 @@ openerp.mail = function(session) {
 
     mail.ChatterUtils = {
 
-        /** get an image in /web/binary/image?... */
-        get_image: function(session_prefix, session_id, model, field, id) {
-            return session_prefix + '/web/binary/image?session_id=' + session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
+        /** Get an image in /web/binary/image?... */
+        get_image: function(session, model, field, id) {
+            return session.prefix + '/web/binary/image?session_id=' + session.session_id + '&model=' + model + '&field=' + field + '&id=' + (id || '');
         },
 
-        /** check if the current user is the message author */
+        /** Get the url of an attachment {'id': id} */
+        get_attachment_url: function (session, attachment) {
+            return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
+        },
+
+        /** Check if the current user is the message author */
         is_author: function (widget, message_user_id) {
             return (widget.session && widget.session.uid != 0 && widget.session.uid == message_user_id);
         },
@@ -111,21 +137,22 @@ openerp.mail = function(session) {
         init: function (parent, options) {
             var self = this;
             this._super(parent);
+            this.attachment_ids = [];
             // options
             this.options = options || {};
             this.options.context = options.context || {};
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
             this.options.form_view_id = options.form_view_id || false;
             // debug
-            // console.groupCollapsed('New ComposeMessage: model', this.options.context.default_res_model, ', id', this.options.context.default_res_id);
-            // console.log('context:', this.options.context);
-            // console.groupEnd();
+            console.groupCollapsed('New ComposeMessage: model', this.options.context.default_model, ', id', this.options.context.default_res_id);
+            console.log('context:', this.options.context);
+            console.groupEnd();
         },
 
         start: function () {
             this._super.apply(this, arguments);
             // customize display: add avatar, clean previous content
-            var user_avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
+            var user_avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             this.$el.find('img.oe_mail_icon').attr('src', user_avatar);
             this.$el.find('div.oe_mail_msg_content').empty();
             // create a context for the dataset and default_get of the wizard
@@ -156,10 +183,42 @@ openerp.mail = function(session) {
             });
             // add the form, bind events, activate the form
             var msg_node = this.$el.find('div.oe_mail_msg_content');
-            return $.when(this.form_view.appendTo(msg_node)).pipe(function() {
-                self.bind_events();
-                self.form_view.do_show();
-            });
+            return $.when(this.form_view.appendTo(msg_node)).pipe(this.proxy('postprocess_create_form_view'));
+        },
+
+        postprocess_create_form_view: function () {
+            // handle attachment button
+            this.fileupload_id = _.uniqueId('oe_fileupload');
+            var button_attach = this.$el.find('button.oe_mail_compose_message_attachment');
+            var rendered = session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this});
+            $(rendered).insertBefore(button_attach);
+            // move the button inside div.oe_hidden_input_file
+            var input_node = this.$el.find('input[name=ufile]');
+            button_attach.detach().insertAfter(input_node);
+            // set the function called when attachments are added
+            this.$el.find('input.oe_form_binary_file').change(this.on_attachment_changed);
+            this.bind_events();
+            this.form_view.do_show();
+        },
+
+        /** Called when the user submits a new attachment */
+        on_attachment_changed: function(e) {
+            var $e = $(e.target);
+            if ($e.val() !== '') {
+                this.$el.find('form.oe_form_binary_form').submit();
+                session.web.blockUI();
+            }
+        },
+
+        display_attachments: function () {
+            var attach_node = this.$el.find('div.oe_mail_compose_message_attachments');
+            var rendered = session.web.qweb.render('mail.thread.message.attachments', {'record': this});
+            attach_node.empty();
+            $(rendered).appendTo(attach_node);
+            this.$el.find('.oe_mail_msg_attachments').show();
+            var composer_attachment_ids = _.pluck(this.attachment_ids, 'id');
+            var onchange_like = {'value': {'attachment_ids': composer_attachment_ids}}
+            this.form_view.on_processed_onchange(onchange_like, []);
         },
 
         /**
@@ -170,6 +229,7 @@ openerp.mail = function(session) {
         refresh: function (new_context) {
             if (! this.form_view) return;
             var self = this;
+            this.attachments = [];
             this.options.context = _.extend(this.options.context, new_context || {});
             this.ds_compose.context = _.extend(this.ds_compose.context, this.options.context);
             return this.ds_compose.call('default_get', [
@@ -184,10 +244,18 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'Attachment' icon-link that opens the dialog to
-            // add an attachment.
+            // event: click on 'Attachment' button that opens the dialog to add an attachment.
             this.$el.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
                 event.stopImmediatePropagation();
+            });
+            // event: add a new attachment
+            $(window).on(this.fileupload_id, function() {
+                var args = [].slice.call(arguments).slice(1);
+                var attachment = args[0];
+                attachment['url'] = mail.ChatterUtils.get_attachment_url(self.session, attachment);
+                self.attachment_ids.push(attachment);
+                self.display_attachments();
+                session.web.unblockUI();
             });
         },
     }),
@@ -407,7 +475,6 @@ openerp.mail = function(session) {
                 }
                 else {
                     self.display_record(record);
-                    // if (self.options.thread_level >= 0) {
                     self.thread = new mail.Thread(self, {
                         'context': {
                             'default_model': record.model,
@@ -419,7 +486,6 @@ openerp.mail = function(session) {
                     });
                     self.$el.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$el.find('div.oe_mail_thread_subthread:last'));
-                    // }
                 }
             });
             if (! _expendable) {
@@ -431,7 +497,7 @@ openerp.mail = function(session) {
          * - record.date: formatting according to the user timezone
          * - record.timerelative: relative time givein by timeago lib
          * - record.avatar: image url
-         * - record.attachments[].url: url of each attachment
+         * - record.attachment_ids[].url: url of each attachment
          * - record.is_author: is the current user the author of the record */
         display_record: function (record) {
             // formatting and additional fields
@@ -440,14 +506,11 @@ openerp.mail = function(session) {
             if (record.type == 'email') {
                 record.avatar = ('/mail/static/src/img/email_icon.png');
             } else {
-                record.avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.partner', 'image_small', record.author_id[0]);
+                record.avatar = mail.ChatterUtils.get_image(this.session, 'res.partner', 'image_small', record.author_id[0]);
             }
-            //TDE: FIX
-            if (record.attachments) {
-                for (var l in record.attachments) {
-                    var url = self.session.origin + '/web/binary/saveas?session_id=' + self.session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id='+records[k].attachments[l].id;
-                    record.attachments[l].url = url;
-                }
+            for (var l in record.attachment_ids) {
+                var attach = record.attachment_ids[l];
+                attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
             }
             record.is_author = mail.ChatterUtils.is_author(this, record.author_user_id[0]);
             // render, add the expand feature
@@ -473,7 +536,7 @@ openerp.mail = function(session) {
         },
 
         display_user_avatar: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.options.uid);
+            var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
         },
         
