@@ -2498,9 +2498,10 @@ class BaseModel(object):
                 append_left(read_group_result.pop(0))
             else:
                 append_right(all_groups.pop(0))
+
         if folded:
             for r in result:
-                r['__fold'] = folded.get(r[groupby], False)
+                r['__fold'] = folded.get(r[groupby] and r[groupby][0], False)
         return result
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
