@@ -654,6 +654,7 @@ class BaseModel(object):
     may be set to False.
     """
     __metaclass__ = MetaModel
+    _auto = True # create database backend
     _register = False # Set to false if the model shouldn't be automatically discovered.
     _name = None
     _columns = {}
@@ -667,6 +668,7 @@ class BaseModel(object):
     _order = 'id'
     _sequence = None
     _description = None
+    _needaction = False
 
     # dict of {field:method}, with method returning the name_get of records
     # to include in the _read_group, if grouped on this field
@@ -1823,12 +1825,11 @@ class BaseModel(object):
         fields = {}
         if node.tag == 'diagram':
             if node.getchildren()[0].tag == 'node':
-                node_fields = self.pool.get(node.getchildren()[0].get('object')).fields_get(cr, user, None, context)
+                node_model = self.pool.get(node.getchildren()[0].get('object'))
+                node_fields = node_model.fields_get(cr, user, None, context)
                 fields.update(node_fields)
-                if not node.get("create"):
-                    fn = getattr(self.pool.get(node.getchildren()[1].get('object')), 'check_create')
-                    if not fn(cr, user, raise_exception=False):
-                        node.set("create", 'false')
+                if not node.get("create") and not node_model.check_access_rights(cr, user, 'create', raise_exception=False):
+                    node.set("create", 'false')
             if node.getchildren()[1].tag == 'arrow':
                 arrow_fields = self.pool.get(node.getchildren()[1].get('object')).fields_get(cr, user, None, context)
                 fields.update(arrow_fields)
@@ -1837,8 +1838,8 @@ class BaseModel(object):
         fields_def = self.__view_look_dom(cr, user, node, view_id, False, fields, context=context)
         node = self._disable_workflow_buttons(cr, user, node)
         if node.tag in ('kanban', 'tree', 'form', 'gantt'):
-            for action, fn in (('create', 'check_create'), ('delete', 'check_unlink'), ('edit', 'check_write')):
-                if not node.get(action) and not getattr(self, fn)(cr, user, raise_exception=False):
+            for action, operation in (('create', 'create'), ('delete', 'unlink'), ('edit', 'write')):
+                if not node.get(action) and not self.check_access_rights(cr, user, operation, raise_exception=False):
                     node.set(action, 'false')
         arch = etree.tostring(node, encoding="utf-8").replace('\t', '')
         for k in fields.keys():
@@ -2354,7 +2355,7 @@ class BaseModel(object):
     def read_string(self, cr, uid, id, langs, fields=None, context=None):
         res = {}
         res2 = {}
-        self.pool.get('ir.translation').check_read(cr, uid)
+        self.pool.get('ir.translation').check_access_rights(cr, uid, 'read')
         if not fields:
             fields = self._columns.keys() + self._inherit_fields.keys()
         #FIXME: collect all calls to _get_source into one SQL call.
@@ -2378,7 +2379,7 @@ class BaseModel(object):
         return res
 
     def write_string(self, cr, uid, id, langs, vals, context=None):
-        self.pool.get('ir.translation').check_write(cr, uid)
+        self.pool.get('ir.translation').check_access_rights(cr, uid, 'write')
         #FIXME: try to only call the translation in one SQL
         for lang in langs:
             for field in vals:
@@ -2526,7 +2527,7 @@ class BaseModel(object):
 
         """
         context = context or {}
-        self.check_read(cr, uid)
+        self.check_access_rights(cr, uid, 'read')
         if not fields:
             fields = self._columns.keys()
 
@@ -3407,8 +3408,7 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        write_access = self.check_write(cr, user, False) or \
-            self.check_create(cr, user, False)
+        write_access = self.check_access_rights(cr, user, 'write') or self.check_access_rights(cr, user, 'create')
 
         res = {}
 
@@ -3472,7 +3472,7 @@ class BaseModel(object):
 
         if not context:
             context = {}
-        self.check_read(cr, user)
+        self.check_access_rights(cr, user, 'read')
         if not fields:
             fields = list(set(self._columns.keys() + self._inherit_fields.keys()))
         if isinstance(ids, (int, long)):
@@ -3746,18 +3746,6 @@ class BaseModel(object):
            according to the access rights."""
         return self.pool.get('ir.model.access').check(cr, uid, self._name, operation, raise_exception)
 
-    def check_create(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'create', raise_exception)
-
-    def check_read(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'read', raise_exception)
-
-    def check_unlink(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'unlink', raise_exception)
-
-    def check_write(self, cr, uid, raise_exception=True):
-        return self.check_access_rights(cr, uid, 'write', raise_exception)
-
     def check_access_rule(self, cr, uid, ids, operation, context=None):
         """Verifies that the operation given by ``operation`` is allowed for the user
            according to ir.rules.
@@ -3821,7 +3809,7 @@ class BaseModel(object):
 
         self._check_concurrency(cr, ids, context)
 
-        self.check_unlink(cr, uid)
+        self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
         
@@ -3957,7 +3945,7 @@ class BaseModel(object):
             ids = [ids]
 
         self._check_concurrency(cr, ids, context)
-        self.check_write(cr, user)
+        self.check_access_rights(cr, user, 'write')
 
         result = self._store_get_values(cr, user, ids, vals.keys(), context) or []
 
@@ -4177,7 +4165,7 @@ class BaseModel(object):
         if self.is_transient():
             self._transient_vacuum(cr, user)
 
-        self.check_create(cr, user)
+        self.check_access_rights(cr, user, 'create')
 
         if self._log_access:
             for f in LOG_ACCESS_COLUMNS:
@@ -4669,7 +4657,7 @@ class BaseModel(object):
         """
         if context is None:
             context = {}
-        self.check_read(cr, access_rights_uid or user)
+        self.check_access_rights(cr, access_rights_uid or user, 'read')
 
         # For transient models, restrict acces to the current user, except for the super-user
         if self.is_transient() and self._log_access and user != SUPERUSER_ID:
@@ -4969,37 +4957,7 @@ class BaseModel(object):
     # backwards compatibility
     get_xml_id = get_external_id
     _get_xml_ids = _get_external_ids
-    
-    def _get_needaction_info(self, cr, uid, user_id, limit=None, order=None, domain=False, context=None):
-        """Base method for needaction mechanism
-           - see ir.needaction for actual implementation
-           - if the model uses the need action mechanism
-             (hasattr(model_obj, 'needaction_get_record_ids')):
-              - get the record ids on which the user has actions to perform
-              - evaluate the menu domain
-              - compose a new domain: menu domain, limited to ids of
-                records requesting an action
-              - count the number of records maching that domain, that
-                is the number of actions the user has to perform
-           - this method returns default values
-           :param: model_name: the name of the model (ex: hr.holidays)
-           :param: user_id: the id of user
-           :return: [uses_needaction=True/False, needaction_uid_ctr=%d]
-        """
-        if hasattr(self, 'needaction_get_record_ids'):
-            # Arbitrary limit, but still much lower thant infinity, to avoid
-            # getting too much data.
-            ids = self.needaction_get_record_ids(cr, uid, user_id, limit=8192, context=context)
-            if not ids:
-                return [True, 0]
-            if domain:
-                new_domain = eval(domain, locals_dict={'uid': user_id}) + [('id', 'in', ids)]
-            else:
-                new_domain = [('id', 'in', ids)]
-            return [True, self.search(cr, uid, new_domain, limit=limit, order=order, count=True, context=context)]
-        else:
-            return [False, 0]
-            
+
     # Transience
     def is_transient(self):
         """ Return whether the model is transient.
@@ -5126,6 +5084,7 @@ class Model(BaseModel):
     The system will later instantiate the class once per database (on
     which the class' module is installed).
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = False # True in a TransientModel
 
@@ -5138,6 +5097,7 @@ class TransientModel(BaseModel):
        records they created. The super-user has unrestricted access
        to all TransientModel records.
     """
+    _auto = True
     _register = False # not visible in ORM registry, meant to be python-inherited only
     _transient = True
 
