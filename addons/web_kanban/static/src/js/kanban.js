@@ -471,7 +471,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var key = this.view.group_by + '-' + this.value;
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
-                folded: group.folded
+                folded: group?group.folded:false
             };
         }
         this.state = this.view.state.groups[key];
