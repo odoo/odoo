@@ -21,14 +21,17 @@ openerp.hr_attendance = function (instance) {
         },
         do_update_attendance: function () {
             var self = this;
-            if (!self.employee) return;
-            hr_employee = new instance.web.DataSet(self, 'hr.employee');
+            if (!self.employee)
+                return;
+            var hr_employee = new instance.web.DataSet(self, 'hr.employee');
             hr_employee.call('attendance_action_change', [
                 [self.employee.id]
             ]).done(function (result) {
                 if (!result) return;
-                if (self.employee.state == 'present') self.employee.state = 'absent';
-                else self.employee.state = 'present';
+                if (self.employee.state == 'present')
+                    self.employee.state = 'absent';
+                else
+                    self.employee.state = 'present';
                 self.do_slide(self.employee.state);
             });
         },
@@ -54,7 +57,8 @@ openerp.hr_attendance = function (instance) {
                 ['user_id', '=', self.session.uid]
             ]);
             return employee.read_slice(['id', 'name', 'state']).pipe(function (res) {
-                if (_.isEmpty(res)) return;
+                if (_.isEmpty(res))
+                    return;
                 self.$el.find(".oe_attendance_status").show();
                 self.employee = res[0];
                 self.do_slide(self.employee.state);
