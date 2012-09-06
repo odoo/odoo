@@ -15,13 +15,16 @@
         
         <record id="mail_subtype_other" model="mail.message.subtype">
             <field name="name">other</field>
-            <field name="default" eval="False"/>
+            <field name="model_ids" eval="[(4,ref('mail.model_mail_group'))]"/>
+            <field name="default" eval='False'/>
         </record>
         <record id="mail_subtype_email" model="mail.message.subtype">
             <field name="name">email</field>
+            <field name="model_ids" eval="[(4,ref('mail.model_mail_group'))]"/>
         </record>
         <record id="mail_subtype_comment" model="mail.message.subtype">
             <field name="name">comment</field>
+            <field name="model_ids" eval="[(4,ref('mail.model_mail_group'))]"/>
         </record>
     </data>
 </openerp>

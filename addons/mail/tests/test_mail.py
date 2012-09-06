@@ -616,9 +616,7 @@ class test_mail(common.TransactionCase):
         # 0 - Admin
         p_a_id = user_admin.partner_id.id
         # Subscribe #1,
-        self.mail_group_model_id = self.ir_model.search(cr, uid, [('model','=', 'mail.group')])[0]
-        subtype_ids = self.mail_message_subtype.search(cr, uid, [])
-        self.mail_message_subtype.write(cr,uid,subtype_ids,{'model_ids':[(4,self.mail_group_model_id )]})
+   
         group_pigs.message_subscribe_users([uid])
 
         # Mail data
