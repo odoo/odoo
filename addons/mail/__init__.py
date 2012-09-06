@@ -20,12 +20,12 @@
 ##############################################################################
 
 import mail_alias
-import mail_message
 import mail_followers
+import mail_message
+import mail_mail
 import mail_thread
 import mail_group
 import mail_vote
-import ir_needaction
 import res_partner
 import res_users
 import report
