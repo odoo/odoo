@@ -92,7 +92,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
         });
-        this.on('clear_uncommitted_changes', this, function(e) {
+        instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
             }
@@ -753,7 +753,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return def.promise();
     },
     can_be_discarded: function() {
-        return !this.$el.is('.oe_form_dirty') || confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"));
+        if (this.$el.is('.oe_form_dirty')) {
+            if (!confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"))) {
+                return false;
+            }
+            this.$el.removeClass('oe_form_dirty');
+        }
+        return true;
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
