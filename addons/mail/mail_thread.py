@@ -600,9 +600,9 @@ class mail_thread(osv.AbstractModel):
         values = kwargs
         subtype_obj = self.pool.get('mail.message.subtype')
         if subtype:
-            subtypes = subtype_obj.name_search(cr, uid, subtype)
+            subtypes = subtype_obj.name_search(cr, uid, subtype,context=context)
             if len(subtypes):
-                subtype_browse = subtype_obj.browse(cr, uid, subtypes[0][0])
+                subtype_browse = subtype_obj.browse(cr, uid, subtypes[0][0],context=context)
                 if self._name in [model.model for model in subtype_browse.model_ids]:
                     values['subtype_id']=subtype_browse.id
         values.update({
@@ -636,7 +636,7 @@ class mail_thread(osv.AbstractModel):
         self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)])
+            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)],context=context)
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
         if context and context.get('read_back'):
@@ -690,7 +690,7 @@ class mail_thread(osv.AbstractModel):
 
     def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
         followers_obj = self.pool.get('mail.followers')
-        followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

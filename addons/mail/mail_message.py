@@ -335,7 +335,7 @@ class mail_message(osv.Model):
             missing_follow_ids = []
             if message.subtype_id:
                 for p_id in missing_notified:
-                    follow_ids = followers_obj.search(cr, uid, [('partner_id','=',p_id),('subtype_ids','in',[message.subtype_id.id]),('res_model','=',message.model),('res_id','=',message.res_id)])
+                    follow_ids = followers_obj.search(cr, uid, [('partner_id','=',p_id),('subtype_ids','in',[message.subtype_id.id]),('res_model','=',message.model),('res_id','=',message.res_id)], context=context)
                     if follow_ids and len(follow_ids):
                         missing_follow_ids.append(p_id)
             message.write({'partner_ids': [(4, p_id) for p_id in missing_follow_ids]})
