@@ -27,7 +27,7 @@
 -  
   !python {model: mail.followers}: |    
     ids = self.search(cr, uid, [('res_model', '=', 'crm.lead'),('res_id', '=', ref('crm_case_1'))])
-    self.write(cr, uid, ids, {'subtype_ids': [(6,0,[ref('mail_subtype_lead_won')])]})
+    self.write(cr, uid, ids, {'subtype_ids': [(6,0,[ref('mail.mail_subtype_won')])]})
 -
   I have change the lead into mark won
 -
@@ -43,6 +43,6 @@
   I have check the subtype as won in feeds
 -
   !python {model: mail.followers}: |
-    followers_ids =self.search(cr, uid, [('res_model', '=','crm.lead'),('res_id', '=', ref('crm_case_1')),('subtype_ids', 'in',[ref('mail_subtype_lead_won')])])
+    followers_ids =self.search(cr, uid, [('res_model', '=','crm.lead'),('res_id', '=', ref('crm_case_1')),('subtype_ids', 'in',[ref('mail.mail_subtype_won')])])
     if len(followers_ids):
       assert followers_ids, 'lead is in won'
