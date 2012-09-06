@@ -57,7 +57,7 @@ class event_event(osv.osv):
             ids = [ids]
 
         res = []
-        for record in self.browse(cr, uid, ids, context=context)
+        for record in self.browse(cr, uid, ids, context=context):
             date = record.date_begin.split(" ")[0]
             date_end = record.date_end.split(" ")[0]
             if date != date_end:
