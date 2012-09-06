@@ -102,6 +102,11 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
+    def _get_rml_footer(self, cr, uid, ids, field_name, arg, context=None):
+        """ simply return the field 'rml_footer'; useful for the client """
+        companies = self.browse(cr, uid, ids, context=context)
+        return dict((company.id, company.rml_footer) for company in companies)
+
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -112,6 +117,7 @@ class res_company(osv.osv):
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
         'rml_footer': fields.text('Report Footer'),
+        'rml_footer_readonly': fields.function(_get_rml_footer, type='text', string='Report Footer'),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
@@ -159,7 +165,7 @@ class res_company(osv.osv):
             title = _('Bank Accounts') if len(accounts_names) > 1 else _('Bank Account')
             res += '\n%s: %s' % (title, ', '.join(accounts_names))
 
-        return {'value': {'rml_footer': res}}
+        return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
 
     def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line, context=None):
         rml_footer_lines = rml_footer.split('\n')
