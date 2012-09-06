@@ -582,6 +582,13 @@ class sale_order(osv.osv):
         result.update(view_id = res and res[1] or False)
         return result
 
+    def test_no_product(self, cr, uid, ids, *args):
+        for order in self.browse(cr, uid, ids):
+            for line in order.order_line:
+                if line.product_id:
+                    return False
+        return True
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}

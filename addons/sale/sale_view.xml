@@ -163,7 +163,7 @@
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
-                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
+                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/> <!-- ('invoice_ids','=',[]) should be work-->
                             <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                             <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
