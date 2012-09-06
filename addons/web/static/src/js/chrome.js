@@ -1070,6 +1070,7 @@ instance.web.WebClient = instance.web.Client.extend({
         n.warn.apply(n, arguments);
     },
     on_logout: function() {
+        var self = this;
         if (!this.has_uncommitted_changes()) {
             this.session.session_logout().then(function () {
                 $(window).unbind('hashchange', self.on_hashchange);

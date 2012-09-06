@@ -753,7 +753,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return def.promise();
     },
     can_be_discarded: function() {
-        return !this.$el.is('.oe_form_dirty') || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
+        return !this.$el.is('.oe_form_dirty') || confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"));
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
