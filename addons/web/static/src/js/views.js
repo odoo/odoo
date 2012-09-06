@@ -125,9 +125,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 return item.widget === it.widget;
             });
             if (!dups.length) {
-                var $e = $.Event("about_to_destroy");
-                item.widget.trigger("about_to_destroy", $e);
-                if ($e.isDefaultPrevented()) {
+                if (this.getParent().has_uncommitted_changes()) {
                     this.inner_widget = item.widget;
                     this.breadcrumbs.splice(index, 0, item);
                     return false;
@@ -260,9 +258,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_common: function(action, on_close, clear_breadcrumbs) {
         var self = this, klass, widget, post_process;
         if (this.inner_widget && (action.type === 'ir.actions.client' || action.target !== 'new')) {
-            var $e = $.Event("about_to_destroy");
-            this.inner_widget.trigger("about_to_destroy", $e);
-            if ($e.isDefaultPrevented()) {
+            if (this.getParent().has_uncommitted_changes()) {
                 return $.Deferred().reject();
             } else if (clear_breadcrumbs) {
                 this.clear_breadcrumbs();
@@ -496,12 +492,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             options.initial_mode = 'edit';
         }
         var controller = new viewclass(this, this.dataset, view.view_id, options);
-
-        if (view_type === 'form') {
-            this.on('about_to_destroy', this, function(e) {
-                controller.trigger('about_to_destroy', e);
-            });
-        }
 
         controller.on('history_back', this, function() {
             var am = self.getParent();

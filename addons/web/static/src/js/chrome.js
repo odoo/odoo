@@ -871,10 +871,12 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-            result.result.res_id = instance.session.uid;
-            self.getParent().action_manager.do_action(result.result);
-        });
+        if (!this.getParent().has_uncommitted_changes()) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+                result.result.res_id = instance.session.uid;
+                self.getParent().action_manager.do_action(result.result);
+            });
+        }
     },
     on_menu_about: function() {
         var self = this;
@@ -952,7 +954,10 @@ instance.web.Client = instance.web.Widget.extend({
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.oe_topbar),.oe_leftbar').toggle(value);
-    }
+    },
+    has_uncommitted_changes: function() {
+        return false;
+    },
 });
 
 instance.web.WebClient = instance.web.Client.extend({
@@ -1051,10 +1056,7 @@ instance.web.WebClient = instance.web.Client.extend({
         n.warn.apply(n, arguments);
     },
     on_logout: function() {
-        var self = this;
-        var $e = $.Event("about_to_destroy");
-        this.action_manager.inner_widget.trigger("about_to_destroy", $e);
-        if (!$e.isDefaultPrevented()) {
+        if (!this.has_uncommitted_changes()) {
             this.session.session_logout().then(function () {
                 $(window).unbind('hashchange', self.on_hashchange);
                 self.do_push_state({});
@@ -1131,7 +1133,16 @@ instance.web.WebClient = instance.web.Client.extend({
             $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
             $("body").css({'overflow-y':'scroll'});
         }
-    }
+    },
+    has_uncommitted_changes: function() {
+        var $e = $.Event('clear_uncommitted_changes');
+        this.trigger_children('clear_uncommitted_changes', $e);
+        if ($e.isDefaultPrevented()) {
+            return true;
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
 });
 
 instance.web.EmbeddedClient = instance.web.Client.extend({
