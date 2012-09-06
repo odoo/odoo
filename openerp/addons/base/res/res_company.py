@@ -359,7 +359,7 @@ class res_company(osv.osv):
             <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
             <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
             <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]
+            <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]</drawCentredString>
             <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
         </pageGraphics>
     </pageTemplate>
