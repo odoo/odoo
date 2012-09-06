@@ -4,8 +4,6 @@ openerp.hr_attendance = function (instance) {
     var QWeb = instance.web.qweb;
     _t = instance.web._t;
 
-    instance.web.attendanceslider = false;
-
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
         template: 'AttendanceSlider',
         init: function (parent) {
@@ -68,13 +66,14 @@ openerp.hr_attendance = function (instance) {
         do_update: function () {
             this._super();
             var self = this;
-            var fct = function () {
-                instance.web.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
+            this.update_promise = this.update_promise.then(function () {
+                if (self.attendanceslider)
+                    return;
+                self.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
 
-                instance.web.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
-                return instance.web.attendanceslider.check_attendance();
-            };
-            this.update_promise = this.update_promise.pipe(fct, fct);
+                self.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
+                self.attendanceslider.check_attendance();
+            });
         },
     });
 }
