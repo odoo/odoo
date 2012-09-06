@@ -23,14 +23,14 @@ class TestO2MSerialization(common.TransactionCase):
 
     def test_no_command(self):
         " empty list of commands yields an empty list of records "
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', [])
 
         self.assertEqual(results, [])
 
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address',
             map(CREATE, [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]))
         self.assertEqual(results, [
@@ -48,7 +48,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
         commands = map(LINK_TO, ids)
 
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', commands, ['name'])
 
         self.assertEqual(results, [
@@ -65,7 +65,7 @@ class TestO2MSerialization(common.TransactionCase):
             self.partner.create(self.cr, UID, {'name': 'baz'})
         ]
 
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', ids, ['name'])
 
         self.assertEqual(results, [
@@ -80,7 +80,7 @@ class TestO2MSerialization(common.TransactionCase):
         id_bar = self.partner.create(self.cr, UID, {'name': 'bar'})
         id_baz = self.partner.create(self.cr, UID, {'name': 'baz', 'city': 'tag'})
 
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', [
                 LINK_TO(id_foo),
                 UPDATE(id_bar, {'name': 'qux', 'city': 'tagtag'}),
@@ -99,7 +99,7 @@ class TestO2MSerialization(common.TransactionCase):
             for name in ['NObar', 'baz', 'qux', 'NOquux', 'NOcorge', 'garply']
         ]
 
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', [
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),
@@ -131,7 +131,7 @@ class TestO2MSerialization(common.TransactionCase):
         ]
         commands = map(lambda id: (4, id), ids)
 
-        results = self.partner.resolve_o2m_commands_to_record_dicts(
+        results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', commands, ['name'])
 
         self.assertEqual(results, [
@@ -144,7 +144,7 @@ class TestO2MSerialization(common.TransactionCase):
         "DELETE_ALL can appear as a singleton"
 
         try:
-            self.partner.resolve_o2m_commands_to_record_dicts(
+            self.partner.resolve_2many_commands(
                 self.cr, UID, 'address', [(5,)], ['name'])
         except AssertionError:
             # 5 should fail with an assert error, but not e.g. a ValueError
@@ -154,19 +154,19 @@ class TestO2MSerialization(common.TransactionCase):
         "Commands with uncertain semantics in this context should be forbidden"
 
         with self.assertRaises(AssertionError):
-            self.partner.resolve_o2m_commands_to_record_dicts(
+            self.partner.resolve_2many_commands(
                 self.cr, UID, 'address', [DELETE(42)], ['name'])
 
         with self.assertRaises(AssertionError):
-            self.partner.resolve_o2m_commands_to_record_dicts(
+            self.partner.resolve_2many_commands(
                 self.cr, UID, 'address', [FORGET(42)], ['name'])
 
         with self.assertRaises(AssertionError):
-            self.partner.resolve_o2m_commands_to_record_dicts(
+            self.partner.resolve_2many_commands(
                 self.cr, UID, 'address', [DELETE_ALL()], ['name'])
 
         with self.assertRaises(AssertionError):
-            self.partner.resolve_o2m_commands_to_record_dicts(
+            self.partner.resolve_2many_commands(
                 self.cr, UID, 'address', [REPLACE_WITH([42])], ['name'])
 
 

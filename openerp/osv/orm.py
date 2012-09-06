@@ -5009,66 +5009,57 @@ class BaseModel(object):
 
         return True
 
-    def resolve_o2m_commands_to_record_dicts(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
-        """ Serializes o2m commands into record dictionaries (as if
-        all the o2m records came from the database via a read()), and
-        returns an iterable over these dictionaries.
+    def resolve_2many_commands(self, cr, uid, field_name, commands, fields=None, context=None):
+        """ Serializes one2many and many2many commands into record dictionaries
+            (as if all the records came from the database via a read()).  This
+            method is aimed at onchange methods on one2many and many2many fields.
 
-        Because o2m commands might be creation commands, not all
-        record ids will contain an ``id`` field. Commands matching an
-        existing record (``UPDATE`` and ``LINK_TO``) will have an id.
+            Because commands might be creation commands, not all record dicts
+            will contain an ``id`` field.  Commands matching an existing record
+            will have an ``id``.
 
-        .. note:: ``CREATE``, ``UPDATE`` and ``LINK_TO`` stand for the
-                  o2m command codes ``0``, ``1`` and ``4``
-                  respectively
-
-        :param field_name: name of the o2m field matching the commands
-        :type field_name: str
-        :param o2m_commands: one2many commands to execute on ``field_name``
-        :type o2m_commands: list((int|False, int|False, dict|False))
-        :param fields: list of fields to read from the database, when applicable
-        :type fields: list(str)
-        :raises AssertionError: if a command is not ``CREATE``, ``UPDATE`` or ``LINK_TO``
-        :returns: o2m records in a shape similar to that returned by
-                  ``read()`` (except records may be missing the ``id``
-                  field if they don't exist in db)
-        :rtype: ``list(dict)``
+            :param field_name: name of the one2many or many2many field matching the commands
+            :type field_name: str
+            :param commands: one2many or many2many commands to execute on ``field_name``
+            :type commands: list((int|False, int|False, dict|False))
+            :param fields: list of fields to read from the database, when applicable
+            :type fields: list(str)
+            :returns: records in a shape similar to that returned by ``read()``
+                (except records may be missing the ``id`` field if they don't exist in db)
+            :rtype: list(dict)
         """
-        o2m_model = self._all_columns[field_name].column._obj
+        result = []             # result (list of dict)
+        record_ids = set()      # ids of records to read
+        updates = {}            # {id: dict} of updates on particular records
 
-        # convert single ids and pairs to tripled commands
-        commands = []
-        for o2m_command in o2m_commands:
-            if not isinstance(o2m_command, (list, tuple)):
-                command = 4
-                commands.append((command, o2m_command, False))
-            elif len(o2m_command) == 1:
-                (command,) = o2m_command
-                commands.append((command, False, False))
-            elif len(o2m_command) == 2:
-                command, id = o2m_command
-                commands.append((command, id, False))
-            else:
-                command = o2m_command[0]
-                commands.append(o2m_command)
-            assert command in (0, 1, 4), \
-                "Only CREATE, UPDATE and LINK_TO commands are supported in resolver"
+        for command in commands:
+            if not isinstance(command, (list, tuple)):
+                record_ids.add(command)
+            elif command[0] == 0:
+                result.append(command[2])
+            elif command[0] == 1:
+                record_ids.add(command[1])
+                updates.setdefault(command[1], {}).update(command[2])
+            elif command[0] in (2, 3):
+                record_ids.discard(command[1])
+            elif command[0] == 4:
+                record_ids.add(command[1])
+            elif command[0] == 5:
+                result, record_ids = [], []
+            elif command[0] == 6:
+                result, record_ids = [], list(command[2])
 
-        # extract records to read, by id, in a mapping dict
-        ids_to_read = [id for (command, id, _) in commands if command in (1, 4)]
-        records_by_id = dict(
-            (record['id'], record)
-            for record in self.pool.get(o2m_model).read(
-                cr, uid, ids_to_read, fields=fields, context=context))
+        # read the records and apply the updates
+        other_model = self.pool.get(self._all_columns[field_name].column._obj)
+        for record in other_model.read(cr, uid, list(record_ids), fields=fields, context=context):
+            record.update(updates.get(record['id'], {}))
+            result.append(record)
 
-        record_dicts = []
-        # merge record from db with record provided by command
-        for command, id, record in commands:
-            item = {}
-            if command in (1, 4): item.update(records_by_id[id])
-            if command in (0, 1): item.update(record)
-            record_dicts.append(item)
-        return record_dicts
+        return result
+
+    # for backward compatibility
+    def resolve_2many_commands(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
+        return self.resolve_2many_commands(cr, uid, field_name, o2m_commands, fields, context)
 
 # keep this import here, at top it will cause dependency cycle errors
 import expression

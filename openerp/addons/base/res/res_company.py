@@ -159,7 +159,7 @@ class res_company(osv.osv):
         ]))
 
         # second line: bank accounts
-        accounts = self.resolve_o2m_commands_to_record_dicts(cr, uid, 'bank_ids', bank_ids, context=context)
+        accounts = self.resolve_2many_commands(cr, uid, 'bank_ids', bank_ids, context=context)
         accounts_names = [('%(bank_name)s %(acc_number)s' % acc) for acc in accounts if acc['footer']]
         if accounts_names:
             title = _('Bank Accounts') if len(accounts_names) > 1 else _('Bank Account')
