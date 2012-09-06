@@ -102,76 +102,17 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
-    def _format_company_footer(self, cr, uid, company, context=None):
-        """
-        Format the company's RML footer the right way
-
-        @param company: compny's browse record OR dict with the required data
-
-        @return: string containing the formated footer
-        """
-
-        # list of values required to compose the footer
-        val = []
-
-        if company['phone']: val.append(_('Phone: ')+company['phone'])
-        if company['fax']: val.append(_('Fax: ')+company['fax'])
-        if company['email']: val.append(_('Email: ')+company['email'])
-        if company['website']: val.append(_('Website: ')+company['website'])
-        if company['vat']: val.append(_('TIN: ')+company['vat'])
-        if company['company_registry']: val.append(_('Reg: ')+company['company_registry'])
-
-        # fetch the company's bank accounts
-        # todo #TODO: make it work with the onchange
-        bank_accounts = self.browse(cr, uid, company['id'], context=context).bank_ids
-        bank_accounts_names = [bank_account.name_get()[0][1] for bank_account in bank_accounts if bank_account.footer]
-
-        res = ' | '.join(val)
-        # append the account(s) in the footer and manage plural form of "account" if necessary
-        if len(bank_accounts_names) == 1:
-            res += _('\nBank Account: ') + ', '.join(bank_accounts_names)
-        elif len(bank_accounts_names) > 1:
-            res += _('\nBank Accounts: ') + ', '.join(bank_accounts_names)
-
-        return res
-
-    def _get_rml_footer(self, cr, uid, ids, field_names, arg, context=None):
-        result = {}
-        for company in self.browse(cr, uid, ids, context=context):
-            if company.customize_footer:
-                result[company.id] = company.rml_footer
-            else:
-                result[company.id] = self._format_company_footer(cr, uid, company, context)
-
-        return result
-
-    def _set_rml_footer(self, cr, uid, company_id, name, value, arg, context=None):
-        company = self.browse(cr, uid, [company_id], context=context)[0]
-
-        if company.customize_footer:
-            rml_footer = value
-        else:
-            rml_footer = self._format_company_footer(cr, uid, company, context)
-
-        return cr.execute('UPDATE res_company SET rml_footer = %s WHERE id = %s', (rml_footer, company_id))
-
-    def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line=0, context=None):
-        rml_split = rml_footer.split('\n')
-        if len(rml_split) < line + 1:
-            return False
-        return rml_split[line]
-
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
-        'customize_footer': fields.boolean('Customize Footer', help="If it is true then general information footer will not update automatically."),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_footer': fields.function(_get_rml_footer, fnct_inv=_set_rml_footer, type='text', string='General Information Footer', store=True),
         'rml_header': fields.text('RML Header', required=True),
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
+        'rml_footer': fields.text('Report Footer'),
+        'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
@@ -196,20 +137,33 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def on_change_footer(self, cr, uid, ids, customize_footer=None, phone=None, email=None, fax=None, website=None, vat=None, company_registry=None, bank_ids=None, context=None):
-        if not customize_footer:
-            company_values = {
-                'id': ids[0],
-                'customize_footer': customize_footer,
-                'phone': phone,
-                'email': email,
-                'fax': fax,
-                'website': website,
-                'vat': vat,
-                'company_registry': company_registry,
-                'bank_ids': bank_ids,
-            }
-            return {'value': {'rml_footer': self._format_company_footer(cr, uid, company_values, context)}}
+    def on_change_footer(self, cr, uid, ids, custom_footer, phone, email, fax,
+                         website, vat, company_registry, bank_ids, context=None):
+        if custom_footer:
+            return {}
+
+        # first line (notice that missing elements are filtered out before the join)
+        res = ' | '.join(filter(bool, [
+            phone            and '%s: %s' % (_('Phone'), phone),
+            fax              and '%s: %s' % (_('Fax'), fax),
+            email            and '%s: %s' % (_('Email'), email),
+            website          and '%s: %s' % (_('Website'), website),
+            vat              and '%s: %s' % (_('TIN'), vat),
+            company_registry and '%s: %s' % (_('Reg'), company_registry),
+        ]))
+
+        # second line: bank accounts
+        accounts = self.resolve_o2m_commands_to_record_dicts(cr, uid, 'bank_ids', bank_ids, context=context)
+        accounts_names = [('%(bank_name)s %(acc_number)s' % acc) for acc in accounts if acc['footer']]
+        if accounts_names:
+            title = _('Bank Accounts') if len(accounts_names) > 1 else _('Bank Account')
+            res += '\n%s: %s' % (title, ', '.join(accounts_names))
+
+        return {'value': {'rml_footer': res}}
+
+    def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line, context=None):
+        rml_footer_lines = rml_footer.split('\n')
+        return rml_footer_lines[line] if line < len(rml_footer_lines) else ""
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
