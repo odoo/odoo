@@ -75,7 +75,6 @@ openerp.base_import = function (instance) {
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
-            this.field_label_to_name = {};
         },
         start: function () {
             var self = this;
@@ -130,38 +129,49 @@ openerp.base_import = function (instance) {
 
             var $fields = this.$('.oe_import_fields input');
             this.render_fields_matches(result, $fields);
-            $fields.autocomplete({
-                minLength: 0,
-                html: true,
-                source: this.generate_fields_completion(result)
-            }).data('autocomplete')._renderItem = function (ul, item) {
-                var $item = $('<li>').data('item.autocomplete', item).appendTo(ul);
-
-                if (item.category) {
-                    return $item
-                        .addClass('oe_import_completion_category')
-                        .text(item.label);
-                } else {
-                    return $item.append(
-                        $('<a>')
-                            .toggleClass('oe_import_completion_required', !!item.required)
-                            .text(item.label));
+            var data = this.generate_fields_completion(result);
+            var item_finder = function (id, items) {
+                items = items || data;
+                for (var i=0; i < items.length; ++i) {
+                    var item = items[i];
+                    if (item.id === id) {
+                        return item;
+                    }
+                    var val;
+                    if (item.children && (val = item_finder(id, item.children))) {
+                        return val;
+                    }
                 }
+                return '';
             };
+            $fields.select2({
+                allowClear: true,
+                minimumInputLength: 0,
+                data: data,
+                initSelection: function (element, callback) {
+                    var default_value = element.val();
+                    if (!default_value) {
+                        callback('');
+                        return;
+                    }
+
+                    callback(item_finder(default_value));
+                },
+
+                width: 'resolve',
+                dropdownCssClass: 'oe_import_selector'
+            });
             this.import_dryrun();
         },
         generate_fields_completion: function (root) {
-            // Display nice names to user, but send logical names to server
-            this.field_label_to_name = {};
             var basic = [];
-            var regulars = [{label: _t("Normal Fields"), category: true}];
-            var o2m = [{label: _t("Relation Fields (o2m)"), category: true}];
-            var self = this;
+            var regulars = [];
+            var o2m = [];
             function traverse(field, ancestors, collection) {
                 var subfields = field.fields;
                 var field_path = ancestors.concat(field);
                 var label = _(field_path).pluck('string').join(' / ');
-                self.field_label_to_name[label] = _(field_path).pluck('name').join('/');
+                var id = _(field_path).pluck('name').join('/');
 
                 // If non-relational, m2o or m2m, collection is regulars
                 if (!collection) {
@@ -176,7 +186,8 @@ openerp.base_import = function (instance) {
                 }
 
                 collection.push({
-                    label: label,
+                    id: id,
+                    text: label,
                     required: field.required
                 });
 
@@ -188,7 +199,10 @@ openerp.base_import = function (instance) {
                 traverse(field, []);
             });
 
-            return basic.concat(regulars, o2m);
+            return basic.concat([
+                { text: _t("Normal Fields"), children: regulars },
+                { text: _t("Relation Fields"), children: o2m }
+            ]);
         },
         render_fields_matches: function (result, $fields) {
             if (_(result.matches).isEmpty()) { return; }
@@ -205,18 +219,17 @@ openerp.base_import = function (instance) {
                             return subfield.name === name;
                         });
                     })
-                    .pluck('string')
+                    .pluck('name')
                     .value()
-                    .join(' / ');
+                    .join('/');
             });
         },
 
         //- import itself
         call_import: function (options) {
             var self = this;
-            var fields = this.$('.oe_import_fields input').map(function (index, el) {
-                // Convert user-readable field label to logical db-backed name
-                return self.field_label_to_name[el.value] || false;
+            var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
+                return $(el).select2('val') || false;
             }).get();
             return this.Import.call(
                 'do', [this.id, fields, this.import_options()], options);

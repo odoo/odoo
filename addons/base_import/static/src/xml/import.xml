@@ -71,7 +71,8 @@
         <tr class="oe_import_fields">
             <!-- Iterate on first row to ensure we have all columns -->
             <td t-foreach="preview[0]" t-as="column">
-                <input placeholder="Don't Import"/>
+                <input placeholder="Don't Import"
+                       class="oe_import_match_field"/>
             </td>
         </tr>
         <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
