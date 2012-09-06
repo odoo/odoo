@@ -732,6 +732,14 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 var dialog = new instance.web.Dialog(this, { title: _t("Fields View Get"), width: '95%' }).open();
                 $('<pre>').text(instance.web.json_node_to_xml(current_view.fields_view.arch, true)).appendTo(dialog.$el);
                 break;
+            case 'tests':
+                this.do_action({
+                    name: "JS Tests",
+                    target: 'new',
+                    type : 'ir.actions.act_url',
+                    url: '/web/static/test/test.html'
+                })
+                break;
             case 'perm_read':
                 var ids = current_view.get_selected_ids();
                 if (ids.length === 1) {
