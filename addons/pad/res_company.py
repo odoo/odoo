@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 from osv import fields, osv
 
-DEFAULT_PAD_TEMPLATE = 'http://beta.etherpad.org/p/%(db)s-%(model)s-%(salt)s'
-
 class company_pad(osv.osv):
     _inherit = 'res.company'
     _columns = {
-        'pad_url_template': fields.char('Pad URL Template', size=128, required=True, help="Template used to generate pad URL."),
-    }
-    _defaults = {
-        'pad_url_template': DEFAULT_PAD_TEMPLATE,
+        'pad_server': fields.char('Pad Server', help="Etherpad lite server. Example: beta.primarypad.com"),
+        'pad_key': fields.char('Pad Api Key', help="Etherpad lite api key."),
     }
 
 

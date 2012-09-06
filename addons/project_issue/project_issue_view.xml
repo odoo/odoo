@@ -248,18 +248,18 @@
                     <field name="date_deadline"/>
                     <templates>
                         <t t-name="kanban-tooltip">
-                           <ul class="oe_kanban_tooltip">
+                           <ul class="oe_kanban_tooltip oe_semantic_html_override">
                               <li><b>Project:</b> <field name="project_id"/></li>
                               <li><b>Category:</b> <field name="categ_ids"/></li>
                            </ul>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <li><a type="edit" >Edit...</a></li>
-                                        <li><a type="delete">Delete</a></li>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -356,11 +356,12 @@
             <field name="model">project.project</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_issues"/></group></td>
-                        <td><button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr='//div[@name="options_active"]' position='inside'>
+                    <field name="use_issues" class="oe_inline"/>
+                    <label for="use_issues"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
@@ -383,7 +384,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        Issues(<field name="issue_count"/>)</a>
+                        <field name="issue_count"/> Issues</a>
                 </xpath>
             </field>
         </record>
@@ -394,11 +395,9 @@
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_issues"/>
+                    <label for="use_issues"/>
                 </xpath>
             </field>
         </record>
