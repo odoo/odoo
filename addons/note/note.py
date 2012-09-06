@@ -68,7 +68,11 @@ class note_note(osv.osv):
 
         stage_ids = stage_obj._search(cr, uid, search_domain, order=self._order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
 
     _columns = {
         'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type="text"),

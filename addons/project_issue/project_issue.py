@@ -94,7 +94,11 @@ class project_issue(base_stage, osv.osv):
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -239,7 +243,7 @@ class project_issue(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
