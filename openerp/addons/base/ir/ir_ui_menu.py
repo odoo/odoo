@@ -23,7 +23,7 @@
 import base64
 import re
 import threading
-
+from tools.safe_eval import safe_eval as eval
 import tools
 import openerp.modules
 from osv import fields, osv
@@ -256,23 +256,24 @@ class ir_ui_menu(osv.osv):
 
         return res
 
-    def _get_needaction_info(self, cr, uid, id, domain=[], context={}):
-        return [False, 0]
-
     def _get_needaction(self, cr, uid, ids, field_names, args, context=None):
-        if context is None:
-            context = {}
         res = {}
         for menu in self.browse(cr, uid, ids, context=context):
-            res[menu.id] = {}
-            if menu.action and menu.action.type == 'ir.actions.act_window' and menu.action.res_model:
-                menu_needaction_res = self.pool.get(menu.action.res_model)._get_needaction_info(cr, uid, uid, domain=menu.action.domain, context=context)
-            else:
-                menu_needaction_res = [False, 0]
-            res[menu.id]['needaction_enabled'] = menu_needaction_res[0]
-            res[menu.id]['needaction_counter'] = menu_needaction_res[1]
+            res[menu.id] = {
+                'needaction_enabled': False,
+                'needaction_counter': False,
+            }
+            if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
+                obj = self.pool.get(menu.action.res_model)
+                if obj._needaction:
+                    if menu.action.type=='ir.actions.act_window':
+                        dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
+                    else:
+                        dom = eval(menu.action.params_store or '{}', {'uid': uid}).get('domain')
+                    res[menu.id]['needaction_enabled'] = obj._needaction
+                    res[menu.id]['needaction_counter'] = obj._needaction_count(cr, uid, dom, context=context)
         return res
-        
+
     _columns = {
         'name': fields.char('Menu', size=64, required=True, translate=True),
         'sequence': fields.integer('Sequence'),
