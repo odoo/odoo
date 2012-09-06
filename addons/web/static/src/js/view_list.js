@@ -250,6 +250,12 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
 
         this.$el.html(QWeb.render(this._template, this));
         this.$el.addClass(this.fields_view.arch.attrs['class']);
+
+        // add css classes that reflect the (absence of) access rights
+        this.$el.toggleClass('oe_list_cannot_create', !this.is_action_enabled('create'))
+                .toggleClass('oe_list_cannot_edit', !this.is_action_enabled('edit'))
+                .toggleClass('oe_list_cannot_delete', !this.is_action_enabled('delete'));
+
         // Head hook
         // Selecting records
         this.$el.find('.oe_list_record_selector').click(function(){
@@ -351,11 +357,11 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
-            this.sidebar.add_items('other', [
-                { label: _t("Import"), callback: this.on_sidebar_import },
+            this.sidebar.add_items('other', _.compact([
+                self.is_action_enabled('create') && { label: _t("Import"), callback: this.on_sidebar_import },
                 { label: _t("Export"), callback: this.on_sidebar_export },
-                { label: _t('Delete'), callback: this.do_delete_selected }
-            ]);
+                self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
+            ]));
             this.sidebar.add_toolbar(this.fields_view.toolbar);
             this.sidebar.$el.hide();
         }
@@ -1995,7 +2001,7 @@ instance.web.list.Column = instance.web.Class.extend({
         if (!(aggregation_func in this)) {
             return {};
         }
-        var C = function (label, fn) {
+        var C = function (fn, label) {
             this['function'] = fn;
             this.label = label;
         };
@@ -2115,6 +2121,11 @@ instance.web.list.ProgressBar = instance.web.list.Column.extend({
     }
 });
 instance.web.list.Handle = instance.web.list.Column.extend({
+    init: function () {
+        this._super.apply(this, arguments);
+        // Handle overrides the field to not be form-editable.
+        this.modifiers.readonly = true;
+    },
     /**
      * Return styling hooks for a drag handle
      *

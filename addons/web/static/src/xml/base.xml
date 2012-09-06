@@ -479,10 +479,12 @@
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
     <option value="manage_filters">Manage Filters</option>
     <t t-if="view_manager.session.uid === 1">
+        <option value="translate">Technical translation</option>
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
@@ -635,7 +637,7 @@
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable" width="13px"/>
+            <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
         </tr>
     </thead>
     <tfoot>
@@ -649,7 +651,7 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
@@ -701,7 +703,7 @@
                 type="button">Save</button>
     </t>
     <t t-jquery="a.oe_list_button_import" t-operation="after">
-        <a href="#" class="oe_bold oe_list_discard">discard</a>
+        <a href="#" class="oe_bold oe_list_discard">Discard</a>
     </t>
 </t>
 <t t-extend="ListView.row">
@@ -725,10 +727,12 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
-              <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
+            <!-- required for the bounce effect on button -->
+            <div t-if="widget.is_action_enabled('edit')" style="display: inline-block;">
+                <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
             </div>
-            <button type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
+            <button t-if="widget.is_action_enabled('create')"
+                type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
             <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
@@ -1063,7 +1067,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps'" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">
@@ -1203,28 +1207,6 @@
             <t t-esc="widget.node.attrs.name"/>
         </li>
     </t>
-</t>
-
-<t t-name="TranslateDialog">
-    <table t-if="widget.view.translatable_fields" class="oe_form oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td class="oe_form_separator" width="1%" nowrap="nowrap">
-            <div class="oe_horizontal_separator">Field</div>
-        </td>
-        <th t-foreach="widget.languages" align="left">
-            <div class="oe_horizontal_separator"><t t-esc="name"/></div>
-        </th>
-    </tr>
-    <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
-        <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.string"/>:</label>
-        </td>
-        <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
-        </td>
-    </tr>
-    </table>
 </t>
 
 <t t-name="AbstractFormPopup.render">

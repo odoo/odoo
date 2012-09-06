@@ -220,7 +220,7 @@ $(document).ready(function () {
     });
 
     module('Widget.renderElement', mod);
-    test('repeated', function () {
+    asyncTest('repeated', 4, function () {
         var w = new (instance.web.Widget.extend({
             template: 'test.widget.template-value'
         }));

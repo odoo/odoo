@@ -42,6 +42,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.limit = options.limit || 80;
         this.add_group_mutex = new $.Mutex();
     },
+    start: function() {
+        var self = this;
+        this._super.apply(this, arguments);
+        this.$el.on('click', '.oe_kanban_dummy_cell', function() {
+            if (self.$buttons) {
+                self.$buttons.find('.oe_kanban_add_column').effect('bounce', {distance: 18, times: 5}, 150);
+            }
+        });
+    },
     destroy: function() {
         this._super.apply(this, arguments);
         $('html').off('click.kanban');
@@ -65,18 +74,16 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         return $.when();
     },
     _is_quick_create_enabled: function() {
-        if (! this.options.quick_creatable)
+        if (!this.options.quick_creatable || !this.is_action_enabled('create'))
             return false;
         if (this.fields_view.arch.attrs.quick_create !== undefined)
             return JSON.parse(this.fields_view.arch.attrs.quick_create);
         return !! this.group_by;
     },
-    _is_create_enabled: function() {
-        if (! this.options.creatable)
+    is_action_enabled: function(action) {
+        if (action === 'create' && !this.options.creatable)
             return false;
-        if (this.fields_view.arch.attrs.create !== undefined)
-            return JSON.parse(this.fields_view.arch.attrs.create);
-        return true;
+        return this._super(action);
     },
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
@@ -508,7 +515,6 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
             self.quick.focus();
         });
         // Add bounce effect on image '+' of kanban header when click on empty space of kanban grouped column.
-        var add_btn = this.$el.find('.oe_kanban_add');
         this.$records.find('.oe_kanban_show_more').click(this.do_show_more);
         if (this.state.folded) {
             this.do_toggle_fold();
@@ -517,10 +523,12 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         this.$records.data('widget', this);
         this.$has_been_started.resolve();
         this.compute_cards_auto_height();
+        var add_btn = this.$el.find('.oe_kanban_add');
+        add_btn.tipsy({delayIn: 500, delayOut: 1000});
         this.$records.click(function (ev) {
             if (ev.target == ev.currentTarget) {
                 if (!self.state.folded) {
-                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);
+                    add_btn.effect('bounce', {distance: 18, times: 5}, 150);                    
                 }
             }
         });
@@ -728,16 +736,19 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             trigger: 'hover'
         });
 
-        // If no draghandle is found, make the whole card as draghandle
+        // If no draghandle is found, make the whole card as draghandle (provided one can edit)
         if (!this.$el.find('.oe_kanban_draghandle').length) {
-            this.$el.children(':first').addClass('oe_kanban_draghandle');
+            this.$el.children(':first')
+                .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
         this.$el.find('.oe_kanban_action').click(function() {
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
-            if (_.str.startsWith(type, 'switch_')) {
+            if ((type === 'edit' || type === 'delete') && ! self.view.is_action_enabled(type)) {
+                self.view.open_record(self.id);
+            } else if (_.str.startsWith(type, 'switch_')) {
                 self.view.do_switch_view(type.substr(7));
             } else if (typeof self[method] === 'function') {
                 self[method]($action);
