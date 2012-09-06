@@ -89,7 +89,12 @@ class res_config_configurable(osv.osv_memory):
         # this is ultra brittle, but apart from storing the todo id
         # into the res.config view, I'm not sure how to get the
         # "previous" todo
-        previous_todo = self._next_action(cr, uid, context=context)
+        if context is None:
+            context = {}
+        if context.get('active_action_todo'):
+            previous_todo = self.pool.get('ir.actions.todo').browse(cr, uid, context['active_action_todo'], context=context)
+        else:
+            previous_todo = self._next_action(cr, uid, context=context)
         if not previous_todo:
             self.__logger.warn(_("Couldn't find previous ir.actions.todo"))
             return
@@ -108,6 +113,7 @@ class res_config_configurable(osv.osv_memory):
                 'res_model': action.res_model,
                 'type': action.type,
                 'target': action.target,
+                'context': {'active_action_todo': next.id},
             }
         self.__logger.info('all configuration actions have been executed')
 
