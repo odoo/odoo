@@ -359,6 +359,26 @@ instance.web.EventDispatcherMixin = _.extend({}, instance.web.ParentedMixin, {
         this.__edispatcherEvents.trigger.apply(this.__edispatcherEvents, arguments);
         return this;
     },
+    trigger_children: function(events) {
+        var children = this.getChildren();
+        for (var i = 0; i < children.length; i++) {
+            var child = children[i];
+            if (child.__eventDispatcherMixin) {
+                child.__edispatcherEvents.trigger.apply(child.__edispatcherEvents, arguments);
+                child.trigger_children.apply(child, arguments);
+            }
+        }
+        return this;
+    },
+    trigger_ancestors: function(events) {
+        var parent = this;
+        while (parent = parent.getParent()) {
+            parent.__edispatcherEvents.trigger.apply(parent.__edispatcherEvents, arguments);
+            parent.trigger_ancestors.apply(parent, arguments);
+
+        }
+        return this;
+    },
     destroy: function() {
         var self = this;
         _.each(this.__edispatcherRegisteredEvents, function(event) {
