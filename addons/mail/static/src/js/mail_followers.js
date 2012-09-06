@@ -95,7 +95,7 @@ openerp_mail_followers = function(session, mail) {
             else {
                 this.$el.find('button.oe_mail_button_follow').show();
                 this.$el.find('button.oe_mail_button_unfollow').hide();
-                // this.$el.find('ul.oe_mail_recthread_subtype').hide() 
+                this.$el.find('ul.oe_mail_recthread_subtype').hide() 
                 }
         },
         update_subtype: function (){
