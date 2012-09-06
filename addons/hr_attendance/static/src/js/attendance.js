@@ -71,7 +71,7 @@ openerp.hr_attendance = function (instance) {
             var fct = function () {
                 instance.web.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
 
-                instance.web.attendanceslider.prependTo(self.$el);
+                instance.web.attendanceslider.prependTo(instance.webclient.$('.oe_systray'));
                 return instance.web.attendanceslider.check_attendance();
             };
             this.update_promise = this.update_promise.pipe(fct, fct);
