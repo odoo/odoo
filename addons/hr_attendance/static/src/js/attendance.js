@@ -2,8 +2,6 @@ openerp.hr_attendance = function(instance) {
     var QWeb = instance.web.qweb;
     _t = instance.web._t;
     
-    instance.web.currentform = false;
-    instance.web.currentlist = false;
     instance.web.attendanceslider = false;
     
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
@@ -16,9 +14,7 @@ openerp.hr_attendance = function(instance) {
             this.session = parent.session;
             this.parent_element = parent.$el ;            
         },
-        renderElement: function(){
-            this.$el = $(QWeb.render(this.template,this.titles));            
-            this.parent_element.prepend(this.$el);
+        start: function() {
             this.$oe_attendance_slider = this.$el.find(".oe_attendance_slider");
             this.$oe_attendance_slider.click(this.do_update_attendance);
         },
@@ -33,20 +29,6 @@ openerp.hr_attendance = function(instance) {
                 else
                     self.employee.state = 'present';
                 self.do_slide(self.employee.state);
-                if(instance.web.currentlist){
-                    instance.web.currentlist.reload();
-                }
-                if(instance.web.currentform){
-                    //tofix: it should be in hr_timesheet_sheet module
-                    if (instance.web.currentform.model == 'hr_timesheet_sheet.sheet'){
-                        model = new instance.web.DataSet(self, instance.web.currentform.model);
-                        model.call('date_today', [instance.web.currentform.dataset.ids]).done(function(result){instance.web.currentform.reload();});
-                    }
-                    else{
-                        instance.web.currentform.reload();
-                    }
-                    
-                }
             });
         },
         do_slide:function(attendance_state)
@@ -73,38 +55,14 @@ openerp.hr_attendance = function(instance) {
         },
     });
     
-    instance.web.ListView.include({
-        init:function(parent, dataset, view_id, options)
-        {
-            this._super(parent, dataset, view_id, options);
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
-                instance.web.currentlist = this;
-        }
-    });
-    
-    
-    instance.web.FormView.include({
-        init: function(parent, dataset, view_id, options) {
-            this._super(parent, dataset, view_id, options);
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
-                instance.web.currentform = this;
-        },
-        reload: function(){
-            var re = this._super();
-            if (!instance.web.attendanceslider) return re;
-            if (this.model == 'hr.employee' || this.model == 'hr.attendance' || this.model == 'hr_timesheet_sheet.sheet')
-                instance.web.attendanceslider.check_attendance();            
-            return re;            
-        },                
-    }),
-    
     instance.web.UserMenu.include({
         do_update: function () {
             this._super();
             var self = this;
             var fct = function() {                
                 instance.web.attendanceslider = new instance.hr_attendance.AttendanceSlider(self);
-                instance.web.attendanceslider.renderElement();
+                
+                instance.web.attendanceslider.prependTo(self.$el);
                 return instance.web.attendanceslider.check_attendance();                
             };
             this.update_promise = this.update_promise.pipe(fct, fct);
