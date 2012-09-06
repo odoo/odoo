@@ -3,13 +3,13 @@
 <data noupdate="0">
 
     <record id="base.group_sale_salesman" model="res.groups">
-        <field name="name">User - Own Leads Only</field>
+        <field name="name">See Own Leads</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="comment">the user will have access to his own data in the sales application.</field>
     </record>
 
     <record id="base.group_sale_salesman_all_leads" model="res.groups">
-        <field name="name">User - All Leads</field>
+        <field name="name">See all Leads</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman'))]"/>
         <field name="comment">the user will have access to all records of everyone in the sales application.</field>
