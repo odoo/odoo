@@ -42,6 +42,7 @@ from tools import config
 from xmlrpclib import Transport, ProtocolError
 import StringIO
 import base64
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -361,7 +362,7 @@ class DAVClient(object):
         to break if "base_crypt" is used.
         """
         ruob = obj.pool.get('res.users')
-        res = ruob.read(cr, 1, [uid,], ['login', 'password'])
+        res = ruob.read(cr, SUPERUSER_ID, [uid,], ['login', 'password'])
         assert res, "uid %s not found" % uid
         self.user = res[0]['login']
         self.passwd = res[0]['password']

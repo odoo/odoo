@@ -1072,12 +1072,14 @@
     -webkit-transition-timing-function: ease-out;
 }
 
-.point-of-sale .pos-actionbar .button.disabled{
-    color:#AAA;
+.point-of-sale .pos-actionbar .button.disabled *{
+    opacity: 0.5;
 }
 .point-of-sale .pos-actionbar .button.disabled:hover{
     border: 1px solid #cacaca;
     border-radius: 4px;
+    color: #555;
+    cursor: default;
 
     background: #e2e2e2;
     background: -webkit-linear-gradient(#f0f0f0, #e2e2e2);
