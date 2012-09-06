@@ -670,7 +670,7 @@ class BaseModel(object):
     _description = None
     _needaction = False
 
-    # dict of {field:method}, with method returning the name_get of records
+    # dict of {field:method}, with method returning the (name_get of records, {id: fold})
     # to include in the _read_group, if grouped on this field
     _group_by_full = {}
 
@@ -2447,7 +2447,7 @@ class BaseModel(object):
 
         # Grab the list of all groups that should be displayed, including all present groups 
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
-        all_groups = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
+        all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
                                                   read_group_order=read_group_order,
                                                   access_rights_uid=openerp.SUPERUSER_ID,
                                                   context=context)
@@ -2498,6 +2498,9 @@ class BaseModel(object):
                 append_left(read_group_result.pop(0))
             else:
                 append_right(all_groups.pop(0))
+        if folded:
+            for r in result:
+                r['__fold'] = folded.get(r[groupby], False)
         return result
 
     def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
