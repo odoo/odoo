@@ -123,14 +123,15 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <label for="state"/>
-                    <div>
-                        <field name="state" class="oe_inline"/> - 
-                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
-                    </div>
-                </field>
+               <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Attendance">
+                        <div>
+                            <field name="state" class="oe_inline"/> - 
+                            <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                            <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                        </div>
+                    </group>
+                </xpath>
             </field>
         </record>
 
