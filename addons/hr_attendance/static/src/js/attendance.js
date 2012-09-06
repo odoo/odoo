@@ -17,10 +17,10 @@ openerp.hr_attendance = function (instance) {
             });
             this.$(".oe_attendance_signin").click(function() {
                 self.do_update_attendance();
-            });
+            }).tipsy();
             this.$(".oe_attendance_signout").click(function() {
                 self.do_update_attendance();
-            });
+            }).tipsy();
             return this.check_attendance();
         },
         do_update_attendance: function () {
