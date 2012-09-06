@@ -19,19 +19,6 @@
 #
 ##############################################################################
 
-from osv import osv
-
-class project_project(osv.osv):
-    _inherit = "project.project"
-
-    def open_hr_expense(self, cr, uid, ids, context=None):
-        account_ids = [x.analytic_account_id.id for x in self.browse(cr, uid, ids, context=context)]
-        return self.pool.get('account.analytic.account').open_hr_expense(cr, uid, account_ids, context=context)
-
-    def hr_to_invoice_expense(self, cr, uid, ids, context=None):
-        account_ids = [x.analytic_account_id.id for x in self.browse(cr, uid, ids, context=context)]
-        return self.pool.get('account.analytic.account').hr_to_invoice_expense(cr, uid, account_ids, context=context)
-
-project_project()
+import base_gengo_translations
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -5,12 +5,13 @@
             <field name="name">account.analytic.account.form.expense.inherit</field>
             <field name="model">account.analytic.account</field>
             <field eval="60" name="priority"/>
+            <field name="inherit_id" ref="account_analytic_analysis.account_analytic_account_form_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//tr[@name="total"]' position='before'>
                     <tr>
-                        <td>
+                        <td class="oe_grey">
                             <label for="charge_expenses"/>
-                        </td><td>
+                        </td><td class="oe_grey">
                             <field name="charge_expenses"/>
                         </td><td>
                             <field class="oe_form_inline" name="est_expenses" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
@@ -21,10 +22,16 @@
                         </td><td>
                             <field class="oe_form_inline" name="expense_to_invoice" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td><td>
-                            <group>
-                                <button name="open_hr_expense" string="All Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
-                                <button name="hr_to_invoice_expense" string="Expenses to Invoice" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
-                            </group>
+                            <button
+                                name="hr_to_invoice_expense"
+                                class="oe_link oe_e"
+                                string="/" type="object"
+                                attrs="{'invisible': [('expense_to_invoice','=',0)]}"/>
+                        </td><td>
+                            <button
+                                name="open_hr_expense"
+                                class="oe_link"
+                                string="Expenses" type="object" attrs="{'invisible': [('charge_expenses','=',False)]}"/>
                         </td>
                     </tr>
                 </xpath>
