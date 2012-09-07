@@ -5,7 +5,7 @@
         <field name="name">My notes</field>
         <field ref="model_note_note" name="model_id"/>
         <field eval="1" name="global"/>
-        <field name="domain_force">[('follower_ids','=',user.id)]</field>
+        <field name="domain_force">[('message_follower_ids','=',user.partner_id.id)]</field>
       </record>
 </data>
 </openerp>

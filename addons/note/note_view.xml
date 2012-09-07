@@ -54,29 +54,37 @@
           <field name="stage_id"/>
           <field name="active"/>
           <field name="note"/>
-          <field name="follower_ids"/>
+          <field name="date_done"/>
+          <field name="message_follower_ids"/>
           <templates>
             <t t-name="kanban-box">
-              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
-                <!-- dropdown menu -->
-                <div class="oe_dropdown_toggle oe_dropdown_kanban">
-                  <span class="oe_e">í</span>
-                  <ul class="oe_dropdown_menu">
-                    <li><a type="edit">Edit...</a></li>
-                    <li><a type="delete">Delete</a></li>
-                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                  </ul>
+              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override ">
+                <div class="oe_dropdown_kanban">
+                  <span>
+                    <a name="onclick_note_is_done" type="object" t-if="record.active.raw_value" class="oe_e">D</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.active.raw_value" class="oe_e">C</a>
+                  </span>
+
+                  <!-- dropdown menu -->
+                  <div class="oe_dropdown_toggle">
+                    <span class="oe_e">í</span>
+                    <ul class="oe_dropdown_menu">
+                      <li><a type="edit">Edit...</a></li>
+                      <li><a type="delete">Delete</a></li>
+                      <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                    </ul>
+                  </div>
                 </div>
 
                 <!-- kanban note -->
-                <div class="oe_kanban_content">
+                <div t-attf-class="oe_kanban_content #{record.active.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </div>
 
-                <div class="oe_kanban_project_avatars">
-                  <t t-foreach="record.follower_ids.raw_value" t-as="follower">
-                    <img t-att-src="kanban_image('res.users', 'image_small', follower)" t-att-data-member_id="follower"/>
+                <div class="oe_right">
+                  <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
+                    <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
                   </t>
                 </div>
               </div>
@@ -96,7 +104,8 @@
           <header>
               <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
-          <field name="note"/>
+          <field name="note" widget="html" editor_width="100%%" editor_height="400px" nolabel="1"/>
+          <field name="tag_ids" widget="many2many_tags" group="group_note_tags" string="Tags"/>
           <field name="note_pad_url" invisible="1"/>
           <div class="oe_chatter">
               <field name="message_ids" widget="mail_thread"/>
@@ -113,6 +122,8 @@
         <search string="Notes">
           <field name="note" string="Note"/>
           <field name="stage_id"/>
+          <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
+          <filter name="active_false" string="Old" domain="[('active', '=', False)]"/>
           <group expand="0" string="Group By...">
             <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
             <filter icon="terp-stock_symbol-selection" string="Stage" help="By Note Category" context="{'group_by':'stage_id'}"/>
@@ -128,6 +139,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
+      <field name="context">{'search_default_active_true':True}</field>
     </record>
 
     <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>

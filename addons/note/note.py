@@ -21,6 +21,7 @@
 
 from openerp.osv import osv, fields
 from tools.translate import _
+import re
 
 class note_stage(osv.osv):
     """ Category of Note """
@@ -39,6 +40,15 @@ class note_stage(osv.osv):
         'sequence' : 1,
     }
 
+class note_tag(osv.osv):
+
+    _name = "note.tag"
+    _description = "User can make tags on his note."
+
+    _columns = {
+        'name' : fields.char('Tag name', size=64, required=True),
+    }
+
 class note_note(osv.osv):
     """ Note """
     _name = 'note.note'
@@ -52,7 +62,11 @@ class note_note(osv.osv):
     def _get_note_first_line(self, cr, uid, ids, name, args, context=None):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
-            res[note.id] = (note.note or '').strip().split('\n')[0]
+            text_note = (note.note or '').strip().split('\n')[0]
+            text_note = re.sub(r'(<br[ /]*>|</p>|</div>)[\s\S]*','',text_note)
+            text_note = re.sub(r'<[^>]+>','',text_note)
+            res[note.id] = text_note
+            
         return res
 
     def _get_default_stage_id(self,cr,uid,context=None):
@@ -70,16 +84,42 @@ class note_note(osv.osv):
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         return result
 
+    def onclick_note_is_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, { 'active' : False, 'date_done' : fields.date.today() })
+        
+        self.message_post(cr, uid, ids[0], body='This note is active', subject=False, 
+            type='notification', parent_id=False, attachments=None, context=context)
+
+        return False
+
+    def onclick_note_not_done(self, cr, uid, ids, context=None):
+        self.write(cr, uid, ids, { 'active' : True })
+
+        self.message_post(cr, uid, ids[0], body='This note is done', subject=False, 
+            type='notification', parent_id=False, attachments=None, context=context)
+
+        return False
+
+
     _columns = {
-        'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type="text"),
-        'note': fields.text('Pad Content'),
+        'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type='text'),
+        'note': fields.html('Pad Content'),
         'note_pad_url': fields.char('Pad Url', size=250),
         'sequence': fields.integer('Sequence'),
+        # the stage_id depending on the uid
         'stage_id': fields.many2one('note.stage', 'Stage'),
+
+        # ERROR for related & stage_ids => group_by for kanban
+        #'stage_id': fields.related('stage_ids', 'id', string='Stage', type="many2one", relation="note.stage"),
+        # stage per user
+        #'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Linked stages users'),
+
         'active': fields.boolean('Active'),
+        # when the user unactivate the note, record de date for un display note after 1 days
+        'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
-        # to be replaced by message_follower_ids
-        'follower_ids': fields.many2many('res.users', 'mail_subscription', 'res_id', 'user_id', 'Followers')
+        # put tags on the note (optional)
+        'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
     }
 
     _defaults = {
@@ -91,3 +131,4 @@ class note_note(osv.osv):
     _group_by_full = {
         'stage_id' : _read_group_stage_ids,
     }
+

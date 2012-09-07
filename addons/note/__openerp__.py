@@ -44,6 +44,7 @@ Notes can be found in the 'Home' menu.
         'pad',
     ],
     'data': [
+        'security/res.groups.csv',
         'security/note_security.xml',
         'security/ir.model.access.csv',
         'note_data.xml',
