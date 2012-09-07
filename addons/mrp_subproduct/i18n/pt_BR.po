@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-07 05:24+0000\n"
-"X-Generator: Launchpad (build 15745)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:29+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -50,7 +50,7 @@ msgstr "Ordem de Produção"
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
-msgstr ""
+msgstr "Produtos de linha BoM não devem ser os mesmo que produtos BoM"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
@@ -118,6 +118,13 @@ msgid ""
 "BoM / quantity of manufactured product set on the BoM * quantity of "
 "manufactured product in the production order.)'"
 msgstr ""
+"Definir como a quantidade de subprodutos será definido em ordens de produção "
+"que utilizam este BoM. 'Fixo' retrata uma situação em caso de a quantidade "
+"de subproduto criado é sempre definido igual à quantidade no BOM, "
+"Independentemente de quantos são criados na ordem de saída. Por outro lado, "
+"'Variável' significa que essa será a quantidade calculada como \"(quantidade "
+"de conjunto subproduto no. BoM / quantidade de produto fabricado definido na "
+"quantidade de produto BoM * Fabricado na Ordem de Produção)\""
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0

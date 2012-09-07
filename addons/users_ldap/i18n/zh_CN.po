@@ -1,0 +1,179 @@
+# Chinese (Simplified) translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-02-08 03:35+0000\n"
+"Last-Translator: Wei \"oldrev\" Li <oldrev@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <zh_CN@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:41+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "错误！您不能创建递归公司."
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr "选择的用户组不在这用允许的用户组"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr "当连接 LDAP 服务器时请求服务器使用安全的 TLS/SSL 加密。该选项需要服务器启用 STARTTLS，否则所有用户验证都将失败。"
+
+#. module: users_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "LDAP 配置"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: users_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Create the user if not in database"
+msgstr "如果数据库中没有用户就创建新的用户"
+
+#. module: users_ldap
+#: help:res.company.ldap,user:0
+msgid "Model used for user creation"
+msgstr "创建用户使用的模型"
+
+#. module: users_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "公司"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "LDAP 服务器地址"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "LDAP 服务器端口"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr "用于查询 LDAP 服务器目录的用户帐号。如果要匿名连接请保持为空。"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "LDAP 基节点"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr "用户信息"
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "公司名必须唯一！"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "公司"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr "进程参数"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "使用安全传输协议"
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "序号"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr "登录信息"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr "服务器信息"
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "设置您的 LDAP 服务器"
+
+#. module: users_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "你不能同时登录两个用户！"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "LDAP 参数"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr "LDAP 服务器上的用户帐号密码，用于查询该目录服务。"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "LDAP 密码"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "用户模型"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "LDAP 过滤器"
+
+#. module: users_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "创建用户"
+
+#~ msgid "Authenticate users with ldap server"
+#~ msgstr "通过LDAP服务器认证用户"

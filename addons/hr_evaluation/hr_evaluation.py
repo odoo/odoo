@@ -228,9 +228,13 @@ class hr_evaluation(osv.osv):
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
                             'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
                         sub = phase.email_subject
-                        dest = [child.work_email]
-                        if dest:
-                           mail_message.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, context=context)
+                        if child.work_email:
+                            vals = {'state': 'outgoing',
+                                    'subject': sub,
+                                    'body_html': '<pre>%s</pre>' % body,
+                                    'email_to': child.work_email,
+                                    'email_from': evaluation.employee_id.work_email}
+                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True

@@ -29,13 +29,13 @@ class base_config_settings(osv.TransientModel):
         'auth_signup_template_user_id': fields.many2one('res.users', 'Template user for new users created through signup'),
     }
 
-    def get_default_signup(self, cr, uid, fields, context=None):
+    def get_default_auth_signup_template_user_id(self, cr, uid, fields, context=None):
         icp = self.pool.get('ir.config_parameter')
         return {
-            'auth_signup_template_user_id': icp.get_param(cr, uid, 'auth.signup_template_user_id', 0) or False
+            'auth_signup_template_user_id': icp.get_param(cr, uid, 'auth_signup.template_user_id', 0) or False
         }
 
-    def set_signup(self, cr, uid, ids, context=None):
+    def set_auth_signup_template_user_id(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context=context)
         icp = self.pool.get('ir.config_parameter')
-        icp.set_param(cr, uid, 'auth.signup_template_user_id', config.auth_signup_template_user_id.id)
+        icp.set_param(cr, uid, 'auth_signup.template_user_id', config.auth_signup_template_user_id.id)
