@@ -273,9 +273,9 @@ class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
     _columns = {
-        'use_phases': fields.boolean('Phases Planing', help="Check this field if project manages phases"),
+        'use_phases': fields.boolean('Phases', help="Check this field if you plan to use phase-based scheduling"),
     }
-    
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
         if template_id and 'value' in res:

@@ -23,7 +23,7 @@
             <field name="channel_id" ref="crm_case_channel_email"/>
             <field name="priority">1</field>
             <field name="section_id" ref="crm_case_section_4"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hello,
 I am Jason from Le Club SARL,
@@ -47,7 +47,7 @@ Can you send details,</field>
             <field name="channel_id" ref="crm_case_channel_website"/>
             <field name="priority">4</field>
             <field name="section_id" ref="crm_case_section_3"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
         </record>
@@ -108,7 +108,7 @@ Can you send details,</field>
             <field name="channel_id" ref="crm_case_channel_website"/>
             <field name="priority">3</field>
             <field name="section_id" ref="section_sales_department"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field name="description">Hi, Can you send a quotation for 20 Computers with speakers? 
 Regards,
@@ -135,7 +135,7 @@ Contact: +1 813 494 5005</field>
             <field name="channel_id" ref=""/>
             <field name="priority">3</field>
             <field name="section_id" ref="crm_case_section_4"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
         </record>
@@ -194,7 +194,7 @@ Contact: +1 813 494 5005</field>
             <field name="channel_id" ref="crm_case_channel_phone"/>
             <field name="priority">2</field>
             <field name="section_id" ref="section_sales_department"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
             <field eval="1" name="active"/>
         </record>
@@ -297,7 +297,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-12')" name="date_action"/>
             <field name="title_action">Meeting for pricing information.</field>
             <field name="section_id" ref="crm_case_section_3"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="1" name="active"/>
         </record>
@@ -342,7 +342,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-10')" name="date_action"/>
             <field name="title_action">Call to ask system requirement</field>
             <field name="section_id" ref="crm_case_section_3"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
         </record>
@@ -411,7 +411,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-4')" name="date_action"/>
             <field name="title_action">Call to define real needs about training</field>
             <field name="section_id" ref="crm_case_section_2"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead3"/>
             <field eval="1" name="active"/>
         </record>
@@ -434,7 +434,7 @@ Andrew</field>
             <field eval="time.strftime('%Y-%m-5')" name="date_action"/>
             <field name="title_action">Ask for the good receprion of the proposition</field>
             <field name="section_id" ref="crm_case_section_1"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
         </record>
@@ -466,7 +466,7 @@ Andrew</field>
             <field name="channel_id" ref="crm_case_channel_phone"/>
             <field name="priority">3</field>
             <field name="section_id" ref="crm_case_section_4"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="1" name="active"/>
         </record>
@@ -484,7 +484,7 @@ Andrew</field>
             <field name="channel_id" ref="crm_case_channel_email"/>
             <field name="priority">3</field>
             <field name="section_id" ref="crm_case_section_4"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead8"/>
             <field eval="1" name="active"/>
         </record>
@@ -519,7 +519,7 @@ Andrew</field>
             <field name="priority">5</field>
             <field eval="time.strftime('%Y-%m-6')" name="date_deadline"/>
             <field name="section_id" ref="section_sales_department"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead6"/>
             <field eval="1" name="active"/>
         </record>
@@ -542,7 +542,7 @@ Andrew</field>
             <field name="priority">2</field>
             <field name="title_action">Conf call with technical service</field>
             <field name="section_id" ref="crm_case_section_2"/>
-            <field name="user_id" ref="base.user_admin"/>
+            <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="crm.stage_lead4"/>
             <field eval="1" name="active"/>
         </record>
@@ -552,85 +552,66 @@ Andrew</field>
             <field name="subject">Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html">&lt;![CDATA[Email0 inquiry]]&gt;&lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to buy a new laptop having latest technologies and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;Can you please send me product catalogue?&lt;/font&gt;&lt;/div&gt;</field>
+            <field name="body">&lt;![CDATA[Email0 inquiry]]&gt;&lt;div&gt;&lt;font size="2"&gt;Hello,&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;I am interested in your company's product and I plan to buy a new laptop having latest technologies and affordable price.&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font size="2"&gt;Can you please send me product catalogue?&lt;/font&gt;&lt;/div&gt;</field>
             <field name="type">email</field>
-            <field name="state">received</field>
-            <field name="user_id" ref="base.user_demo"/>
         </record>
         <record id="message_note0" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="parent_id" ref="message_email0"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Dear Customer,
+            <field name="type">comment</field>
+            <field name="body">Dear Customer,
 Thanks for showing interest in our products.
 We have attached the catalogue,
 We would like to know your interests, Let us know if we can call you for more details.
 
 Thanks</field>
-            <field name="type">email</field>
-            <field name="user_id" ref="base.user_root"/>
-            <field name="state">sent</field>
+            <field name="parent_id" ref="message_email0"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
         <record id="message_note0_comment0" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
+            <field name="type">comment</field>
+            <field name="body">&lt;div&gt;Thanks for the information,&lt;/div&gt;&lt;div&gt;I will visit the store soon.&lt;/div&gt;</field>
             <field name="parent_id" ref="message_note0"/>
-            <field name="type">email</field>
-            <field name="user_id" ref="base.user_demo"/>
-            <field name="state">received</field>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_note0_comment1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
+            <field name="type">comment</field>
+            <field name="body">&lt;font color="#1f1f1f"&gt;Can you tell me if the store is open at 9:00 PM?&lt;/b&gt;&lt;/font&gt;</field>
             <field name="parent_id" ref="message_note0"/>
-            <field name="type">email</field>
-            <field name="state">received</field>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <record id="message_email1" model="mail.message">
             <field name="subject">Re: Plan to buy a Laptop</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_15"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Yes, its open till 10:00 PM, you are welcome!</field>
+            <field name="body">Yes, its open till 10:00 PM, you are welcome!</field>
             <field name="type">email</field>
-            <field name="state">sent</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
-
         <record id="message_email_12" model="mail.message">
             <field name="subject">Inquiry</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_1"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Hello,
+            <field name="body">Hello,
 I am Jason from Le Club SARL,
 I am intertested to attend Training organized in your company,
 Can you send details,</field>
             <field name="type">email</field>
-            <field name="state">received</field>
-            <field name="user_id" ref="base.user_demo"/>
         </record>
-
         <record id="message_email_13" model="mail.message">
             <field name="subject">Need Details</field>
             <field name="model">crm.lead</field>
             <field name="res_id" ref="crm_case_2"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Want to know features and benifits to use the new software.</field>
+            <field name="body">Want to know features and benifits to use the new software.</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_demo"/>
         </record>
-
 
         <!--        Call Function to set the opportunities as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
