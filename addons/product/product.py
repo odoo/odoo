@@ -28,18 +28,10 @@ import re
 import tools
 from tools.translate import _
 
-def is_pair(x):
-    return not x%2
-
-def check_ean(eancode):
-    if not eancode:
-        return True
+def ean_checksum(eancode):
+    """returns the checksum of an ean string of length 13, returns -1 if the string has the wrong length"""
     if len(eancode) <> 13:
-        return False
-    try:
-        int(eancode)
-    except:
-        return False
+        return -1
     oddsum=0
     evensum=0
     total=0
@@ -48,17 +40,38 @@ def check_ean(eancode):
     finalean=reversevalue[1:]
 
     for i in range(len(finalean)):
-        if is_pair(i):
+        if i % 2 == 0:
             oddsum += int(finalean[i])
         else:
             evensum += int(finalean[i])
     total=(oddsum * 3) + evensum
 
     check = int(10 - math.ceil(total % 10.0)) %10
+    return check
 
-    if check != int(eancode[-1]):
+def check_ean(eancode):
+    """returns True if eancode is a valid ean13 string, or null"""
+    if not eancode:
+        return True
+    if len(eancode) <> 13:
         return False
-    return True
+    try:
+        int(eancode)
+    except:
+        return False
+    return ean_checksum(eancode) == int(eancode[-1])
+
+def sanitize_ean13(ean13):
+    """Creates and returns a valid ean13 from an invalid one"""
+    if not ean13:
+        return "0000000000000"
+    ean13 = re.sub("[A-Za-z]","0",ean13);
+    ean13 = re.sub("[^0-9]","",ean13);
+    ean13 = ean13[:13]
+    if len(ean13) < 13:
+        ean13 = ean13 + '0' * (13-len(ean13))
+    return ean13[:-1] + str(ean_checksum(ean13))
+
 #----------------------------------------------------------
 # UOM
 #----------------------------------------------------------
@@ -195,8 +208,10 @@ product_ul()
 class product_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
-        if not len(ids):
+        if isinstance(ids, (list, tuple)) and not len(ids):
             return []
+        if isinstance(ids, (long, int)):
+            ids = [ids]
         reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
         res = []
         for record in reads:
@@ -273,13 +288,13 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
+        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
-        'warranty': fields.float('Warranty (months)'),
+        'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),
@@ -287,7 +302,7 @@ class product_template(osv.osv):
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
-        'uom_id': fields.many2one('product.uom', 'Default Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default Unit of Measure.'),
@@ -339,7 +354,7 @@ class product_template(osv.osv):
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',
         'supply_method': lambda *a: 'buy',
-        'standard_price': lambda *a: 1,
+        'standard_price': lambda *a: 0.0,
         'sale_ok': lambda *a: 1,
         'sale_delay': lambda *a: 7,
         'produce_delay': lambda *a: 1,
@@ -484,7 +499,7 @@ class product_product(osv.osv):
             main_supplier = self._get_main_product_supplier(cr, uid, product, context=context)
             result[product.id] = {
                 'seller_info_id': main_supplier and main_supplier.id or False,
-                'seller_delay': main_supplier and main_supplier.delay or 1,
+                'seller_delay': main_supplier.delay if main_supplier else 1,
                 'seller_qty': main_supplier and main_supplier.qty or 0.0,
                 'seller_id': main_supplier and main_supplier.name.id or False
             }
@@ -520,13 +535,13 @@ class product_product(osv.osv):
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Product Price')),
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'code': fields.function(_product_code, type='char', string='Reference'),
+        'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
-        'default_code' : fields.char('Reference', size=64, select=True),
+        'default_code' : fields.char('Internal Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
-        'ean13': fields.char('EAN13', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
+        'ean13': fields.char('EAN13 Barcode', size=13, help="The numbers encoded in EAN-13 bar codes are product identification numbers."),
         'packaging' : fields.one2many('product.packaging', 'product_id', 'Logistical Units', help="Gives the different ways to package the same product. This has no impact on the picking order and is mainly used if you use the EDI module."),
         'price_extra': fields.float('Variant Price Extra', digits_compute=dp.get_precision('Product Price')),
         'price_margin': fields.float('Variant Price Margin', digits_compute=dp.get_precision('Product Price')),
@@ -565,7 +580,7 @@ class product_product(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []
@@ -593,6 +608,7 @@ class product_product(osv.osv):
         for product in self.read(cr, uid, ids, ['ean13'], context=context):
             res = check_ean(product['ean13'])
         return res
+
 
     _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
 

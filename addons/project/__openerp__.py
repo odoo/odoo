@@ -70,10 +70,8 @@ Dashboard for project management that includes:
         'board_project_view.xml',
         'res_config_view.xml',
     ],
-    'demo': [
-        'project_demo.xml',
-    ],
-    'test':[
+    'demo': ['project_demo.xml'],
+    'test': [
         'test/project_demo.yml',
         'test/project_process.yml',
         'test/task_process.yml',

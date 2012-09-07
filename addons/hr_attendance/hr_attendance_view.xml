@@ -126,9 +126,9 @@
                 <field name="active" position="before">
                     <label for="state"/>
                     <div>
-                        <field name="state" class="oe_inline"/>
-                        <button class="oe_inline oe_right" name="attendance_action_change" states="present" string="Sign Out" type="object" icon="gtk-go-forward" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
-                        <button class="oe_inline oe_right" name="attendance_action_change" states="absent" string="Sign In" type="object" icon="gtk-go-back" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
+                        <field name="state" class="oe_inline"/> - 
+                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </div>
                 </field>
             </field>

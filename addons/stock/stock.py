@@ -1379,13 +1379,13 @@ class stock_picking(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
-        return self.message_append_note(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
+        return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
 
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
+        return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
 
     def ship_done_send_note(self, cr, uid, ids, context=None):
         type_dict = {
@@ -1394,11 +1394,11 @@ class stock_picking(osv.osv):
                 'internal': 'moved',
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
 
 
 stock_picking()
@@ -2087,11 +2087,12 @@ class stock_move(osv.osv):
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s where id=%s', (r[1], r[0], move.id))
+                    product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
+                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
 
                     while res:
                         r = res.pop(0)
-                        move_id = self.copy(cr, uid, move.id, {'product_qty': r[0], 'location_id': r[1]})
+                        move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
         if done:
             count += len(done)
@@ -2541,7 +2542,7 @@ class stock_move(osv.osv):
         product_obj = self.pool.get('product.product')
         for new_move in self.browse(cr, uid, res, context=context):
             message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
-            product_obj.message_append_note(cr, uid, [new_move.product_id.id], body=message, context=context)
+            product_obj.message_post(cr, uid, [new_move.product_id.id], body=message, context=context)
 
         self.action_done(cr, uid, res, context=context)
 

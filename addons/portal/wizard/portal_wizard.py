@@ -194,7 +194,6 @@ class wizard(osv.osv_memory):
             if not data.user_ids:
                 raise osv.except_osv(_('User required'),
                 _('Create atleast one user for portal.'))
-
             portal_user_ids = [user.id for user in data.user_ids]
             res_portal_user.manage_portal_access(cr, uid, portal_user_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}
@@ -242,19 +241,23 @@ class wizard_user(osv.osv_memory):
 
     def send_email(self, cr, uid, portal_user, new_user_id, context=None):
         #TODO: use email template
+        if context is None:
+            context = {}
+        ctx = dict(context)
         res_users = self.pool.get('res.users')
-        mail_message = self.pool.get('mail.message')
+        mail_mail = self.pool.get('mail.mail')
         user = res_users.browse(cr, ROOT_UID, uid, context)
         if not user.email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences'
                   ' to send emails.'))
-
+        
         record = portal_user.wizard_id
         subject_data = {
                 'company': user.company_id.name,
         }
         new_user = res_users.browse(cr, uid, new_user_id, context=context)
+        ctx['lang'] = new_user.lang
         body_data = {
                 'portal': record.portal_id.name,
                 'message': record.message or "",
@@ -269,11 +272,13 @@ class wizard_user(osv.osv_memory):
         email_to = portal_user.email
         subject = _(WELCOME_EMAIL_SUBJECT) % subject_data
         body = _(WELCOME_EMAIL_BODY) % body_data
-        res = mail_message.schedule_with_attach(cr, uid, email_from , [email_to], subject, body, context=context)
-        if not res:
-            _logger.warning(
-                'Failed to send email from %s to %s', email_from, email_to)
-        return True
+        mail_id = mail_mail.create(cr, uid, {
+                            'email_from': email_from ,
+                            'email_to': email_to,
+                            'subject': subject,
+                            'state': 'outgoing',
+                            'body_html': '<pre>%s</pre>' % body}, context=ctx)
+        return mail_id
 
     def create_new_user(self, cr, uid, portal_user, context=None):
         res_user = self.pool.get('res.users')

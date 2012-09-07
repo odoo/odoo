@@ -60,13 +60,9 @@ system to store and search in your CV base.
         'res_config_view.xml',
         'hr_recruitment_data.xml'
     ],
-    'demo': [
-        'hr_recruitment_demo.yml',
-    ],
+    'demo': ['hr_recruitment_demo.yml'],
     'js': ['static/src/js/hr_recruitment.js'],
-    'test': [
-        'test/recruitment_process.yml',
-    ],
+    'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '001073437025460275621',

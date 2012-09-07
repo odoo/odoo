@@ -108,7 +108,7 @@ class hr_payslip(osv.osv):
                 'journal_id': slip.journal_id.id,
                 'period_id': period_id,
             }
-            for line in slip.line_ids:
+            for line in slip.details_by_salary_rule_category:
                 amt = slip.credit_note and -line.total or line.total
                 partner_id = line.salary_rule_id.register_id.partner_id and line.salary_rule_id.register_id.partner_id.id or default_partner_id
                 debit_account_id = line.salary_rule_id.account_debit.id

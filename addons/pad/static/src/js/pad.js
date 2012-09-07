@@ -1,32 +1,41 @@
 openerp.pad = function(instance) {
 
-instance.web.form.FieldPad = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
+instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
     template: 'FieldPad',
-    initialize_content: function() {
+    start: function() {
+        this._super();
         var self = this;
-        this.$textarea = undefined;
-        this.$element.find('div.oe_etherpad_head').click(function(ev) {
-            self.$element.toggleClass('oe_etherpad_fullscreen').toggleClass('oe_etherpad_normal');
+        this.$el.find('div.oe_pad_head').click(function(ev) {
+            self.$el.toggleClass('oe_pad_fullscreen');
+        });
+        this.on("change:effective_readonly", this, function() {
+            this.render_value();
         });
     },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
+    set_value: function(val) {
+        var self = this;
+        var _super = self._super;
+        _super.apply(self,[val]);
+        this._dirty_flag = true;
+        self.render_value();
     },
     render_value: function() {
+        console.log("display");
         var self = this;
         var value = this.get('value');
-        if(value !== false) {
-            var url = value.split('\n')[0];
+
+        if (!_.str.startsWith(value, "http")) {
+            self.$('.oe_pad_content').html(instance.web.qweb.render('FieldPad.unconfigured'));
+        } else {
             if (!this.get("effective_readonly")) {
                 var pad_username = this.session.username;
-                var code = '<iframe width="100%" height="100%" frameborder="0" src="'+url+'?showChat=false&userName='+pad_username+'"></iframe>';
-                this.$element.find('div.oe_etherpad_default').html(code);
+                var code = '<iframe width="100%" height="100%" frameborder="0" src="'+value+'?showChat=false&userName='+pad_username+'"></iframe>';
+                this.$('.oe_pad_content').html(code);
             } else {
-                $.get(url+'/export/html').success(function(data) {
-                    self.$element.html('<div class="etherpad_readonly">'+data+'</div>');
+                $.get(value+'/export/html').success(function(data) {
+                    self.$('.oe_pad_content').html('<div class="oe_pad_readonly">'+data+'</div>');
                 }).error(function() {
-                    self.$element.text('Unable to load pad');
+                    self.$('.oe_pad_content').text('Unable to load pad');
                 });
             }
         }

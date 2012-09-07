@@ -1045,7 +1045,7 @@ class account_invoice(osv.osv):
                 if obj_inv.type in ('out_invoice', 'out_refund'):
                     ctx = self.get_log_context(cr, uid, context=ctx)
                 message = _("Invoice  '%s' is validated.") % name
-                self.message_append_note(cr, uid, [inv_id], body=message, context=context)
+                self.message_post(cr, uid, [inv_id], body=message, context=context)
         return True
 
     def action_cancel(self, cr, uid, ids, *args):
@@ -1127,7 +1127,7 @@ class account_invoice(osv.osv):
         return map(lambda x: (0,0,x), lines)
 
     def refund(self, cr, uid, ids, date=None, period_id=None, description=None, journal_id=None):
-        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id'])
+        invoices = self.read(cr, uid, ids, ['name', 'type', 'number', 'reference', 'comment', 'date_due', 'partner_id', 'partner_contact', 'partner_insite', 'partner_ref', 'payment_term', 'account_id', 'currency_id', 'invoice_line', 'tax_line', 'journal_id', 'company_id'])
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_invoice_tax = self.pool.get('account.invoice.tax')
         obj_journal = self.pool.get('account.journal')
@@ -1175,7 +1175,7 @@ class account_invoice(osv.osv):
                     'name': description,
                 })
             # take the id part of the tuple returned for many2one fields
-            for field in ('partner_id',
+            for field in ('partner_id', 'company_id',
                     'account_id', 'currency_id', 'payment_term', 'journal_id'):
                 invoice[field] = invoice[field] and invoice[field][0]
             # create the new invoice
@@ -1275,7 +1275,7 @@ class account_invoice(osv.osv):
             # TODO: use currency's formatting function
             msg = _("Invoice '%s' is paid partially: %s%s of %s%s (%s%s remaining).") % \
                     (name, pay_amount, code, invoice.amount_total, code, total, code)
-            self.message_append_note(cr, uid, [inv_id], body=msg, context=context)
+            self.message_post(cr, uid, [inv_id], body=msg, context=context)
             self.pool.get('account.move.line').reconcile_partial(cr, uid, line_ids, 'manual', context)
 
         # Update the stored value (fields.function), so we write to trigger recompute
@@ -1288,24 +1288,25 @@ class account_invoice(osv.osv):
 
     def _get_document_type(self, type):
         type_dict = {
-                'out_invoice': 'Customer invoice',
-                'in_invoice': 'Supplier invoice',
-                'out_refund': 'Customer Refund',
-                'in_refund': 'Supplier Refund',
+                # Translation markers will have no effect at runtime, only used to properly flag export
+                'out_invoice': _('Customer invoice'),
+                'in_invoice': _('Supplier invoice'),
+                'out_refund': _('Customer Refund'),
+                'in_refund': _('Supplier Refund'),
         }
         return type_dict.get(type, 'Invoice')
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>created</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
-         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (_(self._get_document_type(obj.type))), context=context)
 
 account_invoice()
 
@@ -1361,10 +1362,16 @@ class account_invoice_line(osv.osv):
         'company_id': fields.related('invoice_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
+
+    def _default_account_id(self, cr, uid, ids, context=None):
+        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        return prop and prop.id or False
+
     _defaults = {
         'quantity': 1,
         'discount': 0.0,
         'price_unit': _price_unit_default,
+        'account_id': _default_account_id,
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
@@ -1473,10 +1480,11 @@ class account_invoice_line(osv.osv):
             prod = self.pool.get('product.product').browse(cr, uid, product, context=context)
             prod_uom = self.pool.get('product.uom').browse(cr, uid, uom, context=context)
             if prod.uom_id.category_id.id != prod_uom.category_id.id:
-                 warning = {
+                warning = {
                     'title': _('Warning!'),
                     'message': _('The selected unit of measure is not compatible with the unit of measure of the product.')
-            }
+                }
+                res['value'].update({'uos_id': prod.uom_id.id})
             return {'value': res['value'], 'warning': warning}
         return res
 
