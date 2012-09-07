@@ -7,7 +7,7 @@
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
                 <notebook position="inside">
-                    <page string="Accounting" groups="base.group_user">
+                    <page string="Accounting" groups="account.group_account_user">
                         <group name="properties">
                             <group>
                                 <field name="property_account_income" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('sale_ok','=',0)]}"/>

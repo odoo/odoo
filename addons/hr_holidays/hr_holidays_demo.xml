@@ -12,7 +12,7 @@
 
     <record model="hr.holidays" id="hr_holidays_employee1_cl">
       <field name="name">Trip with Family</field>
-      <field name="holiday_status_id" ref="holiday_status_cl"/>
+      <field name="holiday_status_id" ref="holiday_status_comp"/>
       <field eval="time.strftime('%Y-%m-01')" name="date_from"/>
       <field eval="time.strftime('%Y-%m-03')" name="date_to"/>
       <field name="type">remove</field>
@@ -52,13 +52,10 @@
       <field name="employee_id" ref="hr.employee_fp"/>
     </record>
 
-    <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_allocation_cl"/>
 
-    <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_sl"/>
 
-    <workflow action="confirm" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
     <workflow action="validate" model="hr.holidays" ref="hr_holidays_employee1_int_tour"/>
   </data>
 </openerp>

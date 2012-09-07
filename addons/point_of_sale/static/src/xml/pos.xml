@@ -540,7 +540,7 @@
     </t>
 
     <t t-name="ActionButtonWidget">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
+        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
             <div class='label'>
                 <t t-esc="widget.label" />
             </div>
@@ -548,7 +548,7 @@
     </t>
 
     <t t-name="ActionButtonWidgetWithIcon">
-        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '')">
+        <li t-att-class=" 'button '+ (widget.rightalign  ? 'rightalign ' : '') + (widget.disabled ? 'disabled ' : '')">
             <div class='icon'>
                 <img t-att-src="widget.icon" />
                 <div class='iconlabel'><t t-esc="widget.label" /></div>
