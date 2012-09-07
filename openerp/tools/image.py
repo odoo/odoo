@@ -20,9 +20,11 @@
 ##############################################################################
 
 import io
+import StringIO
+
 from PIL import Image
 from PIL import ImageFilter
-import StringIO
+from random import random
 
 # ----------------------------------------
 # Image resizing
@@ -48,7 +50,7 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
           image.
         - past the thumbnail on the transparent background and center
           it.
-        
+
         :param base64_source: base64-encoded version of the source
             image
         :param size: tuple(height, width)
@@ -93,7 +95,7 @@ def image_resize_image_medium(base64_source, size=(180, 180), encoding='base64',
     if not base64_source:
         return False
     return image_resize_image(base64_source, size, encoding, filetype)
-    
+
 def image_resize_image_small(base64_source, size=(50, 50), encoding='base64', filetype='PNG'):
     """ Wrapper on image_resize_image, to resize to the standard 'small' image
         size: 50x50.
@@ -103,6 +105,29 @@ def image_resize_image_small(base64_source, size=(50, 50), encoding='base64', fi
     if not base64_source:
         return False
     return image_resize_image(base64_source, size, encoding, filetype)
+
+# ----------------------------------------
+# Colors
+# ---------------------------------------
+
+def image_colorize(original, randomize=True, color=(255, 255, 255)):
+    """ Add a color to the transparent background of an image.
+        :param original: file object on the original image file
+        :param randomize: randomize the background color
+        :param color: background-color, if not randomize
+    """
+    # create a new image, based on the original one
+    original = Image.open(io.BytesIO(original))
+    image = Image.new('RGB', original.size)
+    # generate the background color, past it as background
+    if randomize:
+        color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
+    image.paste(color)
+    image.paste(original, mask=original)
+    # return the new image
+    buffer = StringIO.StringIO()
+    image.save(buffer, 'PNG')
+    return buffer.getvalue()
 
 # ----------------------------------------
 # Misc image tools
@@ -118,7 +143,7 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         Default parameters are given to be used for the getter of functional
         image fields,  for example with res.users or res.partner. It returns
         only image_medium and image_small values, to update those fields.
-        
+
         :param base64_source: if set to False, other values are set to False
             also. The purpose is to be linked to the fields that hold images in
             OpenERP and that are binary fields.
@@ -135,7 +160,10 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
             previous parameters.
     """
     return_dict = dict()
-    if return_big: return_dict[big_name] = image_resize_image_big(base64_source)
-    if return_medium: return_dict[medium_name] = image_resize_image_medium(base64_source)
-    if return_small: return_dict[small_name] = image_resize_image_small(base64_source)
+    if return_big:
+        return_dict[big_name] = image_resize_image_big(base64_source)
+    if return_medium:
+        return_dict[medium_name] = image_resize_image_medium(base64_source)
+    if return_small:
+        return_dict[small_name] = image_resize_image_small(base64_source)
     return return_dict
