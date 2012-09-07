@@ -93,6 +93,23 @@ class TestO2MSerialization(common.TransactionCase):
             {'id': id_baz, 'name': 'quux', 'city': 'tag'}
         ])
 
+    def test_DELETE_command(self):
+        " deleted records are not returned at all. "
+        ids = [
+            self.partner.create(self.cr, UID, {'name': 'foo'}),
+            self.partner.create(self.cr, UID, {'name': 'bar'}),
+            self.partner.create(self.cr, UID, {'name': 'baz'})
+        ]
+        commands = [DELETE(ids[0]), DELETE(ids[1]), DELETE(ids[2])]
+
+        results = self.partner.resolve_2many_commands(
+            self.cr, UID, 'address', commands, ['name'])
+
+        self.assertEqual(results, [
+            {'id': ids[0], 'name': 'foo'},
+            {'id': ids[2], 'name': 'baz'}
+        ])
+
     def test_mixed_commands(self):
         ids = [
             self.partner.create(self.cr, UID, {'name': name})
@@ -104,7 +121,7 @@ class TestO2MSerialization(common.TransactionCase):
                 CREATE({'name': 'foo'}),
                 UPDATE(ids[0], {'name': 'bar'}),
                 LINK_TO(ids[1]),
-                LINK_TO(ids[2]),
+                DELETE(ids[2]),
                 UPDATE(ids[3], {'name': 'quux',}),
                 UPDATE(ids[4], {'name': 'corge'}),
                 CREATE({'name': 'grault'}),
@@ -115,7 +132,6 @@ class TestO2MSerialization(common.TransactionCase):
             {'name': 'foo'},
             {'id': ids[0], 'name': 'bar'},
             {'id': ids[1], 'name': 'baz'},
-            {'id': ids[2], 'name': 'qux'},
             {'id': ids[3], 'name': 'quux'},
             {'id': ids[4], 'name': 'corge'},
             {'name': 'grault'},
@@ -149,25 +165,5 @@ class TestO2MSerialization(common.TransactionCase):
         except AssertionError:
             # 5 should fail with an assert error, but not e.g. a ValueError
             pass
-
-    def test_invalid_commands(self):
-        "Commands with uncertain semantics in this context should be forbidden"
-
-        with self.assertRaises(AssertionError):
-            self.partner.resolve_2many_commands(
-                self.cr, UID, 'address', [DELETE(42)], ['name'])
-
-        with self.assertRaises(AssertionError):
-            self.partner.resolve_2many_commands(
-                self.cr, UID, 'address', [FORGET(42)], ['name'])
-
-        with self.assertRaises(AssertionError):
-            self.partner.resolve_2many_commands(
-                self.cr, UID, 'address', [DELETE_ALL()], ['name'])
-
-        with self.assertRaises(AssertionError):
-            self.partner.resolve_2many_commands(
-                self.cr, UID, 'address', [REPLACE_WITH([42])], ['name'])
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
