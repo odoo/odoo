@@ -425,7 +425,7 @@ class import_framework(Thread):
         email_id = email_obj.create(self.cr, self.uid, {
             'email_from' : 'import@module.openerp',
             'email_to' : self.email,
-            'body_text' : self.get_email_body(result, error),
+            'body' : self.get_email_body(result, error),
             'subject' : self.get_email_subject(result, error),
             'auto_delete' : True})
         email_obj.send(self.cr, self.uid, [email_id])

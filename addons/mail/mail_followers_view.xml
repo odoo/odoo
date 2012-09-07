@@ -11,7 +11,7 @@
                 <tree string="Followers">
                     <field name="res_model"/>
                     <field name="res_id"/>
-                    <field name="user_id"/>
+                    <field name="partner_id"/>
                 </tree>
             </field>
         </record>
@@ -23,7 +23,7 @@
             <field name="priority">10</field>
             <field name="arch" type="xml">
                 <tree string="Notifications">
-                    <field name="user_id"/>
+                    <field name="partner_id"/>
                     <field name="message_id"/>
                 </tree>
             </field>
@@ -37,7 +37,7 @@
         </record>
 
         <record id="action_view_notifications" model="ir.actions.act_window">
-            <field name="name">Pushed notif</field>
+            <field name="name">Notifications</field>
             <field name="res_model">mail.notification</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

@@ -14,6 +14,7 @@ pads (by default, http://ietherpad.com/).
     'website': 'http://openerp.com',
     'depends': ['base'],
     'data': ['res_company.xml'],
+    'demo': ['pad_demo.xml'],
     'installable': True,
     'auto_install': False,
     'web': True,
