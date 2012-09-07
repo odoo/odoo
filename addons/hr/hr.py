@@ -189,7 +189,7 @@ class hr_employee(osv.osv):
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
@@ -197,7 +197,7 @@ class hr_employee(osv.osv):
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),

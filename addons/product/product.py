@@ -509,7 +509,7 @@ class product_product(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
+            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -557,15 +557,15 @@ class product_product(osv.osv):
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the product. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
+                 "resized as a 128x128px image, with aspect ratio preserved, "\
+                 "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
             store={
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the product. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
