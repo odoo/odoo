@@ -106,8 +106,6 @@ class plugin_handler(osv.osv_memory):
                 res_id = model_obj.message_new(cr, uid, msg)
                 notify = "Mail succesfully pushed, a new %s has been created " % model
         else:
-            if model == 'res.partner':
-                model_obj = self.pool.get('mail.thread')
             model_obj.message_post(cr, uid, [res_id], body=msg)
             notify = "Mail succesfully pushed"
             
