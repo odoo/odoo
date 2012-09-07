@@ -79,7 +79,7 @@
             </form>
             <div class="oe_login_footer">
                 <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com">Powered by <span>OpenERP</span></a>
+                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
             </div>
         </div>
     </div>
@@ -404,13 +404,10 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <t t-js="d">
-                    d.url = '/' + (window.location.search || '');
-                </t>
-                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                    Powered by <a href="http://www.openerp.com" target="_blank"><span>Open</span>ERP</a>
                 </div>
             </td>
             <td class="oe_application">
@@ -479,6 +476,7 @@
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
     <option value="manage_filters">Manage Filters</option>

@@ -731,6 +731,8 @@ instance.web.Menu =  instance.web.Widget.extend({
      * @param {Number} id database id of the terminal menu to select
      */
     open_menu: function (id) {
+        this.current_menu = id;
+        this.session.active_id = id;
         var $clicked_menu, $sub_menu, $main_menu;
         $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
         this.trigger('open_menu', id, $clicked_menu);
@@ -803,16 +805,15 @@ instance.web.Menu =  instance.web.Widget.extend({
                 }
             }
         }
-        this.open_menu(id);
-        this.current_menu = id;
-        this.session.active_id = id;
         if (action_id) {
             this.trigger('menu_click', {
                 action_id: action_id,
                 needaction: needaction,
-                id: id
+                id: id,
+                previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
             }, $item);
         }
+        this.open_menu(id);
     },
     /**
      * Jquery event handler for menu click
@@ -870,10 +871,12 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     },
     on_menu_settings: function() {
         var self = this;
-        self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-            result.result.res_id = instance.session.uid;
-            self.getParent().action_manager.do_action(result.result);
-        });
+        if (!this.getParent().has_uncommitted_changes()) {
+            self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
+                result.result.res_id = instance.session.uid;
+                self.getParent().action_manager.do_action(result.result);
+            });
+        }
     },
     on_menu_about: function() {
         var self = this;
@@ -951,7 +954,10 @@ instance.web.Client = instance.web.Widget.extend({
     },
     toggle_bars: function(value) {
         this.$('tr:has(td.oe_topbar),.oe_leftbar').toggle(value);
-    }
+    },
+    has_uncommitted_changes: function() {
+        return false;
+    },
 });
 
 instance.web.WebClient = instance.web.Client.extend({
@@ -963,6 +969,9 @@ instance.web.WebClient = instance.web.Client.extend({
     start: function() {
         var self = this;
         return $.when(this._super()).pipe(function() {
+            self.$el.on('click', '.oe_logo', function() {
+                self.action_manager.do_action('home');
+            });
             if (jQuery.param !== undefined && jQuery.deparam(jQuery.param.querystring()).kitten !== undefined) {
                 $("body").addClass("kitten-mode-activated");
                 if ($.blockUI) {
@@ -1048,11 +1057,13 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_logout: function() {
         var self = this;
-        this.session.session_logout().then(function () {
-            $(window).unbind('hashchange', self.on_hashchange);
-            self.do_push_state({});
-            window.location.reload();
-        });
+        if (!this.has_uncommitted_changes()) {
+            this.session.session_logout().then(function () {
+                $(window).unbind('hashchange', self.on_hashchange);
+                self.do_push_state({});
+                window.location.reload();
+            });
+        }
     },
     bind_hashchange: function() {
         var self = this;
@@ -1095,14 +1106,15 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     on_menu_action: function(options) {
         var self = this;
-        this.rpc("/web/action/load", { action_id: options.action_id })
-            .then(function (result) {
+        return this.rpc("/web/action/load", { action_id: options.action_id })
+            .pipe(function (result) {
                 var action = result.result;
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
-                self.action_manager.clear_breadcrumbs();
-                self.action_manager.do_action(action);
+                return $.when(self.action_manager.do_action(action, null, true)).fail(function() {
+                    self.menu.open_menu(options.previous_menu_id);
+                });
             });
     },
     do_action: function(action) {
@@ -1122,7 +1134,16 @@ instance.web.WebClient = instance.web.Client.extend({
             $(".oe_webclient", this.$el).removeClass("oe_content_full_screen");
             $("body").css({'overflow-y':'scroll'});
         }
-    }
+    },
+    has_uncommitted_changes: function() {
+        var $e = $.Event('clear_uncommitted_changes');
+        instance.web.bus.trigger('clear_uncommitted_changes', $e);
+        if ($e.isDefaultPrevented()) {
+            return true;
+        } else {
+            return this._super.apply(this, arguments);
+        }
+    },
 });
 
 instance.web.EmbeddedClient = instance.web.Client.extend({

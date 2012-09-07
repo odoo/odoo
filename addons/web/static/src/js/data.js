@@ -417,6 +417,7 @@ instance.web.data = {
             var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
             var leaf_group = fixed_group.__context.group_by.length === 0;
             this.attributes = {
+                folded: !!(fixed_group.__fold),
                 grouped_on: grouping_field,
                 // if terminal group (or no group) and group_by_no_leaf => use group.__count
                 length: group_size,
@@ -494,6 +495,7 @@ instance.web.DataGroup =  instance.web.CallbackEnabled.extend( /** @lends opener
                     {
                         __context: child_context,
                         __domain: group.model.domain(),
+                        folded: group.get('folded'),
                         grouped_on: group.get('grouped_on'),
                         length: group.get('length'),
                         value: group.get('value'),
