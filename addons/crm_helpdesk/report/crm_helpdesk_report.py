@@ -97,7 +97,7 @@ class crm_helpdesk_report(osv.osv):
                     c.planned_cost,
                     count(*) as nbr,
                     extract('epoch' from (c.date_closed-c.create_date))/(3600*24) as  delay_close,
-                    (SELECT count(id) FROM mail_message WHERE model='crm.helpdesk' AND res_id=c.id AND email_from IS NOT NULL) AS email,
+                    (SELECT count(id) FROM mail_message WHERE model='crm.helpdesk' AND res_id=c.id AND type = 'email') AS email,
                     abs(avg(extract('epoch' from (c.date_deadline - c.date_closed)))/(3600*24)) as delay_expected
                 from
                     crm_helpdesk c

@@ -65,7 +65,7 @@ class pos_open_statement(osv.osv_memory):
             statement_id = statement_obj.create(cr, uid, data, context=context)
             st_ids.append(int(statement_id))
 
-            if journal.opening_control:
+            if journal.cash_control:
                 statement_obj.button_open(cr, uid, [statement_id], context)
 
         tree_res = mod_obj.get_object_reference(cr, uid, 'point_of_sale', 'view_cash_statement_pos_tree')

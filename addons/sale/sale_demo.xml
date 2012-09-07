@@ -304,36 +304,33 @@
         <record id="message_sale_1" model="mail.message">
             <field name="model">sale.order</field>
             <field name="res_id" ref="sale_order_2"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Hi,
+            <field name="body">Hi,
 I have a confusion for pricing of Services, I have heard there is a discount above 25 hours.
 Can you clarify please?</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
 
         <record id="message_sale_2" model="mail.message">
             <field name="model">sale.order</field>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_1"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Hello, 
+            <field name="body">Hello, 
 Sorry but that scheme is not available for now,
 We would like to know if you confirm the quotation with pricing we sent to you.
 Thanks,
 Sales Department</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
 
         <record id="message_sale_3" model="mail.message">
             <field name="model">sale.order</field>
             <field name="res_id" ref="sale_order_2"/>
             <field name="parent_id" ref="message_sale_2"/>
-            <field name="content_subtype">plain</field>
-            <field name="body_text">Ok, fine, we will intimate you after discussing with our team.</field>
+            <field name="body">Ok, fine, we will intimate you after discussing with our team.</field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
         <!-- sale advance demo.. -->
         <!-- Demo Data for Product -->
