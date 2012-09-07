@@ -55,10 +55,10 @@ class note_note(osv.osv):
     _inherit = ['mail.thread']
     _description = "Note"
 
-    def _set_note_first_line(self, cr, uid, id, name, value, args, context=None):
+    def _set_note_first_line(self, cr, uid, id, name, value, args={}, context=None):
         return self.write(cr, uid, [id], {'note': value}, context=context)
 
-    def _get_note_first_line(self, cr, uid, ids, name, args, context=None):
+    def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
             text_note = (note.note or '').strip().split('\n')[0]
@@ -99,6 +99,16 @@ class note_note(osv.osv):
 
         return False
 
+    def _constraints_min_len(self, cr, uid, ids, context=None):
+        
+        res = self._get_note_first_line(cr, uid, ids, context=context)
+
+        for note in self.browse(cr, uid, ids, context=context):
+            if len(res[note.id])<1 :
+                return False
+        
+        return True
+    
 
     _columns = {
         'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type='text'),
@@ -120,9 +130,14 @@ class note_note(osv.osv):
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
     }
 
+    _constraints = [
+        (_constraints_min_len,'The title (first line on the note) must have at least one character.',['note']),
+    ]
+
     _defaults = {
         'active' : 1,
         'stage_id' : _get_default_stage_id,
+        'note': " "
     }
     _order = 'sequence asc'
     _group_by_full = {
