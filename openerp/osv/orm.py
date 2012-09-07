@@ -5029,21 +5029,21 @@ class BaseModel(object):
             :rtype: list(dict)
         """
         result = []             # result (list of dict)
-        record_ids = set()      # ids of records to read
+        record_ids = []         # ids of records to read
         updates = {}            # {id: dict} of updates on particular records
 
         for command in commands:
             if not isinstance(command, (list, tuple)):
-                record_ids.add(command)
+                record_ids.append(command)
             elif command[0] == 0:
                 result.append(command[2])
             elif command[0] == 1:
-                record_ids.add(command[1])
+                record_ids.append(command[1])
                 updates.setdefault(command[1], {}).update(command[2])
             elif command[0] in (2, 3):
-                record_ids.discard(command[1])
+                record_ids = [id for id in record_ids if id != command[1]]
             elif command[0] == 4:
-                record_ids.add(command[1])
+                record_ids.append(command[1])
             elif command[0] == 5:
                 result, record_ids = [], []
             elif command[0] == 6:
@@ -5051,7 +5051,7 @@ class BaseModel(object):
 
         # read the records and apply the updates
         other_model = self.pool.get(self._all_columns[field_name].column._obj)
-        for record in other_model.read(cr, uid, list(record_ids), fields=fields, context=context):
+        for record in other_model.read(cr, uid, record_ids, fields=fields, context=context):
             record.update(updates.get(record['id'], {}))
             result.append(record)
 

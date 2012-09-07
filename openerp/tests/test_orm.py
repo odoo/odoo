@@ -15,6 +15,10 @@ LINK_TO = lambda id: (4, id, False)
 DELETE_ALL = lambda: (5, False, False)
 REPLACE_WITH = lambda ids: (6, False, ids)
 
+def sorted_by_id(list_of_dicts):
+    "sort dictionaries by their 'id' field; useful for comparisons"
+    return sorted(list_of_dicts, key=lambda d: d.get('id'))
+
 class TestO2MSerialization(common.TransactionCase):
 
     def setUp(self):
@@ -30,14 +34,11 @@ class TestO2MSerialization(common.TransactionCase):
 
     def test_CREATE_commands(self):
         " returns the VALUES dict as-is "
+        values = [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]
         results = self.partner.resolve_2many_commands(
-            self.cr, UID, 'address',
-            map(CREATE, [{'foo': 'bar'}, {'foo': 'baz'}, {'foo': 'baq'}]))
-        self.assertEqual(results, [
-            {'foo': 'bar'},
-            {'foo': 'baz'},
-            {'foo': 'baq'}
-        ])
+            self.cr, UID, 'address', map(CREATE, values))
+
+        self.assertEqual(results, values)
 
     def test_LINK_TO_command(self):
         " reads the records from the database, records are returned with their ids. "
@@ -51,11 +52,11 @@ class TestO2MSerialization(common.TransactionCase):
         results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', commands, ['name'])
 
-        self.assertEqual(results, [
+        self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
             {'id': ids[2], 'name': 'baz'}
-        ])
+        ]))
 
     def test_bare_ids_command(self):
         " same as the equivalent LINK_TO commands "
@@ -68,11 +69,11 @@ class TestO2MSerialization(common.TransactionCase):
         results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', ids, ['name'])
 
-        self.assertEqual(results, [
+        self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
             {'id': ids[2], 'name': 'baz'}
-        ])
+        ]))
 
     def test_UPDATE_command(self):
         " take the in-db records and merge the provided information in "
@@ -87,11 +88,11 @@ class TestO2MSerialization(common.TransactionCase):
                 UPDATE(id_baz, {'name': 'quux'})
             ], ['name', 'city'])
 
-        self.assertEqual(results, [
+        self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': id_foo, 'name': 'foo', 'city': False},
             {'id': id_bar, 'name': 'qux', 'city': 'tagtag'},
             {'id': id_baz, 'name': 'quux', 'city': 'tag'}
-        ])
+        ]))
 
     def test_DELETE_command(self):
         " deleted records are not returned at all. "
@@ -105,10 +106,7 @@ class TestO2MSerialization(common.TransactionCase):
         results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', commands, ['name'])
 
-        self.assertEqual(results, [
-            {'id': ids[0], 'name': 'foo'},
-            {'id': ids[2], 'name': 'baz'}
-        ])
+        self.assertEqual(results, [])
 
     def test_mixed_commands(self):
         ids = [
@@ -128,7 +126,7 @@ class TestO2MSerialization(common.TransactionCase):
                 LINK_TO(ids[5])
             ], ['name'])
 
-        self.assertEqual(results, [
+        self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'name': 'foo'},
             {'id': ids[0], 'name': 'bar'},
             {'id': ids[1], 'name': 'baz'},
@@ -136,7 +134,7 @@ class TestO2MSerialization(common.TransactionCase):
             {'id': ids[4], 'name': 'corge'},
             {'name': 'grault'},
             {'id': ids[5], 'name': 'garply'}
-        ])
+        ]))
 
     def test_LINK_TO_pairs(self):
         "LINK_TO commands can be written as pairs, instead of triplets"
@@ -150,20 +148,17 @@ class TestO2MSerialization(common.TransactionCase):
         results = self.partner.resolve_2many_commands(
             self.cr, UID, 'address', commands, ['name'])
 
-        self.assertEqual(results, [
+        self.assertEqual(sorted_by_id(results), sorted_by_id([
             {'id': ids[0], 'name': 'foo'},
             {'id': ids[1], 'name': 'bar'},
             {'id': ids[2], 'name': 'baz'}
-        ])
+        ]))
 
     def test_singleton_commands(self):
         "DELETE_ALL can appear as a singleton"
+        results = self.partner.resolve_2many_commands(
+            self.cr, UID, 'address', [DELETE_ALL()], ['name'])
 
-        try:
-            self.partner.resolve_2many_commands(
-                self.cr, UID, 'address', [(5,)], ['name'])
-        except AssertionError:
-            # 5 should fail with an assert error, but not e.g. a ValueError
-            pass
+        self.assertEqual(results, [])
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
