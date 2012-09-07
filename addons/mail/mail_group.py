@@ -56,13 +56,12 @@ class mail_group(osv.Model):
             help="Members of those groups will automatically added as followers. "\
                  "Note that they will be able to manage their subscription manually "\
                  "if necessary."),
+        # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
-            help="This field holds the image used as photo for the "\
-                 "user. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as photo for the group, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the group. It is automatically "\
@@ -70,7 +69,7 @@ class mail_group(osv.Model):
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized photo", type="binary", multi="_get_image",
-            store = {
+            store={
                 'mail.group': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the group. It is automatically "\

@@ -1211,17 +1211,15 @@ class pos_category(osv.osv):
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
         
-        # NOTE:  there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
+        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
         # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
-        # In this case, the default image is set by the js code. 
-
+        # In this case, the default image is set by the js code.
+        # NOTE2: image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used for the category. "\
-                 "The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the category. It is automatically "\
@@ -1229,7 +1227,7 @@ class pos_category(osv.osv):
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the category. It is automatically "\
