@@ -316,7 +316,7 @@ class res_company(osv.osv):
             <!-- left margin -->
             <rotate degrees="90"/>
             <fill color="grey"/>
-            <drawCentredString x="14cm" y="-0.7cm">produced by OpenERP - www.openerp.com</drawCentredString>
+            <drawString x="2.65cm" y="-0.4cm">produced by OpenERP.com</drawString>
             <fill color="black"/>
             <rotate degrees="-90"/>
 
