@@ -47,6 +47,15 @@
             <field name="res_model">mail.message.subtype</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a message subtype.
+              </p><p>
+                OpenERP's message subtype allows to ease and fasten the
+                subtype which helps to decrease over crowdy wall comments which displays 
+                only those.
+              </p>
+            </field>
         </record>
         
         <menuitem name="Subtypes" id="menu_message_subtype" parent="base.menu_email"

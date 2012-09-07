@@ -117,7 +117,8 @@ openerp_mail_followers = function(session, mail) {
                 follower_read.then(function (follower_record){
                     if(follower_record.length != 0){
                         _(follower_record[0].subtype_ids).each(function (subtype_id){
-                            self.$el.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true
+                            if(self.$el.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0]){
+                                self.$el.find('.oe_msg_subtype_check[id=' + subtype_id + ']')[0].checked=true}
                         });
                     }
                 })
