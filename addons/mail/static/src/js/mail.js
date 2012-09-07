@@ -289,19 +289,16 @@ openerp.mail = function(session) {
 
         render_vote: function(message_id){
             var self = this;
-            var mail_vote = new session.web.DataSetSearch(self, 'mail.vote', self.session.context, [['msg_id','=',parseInt(message_id)]]);
-            mail_vote.read_slice(['user_id']).then(function(result){
-                vote_count = result.length;
-                is_vote_liked = false;
-                _.each(result, function(vote){
-                    if (self.session.uid == vote.user_id[0]){
-                        is_vote_liked = true;
-                    }
-                });
+            this.ds_message.call('message_read', [[parseInt(message_id)]]).then(function(result){
+                vote_count = 0;
+                if (result[0].vote_user_ids){length
+                	vote_count = result[0].vote_user_ids.length;
+                }
                 parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
-                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'is_vote_liked': is_vote_liked});
+                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'has_voted': result[0].has_voted});
                 $(parent_element).html(vote_element);
                 self.add_vote_event($(parent_element));
+                
             });
         },
         
@@ -446,8 +443,6 @@ openerp.mail = function(session) {
             var self = this;
             var _expendable = false;
             _(records).each(function (record) {
-                //Render Votes.
-                self.render_vote(record.id);
                 if (record.type == 'expandable') {
                     _expendable = true;
                     self.update_fetch_more(true);
@@ -484,6 +479,8 @@ openerp.mail = function(session) {
          * - record.is_author: is the current user the author of the record */
         display_record: function (record) {
             // formatting and additional fields
+            //Render Votes.
+            this.render_vote(record.id);
             record.date = session.web.format_value(record.date, {type:"datetime"});
             record.timerelative = $.timeago(record.date);
             if (record.type == 'email') {

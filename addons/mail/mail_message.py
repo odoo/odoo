@@ -124,7 +124,7 @@ class mail_message(osv.Model):
         'unread': fields.function(_get_unread, fnct_search=_search_unread,
             type='boolean', string='Unread',
             help='Functional field to search for unread messages linked to uid'),
-        'vote_ids': fields.one2many('mail.vote', 'msg_id', 'Votes'),            
+        'vote_user_ids': fields.many2many('mail.vote', 'message_vote_rel', 'message_id', 'vote_id', 'Votes'),
 
     }
 
@@ -154,13 +154,14 @@ class mail_message(osv.Model):
         vote_pool = self.pool.get('mail.vote')
         new_vote_id = False
         for message in self.browse(cr, uid, ids, context):
-            voters_ids = [x.id for x in message.vote_ids if x.user_id.id == uid]
+            voters_ids = [x.id for x in message.vote_user_ids if x.user_id.id == uid]
             if not voters_ids:
                 new_vote_id =  vote_pool.create(cr, uid, {'msg_id': message.id, 'user_id': uid}, context=context)
-            else:    
+                self.write(cr, uid, ids, {'vote_user_ids': [(4, new_vote_id)]}, context=context)
+            else:
+                self.write(cr, uid, ids, {'vote_user_ids': [(3, voters_ids[0])]}, context=context)
                 vote_pool.unlink(cr, uid, voters_ids, context=context)
-        return True                
-
+        return True
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -168,7 +169,13 @@ class mail_message(osv.Model):
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
+        vote_pool = self.pool.get('mail.vote')
         attachment_ids = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
+        vote_ids = vote_pool.name_get(cr, uid, [x.id for x in msg.vote_user_ids], context=context)
+        has_voted = False;
+        for vote in msg.vote_user_ids:
+            if (uid == vote.user_id.id):
+              has_voted = True;
         author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
         author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
@@ -186,6 +193,8 @@ class mail_message(osv.Model):
             'author_user_id': author_user_id,
             'partner_ids': partner_ids,
             'child_ids': [],
+            'vote_user_ids': vote_ids,
+            'has_voted': has_voted
         }
 
     def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
