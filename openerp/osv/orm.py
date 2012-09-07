@@ -5058,7 +5058,7 @@ class BaseModel(object):
         return result
 
     # for backward compatibility
-    def resolve_2many_commands(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
+    def resolve_o2m_commands_to_record_dicts(self, cr, uid, field_name, o2m_commands, fields=None, context=None):
         return self.resolve_2many_commands(cr, uid, field_name, o2m_commands, fields, context)
 
 # keep this import here, at top it will cause dependency cycle errors
