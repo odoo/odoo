@@ -17,7 +17,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-
+        
+        if(!this.session.debug)
+            this.$el.find(".oe_dashboard_links button:first").css("display", "none");
+            
         this.$el.find('.oe_dashboard_column').sortable({
             connectWith: '.oe_dashboard_column',
             handle: '.oe_header',
