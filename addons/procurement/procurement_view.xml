@@ -261,12 +261,12 @@
         </record>
 
         <act_window
-        context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
-        id="act_stock_warehouse_2_stock_warehouse_orderpoint"
-        name="Reordering Rules"
-        res_model="stock.warehouse.orderpoint"
-        src_model="stock.warehouse"
-        groups="stock.group_stock_user"/>
+            context="{'search_default_warehouse_id': active_id, 'default_warehouse_id': active_id}"
+            id="act_stock_warehouse_2_stock_warehouse_orderpoint"
+            name="Reordering Rules"
+            res_model="stock.warehouse.orderpoint"
+            src_model="stock.warehouse"
+            groups="stock.group_stock_user"/>
 
         <act_window
             context="{'product_uom': locals().has_key('uom_id') and uom_id, 'default_procurement_id': active_id}"
@@ -283,23 +283,11 @@
         <menuitem id="menu_stock_procurement" name="Automatic Procurements" parent="stock.menu_stock_configuration" sequence="5"/>
             <menuitem action="action_orderpoint_form" id="menu_stock_order_points" parent="stock.menu_stock_configuration" sequence="10"/>
 
-        <record id="product_normal_form_view" model="ir.ui.view">
-            <field name="name">product.normal.form.orderpoint.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
-            <field name="arch" type="xml">
-                <page string="Procurement &amp; Locations" position="inside">
-                    <separator string="Minimum Stock Rules"/>
-                        <field name="orderpoint_ids" widget="one2many_list" mode="tree" context="{'default_product_id': active_id}">
-                            <tree string="Reordering Rules">
-                                <field name="name"/>
-                                <field name="warehouse_id"/>
-                                <field name="product_min_qty"/>
-                                <field name="product_max_qty"/>
-                            </tree>
-                        </field>
-                </page>
-            </field>
+
+        <record model="ir.actions.act_window" id="product_open_orderpoint">
+            <field name="context">{'default_product_id': active_id, 'search_default_product_id': active_id}</field>
+            <field name="name">Orderpoints</field>
+            <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
 
         <record model="ir.ui.view" id="product_form_view_procurement_button">
@@ -307,10 +295,9 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='image_medium']" position="after">
-                    <div class='oe_right oe_button_box'>
-                        <button string="Procurement Request" name="%(act_make_procurement)d" type="action"/>
-                    </div>
+                <xpath expr="//div[@name='buttons']" position="inside">
+                    <button string="Request Procurement" name="%(act_make_procurement)d" type="action"/>
+                    <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action"/>
                 </xpath>
             </field>
         </record>

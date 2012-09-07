@@ -6,12 +6,11 @@
         Analytic Account form
         -->
 
-        <act_window
-            id="action_sales_order"
-            name="Sales Orders"
-            res_model="sale.order"
-            src_model="account.analytic.account"
-        />
+        <record model="ir.actions.act_window" id="action_sales_order">
+            <field name="name">Sales Orders</field>
+            <field name="res_model">sale.order</field>
+            <field name="src_model">account.analytic.account</field>
+        </record>
 
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form.inherit</field>
@@ -23,7 +22,6 @@
                     <label for="quantity_max"/>
                     <div>
                         <field name="quantity_max" class="oe_inline"/>
-                        <field name="company_uom_id" readonly="1" class="oe_inline"/>
                     </div>
                 </xpath>
                 <xpath expr='//group[@name="invoice_on_timesheets"]' position="replace">

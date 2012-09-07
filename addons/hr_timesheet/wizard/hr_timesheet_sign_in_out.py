@@ -91,7 +91,7 @@ class hr_so_project(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
-            emp_obj.attendance_action_change(cr, uid, [emp_id], type='sign_out', dt=data.date)
+            emp_obj.attendance_action_change(cr, uid, [emp_id], {'action':'sign_out', 'action_date':data.date})
             self._write(cr, uid, data, emp_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -99,7 +99,7 @@ class hr_so_project(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
-            emp_obj.attendance_action_change(cr, uid, [emp_id], type='action', dt=data.date)
+            emp_obj.attendance_action_change(cr, uid, [emp_id], {'action':'action', 'action_date':data.date})
             self._write(cr, uid, data, emp_id, context=context)
         return {'type': 'ir.actions.act_window_close'}
 
@@ -156,7 +156,7 @@ class hr_si_project(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         for data in self.browse(cr, uid, ids, context=context):
             emp_id = data.emp_id.id
-            emp_obj.attendance_action_change(cr, uid, [emp_id], type = 'sign_in' ,dt=data.date or False)
+            emp_obj.attendance_action_change(cr, uid, [emp_id], {'action':'sign_in', 'action_date':data.date})
         return {'type': 'ir.actions.act_window_close'}
 
     def default_get(self, cr, uid, fields_list, context=None):
