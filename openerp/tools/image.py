@@ -52,13 +52,15 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
           it.
 
         :param base64_source: base64-encoded version of the source
-            image
+            image; if False, returns False
         :param size: tuple(height, width)
         :param encoding: the output encoding
         :param filetype: the output filetype
         :param avoid_if_small: do not resize if image height and width
             are smaller than the expected size.
     """
+    if not base64_source:
+        return False
     image_stream = io.BytesIO(base64_source.decode(encoding))
     image = Image.open(image_stream)
     # check image size: do not create a thumbnail if avoiding smaller images
@@ -76,35 +78,26 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     background.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
 
-def image_resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG'):
+def image_resize_image_big(base64_source, size=(1204, 1204), encoding='base64', filetype='PNG', avoid_if_small=True):
     """ Wrapper on image_resize_image, to resize images larger than the standard
         'big' image size: 1024x1024px.
-        :param base64_source: base64 encoded source image. If False,
-            the function returns False.
+        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
-    if not base64_source:
-        return False
-    return image_resize_image(base64_source, size, encoding, filetype, True)
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
-def image_resize_image_medium(base64_source, size=(180, 180), encoding='base64', filetype='PNG'):
+def image_resize_image_medium(base64_source, size=(128, 128), encoding='base64', filetype='PNG', avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'medium'
         image size: 180x180.
-        :param base64_source: base64 encoded source image. If False,
-            the function returns False.
+        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
-    if not base64_source:
-        return False
-    return image_resize_image(base64_source, size, encoding, filetype)
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
-def image_resize_image_small(base64_source, size=(50, 50), encoding='base64', filetype='PNG'):
+def image_resize_image_small(base64_source, size=(64, 64), encoding='base64', filetype='PNG', avoid_if_small=False):
     """ Wrapper on image_resize_image, to resize to the standard 'small' image
         size: 50x50.
-        :param base64_source: base64 encoded source image. If False,
-            the function returns False.
+        :param size, encoding, filetype, avoid_if_small: refer to image_resize_image
     """
-    if not base64_source:
-        return False
-    return image_resize_image(base64_source, size, encoding, filetype)
+    return image_resize_image(base64_source, size, encoding, filetype, avoid_if_small)
 
 # ----------------------------------------
 # Colors
@@ -134,7 +127,8 @@ def image_colorize(original, randomize=True, color=(255, 255, 255)):
 # ---------------------------------------
 
 def image_get_resized_images(base64_source, return_big=False, return_medium=True, return_small=True,
-    big_name='image', medium_name='image_medium', small_name='image_small'):
+    big_name='image', medium_name='image_medium', small_name='image_small',
+    avoid_resize_big=True, avoid_resize_medium=False, avoid_resize_small=False):
     """ Standard tool function that returns a dictionary containing the
         big, medium and small versions of the source image. This function
         is meant to be used for the methods of functional fields for
@@ -144,26 +138,21 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
         image fields,  for example with res.users or res.partner. It returns
         only image_medium and image_small values, to update those fields.
 
-        :param base64_source: if set to False, other values are set to False
-            also. The purpose is to be linked to the fields that hold images in
-            OpenERP and that are binary fields.
-        :param return_big: if set, return_dict contains the 'big_name' entry
-        :param return_medium: if set, return_dict contains the 'medium_name' entry
-        :param return_small: if set, return_dict contains the 'small_name' entry
-        :param big_name: name related to the big version of the image;
-            'image' by default.
-        :param medium_name: name related to the medium version of the
-            image; 'image_medium' by default.
-        :param small_name: name related to the small version of the
-            image; 'image_small' by default.
+        :param base64_source: base64-encoded version of the source
+            image; if False, all returnes values will be False
+        :param return_{..}: if set, computes and return the related resizing
+            of the image
+        :param {..}_name: key of the resized image in the return dictionary;
+            'image', 'image_medium' and 'image_small' by default.
+        :param avoid_resize_[..]: see avoid_if_small parameter
         :return return_dict: dictionary with resized images, depending on
             previous parameters.
     """
     return_dict = dict()
     if return_big:
-        return_dict[big_name] = image_resize_image_big(base64_source)
+        return_dict[big_name] = image_resize_image_big(base64_source, avoid_if_small=avoid_resize_big)
     if return_medium:
-        return_dict[medium_name] = image_resize_image_medium(base64_source)
+        return_dict[medium_name] = image_resize_image_medium(base64_source, avoid_if_small=avoid_resize_medium)
     if return_small:
-        return_dict[small_name] = image_resize_image_small(base64_source)
+        return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
