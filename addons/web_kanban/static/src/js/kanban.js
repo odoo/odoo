@@ -757,7 +757,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             }
         });
 
-        if (this.$el.find('.oe_kanban_global_click').length) {
+        if (this.$el.find('.oe_kanban_global_click,.oe_kanban_global_click_edit').length) {
             this.$el.on('click', function(ev) {
                 if (!ev.isTrigger && !$(ev.target).data('events')) {
                     var trigger = true;
@@ -798,8 +798,15 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             });
         }
     },
+    /* actions when user click on the block with a specific class
+    *  open on normal view : oe_kanban_global_click
+    *  open on form/edit view : oe_kanban_global_click_edit
+    */
     on_card_clicked: function(ev) {
-        this.view.open_record(this.id);
+        if(this.$el.find('.oe_kanban_global_click_edit').size()>0)
+            this.do_action_edit();
+        else
+            this.do_action_open();
     },
     setup_color_picker: function() {
         var self = this;
