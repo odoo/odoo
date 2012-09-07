@@ -300,11 +300,10 @@ class res_company(osv.osv):
             <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>
+
+            <!-- page header -->
             <lines>1.3cm %s 20cm %s</lines>
-
             <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
-
-
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
@@ -314,8 +313,14 @@ class res_company(osv.osv):
             <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
             <lines>1.3cm %s 7cm %s</lines>
 
-            <!--page bottom-->
+            <!-- left margin -->
+            <rotate degrees="90"/>
+            <fill color="grey"/>
+            <drawCentredString x="14cm" y="-0.7cm">produced by OpenERP - www.openerp.com</drawCentredString>
+            <fill color="black"/>
+            <rotate degrees="-90"/>
 
+            <!--page bottom-->
             <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
             <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
             <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
