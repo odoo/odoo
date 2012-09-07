@@ -168,8 +168,8 @@ class res_company(osv.osv):
         return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
 
     def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line, context=None):
-        rml_footer_lines = rml_footer.split('\n')
-        return rml_footer_lines[line] if line < len(rml_footer_lines) else ""
+        rml_footer_lines = (rml_footer or '').split('\n')
+        return rml_footer_lines[line] if line < len(rml_footer_lines) else ''
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
