@@ -31,13 +31,8 @@ def message_check(msg, secret):
 
 class res_users(osv.osv):
     _inherit = 'res.users'
-    _columns = {
-        'user_email': fields.related('email', type='char',
-            deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.')
-    } 
-    _sql_constraints = [
-        ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
-    ]
+   
+    
 
     def _auth_reset_password_secret(self, cr, uid, context=None):
         uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
