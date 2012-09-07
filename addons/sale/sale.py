@@ -145,6 +145,22 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
+    def _get_invoiced_amount(self, cr, uid, sale_object, context=None):
+        invoiced_amount = 0
+        for invoice in sale_object.invoice_ids:
+            if invoice.state!='cancel':
+                invoiced_amount += invoice.amount_total
+        return invoiced_amount
+
+    def _partial_invoiced(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = True
+            invoiced_amount = self._get_invoiced_amount(cursor, user, sale, context=context)
+            if not invoiced_amount or invoiced_amount == sale.amount_total and sale.invoiced:
+                res[sale.id] = False
+        return res
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -156,7 +172,8 @@ class sale_order(osv.osv):
                     if invoice.state != 'paid':
                         res[sale.id] = False
                         break
-            if not invoice_existence:
+            invoiced_amount = self._get_invoiced_amount(cursor, user, sale, context=context)
+            if invoiced_amount != sale.amount_total or not invoice_existence:
                 res[sale.id] = False
         return res
 
@@ -245,6 +262,8 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
+        'partial_invoiced': fields.function(_partial_invoiced, string='Partial invoiced',
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has been partially invoiced."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
@@ -518,33 +537,22 @@ class sale_order(osv.osv):
         This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
-        result = {
-            'name': _('Cutomer Invoice'),
-            'view_type': 'form',
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-        }
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
         #compute the number of invoices to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             inv_ids += [invoice.id for invoice in so.invoice_ids]
         #choose the view_mode accordingly
-        if len(inv_ids)>1:
-            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-            result.update({
-                'view_mode': 'tree,form',
-                'res_id': inv_ids or False
-            })
+        if len(inv_ids) > 1:
+            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            result.update({
-                'view_mode': 'form',
-                'res_id': inv_ids and inv_ids[0] or False,
-            })
-        result.update(view_id = res and res[1] or False)
+            result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
         return result
 
 
