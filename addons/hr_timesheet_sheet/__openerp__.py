@@ -27,8 +27,8 @@
     'sequence': 16,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
-This module helps you to easily encode and validate timesheet and attendances within the same view.
-===================================================================================================
+This module helps you to easily record and validate timesheets and attendances within the same view.
+====================================================================================================
 
     * It will maintain attendances and track (sign in/sign out) events.
     * Track the timesheet lines.
