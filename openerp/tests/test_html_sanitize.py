@@ -26,11 +26,15 @@ class TestSanitizer(unittest.TestCase):
     def test_simple(self):
         x = "yop"
         self.assertEqual(x, html_sanitize(x))
+        
+    def test_trailing_text(self):
+        x = 'lala<p>yop</p>xxx'
+        self.assertEqual(x, html_sanitize(x))
     
-    def test_test_case(self):
+    def test_no_exception(self):
         html_sanitize(test_case)
         
-    def test_crm(self):
+    def test_unicode(self):
         html_sanitize("Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci")
 
 if __name__ == '__main__':
