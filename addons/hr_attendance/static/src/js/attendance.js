@@ -27,12 +27,16 @@ openerp.hr_attendance = function (instance) {
             });
             this.$el.tipsy({
                 title: function() {
+                    var last_text = instance.web.format_value(self.last_sign, {type: "datetime"});
+                    var current_text = instance.web.format_value(new Date(), {type: "datetime"});
+                    var duration = $.timeago(self.last_sign);
                     if (self.get("signed_in")) {
-                        return _t("You are currently signed in. Click here to sign out.");
+                        return _.str.sprintf(_t("Last sign in: %s,<br />%s.<br />Click to sign out."), last_text, duration);
                     } else {
-                        return _t("You are currently signed out. Click here to sign in.");
+                        return _.str.sprintf(_t("Click to Sign In at %s."), current_text);
                     }
-                }
+                },
+                html: true,
             });
             return this.check_attendance();
         },
@@ -42,6 +46,7 @@ openerp.hr_attendance = function (instance) {
             hr_employee.call('attendance_action_change', [
                 [self.employee.id]
             ]).done(function (result) {
+                self.last_sign = new Date();
                 self.set({"signed_in": ! self.get("signed_in")});
             });
         },
@@ -52,11 +57,12 @@ openerp.hr_attendance = function (instance) {
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [
                 ['user_id', '=', self.session.uid]
             ]);
-            return employee.read_slice(['id', 'name', 'state']).pipe(function (res) {
+            return employee.read_slice(['id', 'name', 'state', 'last_sign']).pipe(function (res) {
                 if (_.isEmpty(res))
                     return;
                 self.$el.show();
                 self.employee = res[0];
+                self.last_sign = instance.web.str_to_datetime(self.employee.last_sign);
                 self.set({"signed_in": self.employee.state !== "absent"});
             });
         },
