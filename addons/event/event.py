@@ -37,8 +37,8 @@ class event_type(osv.osv):
     }
     _defaults = {
         'default_registration_min': 0,
-        'default_registration_max':0,
-        }
+        'default_registration_max': 0,
+    }
 
 event_type()
 
@@ -52,6 +52,10 @@ class event_event(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
+
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             date = record.date_begin.split(" ")[0]
