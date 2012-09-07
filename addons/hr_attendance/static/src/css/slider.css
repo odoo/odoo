@@ -1,7 +1,7 @@
 
 .openerp .oe_attendance_status {
     height: 32px;
-    width: 32px;
+    width: 64px;
     display: inline-block;
 }
 .openerp .oe_attendance_signin {
@@ -12,7 +12,7 @@
     cursor: pointer;
 }
 .openerp .oe_attendance_status.oe_attendance_signed .oe_attendance_signin {
-    display: none;
+    background: url(/hr_attendance/static/src/img/emp-in-disable32.png);
 }
 
 .openerp .oe_attendance_signout {
@@ -23,5 +23,5 @@
     cursor: pointer;
 }
 .openerp .oe_attendance_status.oe_attendance_nosigned .oe_attendance_signout {
-    display: none;
+    background: url(/hr_attendance/static/src/img/emp-out-disable32.png);
 }

@@ -4,11 +4,6 @@ openerp.hr_attendance = function (instance) {
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
     var _lt = instance.web._lt;
-    
-    var tips = {
-        "true": _lt("You are currently signed in. Click here to sign out."),
-        "false": _lt("You are currently signed out. Click here to sign in."),
-    }
 
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
         template: 'AttendanceSlider',
@@ -21,7 +16,6 @@ openerp.hr_attendance = function (instance) {
             var tmp = function() {
                 this.$el.toggleClass("oe_attendance_nosigned", ! this.get("signed_in"));
                 this.$el.toggleClass("oe_attendance_signed", this.get("signed_in"));
-                this.$el.attr("title", tips["" + this.get("signed_in")].toString());
             };
             this.on("change:signed_in", this, tmp);
             _.bind(tmp, this)();
@@ -30,6 +24,15 @@ openerp.hr_attendance = function (instance) {
             });
             this.$(".oe_attendance_signout").click(function() {
                 self.do_update_attendance();
+            });
+            this.$el.tipsy({
+                title: function() {
+                    if (self.get("signed_in")) {
+                        return _t("You are currently signed in. Click here to sign out.");
+                    } else {
+                        return _t("You are currently signed out. Click here to sign in.");
+                    }
+                }
             });
             return this.check_attendance();
         },
