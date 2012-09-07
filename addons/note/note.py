@@ -52,8 +52,7 @@ class note_tag(osv.osv):
 class note_note(osv.osv):
     """ Note """
     _name = 'note.note'
-    _inherit = ['mail.thread','pad.common']
-    _pad_fields = ['note_pad']
+    _inherit = ['mail.thread']
     _description = "Note"
 
     def _set_note_first_line(self, cr, uid, id, name, value, args, context=None):
@@ -104,7 +103,6 @@ class note_note(osv.osv):
     _columns = {
         'name': fields.function(_get_note_first_line, fnct_inv=_set_note_first_line, string='Note Summary', type='text'),
         'note': fields.html('Pad Content'),
-        'note_pad_url': fields.char('Pad Url', size=250),
         'sequence': fields.integer('Sequence'),
         # the stage_id depending on the uid
         'stage_id': fields.many2one('note.stage', 'Stage'),
@@ -125,7 +123,6 @@ class note_note(osv.osv):
     _defaults = {
         'active' : 1,
         'stage_id' : _get_default_stage_id,
-        'note_pad_url': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
     }
     _order = 'sequence asc'
     _group_by_full = {
