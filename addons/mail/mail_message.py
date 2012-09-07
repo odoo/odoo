@@ -306,12 +306,11 @@ class mail_message(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
-        # for mail.messages that act as parent for a standalone mail.mail record). Also remove
-        # attachment with a void id, because this can happen with the composer.
+        # for mail.messages that act as parent for a standalone mail.mail record).
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
-                if attach.res_model == self._name and (attach.res_id == message.id or attach.res_id == 0):
+                if attach.res_model == self._name and attach.res_id == message.id:
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
