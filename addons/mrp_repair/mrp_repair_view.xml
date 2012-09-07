@@ -34,8 +34,9 @@
                    <button name="action_invoice_create" states="2binvoiced" string="Make Invoice" class="oe_highlight"/>
                    <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                    <button name="invoice_corrected" states="invoice_except" string="Invoice Corrected"/>
-                   <button name="action_cancel" states="confirmed,2binvoiced,ready,under_repair" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
-                   <button name="action_cancel" states="invoice_except" string="Cancel Repair" type="object" attrs="{'invisible':[('invoice_method','!=','none')]}"/>
+                   <button name="action_cancel" string="Cancel Repair" type="object" attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', 'not in',('confirmed','2binvoiced','ready','under_repair'))]}"/>
+                   <button name="action_cancel" string="Cancel Repair" type="object" 
+                attrs="{'invisible':['|',('invoice_method','!=','none'), ('state', '!=', 'invoice_except')]}"/>
                    <button name="cancel" states="draft" string="Cancel Repair"/>
                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,done"/>
                </header>
