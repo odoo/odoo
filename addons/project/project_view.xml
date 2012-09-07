@@ -133,7 +133,7 @@
                                 <group string="Administration">
                                     <field name="planned_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
                                     <field name="effective_hours" widget="float_time" groups="project.group_time_work_estimation_tasks"/>
-                                    <field name="resource_calendar_id" groups="project.group_long_term_planning_user"/>
+                                    <field name="resource_calendar_id" groups="base.group_no_one"/>
                                 </group>
                                 <group string="Miscellaneous" name="misc">
                                     <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
