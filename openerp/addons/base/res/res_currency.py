@@ -98,7 +98,10 @@ class res_currency(osv.osv):
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         res = super(res_currency, self).read(cr, user, ids, fields, context, load)
         currency_rate_obj = self.pool.get('res.currency.rate')
-        for r in res:
+        values = res
+        if not isinstance(values, (list)):
+            values = [values]
+        for r in values:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:

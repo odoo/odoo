@@ -4,7 +4,6 @@
         <record id="res_request_link-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
             <field name="model">res.request.link</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Request Link" version="7.0">
                   <sheet>
@@ -20,7 +19,6 @@
         <record id="res_request_link_tree-view" model="ir.ui.view">
             <field name="name">res.request.link.form</field>
             <field name="model">res.request.link</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Request Link">
                     <field name="name"/>
@@ -31,7 +29,6 @@
         <record id="res_request_link_search_view" model="ir.ui.view">
             <field name="name">res.request.link.search</field>
             <field name="model">res.request.link</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Request Link">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('object','ilike',self)]" string="Subject"/>

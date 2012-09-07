@@ -183,7 +183,6 @@ class ir_model(osv.osv):
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
-            self.pool.get(vals['model']).__init__(self.pool, cr)
             ctx = dict(context,
                 field_name=vals['name'],
                 field_state='manual',
@@ -198,7 +197,9 @@ class ir_model(osv.osv):
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model.create_instance(self.pool, cr)
-        if (not a._columns) or ('x_name' in a._columns.keys()):
+        if not a._columns:
+            x_name = 'id'
+        elif 'x_name' in a._columns.keys():
             x_name = 'x_name'
         else:
             x_name = a._columns.keys()[0]
@@ -931,6 +932,9 @@ class ir_model_data(osv.osv):
 
         ir_model_relation = self.pool.get('ir.model.relation')
         relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
+        ir_module_module = self.pool.get('ir.module.module')
+        modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
+        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
         ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
 
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink

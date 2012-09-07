@@ -4,7 +4,6 @@
         <record id="view_res_widget_search" model="ir.ui.view">
             <field name="name">res.widget.search</field>
             <field name="model">res.widget</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Widget">
                     <field name="title" string="Widget"/>
@@ -14,7 +13,6 @@
         <record id="res_widget_form" model="ir.ui.view">
             <field name="name">res.widget.form</field>
             <field name="model">res.widget</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Widgets" version="7.0">
                   <sheet>
@@ -29,7 +27,6 @@
         <record id="res_widget_tree" model="ir.ui.view">
             <field name="name">res.widget.tree</field>
             <field name="model">res.widget</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Widgets">
                     <field name="title"/>
@@ -49,7 +46,6 @@
         <record id="res_widget_user_tree" model="ir.ui.view">
             <field name="name">res.widget.user.tree</field>
             <field name="model">res.widget.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="User Widgets">
                     <field name="sequence" invisible="1"/>
@@ -61,7 +57,6 @@
         <record id="res_widget_user_form" model="ir.ui.view">
             <field name="name">res.widget.user.form</field>
             <field name="model">res.widget.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User Widgets" version="7.0">
                   <sheet>
@@ -85,7 +80,6 @@
         <record id="view_res_widget_wizard" model="ir.ui.view">
             <field name="name">Homepage Widgets Management</field>
             <field name="model">res.widget.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Widget Wizard" col="4" version="7.0">
                     <header>

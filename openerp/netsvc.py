@@ -3,7 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -376,11 +376,11 @@ def dispatch_rpc(service_name, method, params):
     except openerp.exceptions.Warning:
         raise
     except openerp.exceptions.DeferredException, e:
-        _logger.error(tools.exception_to_unicode(e))
+        _logger.exception(tools.exception_to_unicode(e))
         post_mortem(e.traceback)
         raise
     except Exception, e:
-        _logger.error(tools.exception_to_unicode(e))
+        _logger.exception(tools.exception_to_unicode(e))
         post_mortem(sys.exc_info())
         raise
 

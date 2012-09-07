@@ -24,6 +24,7 @@ from osv import fields
 import os
 import tools
 import openerp
+from openerp import SUPERUSER_ID
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
@@ -142,23 +143,21 @@ class res_company(osv.osv):
         if phone: val.append(_('Phone: ')+phone)
         if fax: val.append(_('Fax: ')+fax)
         if website: val.append(_('Website: ')+website)
-        if vat: val.append(_('VAT: ')+vat)
+        if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
         return {'value': {'rml_footer1':' | '.join(val)}}
 
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
-
         if context is None:
             context = {}
-        user_preference = context.get('user_preference', False)
-        if user_preference:
+        if context.get('user_preference'):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,

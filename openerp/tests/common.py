@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import threading
 import time
 import unittest2
 import xmlrpclib
@@ -10,6 +11,13 @@ import openerp
 ADDONS_PATH = openerp.tools.config['addons_path']
 PORT = openerp.tools.config['xmlrpc_port']
 DB = openerp.tools.config['db_name']
+
+# If the database name is not provided on the command-line,
+# use the one on the thread (which means if it is provided on
+# the command-line, this will break when installing another
+# database from XML-RPC).
+if not DB and hasattr(threading.current_thread(), 'dbname'):
+    DB = threading.current_thread().dbname
 
 HOST = '127.0.0.1'
 
