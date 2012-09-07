@@ -58,9 +58,16 @@ class res_users(osv.Model):
         """Installation hook to create aliases for all users and avoid constraint errors."""
         self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        # make already existing users follow themselves
-        for user in self.browse(cr, SUPERUSER_ID, self.search(cr, SUPERUSER_ID, [], context=context), context=context):
-            self.pool.get('res.partner').message_subscribe(cr, SUPERUSER_ID, [user.partner_id.id], [user.partner_id.id], context=context)
+        # make already existing users follow themselves, using read to avoid unprefetched fields browse failure
+        cr.execute("""  SELECT p.id FROM res_partner p
+                        LEFT JOIN mail_followers n
+                        ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
+                        WHERE n.id IS NULL
+                    """)
+        params = [(res[0], res[0]) for res in cr.fetchall()]
+        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
+                            VALUES (%s, 'res.partner', %s)
+                        """, params)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
