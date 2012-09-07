@@ -26,7 +26,6 @@ import logging
 import os
 import re
 import shutil
-import sys
 import tempfile
 import urllib
 import zipfile
@@ -39,6 +38,7 @@ except ImportError:
 
 import requests
 
+import openerp
 from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
@@ -640,32 +640,44 @@ class module(osv.osv):
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             for module_name in urls:
+                if module_name == 'base':
+                    continue    # special case. handled below
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
                 bck = backup(module_path, False)
                 shutil.move(os.path.join(tmp, module_name), module_path)
                 if bck:
                     shutil.rmtree(bck)
 
+            if urls.get('base', None):
+                # base is a special case. it containt the server and the base module.
+                # extract path is not the same
+
+                # TODO copy all modules in the SERVER/openerp/addons directory to the new "base" module (exceptbase itself)
+                # then replace the server by the new "base" module
+                base_path = os.path.dirname(modules.get_module_path('base'))
+
+                for d in os.listdir(base_path):
+                    if d != 'base' and os.path.isdir(os.path.join(base_path, d)):
+                        destdir = os.path.join(tmp, 'base', 'addons', d)    # XXX 'openerp'
+                        shutil.copytree(os.path.join(base_path, d), destdir)
+
+                server_dir = openerp.tools.config['root_path']      # XXX or dirname()
+                bck = backup(server_dir)
+                shutil.move(os.path.join(tmp, 'base'), server_dir)
+                #if bck:
+                #    shutil.rmtree(bck)
+
             self.update_list(cr, uid, context=context)
 
             ids = self.search(cr, uid, [('name', 'in', urls.keys())], context=context)
             if self.search_count(cr, uid, [('id', 'in', ids), ('state', '=', 'installed')], context=context):
                 # if any to update
-                return self.restart_server(cr, uid, context)     # in fact will never return...
+                cr.commit()
+                openerp.service.restart_server()
+                return False
             return self.button_immediate_install(cr, uid, ids, context=context)
         finally:
             shutil.rmtree(tmp)
-
-    def restart_server(self, cr, uid, context=None):
-        raise NotImplementedError('# FIXME')
-        # TODO send a signal to will wait all threads (include us) like ctrl-c
-        # catch the case of gunicorn and force all workers to die...
-
-        strip_args = ['-d', '-u']
-        a = sys.argv[:]
-        args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
-
-        os.execv(sys.executable, [sys.executable] + args)
 
     def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:

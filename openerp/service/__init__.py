@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#    
+#
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,11 +15,14 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
 
 import logging
+import os
+import signal
+import sys
 import threading
 import time
 
@@ -83,24 +86,43 @@ def stop_services():
 
     openerp.netsvc.Server.quitAll()
     openerp.wsgi.core.stop_server()
-    config = openerp.tools.config
     _logger.info("Initiating shutdown")
     _logger.info("Hit CTRL-C again or send a second signal to force the shutdown.")
-    logging.shutdown()
 
     # Manually join() all threads before calling sys.exit() to allow a second signal
     # to trigger _force_quit() in case some non-daemon threads won't exit cleanly.
     # threading.Thread.join() should not mask signals (at least in python 2.5).
+    me = threading.currentThread()
+    _logger.debug('current thread: %r', me)
     for thread in threading.enumerate():
-        if thread != threading.currentThread() and not thread.isDaemon():
+        _logger.debug('process %r (%r)', thread, thread.isDaemon())
+        if thread != me and not thread.isDaemon():
             while thread.isAlive():
+                _logger.debug('join and sleep')
                 # Need a busyloop here as thread.join() masks signals
                 # and would prevent the forced shutdown.
                 thread.join(0.05)
                 time.sleep(0.05)
 
+    _logger.debug('--')
     openerp.modules.registry.RegistryManager.delete_all()
+    logging.shutdown()
 
+def restart_server():
+    pid = openerp.wsgi.core.arbiter_pid
+    if pid:
+        os.kill(pid, signal.SIGHUP)
+    else:
+        openerp.phoenix = True
+        signame = 'CTRL_C_EVENT' if os.name == 'nt' else 'SIGINT'
+        sig = getattr(signal, signame)
+        os.kill(os.getpid(), sig)
+
+        #strip_args = ['-d', '-u']
+        #a = sys.argv[:]
+        #args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+
+        #stop_services()
+        #os.execv(sys.executable, [sys.executable] + args)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

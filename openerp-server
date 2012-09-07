@@ -203,13 +203,23 @@ def quit_on_signals():
     try:
         while quit_signals_received == 0:
             time.sleep(60)
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt:
         pass
+
+    openerp.service.stop_services()
+
+    if getattr(openerp, 'phoenix', False):
+        # like the phoenix, reborn from ashes...
+        strip_args = ['-d', '-u']
+        a = sys.argv[:]
+        args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
+
+        time.sleep(0.5)     # wait end of sockets...
+        os.execv(sys.executable, [sys.executable] + args)
+        return
 
     if config['pidfile']:
         os.unlink(config['pidfile'])
-
-    openerp.service.stop_services()
     sys.exit(0)
 
 def configure_babel_localedata_path():
