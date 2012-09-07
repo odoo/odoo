@@ -157,6 +157,9 @@ class res_users(osv.osv):
         'user_email': fields.related('email', type='char',
             deprecated='Use the email field instead of user_email. This field will be removed with OpenERP 7.1.'),
     }
+    _sql_constraints = [
+        ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
+    ]
 
     def on_change_company_id(self, cr, uid, ids, company_id):
         return {'warning' : {
