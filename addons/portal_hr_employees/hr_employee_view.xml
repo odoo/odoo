@@ -8,12 +8,8 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//page[last()]" position="after">
-                    <page string="Portal Settings">
-                        <group>
-                            <field name="visibility"/>
-                        </group>
-                    </page>
+               <xpath expr="//field[@name='active']" position="before">
+                    <field name="visibility"/>
                 </xpath>
             </field>
         </record>
@@ -32,7 +28,7 @@
 
                             <templates>
                                 <t t-name="kanban-box">
-                                    <div class="oe_employee_vignette oe_semantic_html_override">
+                                    <div class="oe_employee_vignette">
                                         <div class="oe_employee_image">
                                             <img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/>
                                         </div>
