@@ -291,7 +291,7 @@ openerp.mail = function(session) {
             var self = this;
             this.ds_message.call('message_read', [[parseInt(message_id)]]).then(function(result){
                 vote_count = 0;
-                if (result[0].vote_user_ids){length
+                if (result[0].vote_user_ids){
                 	vote_count = result[0].vote_user_ids.length;
                 }
                 parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
