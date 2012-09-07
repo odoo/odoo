@@ -473,7 +473,7 @@ openerp.mail = function(session) {
         },
 
         display_user_avatar: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.options.uid);
+            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
         },
         
