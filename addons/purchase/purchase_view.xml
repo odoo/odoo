@@ -73,7 +73,7 @@
         parent="base.menu_purchase_root" sequence="6"/>
 
     <record id="action_invoice_pending" model="ir.actions.act_window">
-        <field name="name">Based on Draft Invoices</field>
+        <field name="name">On Draft Invoices</field>
         <field name="res_model">account.invoice</field>
         <field name="view_type">form</field>
         <field name="view_mode">tree,form,calendar,graph</field>
@@ -95,7 +95,7 @@
         </field>
     </record>
 
-     <menuitem name="Based on Draft Invoices"
+     <menuitem
           id="menu_procurement_management_pending_invoice"
           action="action_invoice_pending"
           parent="menu_procurement_management_invoice"
@@ -177,7 +177,7 @@
             <field name="arch" type="xml">
                 <form string="Purchase Order" version="7.0">
                 <header>
-                    <button name="purchase_confirm" states="draft,sent" string="Confirm Quotation" class="oe_highlight"/>
+                    <button name="purchase_confirm" states="draft,sent" string="Confirm Order" class="oe_highlight"/>
                     <button name="wkf_send_rfq" states="draft" string="Send RFQ" type="object" context="{'send_rfq':True}"/>
                     <button name="wkf_send_rfq" states="confirmed" string="Resend Purchase Order" type="object" class="oe_highlight"/>
                     <button name="action_cancel" states="except_picking,except_invoice" string="Cancel" type="object" />
@@ -214,12 +214,16 @@
                     <notebook>
                         <page string="Purchase Order">
                             <field name="order_line">
-                                <tree string="Purchase Order Lines">
-                                    <field name="date_planned"/>
+                                <tree string="Purchase Order Lines" editable="bottom">
+                                    <field name="product_id" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                     <field name="name"/>
-                                    <field name="product_qty"/>
-                                    <field name="product_uom" groups="product.group_uom"/>
+                                    <field name="date_planned"/>
+                                    <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                                    <field name="account_analytic_id" groups="purchase.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
+                                    <field name="product_qty" on_change="onchange_product_id(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id,parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
+                                    <field name="product_uom" groups="product.group_uom" on_change="onchange_product_uom(parent.pricelist_id,product_id,product_qty,product_uom,parent.partner_id, parent.date_order,parent.fiscal_position,date_planned,name,price_unit,context)"/>
                                     <field name="price_unit"/>
+                                    <field name="taxes_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','!=','sale')]"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
@@ -298,7 +302,7 @@
             <field name="arch" type="xml">
                 <search string="Search Purchase Order">
                     <field name="name" string="Reference"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-document-new" name="draft" string="Quotations" domain="[('state','=','draft')]" help="Purchase orders which are in draft state"/>
                     <filter icon="terp-check" name="approved" string="Purchase Orders" domain="[('state','not in',('draft','cancel'))]" help="Approved purchase orders"/>
@@ -323,8 +327,8 @@
             <field name="name">purchase.order.tree</field>
             <field name="model">purchase.order</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in (confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('wait','confirmed');red:state in ('except_invoice','except_picking')" string="Purchase Order">
+                    <field name="message_unread" invisible="1"/>
                     <field name="name" string="Reference"/>
                     <field name="date_order" />
                     <field name="partner_id"/>
@@ -508,7 +512,7 @@
 
 
         <record id="purchase_line_form_action2" model="ir.actions.act_window">
-            <field name="name">Based on Purchase Order Lines</field>
+            <field name="name">On Purchase Order Lines</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order.line</field>
             <field name="domain">[('order_id.invoice_method','&lt;&gt;','picking'), ('state','in',('confirmed','done')), ('invoiced', '=', False)]</field>
@@ -552,6 +556,20 @@
                 <xpath expr="//field[@name='close_move']" position="before">
                     <field name="purchase_id"/>
                 </xpath>
+            </field>
+        </record>
+        
+        <!-- Product Suppliers-->
+        
+        <record id="view_product_supplier_inherit" model="ir.ui.view">
+            <field name="name">product.normal.supplier.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <group name="procurement" position="after">
+                     <separator string="Suppliers"/>
+                     <field name="seller_ids" context="{'uom_id': uom_id}"/>
+                </group>
             </field>
         </record>
     </data>

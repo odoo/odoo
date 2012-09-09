@@ -10,8 +10,6 @@
                     <page string="Point of Sale">
                         <group col="4" colspan="4">
                             <field name="journal_user"/>
-                            <field name="opening_control"/>
-                            <field name="closing_control"/>
                             <field name="amount_authorized_diff"/>
                             <field name="self_checkout_payment_method" />
                         </group>
@@ -113,37 +111,5 @@
             <field name="view_id" ref="account.view_bank_statement_form2"/>
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
-
-        <!--
-        <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
-            id="menu_point_open_config" sequence="10"/>
-        <menuitem
-            name="Open Cash Registers" parent="menu_point_open_config"
-            string="Open Cash Registers"
-            action="action_pos_open_statement"
-            id="menu_open_statement" sequence="1" />
-
-        <menuitem
-            name="Close Cash Registers" parent="menu_point_open_config"
-            string="Close Cash Registers"
-            action="action_pos_close_statement"
-            id="menu_close_statement" sequence="2" />
-
-        <menuitem
-            parent="menu_point_open_config"
-            action="action_pos_confirm"
-            id="menu_wizard_pos_confirm" sequence="8" />
-
-
-        <menuitem
-            name="List of Cash Registers"
-            parent="menu_point_open_config"
-            action="action_new_bank_statement_all_tree"
-            id="menu_all_menu_all_register"
-            sequence="4"
-        />
-    -->
-
-
     </data>
 </openerp>

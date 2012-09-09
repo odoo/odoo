@@ -51,7 +51,7 @@ Some statistics by journals are provided.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/invoice_type.jpeg'],
-    'depends': ['sale_stock'],
+    'depends': ['sale'],
     'data': [
         'security/ir.model.access.csv',
         'sale_journal_view.xml',

@@ -21,7 +21,10 @@
 
 {
     'name': 'Signup',
-    'description': 'Allow users to sign up',
+    'description': """
+Allow users to sign up.
+=======================
+    """,
     'author': 'OpenERP SA',
     'version': '1.0',
     'category': 'Authentication',
@@ -29,12 +32,9 @@
     'installable': True,
     'depends': ['base_setup'],
     'data': [
+        'auth_signup_data.xml',
         'res_config.xml',
     ],
-    'js': [
-        'static/src/js/auth_signup.js',
-    ],
-    'qweb': [
-        'static/src/xml/auth_signup.xml',
-    ],
+    'js': ['static/src/js/auth_signup.js'],
+    'qweb': ['static/src/xml/auth_signup.xml'],
 }

@@ -24,8 +24,8 @@
     'name': 'Todo Lists',
     'version': '1.0',
     'category': 'Project Management',
-    "sequence": 20,
-    "summary": "Personal Tasks",
+    'sequence': 20,
+    'summary': 'Personal Tasks',
     'description': """
 This module implements all concepts defined by the Getting Things Done methodology.
 ===================================================================================
@@ -48,18 +48,15 @@ performing those tasks.
     'author': 'OpenERP SA',
     'images': ['images/project_gtd.jpeg'],
     'depends': ['project'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'project_gtd_data.xml',
         'project_gtd_view.xml',
         'security/ir.model.access.csv',
         'wizard/project_gtd_empty_view.xml',
         'wizard/project_gtd_fill_view.xml',
     ],
-    'demo_xml': ['project_gtd_demo.xml'],
-    'test':[
-         'test/task_timebox.yml'
-    ],
+    'demo': ['project_gtd_demo.xml'],
+    'test':['test/task_timebox.yml'],
     'installable': True,
     'application': True,
     'auto_install': False,
