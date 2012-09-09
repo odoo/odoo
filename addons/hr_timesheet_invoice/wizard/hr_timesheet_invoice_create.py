@@ -122,11 +122,11 @@ class account_analytic_line(osv.osv):
                 else:
                     price = 0.0
 
-                taxes = product.taxes_id
-                tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
-                account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
-                if not account_id:
+                general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                if not general_account:
                     raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
+                taxes = product.taxes_id or general_account.tax_ids
+                tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -137,7 +137,7 @@ class account_analytic_line(osv.osv):
                     'product_id': product_id,
                     'invoice_line_tax_id': [(6,0,tax)],
                     'uos_id': uom,
-                    'account_id': account_id,
+                    'account_id': general_account.id,
                     'account_analytic_id': account.id,
                 }
 
