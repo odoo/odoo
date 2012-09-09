@@ -21,7 +21,6 @@
 
 import sale_stock
 import stock
-import wizard
 import report
 import company
 import res_config

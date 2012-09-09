@@ -53,8 +53,8 @@ Dashboard for Sales Manager that includes:
     'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['account_voucher'],
     'data': [
-        'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
+        'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',

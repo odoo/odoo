@@ -635,11 +635,11 @@ class sale_order(osv.osv):
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
             
     def done_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> has been <b>done</b>") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> has been <b>done</b>") % (obj.partner_id.name), context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Invoice has been <b>paid</b>."), context=context)

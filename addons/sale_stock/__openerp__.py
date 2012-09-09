@@ -69,10 +69,9 @@ Dashboard for Sales Manager that includes:
                    'company_view.xml',
                    'sale_stock_view.xml',
                    'sale_stock_workflow.xml',
-                    'res_config_view.xml',
-                    'report/sale_report_view.xml',
-                    'process/sale_stock_process.xml',
-                   
+                   'res_config_view.xml',
+                   'report/sale_report_view.xml',
+                   'process/sale_stock_process.xml',
                    ],
    'data': ['sale_stock_data.xml'],
    'demo_xml': ['sale_stock_demo.xml'],
