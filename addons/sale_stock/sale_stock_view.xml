@@ -28,18 +28,6 @@
 
         <menuitem action="sale.action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="stock.group_locations"/>
 
-         <record id="view_order_tree_sale_stock_inherit" model="ir.ui.view">
-             <field name="name">sale.order.tree.sale.stock</field>
-             <field name="model">sale.order</field>
-             <field name="inherit_id" ref="sale.view_order_tree"/>
-             <field name="type">tree</field>
-             <field name="arch" type="xml">
-                 <field name="user_id" position="after">
-                     <field name="picked_rate" widget="progressbar"/>
-                 </field>
-             </field>
-         </record>
-
         <record id="view_order_form_inherit" model="ir.ui.view">
             <field name="name">sale.order.form.sale.stock</field>
             <field name="model">sale.order</field>

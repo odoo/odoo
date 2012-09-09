@@ -682,6 +682,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         result = super(sale_advance_payment_inv, self).create_invoices(cr, uid, ids, context=context)
         sale_obj = self.pool.get('sale.order')
         inv_line_obj = self.pool.get('account.invoice.line')
+        sale_line_obj = self.pool.get('sale.order.line')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
 
@@ -732,5 +733,5 @@ class sale_advance_payment_inv(osv.osv_memory):
                     'discount': False,
                     'tax_id': res.get('invoice_line_tax_id'),
                 }
-                self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
+                sale_line_obj.create(cr, uid, vals, context=context)
         return result

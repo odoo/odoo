@@ -69,19 +69,24 @@ class sale_advance_payment_inv(osv.osv_memory):
         """ create invoices for the active sale orders """
         if context is None:
             context = {}
+        sale_obj = self.pool.get('sale.order')
+        inv_obj = self.pool.get('account.invoice')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        ir_property_obj = self.pool.get('ir.property')
+        act_window = self.pool.get('ir.actions.act_window')
+        fiscal_obj = self.pool.get('account.fiscal.position')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
 
         if wizard.advance_payment_method == 'all':
             # create the final invoices of the active sale orders
-            res = self.pool.get('sale.order').manual_invoice(cr, uid, sale_ids, context)
+            res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
             if context.get('open_invoices', False):
                 return res
             return {'type': 'ir.actions.act_window_close'}
 
         if wizard.advance_payment_method == 'lines':
             # open the list view of sale order lines to invoice
-            act_window = self.pool.get('ir.actions.act_window')
             res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
             res['context'] = {
                 'search_default_uninvoiced': 1,
@@ -91,9 +96,6 @@ class sale_advance_payment_inv(osv.osv_memory):
 
         assert wizard.advance_payment_method in ('fixed', 'percentage')
 
-        sale_obj = self.pool.get('sale.order')
-        inv_obj = self.pool.get('account.invoice')
-        inv_line_obj = self.pool.get('account.invoice.line')
         inv_ids = []
 
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
@@ -109,10 +111,10 @@ class sale_advance_payment_inv(osv.osv_memory):
 
             # determine and check income account
             if not wizard.product_id.id :
-                prop = self.pool.get('ir.property').get(cr, uid,
+                prop = ir_property_obj.get(cr, uid,
                             'property_account_income_categ', 'product.category', context=context)
                 prop_id = prop and prop.id or False
-                account_id = self.pool.get('account.fiscal.position').map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
+                account_id = fiscal_obj.map_account(cr, uid, sale.fiscal_position.id or False, prop_id)
                 if not account_id:
                     raise osv.except_osv(_('Configuration Error!'),
                             _('There is no income account defined as global property.'))
