@@ -503,8 +503,10 @@ class account_invoice(osv.osv):
         if journal_id:
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
             currency_id = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+            company_id = journal.company_id.id
             result = {'value': {
                     'currency_id': currency_id,
+                    'company_id': company_id,
                     }
                 }
         return result
