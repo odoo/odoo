@@ -39,7 +39,7 @@
             <field name="name">done</field>
             <field name="flow_stop">True</field>
             <field name="kind">function</field>
-            <field name="action">write({'state':'done'})</field>
+            <field name="action">action_done()</field>
             <field name="join_mode">AND</field>
         </record>
 
@@ -135,10 +135,10 @@
             <field name="signal">cancel</field>
         </record>
 
-        <record id="trans_wait_invoice_invoice" model="workflow.transition">
+        <record id="trans_wait_invoice_invoice_manual" model="workflow.transition">
             <field name="act_from" ref="act_wait_invoice"/>
             <field name="act_to" ref="act_invoice"/>
-            <field name="condition">(order_policy=='prepaid')</field>
+            <field name="signal">manual_invoice</field>
         </record>
 
         <record id="trans_invoice_invoice_end" model="workflow.transition">
@@ -146,6 +146,7 @@
             <field name="act_to" ref="act_invoice_end"/>
             <field name="signal">subflow.paid</field>
         </record>
+        
         <record id="trans_invoice_invoice_except" model="workflow.transition">
             <field name="act_from" ref="act_invoice"/>
             <field name="act_to" ref="act_invoice_except"/>

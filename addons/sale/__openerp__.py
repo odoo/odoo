@@ -23,15 +23,15 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    "sequence": 14,
-    "summary": "Quotations, Sale Orders, Invoicing",
+    'sequence': 14,
+    'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
 The base module to manage quotations and sales orders.
 ======================================================
 
 Workflow with validation steps:
 -------------------------------
-    * Quotation -> Sales order -> Invoice
+    * **Quotation** -> **Sales order** -> **Invoice**
 
 Create Invoice:
 ---------------
@@ -51,9 +51,11 @@ Dashboard for Sales Manager that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['board', 'account_voucher'],
-    'init_xml': [],
-    'update_xml': ['wizard/sale_line_invoice.xml',
+    'depends': ['account_voucher'],
+    'data': [
+        'wizard/sale_make_invoice_advance.xml',
+        'wizard/sale_line_invoice.xml',
+        'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
         'sale_workflow.xml',
@@ -68,10 +70,10 @@ Dashboard for Sales Manager that includes:
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
-        'test/prepaid_order_policy.yml',
+        'test/manual_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',

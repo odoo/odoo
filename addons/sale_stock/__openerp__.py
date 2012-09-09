@@ -20,10 +20,11 @@
 ##############################################################################
 
 {
-    'name': 'Sale To Stock',
+    'name': 'Sales and Warehouse Management',
     'version': '1.0',
     'category': 'Hidden',
     'description': """
+    'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
 This Module manage quotations and sales orders. 
 ===========================================================================
 
@@ -61,11 +62,9 @@ Dashboard for Sales Manager that includes:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': [],
-    'depends': ['sale', 'procurement'],
+    'depends': ['sale', 'stock', 'procurement'],
     'init_xml': [],
-    'update_xml': ['wizard/sale_make_invoice_advance.xml',
-                   'wizard/sale_make_invoice.xml',
-                   'security/sale_stock_security.xml',
+    'update_xml': ['security/sale_stock_security.xml',
                    'security/ir.model.access.csv',
                    'company_view.xml',
                    'sale_stock_view.xml',
@@ -73,12 +72,13 @@ Dashboard for Sales Manager that includes:
                     'res_config_view.xml',
                     'report/sale_report_view.xml',
                     'process/sale_stock_process.xml',
+                   
                    ],
    'data': ['sale_stock_data.xml'],
    'demo_xml': ['sale_stock_demo.xml'],
     'test': ['test/cancel_order_sale_stock.yml',
              'test/picking_order_policy.yml',
-             'test/manual_order_policy.yml'
+             'test/prepaid_order_policy.yml',
              ],
     'installable': True,
     'auto_install': True,

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <!-- Top menu item -->
         <!--
             This menu item's purpose is to overwrite another one defined in
@@ -32,7 +31,7 @@
                         </group>
                     </group>
                 </form>
-            </field>
+           </field>
         </record>
         
         <record id="view_shop_tree" model="ir.ui.view">
@@ -65,7 +64,6 @@
             </field>
         </record>
 
-        <menuitem action="action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35"/>
 
         <!-- Sale order Read/Unread actions -->
         <record id="actions_server_sale_order_unread" model="ir.actions.server">
@@ -130,8 +128,8 @@
             <field name="model">sale.order</field>
             <field name="priority">2</field>
             <field name="arch" type="xml">
-                <tree string="Sales Orders" fonts="bold:needaction_pending==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree string="Sales Orders" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
+                    <field name="message_unread" invisible="1"/>
                     <field name="name"/>
                     <field name="date_order"/>
                     <field name="partner_id"/>
@@ -152,18 +150,21 @@
                         <span groups="base.group_user">
                             <button name="invoice_recreate" states="invoice_except" string="Recreate Invoice"/>
                             <button name="invoice_corrected" states="invoice_except" string="Ignore Exception"/>
-                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft,sent"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft,sent"/>
-                            <button name="action_button_confirm" states="draft" string="Confirm" type="object" class="oe_highlight"/>
-
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_highlight"/>
+                            <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_highlight"/>
+                            <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                            <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
-                            <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
-                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True)]}"/>
+
+                            <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
+                                type="action" states="manual" class="oe_highlight"/>
+                                
                             <button name="cancel" states="draft,sent" string="Cancel"/>
                             <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
                             <button name="invoice_cancel" states="invoice_except" string="Cancel"/>
                         </span>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,invoiced,done" statusbar_colors='{"invoice_except":"red","waiting_date":"blue"}'/>
                 </header>
                 <sheet>
                     <h1>
@@ -180,7 +181,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection"/>
+                            <field name="shop_id"  invisible="1"/>
                             <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>
@@ -237,25 +238,26 @@
                                     </div>
                                 </form>
                                 <tree string="Sales Order Lines" editable="bottom">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="state" invisible="1"/>
-                                    <field name="sequence" invisible="1"/>
-                                    <field name="tax_id" invisible="1"/>
                                     <field name="th_weight" invisible="1"/>
                                     <field name="product_id"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                         groups="base.group_user" 
                                         on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
                                     <field name="name"/>
+                                    <field name="type" invisible="1"/>
                                     <field name="product_uom_qty"
                                         context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
                                         on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, False, parent.fiscal_position, True, context)"/>
                                     <field name="product_uom"
                                         on_change="product_uom_change(parent.pricelist_id, product_id, product_uom_qty, product_uom, product_uos_qty, product_uos, name, parent.partner_id, False, False, parent.date_order, context)"
                                         groups="product.group_uom" options='{"no_open": true}'/>
-                                    <field name="product_uos_qty" groups="product.group_uos"/>
-                                    <field name="product_uos" string="UoS" groups="product.group_uos"/>
-                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
+                                    <field name="product_uos_qty" groups="product.group_uos" invisible="1"/>
+                                    <field name="product_uos" string="UoS" groups="product.group_uos" invisible="1"/>
+                                    <field name="tax_id" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
                                     <field name="price_unit"/>
+                                    <field name="discount" groups="sale.group_discount_per_so_line"/>
                                     <field name="price_subtotal"/>
                                 </tree>
                             </field>
@@ -278,7 +280,7 @@
                         <page string="Other Information" groups="base.group_user">
                             <group>
                                 <group name="logistics">
-                                    <field name="order_policy"/>
+                                    <field name="order_policy" readonly="1"/>
                                     <field name="invoice_quantity" invisible="True"/>
                                 </group>
                                 <group groups="base.group_user">
@@ -319,13 +321,27 @@
             </field>
         </record>
 
+        <!-- inherited view to make the order lines list in the form non-editable
+             for the members of some usability groups -->
+        <record id="view_order_form_editable_list" model="ir.ui.view">
+            <field name="name">sale.order.form.editable.list</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="groups_id" eval="[(6, 0, [ref('product.group_uos'), ref('product.group_stock_packaging'), ref('sale.group_mrp_properties')])]"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="view_sales_order_filter" model="ir.ui.view">
             <field name="name">sale.order.list.select</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>

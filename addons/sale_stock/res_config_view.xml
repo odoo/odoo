@@ -9,7 +9,11 @@
              <field name="inherit_id" ref="sale.view_sales_config"/>
              <field name="arch" type="xml">
                  <data>
-                     <xpath expr="//div[@name='invoice_so_lines']" position="after">
+                     <xpath expr="//div[@name='timesheet']" position="before">
+                         <div>
+                             <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
+                             <label for="group_invoice_so_lines"/>
+                         </div>
                          <div>
                              <field name="group_invoice_deli_orders" class="oe_inline" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)"/>
                              <label for="group_invoice_deli_orders"/>
@@ -22,7 +26,11 @@
                      <xpath expr="//label[@string='Default Options']" position="replace">
                          <label for="id" string="Default Options" attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False),('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False),('task_work','=',False), ('module_account_analytic_analysis','=',False)]}"/>
                      </xpath>
-                     <xpath expr="//div[@name='default_order_policy']" position="after">
+                     <xpath expr="//div[@name='time_unit']" position="before">
+                         <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
+                             <label for="default_order_policy"/>
+                             <field name="default_order_policy" class="oe_inline"/>
+                         </div>
                          <div attrs="{'invisible':[('group_invoice_so_lines','=',False), ('group_invoice_deli_orders','=',False)]}">
                              <field name="module_delivery" class="oe_inline"/>
                              <label for="module_delivery"/>
@@ -44,24 +52,15 @@
                              <label for="group_mrp_properties"/>
                          </div>
                      </div>
-                    
-                     <xpath expr="//div[@name='Sale Features']/div[@name='module_sale_margin']" position="before">
+                     <xpath expr="//div[@name='module_sale_margin']" position="before">
                          <div>
                              <field name="group_multiple_shops" class="oe_inline"/>
                              <label for="group_multiple_shops"/>
                          </div>
                      </xpath>
-
                      <field name="group_invoice_so_lines" position="replace">
                          <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
                      </field>
-
-                     <xpath expr="//div[@name='default_order_policy']" position="replace">
-                         <div attrs="{'invisible':['|',('group_invoice_so_lines','=',False),('group_invoice_deli_orders','=',False)],'required': ['|',('group_invoice_so_lines','=',True),('group_invoice_deli_orders','=',True)]}">
-                             <label for="default_order_policy"/>
-                             <field name="default_order_policy" class="oe_inline"/>
-                         </div>
-                     </xpath>
                      <xpath expr="//div[@name='time_unit']" position="replace">
                          <div attrs="{'invisible': [('task_work','=',False), ('module_account_analytic_analysis','=',False)],'required': ['|', ('task_work','=',True), ('module_account_analytic_analysis','=',True)]}">
                              <label for="time_unit"/>

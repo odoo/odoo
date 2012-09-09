@@ -27,9 +27,6 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'group_invoice_so_lines': fields.boolean('generate invoices based on the sale order',
-            implied_group='sale.group_invoice_so_lines',
-            help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
         'timesheet': fields.boolean('prepare invoices based on timesheets',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
@@ -40,11 +37,7 @@ class sale_configuration(osv.osv_memory):
             (650€/day for a developer), the duration (one year support contract).
             You will be able to follow the progress of the contract and invoice automatically.
             It installs the account_analytic_analysis module."""),
-        'default_order_policy': fields.selection(
-            [('manual', 'Invoice Based on Sales Orders')],
-            'The default invoicing method is', default_model='sale.order',
-            help="You can generate invoices based on sales orders."),
-        'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
+        'time_unit': fields.many2one('product.uom', 'the default working time unit for services is'),
         'group_sale_pricelist':fields.boolean("use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
@@ -76,6 +69,8 @@ class sale_configuration(osv.osv_memory):
                 But the possibility to change these values is still available.
                 This installs the module analytic_user_function."""),
         'module_project': fields.boolean("Project"),
+        'module_sale_stock': fields.boolean("Sale and Warehouse Management",
+            help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock """),
     }
 
     def default_get(self, cr, uid, fields, context=None):
@@ -94,10 +89,8 @@ class sale_configuration(osv.osv_memory):
         return ids and ids[0] or False
 
     _defaults = {
-        'default_order_policy': 'manual',
         'time_unit': _get_default_time_unit,
     }
-
 
     def set_sale_defaults(self, cr, uid, ids, context=None):
         ir_model_data = self.pool.get('ir.model.data')
@@ -110,12 +103,7 @@ class sale_configuration(osv.osv_memory):
         if wizard.module_project and wizard.time_unit:
             user = self.pool.get('res.users').browse(cr, uid, uid, context)
             user.company_id.write({'project_time_mode_id': wizard.time_unit.id})
-
-        return {}
-
-    def onchange_invoice_methods(self, cr, uid, ids, group_invoice_so_lines, context=None):
-        if  group_invoice_so_lines:
-            return {'value': {'default_order_policy': 'manual'}}
+         
         return {}
 
     def onchange_task_work(self, cr, uid, ids, task_work, context=None):

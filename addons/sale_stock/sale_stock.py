@@ -28,8 +28,10 @@ from tools.translate import _
 class sale_shop(osv.osv):
     _inherit = "sale.shop"
     _columns = {
-            'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
+        'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
     }
+
+sale_shop()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
@@ -110,7 +112,7 @@ class sale_order(osv.osv):
         return res
     
     _columns = {
-        'state': fields.selection([
+          'state': fields.selection([
             ('draft', 'Draft Quotation'),
             ('sent', 'Quotation Sent'),
             ('cancel', 'Cancelled'),
@@ -142,7 +144,7 @@ class sale_order(osv.osv):
         'picked_rate': fields.function(_picked_rate, string='Picked', type='float'),
         'invoice_quantity': fields.selection([('order', 'Ordered Quantities'), ('procurement', 'Shipped Quantities')], 'Invoice on', 
                                              help="The sale order will automatically create the invoice proposition (draft invoice).\
-                                              You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),                  
+                                              You have to choose  if you want your invoice based on ordered ", required=True, readonly=True, states={'draft': [('readonly', False)]}),
     }
     _defaults = {
              'picking_policy': 'direct',
@@ -162,7 +164,16 @@ class sale_order(osv.osv):
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)    
     
-    
+    def onchange_shop_id(self, cr, uid, ids, shop_id):
+        v = {}
+        if shop_id:
+            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id)
+            v['project_id'] = shop.project_id.id
+            # Que faire si le client a une pricelist a lui ?
+            if shop.pricelist_id.id:
+                v['pricelist_id'] = shop.pricelist_id.id
+        return {'value': v}
+
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
@@ -210,42 +221,11 @@ class sale_order(osv.osv):
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
             self.confirm_send_note(cr, uid, ids, context)
         return True
-    
-    def manual_invoice(self, cr, uid, ids, context=None):
-        """ create invoices for the given sale orders (ids), and open the form
-            view of one of the newly created invoices
-        """
-        mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
-
-        # create invoices through the sale orders' workflow
-        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        # determine newly created invoices
-        new_inv_ids = list(inv_ids1 - inv_ids0)
-
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        res_id = res and res[1] or False,
-
-        return {
-            'name': _('Customer Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': new_inv_ids and new_inv_ids[0] or False,
-        }
         
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
-        res = super(sale_order,self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_inv = date_inv, context=context)
         picking_obj = self.pool.get('stock.picking')
+        res = super(sale_order,self).action_invoice_create( cr, uid, ids, grouped=grouped, states=states, date_inv = date_inv, context=context)
         if context is None:
             context = {}
         # If date was specified, use it as date invoiced, usefull when invoices are generated this month and put the
@@ -518,9 +498,6 @@ class sale_order(osv.osv):
     
     def get_needaction_user_ids(self, cr, uid, ids, context=None):
         result = super(sale_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if (obj.state == 'manual' or obj.state == 'progress'):
-                result[obj.id].append(obj.user_id.id)
         return result
 
     def delivery_send_note(self, cr, uid, ids, picking_id, context=None):
@@ -550,14 +527,13 @@ class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
     _columns = { 
          'delay': fields.float('Delivery Lead Time', required=True, help="Number of days between the order confirmation the shipping of the products to the customer", readonly=True, states={'draft': [('readonly', False)]}),
-         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
          'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
             help="If 'on order', it triggers a procurement when the sale order is confirmed to create a task, purchase order or manufacturing order linked to this sale order line."),
-         'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+        'property_ids': fields.many2many('mrp.property', 'sale_order_line_property_rel', 'order_id', 'property_id', 'Properties', readonly=True, states={'draft': [('readonly', False)]}),
+        'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'product_packaging': fields.many2one('product.packaging', 'Packaging'),
         'move_ids': fields.one2many('stock.move', 'sale_line_id', 'Inventory Moves', readonly=True),
         'number_packages': fields.function(_number_packages, type='integer', string='Number Packages'),
-                     
     }
     _defaults = {
              'delay': 0.0,
@@ -567,23 +543,33 @@ class sale_order_line(osv.osv):
     
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         res = super(sale_order_line, self)._prepare_order_line_invoice_line(cr, uid, line, account_id=account_id, context=context)
-        
+
         def _get_line_qty(line):
-            if not (line.order_id.invoice_quantity=='order') or line.procurement_id:
+            if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
+                if line.product_uos:
+                    return line.product_uos_qty or 0.0
+                return line.product_uom_qty
+            else:
                 return self.pool.get('procurement.order').quantity_get(cr, uid,
                         line.procurement_id.id, context=context)
-       
+
         def _get_line_uom(line):
-            if not (line.order_id.invoice_quantity=='order') or line.procurement_id:
+            if (line.order_id.invoice_quantity=='order') or not line.procurement_id:
+                if line.product_uos:
+                    return line.product_uos.id
+                return line.product_uom.id
+            else:
                 return self.pool.get('procurement.order').uom_get(cr, uid,
                         line.procurement_id.id, context=context)
-        uosqty = _get_line_qty(line)
-        uos_id = _get_line_uom(line)
-        pu = 0.0
-        if uosqty:
+                
+        if not line.invoiced:
+            uosqty = _get_line_qty(line)
+            uos_id = _get_line_uom(line)
+            pu = 0.0
+            if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
-                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Sale Price'))
-        res.update({'price_unit': pu, 'quantity': uosqty,'uos_id': uos_id})
+                        self.pool.get('decimal.precision').precision_get(cr, uid, 'Product Price'))
+            res.update({'price_unit': pu, 'quantity': uosqty, 'uos_id': uos_id})
         return res
     
     def product_packaging_change(self, cr, uid, ids, pricelist, product, qty=0, uom=False,
@@ -644,14 +630,14 @@ class sale_order_line(osv.osv):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-        
+                
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                    'product_uos': []}}
-        res = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
-        result = res.get('value', {})
-        warning_msgs = res.get('warning') and res['warning']['message'] or ''
+        res_packing = self.product_packaging_change(cr, uid, ids, pricelist, product, qty, uom, partner_id, packaging, context=context)
+        result = res_packing.get('value', {})
+        warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
         uom2 = False
         if uom:
@@ -671,7 +657,10 @@ class sale_order_line(osv.osv):
             warning_msgs += _("Not enough stock ! : ") + warn_msg + "\n\n"
         # get unit price
         if warning_msgs:
-            warning.update({'message': warning_msgs})
+            warning = {
+                       'title': _('Configuration Error!'),
+                       'message' : warning_msgs
+                    }
         res.update({'warning': warning})
         return res
 

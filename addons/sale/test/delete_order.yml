@@ -10,5 +10,5 @@
   I make duplicate order and delete.
 -
   !python {model: sale.order}: |
-    id = self.copy(cr, uid, ref('sale_order_1'))
+    id = self.copy(cr, uid, ref('sale_order_2'))
     self.unlink(cr, uid, [id])

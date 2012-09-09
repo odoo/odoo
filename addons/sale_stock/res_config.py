@@ -26,6 +26,9 @@ from tools.translate import _
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
     _columns = {
+        'group_invoice_so_lines': fields.boolean('generate invoices based on the sale order',
+           implied_group='sale.group_invoice_so_lines',
+           help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
         'group_invoice_deli_orders': fields.boolean('generate invoices after and based on delivery orders',
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
@@ -52,8 +55,11 @@ class sale_configuration(osv.osv_memory):
             help="This allows to configure and use multiple shops."),
         'module_project_timesheet': fields.boolean("Project Timesheet"),
         'module_project_mrp': fields.boolean("Project MRP"),
-                
-    }                
+    }
+
+    _defaults = {
+        'default_order_policy': 'manual',
+    }
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(sale_configuration, self).default_get(cr, uid, fields, context)

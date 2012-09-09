@@ -79,7 +79,7 @@ class sale_report(osv.osv):
                     s.partner_id as partner_id,
                     s.user_id as user_id,
                     s.shop_id as shop_id,
-                    s.company_id as company_id,
+                    s.company_id as company_id,                    
                     extract(epoch from avg(date_trunc('day',s.date_confirm)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
                     s.state,
                     t.categ_id as categ_id,
@@ -103,7 +103,7 @@ class sale_report(osv.osv):
                     s.partner_id,
                     s.user_id,
                     s.shop_id,
-                    s.company_id,
+                    s.company_id,                    
                     s.state,
                     s.pricelist_id,
                     s.project_id

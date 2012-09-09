@@ -9,7 +9,6 @@
             <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
-             <field name="order_policy">prepaid</field>
         </record>
 
         <record id="sale_order_line_1" model="sale.order.line">
@@ -49,6 +48,7 @@
             <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
         </record>
 
         <record id="sale_order_line_4" model="sale.order.line">
@@ -78,6 +78,7 @@
             <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
         </record>
 
         <record id="sale_order_line_6" model="sale.order.line">
@@ -107,7 +108,6 @@
             <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
-            <field name="order_policy">prepaid</field>
         </record>
 
         <record id="sale_order_line_8" model="sale.order.line">
@@ -212,9 +212,9 @@
             <field name="partner_id" ref="base.res_partner_11"/>
             <field name="partner_invoice_id" ref="base.res_partner_address_20"/>
             <field name="partner_shipping_id" ref="base.res_partner_address_20"/>
-            <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
         </record>
 
         <record id="sale_order_line_16" model="sale.order.line">
@@ -264,6 +264,7 @@
             <field name="shop_id" ref="sale_shop_1"/>
             <field name="user_id" ref="base.user_demo"/>
             <field name="pricelist_id" ref="product.list0"/>
+            <field name="order_policy">manual</field>
         </record>
 
         <record id="sale_order_line_20" model="sale.order.line">
@@ -285,10 +286,41 @@
             <field name="product_uom" ref="product.product_uom_unit"/>
             <field name="price_unit">12.50</field>
         </record>
-
+        
         <!-- Confirm some Sale Orders-->
-        <workflow action="order_confirm" model="sale.order" ref="sale_order_1"/>
+        <workflow action="order_confirm" model="sale.order" ref="sale_order_7"/>
 
+        <record id="message_sale_1" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="body">Hi,
+I have a confusion for pricing of Services, I have heard there is a discount above 25 hours.
+Can you clarify please?</field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
+
+        <record id="message_sale_2" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="parent_id" ref="message_sale_1"/>
+            <field name="body">Hello, 
+Sorry but that scheme is not available for now,
+We would like to know if you confirm the quotation with pricing we sent to you.
+Thanks,
+Sales Department</field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_root"/>
+        </record>
+
+        <record id="message_sale_3" model="mail.message">
+            <field name="model">sale.order</field>
+            <field name="res_id" ref="sale_order_2"/>
+            <field name="parent_id" ref="message_sale_2"/>
+            <field name="body">Ok, fine, we will intimate you after discussing with our team.</field>
+            <field name="type">comment</field>
+            <field name="author_id" ref="base.partner_demo"/>
+        </record>
         <!-- sale advance demo.. -->
         <!-- Demo Data for Product -->
 

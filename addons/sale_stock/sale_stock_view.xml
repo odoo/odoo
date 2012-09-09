@@ -2,19 +2,18 @@
 <openerp>
     <data>
         
-        <record id="view_shop_form_inherit" model="ir.ui.view">
-            <field name="name">sale.shop.sale.stock</field>
+        <record id="view_sale_shop_form_inherit" model="ir.ui.view">
+            <field name="name">sale.shop.inherit.form</field>
             <field name="model">sale.shop</field>
             <field name="inherit_id" ref="sale.view_shop_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='shop']" position="before">
-                    <label for="warehouse_id" class="oe_edit_only"/>
-                    <h2><field name="warehouse_id" required="1"/></h2>
+                     <label for="warehouse_id" class="oe_edit_only"/>
+                     <h2><field name="warehouse_id" required="1"/></h2>
                 </xpath>
             </field>
         </record>
-
+        
          <record id="view_shop_tree_inherit" model="ir.ui.view">
              <field name="name">sale.shop.sale.stock</field>
              <field name="model">sale.shop</field>
@@ -27,6 +26,7 @@
              </field>
          </record>
 
+        <menuitem action="sale.action_shop_form" id="menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="stock.group_locations"/>
 
          <record id="view_order_tree_sale_stock_inherit" model="ir.ui.view">
              <field name="name">sale.order.tree.sale.stock</field>
@@ -47,27 +47,25 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                   <xpath expr="/form/header/span/button[@name='invoice_corrected']" position="after">
+                   <xpath expr="//button[@name='invoice_corrected']" position="after">
                        <button name="ship_recreate" states="shipping_except" string="Recreate Delivery Order"/>
                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                    </xpath>
-                   <xpath expr="/form/header/span/button[@name='action_view_invoice']" position="replace">
+                   <xpath expr="//button[@name='action_button_confirm']" position="after">
                        <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
                             attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
                    </xpath>
-                    <xpath expr="/form/header/span/button[@name='action_view_invoice']" position="after">
+                    <xpath expr="//button[@name='action_view_invoice']" position="after">
                        <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
                                  attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                    </xpath>                   
-                    <xpath expr="/form/header/span/button[@name='action_cancel']" position="after">
+                    <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel"/>
-                    </xpath>
-                    <xpath expr="/form/header/span/button[@name='action_view_delivery']" position="after">
-                        <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice" class="oe_highlight" type="action" states="manual"/>
                     </xpath>
                     <field name="state" position="replace">
                         <field name="state" widget="statusbar" statusbar_visible="draft,sent,progress,invoiced,done" statusbar_colors='{"shipping_except":"red","invoice_except":"red","waiting_date":"blue"}'/>
                     </field>
+
                    <field name="product_id" position="replace">
                        <field name="product_id"
                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'shop':parent.shop_id, 'uom':product_uom}"
@@ -80,11 +78,11 @@
                            on_change="product_id_change(parent.pricelist_id,product_id,product_uom_qty,product_uom,product_uos_qty,product_uos,name,parent.partner_id, False, False, parent.date_order, product_packaging, parent.fiscal_position, True, context)"/>
                    </field>
                    <field name="shop_id" position="replace">
-                       <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
+                        <field name="shop_id" on_change="onchange_shop_id(shop_id)" widget="selection" groups="stock.group_locations"/>
                    </field>
-                   <xpath expr="//page[@string='Other Information']/group/group/field[@name='invoiced']" position="after">
+                   <field name='invoiced' position="after">
                        <field name="shipped"/>
-                   </xpath>
+                   </field>
                    <field name="invoice_ids" position="after">
                        <separator string="Delivery Orders"/>
                        <field name="picking_ids" context="{'default_type': 'out'}">
@@ -124,18 +122,17 @@
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/tree[@string='Sales Order Lines']/field[@name='th_weight']" position="after">
                        <field name="product_packaging" invisible="1"/>
                    </xpath>
-                   <xpath expr="//page[@string='Other Information']/group/group[@name='logistics']/field[@name='order_policy']" position="replace">
+                   <field name='order_policy' position="replace">
                        <field name="order_policy" on_change="shipping_policy_change(order_policy)"/>
-                   </xpath>
-                   <xpath expr="//page[@string='Other Information']/group/group[@name='logistics']/field[@name='order_policy']" position="before">
+                       <field name="invoice_quantity" invisible="1"/>
+                   </field>
+                   <field name='order_policy' position="before">
                        <field name="incoterm" widget="selection" groups="base.group_user"/>
                        <field name="picking_policy" required="True"/>
-                   </xpath>
+                   </field>
                 </data>
            </field>
         </record>
-        
-        <menuitem action="sale.action_shop_form" id="sale.menu_action_shop_form" parent="base.menu_base_config" sequence="35" groups="stock.group_locations"/>
 
     </data>
 </openerp>
