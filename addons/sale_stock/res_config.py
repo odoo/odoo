@@ -48,7 +48,7 @@ class sale_configuration(osv.osv_memory):
         'default_picking_policy' : fields.boolean("Deliver all at once when all products are available.",
             help = "Sales order by default will be configured to deliver all products at once instead of delivering each product when it is available. This may have an impact on the shipping price."),
         'group_mrp_properties': fields.boolean('Product properties on order lines',
-            implied_group='sale_stock.group_mrp_properties',
+            implied_group='sale.group_mrp_properties',
             help="Allows you to tag sale order lines with properties."),
         'group_multiple_shops': fields.boolean("Manage Multiple Shops",
             implied_group='stock.group_locations',

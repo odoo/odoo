@@ -146,7 +146,7 @@
             <field eval="&quot;&quot;&quot;The Salesman creates an invoice manually, if the sales order shipping policy is 'Shipping and Manual in Progress'. The invoice is created automatically if the shipping policy is 'Payment before Delivery'.&quot;&quot;&quot;" name="note"/>
             <field model="process.node" name="target_node_id" ref="sale.process_node_invoice0"/>
             <field model="process.node" name="source_node_id" ref="sale.process_node_saleorder0"/>
-            <field eval="[(6,0,[ref('sale_stock.trans_wait_invoice_invoice_manual')])]" name="transition_ids"/>
+            <field eval="[(6,0,[ref('sale.trans_wait_invoice_invoice_manual')])]" name="transition_ids"/>
         </record>
 
         <record id="process_transition_action_cancelorder0" model="process.transition.action">
