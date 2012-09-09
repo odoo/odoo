@@ -79,17 +79,24 @@ class account_analytic_line(osv.osv):
             curr_invoice = {
                 'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
+                'company_id': account.company_id.id,
                 'payment_term': partner.property_payment_term.id or False,
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
-            invoices.append(last_invoice)
-
+            
             context2 = context.copy()
             context2['lang'] = partner.lang
+            # set company_id in context, so the correct default journal will be selected 
+            context2['force_company'] = curr_invoice['company_id']
+            # set force_company in context so the correct product properties are selected (eg. income account) 
+            context2['company_id'] = curr_invoice['company_id']
+            
+            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
+            invoices.append(last_invoice)
+
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id, name " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
