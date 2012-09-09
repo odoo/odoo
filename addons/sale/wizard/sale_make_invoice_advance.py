@@ -178,23 +178,6 @@ class sale_advance_payment_inv(osv.osv_memory):
             # add the invoice to the sale order's invoices
             sale.write({'invoice_ids': [(4, inv_id)]})
 
-            # If invoice on picking: add the cost on the SO
-            # If not, the advance will be deduced when generating the final invoice
-            if sale.order_policy == 'picking':
-                vals = {
-                    'order_id': sale.id,
-                    'name': res.get('name'),
-                    'price_unit': -inv_amount,
-                    'product_uom_qty': wizard.qtty or 1.0,
-                    'product_uos_qty': wizard.qtty or 1.0,
-                    'product_uos': res.get('uos_id', False),
-                    'product_uom': res.get('uom_id', False),
-                    'product_id': wizard.product_id.id or False,
-                    'discount': False,
-                    'tax_id': res.get('invoice_line_tax_id'),
-                }
-                self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
-
         if context.get('open_invoices', False):
             return self.open_invoices( cr, uid, ids, inv_ids, context=context)
         return {'type': 'ir.actions.act_window_close'}

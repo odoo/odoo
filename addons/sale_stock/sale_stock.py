@@ -673,3 +673,64 @@ class sale_order_line(osv.osv):
                             _('Cannot cancel sales order line!'),
                             _('You must first cancel stock moves attached to this sales order line.'))   
         return res
+
+class sale_advance_payment_inv(osv.osv_memory):
+    _inherit = "sale.advance.payment.inv"
+    
+    def create_invoices(self, cr, uid, ids, context=None):
+        """ create invoices for the active sale orders """
+        result = super(sale_advance_payment_inv, self).create_invoices(cr, uid, ids, context=context)
+        sale_obj = self.pool.get('sale.order')
+        inv_line_obj = self.pool.get('account.invoice.line')
+        wizard = self.browse(cr, uid, ids[0], context)
+        sale_ids = context.get('active_ids', [])
+
+        assert wizard.advance_payment_method in ('fixed', 'percentage')
+        inv_ids = []
+        for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
+            if sale.order_policy == 'postpaid':
+                raise osv.except_osv(
+                    _('Error!'),
+                    _("You cannot make an advance on a sales order \
+                         that is defined as 'Automatic Invoice after delivery'."))
+
+            val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
+                    uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
+            res = val['value']
+            # determine invoice amount
+            if wizard.advance_payment_method == 'percentage':
+                inv_amount = sale.amount_total * wizard.amount / 100
+                if not res.get('name'):
+                    res['name'] = _("Advance of %s %%") % (wizard.amount)
+            else:
+                inv_amount = wizard.amount
+                if not res.get('name'):
+                    #TODO: should find a way to call formatLang() from rml_parse
+                    symbol = sale.pricelist_id.currency_id.symbol
+                    if sale.pricelist_id.currency_id.position == 'after':
+                        res['name'] = _("Advance of %s %s") % (inv_amount, symbol)
+                    else:
+                        res['name'] = _("Advance of %s %s") % (symbol, inv_amount)
+
+            # determine taxes
+            if res.get('invoice_line_tax_id'):
+                res['invoice_line_tax_id'] = [(6, 0, res.get('invoice_line_tax_id'))]
+            else:
+                res['invoice_line_tax_id'] = False
+            # If invoice on picking: add the cost on the SO
+            # If not, the advance will be deduced when generating the final invoice
+            if sale.order_policy == 'picking':
+                vals = {
+                    'order_id': sale.id,
+                    'name': res.get('name'),
+                    'price_unit': -inv_amount,
+                    'product_uom_qty': wizard.qtty or 1.0,
+                    'product_uos_qty': wizard.qtty or 1.0,
+                    'product_uos': res.get('uos_id', False),
+                    'product_uom': res.get('uom_id', False),
+                    'product_id': wizard.product_id.id or False,
+                    'discount': False,
+                    'tax_id': res.get('invoice_line_tax_id'),
+                }
+                self.pool.get('sale.order.line').create(cr, uid, vals, context=context)
+        return result
