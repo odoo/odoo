@@ -146,14 +146,8 @@ class survey_question_wiz(osv.osv_memory):
                         pre_button = True
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                    xml_form = etree.Element('form', {'string': tools.ustr(sur_rec.title)})
-                    xml_header = etree.SubElement(xml_form, 'header', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
-                    xml_header_title = etree.SubElement(xml_header, 'group', {'col': '6', 'colspan': '6'})
-
-                    etree.SubElement(xml_header_title, 'label', {'string': tools.ustr(pag_rec.title) ,'colspan': '2' ,'class' : 'oe_survey_title'})
-                    xml_header_group = etree.SubElement(xml_header_title, 'group', {'col': '4', 'colspan': '1'})
+                    xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title or sur_rec.title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
-                        etree.SubElement(xml_form, 'separator', {'string' : '','colspan': '4'})
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
                         etree.SubElement(xml_group3, 'button', {'string' :'Add Page','icon': "gtk-new", 'type' :'object','name':"action_new_page", 'context' : tools.ustr(context)})
@@ -161,7 +155,9 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_group3, 'button', {'string' :'Delete Page','icon': "gtk-delete", 'type' :'object','name':"action_delete_page", 'context' : tools.ustr(context)})
                         etree.SubElement(xml_group3, 'button', {'string' :'Add Question','icon': "gtk-new", 'type' :'object','name':"action_new_question", 'context' : tools.ustr(context)})
 
-                    xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
+                    # FP Note
+                    xml_group = xml_form
+
                     if context.has_key('response_id') and context.get('response_id', False) \
                          and int(context.get('response_id',0)[0]) > 0:
                         # TODO: l10n, cleanup this code to make it readable. Or template?
@@ -179,9 +175,8 @@ class survey_question_wiz(osv.osv_memory):
                         etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
                     if pag_rec.note:
-                        xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
                         for que_test in pag_rec.note.split('\n'):
-                            etree.SubElement(xml_group, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
+                            etree.SubElement(xml_form, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
                     que_ids = pag_rec.question_ids
                     qu_no = 0
 
@@ -194,19 +189,16 @@ class survey_question_wiz(osv.osv_memory):
                             star = '*'
                         else:
                             star = ''
-                        xml_group = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '4'})
-
                         if context.has_key('active') and context.get('active',False) and \
                                     context.has_key('edit'):
-                            xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '2'})
-                            etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '3'})
+                            etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
+
                             xml_group1 = etree.SubElement(xml_form, 'group', {'col': '2', 'colspan': '2'})
                             context.update({'question_id' : tools.ustr(que.id),'page_number': sur_name_rec.page_no , 'transfer' : sur_name_read.transfer, 'page_id' : p_id})
                             etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
                             etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
                         else:
-                            xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
-                            etree.SubElement(xml_group, 'separator', {'string': star+to_xml(separator_string), 'colspan': '4'})
+                            etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
 
                         ans_ids = que_rec.answer_choice_ids
                         xml_group = etree.SubElement(xml_form, 'group', {'col': '1', 'colspan': '4'})
@@ -366,8 +358,6 @@ class survey_question_wiz(osv.osv_memory):
                                     etree.SubElement(xml_group, 'field', {'readonly' :str(readonly), 'name': tools.ustr(que.id) + "_other", 'nolabel':"1" ,'colspan':"4"})
                                     fields[tools.ustr(que.id) + "_other"] = {'type': 'text', 'string': '', 'views':{}}
 
-                    etree.SubElement(xml_form, 'separator', {'colspan': '4'})
- 
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '8', 'colspan': '1', 'width':"100%"})
 
                     if pre_button:
