@@ -1,4 +1,3 @@
-import os
 import unittest2
 
 import openerp

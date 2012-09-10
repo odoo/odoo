@@ -892,8 +892,8 @@ class BaseModel(object):
                         for c in cls.__dict__.get(s, []):
                             exist = False
                             for c2 in range(len(new)):
-                                 #For _constraints, we should check field and methods as well
-                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                #For _constraints, we should check field and methods as well
+                                if new[c2][2]==c[2] and (new[c2][0] == c[0] \
                                         or getattr(new[c2][0],'__name__', True) == \
                                             getattr(c[0],'__name__', False)):
                                     # If new class defines a constraint with
@@ -1308,7 +1308,7 @@ class BaseModel(object):
                 if not line[i]:
                     continue
 
-                if field[:len(prefix)] <> prefix:
+                if field[:len(prefix)] != prefix:
                     if line[i] and skip:
                         return False
                     continue
@@ -2709,7 +2709,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if (val<>False) or (type(val)<>bool):
+                if val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
@@ -2733,7 +2733,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-            _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints

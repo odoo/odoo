@@ -22,7 +22,6 @@
 import socket
 import cPickle
 import cStringIO
-import marshal
 
 import netsvc
 
