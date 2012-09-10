@@ -252,6 +252,8 @@ class res_company(osv.osv):
 
     def write(self, cr, uid, ids, values, context=None):
         self.cache_restart(cr)
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         super(res_company, self).write(cr, uid, ids, values, context=context)
         if 'rml_footer' not in values:
             self.compute_footer(cr, uid, ids, context=context)
