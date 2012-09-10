@@ -23,14 +23,15 @@
     'name': 'Sales and Warehouse Management',
     'version': '1.0',
     'category': 'Hidden',
-    'description': """
     'summary': 'Quotation, Sale Orders, Delivery & Invoicing Control',
+    'description': """
+    
 This Module manage quotations and sales orders. 
 ===========================================================================
 
 Workflow with validation steps:
 -------------------------------
-    * Quotation -> Sales order -> Invoice
+    * **Quotation** -> **Sales order** -> **Invoice**
 
 Create Invoice:
 ---------------
@@ -45,7 +46,7 @@ Partners preferences:
     * Invoicing
 
 Products stocks and prices:
---------------------------
+---------------------------
 
 Delivery method:
 -----------------
