@@ -168,10 +168,6 @@ class res_company(osv.osv):
                 self.write(cr, uid, [company.id], {'rml_footer': res}, context=context)
         return True
 
-    def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line, context=None):
-        rml_footer_lines = (rml_footer or '').split('\n')
-        return rml_footer_lines[line] if line < len(rml_footer_lines) else ''
-
     def on_change_country(self, cr, uid, ids, country_id, context=None):
         currency_id = self._get_euro(cr, uid, context=context)
         if country_id:
@@ -304,6 +300,9 @@ class res_company(osv.osv):
 <header>
     <pageTemplate>
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
+         <stylesheet>
+            <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
+         </stylesheet>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
@@ -332,10 +331,10 @@ class res_company(osv.osv):
 
             <!--page bottom-->
             <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
-            <drawCentredString x="10.5cm" y="2.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=0) ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="1.8cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=1) ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="1.3cm">[[ company._get_rml_footer_by_line(company.rml_footer,line=2) ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
+            <place x="1.3cm" y="0cm" height="2cm" width="19.0cm">
+                <para style="main_footer">[[ company.rml_footer ]]</para>
+                <para style="main_footer">Contact : [[ user.name ]] - Page: <pageNumber/></para>
+            </place>
         </pageGraphics>
     </pageTemplate>
 </header>"""
