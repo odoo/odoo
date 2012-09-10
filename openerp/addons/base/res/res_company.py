@@ -333,7 +333,7 @@ class res_company(osv.osv):
 
             <!--page bottom-->
             <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
-            <place x="1.3cm" y="0cm" height="2cm" width="19.0cm">
+            <place x="1.3cm" y="0cm" height="2.55cm" width="19.0cm">
                 <para style="main_footer">[[ company.rml_footer ]]</para>
                 <para style="main_footer">Contact : [[ user.name ]] - Page: <pageNumber/></para>
             </place>
