@@ -436,8 +436,8 @@ class mrp_production(osv.osv):
         return dest_location_id.id
 
     _columns = {
-        'name': fields.char('Reference', size=64, required=True, states={'in_production':[('readonly',True)],'ready':[('readonly',True)]}),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request.", states={'in_production':[('readonly',True)],'ready':[('readonly',True)]}),
+        'name': fields.char('Reference', size=64, required=True, states={'in_production':[('readonly',True)],'ready':[('readonly',True)],'done':[('readonly',True)]}),
+        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request.", states={'in_production':[('readonly',True)],'ready':[('readonly',True)],'done':[('readonly',True)]}),
         'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', select=True),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
