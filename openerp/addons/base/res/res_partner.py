@@ -215,6 +215,7 @@ class res_partner(osv.osv):
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
+        'user_ids': fields.one2many('res.users', 'partner_id', 'Users'),
         'contact_address': fields.function(_address_display,  type='char', string='Complete Address'),
     }
 
@@ -225,14 +226,16 @@ class res_partner(osv.osv):
             return [context['category_id']]
         return False
 
-    def _get_default_image(self, cr, uid, is_company, context=None):
+    def _get_default_image(self, cr, uid, is_company, context=None, colorize=False):
         if is_company:
             image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
         else:
             from PIL import Image
             from StringIO import StringIO
-            from random import random
-            color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
+            color = (255,255,255)
+            if colorize:
+                from random import random
+                color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
             face = Image.open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png'))
             avatar = Image.new('RGB', face.size)
             avatar.paste(color)
@@ -240,7 +243,7 @@ class res_partner(osv.osv):
             buffer = StringIO()
             avatar.save(buffer, 'PNG')
             image = buffer.getvalue()
-        return tools.image_resize_image_big(image.encode('base64'))
+        return image.encode('base64')
 
     _defaults = {
         'active': True,
@@ -253,9 +256,7 @@ class res_partner(osv.osv):
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
-        'image_small': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
-        'image_medium': lambda self, cr, uid, context: self._get_default_image(cr, uid, False, context),
+        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context.get('default_is_company', False), context),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -333,9 +334,6 @@ class res_partner(osv.osv):
             domain_siblings = [('parent_id', '=', vals['parent_id']), ('use_parent_address', '=', True)]
             update_ids = [vals['parent_id']] + self.search(cr, uid, domain_siblings, context=context)
             self.update_address(cr, uid, update_ids, vals, context)
-        if 'image' not in vals :
-            image_value = self._get_default_image(cr, uid, vals.get('is_company', False) or context.get('default_is_company'), context)
-            vals.update(tools.image_get_resized_images(image_value, return_big=True))
         return super(res_partner,self).create(cr, uid, vals, context=context)
 
     def update_address(self, cr, uid, ids, vals, context=None):
@@ -360,37 +358,34 @@ class res_partner(osv.osv):
             res.append((record.id, name))
         return res
 
+    def _parse_partner_name(self, text, context=None):
+        """ Supported syntax:
+            - 'Raoul <raoul@grosbedon.fr>': will find name and email address
+            - otherwise: default, everything is set as the name """
+        match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
+        if match:
+            email = match.group(1) 
+            name = text[:text.index(email)].replace('"','').replace('<','').strip()
+        else:
+            name, email = text, ''
+        return name, email
+
     def name_create(self, cr, uid, name, context=None):
         """ Override of orm's name_create method for partners. The purpose is
             to handle some basic formats to create partners using the
             name_create.
-            Supported syntax:
-            - 'raoul@grosbedon.fr': create a partner with name raoul@grosbedon.fr
-              and sets its email to raoul@grosbedon.fr
-            - 'Raoul Grosbedon <raoul@grosbedon.fr>': create a partner with name
-              Raoul Grosbedon, and set its email to raoul@grosbedon.fr
-            - anything else: fall back on the default name_create
-            Regex :
-            - ([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8}): raoul@grosbedon.fr
-            - ([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]:
-              Raoul Grosbedon, raoul@grosbedon.fr
-        """
-        contact_regex = re.compile('([\w\s.\\-]+)[\<]([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})[\>]')
-        email_regex = re.compile('([a-zA-Z0-9._%-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9._]{1,8})')
-        contact_regex_res = contact_regex.findall(name)
-        email_regex_res = email_regex.findall(name)
-        if contact_regex_res:
-            name = contact_regex_res[0][0].rstrip(' ') # remove extra spaces on the right
-            email = contact_regex_res[0][1]
-            rec_id = self.create(cr, uid, {self._rec_name: name, 'email': email}, context);
-            return self.name_get(cr, uid, [rec_id], context)[0]
-        elif email_regex_res:
-            email = '%s' % (email_regex_res[0])
-            rec_id = self.create(cr, uid, {self._rec_name: email, 'email': email}, context);
-            return self.name_get(cr, uid, [rec_id], context)[0]
-        else:
-            rec_id = super(res_partner, self).create(cr, uid, {self._rec_name: name}, context)
-            return self.name_get(cr, uid, [rec_id], context)[0]
+            If only an email address is received and that the regex cannot find
+            a name, the name will have the email value.
+            If 'force_email' key in context: must find the email address. """
+        if context is None:
+            context = {}
+        name, email = self._parse_partner_name(name, context=context)
+        if context.get('force_email') and not email:
+            raise osv.except_osv(_('Warning'), _("Couldn't create contact without email address !"))
+        if not name and email:
+            name = email
+        rec_id = self.create(cr, uid, {self._rec_name: name or email, 'email': email or False}, context=context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
@@ -413,6 +408,21 @@ class res_partner(osv.osv):
             if ids:
                 return self.name_get(cr, uid, ids, context)
         return super(res_partner,self).name_search(cr, uid, name, args, operator=operator, context=context, limit=limit)
+
+    def find_or_create(self, cr, uid, email, context=None):
+        """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
+            to create one
+            
+            :param str email: email-like string, which should contain at least one email,
+                e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
+        assert email, 'an email is required for find_or_create to work'
+        emails = tools.email_split(email)
+        if emails:
+            email = emails[0]
+        ids = self.search(cr, uid, [('email','ilike',email)], context=context)
+        if not ids:
+            return self.name_create(cr, uid, email, context=context)[0]
+        return ids[0]
 
     def _email_send(self, cr, uid, ids, email_from, subject, body, on_error=None):
         partners = self.browse(cr, uid, ids)

@@ -146,7 +146,12 @@ class res_company(osv.osv):
         if vat: val.append(_('TIN: ')+vat)
         if reg: val.append(_('Reg: ')+reg)
         return {'value': {'rml_footer1':' | '.join(val)}}
-
+    
+    def on_change_country(self, cr, uid, ids, country_id, context=None):
+        currency_id = self._get_euro(cr, uid, context=context)
+        if country_id:
+            currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
+        return {'value': {'currency_id': currency_id}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
@@ -228,10 +233,9 @@ class res_company(osv.osv):
         return super(res_company, self).write(cr, *args, **argv)
 
     def _get_euro(self, cr, uid, context=None):
-        try:
-            return self.pool.get('res.currency').search(cr, uid, [])[0]
-        except:
-            return False
+        rate_obj = self.pool.get('res.currency.rate')
+        rate_id = rate_obj.search(cr, uid, [('rate', '=', 1)], context=context)
+        return rate_id and rate_obj.browse(cr, uid, rate_id[0], context=context).currency_id.id or False
 
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')

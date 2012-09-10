@@ -811,8 +811,6 @@ class YamlInterpreter(object):
             is_preceded_by_comment = self._log_node(node, is_preceded_by_comment)
             try:
                 self._process_node(node)
-            except YamlImportException, e:
-                _logger.exception(e)
             except Exception, e:
                 _logger.exception(e)
                 raise
