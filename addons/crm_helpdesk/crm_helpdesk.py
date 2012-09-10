@@ -38,7 +38,7 @@ class crm_helpdesk(base_state, osv.osv):
     _description = "Helpdesk"
     _order = "id desc"
     _inherit = ['mail.thread']
-    _mail_compose_message = True
+
     _columns = {
             'id': fields.integer('ID', readonly=True),
             'name': fields.char('Name', size=128, required=True),
@@ -105,12 +105,11 @@ class crm_helpdesk(base_state, osv.osv):
         if custom_values is None: custom_values = {}
         custom_values.update({
             'name': msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
         })
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
         return super(crm_helpdesk,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
@@ -130,7 +129,7 @@ class crm_helpdesk(base_state, osv.osv):
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -149,7 +148,7 @@ class crm_helpdesk(base_state, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         msg = _('Case has been <b>created</b>.')
-        self.message_append_note(cr, uid, ids, body=msg, context=context)
+        self.message_post(cr, uid, ids, body=msg, context=context)
         return True
 
 
