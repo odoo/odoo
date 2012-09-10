@@ -160,7 +160,6 @@ class account_move_line(osv.osv):
         return res
 
     def default_get(self, cr, uid, fields, context=None):
-        context['journal_id'] = context.get('search_default_journal_id')
         data = self._default_get(cr, uid, fields, context=context)
         for f in data.keys():
             if f not in fields:
@@ -927,8 +926,6 @@ class account_move_line(osv.osv):
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
-        if context.get('journal_id', False):
-            context['journal_id'] = context.get('search_default_journal_id')
         cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
         j = cr.fetchone()[0] or ''
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
