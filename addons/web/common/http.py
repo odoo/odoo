@@ -7,6 +7,7 @@ import cgi
 import contextlib
 import functools
 import logging
+import mimetypes
 import os
 import pprint
 import sys
@@ -420,7 +421,11 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
 #----------------------------------------------------------
 # OpenERP Web WSGI Application
 #----------------------------------------------------------
-class CustomStaticMiddleware(object):
+# Add potentially missing (older ubuntu) font mime types
+mimetypes.add_type('application/font-woff', '.woff')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('application/x-font-ttf', '.ttf')
+class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
     def __call__(self, environ, start_response):
@@ -431,11 +436,8 @@ class CustomStaticMiddleware(object):
 
             new_headers = []
             unwanted_keys = ['Last-Modified']
-            if environ.get('PATH_INFO', '').endswith(".ttf"):
-                new_headers.append(("Content-Type", "application/x-font-ttf"))
-                unwanted_keys += ["Content-Type"]
             if debug:
-                new_headers.append(('Cache-Control', 'no-cache'))
+                new_headers = [('Cache-Control', 'no-cache')]
                 unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
             for k, v in headers:
@@ -480,7 +482,7 @@ class Root(object):
         static_dirs = self._load_addons()
         if options.serve_static:
             app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
-            self.dispatch = CustomStaticMiddleware(app)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
