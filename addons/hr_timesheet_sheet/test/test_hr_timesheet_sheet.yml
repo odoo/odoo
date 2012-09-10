@@ -26,7 +26,7 @@
   Now, at the time of login, I create Attendances and perform "Sign In" action.
 -
   !python {model: hr_timesheet_sheet.sheet}: |
-    self.sign_in(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {})
+    self.attendance_action_change(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {})
     task_work = self.search(cr, uid, [("name","=","Quentin Paolinon")],context)[0]
     task_ids = self.browse(cr, uid, task_work, context)
     assert task_ids.state == "draft", "I State In Timesheet"
