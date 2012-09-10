@@ -55,7 +55,7 @@
                     </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
                     <div class="oe_document_page">
-                        <field name="display_content" widget="text_wiki" class="oe_view_only"/>
+                        <field name="display_content" widget="html" class="oe_view_only" options='{"safe": true}'/>
                     </div>
                 </form>
             </field>
