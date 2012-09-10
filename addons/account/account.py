@@ -3001,6 +3001,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', help="Currency as per company's country."),
         'only_one_chart_template': fields.boolean('Only One Chart Template Available'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
@@ -3011,6 +3012,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
+    
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        currency_id = False        
+        if company_id:
+            currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
+        return {'value': {'currency_id': currency_id}}
+
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
@@ -3041,6 +3049,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
+        if 'currency_id' in fields:
+            company_id = res.get('company_id') or False
+            if company_id:
+                company_obj = self.pool.get('res.company')
+                country_id = company_obj.browse(cr, uid, company_id, context=context).country_id.id
+                currency_id = company_obj.on_change_country(cr, uid, company_id, country_id, context=context)['value']['currency_id']
+                res.update({'currency_id': currency_id})
 
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
@@ -3345,6 +3360,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
+        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 
