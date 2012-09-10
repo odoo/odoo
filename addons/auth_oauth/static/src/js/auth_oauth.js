@@ -4,7 +4,7 @@ openerp.auth_oauth = function(instance) {
     instance.web.Login = instance.web.Login.extend({
         start: function(parent, params) {
             var d = this._super.apply(this, arguments);
-            this.$element.on('click', 'a.zocial', this.on_oauth_sign_in);
+            this.$el.on('click', 'a.zocial', this.on_oauth_sign_in);
             this.oauth_providers = [];
             if(this.params.oauth_error === 1) {
                 this.do_warn("Sign up error.","Sign up is not allowed on this database.");

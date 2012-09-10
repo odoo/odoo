@@ -45,16 +45,14 @@
             <field name="arch" type="xml">
                 <notebook position="inside">
                     <page string="Warnings">
-                        <group colspan="2" col="2">
-                            <separator string="Warning when Selling this Product" colspan="4"/>
-                            <field name="sale_line_warn"  nolabel="1" />
-                            <field name="sale_line_warn_msg" colspan="3" nolabel="1" 
+                        <group string="Warning when Selling this Product">
+                            <field name="sale_line_warn"/>
+                            <field name="sale_line_warn_msg"
                                     attrs="{'required':[('sale_line_warn','!=','no-message')],'readonly':[('sale_line_warn','=','no-message')]}"/>
                         </group>
-                        <group colspan="2" col="2">
-                            <separator string="Warning when Purchasing this Product" colspan="4" />
-                            <field name="purchase_line_warn"  nolabel="1" />
-                            <field name="purchase_line_warn_msg" colspan="3" nolabel="1" 
+                        <group string="Warning when Purchasing this Product">
+                            <field name="purchase_line_warn"/>
+                            <field name="purchase_line_warn_msg"
                                     attrs="{'required':[('purchase_line_warn','!=','no-message')],'readonly':[('purchase_line_warn','=','no-message')]}"/>
                         </group>
                     </page>

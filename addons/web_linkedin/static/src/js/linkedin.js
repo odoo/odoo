@@ -233,8 +233,8 @@ openerp.web_linkedin = function(instance) {
                     $row.appendTo($elem);
                 }
                 pc.appendTo($row);
-                pc.$element.css("display", "table-cell");
-                pc.$element.css("width", "20%");
+                pc.$el.css("display", "table-cell");
+                pc.$el.css("width", "20%");
                 pc.on("selected", self, function(data) {
                     self.trigger("selected", data);
                     self.destroy();
@@ -255,7 +255,7 @@ openerp.web_linkedin = function(instance) {
         },
         start: function() {
             var self = this;
-            this.$element.click(function() {
+            this.$el.click(function() {
                 self.trigger("selected", self.data);
             });
             if (this.data.__type === "company") {
