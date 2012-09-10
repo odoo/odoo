@@ -199,6 +199,12 @@ openerp.base_import = function (instance) {
                 traverse(field, []);
             });
 
+            var cmp = function (field1, field2) {
+                return field1.text.localeCompare(field2.text);
+
+            };
+            regulars.sort(cmp);
+            o2m.sort(cmp);
             return basic.concat([
                 { text: _t("Normal Fields"), children: regulars },
                 { text: _t("Relation Fields"), children: o2m }
