@@ -220,23 +220,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         am.do_action = function (action) {
             self.do_action(action);
         };
-        if (action_attrs.creatable && action_attrs.creatable !== 'false') {
-            var action_id = parseInt(action_attrs.creatable, 10);
-            $action.parent().find('button.oe_dashboard_button_create').click(function() {
-                if (isNaN(action_id)) {
-                    action_orig.flags.default_view = 'form';
-                    self.do_action(action_orig);
-                } else {
-                    self.rpc('/web/action/load', {
-                        action_id: action_id
-                    }, function(result) {
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.default_view = 'form';
-                        self.do_action(result.result);
-                    });
-                }
-            });
-        }
         if (am.inner_widget) {
             var new_form_action = function(id, editable) {
                 var new_views = [];
