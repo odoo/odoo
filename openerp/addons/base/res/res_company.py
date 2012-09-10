@@ -102,11 +102,6 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
-    def _get_rml_footer(self, cr, uid, ids, field_name, arg, context=None):
-        """ simply return the field 'rml_footer'; useful for the client """
-        companies = self.browse(cr, uid, ids, context=context)
-        return dict((company.id, company.rml_footer) for company in companies)
-
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
@@ -117,7 +112,6 @@ class res_company(osv.osv):
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
         'rml_footer': fields.text('Report Footer'),
-        'rml_footer_readonly': fields.function(_get_rml_footer, type='text', string='Report Footer'),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
@@ -143,29 +137,36 @@ class res_company(osv.osv):
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
 
-    def on_change_footer(self, cr, uid, ids, custom_footer, phone, email, fax,
-                         website, vat, company_registry, bank_ids, context=None):
-        if custom_footer:
-            return {}
+    def onchange_footer(self, cr, uid, ids, context=None):
+        # when touched, the footer becomes custom
+        return {'value': {'custom_footer': True}}
 
-        # first line (notice that missing elements are filtered out before the join)
-        res = ' | '.join(filter(bool, [
-            phone            and '%s: %s' % (_('Phone'), phone),
-            fax              and '%s: %s' % (_('Fax'), fax),
-            email            and '%s: %s' % (_('Email'), email),
-            website          and '%s: %s' % (_('Website'), website),
-            vat              and '%s: %s' % (_('TIN'), vat),
-            company_registry and '%s: %s' % (_('Reg'), company_registry),
-        ]))
+    def set_auto_footer(self, cr, uid, ids, context=None):
+        # unset the flag 'custom_footer'; this will automatically compute the footer
+        return self.write(cr, uid, ids, {'custom_footer': False}, context=context)
 
-        # second line: bank accounts
-        accounts = self.resolve_2many_commands(cr, uid, 'bank_ids', bank_ids, context=context)
-        accounts_names = [('%(bank_name)s %(acc_number)s' % acc) for acc in accounts if acc['footer']]
-        if accounts_names:
-            title = _('Bank Accounts') if len(accounts_names) > 1 else _('Bank Account')
-            res += '\n%s: %s' % (title, ', '.join(accounts_names))
-
-        return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
+    def compute_footer(self, cr, uid, ids, context=None):
+        res_partner_bank = self.pool.get('res.partner.bank')
+        for company in self.browse(cr, uid, ids, context):
+            if not company.custom_footer:
+                # first line (notice that missing elements are filtered out before the join)
+                res = ' | '.join(filter(bool, [
+                    company.phone            and '%s: %s' % (_('Phone'), company.phone),
+                    company.fax              and '%s: %s' % (_('Fax'), company.fax),
+                    company.email            and '%s: %s' % (_('Email'), company.email),
+                    company.website          and '%s: %s' % (_('Website'), company.website),
+                    company.vat              and '%s: %s' % (_('TIN'), company.vat),
+                    company.company_registry and '%s: %s' % (_('Reg'), company.company_registry),
+                ]))
+                # second line: bank accounts
+                account_ids = [acc.id for acc in company.bank_ids if acc.footer]
+                account_names = res_partner_bank.name_get(cr, uid, account_ids, context=context)
+                if account_names:
+                    title = _('Bank Accounts') if len(account_names) > 1 else _('Bank Account')
+                    res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
+                # update footer
+                self.write(cr, uid, [company.id], {'rml_footer': res}, context=context)
+        return True
 
     def _get_rml_footer_by_line(self, cr, uid, ids, rml_footer, line, context=None):
         rml_footer_lines = (rml_footer or '').split('\n')
@@ -250,11 +251,15 @@ class res_company(osv.osv):
         self.cache_restart(cr)
         company_id = super(res_company, self).create(cr, uid, vals, context=context)
         obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
+        self.compute_footer(cr, uid, [company_id], context=context)
         return company_id
 
-    def write(self, cr, *args, **argv):
+    def write(self, cr, uid, ids, values, context=None):
         self.cache_restart(cr)
-        return super(res_company, self).write(cr, *args, **argv)
+        super(res_company, self).write(cr, uid, ids, values, context=context)
+        if 'rml_footer' not in values:
+            self.compute_footer(cr, uid, ids, context=context)
+        return True
 
     def _get_euro(self, cr, uid, context=None):
         rate_obj = self.pool.get('res.currency.rate')
