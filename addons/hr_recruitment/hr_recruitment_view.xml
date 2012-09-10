@@ -76,8 +76,8 @@
         <field name="name">Applicants</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree string="Applicants" fonts="bold:needaction_pending==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
-                <field name="needaction_pending" invisible="1"/>
+            <tree string="Applicants" fonts="bold:message_unread==True" colors="grey:state in ('cancel','done');blue:state=='pending'">
+                <field name="message_unread" invisible="1"/>
                 <field name="create_date" groups="base.group_no_one"/>
                 <field name="name" string="Subject"/>
                 <field name="partner_name"/>
@@ -95,7 +95,7 @@
                 <field name="availability" invisible="1"/>
                 <field name="department_id" invisible="context.get('invisible_department', True)"/>
                 <field name="user_id"/>
-                <field name="state" groups="base.group_no_one"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -107,7 +107,7 @@
           <form string="Jobs - Recruitment Form" version="7.0">
             <header>
                 <button name="case_close_with_emp" string="Hire" type="object"
-                        states="open,pending" class="oe_highlight"/>
+                        states="draft,open,pending" class="oe_highlight"/>
                 <button name="case_cancel" string="Refuse" type="object"
                         states="draft,open,pending" class="oe_highlight"/>
                 <field name="stage_id" widget="statusbar" clickable="True"/>
@@ -208,7 +208,7 @@
         <field name="arch" type="xml">
             <search string="Search Jobs">
                 <field name="partner_name" filter_domain="['|','|',('name','ilike',self),('partner_name','ilike',self),('email_from','ilike',self)]" string="Subject / Applicant"/>
-                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]" help="All Initial Jobs"/>
                 <filter icon="terp-camera_test" string="In Progress" domain="[('state','=','open')]" help="Open Jobs"/>
@@ -228,7 +228,6 @@
                     <filter string="Availability" icon="terp-camera_test" domain="[]" context="{'group_by':'availability'}"/>
                     <filter string="Appreciation" icon="terp-face-plain" domain="[]" context="{'group_by':'priority'}"/>
                     <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                    <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                     <filter string="Source" icon="terp-face-plain" domain="[]" context="{'group_by':'source_id'}"/>
                     <filter string="Creation Date" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" groups="base.group_no_one"/>
                 </group>
@@ -278,12 +277,12 @@
                         </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                 <span class="oe_e">i</span>
                                 <ul class="oe_dropdown_menu">
-                                    <li><a type="edit">Edit...</a></li>
-                                    <li><a type="delete">Delete</a></li>
+                                    <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                     <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
                                     <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                 </ul>
@@ -376,10 +375,15 @@
         <field name="arch" type="xml">
             <form string="Stage" version="7.0">
                 <group string="Stage Definition">
-                    <field name="name"/>
-                    <field name="department_id"/>
-                    <field name="sequence"/>
-                    <field name="state"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="department_id"/>
+                    </group>
+                    <group>
+                        <field name="state"/>
+                        <field name="sequence"/>
+                        <field name="fold"/>
+                    </group>
                 </group>
                 <separator string="Requirements"/>
                 <field name="requirements"/>
