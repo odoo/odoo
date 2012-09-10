@@ -55,10 +55,11 @@ class res_users(osv.Model):
         return init_res
 
     def _auto_init(self, cr, context=None):
-        """Installation hook to create aliases for all users and avoid constraint errors."""
+        """ Installation hook: aliases, partner following themselves """
+        # create aliases for all users and avoid constraint errors
         self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
-        # make already existing users follow themselves, using read to avoid unprefetched fields browse failure
+        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
         cr.execute("""  SELECT p.id FROM res_partner p
                         LEFT JOIN mail_followers n
                         ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
