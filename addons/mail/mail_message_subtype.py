@@ -27,8 +27,8 @@ class mail_message_subtype(osv.osv):
     _name = 'mail.message.subtype'
     _description = 'mail_message_subtype'
     _columns = {
-                'name': fields.char(' Message Subtype ', size = 128,
-                        required = True, help = 'Subtype Of Message'),
+                'name': fields.char('Message Subtype ', size = 128,
+                        required = True, help = 'Message subtype, gives a more precise type on the message, especially for system notifications. For example, it can be a notification related to a new record (New), or to a stage change in a process (Stage change). Message subtypes allow to precisely tune the notifications the user want to receive on its wall.'),
                 'model_ids': fields.many2many('ir.model',
                                               'mail_message_subtyp_message_rel',
                                               'message_subtype_id', 'model_id', 'Model',
