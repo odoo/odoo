@@ -314,10 +314,9 @@ class pos_session(osv.osv):
 
             # define some cash journal if no payment method exists
             if not pos_config.journal_ids:
-                cashids = self.pool.get('account.journal').search(cr, uid, [('journal_user','=',True)], context=context)
+                cashids = self.pool.get('account.journal').search(cr, uid, [('journal_user', '=', True), ('type','=','cash')], context=context)
                 if not cashids:
-                    cashids = self.pool.get('account.journal').search(cr, uid, [('type','=','cash')], context=context)
-                    self.pool.get('account.journal').write(cr, uid, cashids, {'journal_user': True})
+                    cashids = self.pool.get('account.journal').search(cr, uid, [('journal_user','=',True)], context=context)
                 jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
