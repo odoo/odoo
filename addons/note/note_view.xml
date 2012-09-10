@@ -9,7 +9,7 @@
       <field name="name">note.stage.form</field>
       <field name="model">note.stage</field>
       <field name="arch" type="xml">
-        <form string="Stage of Notes" version="7.0">
+        <form string="Stage of memos" version="7.0">
           <group>
             <field name="name"/>
           </group>
@@ -23,7 +23,7 @@
       <field name="model">note.stage</field>
       <field name="field_parent"></field>
       <field name="arch" type="xml">
-        <tree string="Stages of notes" editable="bottom">
+        <tree string="Stages of memos" editable="bottom">
               <field name="sequence" widget="handle"/>
               <field name="name"/>
               <field name="fold"/>
@@ -100,7 +100,7 @@
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <form string="Note" version="7.0">
+        <form string="Memo" version="7.0">
           <header>
               <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
@@ -120,8 +120,8 @@
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <search string="Notes">
-          <field name="note" string="Note"/>
+        <search string="Memos">
+          <field name="note" string="Memo"/>
           <field name="stage_id"/>
           <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
           <filter name="active_false" string="Old" domain="[('active', '=', False)]"/>
