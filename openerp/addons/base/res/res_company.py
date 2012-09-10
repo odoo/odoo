@@ -111,7 +111,8 @@ class res_company(osv.osv):
         'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
         'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
-        'rml_footer': fields.text('Report Footer'),
+        'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports. Automatically set based on company details, "\
+                                  "but may also be customized by directly editing it."),
         'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
         'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
