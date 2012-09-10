@@ -521,13 +521,6 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             var product = this.get_product();
             return (product ? product.get('list_price') : 0) || 0;
         },
-        get_product_image_url: function() {
-            var product = this.get_product();
-            if(!product){
-                return "";
-            }
-            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+product.get('id');
-        },
         get_product_weight: function(){
             return this.weight || 0;
         },

@@ -185,8 +185,8 @@
                     <span class="product-price">
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
-                    <t t-if="widget.get_product_image_url()">
-                        <img t-att-src="widget.get_product_image_url()" />
+                    <t t-if="widget.get_product()">
+                        <img t-att-src="widget.get_product().get_image_url()" />
                     </t>
                 </div>
             </div>
@@ -346,7 +346,8 @@
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message"><t t-esc=" widget.message || 'Product not Found' " /></p>
+                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
+                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
             </div>
         </div>
     </t>

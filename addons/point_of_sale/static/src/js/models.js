@@ -48,7 +48,7 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 'units':            null,
                 'units_by_id':      null,
 
-                'selectedOrder':    undefined,
+                'selectedOrder':    null,
             });
 
             this.get('orders').bind('remove', function(){ self.on_removed_order(); });
@@ -310,6 +310,9 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
     });
 
     module.Product = Backbone.Model.extend({
+        get_image_url: function(){
+            return '/web/binary/image?session_id='instance.session.session_id+'&model=product.product&field=image&id='+this.get('id');
+        },
     });
 
     module.ProductCollection = Backbone.Collection.extend({
@@ -339,7 +342,6 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
         get_discount: function(){
             return this.discount;
         },
-        // FIXME
         get_product_type: function(){
             return this.type;
         },

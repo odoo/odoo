@@ -284,12 +284,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.click_product_action = options.click_product_action; 
         },
         // returns the url of the product thumbnail
-        get_image_url: function() {
-            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+this.model.get('id');
-        },
         renderElement: function() {
             this._super();
-            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.get_image_url()));
+            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.model.get_image_url()));
             var self = this;
             $("a", this.$el).click(function(e){
                 if(self.click_product_action){
