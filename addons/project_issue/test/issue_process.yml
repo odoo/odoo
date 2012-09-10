@@ -21,7 +21,7 @@
 -
   I send mail to get more details.
 -
-  !python {model: mail.compose.message }: |
+  !python {model: mail.mail }: |
     ctx = context.copy()
     ctx.update({'active_model': 'project.issue', 'active_id': ref("crm_case_buginaccountsmodule0"), 'active_ids': [ref("crm_case_buginaccountsmodule0")]})
     vals = self.default_get(cr, uid , [], context=ctx)
