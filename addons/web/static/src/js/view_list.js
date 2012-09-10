@@ -480,7 +480,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve(this.embedded_view);
         } else {
-            return this.rpc('/web/listview/load', {
+            return this.rpc('/web/view/load', {
                 model: this.model,
                 view_id: this.view_id,
                 view_type: "tree",
