@@ -244,14 +244,14 @@ class res_users(osv.osv):
         return result
 
     _defaults = {
-        'password' : '',
-        'active' : True,
+        'password': '',
+        'active': True,
         'customer': False,
         'menu_id': _get_menu,
         'company_id': _get_company,
         'company_ids': _get_companies,
         'groups_id': _get_group,
-        'image': lambda self, cr, uid, context: self.pool.get('res.partner')._get_default_image(cr, uid, False, context, colorize=True),
+        'image': lambda self, cr, uid, ctx={}: self.pool.get('res.partner')._get_default_image(cr, uid, False, ctx, colorize=True),
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):

@@ -21,7 +21,6 @@
 
 import math
 import openerp
-import os
 from osv import osv, fields
 import re
 import tools
@@ -58,20 +57,20 @@ class res_partner_category(osv.osv):
             return super(res_partner_category, self).name_get(cr, uid, ids, context=context)
         if isinstance(ids, (int, long)):
             ids = [ids]
-        reads = self.read(cr, uid, ids, ['name','parent_id'], context=context)
+        reads = self.read(cr, uid, ids, ['name', 'parent_id'], context=context)
         res = []
         for record in reads:
             name = record['name']
             if record['parent_id']:
-                name = record['parent_id'][1]+' / '+name
+                name = record['parent_id'][1] + ' / ' + name
             res.append((record['id'], name))
         return res
 
     def name_search(self, cr, uid, name, args=None, operator='ilike', context=None, limit=100):
         if not args:
-            args=[]
+            args = []
         if not context:
-            context={}
+            context = {}
         if name:
             # Be sure name_search is symetric to name_get
             name = name.split(' / ')[-1]
@@ -85,23 +84,23 @@ class res_partner_category(osv.osv):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
-    _description='Partner Categories'
+    _description = 'Partner Categories'
     _name = 'res.partner.category'
     _columns = {
         'name': fields.char('Category Name', required=True, size=64, translate=True),
         'parent_id': fields.many2one('res.partner.category', 'Parent Category', select=True, ondelete='cascade'),
         'complete_name': fields.function(_name_get_fnc, type="char", string='Full Name'),
         'child_ids': fields.one2many('res.partner.category', 'parent_id', 'Child Categories'),
-        'active' : fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
-        'parent_left' : fields.integer('Left parent', select=True),
-        'parent_right' : fields.integer('Right parent', select=True),
+        'active': fields.boolean('Active', help="The active field allows you to hide the category without removing it."),
+        'parent_left': fields.integer('Left parent', select=True),
+        'parent_right': fields.integer('Right parent', select=True),
         'partner_ids': fields.many2many('res.partner', id1='category_id', id2='partner_id', string='Partners'),
     }
     _constraints = [
         (osv.osv._check_recursion, 'Error ! You can not create recursive categories.', ['parent_id'])
     ]
     _defaults = {
-        'active' : lambda *a: 1,
+        'active': lambda *a: 1,
     }
     _parent_store = True
     _parent_order = 'name'
@@ -113,7 +112,7 @@ class res_partner_title(osv.osv):
     _columns = {
         'name': fields.char('Title', required=True, size=46, translate=True),
         'shortcut': fields.char('Abbreviation', size=16, translate=True),
-        'domain': fields.selection([('partner','Partner'),('contact','Contact')], 'Domain', required=True, size=24)
+        'domain': fields.selection([('partner', 'Partner'), ('contact', 'Contact')], 'Domain', required=True, size=24)
     }
     _defaults = {
         'domain': 'contact',
@@ -129,13 +128,13 @@ POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'countr
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
 class res_partner(osv.osv):
-    _description='Partner'
+    _description = 'Partner'
     _name = "res.partner"
 
     def _address_display(self, cr, uid, ids, name, args, context=None):
-        res={}
+        res = {}
         for partner in self.browse(cr, uid, ids, context=context):
-            res[partner.id] =self._display_address(cr, uid, partner, context=context)
+            res[partner.id] = self._display_address(cr, uid, partner, context=context)
         return res
 
     def _get_image(self, cr, uid, ids, name, args, context=None):
@@ -143,7 +142,7 @@ class res_partner(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -151,7 +150,7 @@ class res_partner(osv.osv):
     _columns = {
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
-        'title': fields.many2one('res.partner.title','Title'),
+        'title': fields.many2one('res.partner.title', 'Title'),
         'parent_id': fields.many2one('res.partner', 'Owned by'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
@@ -162,9 +161,9 @@ class res_partner(osv.osv):
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('TIN',size=32 ,help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
+        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
-        'website': fields.char('Website',size=64, help="Website of Partner or Company"),
+        'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
         'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
@@ -175,8 +174,8 @@ class res_partner(osv.osv):
         'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
         'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
         'function': fields.char('Job Position', size=128),
-        'type': fields.selection( [('default','Default'), ('invoice','Invoice'),
-                                   ('delivery','Delivery'), ('contact','Contact'),
+        'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
+                                   ('delivery', 'Delivery'), ('contact', 'Contact'),
                                    ('other', 'Other')], 'Address Type',
             help="Used to select automatically the right address according to the context in sales and purchases documents."),
         'street': fields.char('Street', size=128),
@@ -193,25 +192,24 @@ class res_partner(osv.osv):
         'birthdate': fields.char('Birthdate', size=64),
         'is_company': fields.boolean('Company', help="Check if the contact is a company, otherwise it is a person"),
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
+        # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as avatar for the "\
-                 "partner. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as avatar for the partner, limited to 1024x1024px"),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the partner. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the partner. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
         'color': fields.integer('Color Index'),
@@ -230,40 +228,28 @@ class res_partner(osv.osv):
         if is_company:
             image = open(openerp.modules.get_module_resource('base', 'static/src/img', 'company_image.png')).read()
         else:
-            from PIL import Image
-            from StringIO import StringIO
-            color = (255,255,255)
-            if colorize:
-                from random import random
-                color = (int(random() * 192 + 32), int(random() * 192 + 32), int(random() * 192 + 32))
-            face = Image.open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png'))
-            avatar = Image.new('RGB', face.size)
-            avatar.paste(color)
-            avatar.paste(face, mask=face)
-            buffer = StringIO()
-            avatar.save(buffer, 'PNG')
-            image = buffer.getvalue()
-        return image.encode('base64')
+            image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
+        return tools.image_resize_image_big(image.encode('base64'))
 
     _defaults = {
         'active': True,
-        'lang': lambda self, cr, uid, context: context.get('lang', 'en_US'),
-        'tz': lambda self, cr, uid, context: context.get('tz', False),
+        'lang': lambda self, cr, uid, ctx: ctx.get('lang', 'en_US'),
+        'tz': lambda self, cr, uid, ctx: ctx.get('tz', False),
         'customer': True,
         'category_id': _default_category,
-        'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=c),
+        'company_id': lambda self, cr, uid, ctx: self.pool.get('res.company')._company_default_get(cr, uid, 'res.partner', context=ctx),
         'color': 0,
         'is_company': False,
         'type': 'default',
         'use_parent_address': True,
-        'image': lambda self, cr, uid, context: self._get_default_image(cr, uid, context.get('default_is_company', False), context),
+        'image': lambda self, cr, uid, ctx: self._get_default_image(cr, uid, ctx.get('default_is_company', False), ctx),
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         name = self.read(cr, uid, [id], ['name'], context)[0]['name']
-        default.update({'name': _('%s (copy)')%(name)})
+        default.update({'name': _('%s (copy)') % (name)})
         return super(res_partner, self).copy(cr, uid, id, default, context)
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
