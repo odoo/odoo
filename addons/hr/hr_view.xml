@@ -20,16 +20,12 @@
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="image_medium" widget='image' class="oe_right oe_avatar"/>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name"/>
                             </h1>
-                            <label for="job_id" class="oe_edit_only"/>
-                            <h2>
-                                <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                            </h2>
                             <label for="category_ids" class="oe_edit_only"/>
                             <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                         </div>
@@ -37,41 +33,52 @@
                             <!-- Put here related buttons -->
                         </div>
                         <notebook>
-                            <page string="Information">
+                            <page string="Public Information">
                                 <group>
-                                    <group>
+                                    <group string="Contact Information">
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="mobile_phone"/>
+                                    </group>
+                                    <group string="Position">
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
-                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
-                                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                                        <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
-                                        <field name="work_email" widget="email"/>
-                                        <field name="work_phone"/>
-                                        <field name="address_id" on_change="onchange_address_id(address_id)"/>
-                                        <field name="mobile_phone"/>
-                                        <field name="identification_id" groups="base.group_hr_user"/>
-                                        <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="otherid" groups="base.group_hr_user"/>
-                                    </group>
-                                    <group name="active_group">
-                                        <field name="active"/>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
                             <page string="Personal Information" groups="base.group_hr_user">
-                                <group col="4">
-                                    <group>
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
                                         <field name="country_id" options='{"no_open": true}'/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
-                                        <field name="address_home_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
-                                    <group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                                    </group>
+                                    <group string="Status">
                                         <field name="gender"/>
                                         <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
                                         <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
                                     </group>
                                 </group>
                             </page>
@@ -128,7 +135,7 @@
                 <field name="last_login"/>
                 <templates>
                     <t t-name="kanban-box">
-                        <div class="oe_employee_vignette oe_semantic_html_override">
+                        <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
                                 <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
