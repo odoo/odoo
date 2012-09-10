@@ -411,7 +411,7 @@ openerp.mail = function(session) {
                     self.thread = new mail.Thread(self, {
                         'context': {
                             'default_model': record.model,
-                            'default_id': record.res_id,
+                            'default_res_id': record.res_id,
                             'default_parent_id': record.id },
                         'message_data': record.child_ids, 'thread_level': self.options.thread_level-1,
                         'show_header_compose': false, 'show_reply': self.options.thread_level > 1,
@@ -473,7 +473,7 @@ openerp.mail = function(session) {
         },
 
         display_user_avatar: function () {
-            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.options.uid);
+            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
         },
         
@@ -484,9 +484,9 @@ openerp.mail = function(session) {
                 var body = comment_node.val();
                 comment_node.val('');
             }
-            return this.ds_post.call('message_post', [
-                [this.options.context.res_id], body, false, 'comment', this.options.context.parent_id]
-                ).then(this.proxy('message_fetch'));
+            return this.ds_thread.call('message_post', [
+                [this.options.context.default_res_id], body, false, 'comment', this.options.context.default_parent_id, undefined]
+                ).then(self.message_fetch());
         },
 
         /** Action: 'shows more' to fetch new messages */
@@ -585,6 +585,7 @@ openerp.mail = function(session) {
             var thread = new mail.Thread(self, {
                 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
+                'message_ids': this.get_value(),
                 'show_delete': true, 'composer': true });
             this.thread_list.push(thread);
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
