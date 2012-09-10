@@ -585,6 +585,7 @@ openerp.mail = function(session) {
             var thread = new mail.Thread(self, {
                 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
+                'message_ids': this.get_value(),
                 'show_delete': true, 'composer': true });
             this.thread_list.push(thread);
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
