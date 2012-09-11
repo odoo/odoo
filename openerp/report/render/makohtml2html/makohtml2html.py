@@ -23,8 +23,7 @@ import mako
 from lxml import etree
 from mako.template import Template
 from mako.lookup import TemplateLookup
-import openerp.netsvc as netsvc
-import traceback, sys, os
+import os
 
 _logger = logging.getLogger(__name__)
 
@@ -126,9 +125,8 @@ class makohtml2html(object):
             final_html += self.format_header(etree_obj)
             final_html += self.format_body(etree_obj)
             return final_html
-        except Exception,e:
-            tb_s = reduce(lambda x, y: x+y, traceback.format_exception(sys.exc_type, sys.exc_value, sys.exc_traceback))
-            _logger.error('report :\n%s\n%s\n', tb_s, str(e))
+        except Exception:
+            _logger.exception('report :')
 
 def parseNode(html, localcontext = {}):
     r = makohtml2html(html, localcontext)
