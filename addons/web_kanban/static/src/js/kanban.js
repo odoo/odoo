@@ -163,6 +163,44 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             }
         }
     },
+    transform_list_many2many: function(){
+        var self = this;
+
+        /* Set the lists of tag/categories */
+        var blocks = self.$el.find('.oe_kanban_list_many2many');
+        for(var i=0;i<blocks.length;i++){
+
+            var block = $(blocks[i]);
+
+            //select the model
+            var model = block.data('model');
+            if(!model||model.length<1) console.log("Error : no data-model on a field : .oe_kanban_list_many2many");
+
+            // select all ids
+            var list_ids = [];
+            block.find('[data-list_id]').each(function() {
+                list_ids.push( $(this).data('list_id') );
+            });
+
+
+            if(list_ids.length>0){
+                // request
+                var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
+                dataset.name_get(_.uniq(list_ids)).then(
+                    function(result) {
+                        for(var t=0;t<result.length;t++){
+                            self.$el.find(".oe_kanban_list_many2many [data-list_id='" + result[t][0] + "']").html(result[t][1]);
+                        }
+                    },
+                    function(r){
+                        console.log('Error',r);
+                    }
+                );
+            }
+
+        }
+
+    },
     do_add_record: function() {
         this.dataset.index = null;
         this.do_switch_view('form');
@@ -350,6 +388,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         } else {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
+
+        this.transform_list_many2many();
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
