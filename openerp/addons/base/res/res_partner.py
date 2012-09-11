@@ -223,6 +223,13 @@ class res_partner(osv.osv):
             image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
         return tools.image_resize_image_big(image.encode('base64'))
 
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
+
+        return super(res_partner, self).fields_view_get(cr, user, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
+
+
     _defaults = {
         'active': True,
         'lang': lambda self, cr, uid, ctx: ctx.get('lang', 'en_US'),

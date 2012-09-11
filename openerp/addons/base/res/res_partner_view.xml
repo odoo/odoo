@@ -89,6 +89,26 @@
             </field>
         </record>
 
+        <record id="view_partner_simple_form" model="ir.ui.view">
+            <field name="name">res.partner.simplified.form</field>
+            <field name="model">res.partner</field>
+            <field name="arch" type="xml">
+                <form string="Contact" version="7.0">
+                    <field name="image" widget='image' class="oe_avatar oe_left" options='{"preview_image": "image_medium"}'/>
+                    <div class="oe_title">
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id" widget="many2many_tags" placeholder="Tags..."/>
+                            <field name="function" placeholder="e.g. Sales Director"/>
+                            <field name="email" required="context.get('force_email', False)"/>
+                            <field name="phone"/>
+                            <field name="mobile"/>
+                        </group>
+                    </div>
+                </form>
+            </field>
+        </record>
+
         <record id="view_partner_form" model="ir.ui.view">
             <field name="name">res.partner.form</field>
             <field name="model">res.partner</field>
