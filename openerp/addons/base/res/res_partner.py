@@ -498,7 +498,7 @@ class res_partner(osv.osv):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id and address.country_id.address_format or \
-                                         '%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s'
+              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
             'state_code': address.state_id and address.state_id.code or '',
             'state_name': address.state_id and address.state_id.name or '',
@@ -511,9 +511,9 @@ class res_partner(osv.osv):
             args[field] = getattr(address, field) or ''
         if without_company:
             args['company_name'] = ''
+        elif address.parent_id:
+            address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-
 
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):
