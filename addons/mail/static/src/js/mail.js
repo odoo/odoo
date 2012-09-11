@@ -316,10 +316,8 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'more' at bottom of thread
-            this.$el.find('button.oe_mail_button_more').click(function () {
-                self.do_message_fetch();
-            });
+            // event: click on 'More' at bottom of thread
+            this.$el.on('click', 'button.oe_mail_button_more', this.do_message_fetch_more);
             // event: writing in basic textarea of composition form (quick reply)
             this.$el.find('textarea.oe_mail_compose_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
@@ -328,41 +326,21 @@ openerp.mail = function(session) {
             });
             // event: click on 'Reply' in msg
             this.$el.on('click', 'a.oe_mail_msg_reply', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
                 var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
                 act_dom.toggle();
             });
-            // event: click on 'attachment(s)' in msg
+            // event: click on 'Attachment(s)' in msg
             this.$el.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
                 var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
                 act_dom.toggle();
             });
             // event: click on 'Delete' in msg side menu
-            this.$el.on('click', 'a.oe_mail_msg_delete', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
-                var msg_id = event.srcElement.dataset.id;
-                if (! msg_id) return false;
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
-                return self.ds_msg.unlink([parseInt(msg_id)]);
-            });
+            this.$el.on('click', 'a.oe_mail_msg_delete', this.on_message_delete);
             // event: click on 'Hide' in msg side menu
-            this.$el.on('click', 'a.oe_mail_msg_hide', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
-                var msg_id = event.srcElement.dataset.id;
-                if (! msg_id) return false;
-                $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
-                return self.ds_notif.call('set_message_read', [parseInt(msg_id)]);
-            });
-            // event: click on "Reply by email" in msg side menu (email style)
+            this.$el.on('click', 'a.oe_mail_msg_hide', this.on_message_read);
+            // event: click on 'Reply by email' in msg side menu
             this.$el.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
-                event.preventDefault();
-                event.stopPropagation();
+                if (! self.compose_message_widget) return true;
                 var msg_id = event.srcElement.dataset.msg_id;
                 if (! msg_id) return false;
                 self.compose_message_widget.refresh({
@@ -372,11 +350,28 @@ openerp.mail = function(session) {
             });
         },
 
+        on_message_delete: function (event) {
+            if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
+            var msg_id = event.srcElement.dataset.id;
+            if (! msg_id) return false;
+            $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
+            return this.ds_message.unlink([parseInt(msg_id)]);
+        },
+
+        on_message_read: function (event) {
+            //TDE: TODO
+            var msg_id = event.srcElement.dataset.id;
+            if (! msg_id) return false;
+            $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
+            return this.ds_notification.call('set_message_read', [parseInt(msg_id)]);
+        },
+
         /**
          * Override-hack of do_action: automatically reload the chatter.
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
         do_action: function(action, on_close) {
+            //TDE: TODO: instead of reloading, push the message ?
             this.message_clean();
             this.message_fetch();
             if (this.compose_message_widget) {
@@ -528,7 +523,7 @@ openerp.mail = function(session) {
         },
 
         /** Action: 'shows more' to fetch new messages */
-        do_message_fetch: function () {
+        do_message_fetch_more: function () {
             return this.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
         },
 
