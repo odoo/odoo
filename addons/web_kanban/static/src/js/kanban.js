@@ -166,6 +166,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
     transform_list_many2many: function(){
         var self = this;
 
+        var arg={};
+
         /* Set the lists of tag/categories */
         var blocks = self.$el.find('.oe_kanban_list_many2many');
         for(var i=0;i<blocks.length;i++){
@@ -174,22 +176,26 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
 
             //select the model
             var model = block.data('model');
-            if(!model||model.length<1) console.log("Error : no data-model on a field : .oe_kanban_list_many2many");
+            if(model&&model.length>1){
 
-            // select all ids
-            var list_ids = [];
-            block.find('[data-list_id]').each(function() {
-                list_ids.push( $(this).data('list_id') );
-            });
+                if(!arg[model]) arg[model]=[];
 
+                // select all ids
+                block.find('[data-list_id]').each(function() {
+                    arg[model].push( $(this).data('list_id') );
+                });
+            }
 
-            if(list_ids.length>0){
-                // request
+        }
+
+        // only one request by model
+        for(var model in arg){
+            if(arg[model].length>0){
                 var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
-                dataset.name_get(_.uniq(list_ids)).then(
+                dataset.name_get(_.uniq( arg[model] )).then(
                     function(result) {
                         for(var t=0;t<result.length;t++){
-                            self.$el.find(".oe_kanban_list_many2many [data-list_id='" + result[t][0] + "']").html(result[t][1]);
+                            self.$el.find(".oe_kanban_list_many2many[data-model='" + model + "'] [data-list_id='" + result[t][0] + "']").html(result[t][1]);
                         }
                     },
                     function(r){
@@ -197,7 +203,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     }
                 );
             }
-
         }
 
     },
