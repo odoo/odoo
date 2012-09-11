@@ -65,7 +65,7 @@
                                 class="oe_mail_compose_message_body_html"
                                 attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
                         <field name="partner_ids" colspan="2" nolabel="1" widget="many2many_tags" placeholder="Add contacts to notify..."
-                                context="{'force_create':True}"
+                                context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_mail_compose_message_partner_ids"/>
                         <field name="attachment_ids" colspan="2" nolabel="1" widget="many2many_tags"
