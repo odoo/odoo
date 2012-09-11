@@ -265,9 +265,9 @@ function install(el, opts) {
 	}
 	// style the overlay
 	if (!opts.theme && (!opts.applyPlatformOpacityRules || !($.browser.mozilla && /Linux/.test(navigator.platform))))
-        lyr2.css(opts.overlayCSS);
+            lyr2.css(opts.overlayCSS);
 	if ($.browser.mozilla && /Linux/.test(navigator.platform))
-        lyr2.css(opts.overlayCSS);
+            lyr2.css(opts.overlayCSS);
 	lyr2.css('position', full ? 'fixed' : 'absolute');
 
 	// make iframe layer transparent in IE
