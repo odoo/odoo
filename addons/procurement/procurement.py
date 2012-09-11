@@ -135,8 +135,8 @@ class procurement_order(osv.osv):
             if s['state'] in ['draft','cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'),
-                        _('Cannot delete Procurement Order(s) which are in %s state!') % \
+                raise osv.except_osv(_('Invalid Action!'),
+                        _('Cannot delete Procurement Order(s) which are in %s state.') % \
                         s['state'])
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -289,14 +289,14 @@ class procurement_order(osv.osv):
                 return False
             if not procurement.product_id.seller_ids:
                 message = _('No supplier defined for this product !')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             partner = procurement.product_id.seller_id #Taken Main Supplier of Product of Procurement.
 
             if not partner:
                 message = _('No default supplier defined for this product')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
             if user.company_id and user.company_id.partner_id:
@@ -306,7 +306,7 @@ class procurement_order(osv.osv):
             address_id = partner_obj.address_get(cr, uid, [partner.id], ['delivery'])['delivery']
             if not address_id:
                 message = _('No address defined for the supplier')
-                self.message_append_note(cr, uid, [procurement.id], body=message)
+                self.message_post(cr, uid, [procurement.id], body=message)
                 cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
                 return False
         return True
@@ -320,6 +320,12 @@ class procurement_order(osv.osv):
                 return True
         return False
 
+    #Initialize get_phantom_bom_id method as it is raising an error from yml of mrp_jit
+    #when one install first mrp and after that, mrp_jit. get_phantom_bom_id defined in mrp module
+    #which is not dependent for mrp_jit.
+    def get_phantom_bom_id(self, cr, uid, ids, context=None):
+        return False
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
         @return: True
@@ -327,8 +333,8 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Data Insufficient !'),
-                    _('Please check the quantity in procurement order(s), it should not be 0 or less!'))
+                raise osv.except_osv(_('Insufficient Data!'),
+                    _('Quantity in procurement order(s) must be greater than 0.'))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -359,7 +365,7 @@ class procurement_order(osv.osv):
         message = _('From stock: products assigned.')
         self.write(cr, uid, ids, {'state': 'running',
                 'message': message}, context=context)
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         self.running_send_note(cr, uid, ids, context=context)
         return True
 
@@ -383,7 +389,7 @@ class procurement_order(osv.osv):
                 ok = ok and self.pool.get('stock.move').action_assign(cr, uid, [id])
                 order_point_id = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [('product_id', '=', procurement.product_id.id)], context=context)
                 if not order_point_id and not ok:
-                     message = _("Not enough stock and no minimum orderpoint rule defined.")
+                    message = _("Not enough stock and no minimum orderpoint rule defined.")
                 elif not order_point_id:
                     message = _("No minimum orderpoint rule defined.")
                 elif not ok:
@@ -392,7 +398,7 @@ class procurement_order(osv.osv):
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
+                    self.message_post(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
@@ -490,22 +496,22 @@ class procurement_order(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>created</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), context=context)
 
     def running_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Procurement has been <b>done</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), context=context)
 
 procurement_order()
 

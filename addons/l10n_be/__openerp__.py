@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-{   'name': 'Belgium - Accounting',
+{   
+    'name': 'Belgium - Accounting',
     'version': '1.1',
     'category': 'Localization/Account Charts',
     'description': """
@@ -27,17 +28,27 @@ This is the base module to manage the accounting chart for Belgium in OpenERP.
 
 After installing this module, the Configuration wizard for accounting is launched.
     * We have the account templates which can be helpful to generate Charts of Accounts.
-    * On that particular wizard, you will be asked to pass the name of the company, the chart template to follow, the no. of digits to generate, the code for your account and bank account, currency to create journals.
+    * On that particular wizard, you will be asked to pass the name of the company,
+      the chart template to follow, the no. of digits to generate, the code for your
+      account and bank account, currency to create journals.
 
 Thus, the pure copy of Chart Template is generated.
 
 Wizards provided by this module:
-    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced amounts.Prepares an XML file format.
-            Path to access : Accounting/Reporting//Legal Statements/Belgium Statements/Partner VAT Listing
-    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.
-            Path to access : Accounting/Reporting/Legal Statements/Belgium Statements/Periodical VAT Declaration
-    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat Declaration of the Main company of the User currently Logged in.Based on Fiscal year
-            Path to access : Accounting/Reporting/Legal Statements/Belgium Statements/Annual Listing Of VAT-Subjected Customers
+--------------------------------
+    * Partner VAT Intra: Enlist the partners with their related VAT and invoiced
+      amounts. Prepares an XML file format.
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Partner VAT Intra
+    * Periodical VAT Declaration: Prepares an XML file for Vat Declaration of
+      the Main company of the User currently Logged in.
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Periodical VAT Declaration
+    * Annual Listing Of VAT-Subjected Customers: Prepares an XML file for Vat
+      Declaration of the Main company of the User currently Logged in Based on
+      Fiscal year.
+      
+        **Path to access :** Invoicing/Reporting/Legal Reports/Belgium Statements/Annual Listing Of VAT-Subjected Customers
 
     """,
     'author': 'Noviat & OpenERP SA',
@@ -48,8 +59,7 @@ Wizards provided by this module:
         'account_chart',
         'account_coda',
     ],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account_financial_report.xml',
         'account_pcmn_belgium.xml',
         'account_tax_code_template.xml',
@@ -64,7 +74,7 @@ Wizards provided by this module:
         'security/ir.model.access.csv',
         'l10n_be_wizard.yml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'certificate': '0031977724637',
     'images': ['images/1_config_chart_l10n_be.jpeg','images/2_l10n_be_chart.jpeg'],

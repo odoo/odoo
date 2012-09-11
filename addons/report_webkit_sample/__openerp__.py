@@ -30,8 +30,8 @@
 ##############################################################################
 
 {
-    "name": "Webkit Report Samples",
-    "description": """
+    'name': 'Webkit Report Samples',
+    'description': """
 Samples for Webkit Report Engine (report_webkit module).
 ========================================================
 
@@ -40,18 +40,16 @@ add Webkit Report entries on any Document in the system.
 
 You have to create the print buttons by calling the wizard. For more details see:
     http://files.me.com/nbessi/06n92k.mov
-                    """,
-    "version": "0.9",
-    "depends": ["base", "account", "report_webkit"],
-    "category": "Reporting",
-    "author": "Camptocamp SA - NBessi",
-    "url": "http://www.camptocamp.com/",
-    "data": ["report_webkit_html_view.xml",
-
-                   ],
-    "installable": True,
-    "auto_install": False,
-    "certificate": "00436592682591421981",
+""",
+    'version': '0.9',
+    'depends': ['base', 'account', 'report_webkit'],
+    'category': 'Reporting',
+    'author': 'Camptocamp SA - NBessi',
+    'url': 'http://www.camptocamp.com/',
+    'data': ['report_webkit_html_view.xml'],
+    'installable': True,
+    'auto_install': False,
+    'certificate': '00436592682591421981',
     'images': ['images/webkit_invoice_report.jpeg'],
 }
 
