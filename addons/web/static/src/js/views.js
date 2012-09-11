@@ -1249,9 +1249,6 @@ instance.web.View = instance.web.Widget.extend({
     },
     do_search: function(view) {
     },
-    on_sidebar_import: function() {
-        new instance.web.DataImport(this, this.dataset).open();
-    },
     on_sidebar_export: function() {
         new instance.web.DataExport(this, this.dataset).open();
     },

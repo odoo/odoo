@@ -153,18 +153,18 @@
     .oe_kanban_add
         float: right
 
-    .oe_kanban_quick_create
-        margin-bottom: 4px
     .oe_kanban_quick_create_buttons
         margin: 4px 0
     .oe_kanban_no_group .oe_kanban_quick_create
         width: 200px
         padding: 10px
     .oe_kanban_quick_create input
+        outline: none
+        border: none
+        @include box-shadow(none)
         display: block
         margin: 0 0 8px 0
         font-size: 13px
-        box-sizing: border-box
         width: 100%
     // }}}
     // KanbanRecords {{{
@@ -302,7 +302,8 @@
         white-space: nowrap
         display: inline-block
         line-height: 1em
-    .oe_kanban_card
+    .oe_kanban_card, .oe_kanban_quick_create
+        margin-bottom: 4px
         position: relative
         display: block
         background: white
@@ -396,6 +397,9 @@
             left: 0
             top: 28px
             min-width: 160px
+            padding: 2px
+            > li
+                padding: 3px
     .oe_dropdown_kanban
         &.oe_opened > span
             visibility: visible
