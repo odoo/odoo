@@ -88,7 +88,7 @@ Dashboard for Sales Manager that includes:
     'test': [
         'test/sale_order_demo.yml',
         'test/picking_order_policy.yml',
-        'test/manual_order_policy.yml',
+        #'test/manual_order_policy.yml',
         'test/prepaid_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
