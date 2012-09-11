@@ -92,4 +92,12 @@
             <t t-esc="error.message"/>
         </li>
     </ul>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="span.oe_alternative">
+            this.attr('t-if', 'widget.options.import_enabled');
+        </t>
+        <t t-jquery="span.oe_alternative" t-operation="append">
+            <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
+    </t>
 </templates>

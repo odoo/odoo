@@ -35,6 +35,25 @@ openerp.base_import = function (instance) {
         $(form).ajaxSubmit(attributes);
     }
 
+    // if true, the 'Import', 'Export', etc... buttons will be shown
+    instance.web.ListView.prototype.defaults.import_enabled = true;
+    instance.web.ListView.include({
+        on_loaded: function () {
+            var self = this;
+            var add_button = false;
+            if (!this.$buttons) {
+                add_button = true;
+            }
+            this._super.apply(this, arguments);
+            if(add_button) {
+                this.$buttons.on('click', '.oe_list_button_import', function() {
+                    new instance.web.DataImport(self, self.dataset).open();
+                    return false;
+                });
+            }
+        }
+    });
+
     instance.web.DataImport = instance.web.Dialog.extend({
         template: 'ImportView',
         dialog_title: _lt("Import Data"),
