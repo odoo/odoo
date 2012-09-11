@@ -77,8 +77,16 @@ class base_stage(object):
         data = {'value': {'email_from': False, 'phone':False}}
         if add:
             address = self.pool.get('res.partner').browse(cr, uid, add)
-            data['value'] = {'email_from': address and address.email or False ,
-                             'phone':  address and address.phone or False}
+            data['value'] = {'partner_name': address and address.name or False,
+                             'email_from': address and address.email or False,
+                             'phone':  address and address.phone or False,
+                             'street': address and address.street or False,
+                             'street2': address and address.street2 or False,
+                             'city': address and address.city or False,
+                             'state_id': address.state_id and address.state_id.id or False,
+                             'zip': address and address.zip or False,
+                             'country_id': address.country_id and address.country_id.id or False,
+                             }
         if 'phone' not in self._columns:
             del data['value']['phone']
         return data
