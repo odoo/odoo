@@ -1,3 +1,3 @@
 import controllers
 import models
-import tests.models
+import test_models
