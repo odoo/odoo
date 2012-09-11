@@ -214,7 +214,7 @@ def quit_on_signals():
         a = sys.argv[:]
         args = [x for i, x in enumerate(a) if x not in strip_args and a[max(i - 1, 0)] not in strip_args]
 
-        time.sleep(0.5)     # wait end of sockets...
+        # FIXME http socket cannot be rebind ?!? socket seems to not be freed, even shutdown() is called
         os.execv(sys.executable, [sys.executable] + args)
         return
 

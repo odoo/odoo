@@ -625,6 +625,9 @@ class module(osv.osv):
             zimp.load_module(mod.name)
         return res
 
+    def install_by_names(self, cr, uid, names, context=None):
+        raise NotImplementedError('# TODO')
+
     def install_from_urls(self, cr, uid, urls, context=None):
         tmp = tempfile.mkdtemp()
         try:
