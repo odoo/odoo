@@ -28,6 +28,7 @@ import re
 import shutil
 import tempfile
 import urllib
+import urllib2
 import zipfile
 import zipimport
 
@@ -35,8 +36,6 @@ try:
     from cStringIO import StringIO
 except ImportError:
     from StringIO import StringIO   # NOQA
-
-import requests
 
 import openerp
 from openerp import modules, pooler, release, tools, addons
@@ -630,13 +629,12 @@ class module(osv.osv):
         try:
             for module_name in urls:
                 try:
-                    r = requests.get(urls[module_name])
-                    r.raise_for_status()
-                except requests.HTTPError, e:
+                    content = urllib2.urlopen(urls[module_name]).read()
+                except Exception, e:
                     _logger.exception('ggr')
                     raise osv.except_osv('grrr', e)
                 else:
-                    zipfile.ZipFile(StringIO(r.content)).extractall(tmp)
+                    zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             for module_name in urls:
