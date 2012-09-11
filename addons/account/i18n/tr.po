@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-08-21 07:22+0000\n"
-"Last-Translator: Arif Aydogmus <arifaydogmus@gmail.com>\n"
+"PO-Revision-Date: 2012-09-08 17:33+0000\n"
+"Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:24+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-09 05:07+0000\n"
+"X-Generator: Launchpad (build 15914)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -44,7 +44,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Günlük Girişini Uzlaştır"
+msgstr "Günlük Kaydını Uzlaştır"
 
 #. module: account
 #: view:account.account:0
@@ -207,9 +207,9 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Analitik yevmiye günlüğünün türünü belirtir. Bir belge için (ör: fatura) "
-"analitik giriş oluşturmak gerektiğinde OpenERP aynı tipe uyan yevmiye "
-"defteri arayacaktır."
+"Analitik günlüğünün türünü belirtir. Bir belge için (ör: fatura) analitik "
+"giriş oluşturmak gerektiğinde OpenERP aynı tipe uyan günlük defteri "
+"arayacaktır."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
@@ -330,9 +330,9 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration/Financial Accounting/Accounts/Journals."
 msgstr ""
-"Bu şirket için %s tipinde bir hesap yevmiyesi bulunamadı.\n"
+"Bu firma için %s tipinde bir hesap günlüğü bulunamadı.\n"
 "\n"
-"Ayarlar/Finansal Muhasebe/Hesaplar/Yevmiyeler menüsünden\n"
+"Ayarlar/Finansal Muhasebe/Hesaplar/Günlükler menüsünden\n"
 "bir tane yaratabilirsiniz."
 
 #. module: account
@@ -380,13 +380,13 @@ msgid ""
 msgstr ""
 "Bu görünüm, OpenERP de kayıtların toplu olarak girilmesi için muhasebeciler "
 "tarafından kullanılır. Banka Hesap Özetleri, Kasa Kayıtları, veya "
-"Müşteri/Satıcı ödemelerine ait yevmiye girişleri OpenERP tarafından "
+"Müşteri/Satıcı ödemelerine ait günlük girişleri OpenERP tarafından "
 "oluşturulur."
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr "Görünüm tipindeki hesaplarda yevmiye kaydı oluşturamazsınız."
+msgstr "Görünüm tipindeki hesaplarda günlük girişi oluşturamazsınız."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -430,7 +430,7 @@ msgid ""
 "This field contains the informatin related to the numbering of the journal "
 "entries of this journal."
 msgstr ""
-"Bu Alan, bu yevmiyenin yevmiye girişleri numaralandırılmasıyla ilintili "
+"Bu Alan, bu günlüğe ait günlük girişleri numaralandırılmasıyla ilintili "
 "bilgi içerir."
 
 #. module: account
@@ -473,7 +473,7 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
-"Yevmiye dönemi oluşturulduğunda, durum 'Taslak' tır. Bir rapor "
+"Günlük dönemi oluşturulduğunda, durum 'Taslak' tır. Bir rapor "
 "yazdırıldığındadurum 'Yazdırılmış' halini alır. Bütün işlemlemler "
 "tamamalandığında durum 'Tamamlandı' halini alır."
 
@@ -518,7 +518,7 @@ msgstr ""
 #: model:ir.model,name:account.model_account_journal
 #: field:validate.account.move,journal_id:0
 msgid "Journal"
-msgstr "Yevmiye"
+msgstr "Günlük"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_confirm
@@ -533,7 +533,7 @@ msgstr "Ana Hedef"
 #. module: account
 #: field:account.bank.statement,account_id:0
 msgid "Account used in this journal"
-msgstr "Bu yevmiyede kullanılan hesap"
+msgstr "Bu günlükte kullanılan hesap"
 
 #. module: account
 #: help:account.aged.trial.balance,chart_account_id:0
@@ -693,7 +693,7 @@ msgstr "Giriş Dönemi Açılışı"
 #. module: account
 #: model:ir.model,name:account.model_account_journal_period
 msgid "Journal Period"
-msgstr "Yevmiye Dönemi"
+msgstr "Günlük Dönemi"
 
 #. module: account
 #: code:addons/account/account_move_line.py:750
@@ -825,7 +825,7 @@ msgstr "Account Subscription Line"
 #. module: account
 #: help:account.invoice,reference:0
 msgid "The partner reference of this invoice."
-msgstr "Bu faturaya ait paydaş kaynağı"
+msgstr "Bu faturaya ait paydaş referansı"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -848,7 +848,7 @@ msgstr "14 Net günde yüzde 2, kalan tutar 30 günde ay sonunda."
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
 msgid "Account Analytic Journal"
-msgstr "Analitik Yevmiye Hesabı"
+msgstr "Analiz Günlük Hesabı"
 
 #. module: account
 #: model:ir.model,name:account.model_account_automatic_reconcile
@@ -1004,7 +1004,7 @@ msgstr "Genişletilmiş Süzgeçler..."
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_central_journal
 msgid "Centralizing Journal"
-msgstr "Merkezileştirme Yevmiyesi"
+msgstr "Merkezileştirme Günlüğü"
 
 #. module: account
 #: selection:account.journal,type:0
@@ -1073,7 +1073,7 @@ msgstr "Kod"
 #: code:addons/account/account_move_line.py:173
 #, python-format
 msgid "No Analytic Journal !"
-msgstr "Analitik Yevmiye Yok !"
+msgstr "Analiz Günlüğü yok !"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1448,7 +1448,7 @@ msgstr "Rapor Seçenekleri"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr "Yevmiye Maddeleri Analizi"
+msgstr "Günlük Maddeleri Analizi"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1472,7 +1472,7 @@ msgstr "Alıcılar Hesabı"
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_central_journal
 msgid "Central Journal"
-msgstr "Merkezi Yevmiye"
+msgstr "Merkezi Günlük"
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -1537,8 +1537,8 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
-"Borç ya da alacak işlemi olmak üzere bir çok yevmiye kalemi içeren Yevmiye "
-"Girişidir. Her hesap belgesi için OpenERP bir tek Yevmiye girişi oluşturur."
+"Borç ya da alacak işlemi olmak üzere bir çok günlük kalemi içeren Günlük "
+"Girişidir. Her hesap belgesi için OpenERP bir tek günlük girişi oluşturur."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1604,7 +1604,7 @@ msgstr "."
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
 msgid "and Journals"
-msgstr "ve yevmiyeler"
+msgstr "ve günlükler"
 
 #. module: account
 #: field:account.journal,groups_id:0
@@ -1707,7 +1707,7 @@ msgstr "Mali Yıl Sırası"
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
 msgid "Separated Journal Sequences"
-msgstr "Ayrılmış Yevmiye Sıraları"
+msgstr "Ayrılmış Günlük Sıraları"
 
 #. module: account
 #: view:account.invoice:0
@@ -1737,7 +1737,7 @@ msgstr "Faturalama"
 #: code:addons/account/report/account_partner_balance.py:115
 #, python-format
 msgid "Unknown Partner"
-msgstr "Bilinmeyen İş Ortağı"
+msgstr "Bilinmeyen Paydaş"
 
 #. module: account
 #: field:account.tax.code,sum:0
@@ -1763,9 +1763,9 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
-"Şirket Hesap Planı, her mali yıl için ve arama süzgeci dönemsel aramaya "
-"ayarlı olarak görünür. Bir hesaba tıklayarak o hesaba ait bütün yevmiye "
-"girişlerinin ağaç görünümü elde edilir."
+"Firma Hesap Planınızı her mali yıl için gösterir ve dönemsel aramaya göre "
+"süzer. Bir hesaba tıklayarak o hesaba ait bütün günlük girişlerinin ağaç "
+"görünümü elde edilir."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1783,7 +1783,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
-"'Aktif' seçeneği işaretli değilse bu, yevmiye dönemini silmeden gizlemenize "
+"'Etkin' seçeneği işaretli değilse bu, günlük dönemini silmeden gizlemenize "
 "izin verir."
 
 #. module: account
@@ -1804,7 +1804,7 @@ msgstr "Account Common Journal Report"
 #. module: account
 #: selection:account.partner.balance,display_partner:0
 msgid "All Partners"
-msgstr "All Partners"
+msgstr "Bütün Paydaşlar"
 
 #. module: account
 #: view:account.analytic.chart:0
@@ -1826,7 +1826,7 @@ msgstr "Customer Ref:"
 #: code:addons/account/account_cash_statement.py:292
 #, python-format
 msgid "User %s does not have rights to access %s journal !"
-msgstr "%s kullanıcısının %s yevmiyesine erişim hakkı bulunmuyor !"
+msgstr "%s kullanıcısının %s günlüğüne erişim hakkı bulunmuyor !"
 
 #. module: account
 #: help:account.period,special:0
@@ -1916,7 +1916,7 @@ msgstr "Maliye İncelemesi"
 #. module: account
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr "Hata! İç içe tekrarlayan şirketler seçemezsiniz."
+msgstr "Hata! Yinelenen firmalar oluşturamazsınız."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
@@ -2162,7 +2162,7 @@ msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
 msgstr ""
-"Yevmiyede \"%s\" \n"
+"\"%s\" günlüğünde\n"
 "Varsayılan borç hesabı tanımlanmamış"
 
 #. module: account
@@ -2175,11 +2175,10 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
-"This type is used to differentiate types with special effects in OpenERP: "
-"view can not have entries, consolidation are accounts that can have children "
-"accounts for multi-company consolidations, payable/receivable are for "
-"partners accounts (for debit/credit computations), closed for depreciated "
-"accounts."
+"Bu tip OpenERP de özel efektler ile türleri ayırt etmek için kullanılır: "
+"görünümde girişler yapılamaz, birleştirmeler çok-firmalı birleştirmeler için "
+"alt hesapları olan hesaplardır, ödenecek/alınacak paydaş hesapları içindir "
+"(borç/alacak hesaplamaları), amortismana tabi hesaplar için kapalıdır"
 
 #. module: account
 #: view:account.chart.template:0
@@ -2266,7 +2265,7 @@ msgstr "Income Account"
 #: code:addons/account/account_invoice.py:370
 #, python-format
 msgid "There is no Accounting Journal of type Sale/Purchase defined!"
-msgstr "Tanımlanan Satış/Satınalma tipli Muhasebe yevmiyesi yoktur!"
+msgstr "Tanımlanan Satış/Satınalma tipli Muhasebe Günlüğü yoktur!"
 
 #. module: account
 #: constraint:res.partner.bank:0
@@ -2368,7 +2367,7 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
-"\"%s\" Yevmiyesinde tanımlı bir varsayılan \n"
+"\"%s\" günlüğünde tanımlı bir varsayılan \n"
 "alacak hesabı yok"
 
 #. module: account
@@ -2465,7 +2464,7 @@ msgstr "Draft state of an invoice"
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr "Partner Reconciliation"
+msgstr "Paydaş Uzlaşması"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2482,10 +2481,10 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
-"Bu firma için %s tipindehesap yevmiyesi bulunamadı\n"
+"Bu firma için %s tipinde hesap günlüğü bulunamadı\n"
 "\n"
 "Menüde bir tane oluşturabilirsiniz \n"
-"Konfigürason\\Mali Hesap\\Hesaplar\\evmiyeler."
+"Konfigürason\\Mali Hesap\\Hesaplar\\Günlükler."
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -2614,14 +2613,13 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
-"The fiscal position will determine taxes and the accounts used for the "
-"partner."
+"Mali durum vergileri ve paydaşlar için kullanılan hesapları belirleyecektir."
 
 #. module: account
 #: view:account.print.journal:0
 msgid ""
 "This report gives you an overview of the situation of a specific journal"
-msgstr "Bu rapor, belirli bir yevmiyenin durumuna gözatmanızı sağlar."
+msgstr "Bu rapor, belirli bir günlüğün durumuna gözatmanızı sağlar."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
@@ -2785,7 +2783,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_aged_balance_view
 #: model:ir.ui.menu,name:account.menu_aged_trial_balance
 msgid "Aged Partner Balance"
-msgstr "Aged Partner Balance"
+msgstr "Yaşlandırılmış Paydaş Bakiyesi"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_entriesreconcile0
@@ -2984,9 +2982,9 @@ msgid ""
 "between the creation date or the creation date of the entries plus the "
 "partner payment terms."
 msgstr ""
-"The maturity date of the generated entries for this model. You can choose "
-"between the creation date or the creation date of the entries plus the "
-"partner payment terms."
+"Bu model için oluşturulan kayıtların vade tarihi. Sen oluşturulma tarihi "
+"veya girişlerin oluşturulma tarihi artı paydaş ödeme koşulları arasında "
+"seçim yapabilirsiniz."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
@@ -3025,7 +3023,7 @@ msgstr ""
 #. module: account
 #: field:account.partner.ledger,page_split:0
 msgid "One Partner Per Page"
-msgstr "One Partner Per Page"
+msgstr "Her Sayfada bir Paydaş"
 
 #. module: account
 #: field:account.account,child_parent_ids:0
@@ -3208,7 +3206,7 @@ msgstr "Starts on"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
 msgid "Account Partner Ledger"
-msgstr "Account Partner Ledger"
+msgstr "Paydaş Hesabı Defteri"
 
 #. module: account
 #: help:account.journal.column,sequence:0
@@ -3228,8 +3226,8 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
-"Sihirbaz belirli yevmiye ve dönelere ait yevmiye girişlerinin hepsini "
-"doğrulayacaktır. Yevmiye girişleri doğrulandıktan sonra bir daha onları "
+"Sihirbaz belirli günlük ve dönemlere ait günlük girişlerinin hepsini "
+"doğrulayacaktır. Günlük girişleri doğrulandıktan sonra bir daha onları "
 "güncelleyemezsiniz."
 
 #. module: account
@@ -3285,7 +3283,7 @@ msgstr ""
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
 #, python-format
 msgid "No End of year journal defined for the fiscal year"
-msgstr "Mali yıl için yol sonu yevmiyesi tanımlanmamış"
+msgstr "Mali yıl için yol sonu günlüğü tanımlanmamış"
 
 #. module: account
 #: view:account.tax:0
@@ -3325,12 +3323,12 @@ msgstr "Masraf hesabında kullanmak için boş bırak"
 #: model:ir.ui.menu,name:account.menu_journals
 #: model:ir.ui.menu,name:account.menu_journals_report
 msgid "Journals"
-msgstr "Journals"
+msgstr "Günlükler"
 
 #. module: account
 #: field:account.partner.reconcile.process,to_reconcile:0
 msgid "Remaining Partners"
-msgstr "Remaining Partners"
+msgstr "Kalan Paydaşlar"
 
 #. module: account
 #: view:account.subscription:0
@@ -3376,7 +3374,7 @@ msgstr "Açılış Bakiyesi"
 #: code:addons/account/account_invoice.py:1332
 #, python-format
 msgid "No Partner Defined !"
-msgstr "No Partner Defined !"
+msgstr "Tanımlı Paydaş Yok !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_period_close
@@ -3462,7 +3460,7 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
-"Seçilen bütün yevmiye girişleri doğrulanacak ve işlenecektir. Bu da; hesap "
+"Seçilen bütün günlük girişleri doğrulanacak ve işlenecektir. Bu da; hesap "
 "alanlarında bir daha değişiklik yapamayacağınız anlamına gelir."
 
 #. module: account
@@ -3552,7 +3550,7 @@ msgstr "Uzlaştırılmamış günlük maddeleri"
 #. module: account
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr "Döviz kodu her şirket için tekil olmalı!"
+msgstr "Döviz kodu her firma için benzersiz olmalı!"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3610,7 +3608,7 @@ msgstr "%s%s \"görünüm\" hesabında günlük maddesi oluşturmazsınız"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr "Reconcilation Process partner by partner"
+msgstr "Paydaş paydaş Uzlaşma İşlemi"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3696,7 +3694,7 @@ msgid ""
 "based on partner payment term!\n"
 "Please define partner on it!"
 msgstr ""
-"'%s' Modele ait '%s' model kalemince oluşturulan vade tarihi paydaş ödeme "
+"'%s' Modele ait '%s' model öğesince oluşturulan vade tarihi paydaş ödeme "
 "koşulu baz alınarak oluşturulur. Lütfen hangi paydaş olduğunu belirtiniz."
 
 #. module: account
@@ -3978,7 +3976,7 @@ msgid ""
 "counterpart."
 msgstr ""
 "Burada en iyi yöntem, bütün mali yılların açılış girişlerini kapsayan "
-"yevmiyeleri kullanmaktır. Merkezi karşı hesaplı ve tipi \"durum\" olan "
+"günlükleri kullanmaktır. Merkezi karşı hesaplı ve tipi \"durum\" olan "
 "varsayılan alacak/borç hesaplarıyla tanımlamaya dikkat edin."
 
 #. module: account
@@ -4316,7 +4314,7 @@ msgstr "Tüm İşlenmiş Girişler"
 #: code:addons/account/account_bank_statement.py:367
 #, python-format
 msgid "Statement %s is confirmed, journal items are created."
-msgstr "%s ekstresi onaylanmış, yevmiye kalemleri oluşturulmuştur."
+msgstr "%s hesap özeti onaylanmış, günlük kalemleri oluşturulmuştur."
 
 #. module: account
 #: field:report.aged.receivable,name:0
@@ -4675,8 +4673,8 @@ msgid ""
 "All draft account entries in this journal and period will be validated. It "
 "means you won't be able to modify their accounting fields anymore."
 msgstr ""
-"Bu yevmiyeye ve döneme ait bütün taslak hesap girişleri doğrulanacaktır. Bu "
-"da hesap alanlarını değiştiremeyeceğiniz anlamına gelir."
+"Bu günlüğe ve döneme ait bütün taslak hesap girişleri doğrulanacaktır. Bu da "
+"hesap alanlarını değiştiremeyeceğiniz anlamına gelir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
@@ -4909,7 +4907,7 @@ msgid ""
 "This report is analysis by partner. It is a PDF report containing one line "
 "per partner representing the cumulative credit balance."
 msgstr ""
-"Bu rapor ortak tarafından analiz edilmiştir. Her satırda bir paydaş (ortak) "
+"Bu rapor paydaş tarafından incelenmiştir. Her satırda bir paydaş (ortak) "
 "için kümülatif kredi bakiyesi içeren bir PDF raporudur."
 
 #. module: account
@@ -5138,7 +5136,7 @@ msgstr "Kolon Adı"
 #: view:account.general.journal:0
 msgid ""
 "This report gives you an overview of the situation of your general journals"
-msgstr "Bu rapor, genel yevmiyelerinizin durumuna göatmanızı sağlar."
+msgstr "Bu rapor, genel günlüklerinizin durumuna göatmanızı sağlar."
 
 #. module: account
 #: field:account.entries.report,year:0
@@ -5180,7 +5178,7 @@ msgstr "ay"
 #. module: account
 #: field:account.partner.reconcile.process,next_partner_id:0
 msgid "Next Partner to Reconcile"
-msgstr "Next Partner to Reconcile"
+msgstr "Uzlaşılacak Sonraki Paydaş"
 
 #. module: account
 #: field:account.invoice.tax,account_id:0
@@ -5203,7 +5201,7 @@ msgstr "Balance Sheet"
 #: view:account.general.journal:0
 #: model:ir.ui.menu,name:account.menu_account_general_journal
 msgid "General Journals"
-msgstr "Genel Yevmiyeler"
+msgstr "Genel Günlükler"
 
 #. module: account
 #: field:account.journal,allow_date:0
@@ -5315,7 +5313,7 @@ msgstr "Süre sonu geçmiş Analiz Hesapları"
 #. module: account
 #: report:account.partner.balance:0
 msgid "(Account/Partner) Name"
-msgstr "(Account/Partner) Name"
+msgstr "(Hesap/Paydaş) Adı"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -5450,7 +5448,7 @@ msgstr "  Gün Sayısı: 14"
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
 msgid "End of Year Entries Journal"
-msgstr "Yevmiye Kayıt Yılı Bitişi"
+msgstr "Yıl Sonu Girişleri Yevmiyesi"
 
 #. module: account
 #: code:addons/account/account.py:3446
@@ -5477,9 +5475,9 @@ msgid ""
 "something to reconcile or not. This figure already count the current partner "
 "as reconciled."
 msgstr ""
-"This is the remaining partners for who you should check if there is "
-"something to reconcile or not. This figure already count the current partner "
-"as reconciled."
+"Bu uzlaştırılacak veya uzlaştırılmayacak bir şey olup olmadığı kontrol "
+"edilecek kalan paydaşlardır. Bu geçerli paydaşı zaten uzlaşılmış olarak "
+"sayar."
 
 #. module: account
 #: view:account.subscription.line:0
@@ -5874,8 +5872,9 @@ msgid ""
 "Shows you the progress made today on the reconciliation process. Given by \n"
 "Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
 msgstr ""
-"Shows you the progress made today on the reconciliation process. Given by \n"
-"Partners Reconciled Today \\ (Remaining Partners + Partners Reconciled Today)"
+"Uzlaşma işlemi üzerinde bugün yapılan gelişmeyi gösterir. Tarafından "
+"verilen\n"
+"Bugünkü Paydaş Uzlaşmaları \\ (Kalan Paydaşlar+ Bugün Uzlaşılan Paydaşlar)"
 
 #. module: account
 #: help:account.payment.term.line,value:0
@@ -6030,7 +6029,7 @@ msgstr "Dış Bilanço"
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr "Yevmiye-Dönem Adı"
+msgstr "Günlük-Dönem Adı"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -6326,7 +6325,7 @@ msgstr "Alacak"
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr "İlişkili hesap ve dönem için aynı şirket olmalı."
+msgstr "İlişkili hesap ve dönem için firma aynı olmalı."
 
 #. module: account
 #: view:account.invoice:0
@@ -6366,7 +6365,7 @@ msgstr "Percentage"
 #. module: account
 #: selection:account.report.general.ledger,sortby:0
 msgid "Journal & Partner"
-msgstr "Journal & Partner"
+msgstr "Günlük & Paydaş"
 
 #. module: account
 #: field:account.automatic.reconcile,power:0
@@ -6402,7 +6401,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_partner_reconcile
 msgid "Reconciliation: Go to Next Partner"
-msgstr "Reconciliation: Go to Next Partner"
+msgstr "Uzlaşma: Sonraki Paydaşa Git"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_analytic_invert_balance
@@ -6472,7 +6471,7 @@ msgstr "Bu görünümde,"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr "Yevmiye adı her firmada benzersiz olmalı."
+msgstr "Günlük adı her firmada benzersiz olmalı."
 
 #. module: account
 #: field:account.account.template,nocreate:0
@@ -6584,7 +6583,7 @@ msgstr "account.sequence.fiscalyear"
 #: model:ir.actions.report.xml,name:account.analytic_journal_print
 #: model:ir.model,name:account.model_account_analytic_journal
 msgid "Analytic Journal"
-msgstr "Analytic Journal"
+msgstr "Analiz Günlüğü"
 
 #. module: account
 #: code:addons/account/account.py:622
@@ -6658,8 +6657,7 @@ msgstr "Entries: "
 #. module: account
 #: view:account.use.model:0
 msgid "Create manual recurring entries in a chosen journal."
-msgstr ""
-"Seçilen bir yevmiyede manuel olarak yinelen girişler yaratabilirsiniz."
+msgstr "Seçilen bir günlükte elle yinelen girişler yaratabilirsiniz."
 
 #. module: account
 #: help:res.partner.bank,currency_id:0
@@ -6683,7 +6681,7 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
-"Hesap türü, bir hesabın her yevmiyede nasıl kullanıldığını belirlemek için "
+"Hesap türü, bir hesabın her günlükte nasıl kullanıldığını belirlemek için "
 "kullanılır. Bir hesap türüne ait erteleme metodu, yılsonu hesap kapatma "
 "işlemini belirler. Bilanço ve kar zarar raporu gibi raporlar, kategoriyi "
 "(kar/zarar veya bilanço) kullanır. Örneğin, hesap türü aktif hesaba, gider "
@@ -6736,8 +6734,8 @@ msgid ""
 "This will automatically configure your chart of accounts, bank accounts, "
 "taxes and journals according to the selected template"
 msgstr ""
-"Bu Hesap Planınızı, banka hesaplarınızı, vergilerinizi ve yevmiyeleri "
-"seçilen şablona uygun olarak otomatikmen yapılandıracaktır."
+"Bu Hesap Planınızı, banka hesaplarınızı, vergilerinizi ve günlükleri seçilen "
+"şablona uygun olarak otomatikmen yapılandıracaktır."
 
 #. module: account
 #: help:res.partner,property_account_receivable:0
@@ -6745,8 +6743,8 @@ msgid ""
 "This account will be used instead of the default one as the receivable "
 "account for the current partner"
 msgstr ""
-"This account will be used instead of the default one as the receivable "
-"account for the current partner"
+"Bu hesap, geçerli paydaş için alacak hesabı olarak varsayılanın yerine "
+"kullanılır."
 
 #. module: account
 #: field:account.tax,python_applicable:0
@@ -6872,7 +6870,7 @@ msgstr ""
 "Bir faturanın ödenmiş olarak kabul edilmesi için, fatura girişlerinin "
 "karşılıkları ile, genelde ödemelerle uyuşması gerekir. Otomatik uzlaşma "
 "fonksiyonu ile OpenERP bir hesap serisi içerisinde uzlaştırmak için kendi "
-"aramasını yapar. Her ortak için uyuşan tutarları bulur."
+"aramasını yapar. Her paydaş için uyuşan tutarları bulur."
 
 #. module: account
 #: view:account.move:0
@@ -6904,7 +6902,7 @@ msgstr "Günlük Girdileri"
 #. module: account
 #: help:account.partner.ledger,page_split:0
 msgid "Display Ledger Report with One partner per page"
-msgstr "Display Ledger Report with One partner per page"
+msgstr "Her sayfada Bir paydaş olarak Defter Raporunu Göster"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1218
@@ -6934,7 +6932,7 @@ msgid ""
 "This report is an analysis done by a partner. It is a PDF report containing "
 "one line per partner representing the cumulative credit balance"
 msgstr ""
-"Bu rapor bir ortak tarafından yapılmış bir analizdir. Her ortak için tek "
+"Bu rapor bir paydaş tarafından yapılmış bir incelemedir. Her paydaş için tek "
 "satırda kümülatif alacak bakiyelerini gösteren bir PDF raporudur."
 
 #. module: account
@@ -7143,7 +7141,7 @@ msgstr "Satışlar"
 #: view:account.journal.column:0
 #: model:ir.model,name:account.model_account_journal_column
 msgid "Journal Column"
-msgstr "Yevmiye Kolonu"
+msgstr "Günlük Sütunu"
 
 #. module: account
 #: selection:account.invoice.report,state:0
@@ -7262,10 +7260,10 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
-"Kasa Kayıtı, nakit yevmiyelerine yapılan nakit girişlerini yönetmenizi "
-"sağlar. Bu özellik, nakit ödemelerin günlük olarak kolayca izlenmesini "
-"sağlar. Kasanızdaki nakit paranın girişini yapabilirsiniz, kasanıza giren, "
-"çıkan nakit parayı işleyebilirsiniz."
+"Kasa Kayıtı, nakitgünlüklerine yapılan nakit girişlerini yönetmenizi sağlar. "
+"Bu özellik, nakit ödemelerin günlük olarak kolayca izlenmesini sağlar. "
+"Kasanızdaki nakit paranın girişini yapabilirsiniz, kasanıza giren, çıkan "
+"nakit parayı işleyebilirsiniz."
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7517,7 +7515,7 @@ msgstr "Closing Cashbox"
 #: view:account.journal:0
 #: field:res.partner.bank,journal_id:0
 msgid "Account Journal"
-msgstr "Yevmiye Hesabı"
+msgstr "Günlük Hesabı"
 
 #. module: account
 #: model:process.node,name:account.process_node_paidinvoice0
@@ -7532,9 +7530,8 @@ msgid ""
 "the system to go through the reconciliation process, based on the latest day "
 "it have been reconciled."
 msgstr ""
-"This field shows you the next partner that will be automatically chosen by "
-"the system to go through the reconciliation process, based on the latest day "
-"it have been reconciled."
+"Bu alan, uzlaşma işlemi süresince sistem tarafından seçilen sonraki paydaşı "
+"gösterir, uzlaşılan son gün temel alınır."
 
 #. module: account
 #: field:account.move.line.reconcile.writeoff,comment:0
@@ -7683,7 +7680,7 @@ msgstr "Satış Günlüğü"
 #: code:addons/account/wizard/account_move_journal.py:104
 #, python-format
 msgid "Open Journal Items !"
-msgstr "Yevmiye öğelerini seç !"
+msgstr "Günlük Öğelerini Aç !"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_tax
@@ -7834,7 +7831,7 @@ msgstr "Servis Talep Kodu"
 #. module: account
 #: view:validate.account.move:0
 msgid "Post Journal Entries of a Journal"
-msgstr "Yevmiyeye ait girişleri işle"
+msgstr "Günlüğe ait Girişleri İşle"
 
 #. module: account
 #: view:product.product:0
@@ -7944,10 +7941,10 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
-"Burada varolan bir yevmiye görünüşünü özelleştirebilir ya da yeni bir "
-"görünüş  yaratabilirsiniz. Yevmiye görünümleri yevmiyelerinize kayıt girime "
-"yöntemini belirler. Bir yevmiyede görünmesini istediğiniz alanları seçin ve "
-"görünüş sırasını belirleyin."
+"Burada varolan bir günlük görünüşünü özelleştirebilir ya da yeni bir görünüş "
+" yaratabilirsiniz. Günlük görünümleri günlüklerinize kayıt girme yöntemini "
+"belirler. Bir günlükte görünmesini istediğiniz alanları seçin ve görünüş "
+"sırasını belirleyin."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
@@ -8015,7 +8012,7 @@ msgstr "CashBox Line"
 #: model:ir.actions.report.xml,name:account.account_3rdparty_ledger_other
 #: model:ir.ui.menu,name:account.menu_account_partner_ledger
 msgid "Partner Ledger"
-msgstr "Partner Ledger"
+msgstr "Paydaş Defteri"
 
 #. module: account
 #: selection:account.tax.template,type:0
@@ -8078,7 +8075,7 @@ msgstr "Subscription Compute"
 #: model:ir.model,name:account.model_res_partner
 #: field:report.invoice.created,partner_id:0
 msgid "Partner"
-msgstr "Ortak"
+msgstr "Paydaş"
 
 #. module: account
 #: help:account.change.currency,currency_id:0
@@ -8247,13 +8244,13 @@ msgstr "Türe göre Bu Ayki Satışlar"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Associated Partner"
-msgstr "Associated Partner"
+msgstr "İlişkili Paydaş"
 
 #. module: account
 #: code:addons/account/account_invoice.py:1332
 #, python-format
 msgid "You must first select a partner !"
-msgstr "You must first select a partner !"
+msgstr "Önce bir paydaş seçmelisiniz !"
 
 #. module: account
 #: view:account.invoice:0
@@ -8289,7 +8286,7 @@ msgstr ""
 #: view:account.invoice.report:0
 #: field:account.invoice.report,residual:0
 msgid "Total Residual"
-msgstr "Total Residual"
+msgstr "Toplam Bakiye"
 
 #. module: account
 #: model:process.node,note:account.process_node_invoiceinvoice0
@@ -8415,8 +8412,7 @@ msgid ""
 "This payment term will be used instead of the default one for the current "
 "partner"
 msgstr ""
-"This payment term will be used instead of the default one for the current "
-"partner"
+"Bu ödeme koşulu geçerli paydaş için varsayılan yerine kullanılacaktır"
 
 #. module: account
 #: view:account.tax.template:0
@@ -8540,8 +8536,8 @@ msgid ""
 "You can check this box to mark this journal item as a litigation with the "
 "associated partner"
 msgstr ""
-"You can check this box to mark this journal item as a litigation with the "
-"associated partner"
+"İlşikili paydaşla ilgili bir dava sözkonusu ise bu kutuyu işaretleyerek bu "
+"günlük öğesine not düşebilirsiniz"
 
 #. module: account
 #: field:account.move.line,reconcile_partial_id:0
@@ -8648,7 +8644,7 @@ msgstr "Fiscalyear Close state"
 #. module: account
 #: field:account.invoice.refund,journal_id:0
 msgid "Refund Journal"
-msgstr "Refund Journal"
+msgstr "İade Günlüğü"
 
 #. module: account
 #: report:account.account.balance:0
@@ -8691,7 +8687,7 @@ msgstr "Company Analysis"
 #. module: account
 #: help:account.invoice,account_id:0
 msgid "The partner account used for this invoice."
-msgstr "The partner account used for this invoice."
+msgstr "Bu fatura için kullanılan paydaş hesabı"
 
 #. module: account
 #: code:addons/account/account.py:3296
@@ -8773,8 +8769,8 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in the company currency."
 msgstr ""
-"Alacak veya borç bakiyeleri yevmiye girişleri firma para birimi olarak ifade "
-"edilir."
+"Alacak veya borç bakiyelerinin günlük girişleri firma para birimi olarak "
+"ifade edilir."
 
 #. module: account
 #: view:account.tax.code:0
@@ -8795,7 +8791,7 @@ msgstr "Fiscalyear Close"
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr "Hesap Kodu her şirket için tekil olmalı !"
+msgstr "Hesap Kodu her firma için benzersiz olmalı !"
 
 #. module: account
 #: view:account.invoice:0
@@ -8991,9 +8987,9 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
-"Şirketinizin mali yılını İhtiyaçlarınıza göre tanımlayın. Bir mali yıl bir "
-"şirketin hesaplarının kapandığı dönemin sonudur (genellikle 12 ay). Mali yıl "
-"genellikle bitiş tarihi yılıyla adlandırılır. Örneğin; bir şirketin mali "
+"Firmanızın mali yılını ihtiyaçlarınıza göre tanımlayın. Bir mali yıl bir "
+"firmanın hesaplarının kapandığı dönemin sonudur (genellikle 12 ay). Mali yıl "
+"genellikle bitiş tarihi yılıyla adlandırılır. Örneğin; bir firmanın mali "
 "yılı 30 Kasım 2011 de biterse 1 Aralık 2010 ve 30 Kasım 2011 tarihleri "
 "​​arasındaki her şey FY 2011 olarak anılacaktır. Gerçek takvim yılını "
 "izlemek zorunda değilsiniz."
@@ -9023,7 +9019,7 @@ msgstr "Force period"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_balance
 msgid "Print Account Partner Balance"
-msgstr "Print Account Partner Balance"
+msgstr "Paydaş Hesabı Bakiyesini Yazdır"
 
 #. module: account
 #: help:account.financial.report,sign:0
@@ -9119,7 +9115,7 @@ msgstr "Given by Python Code"
 #. module: account
 #: field:account.analytic.journal,code:0
 msgid "Journal Code"
-msgstr "Journal Code"
+msgstr "Günlük Kodu"
 
 #. module: account
 #: help:account.tax.code,sign:0
@@ -9137,7 +9133,7 @@ msgstr ""
 #: field:account.move.line,amount_residual:0
 #: field:account.move.line,amount_residual_currency:0
 msgid "Residual Amount"
-msgstr "Residual Amount"
+msgstr "Bakiye Tutarı"
 
 #. module: account
 #: field:account.invoice,move_lines:0
@@ -9154,7 +9150,7 @@ msgstr "Mali Hesaplarınızı gözden geçirin"
 #: model:ir.actions.act_window,name:account.action_open_journal_button
 #: model:ir.actions.act_window,name:account.action_validate_account_move
 msgid "Open Journal"
-msgstr "Open Journal"
+msgstr "Günlük Aç"
 
 #. module: account
 #: report:account.analytic.account.journal:0
@@ -9312,7 +9308,7 @@ msgstr "Analysis Direction"
 #. module: account
 #: field:res.partner,ref_companies:0
 msgid "Companies that refers to partner"
-msgstr "Companies that refers to partner"
+msgstr "Paydaşa başvurusu olan Firmalar"
 
 #. module: account
 #: view:account.journal:0
@@ -9321,7 +9317,7 @@ msgstr "Companies that refers to partner"
 #: field:account.journal.view,name:0
 #: model:ir.model,name:account.model_account_journal_view
 msgid "Journal View"
-msgstr "Journal View"
+msgstr "Günlük Görünümü"
 
 #. module: account
 #: view:account.move.line:0
@@ -9468,7 +9464,7 @@ msgid ""
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
 "Bu görünüm, muhasebeciler tarafından OpenERP de toplu girişler yapmak için "
-"kullanılır. Bir müşteri faturası kaydetmek için arama çubuğundan yevmiye ve "
+"kullanılır. Bir müşteri faturası kaydetmek için arama çubuğundan günlük ve "
 "dönem seçin. Sonra, gelir hesabına giriş satırını kaydetmeye başlayın. "
 "OpenERP size otomatik olarak bu hesapla ve karşı hesap olan \"Satıcılar "
 "Hesabı\" yla ilişkili Vergiyi önerecektir."
@@ -9588,8 +9584,8 @@ msgid ""
 "The journal must have centralised counterpart without the Skipping draft "
 "state option checked!"
 msgstr ""
-"Bir yevmiyenin, taslak durumu seçeneği seçilmeden geçilmiş merkezi "
-"karşıtının olması gerekir!"
+"Bir günlüğün, taslak durumu seçeneği seçimi Atlanmadan merkezi karşıtının "
+"olması gerekir!"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -9836,8 +9832,8 @@ msgid ""
 "This account will be used instead of the default one as the payable account "
 "for the current partner"
 msgstr ""
-"This account will be used instead of the default one as the payable account "
-"for the current partner"
+"Bu hesap geçerli paydaşın ödemeler hesabında varsayılan yerine "
+"kullanılacaktır"
 
 #. module: account
 #: field:account.period,special:0
@@ -9912,7 +9908,7 @@ msgstr ""
 #. module: account
 #: view:account.model:0
 msgid "Journal Entry Model"
-msgstr "Yevmiye Giriş Modeli"
+msgstr "Günlük Giriş Modeli"
 
 #. module: account
 #: code:addons/account/wizard/account_use_model.py:44
@@ -10055,8 +10051,8 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
-"Yevmiye onaylama işlemi, 'büyük deftere işleme' olarak da anılır ve bir "
-"yevmiyeye girilen borç/alacak tutarlarının büyük deftere transfer edilmesi "
+"Günlük onaylama işlemi, 'büyük deftere işleme' olarak da anılır ve bir "
+"günlükte girilen borç/alacak tutarlarının büyük deftere aktarılması "
 "işlemidir."
 
 #. module: account
@@ -10084,7 +10080,7 @@ msgid ""
 "This report allows you to print or generate a pdf of your general ledger "
 "with details of all your account journals"
 msgstr ""
-"Bu rapor, hesaplarınıza ait bütün yevmiyelerinizin ayrıntılarını gösteren "
+"Bu rapor, hesaplarınıza ait bütün günlüklerinizin ayrıntılarını gösteren "
 "büyük defterinizi pdf olarak yazdırmanızı ve oluşturmanızı sağlar."
 
 #. module: account
@@ -10198,7 +10194,7 @@ msgstr "Bu ürün için tanımlanmış gelir hesabı bulunmuyor: \"%s\" (id:%d)"
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr "Kapalı bir hesap için yevmiye kayıtları oluşturamazsınız."
+msgstr "Kapalı hesapta günlük girişi maddeleri oluşturamazsınız."
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
@@ -10242,7 +10238,7 @@ msgstr "Toplam"
 #: code:addons/account/wizard/account_move_journal.py:97
 #, python-format
 msgid "Journal: All"
-msgstr "Yevmiye: Tümü"
+msgstr "Günlük: Hepsi"
 
 #. module: account
 #: field:account.account,company_id:0
@@ -10365,7 +10361,7 @@ msgstr "Dönem Sonu"
 #. module: account
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr "Yevmiye kodu her firma için benzersiz olmalı."
+msgstr "Günlük kodu her firma için benzersiz olmalı."
 
 #. module: account
 #: help:product.category,property_account_expense_categ:0
@@ -10497,7 +10493,7 @@ msgstr "Alıcılar Hesabı"
 #. module: account
 #: selection:account.model.line,date_maturity:0
 msgid "Partner Payment Term"
-msgstr "Paydaş Ödeme Şartı"
+msgstr "Paydaş Ödeme Koşulu"
 
 #. module: account
 #: field:temp.range,name:0
@@ -10519,10 +10515,10 @@ msgid ""
 "computations), closed for depreciated accounts."
 msgstr ""
 "'İç Tür' farklı hesap türlerindeki olan özellikler için kullanılır: görünüm "
-"günlük maddelerini alamaz, birleştirme (konsolidasyon) çoklu şirket "
-"hesaplarının birleştirilmelerinin (konsolidasyonlarının)  alt hesapları "
-"için, borç/alacak paydaş hesapları için (borç/alacak hesaplamaları) , kapalı "
-"değer düşmesi hesapları için."
+"günlük maddelerini alamaz, birleştirme (konsolidasyon) çoklu firma "
+"hesaplarının birleştirilmelerinin alt hesapları için, borç/alacak paydaş "
+"hesapları için (borç/alacak hesaplamaları) , kapalı değer düşmesi hesapları "
+"için."
 
 #. module: account
 #: selection:account.balance.report,display_account:0
@@ -10559,7 +10555,7 @@ msgstr "Aralık"
 #: model:ir.actions.act_window,name:account.action_account_analytic_journal_tree
 #: model:ir.ui.menu,name:account.account_analytic_journal_print
 msgid "Print Analytic Journals"
-msgstr "Yevmiye Analizi Yazdır"
+msgstr "Analiz Günlüğü Yazdır"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -10621,12 +10617,11 @@ msgid ""
 "may keep several types of specialized journals such as a cash journal, "
 "purchase journal, sales journal..."
 msgstr ""
-"Bu menüden şirketinize ait yevmiyeleri yaratabilir ve yönetebilirsiniz. "
-"Yevmiye, çifte kayıt usulü muhasebe tutan firmanızın günlük işlemleriyle "
-"ilintili olan tüm muhasebe bilgilerinin kayıt işlemleri için kullanılır. "
-"Günlük işlemlere ve firmanın işleyişine göre çeşitli tiplerde, örneğin, kasa "
-"yevmiyesi, satınalma yevmiyesi, satış yevmiyesi gibi özel yevmiyeler "
-"kullanılır."
+"Bu menüden firmanıza ait günlükleri yaratabilir ve yönetebilirsiniz. Günlük, "
+"çift kayıt usulü muhasebe tutan firmanızın günlük işlemleriyle ilintili olan "
+"tüm muhasebe bilgilerinin kayıt işlemleri için kullanılır. Günlük işlemlere "
+"ve firmanın işleyişine göre çeşitli türlerde, örneğin, kasa günlüğü, "
+"satınalma günlüğü, satış günlüğü gibi özel günlükler kullanılır."
 
 #. module: account
 #: view:account.payment.term:0
@@ -10714,7 +10709,7 @@ msgstr "Dönem sayısı"
 #: report:account.general.journal:0
 #: model:ir.actions.report.xml,name:account.account_general_journal
 msgid "General Journal"
-msgstr "Genel Yevmiye"
+msgstr "Genel Günlük"
 
 #. module: account
 #: view:account.invoice:0
@@ -10808,12 +10803,12 @@ msgstr ""
 "''}${object.address_invoice_id.name or ''},\n"
 "\n"
 "${object.partner_id.name}:\n"
-"       | Invoice number: *${object.number}*\n"
+"       | Fatura Numarası: *${object.number}*\n"
 "       | Fatura toplamı: *${object.amount_total} "
 "${object.currency_id.name}*\n"
 "       | Fatura tarihi: ${object.date_invoice}\n"
 "       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
+"       | Sipariş Referansı: ${object.origin}\n"
 "       % endif\n"
 "       | İlgili kişi: ${object.user_id.name} ${object.user_id.user_email and "
 "'<%s>'%(object.user_id.user_email) or ''}\n"
@@ -10963,7 +10958,7 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the analytic "
 "journal without removing it."
 msgstr ""
-"Eğer aktif alan Yanlış'a ayarlıysa, yevmiye analizini silmeden gizlemenizi "
+"Eğer etkin alan Yanlış'a ayarlıysa, analiz günlüğünü silmeden gizlemenizi "
 "sağlar."
 
 #. module: account
@@ -11010,7 +11005,7 @@ msgstr "Banka Hesabı"
 #: model:ir.actions.act_window,name:account.action_account_central_journal
 #: model:ir.model,name:account.model_account_central_journal
 msgid "Account Central Journal"
-msgstr "Merkezi Yevmiye Hesabı"
+msgstr "Merkezi Hesap Günlüğü"
 
 #. module: account
 #: report:account.overdue:0
@@ -11025,7 +11020,7 @@ msgstr "İlerki"
 #. module: account
 #: view:account.move.line:0
 msgid "Search Journal Items"
-msgstr "Yevmiye Maddelerini Ara"
+msgstr "Günlük Öğesi Ara"
 
 #. module: account
 #: help:account.tax,base_sign:0
@@ -11077,12 +11072,12 @@ msgid ""
 "certain amount of information. They have to be certified by an external "
 "auditor annually."
 msgstr ""
-"Yevmiye giriş kayıtları yapmak istediğiniz hesapları oluşturun ve yönetin. "
-"Bir hesap, şirketinize ait borç ve alacak işlemlerini kayıt etmenizi "
-"sağlayan büyük defterin bir parçasıdır. Firmalar, yıllık hesaplarını iki ana "
-"bölümde tutar: bilanço ve gelir tablosu (kar ve zarar hesabı). Bir firmanın "
-"yıllık hesapları, yasal olarak belirli bir miktarda bilgi içermelidir. Bir "
-"dış denetçi tarafından da onaylanmalıdır."
+"Günlük giriş kayıtları yapmak istediğiniz hesapları oluşturun ve yönetin. "
+"Bir hesap, firmanıza ait borç ve alacak işlemlerini kayıt etmenizi sağlayan "
+"büyük defterin bir parçasıdır. Firmalar, yıllık hesaplarını iki ana bölümde "
+"tutar: bilanço ve gelir tablosu (kar ve zarar hesabı). Bir firmanın yıllık "
+"hesapları, yasal olarak belirli bir miktarda bilgi içermelidir. Bir dış "
+"denetçi tarafından da onaylanmalıdır."
 
 #. module: account
 #: help:account.move.line,amount_residual_currency:0
@@ -11090,5 +11085,5 @@ msgid ""
 "The residual amount on a receivable or payable of a journal entry expressed "
 "in its currency (maybe different of the company currency)."
 msgstr ""
-"Alıcılar ya da satıcılar hesabına ait bir yevmiyede bakiye tutarı, bakiye "
+"Alıcılar ya da satıcılar hesabına ait bir günlükte bakiye tutarı, bakiye "
 "para cinsi ile belirtilir (firma para cinsinden belki farklı olabilir)."

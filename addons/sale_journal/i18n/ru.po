@@ -7,19 +7,19 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-17 09:10+0000\n"
+"PO-Revision-Date: 2012-09-08 20:09+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 10:03+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-09 05:08+0000\n"
+"X-Generator: Launchpad (build 15914)\n"
 
 #. module: sale_journal
 #: sql_constraint:sale.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка на заказ должны быть уникальной для каждой компании!"
 
 #. module: sale_journal
 #: field:sale_journal.invoice.type,note:0
@@ -29,7 +29,7 @@ msgstr "Примечание"
 #. module: sale_journal
 #: field:res.partner,property_invoice_type:0
 msgid "Invoicing Type"
-msgstr ""
+msgstr "Способ выставления счета"
 
 #. module: sale_journal
 #: help:res.partner,property_invoice_type:0
@@ -37,11 +37,13 @@ msgid ""
 "This invoicing type will be used, by default, for invoicing the current "
 "partner."
 msgstr ""
+"Этот способ выставления счета будет использоваться по умолчанию при "
+"выставлении счета этому контрагенту."
 
 #. module: sale_journal
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "Ошибка! Вы не можете создавать рекурсивные ссылки на участников."
 
 #. module: sale_journal
 #: view:res.partner:0
@@ -99,7 +101,7 @@ msgstr ""
 #. module: sale_journal
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "Ссылка должна быть уникальна для каждой компании!"
 
 #. module: sale_journal
 #: field:sale.order,invoice_type_id:0

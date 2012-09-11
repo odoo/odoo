@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-09-02 18:19+0000\n"
+"PO-Revision-Date: 2012-09-09 07:35+0000\n"
 "Last-Translator: Ayhan KIZILTAN <Unknown>\n"
 "Language-Team: Turkish <tr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-03 05:36+0000\n"
-"X-Generator: Launchpad (build 15890)\n"
+"X-Launchpad-Export-Date: 2012-09-10 04:59+0000\n"
+"X-Generator: Launchpad (build 15924)\n"
 
 #. module: project_planning
 #: help:report_account_analytic.planning.account,tasks:0
@@ -24,6 +24,8 @@ msgid ""
 "This value is given by the sum of work remaining to do on the task for this "
 "planning, expressed in days."
 msgstr ""
+"Bu değer, bu planlama için yapılacakların kalan süresinin toplamı olarak "
+"verilir, gün olarak belirtilir."
 
 #. module: project_planning
 #: model:ir.actions.act_window,name:project_planning.action_account_analytic_planning_stat_form
@@ -41,7 +43,7 @@ msgstr "Planlama Öğesi"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Unallocated Time"
-msgstr ""
+msgstr "Tahsis Edilmemiş Toplam Süre"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,name:0
@@ -73,6 +75,10 @@ msgid ""
 "material), OpenERP allows you to encode and then automatically compute tasks "
 "and phases scheduling, track resource allocation and availability."
 msgstr ""
+"OpenERP, bir firmanın tüm kaynaklarını (insan ve malzeme) programlayan "
+"küresel sistemi ile görevleri ve programlama aşamalarını kodlamanızı ve "
+"sonra otomatik olarak hesaplamanızı, kaynak tahsislerini ve uygunluğunu "
+"izlemenizi sağlar."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -169,6 +175,8 @@ msgid ""
 "This value is given by the sum of all work encoded in the timesheet(s) "
 "between the 'Date From' and 'Date To' of the planning."
 msgstr ""
+"Bu değer, 'Başlangıç Tarihi'yle 'Bitiş Tarihi' arasındaki zaman "
+"çizelge(lerindeki)sindeki kodlanan tüm işlerin toplamı olarak verilir."
 
 #. module: project_planning
 #: constraint:account.analytic.account:0
@@ -204,6 +212,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to FALSE, expressed in days."
 msgstr ""
+"Bu değer, işaretkutusu YANLIŞ olarak ayarlanmış 'Görevlere Atanmış' süre "
+"tahsislerinin toplamı olarak verilir, gün olarak tanımlanır."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -261,6 +271,8 @@ msgid ""
 "This value is given by the sum of time allocation without task(s) linked, "
 "expressed in days."
 msgstr ""
+"Bu değer, bağlantılı görev(ler)i olmayan süre tahsislerinin toplamı olarak "
+"verilir, gün olarak tanımlanır."
 
 #. module: project_planning
 #: view:report_account_analytic.planning:0
@@ -278,6 +290,8 @@ msgid ""
 "Set here the number of working days within this planning for one person full "
 "time"
 msgstr ""
+"Burada, bu planlama içerisinde bir insan için tam zamanlı çalışma günü "
+"sayısını ayarlayın."
 
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
@@ -327,6 +341,8 @@ msgid ""
 "This value is given by the sum of time allocation with the checkbox "
 "'Assigned in Taks' set to TRUE expressed in days."
 msgstr ""
+"Bu değer, işaretkutusu DOĞRU olarak ayarlanmış 'Görevlere Atanmış' süre "
+"tahsislerinin toplamı olarak verilir, gün olarak tanımlanır."
 
 #. module: project_planning
 #: help:report_account_analytic.planning.user,free:0
@@ -334,6 +350,8 @@ msgid ""
 "Computed as Business Days - (Time Allocation of Tasks + Time Allocation "
 "without Tasks + Holiday Leaves)"
 msgstr ""
+"İş Günleri olarak hesaplanır - (Görevler için Tahsis edilen Süre + Görevsiz "
+"Süre Tahsisleri + Tatil İzinleri)"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,amount_unit:0
@@ -378,6 +396,8 @@ msgid ""
 "This value is given by the total of validated leaves into the 'Date From' "
 "and 'Date To' of the planning."
 msgstr ""
+"Bu değer, planlanan 'Başlangıç Tarihi' ile 'Bitiş Tarihi' arasındaki "
+"doğrulanmış izinlerin toplamı olarak verilir."
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,user_id:0
@@ -474,7 +494,7 @@ msgstr "Yeniden etkinleştir"
 #. module: project_planning
 #: constraint:project.task:0
 msgid "Error ! Task end-date must be greater then task start-date"
-msgstr ""
+msgstr "Hata! görev bitiş tarihi başlangıç tarihinden sonra olmalı"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,user_id:0
@@ -509,7 +529,7 @@ msgstr "İzinler"
 #. module: project_planning
 #: view:report_account_analytic.planning:0
 msgid "Total Time Allocation of Tasks"
-msgstr ""
+msgstr "Tahsisli Görevlerin Toplam Süresi"
 
 #. module: project_planning
 #: field:report_account_analytic.planning,date_to:0
@@ -539,17 +559,17 @@ msgstr "Sorumlu:"
 #. module: project_planning
 #: report:report_account_analytic.planning.print:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: project_planning
 #: field:res.company,planning_time_mode_id:0
 msgid "Planning Time Unit"
-msgstr ""
+msgstr "Planlama Zaman Birimi"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.line,task_ids:0
 msgid "Planning Tasks"
-msgstr ""
+msgstr "Görevleri Planlama"
 
 #. module: project_planning
 #: field:report_account_analytic.planning.stat,manager_id:0
@@ -562,3 +582,5 @@ msgid ""
 "This value is given by the sum of time allocation with task(s) linked, "
 "expressed in days."
 msgstr ""
+"Bu değer, bağlantılı görev(ler)in süre tahsislerinin toplamı olarak verilir, "
+"gün olarak tanımlanır."
