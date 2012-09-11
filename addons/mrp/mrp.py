@@ -47,13 +47,13 @@ class mrp_workcenter(osv.osv):
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
         'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
-        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
+        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','!=','view')],
             help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
-        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
+        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','!=','view')],
             help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
-        'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
+        'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','!=','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
         'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
     }
@@ -707,7 +707,7 @@ class mrp_production(osv.osv):
 
         produced_qty = 0
         for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id <> production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
         if production_mode in ['consume','consume_produce']:
@@ -914,7 +914,7 @@ class mrp_production(osv.osv):
         # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
         if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
             routing_loc = production.bom_id.routing_id.location_id
-            if routing_loc.usage <> 'internal':
+            if routing_loc.usage != 'internal':
                 pick_type = 'out'
             partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
 

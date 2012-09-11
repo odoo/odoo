@@ -625,7 +625,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
+                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
@@ -658,7 +658,7 @@
                         <page string="Consumed Products">
                             <group>
                                 <group string="Products to Consume">
-                                    <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_lines" domain="[('state','not in', ('done', 'cancel'))]" nolabel="1">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
@@ -704,7 +704,7 @@
                         <page string="Finished Products">
                             <group>
                                 <group string="Products to Produce">
-                                    <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_created_ids" domain="[('state','not in', ('done', 'cancel'))]" nolabel="1">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
                                             <field name="product_qty"/>
