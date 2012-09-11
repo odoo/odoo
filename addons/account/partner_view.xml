@@ -93,8 +93,10 @@
                     </group>
                     <field name="bank_ids">
                         <form string="Bank account" version="7.0">
-                            <field name="state"/>
-                            <field name="acc_number"/>
+                            <group>
+                                <field name="state" class="oe_inline"/>
+                                <field name="acc_number" class="oe_inline"/>
+                            </group>
                             <group>
                                 <group name="owner" string="Bank Account Owner">
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
