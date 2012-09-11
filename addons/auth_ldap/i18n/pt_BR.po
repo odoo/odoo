@@ -1,0 +1,187 @@
+# Brazilian Portuguese translation for openobject-addons
+# Copyright (c) 2010 Rosetta Contributors and Canonical Ltd 2010
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2010.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"PO-Revision-Date: 2012-07-28 22:27+0000\n"
+"Last-Translator: Fábio Martinelli <webmaster@guaru.net>\n"
+"Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-07 05:37+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
+
+#. module: users_ldap
+#: constraint:res.company:0
+msgid "Error! You can not create recursive companies."
+msgstr "Erro! Voce não pode criar empresas recursivas"
+
+#. module: users_ldap
+#: constraint:res.users:0
+msgid "The chosen company is not in the allowed companies for this user"
+msgstr ""
+"A empresa escolhida não está entre as empresas habilitadas para este usuário"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_tls:0
+msgid ""
+"Request secure TLS/SSL encryption when connecting to the LDAP server. This "
+"option requires a server with STARTTLS enabled, otherwise all authentication "
+"attempts will fail."
+msgstr ""
+"Solicite a conexão segura com encriptação TLS/SSL quando se conectar no "
+"servidor LDAP. Esta opção requer um servidor com STARTTLS habilitado, caso "
+"contrário a autenticação irá falhar"
+
+#. module: users_ldap
+#: view:res.company:0
+#: view:res.company.ldap:0
+msgid "LDAP Configuration"
+msgstr "Configuração LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_binddn:0
+msgid "LDAP binddn"
+msgstr "LDAP binddn"
+
+#. module: users_ldap
+#: help:res.company.ldap,create_user:0
+msgid "Create the user if not in database"
+msgstr "Cria o usuário se não existe na base"
+
+#. module: users_ldap
+#: help:res.company.ldap,user:0
+msgid "Model used for user creation"
+msgstr "Modelo utilizado para criação do usuário"
+
+#. module: users_ldap
+#: field:res.company.ldap,company:0
+msgid "Company"
+msgstr "Empresa"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server:0
+msgid "LDAP Server address"
+msgstr "Endereço do Servidor LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_server_port:0
+msgid "LDAP Server port"
+msgstr "Porta do Servidor LDAP"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_binddn:0
+msgid ""
+"The user account on the LDAP server that is used to query the directory. "
+"Leave empty to connect anonymously."
+msgstr ""
+"A conta do usuário no servidor LDAP que é usada para a busca no diretório, "
+"deixe em branco para conectar anonimamente"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_base:0
+msgid "LDAP base"
+msgstr "Base LDAP"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "User Information"
+msgstr "Informações do usuário"
+
+#. module: users_ldap
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr "O nome da empresa deve ser exclusivo!"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company
+msgid "Companies"
+msgstr "Empresas"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Process Parameter"
+msgstr "Parâmetro de Processo"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_company_ldap
+msgid "res.company.ldap"
+msgstr "res.company.ldap"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_tls:0
+msgid "Use TLS"
+msgstr "Usar TLS"
+
+#. module: users_ldap
+#: field:res.company.ldap,sequence:0
+msgid "Sequence"
+msgstr "Sequência"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Login Information"
+msgstr "Informações de login"
+
+#. module: users_ldap
+#: view:res.company.ldap:0
+msgid "Server Information"
+msgstr "Informação do servidor"
+
+#. module: users_ldap
+#: model:ir.actions.act_window,name:users_ldap.action_ldap_installer
+msgid "Setup your LDAP Server"
+msgstr "Configure seu servidor LDAP"
+
+#. module: users_ldap
+#: sql_constraint:res.users:0
+msgid "You can not have two users with the same login !"
+msgstr "Não é permitido criar dois usuários com o mesmo login!"
+
+#. module: users_ldap
+#: field:res.company,ldaps:0
+msgid "LDAP Parameters"
+msgstr "Parâmetros LDAP"
+
+#. module: users_ldap
+#: help:res.company.ldap,ldap_password:0
+msgid ""
+"The password of the user account on the LDAP server that is used to query "
+"the directory."
+msgstr ""
+"A senha da conta de usuário no servidor LDAP que é usada para a busca no "
+"diretório"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_password:0
+msgid "LDAP password"
+msgstr "Senha LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,user:0
+msgid "Model User"
+msgstr "Usuário Modelo"
+
+#. module: users_ldap
+#: model:ir.model,name:users_ldap.model_res_users
+msgid "res.users"
+msgstr "res.users"
+
+#. module: users_ldap
+#: field:res.company.ldap,ldap_filter:0
+msgid "LDAP filter"
+msgstr "Filtro LDAP"
+
+#. module: users_ldap
+#: field:res.company.ldap,create_user:0
+msgid "Create user"
+msgstr "Criar usuário"
+
+#~ msgid "Authenticate users with ldap server"
+#~ msgstr "Autenticar usuário com servidor ldap"

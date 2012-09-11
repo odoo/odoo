@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:32+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:20+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -62,7 +62,7 @@ msgstr "Analysjournal"
 #: view:account.analytic.plan.line:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_line
 msgid "Analytic Plan Line"
-msgstr ""
+msgstr "Objektplaneringsrad"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/wizard/account_crossovered_analytic.py:61
@@ -73,7 +73,7 @@ msgstr "Användarfel"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance
 msgid "Analytic Plan Instance"
-msgstr ""
+msgstr "Objektplaneringsinstans"
 
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
@@ -93,7 +93,7 @@ msgstr "Konto2 Id"
 #. module: account_analytic_plans
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "Fakturanummer måste vara unikt per bolag!"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -106,6 +106,7 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Konfigurations fel! Den valuta bör delas mellan standard-konton också."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.move.line:0
@@ -120,7 +121,7 @@ msgstr "Konto6 Id"
 #. module: account_analytic_plans
 #: model:ir.ui.menu,name:account_analytic_plans.menu_account_analytic_multi_plan_action
 msgid "Multi Plans"
-msgstr ""
+msgstr "Multiplanering"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_bank_statement_line
@@ -130,17 +131,17 @@ msgstr "Kontoutdragsrad"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_form_action_installer
 msgid "Define your Analytic Plans"
-msgstr ""
+msgstr "Definiera din objektplanering"
 
 #. module: account_analytic_plans
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "Ogiltig BBA-strukturerad kommunikation!"
 
 #. module: account_analytic_plans
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "Journalen och perioden måste tillhöra samma bolag."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
@@ -148,6 +149,8 @@ msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"Verifikatsdatumet är inte inom den definierade perioden! Du bör ändra datum "
+"eller ta bort denna begränsning från journalen."
 
 #. module: account_analytic_plans
 #: sql_constraint:account.journal:0
@@ -157,7 +160,7 @@ msgstr "Journalkoden måste vara unik per företag!"
 #. module: account_analytic_plans
 #: field:account.crossovered.analytic,ref:0
 msgid "Analytic Account Reference"
-msgstr ""
+msgstr "Objektkontoreferens"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_sale_order_line
@@ -174,7 +177,7 @@ msgstr "Distributionsmodell sparad"
 #. module: account_analytic_plans
 #: model:ir.actions.act_window,name:account_analytic_plans.account_analytic_plan_instance_action
 msgid "Analytic Distribution's Models"
-msgstr ""
+msgstr "Objektkontofördelningsmodell"
 
 #. module: account_analytic_plans
 #: view:account.crossovered.analytic:0
@@ -209,7 +212,7 @@ msgstr "Kurs (%)"
 #: field:account.analytic.plan,plan_ids:0
 #: field:account.journal,plan_id:0
 msgid "Analytic Plans"
-msgstr ""
+msgstr "Objektplanering"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -237,6 +240,7 @@ msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
 msgstr ""
+"Beloppet på bokföringsordern måste överenstämma med beloppet på kontoutdraget"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice_line
@@ -250,6 +254,8 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"Valt konto på verifikatet tvingar fram en sekundär valuta. Du kan ta bort "
+"den sekundära valutan på kontot eller välja en flervalutavy för journalen."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -274,7 +280,7 @@ msgstr "Konto5 Id"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_plan_instance_line
 msgid "Analytic Instance Line"
-msgstr ""
+msgstr "Objektinstansrad"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,root_analytic_id:0
@@ -306,7 +312,7 @@ msgstr "analytic.plan.create.model.action"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Objektrad"
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -316,7 +322,7 @@ msgstr "Analyskonto :"
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
 msgid "Analytic Account Reference:"
-msgstr ""
+msgstr "Objektkontoreferens:"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.line,name:0
@@ -359,12 +365,12 @@ msgstr "Fel"
 #. module: account_analytic_plans
 #: view:analytic.plan.create.model:0
 msgid "Save This Distribution as a Model"
-msgstr ""
+msgstr "Spara denna fördelning som mall"
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner med rubrikkonton."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0
@@ -380,7 +386,7 @@ msgstr "Vänligen skriv ett namn och en kod innan du sparar modellen !"
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_crossovered_analytic
 msgid "Print Crossovered Analytic"
-msgstr ""
+msgstr "Skriv ut korsrefererande objekt"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:341
@@ -407,7 +413,7 @@ msgstr "Konto3 Id"
 #. module: account_analytic_plans
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Du kan inte skapa objekttransaktioner med rubrikkonton."
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_invoice
@@ -428,12 +434,12 @@ msgstr "Konto4 Id"
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "Bolaget måste överenstämma för alla konton och perioder."
 
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Lines"
-msgstr ""
+msgstr "Objektfördelningsrad"
 
 #. module: account_analytic_plans
 #: code:addons/account_analytic_plans/account_analytic_plans.py:234
@@ -454,7 +460,7 @@ msgstr "Kontonamn"
 #. module: account_analytic_plans
 #: view:account.analytic.plan.instance.line:0
 msgid "Analytic Distribution Line"
-msgstr ""
+msgstr "Objektfördelningsrad"
 
 #. module: account_analytic_plans
 #: field:account.analytic.plan.instance,code:0
@@ -480,7 +486,7 @@ msgstr "100.00%"
 #: field:account.move.line,analytics_id:0
 #: model:ir.model,name:account_analytic_plans.model_account_analytic_default
 msgid "Analytic Distribution"
-msgstr ""
+msgstr "Objektfördelning"
 
 #. module: account_analytic_plans
 #: model:ir.model,name:account_analytic_plans.model_account_journal
@@ -514,11 +520,14 @@ msgid ""
 "analytic accounts for each plan set. Then, you must attach a plan set to "
 "your account journals."
 msgstr ""
+"Att sätta upp miljö för multipel objektplanering, du måste definiera root-"
+"objektkonto för varje enskild plan. Sedan måste du lägga till en plan knuten "
+"till dina kontojournaler."
 
 #. module: account_analytic_plans
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "Du kan inte skapa transaktioner på ett stängt konto."
 
 #. module: account_analytic_plans
 #: report:account.analytic.account.crossovered.analytic:0

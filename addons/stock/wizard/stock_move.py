@@ -210,7 +210,7 @@ class split_in_production_lot(osv.osv_memory):
                     quantity = line.quantity
                     total_move_qty += quantity
                     if total_move_qty > move_qty:
-                        raise osv.except_osv(_('Processing Error'), _('Serial number quantity %d of %s is larger than available quantity (%d) !') \
+                        raise osv.except_osv(_('Processing Error!'), _('Serial number quantity %d of %s is larger than available quantity (%d)!') \
                                 % (total_move_qty, move.product_id.name, move_qty))
                     if quantity <= 0 or move_qty == 0:
                         continue

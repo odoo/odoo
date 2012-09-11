@@ -27,21 +27,15 @@
     'description': """
 This module is for modifying account analytic view to show some data related to the hr_expense module.
 ======================================================================================================
-
 """,
-    "author": "OpenERP S.A.",
-    "website": "http://www.openerp.com/",
-    "depends": ["hr_expense","account_analytic_analysis"],
-    "init_xml": [],
-    "update_xml": [
-                    "analytic_contract_hr_expense_view.xml",
-                    ],
-    'demo_xml': [],
-    "css" : [
-             ],
+    'author': 'OpenERP S.A.',
+    'website': 'http://www.openerp.com/',
+    'depends': ['hr_expense','account_analytic_analysis'],
+    'data': ['analytic_contract_hr_expense_view.xml'],
+    'demo': [],
+    'css' : [],
     'installable': True,
     'auto_install': True,
-    'certificate': '',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

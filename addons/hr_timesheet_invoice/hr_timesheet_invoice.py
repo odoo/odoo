@@ -64,7 +64,7 @@ class account_analytic_account(osv.osv):
     _inherit = "account.analytic.account"
     _columns = {
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist',
-            help="The product to invoice is defined on the employee form, the price will be deduced by this pricelist on the product."),
+            help="The product to invoice is defined on the employee form, the price will be deducted by this pricelist on the product."),
         'amount_max': fields.float('Max. Invoice Price',
             help="Keep empty if this contract is not limited to a total fixed price."),
         'amount_invoiced': fields.function(_invoiced_calc, string='Invoiced Amount',
@@ -95,25 +95,25 @@ class account_analytic_account(osv.osv):
     def set_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
         message = _("Contract has been <b>cancelled</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'open'}, context=context)
         message = _("Contract has been <b>opened</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state':'pending'}, context=context)
         message = _("Contract has been set as <b>pending</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
 account_analytic_account()
@@ -124,6 +124,25 @@ class account_analytic_line(osv.osv):
     _columns = {
         'invoice_id': fields.many2one('account.invoice', 'Invoice', ondelete="set null"),
         'to_invoice': fields.many2one('hr_timesheet_invoice.factor', 'Type of Invoicing', help="It allows to set the discount while making invoice"),
+    }
+
+    def _default_journal(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        return employee.journal_id and employee.journal_id.id or False
+
+    def _default_general_account(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee.product_id and employee.product_id.property_account_income:
+            return employee.product_id.property_account_income.id
+        return False
+
+    _defaults = {
+        'journal_id' : _default_journal,
+        'general_account_id' : _default_general_account,
     }
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -138,7 +157,7 @@ class account_analytic_line(osv.osv):
         if ( not vals.has_key('invoice_id')) or vals['invoice_id' ] == False:
             for line in self.browse(cr, uid, select):
                 if line.invoice_id:
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                         _('You cannot modify an invoiced analytic line!'))
         return True
 

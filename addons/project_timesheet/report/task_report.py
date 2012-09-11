@@ -29,22 +29,8 @@ class report_timesheet_task_user(osv.osv):
     _auto = False
     _order = "name"
 
-    def _get_task_hours(self, cr, uid, ids, name,args,context):
-        result = {}
-        for record in self.browse(cr, uid, ids,context):
-            last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
-            task_obj = self.pool.get('project.task.work')
-            task_ids = task_obj.search(cr, uid, [('user_id','=',record.user_id.id),('date','>=',record.name),('date','<=',last_date.strftime('%Y-%m-%d'))])
-            tsk_hrs = task_obj.read(cr, uid, task_ids, ['hours','date','user_id'])
-            total = 0.0
-            for hrs in tsk_hrs:
-                total += hrs['hours']
-            result[record.id] = total
-        return result
-
     def get_hrs_timesheet(self, cr, uid, ids, name,args,context):
         result = {}
-        sum = 0.0
         for record in self.browse(cr, uid, ids, context):
             last_date = datetime.strptime(record.name, '%Y-%m-%d') + relativedelta(months=1) - relativedelta(days=1)
             obj = self.pool.get('hr_timesheet_sheet.sheet.day')
@@ -63,7 +49,7 @@ class report_timesheet_task_user(osv.osv):
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id': fields.many2one('res.users', 'User',readonly=True),
         'timesheet_hrs': fields.function(get_hrs_timesheet, string="Timesheet Hours"),
-        'task_hrs': fields.function(_get_task_hours, string="Task Hours"),
+        'task_hrs' : fields.float('Task Hours'),
     }
 
     def init(self, cr):
@@ -74,7 +60,9 @@ class report_timesheet_task_user(osv.osv):
                months.name as name,
                r.id as user_id,
                to_char(to_date(months.name, 'YYYY/MM/DD'),'YYYY') as year,
-               to_char(to_date(months.name, 'YYYY/MM/DD'),'MM') as month
+               to_char(to_date(months.name, 'YYYY/MM/DD'),'MM') as month,
+               (select sum(hours) from project_task_work where user_id = r.id and date between to_date(months.name, 'YYYY/MM/DD') and (to_date(months.name, 'YYYY/MM/DD') + interval '1 month' -
+            interval '1 day') ) as task_hrs
         from res_users r,
                 (select to_char(p.date,'YYYY-MM-01') as name,
             to_char(p.date,'MM') as m_id

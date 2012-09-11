@@ -4,7 +4,6 @@
             <field name="name">ir.actions.report.xml.inherit</field>
             <field name="model">ir.actions.report.xml</field>
             <field name="inherit_id" ref="base.act_report_xml_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//page[@string='Security']" position="before" >
                     <page string="Webkit" attrs="{'invisible':[('report_type','!=','webkit')]}">

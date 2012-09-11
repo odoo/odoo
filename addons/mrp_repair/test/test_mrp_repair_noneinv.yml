@@ -1,24 +1,24 @@
 -
-  In order to test "mrp_repair" module, I start from confirm it, and start repair.
+  In order to test "mrp_repair" module, I start with confirm state, and start repair.
 -
-  I Confirm Repair order for Invoice Type 'None'.
+  I confirm Repair order for Invoice Method 'No Invoice'.
 -
   !workflow {model: mrp.repair, action: repair_confirm, ref: mrp_repair_rmrp1}
 -
-  I start the repairing  process by click on "Start Repair" Button For Invoice Type None.
+  I start the repairing  process by clicking on "Start Repair" button for Invoice Method 'No Invoice'.
 -
   !workflow {model: mrp.repair, action: repair_ready, ref: mrp_repair_rmrp1}
 -
-  I check that state is "Under Repair".
+  I check its state which is in "Under Repair".
 -
   !assert {model: mrp.repair, id: mrp_repair_rmrp1}:
       - state == 'under_repair'
 -
-  Repairing Process for product is Done and I End Repair process by click on "End Repair" button.
+  Repairing process for product is in Done state and I end this process by clicking on "End Repair" button.
 -
   !workflow {model: mrp.repair, action: action_repair_end, ref: mrp_repair_rmrp1}
 -
-  I define invoiced none option in this Repair order.
+  I define Invoice Method 'No Invoice' option in this repair order.
   So, I check that Invoice should not be created for this repair order.
 -
   !python {model: mrp.repair}: |
