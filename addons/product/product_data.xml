@@ -4,7 +4,7 @@
         <!--
     Resource: product.uom.categ
     -->
-        <record id="cat0" model="product.category">
+        <record id="product_category_all" model="product.category">
             <field name="name">All products</field>
         </record>
 
@@ -20,7 +20,9 @@
         <record id="uom_categ_length" model="product.uom.categ">
             <field name="name">Length / Distance</field>
         </record>
-
+        <record id="product_uom_categ_vol" model="product.uom.categ">
+            <field name="name">Volume</field>
+        </record>
 
         <!--
             Resource: product.uom
@@ -30,6 +32,12 @@
             <field name="name">Unit</field>
             <field name="factor" eval="1.0"/>
             <field name="rounding" eval="1.0"/>
+        </record>
+       <record id="product_uom_dozen" model="product.uom">
+            <field name="category_id" ref="product.product_uom_categ_unit"/>
+            <field name="name">Dozen</field>
+            <field name="factor" eval="0.083"/>
+            <field name="uom_type">bigger</field>
         </record>
         <record id="product_uom_kgm" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
@@ -42,13 +50,13 @@
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
         </record>
-        <record id="uom_hour" model="product.uom">
+        <record id="product_uom_hour" model="product.uom">
             <field name="name">Hour</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="8.0"/>
             <field name="uom_type">smaller</field>
         </record>
-        <record id="uom_day" model="product.uom">
+        <record id="product_uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="1.0"/>
@@ -77,6 +85,11 @@
             <field name="name">cm</field>
             <field name="factor" eval="100"/>
             <field name="uom_type">smaller</field>
+        </record>
+        <record id="product_uom_litre" model="product.uom">
+            <field name="name">Litre</field>
+            <field name="category_id" ref="product_uom_categ_vol"/>
+            <field name="factor">1.0</field>
         </record>
 
 
@@ -144,12 +157,12 @@ parameter) will see those record just disappear.
             <field eval="'product.pricelist,'+str(ref('list0'))" name="value"/>
         </record>
 
-        <record forcecreate="True" id="decimal_sale" model="decimal.precision">
-            <field name="name">Sale Price</field>
+        <record forcecreate="True" id="decimal_price" model="decimal.precision">
+            <field name="name">Product Price</field>
             <field name="digits">2</field>
         </record>
-        <record forcecreate="True" id="decimal_purchase" model="decimal.precision">
-            <field name="name">Purchase Price</field>
+        <record forcecreate="True" id="decimal_discount" model="decimal.precision">
+            <field name="name">Discount</field>
             <field name="digits">2</field>
         </record>
         <record forcecreate="True" id="decimal_account" model="decimal.precision">
@@ -172,13 +185,13 @@ parameter) will see those record just disappear.
         <!--
         Product
         -->
-        <record id="product_consultant" model="product.product">
+        <record id="product_product_consultant" model="product.product">
             <field name="list_price">75.0</field>
             <field name="standard_price">30.0</field>
-            <field name="uom_id" ref="product.uom_hour"/>
-            <field name="uom_po_id" ref="product.uom_hour"/>
-            <field name="name">Service on Timesheet</field>
-            <field name="categ_id" ref="product.cat0"/>
+            <field name="uom_id" ref="product.product_uom_hour"/>
+            <field name="uom_po_id" ref="product.product_uom_hour"/>
+            <field name="name">Service on Demand</field>
+            <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>
         </record>

@@ -46,8 +46,7 @@ class project_issue(base_stage, osv.osv):
     _name = "project.issue"
     _description = "Project Issue"
     _order = "priority, create_date desc"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
-    _mail_compose_message = True
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
 
     def _get_default_project_id(self, cr, uid, context=None):
         """ Gives default project by checking if present in the context """
@@ -88,14 +87,18 @@ class project_issue(base_stage, osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+            search_domain += ['|', ('project_ids', '=', project_id)]
+        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # perform search
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -219,7 +222,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': fields.many2one('crm.case.section', 'Sales Team', \
                         select=True, help='Sales team to which Case belongs to.\
                              Define Responsible user and Email account for mail gateway.'),
-        'partner_id': fields.many2one('res.partner', 'Partner', select=1),
+        'partner_id': fields.many2one('res.partner', 'Contact', select=1),
         'company_id': fields.many2one('res.company', 'Company'),
         'description': fields.text('Description'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
@@ -236,11 +239,11 @@ class project_issue(base_stage, osv.osv):
         'date_closed': fields.datetime('Closed', readonly=True,select=True),
         'date': fields.datetime('Date'),
         'channel_id': fields.many2one('crm.case.channel', 'Channel', help="Communication channel."),
-        'categ_id': fields.many2one('crm.case.categ', 'Category', domain="[('object_id.model', '=', 'crm.project.bug')]"),
+        'categ_ids': fields.many2many('project.category', string='Categories'),
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'version_id': fields.many2one('project.issue.version', 'Version'),
         'stage_id': fields.many2one ('project.task.type', 'Stage',
-                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'project_id':fields.many2one('project.project', 'Project'),
         'duration': fields.float('Duration'),
         'task_id': fields.many2one('project.task', 'Task', domain="[('project_id','=',project_id)]"),
@@ -256,7 +259,7 @@ class project_issue(base_stage, osv.osv):
         'inactivity_days': fields.function(_compute_day, string='Days since last action', \
                                 multi='compute_day', type="integer", help="Difference in days between last action and current date"),
         'color': fields.integer('Color Index'),
-        'user_email': fields.related('user_id', 'user_email', type='char', string='User Email', readonly=True),
+        'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
         'date_action_last': fields.datetime('Last Action', readonly=1),
         'date_action_next': fields.datetime('Next Action', readonly=1),
         'progress': fields.function(_hours_get, string='Progress (%)', multi='hours', group_operator="avg", help="Computed as: Time Spent / Total Time.",
@@ -267,9 +270,6 @@ class project_issue(base_stage, osv.osv):
             }),
     }
 
-    def on_change_project(self, cr, uid, ids, project_id, context=None):
-        return {}
-
     _defaults = {
         'active': 1,
         'partner_id': lambda s, cr, uid, c: s._get_default_partner(cr, uid, c),
@@ -279,7 +279,6 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
-        'categ_id' : lambda *a: False,
          }
 
     _group_by_full = {
@@ -304,11 +303,11 @@ class project_issue(base_stage, osv.osv):
     def convert_issue_task(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        
+
         case_obj = self.pool.get('project.issue')
         data_obj = self.pool.get('ir.model.data')
         task_obj = self.pool.get('project.task')
-        
+
         result = data_obj._get_id(cr, uid, 'project', 'view_task_search_form')
         res = data_obj.read(cr, uid, result, ['res_id'])
         id2 = data_obj._get_id(cr, uid, 'project', 'view_task_form2')
@@ -351,23 +350,6 @@ class project_issue(base_stage, osv.osv):
             'nodestroy': True
         }
 
-
-    def _convert(self, cr, uid, ids, xml_id, context=None):
-        data_obj = self.pool.get('ir.model.data')
-        id2 = data_obj._get_id(cr, uid, 'project_issue', xml_id)
-        categ_id = False
-        if id2:
-            categ_id = data_obj.browse(cr, uid, id2, context=context).res_id
-        if categ_id:
-            self.write(cr, uid, ids, {'categ_id': categ_id})
-        return True
-
-    def convert_to_feature(self, cr, uid, ids, context=None):
-        return self._convert(cr, uid, ids, 'feature_request_categ', context=context)
-
-    def convert_to_bug(self, cr, uid, ids, context=None):
-        return self._convert(cr, uid, ids, 'bug_categ', context=context)
-
     def copy(self, cr, uid, id, default=None, context=None):
         issue = self.read(cr, uid, id, ['name'], context=context)
         if not default:
@@ -376,7 +358,7 @@ class project_issue(base_stage, osv.osv):
         default['name'] = issue['name'] + _(' (copy)')
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
-    
+
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
@@ -385,7 +367,6 @@ class project_issue(base_stage, osv.osv):
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
-        result = {}
         if not task_id:
             return {'value':{}}
         task = self.pool.get('project.task').browse(cr, uid, task_id, context=context)
@@ -455,7 +436,7 @@ class project_issue(base_stage, osv.osv):
                 if case.task_id:
                     self.pool.get('project.task').write(cr, uid, [case.task_id.id], {'project_id': data['project_id'], 'user_id': False})
             else:
-                raise osv.except_osv(_('Warning !'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
+                raise osv.except_osv(_('Warning!'), _('You cannot escalate this issue.\nThe relevant Project has not configured the Escalation Project!'))
             self.case_set(cr, uid, ids, 'draft', data, context=context)
             self.case_escalate_send_note(cr, uid, [case.id], context=context)
         return True
@@ -463,7 +444,7 @@ class project_issue(base_stage, osv.osv):
     # -------------------------------------------------------
     # Mail gateway
     # -------------------------------------------------------
-    
+
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
         """ Overrides mail_thread message_new that is called by the mailgateway
             through message_process.
@@ -475,17 +456,16 @@ class project_issue(base_stage, osv.osv):
 
         custom_values.update({
             'name':  msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
             'user_id': False,
         })
         if  msg.get('priority'):
             custom_values['priority'] =  msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
 
         res_id = super(project_issue, self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
-        self.convert_to_bug(cr, uid, [res_id], context=context)
+        # self.convert_to_bug(cr, uid, [res_id], context=context)
         return res_id
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
@@ -498,61 +478,53 @@ class project_issue(base_stage, osv.osv):
         if update_vals is None: update_vals = {}
 
         # Update doc values according to the message
-        update_vals['description'] = msg.get('body_text', '')
+        update_vals['description'] = msg.get('body', '')
         if msg.get('priority'):
             update_vals['priority'] = msg.get('priority')
-        # Parse 'body_text' to find values to update
+        # Parse 'body' to find values to update
         maps = {
             'cost': 'planned_cost',
             'revenue': 'planned_revenue',
             'probability': 'probability',
         }
-        for line in msg.get('body_text', '').split('\n'):
+        for line in msg.get('body', '').split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower(), False):
                 key = maps.get(res.group(1).lower())
                 update_vals[key] = res.group(2).lower()
 
-        return super(project_issue, self).message_update(cr, uid, ids, update_vals=update_vals, context=context)
-    
+        return super(project_issue, self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
+
     # -------------------------------------------------------
     # OpenChatter methods and notifications
     # -------------------------------------------------------
-    
-    def message_get_subscribers(self, cr, uid, ids, context=None):
-        """ Override to add responsible user. """
-        user_ids = super(project_issue, self).message_get_subscribers(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.user_id and not obj.user_id.id in user_ids:
-                user_ids.append(obj.user_id.id)
-        return user_ids
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ Override of default prefix for notifications. """
         return 'Project issue'
 
     def convert_to_task_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>converted</b> in to task.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        message = _("Project issue <b>converted</b> to task.")
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        message = _("Project issue has been <b>created</b>.")
-        return self.message_append_note(cr, uid, ids, body=message, context=context)
+        message = _("Project issue <b>created</b>.")
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def case_escalate_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             if obj.project_id:
-                message = _("has been <b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
-                obj.message_append_note(body=message, context=context)
+                message = _("<b>escalated</b> to <em>'%s'</em>.") % (obj.project_id.name)
+                obj.message_post(body=message)
             else:
-                message = _("has been <b>escalated</b>.")
-                obj.message_append_note(body=message, context=context)
+                message = _("<b>escalated</b>.")
+                obj.message_post(body=message)
         return True
 
 project_issue()
@@ -560,6 +532,9 @@ project_issue()
 class project(osv.osv):
     _inherit = "project.project"
 
+    def _get_alias_models(self, cr, uid, context=None):
+        return [('project.task', "Tasks"), ("project.issue", "Issues")]
+        
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
@@ -569,7 +544,6 @@ class project(osv.osv):
 
     _columns = {
         'project_escalation_id' : fields.many2one('project.project','Project Escalation', help='If any issue is escalated from the current Project, it will be listed under the project selected here.', states={'close':[('readonly',True)], 'cancelled':[('readonly',True)]}),
-        'reply_to' : fields.char('Reply-To Email Address', size=256),
         'issue_count': fields.function(_issue_count, type='integer'),
     }
 
@@ -583,20 +557,35 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
+    
 project()
 
 class account_analytic_account(osv.osv):
     _inherit = 'account.analytic.account'
     _description = 'Analytic Account'
-    
+
     _columns = {
-        'use_issues' : fields.boolean('Issues Tracking', help="Check this field if this project manages issues"),
+        'use_issues' : fields.boolean('Issues', help="Check this field if this project manages issues"),
     }
-    
+
+    def on_change_template(self, cr, uid, ids, template_id, context=None):
+        res = super(account_analytic_account, self).on_change_template(cr, uid, ids, template_id, context=context)
+        if template_id and 'value' in res:
+            template = self.browse(cr, uid, template_id, context=context)
+            res['value']['use_issues'] = template.use_issues
+        return res
+
     def _trigger_project_creation(self, cr, uid, vals, context=None):
+        if context is None: context = {}
         res = super(account_analytic_account, self)._trigger_project_creation(cr, uid, vals, context=context)
-        return res or vals.get('use_issues')
+        return res or (vals.get('use_issues') and not 'project_creation_in_progress' in context)
 
 account_analytic_account()
+
+class project_project(osv.osv):
+    _inherit = 'project.project'
+    _defaults = {
+        'use_issues': True
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

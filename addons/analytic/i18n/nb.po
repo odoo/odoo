@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:56+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:34+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: analytic
 #: field:account.analytic.account,child_ids:0
 msgid "Child Accounts"
-msgstr ""
+msgstr "underordnede kontoer"
 
 #. module: analytic
 #: field:account.analytic.account,name:0
@@ -30,7 +30,7 @@ msgstr "Kontonavn"
 #. module: analytic
 #: help:account.analytic.line,unit_amount:0
 msgid "Specifies the amount of quantity to count."
-msgstr ""
+msgstr "Angir mengden avnkvantitet å telle."
 
 #. module: analytic
 #: field:account.analytic.account,state:0
@@ -40,7 +40,7 @@ msgstr "Status"
 #. module: analytic
 #: field:account.analytic.account,user_id:0
 msgid "Account Manager"
-msgstr ""
+msgstr "kontofører"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -70,11 +70,21 @@ msgid ""
 " If it is to be reviewed then the state is 'Pending'.\n"
 " When the project is completed the state is set to 'Done'."
 msgstr ""
+"Når en konto er opprettet sin i \"Kladd\" tilstand.\n"
+"* Hvis noen assosiert partner er der, kan det være i 'åpen' tilstand.\n"
+"* Hvis noen ventende balanse er det det kan være i 'Pending \".\n"
+"* Og til slutt når alle transaksjoner er over, kan det være i \"Lukk\" "
+"tilstand.\n"
+"* Prosjektet kan være enten hvis statenes mal \"og\" Running \".\n"
+"  Hvis det er malen så kan vi lage prosjekter basert på mal prosjekter. Hvis "
+"det i 'Running' tilstand er det en normal prosjekt.\n"
+"  Hvis det er å bli vurdert så staten \"Venter\".\n"
+"  Når prosjektet er fullført staten er satt til 'Ferdig'"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "New"
-msgstr ""
+msgstr "Ny"
 
 #. module: analytic
 #: field:account.analytic.account,type:0
@@ -84,12 +94,12 @@ msgstr "Kontotype"
 #. module: analytic
 #: selection:account.analytic.account,state:0
 msgid "Pending"
-msgstr ""
+msgstr "Venter"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_line
 msgid "Analytic Line"
-msgstr ""
+msgstr "Analytisk linje"
 
 #. module: analytic
 #: field:account.analytic.account,description:0
@@ -119,6 +129,12 @@ msgid ""
 "consolidation purposes of several companies charts with different "
 "currencies, for example."
 msgstr ""
+"Hvis du angir et selskap, har valutaen valgt å være det samme som det er "
+"valuta.\n"
+"Du kan fjerne selskap som tilhører, og dermed endre valutaen, bare på "
+"analytisk grunn av type 'view'. Dette kan være veldig nyttig for "
+"konsolideringsformål av flere selskaper diagrammer med ulike valutaer, for "
+"eksempel."
 
 #. module: analytic
 #: field:account.analytic.line,user_id:0
@@ -158,12 +174,12 @@ msgstr ""
 #. module: analytic
 #: field:account.analytic.account,child_complete_ids:0
 msgid "Account Hierarchy"
-msgstr ""
+msgstr "konto hierarkiet"
 
 #. module: analytic
 #: help:account.analytic.account,quantity_max:0
 msgid "Sets the higher limit of time to work on the contract."
-msgstr ""
+msgstr "Setter høyere grense av tid til å jobbe på kontrakten."
 
 #. module: analytic
 #: field:account.analytic.account,credit:0
@@ -183,7 +199,7 @@ msgstr "Kontakt"
 #. module: analytic
 #: field:account.analytic.account,code:0
 msgid "Code/Reference"
-msgstr ""
+msgstr "Kode/Referanse"
 
 #. module: analytic
 #: selection:account.analytic.account,state:0
@@ -194,7 +210,7 @@ msgstr "Annulert"
 #: code:addons/analytic/analytic.py:138
 #, python-format
 msgid "Error !"
-msgstr ""
+msgstr "Feil !"
 
 #. module: analytic
 #: field:account.analytic.account,balance:0
@@ -204,7 +220,7 @@ msgstr "Saldo"
 #. module: analytic
 #: constraint:account.analytic.account:0
 msgid "Error! You can not create recursive analytic accounts."
-msgstr ""
+msgstr "Feil! Du kan ikke opprette rekursive analytiske kontoer."
 
 #. module: analytic
 #: help:account.analytic.account,type:0
@@ -212,26 +228,28 @@ msgid ""
 "If you select the View Type, it means you won't allow to create journal "
 "entries using that account."
 msgstr ""
+"Hvis du velger View type, betyr det at du ikke vil tillate å lage "
+"bilagsregistreringer med denne kontoen."
 
 #. module: analytic
 #: field:account.analytic.account,date:0
 msgid "Date End"
-msgstr ""
+msgstr "Sluttdato"
 
 #. module: analytic
 #: field:account.analytic.account,quantity_max:0
 msgid "Maximum Time"
-msgstr ""
+msgstr "Max tid"
 
 #. module: analytic
 #: model:res.groups,name:analytic.group_analytic_accounting
 msgid "Analytic Accounting"
-msgstr ""
+msgstr "Analytisk bokføring"
 
 #. module: analytic
 #: field:account.analytic.account,complete_name:0
 msgid "Full Account Name"
-msgstr ""
+msgstr "Fullt kontonavn"
 
 #. module: analytic
 #: field:account.analytic.line,account_id:0
@@ -242,17 +260,17 @@ msgstr "Analytisk konto"
 #. module: analytic
 #: field:account.analytic.account,currency_id:0
 msgid "Currency"
-msgstr ""
+msgstr "Valuta"
 
 #. module: analytic
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "Du kan ikke opprette analytisk linje på visning konto."
 
 #. module: analytic
 #: selection:account.analytic.account,type:0
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #. module: analytic
 #: field:account.analytic.account,partner_id:0
@@ -272,7 +290,7 @@ msgstr "Åpen"
 #. module: analytic
 #: field:account.analytic.account,line_ids:0
 msgid "Analytic Entries"
-msgstr ""
+msgstr "Analytiske registreringer"
 
 #~ msgid "Draft"
 #~ msgstr "Utkast"

@@ -28,18 +28,20 @@
 This module allows users to perform segmentation within partners.
 =================================================================
 
-It uses the profiles criteria from the earlier segmentation module and improve it. Thanks to the new concept of questionnaire. You can now regroup questions into a questionnaire and directly use it on a partner.
+It uses the profiles criteria from the earlier segmentation module and improve it. 
+Thanks to the new concept of questionnaire. You can now regroup questions into a 
+questionnaire and directly use it on a partner.
 
-It also has been merged with the earlier CRM & SRM segmentation tool because they were overlapping.
+It also has been merged with the earlier CRM & SRM segmentation tool because they 
+were overlapping.
 
-    * Note: this module is not compatible with the module segmentation, since it's the same which has been renamed.
+    **Note:** this module is not compatible with the module segmentation, since it's the same which has been renamed.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'crm'],
-    'init_xml': [],
-    'update_xml': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
-    'demo_xml': ['crm_profiling_demo.xml'],
+    'data': ['security/ir.model.access.csv', 'wizard/open_questionnaire_view.xml', 'crm_profiling_view.xml'],
+    'demo': ['crm_profiling_demo.xml'],
     'test': [
         #'test/process/profiling.yml', #TODO:It's not debuging because problem to write data for open.questionnaire from partner section.
     ],

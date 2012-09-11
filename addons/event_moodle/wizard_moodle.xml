@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="create_moodle_config_view">
             <field name="name">moodle.config.wizard.form</field>
             <field name="model">event.moodle.config.wiz</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Moodle" version="7.0">
                     <header>
@@ -39,13 +38,9 @@
             <field name="target">new</field>
         </record>
 
-        <record id="marketing_cat" model="ir.actions.todo.category">
-            <field name="name">Marketing</field>
-        </record>
         <!-- register configuration wizard -->
         <record id="config_wizard_config_moodle" model="ir.actions.todo">
             <field name="action_id" ref="configure_moodle"/>
-            <field name="category_id" ref="marketing_cat" />
             <field name="type">automatic</field>
             <field name="name">Configuration of moodle</field>
         </record>

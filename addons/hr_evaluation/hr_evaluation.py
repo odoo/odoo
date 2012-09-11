@@ -156,7 +156,7 @@ class hr_evaluation(osv.osv):
             ('2','Meet expectations'),
             ('3','Exceeds expectations'),
             ('4','Significantly exceeds expectations'),
-        ], "Appreciation", help="This is the appreciation on that summarize the evaluation"),
+        ], "Appreciation", help="This is the appreciation on which the evaluation is summarized."),
         'survey_request_ids': fields.one2many('hr.evaluation.interview','evaluation_id','Appraisal Forms'),
         'plan_id': fields.many2one('hr_evaluation.plan', 'Plan', required=True),
         'state': fields.selection([
@@ -228,9 +228,13 @@ class hr_evaluation(osv.osv):
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
                             'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
                         sub = phase.email_subject
-                        dest = [child.work_email]
-                        if dest:
-                           mail_message.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, context=context)
+                        if child.work_email:
+                            vals = {'state': 'outgoing',
+                                    'subject': sub,
+                                    'body_html': '<pre>%s</pre>' % body,
+                                    'email_to': child.work_email,
+                                    'email_from': evaluation.employee_id.work_email}
+                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
@@ -240,7 +244,7 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for id in self.browse(cr, uid, ids, context=context):
             if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
-                raise osv.except_osv(_('Warning !'),_("You cannot change state, because some appraisal in waiting answer or draft state"))
+                raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
     def button_done(self,cr, uid, ids, context=None):
@@ -311,7 +315,7 @@ class hr_evaluation_interview(osv.osv):
             flag = False
             wating_id = 0
             if not id.evaluation_id.id:
-                raise osv.except_osv(_('Warning !'),_("You cannot start evaluation without Appraisal."))
+                raise osv.except_osv(_('Warning!'),_("You cannot start evaluation without Appraisal."))
             records = hr_eval_obj.browse(cr, uid, [id.evaluation_id.id], context=context)[0].survey_request_ids
             for child in records:
                 if child.state == "draft":

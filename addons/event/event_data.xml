@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="action_client_event_menu" model="ir.actions.client">
+            <field name="name">Open Event Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('event.event_main_menu')}"/>
+        </record>
+        <record id="todo_open_event_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_event_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Events Organisation application installed!</field>
+            <field name="body">From the top Events menu, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</field>
+        </record>
+
+    </data>
+</openerp>

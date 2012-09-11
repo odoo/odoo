@@ -54,7 +54,7 @@ class project_issue(osv.osv):
         result = {}
 
         if account and account.state == 'pending':
-            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is in pending !')}}
+            result = {'warning' : {'title' : _('Analytic Account'), 'message' : _('The Analytic Account is pending !')}}
             
         return result
 

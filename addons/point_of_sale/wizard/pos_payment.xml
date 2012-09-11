@@ -3,21 +3,20 @@
     <data>
 
         <record id="view_pos_payment" model="ir.ui.view">
-            <field name="name">Add payment :</field>
+            <field name="name">Pay Order</field>
             <field name="model">pos.make.payment</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Add payment :" version="7.0">
-                <header>
-                    <button name="check" string="Make Payment" type="object"  class="oe_highlight"/>
-                    or
-                    <button string="Cancel" class="oe_link" special="cancel" />
-                </header>
-                <group col="4">
-                    <field name="journal"/>
+            <form string="Pay Order" version="7.0">
+                <group>
+                    <field name="journal_id" />
                     <field name="amount" />
                     <field name="payment_name"/>
                 </group>
+                <footer>
+                    <button name="check" string="Make Payment" type="object" class="oe_highlight"/>
+                    or 
+                    <button icon="gtk-stop" special="cancel" string="Cancel" class="oe_link"/>
+                </footer>
             </form>
             </field>
         </record>

@@ -28,5 +28,17 @@
         <field name="padding">4</field>
     </record>
 
+    <record model="ir.sequence.type" id="seq_type_pos_session">
+        <field name="name">POS Session</field>
+        <field name="code">pos.session</field>
+    </record>
+
+    <record model="ir.sequence" id="seq_pos_session">
+        <field name="name">POS Session</field>
+        <field name="code">pos.session</field>
+        <field name="prefix">POS/%(day)s/(month)s/%(year)s/</field>
+        <field name="padding">4</field>
+    </record>
+
 </data>
 </openerp>

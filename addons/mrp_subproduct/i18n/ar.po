@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:49+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:28+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_id:0
@@ -33,16 +33,19 @@ msgid ""
 "You should install the mrp_subproduct module if you want to manage extra "
 "products on BoMs !"
 msgstr ""
+"يجب ان تكون كل كميات المنتج اكبر من 0.\n"
+"يجب انت تثبت نموذج المنتج الفرعي_لتخطيط مصدر التصنيع اذا كنت تريد ادارة "
+"المنتجات الزائده في التخطيط لمصدر التصنيع !"
 
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "sub products"
-msgstr ""
+msgstr "منتجات فرعية"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_production
 msgid "Manufacturing Order"
-msgstr ""
+msgstr "امر التصنيع"
 
 #. module: mrp_subproduct
 #: constraint:mrp.bom:0
@@ -52,22 +55,22 @@ msgstr ""
 #. module: mrp_subproduct
 #: view:mrp.bom:0
 msgid "Sub Products"
-msgstr ""
+msgstr "منتجات فرعية"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,subproduct_type:0
 msgid "Quantity Type"
-msgstr ""
+msgstr "نوع الكمية"
 
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_bom
 msgid "Bill of Material"
-msgstr ""
+msgstr "فاتورة المواد"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_qty:0
 msgid "Product Qty"
-msgstr ""
+msgstr "كمية المنتج"
 
 #. module: mrp_subproduct
 #: field:mrp.subproduct,product_uom:0
@@ -77,17 +80,17 @@ msgstr "وحدة قياس المنتج"
 #. module: mrp_subproduct
 #: field:mrp.subproduct,bom_id:0
 msgid "BoM"
-msgstr ""
+msgstr "فاتورة المواد"
 
 #. module: mrp_subproduct
 #: sql_constraint:mrp.production:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: mrp_subproduct
 #: field:mrp.bom,sub_products:0
 msgid "sub_products"
-msgstr ""
+msgstr "منتجات_فرعية"
 
 #. module: mrp_subproduct
 #: selection:mrp.subproduct,subproduct_type:0
@@ -97,12 +100,12 @@ msgstr "متغير"
 #. module: mrp_subproduct
 #: model:ir.model,name:mrp_subproduct.model_mrp_subproduct
 msgid "Sub Product"
-msgstr ""
+msgstr "منتج فرعي"
 
 #. module: mrp_subproduct
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "كمية الطلب لا تكون أقل أو مساوية للصفر!"
 
 #. module: mrp_subproduct
 #: help:mrp.subproduct,subproduct_type:0
@@ -120,3 +123,35 @@ msgstr ""
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
 msgstr ""
+
+#~ msgid ""
+#~ "MRP Sub Product - To produce several products from one production order"
+#~ msgstr ""
+#~ "المنتج الفرعي لتخطيط مورد التصنيع - لانتاج منتجات متعددة من امر الانتاج "
+#~ "الواحد"
+
+#~ msgid "Order quantity cannot be negative or zero !"
+#~ msgstr "لا يمكن انت تكون كمية الامر سلبية او صفر !"
+
+#~ msgid "Error ! You can not create recursive BoM."
+#~ msgstr "خطأ ! لا يمكنك انشاء فاتورة للمواد رجعية."
+
+#~ msgid ""
+#~ "\n"
+#~ "This module allows you to produce several products from one production "
+#~ "order.\n"
+#~ "You can configure sub-products in the bill of material.\n"
+#~ "Without this module:\n"
+#~ "    A + B + C -> D\n"
+#~ "With this module:\n"
+#~ "    A + B + C -> D + E\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "تسمح لك هذه الوحدة بانتاج منتجات متعددة من امر انتاج واحد.\n"
+#~ "يمكنك ضبط المنتجات الفرعية في فاتورة المواد.\n"
+#~ "بدون هذه الوحدة:\n"
+#~ "A + B + C -> D\n"
+#~ "وبهذه الوحدة:\n"
+#~ "A + B + C -> D + E\n"
+#~ "    "

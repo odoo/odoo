@@ -24,20 +24,21 @@
     'name': 'Portal Event',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
-This module adds event menu and features to your portal if event and portal are 
-installed.
+This module adds event menu and features to your portal if event and portal are installed.
+==========================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['event','portal'],
     'data': [
+        'event_view.xml',
         'security/portal_security.xml',
         'portal_event_view.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
+    'auto_install': True,
+    'category': 'Hidden',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
