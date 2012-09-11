@@ -1577,7 +1577,13 @@ class stock_move(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for line in self.browse(cr, uid, ids, context=context):
-            res.append((line.id, (line.picking_id.origin or '/')+ ' ' +(line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
+            name = line.location_id.name+' > '+line.location_dest_id.name
+            # optional prefixes
+            if line.product_id.code:
+                name = line.product_id.code + ': ' + name
+            if line.picking_id.origin:
+                name = line.picking_id.origin + '/ ' + name
+            res.append((line.id, name))
         return res
 
     def _check_tracking(self, cr, uid, ids, context=None):
