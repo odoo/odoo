@@ -685,8 +685,6 @@ class sale_advance_payment_inv(osv.osv_memory):
         sale_line_obj = self.pool.get('sale.order.line')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
-
-        assert wizard.advance_payment_method in ('fixed', 'percentage')
         inv_ids = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
             if sale.order_policy == 'postpaid':
