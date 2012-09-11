@@ -597,11 +597,6 @@ openerp.mail = function(session) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
-        destroy: function() {
-            if (this.thread) { this.thread.destroy(); }
-            this._super.apply(this, arguments);
-        },
-
         set_value: function() {
             var self = this;
             this._super.apply(this, arguments);
@@ -617,13 +612,11 @@ openerp.mail = function(session) {
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
-            if (this.thread) { this.thread.destroy(); }
             var thread = new mail.Thread(self, {
                 'context': this.options.context, 'domain': domain, 'message_ids': this.get_value(),
                 // display
                 'thread_level': this.options.thread_level, 'show_header_compose': true, 'show_delete': true, 'composer': true,
             });
-            this.thread = thread;
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
     });
@@ -664,11 +657,6 @@ openerp.mail = function(session) {
             var search_view_ready = this.load_search_view({}, false);
             var thread_displayed = this.message_display();
             return (search_view_ready && thread_displayed);
-        },
-
-        destroy: function () {
-            if (this.thread) this.thread.destroy();
-            this._super.apply(this, arguments);
         },
 
         /**
@@ -716,7 +704,7 @@ openerp.mail = function(session) {
         message_display: function () {
             var domain = this.options.domain.concat(this.search_results['domain']);
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-            $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
+            $(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
             var thread = new mail.Thread(this, {
                 'context': this.options.context, 'domain': domain,
                 // display options
@@ -725,8 +713,7 @@ openerp.mail = function(session) {
                 'show_hide': true, 'show_reply_by_email': true,
                 }
             );
-            thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
-            this.thread = thread;
+            return thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
         },
     });
 };
