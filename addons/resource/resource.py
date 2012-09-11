@@ -262,8 +262,8 @@ class resource_calendar_attendance(osv.osv):
         'name' : fields.char("Name", size=64, required=True),
         'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
         'date_from' : fields.date('Starting Date'),
-        'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from", select=True),
-        'hour_to' : fields.float("Work to", size=8, required=True, help="Working time will end at"),
+        'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
+        'hour_to' : fields.float("Work to", required=True),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
     
@@ -292,7 +292,7 @@ class resource_resource(osv.osv):
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
-        'time_efficiency' : fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
+        'time_efficiency' : fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."),
         'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
     _defaults = {

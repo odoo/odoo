@@ -14,18 +14,18 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:42+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:04+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,product_nb:0
 msgid "Product Nb."
-msgstr ""
+msgstr "Барааны №"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_today
 msgid "Sales by day"
-msgstr ""
+msgstr "Борлуулалт өдөрөөр"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
@@ -38,26 +38,31 @@ msgid ""
 "new payment methods directly from menu \"PoS Backend > Configuration > "
 "Payment Methods\"."
 msgstr ""
+"Борлуулалтын цэгүүдэд ямар төлбөрийн арга хэрэглэх боломжтой байхыг \"Санхүү "
+"> Тохиргоо > Санхүү бүртгэл > Журнал\" дахь банк болон кассыг дахин хэрэглэх "
+"замаар тодорхойлох ёстой. Журналыг сонгоод \"POS төлбөрийн арга\" талбарыг "
+"\"Борлуулалтын Цэг\" хавтаст тэмдэглэнэ. Түүнчлэн шинэ төлбөрийн аргыг \"POS "
+"ар тал > Тохиргоо > Төлбөрийн аргууд\" хэсэгт тодорхойлж болно."
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.pos.order:0
 msgid "Today"
-msgstr ""
+msgstr "Өнөөдөр"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.plain_water
 msgid "Plain Water"
-msgstr ""
+msgstr "Цэвэр Ус"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Year from Creation date of cash register"
-msgstr ""
+msgstr "Касс бүртгүүлсэн огнооны жил"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Post All Orders"
-msgstr ""
+msgstr "Бүх захиалгуудыг илгээх"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_2l_product_template
@@ -67,13 +72,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_out
 msgid "Pos Box Out"
-msgstr ""
+msgstr "POS хайрцаг гарах"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_cash_register_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_cash_register_all
 msgid "Register Analysis"
-msgstr ""
+msgstr "Бүртгэлийн Шинжилгээ"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_detail
@@ -85,7 +90,7 @@ msgstr "Борлуулалтын дэлгэрэнгүй"
 #: view:report.cash.register:0 field:report.cash.register,day:0
 #: view:report.pos.order:0 field:report.pos.order,day:0
 msgid "Day"
-msgstr ""
+msgstr "Өдөр"
 
 #. module: point_of_sale
 #: view:pos.make.payment:0
@@ -95,18 +100,18 @@ msgstr "Төлбөр нэмэх"
 #. module: point_of_sale
 #: field:pos.box.out,name:0
 msgid "Description / Reason"
-msgstr ""
+msgstr "Тайлбар / Шалтгаан"
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,product_name:0
 #: field:report.sales.by.margin.pos.month,product_name:0
 msgid "Product Name"
-msgstr ""
+msgstr "Барааны нэр"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Month from Creation date of cash register"
-msgstr ""
+msgstr "Касс бүртгүүлсэн огнооны сар"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.box.entries,amount:0
@@ -122,18 +127,20 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"Тохиргооны алдаа! Сонгосон валют нь анхны утга болох дансдад бас хуваалцсан "
+"байх хэрэгтэй"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.pos_category_action
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_category view:pos.category:0
 msgid "PoS Categories"
-msgstr ""
+msgstr "POS-н ангилал"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_out
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl2
 msgid "Take Money Out"
-msgstr ""
+msgstr "Мөнгийг гадагш авах"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -143,7 +150,7 @@ msgstr "НӨАТ"
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Origin"
-msgstr ""
+msgstr "Эх үүсвэр"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -153,7 +160,7 @@ msgstr "Татвар"
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Starting Date"
-msgstr ""
+msgstr "Эхлэл Огноо"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:46
@@ -162,6 +169,8 @@ msgid ""
 "You do not have any open cash register. You must create a payment method or "
 "open a cash register."
 msgstr ""
+"Танд нээлттэй бүртүүлсэн касс алга байна. Төлбөрийн арга үүсгэх эсвэл кассыг "
+"бүртгүүлэх хэрэгтэй."
 
 #. module: point_of_sale
 #: report:account.statement:0 field:report.pos.order,partner_id:0
@@ -176,7 +185,7 @@ msgstr "Өдрийн дүн"
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,average_price:0
 msgid "Average Price"
-msgstr ""
+msgstr "Дундаж үнэ"
 
 #. module: point_of_sale
 #: report:pos.lines:0
@@ -186,7 +195,7 @@ msgstr "Хөнг.(%)"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_open_config
 msgid "Cash Register Management"
-msgstr ""
+msgstr "Кассын бүртгэлийн менежмент"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_45g_product_template
@@ -196,7 +205,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Accounting Information"
-msgstr ""
+msgstr "Санхүүгийн мэдээлэл"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_2l_product_template
@@ -206,18 +215,18 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree_month
 msgid "Sales by month"
-msgstr ""
+msgstr "Борлуулалт сараар"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda_orange
 msgid "Orange"
-msgstr ""
+msgstr "Жүрж"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_today
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 msgid "Sales by User"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -227,12 +236,12 @@ msgstr "Хөнг.(%)"
 #. module: point_of_sale
 #: field:pos.box.entries,ref:0
 msgid "Ref"
-msgstr ""
+msgstr "Дугаар"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,price_total:0
 msgid "Total Price"
-msgstr ""
+msgstr "Нийт үнэ"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_brune_33cl_product_template
@@ -243,12 +252,12 @@ msgstr ""
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user
 #: report:pos.sales.user:0
 msgid "Sales Report"
-msgstr ""
+msgstr "Борлуулалтын тайлан"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beverage
 msgid "Beverages"
-msgstr ""
+msgstr "Ууш"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_50cl_product_template
@@ -258,24 +267,24 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "Dates"
-msgstr ""
+msgstr "Огноо"
 
 #. module: point_of_sale
 #: field:pos.category,parent_id:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Эцэг ангилал"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "["
-msgstr ""
+msgstr "["
 
 #. module: point_of_sale
 #: field:report.sales.by.margin.pos,total:0
 #: field:report.sales.by.margin.pos.month,total:0
 msgid "Margin"
-msgstr ""
+msgstr "Margin"
 
 #. module: point_of_sale
 #: field:pos.discount,discount:0 field:pos.order.line,discount:0
@@ -300,48 +309,48 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_user_pos_month
 msgid "Sales by User Monthly"
-msgstr ""
+msgstr "Борлуулалт Хэрэглчээр Сараар"
 
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "Today's Closed Cashbox"
-msgstr ""
+msgstr "Өнөөдрийн хаагдсан мөнгөний хайрцаг"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Day from Creation date of cash register"
-msgstr ""
+msgstr "Кассын бүртгэлийн огнооны өдөр"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale
 msgid "Daily Operations"
-msgstr ""
+msgstr "Өдөр тутамын ажиллагаа"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:285
 #, python-format
 msgid "Configuration Error !"
-msgstr ""
+msgstr "Тохиргооны алдаа !"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.sparkling_water
 msgid "Sparkling Water"
-msgstr ""
+msgstr "Газтай ус"
 
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Fill in this form if you put money in the cash register:"
-msgstr ""
+msgstr "Кассын бүртгэлд мөнгө хийж байгаа бол энэ маягтыг бөглөнө"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Search Cash Statements"
-msgstr ""
+msgstr "Кассын тооцоог хайх"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "August"
-msgstr ""
+msgstr "8-р сар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_lemon_33cl_product_template
@@ -351,12 +360,12 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "June"
-msgstr ""
+msgstr "6-р сар"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order line"
-msgstr ""
+msgstr "POS захиалгын мөр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_50cl_product_template
@@ -366,7 +375,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.category,child_id:0
 msgid "Children Categories"
-msgstr ""
+msgstr "Дэд ангилалууд"
 
 #. module: point_of_sale
 #: field:pos.make.payment,payment_date:0
@@ -379,16 +388,18 @@ msgid ""
 "If you want to sell this product through the point of sale, select the "
 "category it belongs to."
 msgstr ""
+"Хэрэв та энэ барааг борлуулалтын цэгээр борлуулахыг хүсч байгаа бол "
+"харъяалагдах ангилалыг нь сонгоно уу."
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Closing Date"
-msgstr ""
+msgstr "Хаалтын огноо"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "October"
-msgstr ""
+msgstr "10-р сар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_1l_product_template
@@ -415,18 +426,18 @@ msgstr "Тоо ширхэг"
 #. module: point_of_sale
 #: field:pos.order.line,name:0
 msgid "Line No"
-msgstr ""
+msgstr "Мөрийн №"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0
 msgid "Period"
-msgstr ""
+msgstr "Мөчлөг"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:49
 #, python-format
 msgid "No Cash Register Defined !"
-msgstr ""
+msgstr "Кассын бүртгэл тодорхойлогдоогүй байна !"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -436,39 +447,39 @@ msgstr "Цэвэр дүн"
 #. module: point_of_sale
 #: field:pos.make.payment,payment_name:0
 msgid "Payment Reference"
-msgstr ""
+msgstr "Төлбөрийн Сурвалж"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
 msgid "Mode of Payment"
-msgstr ""
+msgstr "Төлбөрийн горим"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_confirm
 msgid "Post POS Journal Entries"
-msgstr ""
+msgstr "POS-н журналын бичилтүүдийг илгээх"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:408
 #, python-format
 msgid "Customer Invoice"
-msgstr ""
+msgstr "Захиалагчийн нэхэмжлэл"
 
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Output Operation"
-msgstr ""
+msgstr "Гаргах ажиллагаа"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,total_discount:0
 msgid "Total Discount"
-msgstr ""
+msgstr "Нийт хөнгөлөлт"
 
 #. module: point_of_sale
 #: view:pos.details:0 view:pos.payment.report:0 view:pos.payment.report.user:0
 #: view:pos.sale.user:0
 msgid "Print Report"
-msgstr ""
+msgstr "Тайлан хэвлэх"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_bolognese_product_template
@@ -479,7 +490,7 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_entries.py:105
 #, python-format
 msgid "Please check that income account is set to %s"
-msgstr ""
+msgstr "Орлогын данс нь %s гэж тохируулагдсан эсэхийг шалгана уу"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pizza
@@ -491,12 +502,12 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_return.py:240
 #, python-format
 msgid "Add Product"
-msgstr ""
+msgstr "Бараа нэмэх"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_am:0
 msgid "Invoice Amount"
-msgstr ""
+msgstr "Нэхэмжлэх Дүн"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.coke
@@ -512,7 +523,7 @@ msgstr "Тел.:"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_confirm
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_pos_confirm
 msgid "Create Sale Entries"
-msgstr ""
+msgstr "Борлуулалтын Бичилтүүдийг Үүсгэх"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -527,12 +538,12 @@ msgstr "Төлбөр"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in current month"
-msgstr ""
+msgstr "Энэ сард үүсгэгдсэн бэлэн мөнгөний шинжилгээ"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "Төгсгөлийн баланс"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_50cl_product_template
@@ -547,7 +558,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Post Entries"
-msgstr ""
+msgstr "Бичилтүүдийг илгээх"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_1l_product_template
@@ -563,39 +574,39 @@ msgstr "Татварын Горим"
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Cash registers are already closed."
-msgstr ""
+msgstr "Кассын бүртгэл хэдийнээ хаагдсан байна."
 
 #. module: point_of_sale
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Алдаа: EAN код буруу"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_open_statement
 #: view:pos.open.statement:0
 msgid "Open Statements"
-msgstr ""
+msgstr "Нээлттэй Тооцоонууд"
 
 #. module: point_of_sale
 #: field:pos.details,date_end:0 field:pos.sale.user,date_end:0
 msgid "Date End"
-msgstr ""
+msgstr "Дуусах огноо"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current year"
-msgstr ""
+msgstr "Энэ жил үүсгэгдсэн POS захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_pos_form
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale view:pos.order:0
 msgid "PoS Orders"
-msgstr ""
+msgstr "PoS захиалгууд"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Sales total(Revenue)"
-msgstr ""
+msgstr "Борлуулалтын дүн(Орлого)"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
@@ -605,7 +616,7 @@ msgstr "Төлсөн дүн"
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_all_menu_all_register
 msgid "List of Cash Registers"
-msgstr ""
+msgstr "Кассын Бүртгэлүүдийн Жагсаалт"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.maes_50cl_product_template
@@ -620,18 +631,18 @@ msgstr "Кассын гүйлгээ"
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Not Invoiced"
-msgstr ""
+msgstr "Нэхэмжлэгдээгүй"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "March"
-msgstr ""
+msgstr "3-р сар"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_users_product_re
 #: report:pos.user.product:0
 msgid "User's Product"
-msgstr ""
+msgstr "Хэрэглэгчийн Бараа"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:641
@@ -640,6 +651,8 @@ msgid ""
 "You have to select a pricelist in the sale form !\n"
 "Please set one before choosing a product."
 msgstr ""
+"Борлуулалтын маягтад үнийн жагсаалтыг сонгох хэрэгтэй !\n"
+"Бараа сонгохоосоо өмнө нэгийг тааруулна уу."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_2l_product_template
@@ -654,7 +667,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_discount
 msgid "Add a Global Discount"
-msgstr ""
+msgstr "Нийтийн Хөнгөлөлтийг Нэмэх"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal_incl:0
@@ -680,13 +693,13 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.cash.register,balance_end_real:0
 msgid "Closing Balance"
-msgstr ""
+msgstr "Хаалтын үлдэгдэл"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.act_pos_open_statement
 #: model:ir.model,name:point_of_sale.model_pos_close_statement
 msgid "Close Statements"
-msgstr ""
+msgstr "Тооцоог Хаах"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_naturel_45g_product_template
@@ -696,18 +709,18 @@ msgstr ""
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange1_product_template
 msgid "Cash Out"
-msgstr ""
+msgstr "Гарах бэлэн мөнгө"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Starting Balance"
-msgstr ""
+msgstr "Эхлэлийн баланс"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_category
 #: field:product.product,pos_categ_id:0
 msgid "PoS Category"
-msgstr ""
+msgstr "PoS Ангилал"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_75cl_product_template
@@ -717,12 +730,12 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.payment.report.user:0
 msgid "Payment By User"
-msgstr ""
+msgstr "Төлбөр хэрэглэгчээр"
 
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,nbr:0
 msgid "# of Lines"
-msgstr ""
+msgstr "Мөрийн тоо"
 
 #. module: point_of_sale
 #: help:account.journal,check_dtls:0
@@ -730,12 +743,14 @@ msgid ""
 "This field authorize Validation of Cashbox without controlling the closing "
 "balance."
 msgstr ""
+"Энэ талбар нь хаалтын балансыг хяналгүйгээр мөнгөний хайрцагийг шалгах "
+"эрхийг олгодог."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_details
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_details
 msgid "Sale Details"
-msgstr ""
+msgstr "Борлуулалтын дэлгэрэнгүй"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.pils
@@ -745,7 +760,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:all.closed.cashbox.of.the.day:0
 msgid "St.Name"
-msgstr ""
+msgstr "Гудамжны Нэр"
 
 #. module: point_of_sale
 #: report:pos.details_summary:0
@@ -760,7 +775,7 @@ msgstr "Дэд дүнгүүдийн нийлбэр"
 #. module: point_of_sale
 #: field:pos.order,lines:0
 msgid "Order Lines"
-msgstr ""
+msgstr "Захиалгын мөрүүд"
 
 #. module: point_of_sale
 #: view:report.transaction.pos:0
@@ -780,7 +795,7 @@ msgstr "Үүсгэсэн огноо"
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_sales_user_today
 msgid "Today's Sales"
-msgstr ""
+msgstr "Өнөөдрийн борлуулалтууд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_300g_product_template
@@ -792,7 +807,7 @@ msgstr ""
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS "
-msgstr "ПОС "
+msgstr "POS "
 
 #. module: point_of_sale
 #: report:account.statement:0 report:pos.user.product:0
@@ -802,7 +817,7 @@ msgstr "Нийт :"
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "My Sales"
-msgstr ""
+msgstr "Миний борлуулалт"
 
 #. module: point_of_sale
 #: field:pos.order,pricelist_id:0
@@ -817,12 +832,12 @@ msgstr "Нэхэмжилсэн дүн"
 #. module: point_of_sale
 #: view:report.pos.order:0 field:report.pos.order,product_qty:0
 msgid "# of Qty"
-msgstr ""
+msgstr "Нийт тоо хэмжээ"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos_month
 msgid "Sales by margin monthly"
-msgstr ""
+msgstr "Борлуулалтын ашиг сараар"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:report.sales.by.margin.pos,date_order:0
@@ -830,7 +845,7 @@ msgstr ""
 #: field:report.sales.by.user.pos,date_order:0
 #: field:report.sales.by.user.pos.month,date_order:0
 msgid "Order Date"
-msgstr ""
+msgstr "Захиалгын Огноо"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.stella_33cl_product_template
@@ -840,7 +855,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created during this year"
-msgstr ""
+msgstr "Энэ жил үүсгэгдсэн кассын шинжилгээ"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -852,12 +867,12 @@ msgstr "Ноорог Нэхэмжлэл"
 msgid ""
 "The amount of the voucher must be the same amount as the one on the "
 "statement line"
-msgstr ""
+msgstr "Энэ ваучерийн дүн тооцооны мөр дэх тоо хэмжээтэй адил байх ёстой."
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Fiscal Position Remark :"
-msgstr ""
+msgstr "Санхүүгийн жилийн харгалзуулалтын тайлбар :"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_2l_product_template
@@ -867,17 +882,17 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "September"
-msgstr ""
+msgstr "9-р сар"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
 msgid "Opening Date"
-msgstr ""
+msgstr "Нээх өдөр"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Taxes :"
-msgstr ""
+msgstr "Татвар :"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_2l_product_template
@@ -892,7 +907,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.transaction.pos,disc:0
 msgid "Disc."
-msgstr ""
+msgstr "Хөнгөлөлт"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_kriek_37,5cl_product_template
@@ -912,12 +927,12 @@ msgstr "НӨАТ:"
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Order lines"
-msgstr ""
+msgstr "POS захиалгын мөрүүд"
 
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Receipt :"
-msgstr ""
+msgstr "Хүлээн авагч :"
 
 #. module: point_of_sale
 #: field:account.bank.statement.line,pos_statement_id:0
@@ -968,7 +983,7 @@ msgstr "Нийт хөнгөлөлт"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_box_entries
 msgid "Pos Box Entries"
-msgstr ""
+msgstr "Pos хайрцагийн бичилтүүд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.boon_framboise_37,5cl_product_template
@@ -978,7 +993,7 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "November"
-msgstr ""
+msgstr "11-р сар"
 
 #. module: point_of_sale
 #: field:pos.config.journal,code:0
@@ -1031,12 +1046,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:account.journal,check_dtls:0
 msgid "Control Balance Before Closing"
-msgstr ""
+msgstr "Хаалтын өмнөх хяналтын баланс"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_order_line
 msgid "Lines of Point of Sale"
-msgstr "ПОС мөрүүд"
+msgstr "Борлуулалтын цэгийн мөрүүд"
 
 #. module: point_of_sale
 #: view:pos.order:0 view:report.transaction.pos:0
@@ -1046,17 +1061,17 @@ msgstr "Бүгд дүн"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_all_tree
 msgid "Cash Registers"
-msgstr ""
+msgstr "Кассын бүртгэлүүд"
 
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Users"
-msgstr ""
+msgstr "Хэрэглэгчид"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.food
 msgid "Food"
-msgstr ""
+msgstr "Хүнс"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1076,7 +1091,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:account.journal,journal_user:0
 msgid "PoS Payment Method"
-msgstr ""
+msgstr "PoS төлбөрийн арга"
 
 #. module: point_of_sale
 #: help:product.product,expense_pdt:0
@@ -1084,11 +1099,13 @@ msgid ""
 "This is a product you can use to take cash from a statement for the point of "
 "sale backend, exemple: money lost, transfer to bank, etc."
 msgstr ""
+"Энэ бараа нь борлуулалтын цэгийн ар талын тооцооноос мөнгө авах бараа юм. "
+"Жишээлбэл: мөнгөний дутагдал, банкны шилжүүлэг, гэх мэт."
 
 #. module: point_of_sale
 #: field:report.cash.register,date:0
 msgid "Create Date"
-msgstr ""
+msgstr "Үүссэн огноо"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_33cl_product_template
@@ -1099,7 +1116,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "Unable to Delete !"
-msgstr ""
+msgstr "Устгах боломжгүй !"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_oven_150g_product_template
@@ -1109,14 +1126,14 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "Start Period"
-msgstr ""
+msgstr "Эхлэл мөчлөг"
 
 #. module: point_of_sale
 #: report:account.statement:0 field:pos.category,complete_name:0
 #: field:pos.category,name:0 report:pos.sales.user:0
 #: report:pos.sales.user.today:0
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_33cl_product_template
@@ -1130,6 +1147,7 @@ msgid ""
 "There is no receivable account defined to make payment for the partner: "
 "\"%s\" (id:%d)"
 msgstr ""
+"Харилцагчид төлбөр төлөх авлагын данс тодорхойлогдоогүй байна: \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.confirm:0
@@ -1137,6 +1155,8 @@ msgid ""
 "Generate all sale journal entries for non invoiced orders linked to a closed "
 "cash register or statement."
 msgstr ""
+"Хаагдсан кассын бүртгэл эсвэл тооцоотой холбогдсон нэхэмжлэгдээгүй "
+"захиалгуудын журналын бичилтүүдийг үүсгэх."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:293
@@ -1155,17 +1175,17 @@ msgstr "Алдаа!"
 #: report:pos.details:0 report:pos.lines:0 report:pos.payment.report.user:0
 #: report:pos.user.product:0
 msgid "]"
-msgstr ""
+msgstr "]"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement
 msgid "Bank Statement"
-msgstr ""
+msgstr "Банкны хуулга"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The name of the journal must be unique per company !"
-msgstr ""
+msgstr "Журналын нэр компанийн хэмжээнд үл давхцах байх ёстой !"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_light_naturel_170g_product_template
@@ -1184,7 +1204,7 @@ msgstr "Хэвлэсэн Огноо"
 #: code:addons/point_of_sale/point_of_sale.py:282
 #, python-format
 msgid "There is no receivable account defined to make payment"
-msgstr ""
+msgstr "Төлбөр хийх авлагын данс тодорхойлогдоогүй байна"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
@@ -1195,12 +1215,12 @@ msgstr ""
 #: help:pos.category,sequence:0
 msgid ""
 "Gives the sequence order when displaying a list of product categories."
-msgstr ""
+msgstr "Барааны харгалзах ангилалын хувьд эрэмбэ дарааллыг тодорхойлно."
 
 #. module: point_of_sale
 #: field:product.product,expense_pdt:0
 msgid "PoS Cash Output"
-msgstr ""
+msgstr "PoS мөнгө гарах"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.soda
@@ -1211,17 +1231,17 @@ msgstr ""
 #: view:account.bank.statement:0 view:pos.order:0 view:report.cash.register:0
 #: view:report.pos.order:0
 msgid "Group By..."
-msgstr ""
+msgstr "Бүлэглэх..."
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "POS Orders"
-msgstr "ПОС Ордерууд"
+msgstr "POS захиалгууд"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.all_closed_cashbox_of_the_day
 msgid "All Closed CashBox"
-msgstr ""
+msgstr "Бүх хаагдсан мөнгөний хайрцагууд"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:640
@@ -1232,7 +1252,7 @@ msgstr "Үнийн жагсаалт алга!"
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Update"
-msgstr ""
+msgstr "Шинэчлэх"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1242,12 +1262,12 @@ msgstr "Суурь"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.categ_others
 msgid "Others"
-msgstr ""
+msgstr "Бусад"
 
 #. module: point_of_sale
 #: view:product.product:0
 msgid "Point-of-Sale"
-msgstr ""
+msgstr "Борлуулалтын-Цэг"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_50cl_product_template
@@ -1279,7 +1299,7 @@ msgstr "Татвар"
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_day
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_order_line_form
 msgid "Sale line"
-msgstr ""
+msgstr "Борлуулалтын мөр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_naturel_oven_150g_product_template
@@ -1296,7 +1316,7 @@ msgstr ""
 #: model:ir.ui.menu,name:point_of_sale.menu_point_of_sale_product
 #: model:ir.ui.menu,name:point_of_sale.menu_pos_products
 msgid "Products"
-msgstr ""
+msgstr "Бараанууд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_4formaggi_product_template
@@ -1312,20 +1332,20 @@ msgstr ""
 #: report:pos.sales.user:0 report:pos.sales.user.today:0
 #: field:report.pos.order,date:0
 msgid "Date Order"
-msgstr ""
+msgstr "Захиалгын огноо"
 
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS"
-msgstr "ПОС"
+msgstr "POS"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_product_output
 #: model:ir.ui.menu,name:point_of_sale.products_for_output_operations
 msgid "Products 'Put Money In'"
-msgstr ""
+msgstr "'Мөнгө дотогш хийх' бараанууд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_bolognaise_250g_product_template
@@ -1335,7 +1355,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Extra Info"
-msgstr ""
+msgstr "Нэмэлт мэдээлэл"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
@@ -1345,13 +1365,13 @@ msgstr "Факс"
 #. module: point_of_sale
 #: field:pos.order,user_id:0
 msgid "Connected Salesman"
-msgstr ""
+msgstr "Холбогдсон борлуулагч"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_sale_all
 #: model:ir.ui.menu,name:point_of_sale.menu_point_ofsale_all
 msgid "All Sales Orders"
-msgstr ""
+msgstr "Бүх борлуулалтын захиалгууд"
 
 #. module: point_of_sale
 #: help:product.product,income_pdt:0
@@ -1359,6 +1379,7 @@ msgid ""
 "This is a product you can use to put cash into a statement for the point of "
 "sale backend."
 msgstr ""
+"Энэ бараан нь борлуулалтын цэгийн ар талын тооцоонд мөнгө хийх бараа юм."
 
 #. module: point_of_sale
 #: view:pos.receipt:0
@@ -1368,7 +1389,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.make.payment,journal:0
 msgid "Payment Mode"
-msgstr ""
+msgstr "Төлбөрийн горим"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_paprika_45g_product_template
@@ -1390,14 +1411,14 @@ msgstr "Тоо"
 #. module: point_of_sale
 #: view:report.cash.register:0 view:report.pos.order:0
 msgid "Month -1"
-msgstr ""
+msgstr "Сар-1"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_sale_user
 #: model:ir.model,name:point_of_sale.model_pos_sale_user
 #: view:pos.payment.report.user:0
 msgid "Sale by User"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.evian_1l_product_template
@@ -1407,22 +1428,22 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_open_statement
 msgid "Open Cash Registers"
-msgstr ""
+msgstr "Касс бүртгүүлэх"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.water
 msgid "Water"
-msgstr ""
+msgstr "Ус"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "state"
-msgstr ""
+msgstr "төлөв"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "July"
-msgstr ""
+msgstr "7-р сар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_poivre_sel_oven_150g_product_template
@@ -1442,7 +1463,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:report.pos.order,delay_validation:0
 msgid "Delay Validation"
-msgstr ""
+msgstr "Шалгалтыг азнах"
 
 #. module: point_of_sale
 #: field:pos.order,nb_print:0
@@ -1452,7 +1473,7 @@ msgstr "Хэвлэсэн тоо"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Payment"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Төлбөр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_50cl_product_template
@@ -1467,7 +1488,7 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.details_summary:0
 msgid "End Period"
-msgstr ""
+msgstr "Дуусах мөчлөг"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_light_lemon_33cl_product_template
@@ -1477,7 +1498,7 @@ msgstr ""
 #. module: point_of_sale
 #: field:account.journal,auto_cash:0
 msgid "Automatic Opening"
-msgstr ""
+msgstr "Автоматаар нээх"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lays_ketchup_250g_product_template
@@ -1492,64 +1513,64 @@ msgstr ""
 #. module: point_of_sale
 #: selection:report.pos.order,state:0
 msgid "Synchronized"
-msgstr ""
+msgstr "Ижилтгэсэн"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,month:0
 #: view:report.pos.order:0 field:report.pos.order,month:0
 msgid "Month"
-msgstr ""
+msgstr "Сар"
 
 #. module: point_of_sale
 #: report:account.statement:0
 msgid "Statement Name"
-msgstr ""
+msgstr "Тооцооны нэр"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Year of order date"
-msgstr ""
+msgstr "Захиалгын огнооны жил"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_new_bank_statement_tree
 #: field:pos.box.entries,journal_id:0 field:pos.box.out,journal_id:0
 msgid "Cash Register"
-msgstr ""
+msgstr "Кассын бүртгэл"
 
 #. module: point_of_sale
 #: view:pos.close.statement:0
 msgid "Yes"
-msgstr ""
+msgstr "Тийм"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_receipt
 msgid "Point of sale receipt"
-msgstr ""
+msgstr "Борлуулалтын цэгийн баримт"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_today
 msgid "Sales by User Daily margin"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр өдөр тутамын ашгаар"
 
 #. module: point_of_sale
 #: view:pos.open.statement:0
 msgid "Open Registers"
-msgstr ""
+msgstr "Бүртгүүлэх"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,journal_id:0
 msgid "Sales Journal"
-msgstr ""
+msgstr "Борлуулалтын журнал"
 
 #. module: point_of_sale
 #: field:report.cash.register,balance_start:0
 msgid "Opening Balance"
-msgstr ""
+msgstr "Нээлтийн үлдэгдэл"
 
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.pos.order,state:0
 msgid "Closed"
-msgstr ""
+msgstr "Хаагдсан"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.oetker_vegetale_product_template
@@ -1559,7 +1580,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created by today"
-msgstr ""
+msgstr "Өнөөдөр үүсгэгдсэн POS-н захиалга"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_2l_product_template
@@ -1574,7 +1595,7 @@ msgstr "Төлсөн"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_all_sales_lines
 msgid "All sales lines"
-msgstr ""
+msgstr "Бүх борлуулалтын мөрүүд"
 
 #. module: point_of_sale
 #: view:pos.order:0
@@ -1584,7 +1605,7 @@ msgstr "Хөнгөлөлт"
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created in last month"
-msgstr ""
+msgstr "Өнгөрсөн сард үүсгэгдсэн кассын шинжилгээ"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.beers
@@ -1598,21 +1619,24 @@ msgid ""
 "validation. He will also open all cash registers for which you have to "
 "control the ending belance before closing manually."
 msgstr ""
+"Шалгалтгүйгээр автоматаар хааж болох бүх бүртгэлийг OpenERP хаах болно. "
+"Гараар хаахаасаа өмнө хаалтын балансыг шалгах шаардлагатай бүртгэлүүдийг "
+"бүгдийг нээж үзэх хэрэгтэй."
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "Cash Analysis created by today"
-msgstr ""
+msgstr "Өнөөдөр үүсгэгдсэн кассын шинжилгээ"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Quotation"
-msgstr ""
+msgstr "Үнийн санал"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.product_product_putmoneyforchange0_product_template
 msgid "Cash In"
-msgstr ""
+msgstr "Мөнгө орох"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1629,17 +1653,17 @@ msgstr "Нийт:"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_margin_pos
 msgid "Sales by margin"
-msgstr ""
+msgstr "Борлуулалт ашгаар"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_config_journal
 msgid "Journal Configuration"
-msgstr ""
+msgstr "Журналын Тохиргоо"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Statement lines"
-msgstr ""
+msgstr "Тооцооны мөрүүд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.croky_paprika_45g_product_template
@@ -1649,7 +1673,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Reprint"
-msgstr ""
+msgstr "Дахин хэвлэх"
 
 #. module: point_of_sale
 #: help:pos.order,user_id:0
@@ -1657,11 +1681,13 @@ msgid ""
 "Person who uses the the cash register. It could be a reliever, a student or "
 "an interim employee."
 msgstr ""
+"Кассын бүртгэлийг хэрэглэж буй хүн. Энэ нь түр ажилтан, оюутан зэрэг байж "
+"болно."
 
 #. module: point_of_sale
 #: field:report.transaction.pos,invoice_id:0
 msgid "Nbr Invoice"
-msgstr ""
+msgstr "Нэхэмжлэхийн №"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1679,6 +1705,9 @@ msgid ""
 "payments. We suggest you to control the opening balance of each register, "
 "using their CashBox tab."
 msgstr ""
+"Систем кассын бүртгэлүүдийг бүгдийг нээх бөгөөд ингэснээр төлбөрүүдийг "
+"хөтлөж эхлэх боломжтой болно. Кассын бүртгэл бүрийн нээлтийн балансыг "
+"тэдгээрийн мөнгөний хайрцагийн хавтасыг ашиглан шалгахыг зөвлөе."
 
 #. module: point_of_sale
 #: report:pos.invoice:0 report:pos.lines:0 field:pos.order.line,price_unit:0
@@ -1705,7 +1734,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:account.bank.statement:0 selection:report.cash.register,state:0
 msgid "Open"
-msgstr ""
+msgstr "Нээх"
 
 #. module: point_of_sale
 #: field:pos.order,name:0 field:pos.order.line,order_id:0
@@ -1726,12 +1755,12 @@ msgstr ""
 #: field:report.sales.by.margin.pos,net_margin_per_qty:0
 #: field:report.sales.by.margin.pos.month,net_margin_per_qty:0
 msgid "Net margin per Qty"
-msgstr ""
+msgstr "Тоо хэмжээнд ногдох цэвэр ашиг"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_sales_by_user_pos_month
 msgid "Sales by user monthly"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр сараар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_et_fruit_50cl_product_template
@@ -1741,7 +1770,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.sales.by.margin.pos:0 view:report.sales.by.margin.pos.month:0
 msgid "Sales by User Margin"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр ашгаар"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_payment.py:59
@@ -1762,7 +1791,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_pos_order
 msgid "Point of Sale Orders Statistics"
-msgstr ""
+msgstr "Борлуулалтын цэгийн захиалгын статистик"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1784,7 +1813,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_lines_report
 msgid "Pos Lines"
-msgstr "ПОС мөрүүд"
+msgstr "POS мөрүүд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.grisette_cerise_25cl_product_template
@@ -1804,12 +1833,12 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root
 msgid "PoS Backend"
-msgstr ""
+msgstr "PoS Ар тал"
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
 msgid "Posted"
-msgstr ""
+msgstr "Илгээгдсэн"
 
 #. module: point_of_sale
 #: field:pos.order,date_order:0
@@ -1820,7 +1849,7 @@ msgstr "Ордерын Огноо"
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment_report_user
 #: model:ir.model,name:point_of_sale.model_pos_payment_report_user
 msgid "Sales lines by Users"
-msgstr ""
+msgstr "Борлуулалтын мөр хэрэглэгчээр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_2l_product_template
@@ -1830,44 +1859,44 @@ msgstr ""
 #. module: point_of_sale
 #: report:pos.details:0
 msgid "Order"
-msgstr ""
+msgstr "Захиалга"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:472
 #, python-format
 msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
+msgstr "Энэ бараанд орлогын данс тодорхойлогдоогүй байна: \"%s\" (id:%d)"
 
 #. module: point_of_sale
 #: view:pos.details:0
 msgid "POS Details"
-msgstr ""
+msgstr "POS дэлгэрэнгүй"
 
 #. module: point_of_sale
 #: field:pos.details,user_ids:0
 msgid "Salesmen"
-msgstr ""
+msgstr "Борлуулалтын ажилтан"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_report_cash_register
 #: view:report.cash.register:0
 msgid "Point of Sale Cash Register Analysis"
-msgstr ""
+msgstr "Борлуулалтын цэгийн кассын бүртгэлийн шинжилгээ"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Net Total :"
-msgstr ""
+msgstr "Цэвэр дүн :"
 
 #. module: point_of_sale
 #: model:res.groups,name:point_of_sale.group_pos_manager
 msgid "Manager"
-msgstr ""
+msgstr "Менежер"
 
 #. module: point_of_sale
 #: field:pos.details,date_start:0 field:pos.sale.user,date_start:0
 msgid "Date Start"
-msgstr ""
+msgstr "Эхлэх огноо"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -1883,12 +1912,12 @@ msgstr "Нийт"
 #. module: point_of_sale
 #: view:pos.sale.user:0
 msgid "Sale By User"
-msgstr ""
+msgstr "Борлуулалт хэрэглэгчээр"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_open_statement
 msgid "Open Cash Register"
-msgstr ""
+msgstr "Кассыг бүртгүүлэх"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.lindemans_pecheresse_37,5cl_product_template
@@ -1904,14 +1933,14 @@ msgstr ""
 #: report:account.statement:0
 #: model:ir.actions.report.xml,name:point_of_sale.account_statement
 msgid "Statement"
-msgstr ""
+msgstr "Тооцоо"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_payment_report
 #: model:ir.model,name:point_of_sale.model_pos_payment_report
 #: view:pos.payment.report:0
 msgid "Payment Report"
-msgstr ""
+msgstr "Төлбөрийн тайлан"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_orange_25cl_product_template
@@ -1921,7 +1950,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Journal Entries"
-msgstr ""
+msgstr "Журналын бичилтүүдийг үүсгэх"
 
 #. module: point_of_sale
 #: report:account.statement:0 report:all.closed.cashbox.of.the.day:0
@@ -1941,7 +1970,7 @@ msgstr "Нэхэмжилсэн Огноо"
 #. module: point_of_sale
 #: field:pos.box.entries,name:0
 msgid "Reason"
-msgstr ""
+msgstr "Шалтгаан"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_33cl_product_template
@@ -1952,7 +1981,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_product_input
 #: model:ir.ui.menu,name:point_of_sale.products_for_input_operations
 msgid "Products 'Take Money Out'"
-msgstr ""
+msgstr "'Мөнгө гадагш авах' бараанууд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chimay_bleu_33cl_product_template
@@ -1963,7 +1992,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:point_of_sale.action_account_journal_form
 #: model:ir.ui.menu,name:point_of_sale.menu_action_account_journal_form_open
 msgid "Payment Methods"
-msgstr ""
+msgstr "Төлбөрийн аргууд"
 
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.chips
@@ -1981,30 +2010,30 @@ msgstr ""
 #: code:addons/point_of_sale/wizard/pos_box_out.py:88
 #, python-format
 msgid "You have to open at least one cashbox"
-msgstr ""
+msgstr "Та дор хаяж нэг мөнгөний хайрцагийг нээх хэрэгтэй"
 
 #. module: point_of_sale
 #: model:ir.actions.report.xml,name:point_of_sale.pos_payment_report_user
 msgid "Today's Payment By User"
-msgstr ""
+msgstr "Өнөөдрийн төлбөр хэрэглэгчээр"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_box_entries
 #: model:ir.ui.menu,name:point_of_sale.menu_wizard_enter_jrnl
 msgid "Put Money In"
-msgstr ""
+msgstr "Мөнгө дотогш хийх"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Error!"
-msgstr ""
+msgstr "Алдаа!"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "No. Of Articles"
-msgstr ""
+msgstr "Бүтээлийн тоо"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.ijsboerke_vanille_2,5l_product_template
@@ -2014,12 +2043,12 @@ msgstr ""
 #. module: point_of_sale
 #: selection:pos.order,state:0 selection:report.pos.order,state:0
 msgid "Cancelled"
-msgstr ""
+msgstr "Цуцлагдсан"
 
 #. module: point_of_sale
 #: report:pos.user.product:0
 msgid "Ending Date"
-msgstr ""
+msgstr "Дуусах огноо"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.orangina_1,5l_product_template
@@ -2034,7 +2063,7 @@ msgstr "Түүвэр"
 #. module: point_of_sale
 #: model:pos.category,name:point_of_sale.ice_cream
 msgid "Ice Cream"
-msgstr ""
+msgstr "Зайрмаг"
 
 #. module: point_of_sale
 #: field:pos.order,shop_id:0 field:report.pos.order,shop_id:0
@@ -2044,7 +2073,7 @@ msgstr "Дэлгүүр"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
 msgid "Bank Statement Line"
-msgstr ""
+msgstr "Банкны хуулгын мөр"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.belle_vue_kriek_25cl_product_template
@@ -2060,7 +2089,7 @@ msgstr ""
 #: view:report.sales.by.user.pos:0 view:report.sales.by.user.pos.month:0
 #: view:report.transaction.pos:0
 msgid "POS Report"
-msgstr ""
+msgstr "POS тайлан"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_1,5l_product_template
@@ -2070,13 +2099,13 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_close_statement
 msgid "Close Cash Register"
-msgstr ""
+msgstr "Кассын бүртгэлийг хаах"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:65
 #, python-format
 msgid "In order to delete a sale, it must be new or cancelled."
-msgstr ""
+msgstr "Захиалгыг устгахын тулд энэ нь шинэ юмуу цуцлагдсан байх ёстой."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_regular_50cl_product_template
@@ -2086,27 +2115,27 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.confirm:0
 msgid "Generate Entries"
-msgstr ""
+msgstr "Бичилтүүдийг үүсгэх"
 
 #. module: point_of_sale
 #: field:pos.box.entries,product_id:0 field:pos.box.out,product_id:0
 msgid "Operation"
-msgstr ""
+msgstr "Ажиллагаа"
 
 #. module: point_of_sale
 #: field:pos.order,account_move:0
 msgid "Journal Entry"
-msgstr ""
+msgstr "Журналын бичилтүүд"
 
 #. module: point_of_sale
 #: selection:report.cash.register,state:0
 msgid "Confirmed"
-msgstr ""
+msgstr "Батлагдсан"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Cancelled Invoice"
-msgstr ""
+msgstr "Цуцлагдсан нэхэмжлэл"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -2119,6 +2148,8 @@ msgid ""
 "This field authorize the automatic creation of the cashbox, without control "
 "of the initial balance."
 msgstr ""
+"Энэ талбар нь эхлэлийн балансыг хяналтгүйгээр автоматаар мөнгөний хайрцаг "
+"нээх эрхийг олгодог."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_50cl_product_template
@@ -2139,18 +2170,19 @@ msgstr "Нийлүүлэгчийн Нэхэмжлэл"
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
 msgstr ""
+"Сонгосон Журнал болон Хугацааны муж нь ижил компанид харъяалагдах ёстой."
 
 #. module: point_of_sale
 #: view:pos.order:0 selection:pos.order,state:0
 #: selection:report.pos.order,state:0
 msgid "New"
-msgstr ""
+msgstr "Шинэ"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/point_of_sale.py:238
 #, python-format
 msgid "In order to set to draft a sale, it must be cancelled."
-msgstr ""
+msgstr "Борлуулалтыг ноороглохын тулд энэ нь цуцлагдсан байх хэрэгтэй."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.fanta_zero_orange_33cl_product_template
@@ -2160,7 +2192,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Day of order date"
-msgstr ""
+msgstr "Захиалгын огнооны өдөр"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_rep
@@ -2175,12 +2207,12 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.box.entries:0
 msgid "Put Money"
-msgstr ""
+msgstr "Мөнгө хийх"
 
 #. module: point_of_sale
 #: sql_constraint:account.journal:0
 msgid "The code of the journal must be unique per company !"
-msgstr ""
+msgstr "Журналын код компанийн хэмжээнд үл давтагдах байх ёстой !"
 
 #. module: point_of_sale
 #: model:ir.ui.menu,name:point_of_sale.menu_point_config_product
@@ -2201,27 +2233,27 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:253
 #, python-format
 msgid "Unable to cancel the picking."
-msgstr ""
+msgstr "Бэлтгэлтийг цуцлах боломжгүй."
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created during current month"
-msgstr ""
+msgstr "Энэ сард үүсгэгдсэн POS-н захиалга"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "POS ordered created last month"
-msgstr ""
+msgstr "Өнгөрсөн сарын POS захиалга"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_pos_invoice
 msgid "Invoices"
-msgstr ""
+msgstr "Нэхэмжлэл"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "December"
-msgstr ""
+msgstr "12-р сар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_1,5l_product_template
@@ -2232,7 +2264,7 @@ msgstr ""
 #: code:addons/point_of_sale/point_of_sale.py:329 view:pos.order:0
 #, python-format
 msgid "Return Products"
-msgstr ""
+msgstr "Бараанууд Буцаах"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.jupiler_33cl_product_template
@@ -2247,25 +2279,25 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Take Money"
-msgstr ""
+msgstr "Мөнгө авах"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_details
 msgid "Sales Details"
-msgstr ""
+msgstr "Борлуулалтын дэлгэрэнгүй"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_close_statement.py:50
 #, python-format
 msgid "Message"
-msgstr ""
+msgstr "Зурвас"
 
 #. module: point_of_sale
 #: view:account.journal:0 model:ir.model,name:point_of_sale.model_pos_order
 #: model:ir.ui.menu,name:point_of_sale.menu_point_root_touchscreen
 #: view:product.product:0
 msgid "Point of Sale"
-msgstr "ПОС"
+msgstr "Борлуулалтын цэг"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.payment.report.user,user_id:0
@@ -2283,7 +2315,7 @@ msgstr "Нэхэмжилсэн"
 #. module: point_of_sale
 #: view:pos.close.statement:0
 msgid "No"
-msgstr ""
+msgstr "Үгүй"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_gazeuse_50cl_product_template
@@ -2298,12 +2330,12 @@ msgstr ""
 #. module: point_of_sale
 #: field:pos.order.line,notice:0
 msgid "Discount Notice"
-msgstr ""
+msgstr "Хөнгөлөлтийн санамж"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Re-Print"
-msgstr ""
+msgstr "Дахин хэвлэх"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
@@ -2344,7 +2376,7 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Search Sales Order"
-msgstr ""
+msgstr "Борлуулалтын захиалга хайх"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,help:point_of_sale.action_account_journal_form
@@ -2352,6 +2384,8 @@ msgid ""
 "Payment methods are defined by accounting journals having the field Payment "
 "Method checked."
 msgstr ""
+"Төлбөрийн аргууд нь Төлбөрийн арга талбар нь тэмдэглэгдсэн санхүүгийн "
+"журналуудаар тодорхойлогддог."
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_trans_pos_tree
@@ -2367,17 +2401,17 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.receipt:0
 msgid "Print Receipt"
-msgstr ""
+msgstr "Баримт хэвлэх"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "January"
-msgstr ""
+msgstr "1-р сар"
 
 #. module: point_of_sale
 #: view:pos.order.line:0
 msgid "POS Orders lines"
-msgstr ""
+msgstr "POS захиалгуудын мөрүүд"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.chaudfontaine_petillante_33cl_product_template
@@ -2392,6 +2426,10 @@ msgid ""
 "contains detailed information about your products related to procurement "
 "logistics, sales price, product category, suppliers and so on."
 msgstr ""
+"Зардаг, худалдаж авдаг бүх бараагаа тодорхойлсон байх ёстой. Бараа гэдэг нь "
+"түүхий эд, хадгалах бараа, хангамжийн материал, үйлчилгээ зэрэг байна. "
+"Барааны форм нь барааны татан авч хангах, борлуулах үнэ, барааны ангилал, "
+"нийлүүлэгч гэх мэт олон тооны дэлгэрэнгүй мэдээллийг агуулдаг."
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.pepsi_max_2l_product_template
@@ -2436,17 +2474,17 @@ msgstr ""
 #: view:pos.close.statement:0
 #, python-format
 msgid "Close Cash Registers"
-msgstr ""
+msgstr "Кассын бүртгэлийг хаах"
 
 #. module: point_of_sale
 #: report:pos.details:0 report:pos.payment.report.user:0
 msgid "Disc(%)"
-msgstr ""
+msgstr "Хөнгөлөлт(%)"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "General Information"
-msgstr ""
+msgstr "Ерөнхий мэдээлэл"
 
 #. #-#-#-#-#  point_of_sale.pot (OpenERP Server 6.1rc1)  #-#-#-#-#
 #. module: point_of_sale
@@ -2466,12 +2504,12 @@ msgstr "Ордерууд"
 #. module: point_of_sale
 #: view:account.journal:0
 msgid "Extended Configuration"
-msgstr ""
+msgstr "Өргөтгөсөн Тохируулга"
 
 #. module: point_of_sale
 #: field:pos.order.line,price_subtotal:0
 msgid "Subtotal w/o Tax"
-msgstr ""
+msgstr "Дэд дүн w/o татвар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.spa_50cl_product_template
@@ -2486,28 +2524,28 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_payment
 msgid "Pyament Report"
-msgstr ""
+msgstr "Төлбөрийн Тайлан"
 
 #. module: point_of_sale
 #: field:report.transaction.pos,jl_id:0
 msgid "Cash Journals"
-msgstr ""
+msgstr "Бэлэн мөнгөний журналууд"
 
 #. module: point_of_sale
 #: report:pos.sales.user.today:0
 msgid "Today's Sales By User"
-msgstr ""
+msgstr "Өнөөдрийн борлуулалт хэрэглэгчээр"
 
 #. module: point_of_sale
 #: report:pos.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "Захиалагчийн код"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_box_out.py:86
 #, python-format
 msgid "please check that account is set to %s"
-msgstr ""
+msgstr "Данс %s гэж тохируулагдсан болохыг шалга"
 
 #. module: point_of_sale
 #: field:pos.config.journal,name:0 report:pos.invoice:0 report:pos.lines:0
@@ -2517,22 +2555,22 @@ msgstr "Тайлбар"
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "May"
-msgstr ""
+msgstr "5-р сар"
 
 #. module: point_of_sale
 #: report:pos.lines:0
 msgid "Sales lines"
-msgstr ""
+msgstr "Борлуулалтын мөрүүд"
 
 #. module: point_of_sale
 #: view:pos.order:0
 msgid "Yesterday"
-msgstr ""
+msgstr "Өчигдөр"
 
 #. module: point_of_sale
 #: field:pos.order,note:0
 msgid "Internal Notes"
-msgstr ""
+msgstr "Дотоод тэмдэглэл"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.coca_zero_decaf_33cl_product_template
@@ -2542,34 +2580,34 @@ msgstr ""
 #. module: point_of_sale
 #: view:pos.box.out:0
 msgid "Describe why you take money from the cash register:"
-msgstr ""
+msgstr "Энэ кассын бүртгэлээс ямар шалтгаанаар мөнгө авч байгаагаа тайлбарла"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_pos_order_all
 #: model:ir.ui.menu,name:point_of_sale.menu_report_pos_order_all
 #: view:report.pos.order:0
 msgid "Point of Sale Analysis"
-msgstr ""
+msgstr "Борлуулалтын Цэгийн Шинжилгээ"
 
 #. module: point_of_sale
 #: view:pos.order:0 field:pos.order,partner_id:0 view:report.pos.order:0
 msgid "Customer"
-msgstr ""
+msgstr "Захиалагч"
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "February"
-msgstr ""
+msgstr "2-р сар"
 
 #. module: point_of_sale
 #: view:report.cash.register:0
 msgid "    Today    "
-msgstr ""
+msgstr "    Өнөөдөр    "
 
 #. module: point_of_sale
 #: selection:report.cash.register,month:0 selection:report.pos.order,month:0
 msgid "April"
-msgstr ""
+msgstr "4-р сар"
 
 #. module: point_of_sale
 #: field:pos.order,statement_ids:0
@@ -2584,7 +2622,7 @@ msgstr "Нийлүүлэгчийн Буцаалт"
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_report_sales_by_margin_pos_month
 msgid "Sales by User Monthly margin"
-msgstr ""
+msgstr "Борлуулал хэрэглчээр сарын ашгаар"
 
 #. module: point_of_sale
 #: model:product.template,name:point_of_sale.leffe_9_33cl_product_template
@@ -2597,95 +2635,97 @@ msgid ""
 "Check this box if this journal define a payment method that can be used in "
 "point of sales."
 msgstr ""
+"Энэ журнал нь борлуулалтын цэгийн төлбөрийн аргыг тодорхойлох бол энэ "
+"талбарыг тэмдэглэ"
 
 #. module: point_of_sale
 #: field:pos.category,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Дараалал"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/wizard/pos_return.py:316 view:pos.make.payment:0
 #, python-format
 msgid "Make Payment"
-msgstr ""
+msgstr "Төлбөр Хийх"
 
 #. module: point_of_sale
 #: constraint:pos.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Алдаа ! Тойрог хамааралтай ангилал үүсгэх боломжгүй."
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_sales_user_today
 msgid "Sales User Today"
-msgstr ""
+msgstr "Өнөөдрийн Борлуулалт Хэрэглэгчээр"
 
 #. module: point_of_sale
 #: view:report.pos.order:0
 msgid "Month of order date"
-msgstr ""
+msgstr "Захиалгын огнооны сар"
 
 #. module: point_of_sale
 #: field:product.product,income_pdt:0
 msgid "PoS Cash Input"
-msgstr ""
+msgstr "PoS бэлэн мөнгө орлого"
 
 #. module: point_of_sale
 #: view:report.cash.register:0 field:report.cash.register,year:0
 #: view:report.pos.order:0 field:report.pos.order,year:0
 msgid "Year"
-msgstr ""
+msgstr "Жил"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:31
 msgid "Disc (%)"
-msgstr ""
+msgstr "Хөнгөлөлт (%)"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:41
 msgid "Subtotal:"
-msgstr ""
+msgstr "Дэд дүн:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:45
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:268
 msgid "Tax:"
-msgstr ""
+msgstr "Татвар:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:64
 msgid "Disc"
-msgstr ""
+msgstr "Хөнгөлөлт"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:71
 msgid "+/-"
-msgstr ""
+msgstr "+/-"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:105
 msgid "Paid:"
-msgstr ""
+msgstr "Төлсөн:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:113
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:288
 msgid "Change:"
-msgstr ""
+msgstr "Өөрчлөлт:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:124
 msgid "Back to Products"
-msgstr ""
+msgstr "Бараануудруу буцах"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:127
 msgid "Validate"
-msgstr ""
+msgstr "Шалгах"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:140
 msgid "pending orders"
-msgstr ""
+msgstr "хүлээгдэж байгаа захиалгууд"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:145
@@ -2693,31 +2733,33 @@ msgid ""
 "There are pending operations that could not be saved into the database, are "
 "you sure you want to exit?"
 msgstr ""
+"Өгөгдлийн баазад хадгалагдаж чадахгүй хүлээгдэж байгаа үйлдлүүд байна, та "
+"гарахдаа итгэлтэй байна уу?"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:236
 msgid "Print"
-msgstr ""
+msgstr "Хэвлэх"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:238
 msgid "Next Order"
-msgstr ""
+msgstr "Дараагийн Захиалга"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:248
 msgid "Phone:"
-msgstr ""
+msgstr "Утас:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:249
 msgid "User:"
-msgstr ""
+msgstr "Хэрэглэгч:"
 
 #. openerp-web
 #: /home/odo/repositories/addons/trunk/point_of_sale/static/src/xml/pos.xml:250
 msgid "Shop:"
-msgstr ""
+msgstr "Дэлгүүр:"
 
 #~ msgid "Document"
 #~ msgstr "Баримт"
@@ -2950,3 +2992,12 @@ msgstr ""
 
 #~ msgid "POS Lines"
 #~ msgstr "Кассын бичилт"
+
+#~ msgid "Do you want to open cash registers ?"
+#~ msgstr "Кассыг бүртгүүлмээр байна уу ?"
+
+#~ msgid "Print the receipt of the sale"
+#~ msgstr "Борлуулалтын баримт хэвлэх"
+
+#~ msgid "Do you want to close your cash registers ?"
+#~ msgstr "Кассын бүртгэлийг хаахыг хүсч байна уу ?"

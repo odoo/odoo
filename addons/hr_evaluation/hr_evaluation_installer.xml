@@ -7,7 +7,16 @@
             <field name="res_model">hr_evaluation.plan</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">You can define appraisal plans (ex: first interview after 6 months, then every year). Then, each employee can be linked to an appraisal plan so that OpenERP can automatically generate interview requests to managers and/or subordinates.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to define a new appraisal plan.
+              </p><p>
+                You can define appraisal plans (ex: first interview after 6
+                months, then every year). Then, each employee can be linked to
+                an appraisal plan so that OpenERP can automatically generate
+                interview requests to managers and/or subordinates.
+              </p>
+            </field>
         </record>
 
     </data>

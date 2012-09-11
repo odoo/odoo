@@ -5,7 +5,6 @@
     <record id="view_applicants_status_tree" model="ir.ui.view">
         <field name="name">applicants.status.tree</field>
         <field name="model">hr.applicant</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state in ('open','pending','done','cancel');" string="Applicants Status">
                 <field name="create_date"/>
@@ -31,7 +30,6 @@
         <field name="name">board.hr.applicants.status.form</field>
         <field name="model">board.board</field>
         <field name="inherit_id" ref="hr.board_hr_form"/>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <xpath expr="/form/board/column[1]" position="inside">
                 <action name="%(action_applicants_status)d" string="Applicants To be Processed"/>

@@ -3,9 +3,8 @@
 -
   !record {model: res.users, id: res_users_hrmanager0}:
     company_id: base.main_company
-    context_lang: en_US
-    login: hr
     name: HR Manager
+    login: hr
     password: hr
     groups_id:
       - base.group_hr_manager
@@ -13,7 +12,7 @@
   Create a product with type service used to specify employees designation
 -
   !record {model: product.product, id: product_product_hrmanger0}:
-    categ_id: product.product_category_services
+    categ_id: product.product_category_6
     cost_method: standard
     mes_type: fixed
     name: HR Manger
@@ -21,8 +20,8 @@
     standard_price: 1.0
     supply_method: buy
     type: service
-    uom_id: product.uom_hour
-    uom_po_id: product.uom_hour
+    uom_id: product.product_uom_hour
+    uom_po_id: product.product_uom_hour
     volume: 0.0
     warranty: 0.0
     weight: 0.0

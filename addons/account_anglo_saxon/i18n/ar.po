@@ -14,13 +14,13 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:53+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:31+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account_anglo_saxon
 #: sql_constraint:purchase.order:0
 msgid "Order Reference must be unique per Company!"
-msgstr ""
+msgstr "مرجع الأمر يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: account_anglo_saxon
 #: view:product.category:0
@@ -35,17 +35,17 @@ msgstr "فئة المنتج"
 #. module: account_anglo_saxon
 #: sql_constraint:stock.picking:0
 msgid "Reference must be unique per Company!"
-msgstr ""
+msgstr "المرجع يجب أن يكون فريداً لكل شركة علي حدا!"
 
 #. module: account_anglo_saxon
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "خطأ ! لا يمكن إنشاء فئات متداخلة."
 
 #. module: account_anglo_saxon
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "خطأ في إتصال قاعدة البيانات"
 
 #. module: account_anglo_saxon
 #: constraint:product.template:0
@@ -89,7 +89,7 @@ msgstr "قائمة الالتقاط"
 #. module: account_anglo_saxon
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
 
 #. module: account_anglo_saxon
 #: help:product.category,property_account_creditor_price_difference_categ:0
@@ -113,3 +113,32 @@ msgstr "سوف يستخدم هذا الحساب لتفريق السعر بين �
 
 #~ msgid "Stock Accounting for Anglo Saxon countries"
 #~ msgstr "محاسبة الأسهم للدول الإنجليزية"
+
+#~ msgid ""
+#~ "This module will support the Anglo-Saxons accounting methodology by\n"
+#~ "    changing the accounting logic with stock transactions. The difference "
+#~ "between the Anglo-Saxon accounting countries\n"
+#~ "    and the Rhine or also called Continental accounting countries is the "
+#~ "moment of taking the Cost of Goods Sold versus Cost of Sales.\n"
+#~ "    Anglo-Saxons accounting does take the cost when sales invoice is "
+#~ "created, Continental accounting will take the cost at the moment the goods "
+#~ "are shipped.\n"
+#~ "    This module will add this functionality by using a interim account, to "
+#~ "store the value of shipped goods and will contra book this interim account\n"
+#~ "    when the invoice is created to transfer this amount to the debtor or "
+#~ "creditor account.\n"
+#~ "    Secondly, price differences between actual purchase price and fixed "
+#~ "product standard price are booked on a separate account"
+#~ msgstr ""
+#~ "وسوف تدعم هذه الوحدة منهجية المحاسبة الأنجلو ساكسون من قبل\n"
+#~ "تغيير منطق المحاسبة مع معاملات الأوراق المالية. الفرق بين البلدان المحاسبة "
+#~ "الأنجلوسكسونية\n"
+#~ "ونهر الراين أو كما تسمى دول المحاسبة القاري هي لحظة اتخاذ تكلفة السلع "
+#~ "المباعة مقابل تكلفة المبيعات.\n"
+#~ "يستغرق الأنغلو ساكسون للمحاسبة تكلفة عند إنشاء فاتورة مبيعات، والمحاسبة "
+#~ "القارية تستغرق تكلفة عند لحظة شحن السلع.\n"
+#~ "ستضيف هذه الوحدة هذه الوظيفة باستخدام حساب مؤقت، لتخزين قيمة البضاعة "
+#~ "المشحونة وسوف تحجز كونترا هذا الحساب مؤقتا\n"
+#~ "عندما يتم إنشاء فاتورة لنقل هذا المبلغ إلى حساب مدين أو دائن.\n"
+#~ "ثانيا، يتم حجز فروق الأسعار بين سعر الشراء الفعلي وثابت السعر القياسي المنتج "
+#~ "على حساب منفصل"

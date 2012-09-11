@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+    
+    <!-- Sales Tax -->
+    
+    <record id="sales_tax_public_main" model="account.tax.template">
+        <field name="name">Sale Tax-15%</field>
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.15</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="sales_tax_public" model="account.tax.template">
+        <field name="name">Sale Tax-12%</field>
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.12</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="sales_tax_public_4" model="account.tax.template">
+        <field name="name">Sale Tax-4%</field>
+        <field name="account_collected_id" ref="p24710"/>
+        <field name="account_paid_id" ref="p24710"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.04</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <!-- Purchase tax -->
+    
+    <record id="purchase_tax_public" model="account.tax.template">
+        <field name="name">Purchase Tax-15%</field>
+        <field name="account_collected_id" ref="p15400"/>
+        <field name="account_paid_id" ref="p15400"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.15</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="base_code_id" ref="vat_code_base_tax_purchase"/>
+        <field name="tax_code_id" ref="vat_code_payable"/>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_purchase"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <!-- -->
+    
+    <!-- VAT -->
+    
+    <record id="vat_public_main" model="account.tax.template">
+        <field name="name">VAT-5%(4% VAT+1% Add. Tax.)</field>
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.05</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <record id="vat_public_main_tax" model="account.tax.template">
+        <field name="name">VAT-15% (12.5% VAT + 2.5% Add. Tax.)</field>
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.15</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="vat_public_tax" model="account.tax.template">
+        <field name="name">VAT-8%</field>
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.08</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+        <record id="vat_public_tax_10" model="account.tax.template">
+        <field name="name">VAT-10%</field>
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">0.10</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <record id="vat_public_tax_12" model="account.tax.template">
+        <field name="name">VAT-12.5%</field>
+        <field name="account_collected_id" ref="p24720"/>
+        <field name="account_paid_id" ref="p24720"/> 
+        <field name="price_include" eval="0"/>
+        <field name="amount">12.5</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+
+    <!-- Service Tax -->
+    
+    <record id="service_public_main" model="account.tax.template">
+        <field name="name">Service Tax-12.30%</field>
+        <field name="account_collected_id" ref="p24740"/>
+        <field name="account_paid_id" ref="p24740"/> 
+        <field name="include_base_amount" eval="True"/>
+        <field name="amount">0.12</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    <record id="service_tax_parent" model="account.tax.template">
+        <field name="name">Service Tax-%2</field>
+        <field name="account_collected_id" ref="p24740"/>
+        <field name="account_paid_id" ref="p24740"/> 
+        <field name="include_base_amount" eval="True"/>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="amount">0.02</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="parent_id" ref="service_public_main"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="service_tax" model="account.tax.template">
+        <field name="name">Service Tax-%1</field>
+        <field name="amount">0.01</field>
+        <field name="account_collected_id" ref="p24740"/>
+        <field name="account_paid_id" ref="p24740"/> 
+        <field name="include_base_amount" eval="True"/>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">all</field>
+        <field name="parent_id" ref="service_public_main"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+<!-- Excise duty -->
+
+    <record id="exice_public_main" model="account.tax.template">
+        <field name="name">Excise Duty-10.30%</field>
+        <field name="account_collected_id" ref="p24730"/>
+        <field name="account_paid_id" ref="p24730"/>
+        <field name="include_base_amount" eval="True"/>
+        <field name="amount">0.10</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="child_depend" eval="0"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="exice_duty_parent" model="account.tax.template">
+        <field name="name">Excise Duty-2%</field>
+        <field name="amount">0.02</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_collected_id" ref="p24730"/>
+        <field name="account_paid_id" ref="p24730"/>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="parent_id" ref="exice_public_main"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    <record id="exice_duty" model="account.tax.template">
+        <field name="name">Excise Duty-1%</field>
+        <field name="amount">0.01</field>
+        <field name="type">percent</field>
+        <field name="type_tax_use">sale</field>
+        <field name="account_collected_id" ref="p24730"/>
+        <field name="account_paid_id" ref="p24730"/>
+        <field name="base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="base_sign">1</field>
+        <field name="tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="tax_sign">1</field>
+        <field name="ref_base_code_id" ref="vat_code_base_tax_sale"/>
+        <field name="ref_base_sign">1</field>
+        <field name="ref_tax_code_id" ref="vat_code_tax_rec"/>
+        <field name="ref_tax_sign">1</field>
+        <field name="parent_id" ref="exice_public_main"/>
+        <field name="chart_template_id" ref="indian_chart_template_public"/>
+    </record>
+    
+    </data>
+</openerp>

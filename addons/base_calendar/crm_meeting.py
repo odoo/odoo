@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+#  -*- coding: utf-8 -*-
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
@@ -43,40 +43,44 @@ class crm_meeting(base_state, osv.Model):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
+    _inherit = ["calendar.event", "mail.thread", 'ir.needaction_mixin']
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
         'date_open': fields.datetime('Confirmed', readonly=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
-        'email_from': fields.char('Email', size=128, states={'done': [('readonly', True)]},
-                        help="These people will receive email."),
+        'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id','partner_id',
+            string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed'), ('cancel', 'Cancelled'), ('done', 'Done')],
                     string='Status', size=16, readonly=True),
         # Meeting fields
-        'name': fields.char('Summary', size=128, required=True, states={'done': [('readonly', True)]}),
-        'categ_id': fields.many2one('crm.meeting.type', 'Meeting Type'),
+        'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
+        'categ_ids': fields.many2many('crm.meeting.type', 'meeting_category_rel',
+            'event_id', 'type_id', 'Tags'),
         'attendee_ids': fields.many2many('calendar.attendee', 'meeting_attendee_rel',\
                             'event_id', 'attendee_id', 'Attendees', states={'done': [('readonly', True)]}),
     }
     _defaults = {
-        'state': 'draft',
+        'state': 'open',
     }
 
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
 
+    # shows events of the day for this user
+    def needaction_domain_get(self, cr, uid, domain=[], context={}):
+        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
+
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Meeting'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>confirmed</b>."), context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>done</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
 
 

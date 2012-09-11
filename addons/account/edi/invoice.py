@@ -31,7 +31,6 @@ INVOICE_LINE_EDI_STRUCT = {
     'price_unit': True,
     'quantity': True,
     'discount': True,
-    'note': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,

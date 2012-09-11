@@ -1,14 +1,17 @@
 -
+  In order to test mrp_operations with OpenERP, I refer created production order of PC Assemble SC349
+  with routing - Manual Component's Assembly to test complete production process with respect of workcenter.
+-
   I compute the production order.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     order.action_compute(context=context)
 -
   I check planned date in workcenter lines of production order.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     for line in order.workcenter_lines:
         #TODO: to check start date of next line should be end of date of previous line.
         assert line.date_planned, "Planned Start date is not computed: %s" %(line)
@@ -17,7 +20,7 @@
 -
   I confirm the Production Order.
 -
-  !workflow {model: mrp.production, action: button_confirm, ref: mrp.mrp_production_shelf100cm}
+  !workflow {model: mrp.production, action: button_confirm, ref: mrp.mrp_production_1}
 -  
   I run scheduler.
 -
@@ -27,17 +30,17 @@
   I forcefully close internal shipment.
 -
   !python {model: mrp.production}: |
-    self.force_production(cr, uid, [ref("mrp.mrp_production_shelf100cm")])
+    self.force_production(cr, uid, [ref("mrp.mrp_production_1")])
 -
   I start production.
 -
-  !workflow {model: mrp.production, action: button_produce, ref: mrp.mrp_production_shelf100cm}
+  !workflow {model: mrp.production, action: button_produce, ref: mrp.mrp_production_1}
 - 
   Production start on first work center, so I start work operation on first work center.
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
 -
@@ -45,16 +48,15 @@
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_pause', cr)
-    wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
 -
   I resume first work operation.
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_resume', cr)
     
@@ -63,32 +65,32 @@
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_cancel', cr)
 -
-  I reset first work operation and start after resolve techninal fault of work center.
+  I reset first work operation and start after resolving techninal fault of work center.
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_draft', cr)
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_start_working', cr)
 -
-  Now Finished work of first work operation so I close that operation.
+  I close first work operation as this work center completed its process.
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'mrp.production.workcenter.line', order.workcenter_lines[0].id, 'button_done', cr)
 -
-  Now I close other operations after start one by one.
+  Now I close other operations one by one which are in start state.
 -
   !python {model: mrp.production}: |
     import netsvc
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     wf_service = netsvc.LocalService("workflow")
     for work_line in order.workcenter_lines[1:]:
         wf_service.trg_validate(uid, 'mrp.production.workcenter.line', work_line.id, 'button_start_working', cr)
@@ -98,8 +100,7 @@
   I check that the production order is now done.
 -
   !python {model: mrp.production}: |
-    order = self.browse(cr, uid, ref("mrp.mrp_production_shelf100cm"), context=context)
-    print order.state
+    order = self.browse(cr, uid, ref("mrp.mrp_production_1"), context=context)
     assert order.state == 'done', "Production should be closed after finished all operations."
 -
   I print a Barcode Report of Operation line.

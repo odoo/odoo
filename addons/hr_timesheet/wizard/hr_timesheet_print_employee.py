@@ -39,7 +39,7 @@ class analytical_timesheet_employee(osv.osv_memory):
         emp_obj = self.pool.get('hr.employee')
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', uid)], context=context)
         if not emp_id:
-            raise osv.except_osv(_("Warning"), _("No employee defined for this user"))
+            raise osv.except_osv(_("Warning!"), _("Please define employee for this user!"))
         return emp_id and emp_id[0] or False
 
     _defaults = {

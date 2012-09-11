@@ -138,7 +138,7 @@ class DomApi(DomApiGeneral):
         if self.styles_dom.getElementsByTagName("style:page-master").__len__()<>0:
             self.page_master = self.styles_dom.getElementsByTagName("style:page-master")[0]
         if  self.styles_dom.getElementsByTagName("style:page-layout").__len__()<>0 :
-			self.page_master = self.styles_dom.getElementsByTagName("style:page-layout")[0]        
+			self.page_master = self.styles_dom.getElementsByTagName("style:page-layout")[0]
         self.document = self.content_dom.getElementsByTagName("office:document-content")[0]
 
     def buildStylePropertiesDict(self):
@@ -307,16 +307,16 @@ def sxw2rml(sxw_file, xsl, output='.', save_pict=False):
 
     tool = PyOpenOffice(output, save_pict = save_pict)
     res = tool.unpackNormalize(sxw_file)
-    
+
     f = StringIO(xsl)
     styledoc = etree.parse(f)
     style = etree.XSLT(styledoc)
-    
+
     f = StringIO(res)
     doc = etree.parse(f)
     result = style(doc)
     root = etree.XPathEvaluator(result)("/document/stylesheet")
-    
+
     if root:
         root=root[0]
         images = etree.Element("images")
@@ -341,7 +341,7 @@ if __name__ == "__main__":
     parser.add_option("-o", "--output", dest="output", default='.', help="directory of image output")
     (opt, args) = parser.parse_args()
     if len(args) != 1:
-        parser.error("incorrect number of arguments")
+        parser.error("Incorrect number of arguments.")
 
     import sys
 

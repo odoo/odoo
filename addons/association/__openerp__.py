@@ -28,12 +28,13 @@
 This module is to configure modules related to an association.
 ==============================================================
 
-It installs the profile for associations to manage events, registrations, memberships, membership products (schemes), etc.
+It installs the profile for associations to manage events, registrations, memberships, 
+membership products (schemes).
     """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'membership', 'event'],
-    'update_xml': ['security/ir.model.access.csv', 'profile_association.xml'],
-    'demo_xml': [],
+    'data': ['security/ir.model.access.csv', 'profile_association.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
     'certificate': '0078696047261',

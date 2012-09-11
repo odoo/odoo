@@ -4,7 +4,6 @@
     <record id="view_account_treasury_report_tree" model="ir.ui.view">
         <field name="name">account.treasury.report.tree</field>
         <field name="model">account.treasury.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Treasury Analysis">
                 <field name="date" invisible="1"/>
@@ -22,7 +21,6 @@
     <record id="view_account_treasury_report_graph" model="ir.ui.view">
          <field name="name">account.treasury.report.graph</field>
          <field name="model">account.treasury.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Treasury Analysis" type="bar">
                 <field name="period_id"/>
@@ -33,15 +31,11 @@
     <record id="view_account_treasury_report_search" model="ir.ui.view">
         <field name="name">account.treasury.report.search</field>
         <field name="model">account.treasury.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Treasury Analysis">
-                <group>
-                    <field name="fiscalyear_id"/>
-                    <field name="period_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </group>
-                <newline/>
+                <field name="fiscalyear_id"/>
+                <field name="period_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
             </search>
         </field>
     </record>

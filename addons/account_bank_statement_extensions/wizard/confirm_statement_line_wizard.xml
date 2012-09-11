@@ -7,7 +7,6 @@
     <record id="view_confirm_statement_line" model="ir.ui.view">
       <field name="name">confirm.statement.line.form</field>
       <field name="model">confirm.statement.line</field>
-      <field name="type">form</field>
       <field name="arch" type="xml">
         <form string="Confirm selected statement lines" version="7.0">
             <header>
@@ -27,7 +26,6 @@
       <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
       <field name="view_id" ref="view_confirm_statement_line"/>
-      <field name="help">Confirm selected statement lines.</field>
       <field name="target">new</field>
     </record>
 

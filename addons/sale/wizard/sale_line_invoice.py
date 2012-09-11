@@ -108,7 +108,7 @@ class sale_order_line_make_invoice(osv.osv_memory):
                 sales_order_obj.write(cr, uid, [line.order_id.id], {'state': 'progress'})
 
         if not invoices:
-            raise osv.except_osv(_('Warning'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
+            raise osv.except_osv(_('Warning!'), _('Invoice cannot be created for this Sales Order Line due to one of the following reasons:\n1.The state of this sales order line is either "draft" or "cancel"!\n2.The Sales Order Line is Invoiced!'))
 
         return {'type': 'ir.actions.act_window_close'}
 
