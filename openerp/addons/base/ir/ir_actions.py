@@ -35,6 +35,7 @@ from tools.config import config
 from tools.safe_eval import safe_eval as eval
 from tools.translate import _
 from socket import gethostname
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -43,7 +44,7 @@ class actions(osv.osv):
     _table = 'ir_actions'
     _order = 'name'
     _columns = {
-        'name': fields.char('Action Name', required=True, size=64),
+        'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
     }
@@ -271,7 +272,7 @@ class act_window(osv.osv):
         :return: A read() view of the ir.actions.act_window
         """
         dataobj = self.pool.get('ir.model.data')
-        data_id = dataobj._get_id (cr, 1, module, xml_id)
+        data_id = dataobj._get_id (cr, SUPERUSER_ID, module, xml_id)
         res_id = dataobj.browse(cr, uid, data_id, context).res_id
         return self.read(cr, uid, res_id, [], context)
 
@@ -860,11 +861,10 @@ class act_client(osv.osv):
     _order = 'name'
 
     def _get_params(self, cr, uid, ids, field_name, arg, context):
-        return dict([
-            ((record.id, ast.literal_eval(record.params_store))
-             if record.params_store else (record.id, False))
-            for record in self.browse(cr, uid, ids, context=context)
-        ])
+        result = {}
+        for record in self.browse(cr, uid, ids, context=context):
+            result[record.id] = record.params_store and eval(record.params_store, {'uid': uid}) or False
+        return result
 
     def _set_params(self, cr, uid, id, field_name, field_value, arg, context):
         if isinstance(field_value, dict):
@@ -873,10 +873,15 @@ class act_client(osv.osv):
             self.write(cr, uid, id, {'params_store': field_value}, context=context)
 
     _columns = {
+        'name': fields.char('Action Name', required=True, size=64, translate=True),
         'tag': fields.char('Client action tag', size=64, required=True,
                            help="An arbitrary string, interpreted by the client"
                                 " according to its own needs and wishes. There "
                                 "is no central tag repository across clients."),
+        'res_model': fields.char('Destination Model', size=64, 
+            help="Optional model, mostly used for needactions."),
+        'context': fields.char('Context Value', size=250, required=True,
+            help="Context dictionary as Python expression, empty by default (Default: {})"),
         'params': fields.function(_get_params, fnct_inv=_set_params,
                                   type='binary', 
                                   string="Supplementary arguments",
@@ -886,6 +891,7 @@ class act_client(osv.osv):
     }
     _defaults = {
         'type': 'ir.actions.client',
+        'context': '{}',
 
     }
 act_client()

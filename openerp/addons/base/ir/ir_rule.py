@@ -44,7 +44,7 @@ class ir_rule(osv.osv):
     def _eval_context(self, cr, uid):
         """Returns a dictionary to use as evaluation context for
            ir.rule domains."""
-        return {'user': self.pool.get('res.users').browse(cr, 1, uid),
+        return {'user': self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid),
                 'time':time}
 
     def _domain_force_get(self, cr, uid, ids, field_name, arg, context=None):
@@ -152,7 +152,7 @@ class ir_rule(osv.osv):
             # involve objects on which the real uid has no acces rights.
             # This means also there is no implicit restriction (e.g. an object
             # references another object the user can't see).
-            query = self.pool.get(model_name)._where_calc(cr, 1, dom, active_test=False)
+            query = self.pool.get(model_name)._where_calc(cr, SUPERUSER_ID, dom, active_test=False)
             return query.where_clause, query.where_clause_params, query.tables
         return [], [], ['"'+self.pool.get(model_name)._table+'"']
 

@@ -126,12 +126,12 @@ class TinySocketServerThread(threading.Thread,netsvc.Server):
                 ct.start()
                 lt = len(self.threads)
                 if (lt > 10) and (lt % 10 == 0):
-                     # Not many threads should be serving at the same time, so log
-                     # their abuse.
-                     _logger.debug("Netrpc: %d threads", len(self.threads))
+                    # Not many threads should be serving at the same time, so log
+                    # their abuse.
+                    _logger.debug("Netrpc: %d threads", len(self.threads))
             self.socket.close()
         except Exception, e:
-            _logger.warning("Netrpc: closing because of exception %s" % str(e))
+            _logger.warning("Netrpc: closing because of exception %s", e)
             self.socket.close()
             return False
 

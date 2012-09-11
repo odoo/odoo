@@ -31,7 +31,6 @@ import openerp.pooler as pooler
 
 from openerp.osv.osv import except_osv
 from openerp.osv.orm import except_orm
-import sys
 
 _logger = logging.getLogger(__name__)
 
@@ -168,10 +167,7 @@ class interface(netsvc.Service):
                 or isinstance(e, except_orm):
                 netsvc.abort_response(2, e.name, 'warning', e.value)
             else:
-                import traceback
-                tb_s = reduce(lambda x, y: x+y, traceback.format_exception(
-                    sys.exc_type, sys.exc_value, sys.exc_traceback))
-                _logger.error('Exception in call: ' + tb_s)
+                _logger.exception('Exception in call:')
                 raise
 
         return res

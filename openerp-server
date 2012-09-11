@@ -30,7 +30,6 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
 """
 
-import imp
 import logging
 import os
 import signal
@@ -203,7 +202,7 @@ def quit_on_signals():
     try:
         while quit_signals_received == 0:
             time.sleep(60)
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt:
         pass
 
     if config['pidfile']:

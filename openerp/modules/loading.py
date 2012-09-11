@@ -39,6 +39,7 @@ import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
 import openerp.tools.assertion_report as assertion_report
+from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
@@ -296,7 +297,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             modobj = pool.get('ir.module.module')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
-                modobj.update_list(cr, 1)
+                modobj.update_list(cr, SUPERUSER_ID)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 
