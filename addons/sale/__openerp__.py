@@ -26,39 +26,31 @@
     'sequence': 14,
     'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
-The base module to manage quotations and sales orders.
-======================================================
+Manage sales quotations and orders
+==================================
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-Workflow with validation steps:
--------------------------------
-    * **Quotation** -> **Sales order** -> **Invoice**
+It handles full sales workflow:
 
-Create Invoice:
----------------
-    * Invoice on Demand
-    * Invoice on Delivery Order
-    * Invoice Before Delivery
+* **Quotation** -> **Sales order** -> **Invoice**
 
-Partners preferences:
----------------------
-    * Incoterm
-    * Shipping
-    * Invoicing
+Preferences
+-----------
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: Choice of how invoice will be paid
+* Incoterm: International Commercial terms
 
-Products stocks and prices:
----------------------------
+You can choose flexible invoicing method:
 
-Delivery method:
-----------------
-    * The Poste
-    * Free Delivery Charges
-    * Normal Delivery Charges
-    * Based on the Delivery Order(if not Add to sale order) 
+* *On Demand*: Invoice is created manually from Sale Order when needed
+* *On Delivery Order*: Invoice is generated from picking(delivery)
+* *Before Delivery*: Draft invoice is created, and it must be paid before delivery
 
-Dashboard for Sales Manager that includes:
-------------------------------------------
-    * My Quotations
-    * Monthly Turnover (Graph)
+
+Dashboard for Sales Manager will include
+----------------------------------------
+* My Quotations
+* Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
