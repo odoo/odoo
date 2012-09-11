@@ -68,7 +68,6 @@ class ir_translation_import_cursor(object):
 
         # Note that Postgres will NOT inherit the constraints or indexes
         # of ir_translation, so this copy will be much faster.
-
         cr.execute('''CREATE TEMP TABLE %s(
             imd_model VARCHAR(64),
             imd_name VARCHAR(128)
@@ -77,16 +76,14 @@ class ir_translation_import_cursor(object):
     def push(self, trans_dict):
         """Feed a translation, as a dictionary, into the cursor
         """
-        params = dict(trans_dict,
-                      state="translated" if trans_dict['value'] else "to_translate")
+        params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
         self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state)
-                            VALUES (%(name)s, %(lang)s, %(res_id)s, %(src)s, %(type)s, %(imd_model)s, %(module)s, %(imd_name)s, %(value)s, %(state)s)""",
-                         params) 
+                            VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s, %%(imd_name)s, %%(value)s, %%(state)s)""" % self._table_name,
+                         params)
 
     def finish(self):
         """ Transfer the data from the temp table to ir.translation
         """
-
         cr = self._cr
         if self._debug:
             cr.execute("SELECT count(*) FROM %s" % self._table_name)
@@ -129,7 +126,6 @@ class ir_translation_import_cursor(object):
                 """ % (self._parent_table, self._table_name, find_expr))
 
         # Step 3: insert new translations
-
         cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state)
             SELECT name, lang, res_id, src, type, value, module, state
               FROM %s AS ti
