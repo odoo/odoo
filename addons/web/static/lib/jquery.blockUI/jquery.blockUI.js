@@ -260,13 +260,14 @@ function install(el, opts) {
 			lyr3.css(themedCSS);
 			lyr3.addClass('ui-widget-content');
 		}
-		else 
+		else
 			lyr3.css(css);
 	}
-
 	// style the overlay
 	if (!opts.theme && (!opts.applyPlatformOpacityRules || !($.browser.mozilla && /Linux/.test(navigator.platform))))
-		lyr2.css(opts.overlayCSS);
+        lyr2.css(opts.overlayCSS);
+	if ($.browser.mozilla && /Linux/.test(navigator.platform))
+        lyr2.css(opts.overlayCSS);
 	lyr2.css('position', full ? 'fixed' : 'absolute');
 
 	// make iframe layer transparent in IE
