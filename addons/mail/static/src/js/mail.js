@@ -291,14 +291,15 @@ openerp.mail = function(session) {
             var self = this;
             this.ds_message.call('message_read', [[parseInt(message_id)]]).then(function(result){
                 vote_count = 0;
-                if (result[0].vote_user_ids){
-                	vote_count = result[0].vote_user_ids.length;
-                }
-                parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
-                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'has_voted': result[0].has_voted});
-                $(parent_element).html(vote_element);
-                self.add_vote_event($(parent_element));
-                
+                _.each(result, function(res){
+	                if (res.vote_user_ids){
+	                	vote_count = res.vote_user_ids.length;
+	                }
+	                parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
+	                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'has_voted': res.has_voted});
+	                $(parent_element).html(vote_element);
+	                self.add_vote_event($(parent_element));
+	            });
             });
         },
         
