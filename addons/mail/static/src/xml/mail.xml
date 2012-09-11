@@ -132,15 +132,14 @@
                         <t t-raw="record.subject"/>
                     </h1>
                     <div class="oe_mail_msg_body">
-                        
                         <div class="oe_mail_msg_record_body">
-                            <a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}" t-if="(params.thread_level > 0) &amp; (!record.subject)"><t t-raw="record.record_name"/></a>
+                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}" t-if="(params.thread_level > 0) &amp; (!record.subject)"><t t-raw="record.record_name"/></a>
                             <t t-raw="record.body"/>
                         </div>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
-                      <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{params.res_model}&amp;id=#{params.res_id}"><t t-raw="record.record_name"/></a></li>
+                      <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a></li>
                       <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                       <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                       <li t-if="display['show_reply']"><a href="#" class="oe_mail_msg_reply">Reply</a></li>

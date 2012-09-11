@@ -536,7 +536,11 @@ openerp.mail = function(session) {
         },
 
         display_user_avatar: function () {
+<<<<<<< TREE
             var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
+=======
+            var avatar = mail.ChatterUtils.get_image(this.session.prefix, this.session.session_id, 'res.users', 'image_small', this.session.uid);
+>>>>>>> MERGE-SOURCE
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
         },
         
@@ -648,6 +652,7 @@ openerp.mail = function(session) {
             var thread = new mail.Thread(self, {
                 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
+                'message_ids': this.get_value(),
                 'show_delete': true, 'composer': true });
             this.thread_list.push(thread);
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));

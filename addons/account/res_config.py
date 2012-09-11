@@ -43,8 +43,8 @@ class account_config_settings(osv.osv_memory):
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
-        'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank accounts on reports will display as followed', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
+        'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
+            string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
@@ -145,42 +145,45 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
-        company = self.pool.get('res.company').browse(cr, uid, company_id)
-        has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
-        fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
-            [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
-             ('company_id', '=', company_id)])
-        values = {
-            'expects_chart_of_accounts': company.expects_chart_of_accounts,
-            'currency_id': company.currency_id.id,
-            'paypal_account': company.paypal_account,
-            'company_footer': company.rml_footer2,
-            'has_chart_of_accounts': has_chart_of_accounts,
-            'has_fiscal_year': bool(fiscalyear_count),
-            'chart_template_id': False,
-            'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
-        }
-        # update journals and sequences
-        for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-            for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
-                values[journal_type + suffix] = False
-        journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
-        for journal in journal_obj.browse(cr, uid, journal_ids):
-            if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-                values.update({
-                    journal.type + '_journal_id': journal.id,
-                    journal.type + '_sequence_prefix': journal.sequence_id.prefix,
-                    journal.type + '_sequence_next': journal.sequence_id.number_next,
-                })
-        # update taxes
-        ir_values = self.pool.get('ir.values')
-        taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
-        supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
-        values.update({
-            'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
-            'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
-        })
+        values = {}
+        values['currency_id'] = False
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
+            fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
+                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                 ('company_id', '=', company_id)])
+            values = {
+                'expects_chart_of_accounts': company.expects_chart_of_accounts,
+                'currency_id': company.currency_id.id,
+                'paypal_account': company.paypal_account,
+                'company_footer': company.rml_footer,
+                'has_chart_of_accounts': has_chart_of_accounts,
+                'has_fiscal_year': bool(fiscalyear_count),
+                'chart_template_id': False,
+                'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+            }
+            # update journals and sequences
+            for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
+                    values[journal_type + suffix] = False
+            journal_obj = self.pool.get('account.journal')
+            journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
+            for journal in journal_obj.browse(cr, uid, journal_ids):
+                if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                    values.update({
+                        journal.type + '_journal_id': journal.id,
+                        journal.type + '_sequence_prefix': journal.sequence_id.prefix,
+                        journal.type + '_sequence_next': journal.sequence_id.number_next,
+                    })
+            # update taxes
+            ir_values = self.pool.get('ir.values')
+            taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
+            supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
+            values.update({
+                'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
+                'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
+            })
         return {'value': values}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id, context=None):
