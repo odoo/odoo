@@ -42,10 +42,10 @@ $sheet-max-width: 860px
   background-color: $startColor
   background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
   background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
-  background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
-  background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
-  background-image:         linear-gradient(to bottom, $startColor, $endColor)
+  background-image:   -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+  background-image:    -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+  background-image:     -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+  background-image:        linear-gradient(to bottom, $startColor, $endColor)
 
 @mixin radial-gradient($gradient)
   background-position: center center
@@ -93,7 +93,7 @@ $sheet-max-width: 860px
   font-size: 1px
   letter-spacing: -1px
   color: transparent
-  &:before
+  &: before
     font: 21px "mnmliconsRegular"
     content: $icon-name
     color: $color
@@ -133,7 +133,77 @@ $sheet-max-width: 860px
 .oe_kanban_color_2
   background-color: red
 				  
-// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+// au BufWritePost,FileWritePost *.sass : !sass --style expanded --line-numbers <afile> > "%: p: r.css"
 
-.oe_kanban_column .note_text_line_through
-  text-decoration: line-through
+.oe_kanban_column
+  .note_text_line_through
+    text-decoration: line-through
+
+
+.openerp
+  .oe_fold_column
+    .oe_kanban_card_fancy 
+      text-decoration: none
+      color: #000
+      display: block
+      padding: 1em
+      margin-right: 1em
+      margin-bottom: 1em
+      -moz-box-shadow: 5px 5px 7px rgba(33,33,33,1)
+      -webkit-box-shadow: 5px 5px 7px rgba(33,33,33,.7)
+      box-shadow: 5px 5px 7px rgba(33,33,33,.7)
+
+
+@mixin rotate($a)
+  -webkit-transform: rotate($a)
+  -o-transform: rotate($a)
+  -moz-transform: rotate($a)
+
+.openerp
+  .oe_kanban_record
+    .oe_kanban_card_fancy 
+      @include rotate(-2deg)
+  .oe_kanban_record:nth-of-type(even)
+    .oe_kanban_card_fancy 
+      @include rotate(1deg)
+  .oe_kanban_record:nth-of-type(3n)
+    .oe_kanban_card_fancy 
+      @include rotate(4deg)
+  .oe_kanban_column:nth-of-type(even)
+    .oe_kanban_card_fancy 
+      @include rotate(2deg)
+  .oe_kanban_column:nth-of-type(even)
+    .oe_kanban_record:nth-of-type(even)
+      .oe_kanban_card_fancy 
+        @include rotate(-3deg)
+  .oe_kanban_column:nth-of-type(even)
+    .oe_kanban_record:nth-of-type(3n)
+      .oe_kanban_card_fancy 
+        @include rotate(1deg)
+  .oe_kanban_column:nth-of-type(3n)
+    .oe_kanban_card_fancy 
+      @include rotate(-2deg)
+  .oe_kanban_column:nth-of-type(3n)
+    .oe_kanban_record:nth-of-type(even)
+      .oe_kanban_card_fancy 
+        @include rotate(1deg)
+  .oe_kanban_column:nth-of-type(3n)
+    .oe_kanban_record:nth-of-type(3n)
+      .oe_kanban_card_fancy 
+        @include rotate(-1deg)
+
+
+@mixin oe_kanban_card_fancy
+  box-shadow: 10px 10px 7px rgba(0,0,0,.7)
+  -moz-box-shadow: 10px 10px 7px rgba(0,0,0,.7)
+  -webkit-box-shadow: 10px 10px 7px rgba(0,0,0,.7)
+  position: relative
+  z-index: 5
+  @include rotate(0)
+
+.openerp
+  .oe_kanban_column
+    .oe_fold_column
+      .oe_kanban_card_fancy:hover,
+      .oe_kanban_card_fancy:focus 
+        @include oe_kanban_card_fancy

@@ -20,19 +20,19 @@
 ##############################################################################
 
 {
-    'name': 'Notes pad',
+    'name': 'Memos pad',
     'version': '0.1',
     'category': 'Tools',
     'description': """
-This module update notes inside OpenERP for using an external pad
+This module update memos inside OpenERP for using an external pad
 ===================================================================
 
-Use for update your text note in real time with the following user that you invite.
+Use for update your text memo in real time with the following user that you invite.
 
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'summary': 'Sticky Notes, Collaborative',
+    'summary': 'Sticky memos, Collaborative',
     'depends': [
         'base_tools',
         'mail',

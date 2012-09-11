@@ -4,7 +4,7 @@
 
     <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
 
-    <!-- Note Stage Form View -->
+    <!-- memo Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
       <field name="model">note.stage</field>
@@ -17,7 +17,7 @@
       </field>
     </record>
 
-    <!-- Note Stage Tree View -->
+    <!-- memo Stage Tree View -->
     <record model="ir.ui.view" id="view_note_stage_tree">
       <field name="name">note.stage.tree</field>
       <field name="model">note.stage</field>
@@ -31,7 +31,7 @@
       </field>
     </record>
 
-    <!-- Note Stage Action -->
+    <!-- memo Stage Action -->
     <record model="ir.actions.act_window" id="action_note_stage">
       <field name="name">Stages</field>
       <field name="res_model">note.stage</field>
@@ -42,7 +42,7 @@
     <menuitem name="Categories"
       id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
 
-    <!-- New Note Kanban View -->
+    <!-- New memo Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
@@ -53,49 +53,58 @@
           <field name="name"/>
           <field name="stage_id"/>
           <field name="active"/>
-          <field name="note"/>
+          <field name="memo"/>
           <field name="date_done"/>
+          <field name="current_partner_id"/>
           <field name="message_follower_ids"/>
+          <field name="tag_ids"/>
           <templates>
             <t t-name="kanban-box">
-              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override ">
+
+              <t t-set="record.group_fancy" t-value="1"  groups="note.group_note_fancy"/>
+
+              <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
                 <div class="oe_dropdown_kanban">
                   <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.active.raw_value" class="oe_e">D</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.active.raw_value" class="oe_e">C</a>
+                    <a name="onclick_note_is_done" type="object" t-if="record.active.raw_value" class="oe_e">W</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.active.raw_value" class="oe_e">è</a>
                   </span>
 
                   <!-- dropdown menu -->
                   <div class="oe_dropdown_toggle">
                     <span class="oe_e">í</span>
                     <ul class="oe_dropdown_menu">
-                      <li><a type="edit">Edit...</a></li>
                       <li><a type="delete">Delete</a></li>
                       <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                     </ul>
                   </div>
                 </div>
 
-                <!-- kanban note -->
+                <!-- kanban memo -->
                 <div t-attf-class="oe_kanban_content #{record.active.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </div>
 
-                <div class="oe_right">
-                  <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
-                    <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
+                <div class="oe_left oe_kanban_list_many2many" data-model="note.tag" groups="note.group_note_tags">
+                  <t t-foreach="record.tag_ids.raw_value" t-as="tag">
+                    <span class="oe_tag" t-att-data-list_id="tag"/>
                   </t>
                 </div>
+                <div class="oe_right">
+                  <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
+                    <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
+                  </t>
+                </div>
+                <div class="oe_clear"></div>
               </div>
-              <div class="oe_clear"></div>
             </t>
           </templates>
         </kanban>
       </field>
     </record>
 
-    <!-- New Note Form View -->
+    <!-- New memo Form View -->
     <record model="ir.ui.view" id="view_note_note_form">
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
@@ -104,38 +113,74 @@
           <header>
               <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
-          <field colspan="4" name="note" widget="html" editor_width="100%%" editor_height="400px" nolabel="1"/>
-          <group>
-            <field name="tag_ids" widget="many2many_tags" group="group_note_tags"/>
+          <field colspan="4" name="memo" widget="html" editor_width="100%%" editor_height="400px" nolabel="1"/>
+          <group groups="note.group_note_tags" col="2">
+            <field name="tag_ids" widget="many2many_tags"/>
           </group>
-          <div class="oe_chatter">
+          <div class="oe_chatter" groups="note.group_note_thread">
               <field name="message_ids" widget="mail_thread"/>
+              <field name="message_follower_ids" widget="mail_followers"/>
           </div>
         </form>
       </field>
     </record>
 
-    <!-- Search Note  -->
+    <!-- Search memo  -->
     <record model="ir.ui.view" id="view_note_note_filter">
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
         <search string="Memos">
-          <field name="note" string="Memo"/>
+          <field name="name" string="Title"/>
+          <field name="memo" string="Memo"/>
           <field name="stage_id"/>
+          <field name="tag_ids" groups="note.group_note_tags"/>
           <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
           <filter name="active_false" string="Old" domain="[('active', '=', False)]"/>
           <group expand="0" string="Group By...">
             <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
-            <filter icon="terp-stock_symbol-selection" string="Stage" help="By Note Category" context="{'group_by':'stage_id'}"/>
+            <filter icon="terp-stock_symbol-selection" string="Stage" help="By memo Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
       </field>
     </record>
 
-    <!-- Note Action -->
+
+    <!-- general settings -->
+    <record model="ir.ui.view" id="view_general_settings_note_form">
+      <field name="name">note.view.general_settings.form</field>
+      <field name="model">base.config.settings</field>
+      <field name="inherit_id" ref="base_setup.view_general_configuration"/>
+      <field name="arch" type="xml">
+        <xpath expr="//label[@string='Authentication']/.." position="after">
+          <group>
+              <label for="id" string="Memos"/>
+              <div>
+                  <div>
+                      <field name="module_note_pad" class="oe_inline"/>
+                      <label for="module_note_pad"/>
+                  </div>
+                  <div>
+                      <field name="group_note_fancy" class="oe_inline"/>
+                      <label for="group_note_fancy"/>
+                  </div>
+                  <div>
+                      <field name="group_note_tags" class="oe_inline"/>
+                      <label for="group_note_tags"/>
+                  </div>
+                  <div>
+                      <field name="group_note_thread" class="oe_inline"/>
+                      <label for="group_note_thread"/>
+                  </div>
+              </div>
+          </group>
+        </xpath>
+      </field>
+    </record>
+
+    <!-- memo Action -->
     <record model="ir.actions.act_window" id="action_note_note">
-      <field name="name">Notes</field>
+      <field name="name">note</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
@@ -143,7 +188,7 @@
       <field name="context">{'search_default_active_true':True}</field>
     </record>
 
-    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+    <menuitem name="Memos" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
 
   </data>
 </openerp>

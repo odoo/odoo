@@ -37,11 +37,10 @@ Memos can be found in the 'Home' menu.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'summary': 'Sticky Memos, Collaborative',
+    'summary': 'Sticky notes, Collaborative, Memos',
     'depends': [
         'base_tools',
         'mail',
-        'pad',
     ],
     'data': [
         'security/res.groups.csv',
