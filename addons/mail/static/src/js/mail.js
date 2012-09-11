@@ -17,19 +17,15 @@ openerp.mail = function(session) {
      */
 
     session.web.FormView = session.web.FormView.extend({
-        // TDE FIXME TODO: CHECK WITH NEW BRANCH
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message' &&
+                action.context && action.context.redirect == true &&
                 this.fields && this.fields.message_ids &&
                 this.fields.message_ids.view.get("actual_mode") != 'create') {
-                // debug
-                console.groupCollapsed('FormView do_action on mail.compose.message');
-                console.log('message_ids field:', this.fields.message_ids);
-                console.groupEnd();
                 var record_thread = this.fields.message_ids;
                 var thread = record_thread.thread;
-                thread.instantiate_composition_form('comment', true, false, 0, action.context);
-                return false;
+                thread.refresh_composition_form(action.context);
+                return true;
             }
             else {
                 return this._super(action, on_close);
@@ -234,7 +230,7 @@ openerp.mail = function(session) {
             this.ds_compose.context = _.extend(this.ds_compose.context, this.options.context);
             return this.ds_compose.call('default_get', [
                 ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
-                    'model', 'res_id', 'parent_id', 'content_subtype'],
+                    'use_template', 'template_id', 'model', 'res_id', 'parent_id', 'content_subtype'],
                 this.ds_compose.get_context(),
             ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
         },
@@ -433,6 +429,11 @@ openerp.mail = function(session) {
             return compose_done;
         },
 
+        refresh_composition_form: function (context) {
+            if (! this.compose_message_widget) return;
+            return this.compose_message_widget.refresh(context);
+        },
+
         /** Clean the thread */
         message_clean: function() {
             this.$el.find('div.oe_mail_thread_display').empty();
@@ -611,7 +612,6 @@ openerp.mail = function(session) {
             this.options.domain = this.options.domain || [];
             this.options.context = {'default_model': 'mail.thread', 'default_res_id': false};
             this.options.thread_level = this.options.thread_level || 0;
-            this.thread_list = [];
         },
 
         start: function() {
@@ -627,7 +627,7 @@ openerp.mail = function(session) {
         },
 
         destroy: function() {
-            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
+            if (this.thread) { this.thread.destroy(); }
             this._super.apply(this, arguments);
         },
 
@@ -644,13 +644,13 @@ openerp.mail = function(session) {
                 default_model: this.view.model });
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
-            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
+            if (this.thread) { this.thread.destroy(); }
             var thread = new mail.Thread(self, {
                 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
                 'message_ids': this.get_value(),
                 'show_delete': true, 'composer': true });
-            this.thread_list.push(thread);
+            this.thread = thread;
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
     });
