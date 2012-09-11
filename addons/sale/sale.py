@@ -145,9 +145,9 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
-    def _get_invoiced_amount(self, cr, uid, sale_object, context=None):
+    def _get_invoiced_amount(self, cr, uid, sale, context=None):
         invoiced_amount = 0
-        for invoice in sale_object.invoice_ids:
+        for invoice in sale.invoice_ids:
             if invoice.state!='cancel':
                 invoiced_amount += invoice.amount_total
         return invoiced_amount
@@ -173,7 +173,7 @@ class sale_order(osv.osv):
                         res[sale.id] = False
                         break
             invoiced_amount = self._get_invoiced_amount(cursor, user, sale, context=context)
-            if invoiced_amount != sale.amount_total or not invoice_existence:
+            if invoiced_amount != sale.amount_total and not invoice_existence:
                 res[sale.id] = False
         return res
 
