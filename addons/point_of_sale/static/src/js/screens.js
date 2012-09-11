@@ -65,6 +65,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         close_popup: function(){
             if(this.current_popup){
+                this.current_popup.close();
                 this.current_popup.hide();
                 this.current_popup = null;
             }
@@ -336,6 +337,11 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                 this.$el.show();
             }
         },
+        /* called before hide, when a popup is closed */
+        close: function(){
+        },
+        /* hides the popup. keep in mind that this is called in the initialization pass of the 
+         * pos instantiation, so you don't want to do anything fancy in here */
         hide: function(){
             if(this.$el){
                 this.$el.hide();
@@ -352,8 +358,10 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
             
             this.$el.find('.button').off('click').click(function(){
                 self.pos_widget.screen_selector.close_popup();
-                self.pos.proxy.help_canceled();
             });
+        },
+        close:function(){
+            this.pos.proxy.help_canceled();
         },
     });
 
