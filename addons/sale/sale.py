@@ -152,13 +152,12 @@ class sale_order(osv.osv):
                 invoiced_amount += invoice.amount_total
         return invoiced_amount
 
-    def _partial_invoiced(self, cursor, user, ids, name, arg, context=None):
+    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
-            res[sale.id] = True
-            invoiced_amount = self._get_invoiced_amount(cursor, user, sale, context=context)
-            if not invoiced_amount or invoiced_amount == sale.amount_total and sale.invoiced:
-                res[sale.id] = False
+            res[sale.id] = False
+            if sale.invoice_ids:
+                res[sale.id] = True
         return res
 
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
@@ -172,8 +171,7 @@ class sale_order(osv.osv):
                     if invoice.state != 'paid':
                         res[sale.id] = False
                         break
-            invoiced_amount = self._get_invoiced_amount(cursor, user, sale, context=context)
-            if invoiced_amount != sale.amount_total and not invoice_existence:
+            if not invoice_existence or sale.state == 'manual':
                 res[sale.id] = False
         return res
 
@@ -262,8 +260,8 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
-        'partial_invoiced': fields.function(_partial_invoiced, string='Partial invoiced',
-            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has been partially invoiced."),
+        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
