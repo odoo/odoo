@@ -318,7 +318,7 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
-        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_form')
         res_id = res and res[1] or False
 
         return {
