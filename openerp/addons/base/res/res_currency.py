@@ -56,7 +56,7 @@ class res_currency(osv.osv):
     _columns = {
         # Note: 'code' column was removed as of v6.0, the 'name' should now hold the ISO code.
         'name': fields.char('Currency', size=32, required=True, help="Currency Code (ISO 4217)"),
-        'symbol': fields.char('Symbol', size=3, help="Currency sign, to be used when printing amounts."),
+        'symbol': fields.char('Symbol', size=4, help="Currency sign, to be used when printing amounts."),
         'rate': fields.function(_current_rate, string='Current Rate', digits=(12,6),
             help='The rate of the currency to the currency of rate 1.'),
         'rate_ids': fields.one2many('res.currency.rate', 'currency_id', 'Rates'),
@@ -98,7 +98,10 @@ class res_currency(osv.osv):
     def read(self, cr, user, ids, fields=None, context=None, load='_classic_read'):
         res = super(res_currency, self).read(cr, user, ids, fields, context, load)
         currency_rate_obj = self.pool.get('res.currency.rate')
-        for r in res:
+        values = res
+        if not isinstance(values, (list)):
+            values = [values]
+        for r in values:
             if r.__contains__('rate_ids'):
                 rates=r['rate_ids']
                 if rates:

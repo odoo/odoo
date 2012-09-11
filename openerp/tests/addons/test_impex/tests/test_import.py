@@ -3,6 +3,7 @@ import openerp.modules.registry
 import openerp
 
 from openerp.tests import common
+from openerp.tools.misc import mute_logger
 
 def ok(n):
     """ Successful import of ``n`` records
@@ -221,6 +222,7 @@ class test_integer_field(ImporterCase):
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
+    @mute_logger('openerp.sql_db')
     def test_out_of_range(self):
         self.assertEqual(
             self.import_(['value'], [[str(2**31)]]),
@@ -713,6 +715,15 @@ class test_m2m(ImporterCase):
 
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
+
+    def test_name_get(self):
+        # FIXME: bloody hell why can't this just name_create the record?
+        self.assertRaises(
+            IndexError,
+            self.import_,
+            ['const', 'value'],
+            [['5', u'Java is a DSL for taking large XML files'
+                   u' and converting them to stack traces']])
 
     def test_single(self):
         self.assertEqual(

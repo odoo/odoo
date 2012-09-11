@@ -43,6 +43,7 @@ import misc
 from misc import UpdateableStr
 from misc import SKIPPED_ELEMENT_TYPES
 import osutil
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -214,7 +215,7 @@ class GettextAlias(object):
                 if cr:
                     # Try to use ir.translation to benefit from global cache if possible
                     pool = pooler.get_pool(cr.dbname)
-                    res = pool.get('ir.translation')._get_source(cr, 1, None, ('code','sql_constraint'), lang, source)
+                    res = pool.get('ir.translation')._get_source(cr, SUPERUSER_ID, None, ('code','sql_constraint'), lang, source)
                 else:
                     _logger.debug('no context cursor detected, skipping translation for "%r"', source)
             else:
@@ -879,7 +880,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
 
         if not ids:
             # lets create the language with locale information
-            lang_obj.load_lang(cr, 1, lang=lang, lang_name=lang_name)
+            lang_obj.load_lang(cr, SUPERUSER_ID, lang=lang, lang_name=lang_name)
 
 
         # now, the serious things: we read the language file
@@ -910,15 +911,15 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
             #  'src': ..., 'value': ..., 'module':...}
-            dic = {'lang': lang}
-            dic_module = False
-            for i in range(len(f)):
-                if f[i] in ('module',):
+            dic = dict.fromkeys(('name', 'res_id', 'src', 'type', 'imd_model', 'imd_name', 'module', 'value'))
+            dic['lang'] = lang
+            for i, field in enumerate(f):
+                if field == 'module':
                     continue
-                dic[f[i]] = row[i]
+                dic[field] = row[i]
 
             # This would skip terms that fail to specify a res_id
-            if not dic.get('res_id', False):
+            if not dic.get('res_id'):
                 continue
 
             res_id = dic.pop('res_id')
@@ -927,21 +928,16 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                     dic['res_id'] = int(res_id)
                     dic['module'] = module_name
             else:
-                try:
-                    tmodel = dic['name'].split(',')[0]
-                    if '.' in res_id:
-                        tmodule, tname = res_id.split('.', 1)
-                    else:
-                        tmodule = dic_module
-                        tname = res_id
-                    dic['imd_model'] = tmodel
-                    dic['module'] = tmodule
-                    dic['imd_name'] =  tname
-                    dic['res_id'] = None
-                except Exception:
-                    _logger.warning("Could not decode resource for %s, please fix the po file.",
-                                    dic['res_id'], exc_info=True)
-                    dic['res_id'] = None
+                tmodel = dic['name'].split(',')[0]
+                if '.' in res_id:
+                    tmodule, tname = res_id.split('.', 1)
+                else:
+                    tmodule = False
+                    tname = res_id
+                dic['imd_model'] = tmodel
+                dic['imd_name'] =  tname
+                dic['module'] = tmodule
+                dic['res_id'] = None
 
             irt_cursor.push(dic)
 

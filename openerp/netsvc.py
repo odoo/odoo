@@ -3,7 +3,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP SA (<http://www.openerp.com>)
+#    Copyright (C) 2004-2012 OpenERP SA (<http://www.openerp.com>)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -86,12 +86,12 @@ class Service(object):
             cls._services.pop(name)
 
 def LocalService(name):
-  # Special case for addons support, will be removed in a few days when addons
-  # are updated to directly use openerp.osv.osv.service.
-  if name == 'object_proxy':
-      return openerp.osv.osv.service
+    # Special case for addons support, will be removed in a few days when addons
+    # are updated to directly use openerp.osv.osv.service.
+    if name == 'object_proxy':
+        return openerp.osv.osv.service
 
-  return Service._services[name]
+    return Service._services[name]
 
 class ExportService(object):
     """ Proxy for exported services.
@@ -238,9 +238,9 @@ def init_logger():
 # server intended to test it.
 def init_alternative_logger():
     class H(logging.Handler):
-      def emit(self, record):
-        if record.levelno > 20:
-          print record.levelno, record.pathname, record.msg
+        def emit(self, record):
+            if record.levelno > 20:
+                print record.levelno, record.pathname, record.msg
     handler = H()
     # Add the handler to the 'openerp' logger.
     logger = logging.getLogger('openerp')
@@ -376,11 +376,11 @@ def dispatch_rpc(service_name, method, params):
     except openerp.exceptions.Warning:
         raise
     except openerp.exceptions.DeferredException, e:
-        _logger.error(tools.exception_to_unicode(e))
+        _logger.exception(tools.exception_to_unicode(e))
         post_mortem(e.traceback)
         raise
     except Exception, e:
-        _logger.error(tools.exception_to_unicode(e))
+        _logger.exception(tools.exception_to_unicode(e))
         post_mortem(sys.exc_info())
         raise
 

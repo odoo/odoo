@@ -206,8 +206,7 @@
         # that don't have OpenERP has a parent company, you expect to find,
         # among others, the companies that don't have parent company.
         #
-        # ('parent_id', 'not in', [0]) must give the same result than
-        # ('parent_id', 'not in', []), i.e. a empty set or a set with non-
+       
         # existing values be treated similarly if we simply check that some
         # existing value belongs to them.
 
@@ -215,7 +214,7 @@
         res_0.sort()
         res_1 = self.search(cr, uid, [('parent_id', 'not in', [max_partner_id + 1])]) # get all rows, included null parent_id
         res_1.sort()
-        res_2 = self.search(cr, uid, [('parent_id', 'not in', False)]) # get rows with not null parent_id, deprecated syntax
+        res_2 = self.search(cr, uid, [('parent_id', '!=', False)]) # get rows with not null parent_id, deprecated syntax
         res_2.sort()
         res_3 = self.search(cr, uid, [('parent_id', 'not in', [])]) # get all rows, included null parent_id
         res_3.sort()
@@ -235,7 +234,7 @@
         res_5.sort()
         res_6 = self.search(cr, uid, [('parent_id', 'in', [max_partner_id + 1])])
         res_6.sort()
-        res_7 = self.search(cr, uid, [('parent_id', 'in', False)])
+        res_7 = self.search(cr, uid, [('parent_id', '=', False)])
         res_7.sort()
         res_8 = self.search(cr, uid, [('parent_id', 'in', [])])
         res_8.sort()
@@ -256,7 +255,7 @@
         res_10.sort()
         res_11 = self.search(cr, uid, ['!', ('parent_id', 'in', [max_partner_id + 1])])
         res_11.sort()
-        res_12 = self.search(cr, uid, ['!', ('parent_id', 'in', False)])
+        res_12 = self.search(cr, uid, ['!', ('parent_id', '=', False)])
         res_12.sort()
         res_13 = self.search(cr, uid, ['!', ('parent_id', 'in', [])])
         res_13.sort()
@@ -277,7 +276,7 @@
         res_16.sort()
         assert res_16 == partner_ids
 
-        res_17 = self.search(cr, uid, [('website', 'not in', False)])
+        res_17 = self.search(cr, uid, [('website', '!=', False)])
         res_17.sort()
         assert res_17 == with_website
 
@@ -292,21 +291,21 @@
         assert res_101 == [], 'res_101: expected %r, got %r' % ([], res_101)
         assert res_102 == company_ids, 'res_102: expected %r, got %r' % (company_ids, res_102)
 -
-    Property of the query (one2many not in False).
+    Property of the query (one2many != False).
 -
     !python {model: res.currency }: |
         ids = self.search(cr, uid, [])
         referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', 'not in', False)]))
+        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '!=', False)]))
         assert referenced_companies == companies
 -
-    Property of the query (one2many in False).
+    Property of the query (one2many = False).
 -
     !python {model: res.currency }: |
         ids = self.search(cr, uid, [])
         referenced_companies = set([x.company_id.id for x in self.browse(cr, uid, ids)])
         unreferenced_companies = set(self.pool.get('res.company').search(cr, uid, [])).difference(referenced_companies)
-        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', 'in', False)]))
+        companies = set(self.pool.get('res.company').search(cr, uid, [('currency_ids', '=', False)]))
         assert unreferenced_companies == companies
 -
     Equivalent queries.
@@ -317,7 +316,7 @@
         res_1 = self.search(cr, uid, [('name', 'not like', 'probably_unexisting_name')])
         res_2 = self.search(cr, uid, [('id', 'not in', [max_currency_id + 1003])])
         res_3 = self.search(cr, uid, [('id', 'not in', [])])
-        res_4 = self.search(cr, uid, [('id', 'not in', False)])
+        res_4 = self.search(cr, uid, [('id', '!=', False)])
         res_0.sort()
         res_1.sort()
         res_2.sort()
@@ -400,7 +399,7 @@
         # get the companies referenced by some currency (this is normally the main company)
         res_10 = self.search(cr, uid, [('currency_ids', 'not like', 'probably_unexisting_name')])
         res_11 = self.search(cr, uid, [('currency_ids', 'not in', [max_currency_id + 1])])
-        res_12 = self.search(cr, uid, [('currency_ids', 'not in', False)])
+        res_12 = self.search(cr, uid, [('currency_ids', '!=', False)])
         res_13 = self.search(cr, uid, [('currency_ids', 'not in', [])])
         res_10.sort()
         res_11.sort()

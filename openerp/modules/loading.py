@@ -3,7 +3,7 @@
 #
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -39,6 +39,7 @@ import openerp.pooler as pooler
 import openerp.release as release
 import openerp.tools as tools
 import openerp.tools.assertion_report as assertion_report
+from openerp import SUPERUSER_ID
 
 from openerp import SUPERUSER_ID
 from openerp.tools.translate import _
@@ -84,7 +85,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
             _load_data(cr, module_name, idref, mode, 'test')
             return True
         except Exception:
-            _logger.error(
+            _logger.exception(
                 'module %s: an exception occurred in a test', module_name)
             return False
         finally:
@@ -119,7 +120,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
                 elif ext == '.sql':
                     process_sql_file(cr, fp)
                 elif ext == '.yml':
-                    tools.convert_yaml_import(cr, module_name, fp, idref, mode, noupdate, report)
+                    tools.convert_yaml_import(cr, module_name, fp, kind, idref, mode, noupdate, report)
                 else:
                     tools.convert_xml_import(cr, module_name, fp, idref, mode, noupdate, report)
             finally:
@@ -296,7 +297,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             modobj = pool.get('ir.module.module')
             if ('base' in tools.config['init']) or ('base' in tools.config['update']):
                 _logger.info('updating modules list')
-                modobj.update_list(cr, 1)
+                modobj.update_list(cr, SUPERUSER_ID)
 
             _check_module_names(cr, itertools.chain(tools.config['init'].keys(), tools.config['update'].keys()))
 

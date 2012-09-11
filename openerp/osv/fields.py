@@ -46,6 +46,7 @@ from openerp.tools.translate import _
 from openerp.tools import float_round, float_repr
 import simplejson
 from openerp.tools.html_sanitize import html_sanitize
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -444,7 +445,7 @@ class many2one(_column):
         # build a dictionary of the form {'id_of_distant_resource': name_of_distant_resource}
         # we use uid=1 because the visibility of a many2one field value (just id and name)
         # must be the access right of the parent form and not the linked object itself.
-        records = dict(obj.name_get(cr, 1,
+        records = dict(obj.name_get(cr, SUPERUSER_ID,
                                     list(set([x for x in res.values() if isinstance(x, (int,long))])),
                                     context=context))
         for id in res:
@@ -514,7 +515,8 @@ class one2many(_column):
         for id in ids:
             res[id] = []
 
-        ids2 = obj.pool.get(self._obj).search(cr, user, self._domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
+        domain = self._domain(obj) if callable(self._domain) else self._domain
+        ids2 = obj.pool.get(self._obj).search(cr, user, domain + [(self._fields_id, 'in', ids)], limit=self._limit, context=context)
         for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_write'):
             if r[self._fields_id] in res:
                 res[r[self._fields_id]].append(r['id'])
@@ -556,7 +558,8 @@ class one2many(_column):
                 reverse_rel = obj._all_columns.get(self._fields_id)
                 assert reverse_rel, 'Trying to unlink the content of a o2m but the pointed model does not have a m2o'
                 # if the o2m has a static domain we must respect it when unlinking
-                extra_domain = self._domain if isinstance(getattr(self, '_domain', None), list) else [] 
+                domain = self._domain(obj) if callable(self._domain) else self._domain
+                extra_domain = domain or []
                 ids_to_unlink = obj.search(cr, user, [(self._fields_id,'=',id)] + extra_domain, context=context)
                 # If the model has cascade deletion, we delete the rows because it is the intended behavior,
                 # otherwise we only nullify the reverse foreign key column.
@@ -574,7 +577,8 @@ class one2many(_column):
         return result
 
     def search(self, cr, obj, args, name, value, offset=0, limit=None, uid=None, operator='like', context=None):
-        return obj.pool.get(self._obj).name_search(cr, uid, value, self._domain, operator, context=context,limit=limit)
+        domain = self._domain(obj) if callable(self._domain) else self._domain
+        return obj.pool.get(self._obj).name_search(cr, uid, value, domain, operator, context=context,limit=limit)
 
     
     @classmethod
@@ -1200,7 +1204,7 @@ class related(function):
         else:
             res = {}.fromkeys(ids, False)
 
-        objlst = obj.browse(cr, 1, ids, context=context)
+        objlst = obj.browse(cr, SUPERUSER_ID, ids, context=context)
         for data in objlst:
             if not data:
                 continue
@@ -1230,7 +1234,7 @@ class related(function):
                 # name_get as root, as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access.
-                ng = dict(obj.pool.get(self._obj).name_get(cr, 1, ids, context=context))
+                ng = dict(obj.pool.get(self._obj).name_get(cr, SUPERUSER_ID, ids, context=context))
                 for r in res:
                     if res[r]:
                         res[r] = (res[r], ng[res[r]])
@@ -1495,7 +1499,7 @@ class property(function):
                 # not target, so user may not have access) in order to avoid
                 # pointing on an unexisting record.
                 if property_destination_obj:
-                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, 1, res[id][prop_name].id):
+                    if res[id][prop_name] and obj.pool.get(property_destination_obj).exists(cr, SUPERUSER_ID, res[id][prop_name].id):
                         name_get_ids[id] = res[id][prop_name].id
                     else:
                         res[id][prop_name] = False
@@ -1503,7 +1507,7 @@ class property(function):
                 # name_get as root (as seeing the name of a related
                 # object depends on access right of source document,
                 # not target, so user may not have access.)
-                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, 1, name_get_ids.values(), context=context))
+                name_get_values = dict(obj.pool.get(property_destination_obj).name_get(cr, SUPERUSER_ID, name_get_ids.values(), context=context))
                 # the property field is a m2o, we need to return a tuple with (id, name)
                 for k, v in name_get_ids.iteritems():
                     if res[k][prop_name]:
@@ -1539,9 +1543,7 @@ def field_to_dict(model, cr, user, field, context=None):
     """
 
     res = {'type': field._type}
-    # This additional attributes for M2M and function field is added
-    # because we need to display tooltip with this additional information
-    # when client is started in debug mode.
+    # some attributes for m2m/function field are added as debug info only
     if isinstance(field, function):
         res['function'] = field._fnct and field._fnct.func_name or False
         res['store'] = field.store
@@ -1576,7 +1578,7 @@ def field_to_dict(model, cr, user, field, context=None):
             res['selection'] = field.selection(model, cr, user, context)
     if res['type'] in ('one2many', 'many2many', 'many2one'):
         res['relation'] = field._obj
-        res['domain'] = field._domain
+        res['domain'] = field._domain(model) if callable(field._domain) else field._domain
         res['context'] = field._context
 
     if isinstance(field, one2many):
