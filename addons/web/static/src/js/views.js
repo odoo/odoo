@@ -327,7 +327,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         this.dialog_stop();
     },
-    ir_actions_server: function (action, on_closed) {
+    ir_actions_server: function (action, on_closed, clear_breadcrumbs) {
         var self = this;
         this.rpc('/web/action/run', {
             action_id: action.id,
