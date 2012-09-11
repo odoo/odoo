@@ -80,7 +80,7 @@ class procurement_order(osv.osv):
     """
     _name = "procurement.order"
     _description = "Procurement"
-    _order ='priority desc,date_planned'
+    _order = 'priority desc,date_planned'
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
@@ -166,7 +166,7 @@ class procurement_order(osv.osv):
         """
         return all(procurement.move_id.state == 'cancel' for procurement in self.browse(cr, uid, ids, context=context))
 
-    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined' 
+    #This Function is create to avoid  a server side Error Like 'ERROR:tests.mrp:name 'check_move' is not defined'
     def check_move(self, cr, uid, ids, context=None):
         pass
 
@@ -277,7 +277,7 @@ class procurement_order(osv.osv):
             if not res:
                 return False
         return True
-    
+
     def check_buy(self, cr, uid, ids):
         """ Checks product type.
         @return: True or Product Id.
@@ -359,7 +359,7 @@ class procurement_order(osv.osv):
         message = _('From stock: products assigned.')
         self.write(cr, uid, ids, {'state': 'running',
                 'message': message}, context=context)
-        self.message_append_note(cr, uid, ids, body=message, context=context)                  
+        self.message_append_note(cr, uid, ids, body=message, context=context)
         self.running_send_note(cr, uid, ids, context=context)
         return True
 
@@ -392,7 +392,7 @@ class procurement_order(osv.osv):
                 if message:
                     message = _("Procurement '%s' is in exception: ") % (procurement.name) + message
                     cr.execute('update procurement_order set message=%s where id=%s', (message, procurement.id))
-                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)   
+                    self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
         return ok
 
     def action_produce_assign_service(self, cr, uid, ids, context=None):
@@ -607,7 +607,7 @@ class stock_warehouse_orderpoint(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -615,7 +615,7 @@ class stock_warehouse_orderpoint(osv.osv):
             'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
-    
+
 stock_warehouse_orderpoint()
 
 class product_product(osv.osv):
