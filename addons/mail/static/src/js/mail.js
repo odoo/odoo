@@ -20,10 +20,8 @@ openerp.mail = function(session) {
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message' &&
                 action.context && action.context.redirect == true &&
-                this.fields && this.fields.message_ids &&
-                this.fields.message_ids.view.get("actual_mode") != 'create') {
-                var record_thread = this.fields.message_ids;
-                var thread = record_thread.thread;
+                this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
+                var thread = this.fields.message_ids.thread;
                 thread.refresh_composition_form(action.context);
                 return true;
             }
@@ -33,46 +31,17 @@ openerp.mail = function(session) {
         },
     });
 
-    /**
-     * ------------------------------------------------------------
-     * Sidebar
-     * ------------------------------------------------------------
-     *
-     * Override of sidebar do_attachment_new method, to catch attachments added
-     * through the sidebar and show them in the Chatter composition form.
-     */
-
-    // session.web.Sidebar = session.web.Sidebar.extend({
-    //     do_attachment_new: function(attachment) {
-    //         this._super(attachment);
-    //         var message_ids = this.getParent().fields.message_ids || undefined;
-    //         if (! message_ids) { return; }
-    //         var compose_message_widget = message_ids.thread.compose_message_widget;
-    //         if (! compose_message_widget) { return; }
-    //         compose_message_widget.attachments.push(attachment);
-    //         compose_message_widget.display_attachments();
-    //     },
-    // });
 
     /**
      * ------------------------------------------------------------
      * ChatterUtils
      * ------------------------------------------------------------
      * 
-     * This class holds a few tools method that will be used by
-     * the various Chatter widgets.
-     *
+     * This class holds a few tools method for Chatter.
      * Some regular expressions not used anymore, kept because I want to
      * - (^|\s)@((\w|@|\.)*): @login@log.log
-     *      1. '(void)'
-     *      2. login@log.log
      * - (^|\s)\[(\w+).(\w+),(\d)\|*((\w|[@ .,])*)\]: [ir.attachment,3|My Label],
      *   for internal links
-     *      1. '(void)'
-     *      2. 'ir'
-     *      3. 'attachment'
-     *      4. '3'
-     *      5. 'My Label'
      */
 
     mail.ChatterUtils = {
@@ -139,10 +108,6 @@ openerp.mail = function(session) {
             this.options.context = options.context || {};
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
             this.options.form_view_id = options.form_view_id || false;
-            // debug
-            console.groupCollapsed('New ComposeMessage: model', this.options.context.default_model, ', id', this.options.context.default_res_id);
-            console.log('context:', this.options.context);
-            console.groupEnd();
         },
 
         start: function () {
@@ -597,13 +562,11 @@ openerp.mail = function(session) {
      * mail_thread Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of the Chatter on documents.
+     * This widget handles the display of messages on a document. Its main
+     * use is to receive a context and a domain, and to delegate the message
+     * fetching and displaying to the Thread widget.
      */
-
-    /* Add mail_thread widget to registry */
     session.web.form.widgets.add('mail_thread', 'openerp.mail.RecordThread');
-
-    /** mail_thread widget: thread of comments */
     mail.RecordThread = session.web.form.AbstractField.extend({
         template: 'mail.record_thread',
 
@@ -616,8 +579,7 @@ openerp.mail = function(session) {
 
         start: function() {
             this._super.apply(this, arguments);
-            // NB: all the widget should be modified to check the actual_mode property on view, not use
-            // any other method to know if the view is in create mode anymore
+            // NB: check the actual_mode property on view to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
         },
@@ -646,9 +608,8 @@ openerp.mail = function(session) {
             this.$el.find('div.oe_mail_recthread_main').empty();
             if (this.thread) { this.thread.destroy(); }
             var thread = new mail.Thread(self, {
-                'context': this.options.context,
+                'context': this.options.context, 'message_ids': this.get_value(),
                 'thread_level': this.options.thread_level, 'show_header_compose': true,
-                'message_ids': this.get_value(),
                 'show_delete': true, 'composer': true });
             this.thread = thread;
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
@@ -661,13 +622,11 @@ openerp.mail = function(session) {
      * Wall Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of the Chatter on the Wall.
+     * This widget handles the display of messages on a Wall. Its main
+     * use is to receive a context and a domain, and to delegate the message
+     * fetching and displaying to the Thread widget.
      */
-
-    /* Add WallView widget to registry */
     session.web.client_actions.add('mail.wall', 'session.mail.Wall');
-
-    /* WallView widget: a wall of messages */
     mail.Wall = session.web.Widget.extend({
         template: 'mail.wall',
 
