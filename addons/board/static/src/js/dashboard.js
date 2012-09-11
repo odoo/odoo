@@ -220,36 +220,40 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         am.do_action = function (action) {
             self.do_action(action);
         };
-        if (action_attrs.creatable && action_attrs.creatable !== 'false') {
-            var action_id = parseInt(action_attrs.creatable, 10);
-            $action.parent().find('button.oe_dashboard_button_create').click(function() {
-                if (isNaN(action_id)) {
-                    action_orig.flags.default_view = 'form';
-                    self.do_action(action_orig);
-                } else {
-                    self.rpc('/web/action/load', {
-                        action_id: action_id
-                    }, function(result) {
-                        result.result.flags = result.result.flags || {};
-                        result.result.flags.default_view = 'form';
-                        self.do_action(result.result);
-                    });
-                }
-            });
-        }
         if (am.inner_widget) {
-            am.inner_widget.on_mode_switch.add(function(mode) {
+            var new_form_action = function(id, editable) {
                 var new_views = [];
                 _.each(action_orig.views, function(view) {
-                    new_views[view[1] === mode ? 'unshift' : 'push'](view);
+                    new_views[view[1] === 'form' ? 'unshift' : 'push'](view);
                 });
-                if (!new_views.length || new_views[0][1] !== mode) {
-                    new_views.unshift([false, mode]);
+                if (!new_views.length || new_views[0][1] !== 'form') {
+                    new_views.unshift([false, 'form']);
                 }
                 action_orig.views = new_views;
-                action_orig.res_id = am.inner_widget.dataset.ids[am.inner_widget.dataset.index];
+                action_orig.res_id = id;
+                action_orig.flags = {
+                    form: {
+                        "initial_mode": editable ? "edit" : "view",
+                    }
+                };
                 self.do_action(action_orig);
-            });
+            };
+            var list = am.inner_widget.views.list;
+            if (list) {
+                list.deferred.then(function() {
+                    $(list.controller.groups).off('row_link').on('row_link', function(e, id) {
+                        new_form_action(id);
+                    });
+                });
+            }
+            var kanban = am.inner_widget.views.kanban;
+            if (kanban) {
+                kanban.deferred.then(function() {
+                    kanban.controller.open_record = function(id, editable) {
+                        new_form_action(id, editable);
+                    };
+                });
+            }
         }
     },
     renderElement: function() {
