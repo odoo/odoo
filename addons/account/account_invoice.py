@@ -1095,10 +1095,10 @@ class account_invoice(osv.osv):
         if not ids:
             return []
         types = {
-                'out_invoice': 'CI: ',
-                'in_invoice': 'SI: ',
-                'out_refund': 'OR: ',
-                'in_refund': 'SR: ',
+                'out_invoice': 'Draft Invoice',
+                'in_invoice': 'Draft Invoice ',
+                'out_refund': 'Draft Refund ',
+                'in_refund': 'Draft Refund',
                 }
         return [(r['id'], (r['number']) or types[r['type']] + (r['name'] or '')) for r in self.read(cr, uid, ids, ['type', 'number', 'name'], context, load='_classic_write')]
 
