@@ -7,6 +7,7 @@ import cgi
 import contextlib
 import functools
 import logging
+import mimetypes
 import os
 import pprint
 import sys
@@ -420,6 +421,10 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
 #----------------------------------------------------------
 # OpenERP Web WSGI Application
 #----------------------------------------------------------
+# Add potentially missing (older ubuntu) font mime types
+mimetypes.add_type('application/font-woff', '.woff')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('application/x-font-ttf', '.ttf')
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -461,7 +466,7 @@ class Root(object):
                       only used in case the list of databases is requested
                       by the server, will be filtered by this pattern
     """
-    def __init__(self, options, openerp_addons_namespace=True):
+    def __init__(self, options):
         self.config = options
 
         if not hasattr(self.config, 'connector'):
@@ -474,7 +479,7 @@ class Root(object):
         self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
-        static_dirs = self._load_addons(openerp_addons_namespace)
+        static_dirs = self._load_addons()
         if options.serve_static:
             app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
             self.dispatch = DisableCacheMiddleware(app)
@@ -520,7 +525,7 @@ class Root(object):
 
         return response(environ, start_response)
 
-    def _load_addons(self, openerp_addons_namespace=True):
+    def _load_addons(self):
         """
         Loads all addons at the specified addons path, returns a mapping of
         static URLs to the corresponding directories
@@ -535,7 +540,7 @@ class Root(object):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if openerp_addons_namespace:
+                        if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
                         else:
                             m = __import__(module)

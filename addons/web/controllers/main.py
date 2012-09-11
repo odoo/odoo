@@ -34,6 +34,50 @@ openerpweb = common.http
 # OpenERP Web helpers
 #----------------------------------------------------------
 
+def rjsmin(script):
+    """ Minify js with a clever regex.
+    Taken from http://opensource.perlig.de/rjsmin
+    Apache License, Version 2.0 """
+    def subber(match):
+        """ Substitution callback """
+        groups = match.groups()
+        return (
+            groups[0] or
+            groups[1] or
+            groups[2] or
+            groups[3] or
+            (groups[4] and '\n') or
+            (groups[5] and ' ') or
+            (groups[6] and ' ') or
+            (groups[7] and ' ') or
+            ''
+        )
+
+    result = re.sub(
+        r'([^\047"/\000-\040]+)|((?:(?:\047[^\047\\\r\n]*(?:\\(?:[^\r\n]|\r?'
+        r'\n|\r)[^\047\\\r\n]*)*\047)|(?:"[^"\\\r\n]*(?:\\(?:[^\r\n]|\r?\n|'
+        r'\r)[^"\\\r\n]*)*"))[^\047"/\000-\040]*)|(?:(?<=[(,=:\[!&|?{};\r\n]'
+        r')(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/'
+        r'))*((?:/(?![\r\n/*])[^/\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*'
+        r'(?:\\[^\r\n][^\\\]\r\n]*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*'
+        r'))|(?:(?<=[\000-#%-,./:-@\[-^`{-~-]return)(?:[\000-\011\013\014\01'
+        r'6-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*((?:/(?![\r\n/*])[^/'
+        r'\\\[\r\n]*(?:(?:\\[^\r\n]|(?:\[[^\\\]\r\n]*(?:\\[^\r\n][^\\\]\r\n]'
+        r'*)*\]))[^/\\\[\r\n]*)*/)[^\047"/\000-\040]*))|(?<=[^\000-!#%&(*,./'
+        r':-@\[\\^`{|~])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/'
+        r'*][^*]*\*+)*/))*(?:((?:(?://[^\r\n]*)?[\r\n]))(?:[\000-\011\013\01'
+        r'4\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))*)+(?=[^\000-\040"#'
+        r'%-\047)*,./:-@\\-^`|-~])|(?<=[^\000-#%-,./:-@\[-^`{-~-])((?:[\000-'
+        r'\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=[^'
+        r'\000-#%-,./:-@\[-^`{-~-])|(?<=\+)((?:[\000-\011\013\014\016-\040]|'
+        r'(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=\+)|(?<=-)((?:[\000-\011\0'
+        r'13\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/)))+(?=-)|(?:[\0'
+        r'00-\011\013\014\016-\040]|(?:/\*[^*]*\*+(?:[^/*][^*]*\*+)*/))+|(?:'
+        r'(?:(?://[^\r\n]*)?[\r\n])(?:[\000-\011\013\014\016-\040]|(?:/\*[^*'
+        r']*\*+(?:[^/*][^*]*\*+)*/))*)+', subber, '\n%s\n' % script
+    ).strip()
+    return result
+
 def sass2scss(src):
     # Validated by diff -u of sass2scss against:
     # sass-convert -F sass -T scss openerp.sass openerp.scss
@@ -256,6 +300,11 @@ def concat_files(file_list, reader=None, intersperse=""):
     files_concat = intersperse.join(files_content)
     return files_concat, checksum.hexdigest()
 
+def concat_js(file_list):
+    content, checksum = concat_files(file_list, intersperse=';')
+    content = rjsmin(content)
+    return content, checksum 
+
 def manifest_glob(req, addons, key):
     if addons is None:
         addons = module_boot(req)
@@ -435,15 +484,13 @@ def fix_view_modes(action):
     if not action.get('views'):
         generate_views(action)
 
-    id_form = None
-    for index, (id, mode) in enumerate(action['views']):
-        if mode == 'form':
-            id_form = id
-            break
-
     if action.pop('view_type', 'form') != 'form':
         return action
 
+    if 'view_mode' in action:
+        action['view_mode'] = ','.join(
+            mode if mode != 'tree' else 'list'
+            for mode in action['view_mode'].split(','))
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
         for id, mode in action['views']
@@ -591,7 +638,7 @@ class WebClient(openerpweb.Controller):
         if req.httprequest.if_modified_since and req.httprequest.if_modified_since >= last_modified:
             return werkzeug.wrappers.Response(status=304)
 
-        content, checksum = concat_files(files, intersperse=';')
+        content, checksum = concat_js(files)
 
         return make_conditional(
             req, req.make_response(content, [('Content-Type', 'application/javascript')]),
@@ -757,7 +804,6 @@ class Session(openerpweb.Controller):
             "context": req.session.get_context() if req.session._uid else {},
             "db": req.session._db,
             "login": req.session._login,
-            "openerp_entreprise": req.session.openerp_entreprise(),
         }
 
     @openerpweb.jsonrequest
@@ -1142,12 +1188,26 @@ class DataSet(openerpweb.Controller):
         return req.session.exec_workflow(model, id, signal)
 
     @openerpweb.jsonrequest
-    def resequence(self, req, model, ids):
+    def resequence(self, req, model, ids, field='sequence', offset=0):
+        """ Re-sequences a number of records in the model, by their ids
+
+        The re-sequencing starts at the first model of ``ids``, the sequence
+        number is incremented by one after each record and starts at ``offset``
+
+        :param ids: identifiers of the records to resequence, in the new sequence order
+        :type ids: list(id)
+        :param str field: field used for sequence specification, defaults to
+                          "sequence"
+        :param int offset: sequence number for first record in ``ids``, allows
+                           starting the resequencing from an arbitrary number,
+                           defaults to ``0``
+        """
         m = req.session.model(model)
-        if not len(m.fields_get(['sequence'])):
+        if not m.fields_get([field]):
             return False
-        for i in range(len(ids)):
-            m.write([ids[i]], { 'sequence': i })
+        # python 2.6 has no start parameter
+        for i, id in enumerate(ids):
+            m.write(id, { field: i + offset })
         return True
 
 class DataGroup(openerpweb.Controller):
@@ -1288,27 +1348,6 @@ class View(openerpweb.Controller):
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):
         return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
-
-class ListView(View):
-    _cp_path = "/web/listview"
-
-    def process_colors(self, view, row, context):
-        colors = view['arch']['attrs'].get('colors')
-
-        if not colors:
-            return None
-
-        color = [
-            pair.split(':')[0]
-            for pair in colors.split(';')
-            if eval(pair.split(':')[1], dict(context, **row))
-        ]
-
-        if not color:
-            return None
-        elif len(color) == 1:
-            return color[0]
-        return 'maroon'
 
 class TreeView(View):
     _cp_path = "/web/treeview"

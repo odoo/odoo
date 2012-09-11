@@ -53,20 +53,20 @@ instance.web_graph.GraphView = instance.web.View.extend({
         // TODO: move  to load_view and document
         var self = this;
         this.fields_view = fields_view_get;
-        this.$element.addClass(this.fields_view.arch.attrs['class']);
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
 
         this.mode = this.fields_view.arch.attrs.type || 'bar';
         this.orientation = this.fields_view.arch.attrs.orientation == 'horizontal';
 
-        var width = this.$element.parent().width();
-        this.$element.css("width", width);
-        this.container = this.$element.find("#editor-render-body").css({
+        var width = this.$el.parent().width();
+        this.$el.css("width", width);
+        this.container = this.$el.find("#editor-render-body").css({
             width: width,
             height: Math.min(500, width * 0.8)
         })[0];
 
         var graph_render = this.proxy('graph_render');
-        this.$element.on('click', '.oe_graph_options a', function (evt) {
+        this.$el.on('click', '.oe_graph_options a', function (evt) {
             var $el = $(evt.target);
 
             self.graph_render({data: filter_values({
@@ -77,18 +77,18 @@ instance.web_graph.GraphView = instance.web.View.extend({
             })});
         });
 
-        this.$element.find("#graph_show_data").click(function () {
+        this.$el.find("#graph_show_data").click(function () {
             self.spreadsheet = ! self.spreadsheet;
             self.graph_render();
         });
-        this.$element.find("#graph_switch").click(function () {
+        this.$el.find("#graph_switch").click(function () {
             if (self.mode != 'radar') {
                 self.orientation = ! self.orientation;
             }
             self.graph_render();
         });
 
-        this.$element.find("#graph_download").click(function () {
+        this.$el.find("#graph_download").click(function () {
             if (self.legend == "top") { self.legend = "inside"; }
             self.forcehtml = true;
 
@@ -110,7 +110,7 @@ instance.web_graph.GraphView = instance.web.View.extend({
         switch (this.legend) {
         case 'top':
             legend.noColumns = 4;
-            legend.container = this.$element.find("div.graph_header_legend")[0];
+            legend.container = this.$el.find("div.graph_header_legend")[0];
             break;
         case 'inside':
             legend.position = 'nw';
@@ -257,24 +257,24 @@ instance.web_graph.GraphView = instance.web.View.extend({
         }
 
         // Render the graph
-        this.$element.find(".graph_header_legend").children().remove();
+        this.$el.find(".graph_header_legend").children().remove();
         this.graph = this.make_graph(this.mode, this.container, data);
 
         // Update styles of menus
 
-        this.$element.find("a").removeClass("active");
+        this.$el.find("a").removeClass("active");
 
-        var $active = this.$element.find('a[data-mode=' + this.mode + ']');
+        var $active = this.$el.find('a[data-mode=' + this.mode + ']');
         if ($active.length > 1) {
             $active = $active.filter('[data-stacked=' + this.stacked + ']');
         }
         $active = $active.add(
-            this.$element.find('a:not([data-mode])[data-legend=' + this.legend + ']'));
+            this.$el.find('a:not([data-mode])[data-legend=' + this.legend + ']'));
 
         $active.addClass('active');
 
         if (this.spreadsheet) {
-            this.$element.find("#graph_show_data").addClass("active");
+            this.$el.find("#graph_show_data").addClass("active");
         }
         return this.graph;
     },

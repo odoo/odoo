@@ -18,7 +18,7 @@ openerp.web_tests = function (instance) {
         start: function () {
             $.when(
                 this.dataset.read_slice(),
-                this.form.appendTo(this.$element)).then(this.on_everything_loaded);
+                this.form.appendTo(this.$el)).then(this.on_everything_loaded);
         },
         on_everything_loaded: function (slice) {
             var records = slice[0].records;
@@ -29,7 +29,7 @@ openerp.web_tests = function (instance) {
             this.form.on_record_loaded(records[0]);
             _(records.slice(1)).each(function (record, index) {
                 this.dataset.index = index+1;
-                this.form.reposition($('<div>').appendTo(this.$element));
+                this.form.reposition($('<div>').appendTo(this.$el));
                 this.form.on_record_loaded(record);
             }, this);
         }

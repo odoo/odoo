@@ -12,7 +12,6 @@ openerp.test_support = {
             username: false,
             user_context: {},
             db: false,
-            openerp_entreprise: false,
 //            this.module_list = openerp._modules.slice();
 //            this.module_loaded = {};
 //            _(this.module_list).each(function (mod) {

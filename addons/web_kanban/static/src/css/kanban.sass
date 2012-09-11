@@ -26,11 +26,18 @@
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
     -box-shadow: $bsval
+
+@mixin transform($transform)
+    -moz-transform: $transform
+    -webkit-transform: $transform
+    -o-transform: $transform
+    -ms-transform: $transform
 // }}}
 
 .openerp .oe_kanban_view
     // KanbanView {{{
     //background: url(data:image/pngbase64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAKElEQVQIHWP8DwTv379nAAFBQUEGhnfv3oHEwADEZgJLIRGMIClkLQCr3x2Htp/lLwAAAABJRU5ErkJggg==)
+    background: white
     height: inherit
     &.oe_kanban_grouped .oe_kanban_dummy_cell
         background: url(/web/static/src/img/form_sheetbg.png)
@@ -38,6 +45,9 @@
         border: 1px dotted black
         visibility: visible !important
         height: 60px !important
+    .ui-sortable-helper
+        @include box-shadow(0 1px 20px rgba(0, 0, 0, 0.9))
+        @include transform(rotate(3deg))
     .oe_kanban_left
         float: left
     .oe_kanban_right
@@ -143,18 +153,18 @@
     .oe_kanban_add
         float: right
 
-    .oe_kanban_quick_create
-        margin-bottom: 4px
     .oe_kanban_quick_create_buttons
         margin: 4px 0
     .oe_kanban_no_group .oe_kanban_quick_create
         width: 200px
         padding: 10px
     .oe_kanban_quick_create input
+        outline: none
+        border: none
+        @include box-shadow(none)
         display: block
         margin: 0 0 8px 0
         font-size: 13px
-        box-sizing: border-box
         width: 100%
     // }}}
     // KanbanRecords {{{
@@ -210,7 +220,6 @@
         -webkit-border-radius: 4px
         margin-bottom: 5px
     .oe_kanban_box_header
-        background: #EEE
         border-bottom: 1px solid #CCC
     .oe_kanban_title
         font-size: 95%
@@ -225,7 +234,6 @@
     &.oe_kanban_grouped .oe_kanban_show_more .oe_button
         width: 100%
     &.oe_kanban_ungrouped .oe_kanban_column
-        background: white
         .oe_kanban_record
             float: left
             padding: 2px
@@ -237,6 +245,8 @@
         margin: 0
     .oe_kanban_action_a
         text-decoration: none
+        &:hover
+            text-decoration: none
     .oe_kanban_table
         width: 100%
         border: none
@@ -292,19 +302,19 @@
         white-space: nowrap
         display: inline-block
         line-height: 1em
-    .oe_kanban_card
+    .oe_kanban_card, .oe_kanban_quick_create
+        margin-bottom: 4px
         position: relative
         display: block
         background: white
         border: 1px solid #d8d8d8
         border-bottom-color: #b9b9b9
-        padding: 6px
+        padding: 8px
         display: block
         @include radius(4px)
-        &:last-child
-            margin-bottom: 0
         &:hover
-            @include box-shadow(0 0 3px rgba(0,0,0,0.6))
+            border: 1px solid #7C7BAD
+            @include box-shadow(0 0 4px #7C7BAD)
             .oe_dropdown_kanban > span
                 visibility: visible
         h3
@@ -387,6 +397,9 @@
             left: 0
             top: 28px
             min-width: 160px
+            padding: 2px
+            > li
+                padding: 3px
     .oe_dropdown_kanban
         &.oe_opened > span
             visibility: visible

@@ -51,29 +51,6 @@
     </table>
 </t>
 <t t-name="CrashManager.error">
-    <t t-if="!session.openerp_entreprise">
-        <span>Your version of OpenERP is unsupported. Support &amp; maintenance services are available here: <a href="http://www.openerp.com/support-or-publisher-warranty-contract" target="_blank">OpenERP Entreprise</a>.</span>
-    </t>
-    <t t-if="session.openerp_entreprise">
-        <div class="oe_error_send">
-            <div>
-                <div class="oe_centeralign"><b>OpenERP Enterprise Contract.</b></div>
-                <div><br/>Your report will be sent to the OpenERP Enterprise team.<br/></div><br/>
-                <div>
-                    <label>Summary:</label><br/>
-                    <input id="issuename" type="text" class="oe_fielddiv"/>
-                </div><br/><br/>
-                <div>
-                    <label>Description:</label><br/>
-                    <textarea id="explanation" rows="6"></textarea>
-                </div><br/><br/>
-                <div>
-                    <label>What you did:</label><br/>
-                    <textarea id="remark" rows="6" ></textarea>
-                </div>
-            </div>
-        </div><br/>
-    </t>
     <div class="oe_error_detail">
         <pre><t t-esc="error.message"/></pre>
         <hr/>
@@ -102,7 +79,7 @@
             </form>
             <div class="oe_login_footer">
                 <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com">Powered by <span>OpenERP</span></a>
+                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
             </div>
         </div>
     </div>
@@ -143,7 +120,7 @@
                     </tr>
                     <tr>
                         <td><label for="db_name">New database name:</label></td>
-                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_]+$" autofocus="true"/></td>
+                        <td><input type="text" name="db_name" class="required" matches="^[a-zA-Z][a-zA-Z0-9_-]+$" autofocus="true"/></td>
                     </tr>
                     <tr>
                         <td><label for="demo_data">Load Demonstration data:</label></td>
@@ -427,13 +404,10 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <t t-js="d">
-                    d.url = '/' + (window.location.search || '');
-                </t>
-                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                    Powered by <a href="http://www.openerp.com" target="_blank"><span>Open</span>ERP</a>
                 </div>
             </td>
             <td class="oe_application">
@@ -502,10 +476,12 @@
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
     <option value="manage_filters">Manage Filters</option>
     <t t-if="view_manager.session.uid === 1">
+        <option value="translate">Technical translation</option>
         <option value="manage_views">Manage Views</option>
         <option value="edit" data-model="ir.ui.view" t-att-data-id="view.fields_view.view_id">Edit <t t-esc="_.str.capitalize(view.fields_view.type)"/>View</option>
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
@@ -563,6 +539,7 @@
         <t t-foreach="widget.sections" t-as="section">
             <div class="oe_form_dropdown_section">
                 <button class="oe_dropdown_toggle oe_dropdown_arrow">
+                    <t t-if="section.name == 'files'" t-raw="widget.items[section.name].length || ''"/>
                     <t t-esc="section.label"/>
                 </button>
                 <ul class="oe_dropdown_menu">
@@ -657,7 +634,7 @@
                     <t t-if="column.tag !== 'button'"><t t-esc="column.string"/></t>
                 </th>
             </t>
-            <th t-if="options.deletable" width="13px"/>
+            <th t-if="options.deletable" class="oe_list_record_delete" width="13px"/>
         </tr>
     </thead>
     <tfoot>
@@ -671,13 +648,10 @@
     </tfoot>
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
-    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable">
+    <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_alternative" t-if="widget.options.import_enabled">
-            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
-        </span>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -721,9 +695,10 @@
     <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
-    </t>
-    <t t-jquery="a.oe_list_button_import" t-operation="after">
-        <a href="#" class="oe_bold oe_list_discard">discard</a>
+        <span class="oe_alternative">
+            <span class="oe_fade">or</span>
+            <a href="#" class="oe_bold oe_list_discard">Discard</a>
+        </span>
     </t>
 </t>
 <t t-extend="ListView.row">
@@ -747,13 +722,17 @@
 <div t-name="FormView.buttons" class="oe_form_buttons">
     <t t-if="widget.options.action_buttons !== false">
         <span class="oe_form_buttons_view">
-            <div style="display: inline-block;"> <!-- required for the bounce effect on button -->
-              <button type="button" class="oe_button oe_form_button_edit">Edit</button>
+            <!-- required for the bounce effect on button -->
+            <div t-if="widget.is_action_enabled('edit')" style="display: inline-block;">
+                <button type="button" class="oe_button oe_form_button_edit" accesskey="E">Edit</button>
             </div>
-            <button type="button" class="oe_button oe_form_button_create">Create</button>
+            <button t-if="widget.is_action_enabled('create')"
+                type="button" class="oe_button oe_form_button_create" accesskey="C">Create</button>
         </span>
         <span class="oe_form_buttons_edit">
-            <button type="button" class="oe_button oe_form_button_save oe_highlight">Save</button> <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_form_button_cancel">Discard</a>
+            <button type="button" class="oe_button oe_form_button_save oe_highlight" accesskey="S">Save</button>
+            <span class="oe_fade">or</span>
+            <a href="#" class="oe_bold oe_form_button_cancel" accesskey="D">Discard</a>
         </span>
     </t>
 </div>
@@ -839,7 +818,7 @@
     <div class="oe_clear">
         <ul t-attf-class="oe_notebook #{classnames}">
             <li t-foreach="pages" t-as="page" t-att-modifiers="page.modifiers">
-                <a t-attf-href="##{page.id}">
+                <a t-attf-href="##{page.id}" t-att-accesskey="page.accesskey">
                     <t t-esc="page.string"/>
                 </a>
             </li>
@@ -1017,12 +996,12 @@
 <t t-name="FieldMany2One">
     <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button" t-att-style="widget.node.attrs.style">
         <t t-if="widget.get('effective_readonly')">
-            <a t-if="! widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
-            <span t-if="widget.get_definition_options().no_open" href="#" class="oe_form_uri"/>
+            <a t-if="! widget.options.no_open" href="#" class="oe_form_uri"/>
+            <span t-if="widget.options.no_open" href="#" class="oe_form_uri"/>
             <span class="oe_form_m2o_follow"/>
         </t>
         <t t-if="!widget.get('effective_readonly')">
-            <a t-if="! widget.get_definition_options().no_open" href="#" tabindex="-1"
+            <a t-if="! widget.options.no_open" href="#" tabindex="-1"
                 class="oe_m2o_cm_button oe_e">/</a>
             <div>
                 <input type="text"
@@ -1083,19 +1062,14 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul class="" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
-    <t t-set="size" t-value="widget.to_show.length"/>
-    <t t-foreach="_.range(size)" t-as="i">
-        <li t-att-class="widget.to_show[i][0] === widget.selected_value ? 'oe_form_steps_active' : 'oe_form_steps_inactive'">
-            <div class="oe_form_steps_button" t-att-data-id="widget.to_show[i][0]">
-                <t t-esc="widget.to_show[i][1]"/>
-                <span class="oe_form_steps_arrow">
-                    <span></span>
-                </span>
-                <img t-att-src='_s + "/web/static/src/img/form_steps.png"' class="oe_form_steps_arrow" t-if="i &lt; size - 1"/>
-            </div>
+    <t t-foreach="widget.selection" t-as="i">
+        <li t-att-class="i[0] === widget.selected_value ? 'oe_active' : ''" t-att-data-id="i[0]">
+            <span class="label"><t t-esc="i[1]"/></span>
+            <!-- are you mit ? -->
+            <span class="arrow"><span></span></span>
         </li>
     </t>
 </t>
@@ -1192,7 +1166,8 @@
     <button type="button" class="oe_button oe_form_button"
         t-att-style="widget.node.attrs.style"
         t-att-tabindex="widget.node.attrs.tabindex"
-        t-att-autofocus="widget.node.attrs.autofocus">
+        t-att-autofocus="widget.node.attrs.autofocus"
+        t-att-accesskey="widget.node.attrs.accesskey">
         <img t-if="widget.node.attrs.icon" t-att-src="_s + widget.node.attrs.icon" width="16" height="16"/>
         <span t-if="widget.string"><t t-esc="widget.string"/></span>
     </button>
@@ -1227,28 +1202,6 @@
             <t t-esc="widget.node.attrs.name"/>
         </li>
     </t>
-</t>
-
-<t t-name="TranslateDialog">
-    <table t-if="widget.view.translatable_fields" class="oe_form oe_translation_form" border="0" cellpadding="0" cellspacing="0" width="100%">
-    <tr>
-        <td class="oe_form_separator" width="1%" nowrap="nowrap">
-            <div class="oe_horizontal_separator">Field</div>
-        </td>
-        <th t-foreach="widget.languages" align="left">
-            <div class="oe_horizontal_separator"><t t-esc="name"/></div>
-        </th>
-    </tr>
-    <tr t-foreach="widget.view.translatable_fields" t-as="field" t-att-data-field="field.name">
-        <td class="oe_form_group_cell" width="1%" nowrap="nowrap">
-            <label class="oe_label"><t t-esc="field.string"/>:</label>
-        </td>
-        <td t-foreach="widget.languages" t-as="lg" class="oe_form_group_cell">
-            <input t-if="field.field.type == 'char'" type="text" t-attf-name="#{lg.code}-#{field.name}" value="" data-value="" class="oe_trad_field" style="width: 100%"/>
-            <textarea t-if="field.field.type == 'text'" t-attf-name="#{lg.code}-#{field.name}" data-value="" class="oe_trad_field" style="width: 100%"></textarea>
-        </td>
-    </tr>
-    </table>
 </t>
 
 <t t-name="AbstractFormPopup.render">
@@ -1741,7 +1694,7 @@
         <div class="oe_blockui_spin" style="height: 50px">
         </div>
         <br />
-        <div style="color:white">Loading...</div>
+        <div class="oe_throbber_message" style="color:white"></div>
     </div>
 </t>
 </templates>
