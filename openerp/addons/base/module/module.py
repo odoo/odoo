@@ -634,7 +634,7 @@ class module(osv.osv):
                     _logger.exception('ggr')
                     raise osv.except_osv('grrr', e)
                 else:
-                    zipfile.ZipFile(StringIO(content).extractall(tmp)
+                    zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
             for module_name in urls:
