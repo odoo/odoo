@@ -52,7 +52,19 @@ class groups(osv.osv):
             else:
                 res[g.id] = g.name
         return res
-
+    
+    def _search_group(self, cr, uid, obj, name, args, context=None):
+        operand = args[0][2]
+        operator = args[0][1]
+        values = operand.split('/')
+        group_name = values[0]
+        where = [('name', operator, group_name)]
+        if len(values) > 1:
+            application_name = values[0]
+            group_name = values[1]
+            where = ['|',('category_id.name', operator, application_name)] + where
+        return where
+    
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -62,7 +74,7 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
     }
 
     _sql_constraints = [
@@ -806,7 +818,7 @@ class users_view(osv.osv):
         for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
-                tips = ['%s: %s' % (g.name, g.comment or '') for g in gs]
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
                 res[name_selection_groups(map(int, gs))] = {
                     'type': 'selection',
                     'string': app and app.name or _('Other'),
