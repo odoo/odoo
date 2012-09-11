@@ -625,9 +625,6 @@ class module(osv.osv):
             zimp.load_module(mod.name)
         return res
 
-    def install_by_names(self, cr, uid, names, context=None):
-        raise NotImplementedError('# TODO')
-
     def install_from_urls(self, cr, uid, urls, context=None):
         tmp = tempfile.mkdtemp()
         try:
@@ -681,6 +678,9 @@ class module(osv.osv):
             return self.button_immediate_install(cr, uid, ids, context=context)
         finally:
             shutil.rmtree(tmp)
+
+    def install_by_names(self, cr, uid, names, context=None):
+        raise NotImplementedError('# TODO')
 
     def _update_dependencies(self, cr, uid, mod_browse, depends=None):
         if depends is None:
