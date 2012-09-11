@@ -9,16 +9,23 @@
   box-shadow: $bsval
 
 .openerp
+  .oe_dashboard_layout_selector
+    ul
+      white-space: nowrap
+    li
+      margin: 0
+      padding: 0
+      list-style-type: none
+      float: left
+      .oe_dashboard_selected_layout
+        margin-left: -30px
+        vertical-align: bottom
+        margin-bottom: 10px
   .oe_dashboard_links
     text-align: right
     margin: 0 4px 6px 0
   .oe_dashboard
     width: 100%
-    .oe_dashboard_layout_selector
-      ul, li
-        margin: 0
-        padding: 0
-        list-style-type: none
     .oe_action
       margin: 0 8px 8px 0
       background-color: white
