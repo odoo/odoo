@@ -684,11 +684,8 @@ openerp.mail = function(session) {
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
             this.options.thread_level = options.thread_level || 1;
-            this.thread_list = [];
-            this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
-            // for search view
-            this.search = {'domain': [], 'context': {}, 'groupby': {}}
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
+            this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
         },
 
         start: function () {
@@ -699,7 +696,7 @@ openerp.mail = function(session) {
         },
 
         destroy: function () {
-            for (var i in this.thread_list) { this.thread_list[i].destroy(); }
+            if (this.thread) this.thread.destroy();
             this._super.apply(this, arguments);
         },
 
@@ -746,10 +743,11 @@ openerp.mail = function(session) {
 
         /** Display the Wall threads */
         message_display: function () {
+            var thread_domain = this.options.domain.concat(this.search_results['domain']);
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
             var thread = new mail.Thread(this, {
-                'domain': this.options.domain, 'context': this.options.context,
+                'domain': thread_domain, 'context': this.options.context,
                 'thread_level': this.options.thread_level, 'composer': true,
                 // display options
                 'show_header_compose': true,  'show_reply': this.options.thread_level > 0,
@@ -757,7 +755,7 @@ openerp.mail = function(session) {
                 }
             );
             thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
-            this.thread_list.push(thread);
+            this.thread = thread;
         },
     });
 };
