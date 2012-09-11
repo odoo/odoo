@@ -14,7 +14,7 @@
                     <group>
                         <field name="subject" placeholder="Subject..."/>
                         <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
-                                context="{'force_create':True}"
+                                context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"/>
                     </group>
                     <notebook>
