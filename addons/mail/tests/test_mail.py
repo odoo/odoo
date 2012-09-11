@@ -29,7 +29,7 @@ Received: by mail1.openerp.com (Postfix, from userid 10002)
 From: Sylvie Lelitre <sylvie.lelitre@agrolait.com>
 Subject: {subject}
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
+Content-Type: multipart/alternative;
     boundary="----=_Part_4200734_24778174.1344608186754"
 Date: Fri, 10 Aug 2012 14:16:26 +0000
 Message-ID: <1198923581.41972151344608186760.JavaMail@agrolait.com>
@@ -52,9 +52,9 @@ Content-Transfer-Encoding: quoted-printable
   <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
  </head>=20
  <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
-  
+
   <p>Please call me as soon as possible this afternoon!</p>
-  
+
   <p>--<br/>
      Sylvie
   <p>
@@ -153,7 +153,7 @@ class test_mail(common.TransactionCase):
         test_msg_id = '<deadcafe.1337@smtp.agrolait.com>'
         mail_text = MAIL_TEMPLATE_PLAINTEXT.format(to='groups@example.com', subject='frogs', extra='', msg_id=test_msg_id)
         self.mail_thread.message_process(cr, uid, None, mail_text)
-        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id','=',test_msg_id)])[0])
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
                          'plaintext mail incorrectly parsed')
 
@@ -458,11 +458,12 @@ class test_mail(common.TransactionCase):
         # It will be updated as soon as we have fixed specs !
         cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
         def _compare_structures(struct1, struct2, n=0):
             print '%scompare structure' % ('\t' * n)
             self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
             for x in range(len(struct1)):
-                print '%s' % ('\t' * n), struct1[x]['id'], struct2[x]['id'], struct1[x].get('subject') or ''
+                print '%s' % ('\t' * n), struct1[x]['id'], struct1[x]['child_nbr'], struct2[x]['id'], struct2[x]['child_nbr'], struct1[x].get('subject') or ''
                 self.assertEqual(struct1[x]['id'], struct2[x]['id'], 'message_read failure %s' % struct1[x].get('subject'))
                 _compare_structures(struct1[x]['child_ids'], struct2[x]['child_ids'], n + 1)
             print '%send compare' % ('\t' * n)
@@ -473,24 +474,24 @@ class test_mail(common.TransactionCase):
 
         # Create dummy message structure
         import copy
-        tree = [{'id': 2, 'child_ids': [
-                    {'id': 6, 'child_ids': [
-                        {'id': 8, 'child_ids': []},
+        tree = [{'id': 2, 'child_nbr': 1, 'child_ids': [
+                    {'id': 6, 'child_nbr': 1, 'child_ids': [
+                        {'id': 8, 'child_nbr': 0, 'child_ids': []},
                         ]},
                     ]},
-                {'id': 1, 'child_ids':[
-                    {'id': 7, 'child_ids': [
-                        {'id': 9, 'child_ids': []},
+                {'id': 1, 'child_nbr': 3, 'child_ids':[
+                    {'id': 7, 'child_nbr': 1, 'child_ids': [
+                        {'id': 9, 'child_nbr': 0, 'child_ids': []},
                         ]},
-                    {'id': 4, 'child_ids': [
-                        {'id': 10, 'child_ids': []},
-                        {'id': 5, 'child_ids': []},
+                    {'id': 4, 'child_nbr': 2, 'child_ids': [
+                        {'id': 10, 'child_nbr': 0, 'child_ids': []},
+                        {'id': 5, 'child_nbr': 0, 'child_ids': []},
                         ]},
-                    {'id': 3, 'child_ids': []},
+                    {'id': 3, 'child_nbr': 0, 'child_ids': []},
                     ]},
                 ]
         # Test: completely flat
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), 0, 0, [('type', 'in', 'borderlands')])
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 0)
         _compare_structures(new_tree, new_tree)
         self.assertEqual(len(new_tree), 10, 'message_read_tree_flatten wrong in flat')
         # Test: 1 thread level
@@ -503,10 +504,10 @@ class test_mail(common.TransactionCase):
                         {'id': 4, 'child_ids': []}, {'id': 3, 'child_ids': []},
                     ]},
                     ]
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), 0, 1, [('type', 'in', 'borderlands')])
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 1)
         _compare_structures(new_tree, tree_test)
         # Test: 2 thread levels
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), 0, 2, [('type', 'in', 'borderlands')])
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 2)
         _compare_structures(new_tree, tree)
 
         # ----------------------------------------

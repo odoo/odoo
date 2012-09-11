@@ -455,7 +455,7 @@ openerp.mail = function(session) {
                 return this.message_display(this.options.message_data);
             }
             return this.ds_message.call('message_read',
-                [(initial_mode && this.options.message_ids) || false, fetch_domain, this.options.thread_level, undefined, fetch_context]
+                [(initial_mode && this.options.message_ids) || false, fetch_domain, this.options.thread_level, fetch_context]
                 ).then(this.proxy('message_display'));
         },
 
