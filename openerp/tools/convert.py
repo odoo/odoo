@@ -134,14 +134,14 @@ def _eval_xml(self, node, pool, cr, uid, idref, context=None):
                     f_val = f_val[0]
             return f_val
         a_eval = node.get('eval','')
-        idref2 = {}
         if a_eval:
             idref2 = _get_idref(self, cr, uid, f_model, context, idref)
             try:
                 return unsafe_eval(a_eval, idref2)
             except Exception:
-                _logger.warning('could not eval(%s) for %s in %s' % (a_eval, node.get('name'), context), exc_info=True)
-                return ""
+                logging.getLogger('openerp.tools.convert.init').error(
+                    'Could not eval(%s) for %s in %s', a_eval, node.get('name'), context)
+                raise
         def _process(s, idref):
             m = re.findall('[^%]%\((.*?)\)[ds]', s)
             for id in m:
