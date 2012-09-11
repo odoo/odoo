@@ -108,6 +108,7 @@ openerp.mail = function(session) {
             this.options.context = options.context || {};
             this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
             this.options.form_view_id = options.form_view_id || false;
+            this.show_attachment_delete = true;
         },
 
         start: function () {
@@ -157,17 +158,27 @@ openerp.mail = function(session) {
             var input_node = this.$el.find('input[name=ufile]');
             button_attach.detach().insertAfter(input_node);
             // set the function called when attachments are added
-            this.$el.find('input.oe_form_binary_file').change(this.on_attachment_changed);
+            this.$el.find('input.oe_form_binary_file').change(this.on_attachment_change);
             this.bind_events();
             this.form_view.do_show();
         },
 
-        /** Called when the user submits a new attachment */
-        on_attachment_changed: function(e) {
-            var $e = $(e.target);
-            if ($e.val() !== '') {
+        on_attachment_change: function (event) {
+            var $target = $(event.target);
+            if ($target.val() !== '') {
                 this.$el.find('form.oe_form_binary_form').submit();
                 session.web.blockUI();
+            }
+        },
+
+        on_attachment_delete: function (event) {
+            if (event.target.dataset && event.target.dataset.id) {
+                var attachment_id = parseInt(event.target.dataset.id);
+                var idx = _.pluck(this.attachment_ids, 'id').indexOf(attachment_id);
+                if (idx == -1) return false;
+                new session.web.DataSetSearch(this, 'ir.attachment').unlink(attachment_id);
+                this.attachment_ids.splice(idx, 1);
+                this.display_attachments();
             }
         },
 
@@ -205,10 +216,6 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
-            // event: click on 'Attachment' button that opens the dialog to add an attachment.
-            this.$el.on('click', 'button.oe_mail_compose_message_attachment', function (event) {
-                event.stopImmediatePropagation();
-            });
             // event: add a new attachment
             $(window).on(this.fileupload_id, function() {
                 var args = [].slice.call(arguments).slice(1);
@@ -218,6 +225,8 @@ openerp.mail = function(session) {
                 self.display_attachments();
                 session.web.unblockUI();
             });
+            // event: delete an attachment
+            this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
         },
     }),
 

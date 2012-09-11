@@ -169,7 +169,12 @@
     <t t-name="mail.thread.message.attachments">
         <ul class="oe_mail_msg_attachments">
             <t t-foreach="record.attachment_ids" t-as="attachment">
-                <li><a t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a></li>
+                <li>
+                    <a t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a>
+                    <t t-if="record.show_attachment_delete">
+                        <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
+                    </t>
+                </li>
             </t>
         </ul>
     </t>
