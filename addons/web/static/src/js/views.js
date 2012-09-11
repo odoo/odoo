@@ -836,6 +836,8 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     }
                 });
                 break;
+            case 'print_workflow':
+                break;
             default:
                 if (val) {
                     console.log("No debug handler for ", val);
