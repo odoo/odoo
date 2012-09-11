@@ -32,14 +32,6 @@ import pytz
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
 
-class res_payterm(osv.osv):
-    _description = 'Payment term'
-    _name = 'res.payterm'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Payment Term (short name)', size=64),
-    }
-
 class res_partner_category(osv.osv):
 
     def name_get(self, cr, uid, ids, context=None):
