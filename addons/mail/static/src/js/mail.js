@@ -416,12 +416,12 @@ openerp.mail = function(session) {
             // domain and context: options + additional
             fetch_domain = _.flatten([this.options.domain, additional_domain || []], true)
             fetch_context = _.extend(this.options.context, additional_context || {})
-            // if message_ids is set: try to use it
+            // initial mode: try to use message_data or message_ids
             if (initial_mode && this.options.message_data) {
                 return this.message_display(this.options.message_data);
             }
-            return this.ds_message.call('message_read',
-                [(initial_mode && this.options.message_ids) || false, fetch_domain, this.options.thread_level, undefined, fetch_context]
+            message_ids = initial_mode && this.options.message_ids != null && this.options.message_ids || false;
+            return this.ds_message.call('message_read', [message_ids, fetch_domain, this.options.thread_level, undefined, fetch_context]
                 ).then(this.proxy('message_display'));
         },
 
@@ -604,13 +604,16 @@ openerp.mail = function(session) {
             _.extend(this.options.context, {
                 default_res_id: this.view.datarecord.id,
                 default_model: this.view.model });
+            // update domain
+            var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
             if (this.thread) { this.thread.destroy(); }
             var thread = new mail.Thread(self, {
-                'context': this.options.context, 'message_ids': this.get_value(),
-                'thread_level': this.options.thread_level, 'show_header_compose': true,
-                'show_delete': true, 'composer': true });
+                'context': this.options.context, 'domain': domain, 'message_ids': this.get_value(),
+                // display
+                'thread_level': this.options.thread_level, 'show_header_compose': true, 'show_delete': true, 'composer': true,
+            });
             this.thread = thread;
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
@@ -702,13 +705,13 @@ openerp.mail = function(session) {
 
         /** Display the Wall threads */
         message_display: function () {
-            var thread_domain = this.options.domain.concat(this.search_results['domain']);
+            var domain = this.options.domain.concat(this.search_results['domain']);
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $('<li class="oe_mail_wall_thread">').html(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
             var thread = new mail.Thread(this, {
-                'domain': thread_domain, 'context': this.options.context,
-                'thread_level': this.options.thread_level, 'composer': true,
+                'context': this.options.context, 'domain': domain,
                 // display options
+                'thread_level': this.options.thread_level, 'composer': true,
                 'show_header_compose': true,  'show_reply': this.options.thread_level > 0,
                 'show_hide': true, 'show_reply_by_email': true,
                 }
