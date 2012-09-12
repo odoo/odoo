@@ -148,7 +148,7 @@ class mail_message(osv.Model):
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
-        attachment_ids = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
+        attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
         author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
         author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
@@ -307,15 +307,15 @@ class mail_message(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
-        # for mail.messages that act as parent for a standalone mail.mail record.
+        # for mail.messages that act as parent for a standalone mail.mail record).
         attachments_to_delete = []
-        for mail in self.browse(cr, uid, ids, context=context):
-            for attach in mail.attachment_ids:
-                if attach.res_model == 'mail.message' and attach.res_id == mail.id:
+        for message in self.browse(cr, uid, ids, context=context):
+            for attach in message.attachment_ids:
+                if attach.res_model == self._name and attach.res_id == message.id:
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
-        return super(mail_message,self).unlink(cr, uid, ids, context=context)
+        return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
     def notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids.
