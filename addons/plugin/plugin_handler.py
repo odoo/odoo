@@ -116,7 +116,7 @@ class plugin_handler(osv.osv_memory):
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
 
-    def contact_create(self, cr, uid, data, partner_id):
+    def contact_create(self, cr, uid, data, partner_id, context=None):
         """
             @param data : the data use to create the res.partner
                 [('field_name', value)], field name is required
