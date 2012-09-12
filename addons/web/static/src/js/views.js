@@ -20,7 +20,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$el.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
+        this.$el.on('click', 'a.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -95,7 +95,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 break;
             }
         }
-        var subindex = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        var subindex = $e.parent().find('a.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
         this.select_breadcrumb(index, subindex);
     },
     select_breadcrumb: function(index, subindex) {
@@ -148,7 +148,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             for (var j = 0; j < tit.length; j += 1) {
                 var label = _.escape(tit[j]);
                 if (i === this.breadcrumbs.length - 1 && j === tit.length - 1) {
-                    titles.push(label);
+                    titles.push(_.str.sprintf('<span class="oe_breadcrumb_item">%s</span>', label));
                 } else {
                     titles.push(_.str.sprintf('<a href="#" class="oe_breadcrumb_item" data-id="%s">%s</a>', item.id, label));
                 }
