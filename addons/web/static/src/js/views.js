@@ -837,6 +837,21 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 });
                 break;
             case 'print_workflow':
+                var self = this
+                if (current_view.get_selected_ids().length != 1) {
+                    instance.web.dialog($("<div />").text(_t("You must choose only one record.")), { title: _t("Warning"), modal: true });
+                    evt.currentTarget.selectedIndex = 0;
+                    return false;
+                } else {
+                    instance.web.blockUI();
+                    var action={"id":current_view.get_selected_ids()[0],
+                                "model":self.dataset.model}
+                    self.session.get_file({
+                        url: '/web/report/print_workflow',
+                        data: {action: JSON.stringify(action)},
+                        complete: instance.web.unblockUI
+                    });
+                }
                 break;
             default:
                 if (val) {
