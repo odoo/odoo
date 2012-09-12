@@ -31,17 +31,9 @@ openerp_mail_followers = function(session, mail) {
         },
 
         start: function() {
-            var self = this;
-            // NB: all the widget should be modified to check the actual_mode property on view, not use
-            // any other method to know if the view is in create mode anymore
+            // use actual_mode property on view to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
-                .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
-                .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
-            this.$el.find('button.oe_mail_button_unfollow').click(function () { self.do_unfollow(); })
-                .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
-                .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.reinit();
         },
 
@@ -49,13 +41,39 @@ openerp_mail_followers = function(session, mail) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
-        destroy: function () {
-            this._super.apply(this, arguments);
-        },
-
         reinit: function() {
             this.$el.find('button.oe_mail_button_follow').hide();
             this.$el.find('button.oe_mail_button_unfollow').hide();
+        },
+
+        bind_events: function() {
+            var self = this;
+            this.$el.find('button.oe_mail_button_follow').on('click', function () { self.do_follow(); })
+            this.$el.find('button.oe_mail_button_unfollow').on('click', function () { self.do_unfollow(); })
+                .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
+                .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
+            this.$el.find('button.oe_mail_button_invite').on('click', function(event) {
+                action = {
+                    type: 'ir.actions.act_window',
+                    res_model: 'mail.wizard.invite',
+                    view_mode: 'form',
+                    view_type: 'form',
+                    views: [[false, 'form']],
+                    target: 'new',
+                    context: {
+                        'default_res_model': self.view.dataset.model,
+                        'default_res_id': self.view.datarecord.id
+                    },
+                }
+                self.do_action(action, function() { self.read_value(); });
+            });
+        },
+
+        read_value: function() {
+            var self = this;
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
+                return results[0].message_follower_ids;
+            }).pipe(this.proxy('set_value'));
         },
 
         set_value: function(value_) {
@@ -65,11 +83,12 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            return this.fetch_followers(value_);
+            this.bind_events();
+            return this.fetch_followers(value_  || this.get_value());
         },
 
         fetch_followers: function (value_) {
-            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', 'user_ids']]).then(this.proxy('display_followers'));
+            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'));
         },
 
         /** Display the followers, evaluate is_follower directly */
@@ -91,13 +110,13 @@ openerp_mail_followers = function(session, mail) {
         },
 
         do_follow: function () {
-            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
-            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
+            var context = new session.web.CompoundContext(this.build_context(), {});
+            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('read_value'));
         },
 
         do_unfollow: function () {
-            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
+            var context = new session.web.CompoundContext(this.build_context(), {});
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('read_value'));
         },
     });
 };
