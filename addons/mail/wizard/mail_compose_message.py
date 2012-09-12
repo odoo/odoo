@@ -116,7 +116,7 @@ class mail_compose_message(osv.TransientModel):
         'composition_mode': 'comment',
         'content_subtype': lambda self, cr, uid, ctx={}: 'plain',
         'body_text': lambda self, cr, uid, ctx={}: False,
-        'body': lambda self, cr, uid, ctx={}: False,
+        'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
@@ -154,7 +154,7 @@ class mail_compose_message(osv.TransientModel):
         # create subject
         re_prefix = _('Re:')
         reply_subject = tools.ustr(message_data.subject or '')
-        if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
+        if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # create the reply in the body
         reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
@@ -250,6 +250,7 @@ class mail_compose_message(osv.TransientModel):
                 post_values = {
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
                     'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
+                    'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
                     'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }

@@ -409,12 +409,14 @@ class test_mail(common.TransactionCase):
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
 
         # 2. Post the comment, get created message
+        parent_id = message.id
         mail_compose.send_mail(cr, uid, [compose_id])
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-        # Test: mail.message: subject as Re:.., body in html
+        # Test: mail.message: subject as Re:.., body in html, parent_id
         self.assertEqual(message.subject, _msg_reply, 'mail.message incorrect subject')
         self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote></div>', message.body, 'mail.message body is incorrect')
+        self.assertEqual(message.parent_id and message.parent_id.id, parent_id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in message.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
