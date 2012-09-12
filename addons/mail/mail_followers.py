@@ -84,16 +84,44 @@ class mail_notification(osv.Model):
         notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
         return self.write(cr, uid, notif_ids, {'read': True}, context=context)
 
+    def get_partners_to_notify(self, cr, uid, partner_ids, message, context=None):
+        """ Return the list of partners to notify, based on their preferences.
+
+            :param message: browse_record of a mail.message
+        """
+        notify_pids = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            # Do not send an email to the writer
+            if partner.user_ids and partner.user_ids[0].id == uid:
+                continue
+            # Do not send to partners without email address defined
+            if not partner.email:
+                continue
+            # Partner does not want to receive any emails
+            if partner.notification_email_send == 'none':
+                continue
+            # Partner wants to receive only emails and comments
+            if partner.notification_email_send == 'comment' and message.type not in ('email', 'comment'):
+                continue
+            # Partner wants to receive only emails
+            if partner.notification_email_send == 'email' and message.type != 'email':
+                continue
+            notify_pids.append(partner.id)
+        return notify_pids
+
     def notify(self, cr, uid, partner_ids, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
         context = context or {}
         # mail_noemail (do not send email) or no partner_ids: do not send, return
         if context.get('mail_noemail') or not partner_ids:
             return True
-
-        mail_mail = self.pool.get('mail.mail')
         msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
 
+        notify_partner_ids = self.get_partners_to_notify(cr, uid, partner_ids, msg, context=context)
+        if not notify_partner_ids:
+            return True
+
+        mail_mail = self.pool.get('mail.mail')
         # add signature
         body_html = msg.body
         signature = msg.author_id and msg.author_id.user_ids[0].signature or ''
@@ -107,27 +135,6 @@ class mail_notification(osv.Model):
             'body_html': body_html,
             'state': 'outgoing',
         }
-
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
-            # Do not send an email to the writer
-            if partner.user_ids and partner.user_ids[0].id == uid:
-                continue
-            # Do not send to partners without email address defined
-            if not partner.email:
-                continue
-            # Partner does not want to receive any emails
-            if partner.notification_email_send == 'none':
-                continue
-            # Partner wants to receive only emails and comments
-            if partner.notification_email_send == 'comment' and msg.type not in ('email', 'comment'):
-                continue
-            # Partner wants to receive only emails
-            if partner.notification_email_send == 'email' and msg.type != 'email':
-                continue
-            if partner.email not in mail_values['email_to']:
-                mail_values['email_to'].append(partner.email)
-        if mail_values['email_to']:
-            mail_values['email_to'] = ', '.join(mail_values['email_to'])
-            email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-            mail_mail.send(cr, uid, [email_notif_id], context=context)
-        return True
+        mail_values['email_to'] = ', '.join(mail_values['email_to'])
+        email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
+        return mail_mail.send(cr, uid, [email_notif_id], notifier_ids=notify_partner_ids, context=context)

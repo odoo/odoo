@@ -137,14 +137,46 @@ class mail_mail(osv.Model):
             mail.unlink()
         return True
 
-    def _send_get_mail_subject(self, cr, uid, mail, force=False, context=None):
+    def _send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ if void and related document: '<Author> posted on <Resource>'
-            :param mail: mail.mail browse_record """
+
+            :param force: force the 'Author posted'... subject
+            :param mail: mail.mail browse_record
+            :param partner: browse_record of the specific recipient partner
+        """
         if force or (not mail.subject and mail.model and mail.res_id):
             return '%s posted on %s' % (mail.author_id.name, mail.record_name)
         return mail.subject
 
-    def send(self, cr, uid, ids, auto_commit=False, context=None):
+    def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+        """ Return a specific ir_email body. The main purpose of this method
+            is to be inherited by Portal, to add a link for signing in, in
+            each notification email a partner receives.
+
+            :param mail: mail.mail browse_record
+            :param partner: browse_record of the specific recipient partner
+        """
+        return mail.body_html
+
+    def _send_get_ir_email_dict(self, cr, uid, mail, partner=None, context=None):
+        """ Return a dictionary for specific ir_email values, depending on a
+            partner, or generic to the whole recipients given by mail.email_to.
+
+            :param mail: mail.mail browse_record
+            :param partner: browse_record of the specific recipient partner
+        """
+        body = self._send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        subject = self._send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
+        body_alternative = tools.html2plaintext(body)
+        email_to = [partner.email] if partner else tools.email_split(mail.email_to)
+        return {
+            'body': body,
+            'body_alternative': body_alternative,
+            'subject': subject,
+            'email_to': email_to,
+        }
+
+    def send(self, cr, uid, ids, auto_commit=False, notifier_ids=None, context=None):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -160,35 +192,36 @@ class mail_mail(osv.Model):
         ir_mail_server = self.pool.get('ir.mail_server')
         for mail in self.browse(cr, uid, ids, context=context):
             try:
-                body = mail.body_html
-                subject = self._send_get_mail_subject(cr, uid, mail, context=context)
-
                 # handle attachments
                 attachments = []
                 for attach in mail.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
-
-                # use only sanitized html and set its plaintexted version as alternative
-                body_alternative = tools.html2plaintext(body)
-                content_subtype_alternative = 'plain'
+                # specific behavior to customize the send email for notified partners
+                ir_email_list = []
+                if notifier_ids:
+                    for partner in self.pool.get('res.partner').browse(cr, uid, notifier_ids, context=context):
+                        ir_email_list.append(self._send_get_ir_email_dict(cr, uid, mail, partner=partner, context=context))
+                else:
+                    ir_email_list.append(self._send_get_ir_email_dict(cr, uid, mail, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
-                msg = ir_mail_server.build_email(
-                    email_from = mail.email_from,
-                    email_to = tools.email_split(mail.email_to),
-                    subject = subject,
-                    body = body,
-                    body_alternative = body_alternative,
-                    email_cc = tools.email_split(mail.email_cc),
-                    reply_to = mail.reply_to,
-                    attachments = attachments,
-                    message_id = mail.message_id,
-                    references = mail.references,
-                    object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
-                    subtype = 'html',
-                    subtype_alternative = content_subtype_alternative)
-                res = ir_mail_server.send_email(cr, uid, msg,
-                    mail_server_id=mail.mail_server_id.id, context=context)
+                for ir_email in ir_email_list:
+                    msg = ir_mail_server.build_email(
+                        email_from = mail.email_from,
+                        email_to = ir_email.get('email_to'),
+                        subject = ir_email.get('subject'),
+                        body = ir_email.get('body'),
+                        body_alternative = ir_email.get('body_alternative'),
+                        email_cc = tools.email_split(mail.email_cc),
+                        reply_to = mail.reply_to,
+                        attachments = attachments,
+                        message_id = mail.message_id,
+                        references = mail.references,
+                        object_id = mail.res_id and ('%s-%s' % (mail.res_id, mail.model)),
+                        subtype = 'html',
+                        subtype_alternative = 'plain')
+                    res = ir_mail_server.send_email(cr, uid, msg,
+                        mail_server_id=mail.mail_server_id.id, context=context)
                 if res:
                     mail.write({'state': 'sent', 'message_id': res})
                 else:
