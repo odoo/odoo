@@ -21,6 +21,7 @@
 
 from osv import osv
 from osv import fields
+from tools.translate import _
 
 
 class invite_wizard(osv.osv_memory):
@@ -38,6 +39,13 @@ class invite_wizard(osv.osv_memory):
         'message': fields.text('Message'),
     }
 
+    _defaults = {
+        'message': lambda s, *a, **k: s._get_default_message(*a, **k),
+    }
+
+    def _get_default_message(self, cr, uid, context=None):
+        return _('You have been invited to follow a new document.')
+
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
             basic purpose of this method is to check that destination partners
@@ -52,5 +60,19 @@ class invite_wizard(osv.osv_memory):
     def add_followers(self, cr, uid, ids, context=None):
         for wizard in self.browse(cr, uid, ids, context=context):
             model_obj = self.pool.get(wizard.res_model)
-            model_obj.message_subscribe(cr, uid, [wizard.res_id], [p.id for p in wizard.partner_ids], context=context)
+            document = model_obj.browse(cr, uid, wizard.res_id, context=context)
+
+            # filter partner_ids to get the new followers, to avoid sending email to already following partners
+            new_follower_ids = [p.id for p in wizard.partner_ids if p.id not in document.message_follower_ids]
+            model_obj.message_subscribe(cr, uid, [wizard.res_id], new_follower_ids, context=context)
+
+            # send an email
+            if wizard.message:
+                for follower_id in new_follower_ids:
+                    mail_mail = self.pool.get('mail.mail')
+                    mail_id = mail_mail.create(cr, uid, {
+                        'body_html': '<pre>%s</pre>' % wizard.message,
+                        'auto_delete': True,
+                        }, context=context)
+                    mail_mail.send(cr, uid, [mail_id], notifier_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}
