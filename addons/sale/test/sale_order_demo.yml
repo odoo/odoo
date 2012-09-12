@@ -1,14 +1,14 @@
 -
   In order to test process of the Sale Order, I create sale order
 -
-  !record {model: sale.order, id: order}:
-    partner_id: base.res_partner_agrolait
+  !record {model: sale.order, id: sale_order_test1}:
+    partner_id: base.res_partner_2
     note: Invoice after delivery
     payment_term: account.account_payment_term
 -
   !record {model: sale.order.line, id: line}:
-    product_id: product.product_product_mb1
+    name : 'LCD Monitor'
+    order_id: sale_order_test1
+    product_id: product.product_product_7
     price_unit: 190.50
     product_uom_qty: 8
-
-

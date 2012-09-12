@@ -4,19 +4,22 @@
 
     <record model="ir.ui.view" id="sale_margin_sale_order">
         <field name="name">sale.order.margin.view.form</field>
-        <field name="type">form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_total']" position="inside">
-                <field name="margin"/>
+            <xpath expr="//group[@name='sale_margin_grp']" position="inside">
+                <group>
+                    <label for="margin"/>
+                    <div>
+                        <field name="margin"/>
+                    </div>
+                </group>
             </xpath>
         </field>
     </record>
 
     <record model="ir.ui.view" id="sale_margin_sale_order_line">
         <field name="name">sale.order.line.margin.view.form</field>
-        <field name="type">form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
@@ -28,7 +31,6 @@
 
     <record model="ir.ui.view" id="sale_margin_sale_order_line_form">
         <field name="name">sale.order.line.tree.margin.view.form</field>
-        <field name="type">form</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">

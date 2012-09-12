@@ -61,8 +61,8 @@ class account_analytic_line(osv.osv):
         for account in analytic_account_obj.browse(cr, uid, account_ids, context=context):
             partner = account.partner_id
             if (not partner) or not (account.pricelist_id):
-                raise osv.except_osv(_('Analytic Account incomplete'),
-                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s') % (account.name,))
+                raise osv.except_osv(_('Analytic Account incomplete !'),
+                        _('Please fill in the Partner or Customer and Sale Pricelist fields in the Analytic Account:\n%s.') % (account.name,))
 
 
 
@@ -90,32 +90,28 @@ class account_analytic_line(osv.osv):
 
             context2 = context.copy()
             context2['lang'] = partner.lang
-            cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id " \
+            cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id, name " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
                         "AND id IN %s AND to_invoice IS NOT NULL " \
-                    "GROUP BY product_id,to_invoice,product_uom_id", (account.id, tuple(ids),))
+                    "GROUP BY product_id, to_invoice, product_uom_id, name", (account.id, tuple(ids),))
 
-            for product_id, factor_id, qty, uom in cr.fetchall():
-                product = product_obj.browse(cr, uid, product_id, context2)
+            for product_id, factor_id, qty, uom, line_name in cr.fetchall():
+                if data.get('product'):
+                     product_id = data['product'][0]
+                product = product_obj.browse(cr, uid, product_id, context=context2)
                 if not product:
-                    raise osv.except_osv(_('Error'), _('At least one line has no product !'))
-                factor_name = ''
-                factor = invoice_factor_obj.browse(cr, uid, factor_id, context2)
-                if not data.get('product', False):
-                    if factor.customer_name:
-                        factor_name = product.name+' - '+factor.customer_name
-                    else:
-                        factor_name = product.name
-                else:
-                    data['product'] = data['product'][0]
-                    factor_name = product_obj.name_get(cr, uid, [data['product']], context=context)[0][1]
+                    raise osv.except_osv(_('Error!'), _('There is no product defined for the line %s. Please select one or force the product through the wizard.') % (line_name))
+                factor = invoice_factor_obj.browse(cr, uid, factor_id, context=context2)
+                factor_name = product_obj.name_get(cr, uid, [product_id], context=context2)[0][1]
+                if factor.customer_name:
+                    factor_name += ' - ' + factor.customer_name
 
                 ctx =  context.copy()
                 ctx.update({'uom':uom})
                 if account.pricelist_id:
                     pl = account.pricelist_id.id
-                    price = pro_price_obj.price_get(cr,uid,[pl], data.get('product', False) or product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
+                    price = pro_price_obj.price_get(cr,uid,[pl], product_id, qty or 1.0, account.partner_id.id, context=ctx)[pl]
                 else:
                     price = 0.0
 
@@ -123,7 +119,7 @@ class account_analytic_line(osv.osv):
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
                 account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
                 if not account_id:
-                    raise osv.except_osv(_("Configuration Error"), _("No income account defined for product '%s'") % product.name)
+                    raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -131,7 +127,7 @@ class account_analytic_line(osv.osv):
                     'invoice_line_tax_id': [(6,0,tax )],
                     'invoice_id': last_invoice,
                     'name': factor_name,
-                    'product_id': data.get('product',product_id),
+                    'product_id': product_id,
                     'invoice_line_tax_id': [(6,0,tax)],
                     'uos_id': uom,
                     'account_id': account_id,
@@ -179,7 +175,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         'time': fields.boolean('Time spent', help='The time of each work done will be displayed on the invoice'),
         'name': fields.boolean('Description', help='The detail of each work done will be displayed on the invoice'),
         'price': fields.boolean('Cost', help='The cost of each work done will be displayed on the invoice. You probably don\'t want to check this'),
-        'product': fields.many2one('product.product', 'Product', help='Complete this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
+        'product': fields.many2one('product.product', 'Force Product', help='Fill this field only if you want to force to use a specific product. Keep empty to use the real product that comes from the cost.'),
     }
 
     _defaults = {
@@ -200,7 +196,7 @@ class hr_timesheet_invoice_create(osv.osv_memory):
         data = context and context.get('active_ids', [])
         for analytic in analytic_obj.browse(cr, uid, data, context=context):
             if analytic.invoice_id:
-                     raise osv.except_osv(_('Warning !'), _("Invoice is already linked to some of the analytic line(s)!"))
+                     raise osv.except_osv(_('Warning!'), _("Invoice is already linked to some of the analytic line(s)!"))
 
     def do_create(self, cr, uid, ids, context=None):
         data = self.read(cr, uid, ids, [], context=context)[0]

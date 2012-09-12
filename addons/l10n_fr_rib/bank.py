@@ -50,12 +50,12 @@ class res_partner_bank(osv.osv):
             # compute the key	
             key = 97 - (100 * int(rib)) % 97
             if int(bank_acc.key) != key:
-                raise osv.except_osv(_('Error'),
+                raise osv.except_osv(_('Error!'),
                     _("The RIB key %s does not correspond to the other codes: %s %s %s.") % \
                         (bank_acc.key, bank_acc.bank_code, bank_acc.office, bank_acc.rib_acc_number) )
             if bank_acc.acc_number:
                 if not self.is_iban_valid(cr, uid, bank_acc.acc_number):
-                    raise osv.except_osv(_('Error'), _("The IBAN %s is not valid.") % bank_acc.acc_number)
+                    raise osv.except_osv(_('Error!'), _("The IBAN %s is not valid.") % bank_acc.acc_number)
         return True
 
     def onchange_bank_id(self, cr, uid, ids, bank_id, context=None):
