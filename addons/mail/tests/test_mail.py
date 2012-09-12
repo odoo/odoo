@@ -122,8 +122,8 @@ class test_mail(common.TransactionCase):
         self.registry('ir.mail_server').build_email = self._mock_build_email
         self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
 
-        # Mock _send_get_mail_body to test its functionality without other addons override
-        self.registry('mail.mail')._send_get_mail_body = self._mock_send_get_mail_body
+        # Mock send_get_mail_body to test its functionality without other addons override
+        self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
 
         # groups@.. will cause the creation of new mail groups
         self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model', '=', 'mail.group')])[0]
