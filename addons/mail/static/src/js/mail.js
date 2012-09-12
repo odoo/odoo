@@ -285,9 +285,8 @@ openerp.mail = function(session) {
 
         render_vote: function(record){
             vote_element = session.web.qweb.render('VoteDisplay', {});
-            var message_id = record.id
             var self = this;
-            var to_render_element = false;
+            var message_id = record.id
             vote_element = session.web.qweb.render('VoteDisplay', {'message_id': message_id, 'vote_count': record.vote_user_ids.length, 'has_voted': record.has_voted});
             parent_element = self.find_parent_element(".oe_mail_msg_vote",message_id);
             $(parent_element).html(vote_element);
