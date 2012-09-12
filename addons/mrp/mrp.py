@@ -439,7 +439,8 @@ class mrp_production(osv.osv):
         'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
             help="Reference of the document that generated this production order request."),
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', select=True),
+        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority',
+            select=True, readonly=True, states=dict.fromkeys(['draft', 'confirmed'], [('readonly', False)])),
 
         'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -457,8 +458,8 @@ class mrp_production(osv.osv):
         'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
         'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_start': fields.datetime('Start Date', select=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'date_finished': fields.datetime('End Date', select=True),
+        'date_start': fields.datetime('Start Date', select=True, readonly=True),
+        'date_finished': fields.datetime('End Date', select=True, readonly=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
