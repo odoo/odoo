@@ -666,34 +666,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         hide: function(){ this.$el.hide(); },
     });
 
-
-// ---------- Main Point of Sale Widget ----------
-
-    // this is used to notify the user that data is being synchronized on the network
-    module.SynchNotificationWidget = module.PosBaseWidget.extend({
-        template: "SynchNotificationWidget",
-        init: function(parent, options){
-            options = options || {};
-            this._super(parent, options);
-        },
-        renderElement: function() {
-            var self = this;
-            this._super();
-            this.$('.oe_pos_synch-notification-button').click(function(){
-                self.pos.flush();
-            });
-        },
-        start: function(){
-            var self = this;
-            this.pos.bind('change:nbr_pending_operations', function(){
-                self.renderElement();
-            });
-        },
-        get_nbr_pending: function(){
-            return this.pos.get('nbr_pending_operations');
-        },
-    });
-
+    // The debug widget lets the user control and monitor the hardware and software status
+    // without the use of the proxy
     module.DebugWidget = module.PosBaseWidget.extend({
         template: "DebugWidget",
         eans:{
@@ -778,6 +752,34 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
         },
     });
+
+// ---------- Main Point of Sale Widget ----------
+
+    // this is used to notify the user that data is being synchronized on the network
+    module.SynchNotificationWidget = module.PosBaseWidget.extend({
+        template: "SynchNotificationWidget",
+        init: function(parent, options){
+            options = options || {};
+            this._super(parent, options);
+        },
+        renderElement: function() {
+            var self = this;
+            this._super();
+            this.$('.oe_pos_synch-notification-button').click(function(){
+                self.pos.flush();
+            });
+        },
+        start: function(){
+            var self = this;
+            this.pos.bind('change:nbr_pending_operations', function(){
+                self.renderElement();
+            });
+        },
+        get_nbr_pending: function(){
+            return this.pos.get('nbr_pending_operations');
+        },
+    });
+
 
     // The PosWidget is the main widget that contains all other widgets in the PointOfSale.
     // It is mainly composed of :
