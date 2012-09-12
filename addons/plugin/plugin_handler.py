@@ -44,7 +44,7 @@ class plugin_handler(osv.osv_memory):
         res_id = 0
         url = ""
         name = ""
-        msg = mail_message_obj.parse_message(email)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, email)
         references = [msg.get('message-id')]
         refs =  msg.get('references',False)
         if refs:
@@ -91,7 +91,7 @@ class plugin_handler(osv.osv_memory):
         """
         mail_message = self.pool.get('mail.message')
         model_obj = self.pool.get(model)
-        msg = mail_message.parse_message(email)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         
@@ -101,16 +101,15 @@ class plugin_handler(osv.osv_memory):
             notify = "Email already pushed"
         elif res_id == 0:
             if model == 'res.partner':
-                notify = 'User the button Partner to create a new partner'
+                notify = 'User the Partner button to create a new partner'
             else:
                 res_id = model_obj.message_new(cr, uid, msg)
-                notify = "Mail succefully pushed, a new %s has been created " % model
+                notify = "Mail succesfully pushed, a new %s has been created " % model
         else:
             if model == 'res.partner':
                 model_obj = self.pool.get('mail.thread')
-            res = self.pool.get(model).browse(cr, uid, [res_id])
-            model_obj.message_append_dict(cr, uid, res, msg)
-            notify = "Mail succefully pushed"
+            model_obj.message_post(cr, uid, [res_id], body=msg)
+            notify = "Mail succesfully pushed"
             
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
@@ -133,7 +132,7 @@ class plugin_handler(osv.osv_memory):
         return ('res.partner', partner_id, url)
 
     # Specific to outlook rfc822 is not available so we split in arguments headerd,body,attachemnts
-    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body_text=False, body_html=False, attachments=False):
+    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body=False, body_html=False, attachments=False):
         # ----------------------------------------
         # solution 1
         # construct a fake rfc822 from the separated arguement
@@ -147,7 +146,7 @@ class plugin_handler(osv.osv_memory):
         mail_message = self.pool.get('mail.message')        
         ir_attachment_obj = self.pool.get('ir.attachment')
         attach_ids = []
-        msg = mail_message.parse_message(headers)
+        msg = self.pool.get('mail.thread').parse_message(cr, uid, headers)
         message_id = msg.get('message-id')    
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
@@ -161,6 +160,6 @@ class plugin_handler(osv.osv_memory):
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         if mail_ids:
-            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body_text':body_text,'body_html':body_html})
+            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url)
