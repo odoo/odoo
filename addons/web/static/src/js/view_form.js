@@ -321,7 +321,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : "New record" });
+        this.set({ 'title' : record.id ? record.display_name : "New" });
 
         if (this.qweb) {
             this.kill_current_form();
