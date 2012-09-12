@@ -24,6 +24,8 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
             this.proxy = new module.ProxyDevice();              // used to communicate to the hardware devices via a local proxy
             this.db = new module.PosLS();                       // a database used to store the products and categories
             this.db.clear('products','categories');
+            this.debug = jQuery.deparam(jQuery.param.querystring()).debug !== undefined;    //debug mode
+
 
             // default attributes values. If null, it will be loaded below.
             this.set({

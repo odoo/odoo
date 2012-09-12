@@ -1,26 +1,6 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
-     var debug_devices = new (instance.web.Class.extend({
-        active: false,
-        payment_status: 'waiting_for_payment',
-        weight: 0,
-        activate: function(){
-            this.active = true;
-        },
-        deactivate: function(){
-            this.active = false;
-        },
-        set_weight: function(weight){ this.activate(); this.weight = weight; },
-        accept_payment: function(){ this.activate(); this.payment_status = 'payment_accepted'; },
-        reject_payment: function(){ this.activate(); this.payment_status = 'payment_rejected'; },
-        delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
-    }))();
-
-    if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-        window.debug_devices = debug_devices;
-    }
-
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
@@ -38,20 +18,34 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             this.connection = new instance.web.JsonRPC();
             this.connection.setup(url);
+
+            this.bypass_proxy = false;
+            this.notifications = {};
             
         },
         message : function(name,params,success_callback, error_callback){
             success_callback = success_callback || function(){}; 
             error_callback   =  error_callback  || function(){};    
 
-            
             if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
                 console.log('PROXY:',name,params);
             }
 
-            if(!(debug_devices && debug_devices.active)){
-                this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
+            var callbacks = this.notifications[name] || [];
+            for(var i = 0; i < callbacks.length; i++){
+                callbacks[i](params);
             }
+
+            this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
+        },
+
+        // this allows the client to be notified when a proxy call is made. The notification 
+        // callback will be executed with the same arguments as the proxy call
+        add_notification: function(name, callback){
+            if(!this.notifications[name]){
+                this.notifications[name] = [];
+            }
+            this.notifications[name].push(callback);
         },
         
         //a product has been scanned and recognized with success
@@ -78,12 +72,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //the client is starting to weight
         weighting_start: function(){
-            this.weight = 0;
-            if(debug_devices){
-                debug_devices.weigth = 0;
+            if(!this.weighting){
+                this.weight = 0;
+                this.weighting = true;
+                this.bypass_proxy = false;
+                this.message('weighting_start');
             }
-            this.weighting = true;
-            this.message('weighting_start');
         },
 
         //returns the weight on the scale. 
@@ -91,22 +85,29 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
-            if(debug_devices && debug_devices.active){
-                return debug_devices.weight;
+            if(this.bypass_proxy){
+                return this.weight;
             }else{
                 this.message('weighting_read_kg',{},function(weight){
-                    if(self.weighting){
+                    if(self.weighting && !self.bypass_proxy){
                         self.weight = weight;
                     }
                 });
-                return self.weight;
+                return this.weight;
             }
+        },
+
+        // sets a custom weight, ignoring the proxy returned value until the next weighting_end 
+        debug_set_weight: function(kg){
+            this.bypass_proxy = true;
+            this.weight = kg;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
             this.weight = 0;
             this.weighting = false;
+            this.bypass_proxy = false;
             this.message('weighting_end');
         },
 
@@ -116,9 +117,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         payment_request: function(price, method, info){
             this.paying = true;
             this.payment_status = 'waiting_for_payment';
-            if(debug_devices){
-                debug_devices.payment_status = 'waiting_for_payment';
-            }
             this.message('payment_request',{'price':price,'method':method,'info':info});
         },
 
@@ -127,18 +125,30 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
             var self = this;
-            if(debug_devices.active){
-                return debug_devices.payment_status;
+            if(this.bypass_proxy){
+                this.bypass_proxy = false;
+                return this.payment_status;
             }else{
                 this.message('is_payment_accepted', {}, function(payment_status){
                     if(self.paying){
                         self.payment_status = payment_status;
                     }
                 });
-                return self.payment_status;
+                return this.payment_status;
             }
         },
+        
+        // override what the proxy says and accept the payment
+        debug_accept_payment: function(){
+            this.bypass_proxy = true;
+            this.payment_status = 'payment_accepted';
+        },
 
+        // override what the proxy says and reject the payment
+        debug_reject_payment: function(){
+            this.bypass_proxy = true;
+            this.payment_status = 'payment_rejected';
+        },
         // the client cancels his payment
         payment_canceled: function(){
             this.paying = false;
@@ -241,18 +251,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.price_prefix_set    = attributes.price_prefix_set    ||  {'23':''};
             this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
             this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
-
-            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-                var self = this;
-                window.simulate_ean = function(ean,strict){
-                    ean = ean.toString();
-                    if(!strict){
-                        ean = self.sanitize_ean(ean);
-                    }
-                    console.log('SIMULATE EAN: ',ean);
-                    self.on_ean(ean);
-                }
-            }
         },
 
         save_callbacks: function(){
@@ -356,7 +354,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 value: 0,
                 unit: 'none',
             };
-            console.log('ean',ean);
 
             function match_prefix(prefix_set, type){
                 for(prefix in prefix_set){

@@ -414,6 +414,55 @@
         </div>
     </t>
 
+    <t t-name="DebugWidget">
+        <div class="debug-widget">
+            <h1>Debug Window</h1>
+            <div class="toggle">▾</div>
+            <div class="content">
+                <p class="category">Payment Terminal</p>
+
+                <ul>
+                    <li class="button accept_payment">Accept Payment</li>
+                    <li class="button reject_payment">Reject Payment</li>
+                </ul>
+                <p class="category">Electronic Scale</p>
+                <ul>
+                    <li><input type="text" class="weight"></input></li>
+                    <li class="button set_weight">Set Weight</li>
+                </ul>
+
+                <p class="category">Barcode Scanner</p>
+                <ul>
+                    <li><input type="text" class="ean"></input></li>
+                    <li class="button custom_ean">Custom Ean13</li>
+                    <li class="button admin_badge">Admin Badge</li>
+                    <li class="button client_badge">Client Badge</li>
+                    <li class="button soda_33cl">Soda 33cl</li>
+                    <li class="button oranges_kg">3.141Kg Oranges</li>
+                    <li class="button lemon_price">1.54€ Lemon</li>
+                    <li class="button unknown_product">Unknown Product</li>
+                    <li class="button invalid_ean">Invalid Ean</li>
+                </ul>
+
+                <p class="category">Hardware Status</p>
+                <ul>
+                    <li class="status help_needed">Help needed</li>
+                    <li class="status weighting">Weighting</li>
+                    <li class="status transaction">In Transaction</li>
+                </ul>
+                <p class="category">Hardware Events</p>
+                <ul>
+                    <li class="status scan_item_success">Scan Item Success</li>
+                    <li class="status scan_item_error_unrecognized">Scan Item Unrecognized</li>
+                    <li class="status payment_request">Payment Request</li>
+                    <li class="status open_cashbox">Open Cashbox</li>
+                    <li class="status print_receipt">Print Receipt</li>
+                    <li class="status print_pdf_invoice">Print Invoice</li>
+                </ul>
+            </div>
+        </div>
+    </t>
+
     <t t-name="OrderlineWidget">
         <li class="orderline">
             <span class="product-name">

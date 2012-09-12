@@ -560,21 +560,21 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
                     
                     //we get the first cashregister marked as self-checkout
                     var selfCheckoutRegisters = [];
-                    for(var i = 0; i < this.pos.get('cashRegisters').models.length; i++){
-                        var cashregister = this.pos.get('cashRegisters').models[i];
+                    for(var i = 0; i < self.pos.get('cashRegisters').models.length; i++){
+                        var cashregister = self.pos.get('cashRegisters').models[i];
                         if(cashregister.self_checkout_payment_method){
                             selfCheckoutRegisters.push(cashregister);
                         }
                     }
 
-                    var cashregister = selfCheckoutRegisters[0] || this.pos.get('cashRegisters').models[0];
+                    var cashregister = selfCheckoutRegisters[0] || self.pos.get('cashRegisters').models[0];
                     currentOrder.addPaymentLine(cashregister);
                     self.pos.push_order(currentOrder.exportAsJSON())
                     currentOrder.destroy();
                     self.pos.proxy.transaction_end();
                     self.pos_widget.screen_selector.set_current_screen(self.next_screen);
                 }else if(payment === 'payment_rejected'){
-                    clearInterval(this.intervalID);
+                    clearInterval(self.intervalID);
                     //TODO show a tryagain thingie ? 
                 }
             },500);
@@ -603,13 +603,14 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         show_numpad:     false,
         show_leftpane:   false,
         barcode_product_action: function(ean){
-            self.pos.proxy.transaction_start();
+            this.pos.proxy.transaction_start();
             this._super(ean);
         },
 
         barcode_client_action: function(ean){
-            self.pos.proxy.transaction_start();
+            this.pos.proxy.transaction_start();
             this._super(ean);
+            $('.goodbye-message').hide();
             this.pos_widget.screen_selector.show_popup('choose-receipt');
         },
         
