@@ -5,7 +5,6 @@
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_form">
             <field name="name">sale_journal.invoice.type.form</field>
             <field name="model">sale_journal.invoice.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Invoice Type" version="7.0">
                     <group col="4">
@@ -24,7 +23,6 @@
         <record model="ir.ui.view" id="view_sale_journal_invoice_type_tree">
             <field name="name">sale_journal.invoice.type.tree</field>
             <field name="model">sale_journal.invoice.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Invoice Type">
                     <field name="name"/>
@@ -50,7 +48,6 @@
 
         <record model="ir.ui.view" id="sale_journal_sale_order">
             <field name="name">sale.order.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
             <field name="arch" type="xml">
@@ -64,7 +61,6 @@
 
         <record model="ir.ui.view" id="sale_journal_sale_order_tree">
             <field name="name">sale.order.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree" />
             <field name="arch" type="xml">
@@ -78,7 +74,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_form" />
             <field name="arch" type="xml">
@@ -92,7 +87,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.vpicktree" />
             <field name="arch" type="xml">
@@ -104,7 +98,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_in">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_form" />
             <field name="arch" type="xml">
@@ -116,7 +109,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_in">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_in_tree" />
             <field name="arch" type="xml">
@@ -128,7 +120,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_out">
             <field name="name">stock.picking.journal.view.form</field>
-            <field name="type">form</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_form" />
             <field name="arch" type="xml">
@@ -140,7 +131,6 @@
 
         <record model="ir.ui.view" id="sale_journal_picking_order_tree_out">
             <field name="name">stock.picking.journal.view.tree</field>
-            <field name="type">tree</field>
             <field name="model">stock.picking</field>
             <field name="inherit_id" ref="stock.view_picking_out_tree" />
             <field name="arch" type="xml">
@@ -153,7 +143,6 @@
         <record id="view_partner_property_form" model="ir.ui.view">
             <field name="name">res.partner.journal.property.form.inherit</field>
             <field name="model">res.partner</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.view_partner_form"/>
             <field name="arch" type="xml">
                 <page string="Sales &amp; Purchases" position="inside">

@@ -21,16 +21,17 @@
 
 
 {
-    'name': "Employee Contracts",
+    'name': 'Employee Contracts',
     'version': '1.0',
     'category': 'Human Resources',
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================
 
-    * Marital status,
-    * Security number,
-    * Place of birth, birth date, ...
+    * Contract
+    * Place of Birth,
+    * Medical Examination Date
+    * Company Vehicle
 
 You can assign several contracts per employee.
     """,
@@ -38,15 +39,13 @@ You can assign several contracts per employee.
     'website': 'http://www.openerp.com',
     'images': ['images/hr_contract.jpeg'],
     'depends': ['hr'],
-    'init_xml': ['hr_contract_data.xml'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
-        'hr_contract_view.xml'
-        ],
-    'demo_xml': [],
-    'test': [
-             'test/test_hr_contract.yml'
-             ],
+        'hr_contract_view.xml',
+        'hr_contract_data.xml'
+    ],
+    'demo': [],
+    'test': ['test/test_hr_contract.yml'],
     'installable': True,
     'auto_install': False,
     'certificate': '0046298028637',

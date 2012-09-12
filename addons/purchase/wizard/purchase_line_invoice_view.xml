@@ -7,17 +7,16 @@
         <record id="view_purchase_line_invoice" model="ir.ui.view">
             <field name="name">Create invoices</field>
             <field name="model">purchase.order.line_invoice</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Select an Open Sale Order" version="7.0">
-                    <header>
-                        <button name="makeInvoices" string="Confirm" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <label string="Do you want to generate the supplier invoices?"/>
                     </group>
+                    <footer>
+                        <button name="makeInvoices" string="Confirm" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

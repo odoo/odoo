@@ -24,6 +24,6 @@ from osv import osv, fields
 class human_resources_configuration(osv.osv_memory):
     _inherit = 'hr.config.settings'
     _columns = {
-        'module_hr_payroll_account': fields.boolean('Manage Account Payroll',
+        'module_hr_payroll_account': fields.boolean('link your payroll to accounting system',
             help ="""Create Journal Entries from Payslips"""),
     }

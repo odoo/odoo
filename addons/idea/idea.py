@@ -49,7 +49,7 @@ class idea_idea(osv.osv):
         'create_uid': fields.many2one('res.users', 'Creator', required=True, readonly=True),
         'name': fields.char('Idea Summary', size=64, required=True, readonly=True, oldname='title', states={'draft':[('readonly',False)]}),
         'description': fields.text('Description', help='Content of the idea', readonly=True, states={'draft':[('readonly',False)]}),
-        'category_ids': fields.many2many('idea.category', 'Tags', readonly=True, states={'draft':[('readonly',False)]}),
+        'category_ids': fields.many2many('idea.category', string='Tags', readonly=True, states={'draft':[('readonly',False)]}),
         'state': fields.selection([('draft', 'New'),
             ('open', 'Accepted'),
             ('cancel', 'Refused'),
@@ -67,21 +67,21 @@ class idea_idea(osv.osv):
 
     def idea_cancel(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state': 'cancel' })
-        self.message_append_note(cr, uid, ids, body=_('Idea canceled.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea canceled.'), context=context)
         return True
 
     def idea_open(self, cr, uid, ids, context={}):
         self.write(cr, uid, ids, { 'state': 'open'})
-        self.message_append_note(cr, uid, ids, body=_('Idea accepted.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea accepted.'), context=context)
         return True
 
     def idea_close(self, cr, uid, ids, context={}):
-        self.message_append_note(cr, uid, ids, body=_('Idea done.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea done.'), context=context)
         self.write(cr, uid, ids, { 'state': 'close' })
         return True
 
     def idea_draft(self, cr, uid, ids, context={}):
-        self.message_append_note(cr, uid, ids, body=_('Idea reset to draft.'), context=context)
+        self.message_post(cr, uid, ids, body=_('Idea reset to draft.'), context=context)
         self.write(cr, uid, ids, { 'state': 'draft' })
         return True
 idea_idea()

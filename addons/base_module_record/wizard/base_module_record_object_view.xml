@@ -5,14 +5,8 @@
         <record id="base_module_record_objects_view" model="ir.ui.view">
             <field name="name">base_module_record_objects</field>
             <field name="model">base.module.record</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Objects Recording" version="7.0">
-                    <header>
-                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group>
                         <field name="check_date"/>
                         <field name="filter_cond"/>
@@ -20,6 +14,11 @@
                     <separator string="Choose objects to record"/>
                     <field name="objects"/>
                     <group><field name="info_yaml"/></group>
+                    <footer>
+                        <button name="record_objects" string="Record" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -57,7 +56,6 @@
         <record id="module_create_form_view" model="ir.ui.view">
             <field name="name">module.create.form</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <group string="Module successfully created!">
@@ -83,14 +81,8 @@
         <record id="info_start_form_view" model="ir.ui.view">
             <field name="name">info.start.form.view</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording" version="7.0">
-                    <header>
-                        <button string="Continue" name="inter_call" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <group string="Module Information">
                         <field name="name"/>
                         <field name="directory_name"/>
@@ -102,6 +94,11 @@
                     </group>
                     <separator string="Description"/>
                     <field name="description"/>
+                    <footer>
+                        <button string="Continue" name="inter_call" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
          </record>
@@ -109,7 +106,6 @@
         <record id="module_recording_message_view" model="ir.ui.view">
             <field name="name">module_recording_message</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <label string="Thanks For using Module Recorder" colspan="4" align="0.0"/>
@@ -120,7 +116,6 @@
         <record id="yml_save_form_view" model="ir.ui.view">
             <field name="name">yml.save.form</field>
             <field name="model">base.module.record.objects</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Module Recording">
                     <separator string="YAML file successfully created !" colspan="4"/>

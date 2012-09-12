@@ -5,12 +5,8 @@
     <record id="caldav_browse_form" model="ir.ui.view">
             <field name="name">caldav_Browse</field>
             <field name="model">caldav.browse</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Browse Caldav" version="7.0">
-                    <header>
-                        <button special="cancel" string="_Close" icon="gtk-close"/>
-                    </header>
                     <sheet>
                         <group>
                             <separator string="Browse Caldav" colspan="4"/>
@@ -37,6 +33,9 @@
                             
                         </group>
                     </sheet>
+                    <footer>
+                        <button special="cancel" string="_Close" icon="gtk-close"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -44,7 +43,6 @@
         <record id="host_prefernce_form" model="ir.ui.view">
             <field name="name">host_preference</field>
            <field name="model">user.preference</field>
-           <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Caldav's host name configuration" version="7.0">
                     <header>
@@ -54,7 +52,7 @@
                     </header>
                     <sheet>
                         <group>
-                            <field name="host_name"  colspan="2" width="250" placeholder="For example : database.my.openerp.com or companyserver.com"/>
+                            <field name="host_name" colspan="2" width="250" placeholder="e.g. company.my.openerp.com"/>
                         </group>
                     </sheet>
                </form>
@@ -64,7 +62,6 @@
      <record id="user_prefernce_form" model="ir.ui.view">
             <field name="name">user_preference</field>
             <field name="model">user.preference</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User Preference" version="7.0">
                     <header>

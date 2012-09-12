@@ -4,17 +4,16 @@
     <record id="ftp_browse_form" model="ir.ui.view">
             <field name="name">Document FTP Browse</field>
             <field name="model">document.ftp.browse</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Browse Document" version="7.0">
-                    <header>
-                        <button name="browse_ftp" string="_Browse" type="object" icon="gtk-ok" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <field name="url" widget="url"/>
                     </group>
+                    <footer>
+                        <button name="browse_ftp" string="_Browse" type="object" icon="gtk-ok" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

@@ -7,18 +7,17 @@
         <record id="view_lunch_order_confirm" model="ir.ui.view">
             <field name="name">lunch.order.confirm.form</field>
             <field name="model">lunch.order.confirm</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Confirm" version="7.0">
-                    <header>
-                        <button name="confirm" string="Confirm Order" type="object" class="oe_highlight"  />
-                        or 
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group col="4">
                          <separator string="Orders Confirmation" colspan="4"/>
                          <field name="confirm_cashbox"/>
                    </group>
+                    <footer>
+                        <button name="confirm" string="Confirm Order" type="object" class="oe_highlight"  />
+                        or 
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                </form>
             </field>
         </record>

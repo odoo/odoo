@@ -7,23 +7,22 @@
         <record model="ir.ui.view" id="merge_opportunity_form">
             <field name="name">crm.merge.opportunity.form</field>
             <field name="model">crm.merge.opportunity</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Merge Opportunities" version="7.0">
-                    <header>
-                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <separator string="Select Opportunities"/>
                     <field name="opportunity_ids">
                         <tree>
-                            <field name="name" />
-                            <field name="partner_id" />
-                            <field name="user_id" />
-                            <field name="section_id" />
+                            <field name="name"/>
+                            <field name="partner_id"/>
+                            <field name="user_id"/>
+                            <field name="section_id"/>
                         </tree>
                     </field>
+                    <footer>
+                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -43,7 +42,7 @@
             multi="True"
             key2="client_action_multi" name="Merge Opportunities"
             res_model="crm.merge.opportunity" src_model="crm.lead"
-            view_mode="form" target="new" view_type="form" />
+            view_mode="form" target="new" view_type="form"/>
 
     </data>
 </openerp>

@@ -5,14 +5,8 @@
         <record id="view_project_task_delegate" model="ir.ui.view">
             <field name="name">Project Task Delegate</field>
             <field name="model">project.task.delegate</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Project Task Delegate" version="7.0">
-                    <header>
-                        <button name="delegate" string="_Delegate" type="object" class="oe_highlight"/>
-                         or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <group>
                             <field name="project_id" on_change="onchange_project_id(project_id)"/>
@@ -30,6 +24,11 @@
                             <field name="state"/>
                         </group>
                     </group>
+                    <footer>
+                        <button name="delegate" string="_Delegate" type="object" class="oe_highlight"/>
+                         or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

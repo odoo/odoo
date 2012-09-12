@@ -27,7 +27,6 @@ class report_event_registration(osv.osv):
     _name = "report.event.registration"
     _description = "Events Analysis"
     _auto = False
-    _rec_name = 'date'
     _columns = {
         'event_date': fields.char('Event Start Date', size=64, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
@@ -77,12 +76,10 @@ class report_event_registration(osv.osv):
                 r.state AS  registration_state
                 FROM
                 event_event e
-                
+
                 LEFT JOIN
                     event_registration r ON (e.id=r.event_id)
 
-                WHERE r.active = 'true'
-               
                GROUP BY
                 event_id,
                 user_id_registration,

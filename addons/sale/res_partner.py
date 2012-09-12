@@ -31,6 +31,14 @@ class res_partner(osv.osv):
             res[partner.id] = len(partner.sale_order_ids)
         return res
 
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'sale_order_ids': []})
+
+        super(res_partner, self).copy(cr, uid, record_id, default, context)
+
     _columns = {
         'sale_order_count': fields.function(_sale_order_count, string='# of Sales Order', type='integer'),
         'sale_order_ids': fields.one2many('sale.order','partner_id','Sales Order')

@@ -14,21 +14,20 @@
         <record id="wizard_view" model="ir.ui.view">
             <field name="name">Add Portal Access</field>
             <field name="model">res.portal.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Add Portal Access" version="7.0">
-                    <header>
-                        <button string="Send Invitations"
-                            name="action_create" type="object" class="oe_highlight"  />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />    
-                    </header>
                     <group col="4">
                         <field name="portal_id" widget="selection"/>
                     </group>
                     <field name="user_ids"/>
                     <label string="The following text will be included in the welcome email sent to users."/>
                     <field name="message"/>
+                    <footer>
+                        <button string="Send Invitations"
+                            name="action_create" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />    
+                    </footer>
                 </form>
             </field>
         </record>
@@ -37,13 +36,12 @@
         <record id="wizard_user_tree_view" model="ir.ui.view">
             <field name="name">Portal Users</field>
             <field name="model">res.portal.wizard.user</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <!-- the attribute 'editable' is set below to make the elements
                      editable in the web client 6.0 -->
                 <tree string="Portal Users" editable="bottom">
                     <field name="name"/>
-                    <field name="user_email"/>
+                    <field name="email"/>
                     <field name="partner_id"/>
                 </tree>
             </field>
@@ -53,12 +51,11 @@
         <record id="wizard_user_form_view" model="ir.ui.view">
             <field name="name">Portal User</field>
             <field name="model">res.portal.wizard.user</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Portal User" version="7.0">
                     <group colspan="2" col="2">
                         <field name="name"/>
-                        <field name="user_email"/>
+                        <field name="email"/>
                         <field name="lang"/>
                         <field name="partner_id"/>
                     </group>

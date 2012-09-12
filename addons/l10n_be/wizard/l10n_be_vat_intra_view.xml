@@ -5,15 +5,8 @@
         <record id="view_vat_intra" model="ir.ui.view">
             <field name="name">Partner VAT intra</field>
             <field name="model">partner.vat.intra</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Partner VAT intra" version="7.0">
-                    <header>
-                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
-                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <separator string="Intracom VAT Declaration"/>
                     </group>   
@@ -33,6 +26,12 @@
                             <field name="country_ids" colspan="4" nolabel="1"/>
                         </page>
                     </notebook>
+                    <footer>
+                        <button name="create_xml" string="Create _XML" type="object" class="oe_highlight"/>
+                        <button name="preview" string="_Preview" type="object" class="oe_highlight" />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -40,7 +39,6 @@
         <record id="view_vat_intra_save" model="ir.ui.view">
             <field name="name">Partner VAT intra Save</field>
             <field name="model">partner.vat.intra</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Save XML" version="7.0">
                     <separator string="Note: "/>

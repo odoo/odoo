@@ -6,13 +6,8 @@
         <record id="view_hr_timesheet_users" model="ir.ui.view">
             <field name="name">hr.analytical.timesheet.users.form</field>
             <field name="model">hr.analytical.timesheet.users</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Monthly Employees Timesheet" version="7.0">
-                    <header>
-                        <button string="Print" name="print_report" type="object" class="oe_highlight"/> or
-                        <button string="Cancel" class="oe_link" special="cancel"/>
-                    </header>
                     <sheet>
                         <group>
                              <label for="month" string="Period"/>
@@ -25,6 +20,10 @@
                             <field name="employee_ids" nolabel="1"/>
                         </group>
                     </sheet>
+                    <footer>
+                        <button string="Print" name="print_report" type="object" class="oe_highlight"/> or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

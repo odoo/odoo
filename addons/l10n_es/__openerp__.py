@@ -22,41 +22,39 @@
 ##############################################################################
 
 {
-    "name" : "Spanish - Accounting (PGCE 2008)",
-    "version" : "3.0",
-    "author" : "Spanish Localization Team",
-    'website' : 'https://launchpad.net/openerp-spain',
-    "category" : "Localization/Account Charts",
-    "description": """
+    'name': 'Spanish - Accounting (PGCE 2008)',
+    'version': '3.0',
+    'author': 'Spanish Localization Team',
+    'website': 'https://launchpad.net/openerp-spain',
+    'category': 'Localization/Account Charts',
+    'description': """
 Spanish Charts of Accounts (PGCE 2008).
 =======================================
 
-* Defines the following chart of account templates:
-    * Spanish General Chart of Accounts 2008.
-    * Spanish General Chart of Accounts 2008 for small and medium companies.
-* Defines templates for sale and purchase VAT.
-* Defines tax code templates.
+    * Defines the following chart of account templates:
+        * Spanish General Chart of Accounts 2008
+        * Spanish General Chart of Accounts 2008 for small and medium companies
+    * Defines templates for sale and purchase VAT
+    * Defines tax code templates
 
-Note: You should install the l10n_ES_account_balance_report module
-for yearly account reporting (balance, profit & losses).
+**Note:** You should install the l10n_ES_account_balance_report module for yearly
+      account reporting (balance, profit & losses).
 """,
-    "license" : "GPL-3",
-    "depends" : ["account", "base_vat", "base_iban"],
-    "init_xml" : [
-        "account_chart.xml",
-        "taxes_data.xml",
-        "fiscal_templates.xml",
-        "account_chart_pymes.xml",
-        "taxes_data_pymes.xml",
-        "fiscal_templates_pymes.xml",
-        "l10n_es_wizard.xml"
+    'license': 'GPL-3',
+    'depends': ['account', 'base_vat', 'base_iban'],
+    'data': [
+        'account_chart.xml',
+        'taxes_data.xml',
+        'fiscal_templates.xml',
+        'account_chart_pymes.xml',
+        'taxes_data_pymes.xml',
+        'fiscal_templates_pymes.xml',
+        'l10n_es_wizard.xml'
     ],
-    "demo_xml" : [],
-    "update_xml" : [
-    ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00408828172062583229",
+    'demo': [],
+    'auto_install': False,
+    'installable': True,
+    'certificate': '00408828172062583229',
     'images': ['images/config_chart_l10n_es.jpeg','images/l10n_es_chart.jpeg'],
 }
 

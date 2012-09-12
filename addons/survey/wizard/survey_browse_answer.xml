@@ -9,7 +9,6 @@
         <record id="view_survey_answer" model="ir.ui.view">
             <field name="name">Survey</field>
             <field name="model">survey.browse.answer</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                     <header>
@@ -18,7 +17,6 @@
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </header>
                     <group col="4">
-                        <separator colspan="4"  string =  "Select Survey and Related Answer"/>
                         <field name="survey_id"/>
                         <field name="response_id" domain="[('survey_id','=', survey_id)]"/>
                     </group>
@@ -37,7 +35,7 @@
         </record>
 
         <menuitem name="Browse Answers" id="menu_browse_survey_response"
-            action="action_browse_survey_response" parent="menu_reporting"
+            action="action_browse_survey_response" parent="base.next_id_10"
             groups="base.group_tool_manager" icon="STOCK_PRINT_PREVIEW"/>
 
     </data>

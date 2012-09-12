@@ -4,14 +4,8 @@
         <record id="view_purchase_order_group" model="ir.ui.view">
             <field name="name">Merger Purchase Orders</field>
             <field name="model">purchase.order.group</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                <form string="Merge orders" version="7.0">
-                    <header>
-                        <button name="merge_orders" string="Merge orders" type="object" class="oe_highlight"/>
-                        or
-                        <button string="Cancel" class="oe_link" special="cancel" />
-                    </header>
                     <group>
                         <separator string="Are you sure you want to merge these orders?"/>
                         <label string="
@@ -25,6 +19,11 @@ Lines will only be merged if: &#10;
 " colspan="4"/>
                     </group>
                     
+                    <footer>
+                        <button name="merge_orders" string="Merge orders" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>

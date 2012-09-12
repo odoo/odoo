@@ -19,6 +19,11 @@
         <field name="implied_ids" eval="[(4, ref('base.group_sale_salesman_all_leads'))]"/>
         <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
+    
+    <record id="group_fund_raising" model="res.groups">
+        <field name="name">Manage Fund Raising</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
 
     <record model="res.users" id="base.user_root">
         <field eval="[(4,ref('base.group_partner_manager'))]" name="groups_id"/>
