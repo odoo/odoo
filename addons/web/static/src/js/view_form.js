@@ -2712,8 +2712,10 @@ instance.web.form.CompletionFieldMixin = {
     _create_context: function(name) {
         var tmp = {};
         var field = (this.options || {}).create_name_field;
-        if (field !== false && (this.options || {}).quick_create !== false)
-            tmp["default_" + field] = name || "name";
+        if (field === undefined)
+            field = "name";
+        if (field !== false && name && (this.options || {}).quick_create !== false)
+            tmp["default_" + field] = name;
         return tmp;
     },
 };
