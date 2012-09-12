@@ -194,7 +194,7 @@ class hr_applicant(base_stage, osv.Model):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'categ_ids': fields.many2many('hr.applicant_category', string='Categories'),
+        'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -398,7 +398,7 @@ class hr_applicant(base_stage, osv.Model):
         for applicant in self.browse(cr, uid, ids, context=context):
             address_id = False
             if applicant.partner_id:
-                address_id = applicant.partner_id.address_get(['contact'])['contact']
+                address_id = applicant.partner_id._model.address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
             if applicant.job_id:
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
                 emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
