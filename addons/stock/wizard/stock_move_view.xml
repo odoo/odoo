@@ -8,8 +8,7 @@
             <field name="model">stock.move.consume</field>
             <field name="arch" type="xml">
                 <form string="Consume Move" version="7.0">
-                    <seperator string="Consume Products"/>
-                    <group>
+                    <group string="Consume Products">
                         <field name="product_id" readonly="1"/>
                         <label for="product_qty"/>
                         <div>
@@ -49,7 +48,8 @@
                             <field name="product_qty" class="oe_inline"/>
                             <field name="product_uom" class="oe_inline" readonly="1" groups="product.group_uom"/>
                         </div>
-                        <field name="location_id" string="Scrap Location" domain="[('usage','&lt;&gt;','view'),('scrap_location','=',True)]" widget="selection" groups="stock.group_locations"/>
+                        <field name="location_id" string="Scrap Location" widget="selection"
+                            domain="[('usage','!=','view'),('scrap_location','=',True)]" groups="stock.group_locations"/>
                     </group>
                     <footer>
                         <button name="move_scrap" string="Ok" type="object" class="oe_highlight"  />
@@ -73,7 +73,7 @@
                 <field name="name">Split in Serial Numbers</field>
                 <field name="model">stock.move.split</field>
                 <field name="arch" type="xml">
-                <form string="Split in Serial number" version="7.0">
+                <form string="Split in Serial Numbers" version="7.0">
                     <group>
                         <field name="product_id" readonly="1"/>
                         <label for="qty"/>
@@ -86,12 +86,12 @@
                     </group>
                     <field name="line_ids" attrs="{'invisible':[('use_exist','=',True)]}">
                         <tree string="Serial Numbers" editable="bottom">
-                            <field name="name" string="Serial Number"/>
+                            <field name="name"/>
                             <field name="quantity" />
                         </tree>
                         <form string="Serial Number" version="7.0">
                             <group>
-                                <field name="name" string="Lot number"/>
+                                <field name="name"/>
                                 <field name="quantity" />
                             </group>
                         </form>
@@ -103,7 +103,7 @@
                         </tree>
                         <form string="Serial Number" version="7.0">
                             <group>
-                                <field name="prodlot_id" string="Serial Number" domain="[('product_id','=',parent.product_id)]" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom, context)"/>
+                                <field name="prodlot_id" domain="[('product_id','=',parent.product_id)]" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom, context)"/>
                                 <field name="quantity" on_change="onchange_lot_id(prodlot_id, quantity, parent.location_id, parent.product_id, parent.product_uom, context)" />
                             </group>
                         </form>
@@ -116,7 +116,7 @@
             </record>
 
             <record id="track_line" model="ir.actions.act_window">
-                <field name="name">Split in serial numbers</field>
+                <field name="name">Split in Serial Numbers</field>
                 <field name="type">ir.actions.act_window</field>
                 <field name="res_model">stock.move.split</field>
                 <field name="view_type">form</field>
