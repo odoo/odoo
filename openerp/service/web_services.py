@@ -18,7 +18,8 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-
+from __future__ import with_statement
+import contextlib
 import base64
 import locale
 import logging
@@ -97,8 +98,6 @@ class db(netsvc.ExportService):
         self.actions = {}
         self.id = 0
         self.id_protect = threading.Semaphore()
-
-        self._pg_psw_env_var_is_set = False # on win32, pg_dump need the PGPASSWORD env var
 
     def dispatch(self, method, params):
         if method in [ 'create', 'get_progress', 'drop', 'dump',
@@ -205,23 +204,28 @@ class db(netsvc.ExportService):
             cr.close()
         return True
 
+    @contextlib.contextmanager
+    def _set_pg_password_in_environment(self):
+        """ On Win32, pg_dump (and pg_restore) require that
+        :envvar:`PGPASSWORD` be set
 
-    def _set_pg_psw_env_var(self):
-        # see http://www.postgresql.org/docs/8.4/static/libpq-envars.html
-        # FIXME: This is not thread-safe, and should never be enabled for
-        # SaaS (giving SaaS users the super-admin password is not a good idea
-        # anyway)
-        if tools.config['db_password'] and not os.environ.get('PGPASSWORD', ''):
+        This context management method handles setting
+        :envvar:`PGPASSWORD` iif win32 and the envvar is not already
+        set, and removing it afterwards.
+        """
+        if os.name != 'nt' or os.environ.get('PGPASSWORD'):
+            yield
+        else:
             os.environ['PGPASSWORD'] = tools.config['db_password']
-            self._pg_psw_env_var_is_set = True
+            try:
+                yield
+            finally:
+                del os.environ['PGPASSWORD']
 
-    def _unset_pg_psw_env_var(self):
-        if self._pg_psw_env_var_is_set:
-            os.environ['PGPASSWORD'] = ''
 
     def exp_dump(self, db_name):
-        try:
-            self._set_pg_psw_env_var()
+        logger = logging.getLogger('openerp.service.web_services.db.dump')
+        with self._set_pg_password_in_environment():
             cmd = ['pg_dump', '--format=c', '--no-owner']
             if tools.config['db_user']:
                 cmd.append('--username=' + tools.config['db_user'])
@@ -237,23 +241,20 @@ class db(netsvc.ExportService):
             res = stdout.close()
     
             if not data or res:
-                _logger.error(
+                logger.error(
                         'DUMP DB: %s failed! Please verify the configuration of the database password on the server. '
                         'It should be provided as a -w <PASSWD> command-line option, or as `db_password` in the '
                         'server configuration file.\n %s', db_name, data)
                 raise Exception, "Couldn't dump database"
-            _logger.info('DUMP DB successful: %s', db_name)
+            logger.info('DUMP DB successful: %s', db_name)
     
             return base64.encodestring(data)
-        finally:
-            self._unset_pg_psw_env_var()
 
     def exp_restore(self, db_name, data):
-        try:
-            self._set_pg_psw_env_var()
-
+        logger = logging.getLogger('openerp.service.web_services.db.restore')
+        with self._set_pg_password_in_environment():
             if self.exp_db_exist(db_name):
-                _logger.warning('RESTORE DB: %s already exists', db_name)
+                logger.warning('RESTORE DB: %s already exists', db_name)
                 raise Exception, "Database already exists"
 
             self._create_empty_database(db_name)
@@ -282,11 +283,9 @@ class db(netsvc.ExportService):
             res = stdout.close()
             if res:
                 raise Exception, "Couldn't restore database"
-            _logger.info('RESTORE DB: %s', db_name)
+            logger.info('RESTORE DB: %s', db_name)
 
             return True
-        finally:
-            self._unset_pg_psw_env_var()
 
     def exp_rename(self, old_name, new_name):
         openerp.modules.registry.RegistryManager.delete(old_name)
