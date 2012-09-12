@@ -8,8 +8,9 @@
              <field name="arch" type="xml">
                 <field name="purchase_ok" position="after">
                     <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>
+                    <label for="event_ok"/>
                 </field>
-                <field name='procure_method' position='before'>
+                <field name='default_code' position='before'>
                     <field name="event_type_id" attrs="{'readonly': [('event_ok', '=', False)]}"/>
                 </field>
              </field>

@@ -146,7 +146,7 @@ class membership_line(osv.osv):
         'date_to': fields.date('To', readonly=True),
         'date_cancel': fields.date('Cancel date'),
         'date': fields.date('Join Date', help="Date on which member has joined the membership"),
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
+        'member_price': fields.float('Membership Fee', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
@@ -443,14 +443,6 @@ class Partner(osv.osv):
         return invoice_list
 
 Partner()
-
-class product_template(osv.osv):
-    _inherit = 'product.template'
-    _columns = {
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Product Price')),
-    }
-
-product_template()
 
 class Product(osv.osv):
 
