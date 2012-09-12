@@ -26,7 +26,9 @@
         <menuitem
             action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
             parent="menu_purchase_config_pricelist" sequence="10" />
-
+        <menuitem
+            action="product.product_price_type_action" id="menu_product_pricelist_action2_purchase_type"
+            parent="menu_purchase_config_pricelist" sequence="60" />
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
             parent="menu_purchase_config_purchase" sequence="30" groups="base.group_no_one"/>
@@ -185,7 +187,7 @@
                     <button name="invoice_ok" states="except_invoice" string="Manually Corrected"/>
                     <button name="purchase_approve" states="confirmed" string="Approve Order" class="oe_highlight"/>
                     <button name="view_invoice" string="Receive Invoice" type="object" attrs="{'invisible': ['|', ('invoice_method','=','picking'), '|', ('state','!=', 'approved'), ('invoiced','=',True) ]}" class="oe_highlight"/>
-                    <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
+                    <button name="view_picking" string="Receive Products" type="object" states="confirmed,approved,sent,done" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
                     <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
