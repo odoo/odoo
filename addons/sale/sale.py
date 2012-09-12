@@ -145,13 +145,6 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
-    def _get_invoiced_amount(self, cr, uid, sale, context=None):
-        invoiced_amount = 0
-        for invoice in sale.invoice_ids:
-            if invoice.state!='cancel':
-                invoiced_amount += invoice.amount_total
-        return invoiced_amount
-
     def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -535,24 +528,34 @@ class sale_order(osv.osv):
         This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
-        act_obj = self.pool.get('ir.actions.act_window')
-
-        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
-        id = result and result[1] or False
-        result = act_obj.read(cr, uid, [id], context=context)[0]
+        result = {
+            'name': _('Cutomer Invoice'),
+            'view_type': 'form',
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+        }
         #compute the number of invoices to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             inv_ids += [invoice.id for invoice in so.invoice_ids]
         #choose the view_mode accordingly
-        if len(inv_ids) > 1:
-            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
+        if len(inv_ids)>1:
+            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
+            result.update({
+                'view_mode': 'tree,form',
+                'res_id': inv_ids or False
+            })
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            result['views'] = [(res and res[1] or False, 'form')]
-            result['res_id'] = inv_ids and inv_ids[0] or False
+            result.update({
+                'view_mode': 'form',
+                'res_id': inv_ids and inv_ids[0] or False,
+            })
+        result.update(view_id = res and res[1] or False)
         return result
-
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
