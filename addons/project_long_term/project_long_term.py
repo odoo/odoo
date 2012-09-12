@@ -292,7 +292,7 @@ account_analytic_account()
 class project_task(osv.osv):
     _inherit = "project.task"
     _columns = {
-        'phase_id': fields.many2one('project.phase', 'Project Phase'),
+        'phase_id': fields.many2one('project.phase', 'Project Phase', domain="[('project_id', '=', project_id)]"),
     }
 project_task()
 
