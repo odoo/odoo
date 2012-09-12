@@ -31,6 +31,7 @@ from tools.translate import _
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
+
 class mail_compose_message(osv.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
@@ -115,8 +116,9 @@ class mail_compose_message(osv.TransientModel):
         'composition_mode': 'comment',
         'content_subtype': lambda self, cr, uid, ctx={}: 'plain',
         'body_text': lambda self, cr, uid, ctx={}: False,
-        'body': lambda self, cr, uid, ctx={}: '',
+        'body': lambda self, cr, uid, ctx={}: False,
         'subject': lambda self, cr, uid, ctx={}: False,
+        'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
     def notify(self, cr, uid, newid, context=None):
@@ -176,8 +178,8 @@ class mail_compose_message(osv.TransientModel):
         return result
 
     def toggle_content_subtype(self, cr, uid, ids, context=None):
-        """ hit toggle formatting mode button: calls onchange_formatting to
-            emulate an on_change, then writes the value to update the form. """
+        """ toggle content_subtype: calls onchange_formatting to emulate an
+            on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
             content_st_new_value = 'plain' if record.content_subtype == 'html' else 'html'
             onchange_res = self.onchange_content_subtype(cr, uid, ids, content_st_new_value, record.model, record.res_id, context=context)
@@ -185,11 +187,10 @@ class mail_compose_message(osv.TransientModel):
         return True
 
     def onchange_content_subtype(self, cr, uid, ids, value, model, res_id, context=None):
-        """ onchange_content_subtype (values: 'plain' or 'html'). This onchange
-            on the subtype allows to have some specific behavior when switching
-            between text or html mode.
-            This method can be overridden for models that want to have their
-            specific behavior. """
+        """ This onchange allows to have some specific behavior when switching
+            between text or html mode. This method can be overridden.
+            :param values: 'plain' or 'html'
+        """
         return {'value': {'content_subtype': value}}
 
     def _verify_partner_email(self, cr, uid, partner_ids, context=None):
@@ -211,9 +212,9 @@ class mail_compose_message(osv.TransientModel):
                 }
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
-            basic purpose of this method is to check that destination partners
+        """ The basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
+            :param value: value format: [[6, 0, [3, 4]]]
         """
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
@@ -292,6 +293,7 @@ class mail_compose_message(osv.TransientModel):
         """
         if context is None:
             context = {}
+
         def merge(match):
             exp = str(match.group()[2:-1]).strip()
             result = eval(exp, {
