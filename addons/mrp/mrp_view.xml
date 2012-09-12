@@ -659,7 +659,7 @@
                             <group>
                                 <group string="Products to Consume">
                                     <field name="move_lines" domain="[('state','not in', ('done', 'cancel'))]" nolabel="1">
-                                        <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready');gray:state in ('cancel','done') " string="Products to Consume">
+                                        <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
