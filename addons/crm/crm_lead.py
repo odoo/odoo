@@ -27,15 +27,13 @@ import time
 import tools
 from tools.translate import _
 
-from base.res.res_partner import format_address
-
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(base_stage, format_address, osv.osv):
+class crm_lead(base_stage, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -106,12 +104,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             fold[stage.id] = stage.fold or False
 
         return result, fold
-
-    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
-        res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
-        return res
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -842,7 +834,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change",context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), mail_subtype_new="crm_subtype_stage_change",context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
@@ -852,16 +844,16 @@ class crm_lead(base_stage, format_address, osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=message, subtype="new", context=context)
+            self.message_post(cr, uid, [id], body=message, subtype_xml_id="crm_subtype_new", context=context)
         return True
 
     def case_mark_lost_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>lost</b>.")
-        return self.message_post(cr, uid, ids, body=message,subtype="lost", context=context)
+        return self.message_post(cr, uid, ids, body=message,subtype_xml_id="crm_subtype_lost", context=context)
 
     def case_mark_won_send_note(self, cr, uid, ids, context=None):
         message = _("Opportunity has been <b>won</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="won", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="crm_subtype_won", context=context)
 
     def schedule_phonecall_send_note(self, cr, uid, ids, phonecall_id, action, context=None):
         phonecall = self.pool.get('crm.phonecall').browse(cr, uid, [phonecall_id], context=context)[0]

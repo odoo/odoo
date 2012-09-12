@@ -14,7 +14,7 @@
             <field name="arch" type="xml">
                 <tree string="Subtype">
                     <field name="name"/>
-                    <field name="model_ids" invisible="1"/>
+                    <field name="res_model" invisible="1"/>
                     <field name="default"/>
                 </tree>
             </field>
@@ -30,13 +30,12 @@
                         <group>
                             <group>
                                 <field name="name"/>
+                                <field name="res_model"/>
                             </group>
                             <group>
                                 <field name="default"/>
                             </group>
                         </group>
-                        <separator string="Models"/>
-                        <field name="model_ids" widget="many2many"/>
                     </sheet>
                 </form>
             </field>

@@ -562,7 +562,7 @@ class mail_thread(osv.AbstractModel):
         self.message_post(cr, uid, [id], message, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=False,
-            type='notification', parent_id=False, attachments=None, subtype='comment', context=None, **kwargs):
+            type='notification', parent_id=False, attachments=None, subtype_xml_id='mail_subtype_comment', context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
@@ -599,12 +599,13 @@ class mail_thread(osv.AbstractModel):
 
         values = kwargs
         subtype_obj = self.pool.get('mail.message.subtype')
-        if subtype:
-            subtypes = subtype_obj.name_search(cr, uid, subtype,context=context)
-            if len(subtypes):
-                subtype_browse = subtype_obj.browse(cr, uid, subtypes[0][0],context=context)
-                if self._name in [model.model for model in subtype_browse.model_ids]:
-                    values['subtype_id']=subtype_browse.id
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype_xml_id)
+        if subtype_xml_id:
+            subtype_browse = subtype_obj.browse(cr, uid, ref[1],context=context)
+            if self._name == subtype_browse.res_model:
+                values['subtype_id']=subtype_browse.id
+            else:
+                values['subtype_id']=subtype_browse.id
         values.update({
             'model': context.get('thread_model', self._name) if thread_id else False,
             'res_id': thread_id or False,
@@ -628,14 +629,20 @@ class mail_thread(osv.AbstractModel):
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
-        """ Add partners to the records followers. """
+    def message_subscribe(self, cr, uid, ids, partner_ids,subtype_ids = None, context=None):
+        """ Add partners to the records followers.
+            :param partner_ids: a list of partner_ids to subscribe
+            :param return: new value of followers if read_back key in context
+        """
+        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('model_ids.model', '=', self._name)],context=context)
+            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('res_model', '=', self._name)],context=context)
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
-        return self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        return []
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
@@ -645,8 +652,14 @@ class mail_thread(osv.AbstractModel):
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
-        """ Remove partners from the records followers. """
-        return self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        """ Remove partners from the records followers.
+            :param partner_ids: a list of partner_ids to unsubscribe
+            :param return: new value of followers if read_back key in context
+        """
+        self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
+        if context and context.get('read_back'):
+            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
+        return []
 
     #------------------------------------------------------
     # Thread state
@@ -679,6 +692,6 @@ class mail_thread(osv.AbstractModel):
     def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
         followers_obj = self.pool.get('mail.followers')
         followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context) #overright or add new one
+        return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context)
         
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
