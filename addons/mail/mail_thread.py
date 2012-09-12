@@ -584,6 +584,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
+        ir_attachment = self.pool.get('ir.attachment')
         attachment_ids = []
         for name, content in attachments:
             if isinstance(content, unicode):
@@ -596,7 +597,7 @@ class mail_thread(osv.AbstractModel):
                 'res_model': context.get('thread_model') or self._name,
                 'res_id': thread_id,
             }
-            attachment_ids.append((0, 0, data_attach))
+            attachment_ids.append(ir_attachment.create(cr, uid, data_attach, context=context))
 
         values = kwargs
         values.update({
