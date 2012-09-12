@@ -25,19 +25,26 @@
     'author': 'OpenERP SA',
     'category': 'Human Resources',
     'website': 'http://www.openerp.com',
-    'summary': 'Periodical Evaluations, Surveys',
+    'summary': 'Periodical Evaluations, Appraisals, Surveys',
     'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg'],
     'depends': ['hr','base_calendar','survey'],
     'description': """
-Ability to create employees evaluation.
-=======================================
+Periodical Employees evaluation and appraisals
+==============================================
+By using this application you can maintain the motivational process by periodical evaluation of employees' performance. The regular assessment of human resources can benefit your people as well your organization. 
 
-An evaluation can be created by employee for subordinates, juniors as well as
-his manager. The evaluation is done under a plan in which various surveys can be
-created and it can be defined which level of employee hierarchy fills what and
-final review and evaluation is done by the manager. Every evaluation filled by
-the employees can be viewed in the form of pdf file.
-         """,
+Each employee can be assigned an evaluation plan. These plans define the frequency and the way you manage your periodic personal evaluation. You will be able to define steps and attach interview forms to each step. 
+
+Manages all kinds of evaluations: bottom-up, top-down, self evaluation and final evaluation by the manager.
+
+Key Features
+------------
+* Ability to create employees evaluation.
+* An evaluation can be created by an employee for subordinates, juniors as well as his manager.
+* The evaluation is done under a plan in which various surveys can be created. Each survey can be answered by a particular level of employee hierarchy. The final review and evaluation is done by the manager.
+* Every evaluation filled by employees can be viewed through a PDF form.
+* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform evaluation of their colleagues periodically.
+""",
     "demo": ["hr_evaluation_demo.xml"],
     "data": [
         'security/ir.model.access.csv',
