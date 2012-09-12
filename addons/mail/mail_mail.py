@@ -30,6 +30,7 @@ from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
+
 class mail_mail(osv.Model):
     """ Model holding RFC2822 email messages to send. This model also provides
         facilities to queue and send new email messages.  """
@@ -58,8 +59,8 @@ class mail_mail(osv.Model):
         'body_html': fields.text('Rich-text Contents', help="Rich-text/HTML message"),
 
         # Auto-detected based on create() - if 'mail_message_id' was passed then this mail is a notification
-        # and during unlink() we will cascade delete the parent and its attachments 
-        'notification': fields.boolean('Is Notification') 
+        # and during unlink() we will not cascade delete the parent and its attachments
+        'notification': fields.boolean('Is Notification')
     }
 
     def _get_default_from(self, cr, uid, context=None):
@@ -76,21 +77,21 @@ class mail_mail(osv.Model):
     def create(self, cr, uid, values, context=None):
         if 'notification' not in values and values.get('mail_message_id'):
             values['notification'] = True
-        return super(mail_mail,self).create(cr, uid, values, context=context)
+        return super(mail_mail, self).create(cr, uid, values, context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete the parent message for all mails that are not created for a notification
-        ids_to_cascade = self.search(cr, uid, [('notification','=',False),('id','in',ids)])
+        ids_to_cascade = self.search(cr, uid, [('notification', '=', False), ('id', 'in', ids)])
         parent_msg_ids = [m.mail_message_id.id for m in self.browse(cr, uid, ids_to_cascade, context=context)]
-        res = super(mail_mail,self).unlink(cr, uid, ids, context=context)
+        res = super(mail_mail, self).unlink(cr, uid, ids, context=context)
         self.pool.get('mail.message').unlink(cr, uid, parent_msg_ids, context=context)
         return res
 
     def mark_outgoing(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'outgoing'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'outgoing'}, context=context)
 
     def cancel(self, cr, uid, ids, context=None):
-        return self.write(cr, uid, ids, {'state':'cancel'}, context=context)
+        return self.write(cr, uid, ids, {'state': 'cancel'}, context=context)
 
     def process_email_queue(self, cr, uid, ids=None, context=None):
         """Send immediately queued messages, committing after each
@@ -127,7 +128,7 @@ class mail_mail(osv.Model):
         """Perform any post-processing necessary after sending ``mail``
         successfully, including deleting it completely along with its
         attachment if the ``auto_delete`` flag of the mail was set.
-        Overridden by subclasses for extra post-processing behaviors. 
+        Overridden by subclasses for extra post-processing behaviors.
 
         :param browse_record mail: the mail that was just sent
         :return: True
@@ -189,15 +190,15 @@ class mail_mail(osv.Model):
                 res = ir_mail_server.send_email(cr, uid, msg,
                     mail_server_id=mail.mail_server_id.id, context=context)
                 if res:
-                    mail.write({'state':'sent', 'message_id': res})
+                    mail.write({'state': 'sent', 'message_id': res})
                 else:
-                    mail.write({'state':'exception'})
+                    mail.write({'state': 'exception'})
                 mail.refresh()
                 if mail.state == 'sent':
                     self._postprocess_sent_message(cr, uid, mail, context=context)
             except Exception:
                 _logger.exception('failed sending mail.mail %s', mail.id)
-                mail.write({'state':'exception'})
+                mail.write({'state': 'exception'})
 
             if auto_commit == True:
                 cr.commit()
