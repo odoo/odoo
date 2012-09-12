@@ -14,8 +14,12 @@
                     </footer>
                 </footer>
                 <separator string="title" position="replace">
+                    <p class="oe_grey">
+                        Select a configuration package to setup automatically your
+                        taxes and chart of accounts.
+                    </p>
                     <group>
-                        <field name="charts"/>
+                        <field name="charts" class="oe_inline"/>
                     </group>
                     <group string="Configure your Fiscal Year" groups="account.group_account_user">
                         <field name="has_default_company" invisible="1" />
@@ -32,7 +36,7 @@
         </record>
 
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Configure your Chart of Accounts</field>
+            <field name="name">Configure Invoicing Data</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>
