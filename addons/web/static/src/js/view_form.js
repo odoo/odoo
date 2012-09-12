@@ -2404,10 +2404,6 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
     template: 'FieldTextHtml',
     init: function() {
         this._super.apply(this, arguments);
-        if (this.field.type !== 'html' && ! this.options.safe) {
-            throw new Error(_.str.sprintf(
-                _t("Error with field %s, it is not allowed to use the widget 'html' with any other field type than 'html'"), this.string));
-        }
     },
     initialize_content: function() {
         var self = this;
@@ -2441,7 +2437,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
     },
     render_value: function() {
         if (! this.get("effective_readonly")) {
-            this.$textarea.val(this.get('value'));
+            this.$textarea.val(this.get('value') || '');
             this._updating_editor = true;
             this.$cleditor.updateFrame();
             this._updating_editor = false;
