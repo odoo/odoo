@@ -272,7 +272,7 @@ openerp.mail = function(session) {
                 });
             return
         },
-        
+
         find_parent_element: function(name, message_id){
             parent_element = false;
             _.each($(name), function(element){
@@ -283,27 +283,22 @@ openerp.mail = function(session) {
             return parent_element;
          },
 
-        render_vote: function(message_id){
+        render_vote: function(record){
+            vote_element = session.web.qweb.render('VoteDisplay', {});
+            var message_id = record.id
             var self = this;
-            this.ds_message.call('message_read', [[parseInt(message_id)]]).then(function(result){
-                vote_count = 0;
-                _.each(result, function(res){
-	                if (res.vote_user_ids){
-	                	vote_count = res.vote_user_ids.length;
-	                }
-	                parent_element = self.find_parent_element(".oe_mail_msg_vote", message_id);
-	                vote_element = session.web.qweb.render('VoteDisplay', {'msg_id': message_id, 'vote_count': vote_count, 'has_voted': res.has_voted});
-	                $(parent_element).html(vote_element);
-	                self.add_vote_event($(parent_element));
-	            });
-            });
+            var to_render_element = false;
+            vote_element = session.web.qweb.render('VoteDisplay', {'message_id': message_id, 'vote_count': record.vote_user_ids.length, 'has_voted': record.has_voted});
+            parent_element = self.find_parent_element(".oe_mail_msg_vote",message_id);
+            $(parent_element).html(vote_element);
+            self.add_vote_event($(parent_element));
         },
         
         subscribe_vote: function(message_id){
             var self = this;
             this.mail_message = new session.web.DataSet(this, 'mail.message');
             return this.mail_message.call('vote_toggle', [[parseInt(message_id)]]).then(function(result){
-                self.render_vote(message_id);
+                //self.render_vote(message_id);
             });
         },
 
@@ -481,8 +476,6 @@ openerp.mail = function(session) {
          * - record.is_author: is the current user the author of the record */
         display_record: function (record) {
             // formatting and additional fields
-            //Render Votes.
-            this.render_vote(record.id);
             record.date = session.web.format_value(record.date, {type:"datetime"});
             record.timerelative = $.timeago(record.date);
             if (record.type == 'email') {
@@ -509,6 +502,9 @@ openerp.mail = function(session) {
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',
                 });
+            
+            //Render Votes.
+            this.render_vote(record);
         },
 
         /** Display 'show more' button */
