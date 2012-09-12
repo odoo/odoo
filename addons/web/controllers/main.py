@@ -1938,8 +1938,33 @@ class Reports(View):
                  ('Content-Disposition', 'attachment; filename="%s.%s"' % (file_name, report_struct['format'])),
                  ('Content-Type', report_mimetype),
                  ('Content-Length', len(report))],
-             cookies={'fileToken': int(token)})
+                 cookies={'fileToken': int(token)})
 
+    @openerpweb.httprequest
+    def print_workflow(self, req, action, token):
+        action = simplejson.loads(action)
+        report_srv = req.session.proxy("report")
+        action.update({'nested': True})
+        report_id = report_srv.report(
+            req.session._db, req.session._uid, req.session._password,
+            'workflow.instance.graph', action['id'], action)
+        report_struct = None
+        while True:
+            report_struct = report_srv.report_get(
+                req.session._db, req.session._uid,
+                req.session._password, report_id)
+            if report_struct["state"]:
+                break
+            time.sleep(self.POLLING_DELAY)
+        report = base64.b64decode(report_struct['result'])
+        file_name = 'workflow_%s_%d.%s'%(action['model'], action['id'], report_struct['format'])
+        return req.make_response(report,
+             headers=[
+                 ('Content-Disposition', 'attachment; filename="%s"'% (file_name)),
+                 ('Content-Type', 'application/pdf'),
+                 ('Content-Length', len(report))],
+                 cookies={'fileToken': int(token)})
+             
 class Import(View):
     _cp_path = "/web/import"
 
