@@ -29,7 +29,7 @@ openerp.hr_attendance = function (instance) {
                 title: function() {
                     var last_text = instance.web.format_value(self.last_sign, {type: "datetime"});
                     var current_text = instance.web.format_value(new Date(), {type: "datetime"});
-                    var duration = $.timeago(self.last_sign);
+                    var duration = self.last_sign ? $.timeago(self.last_sign) : "none";
                     if (self.get("signed_in")) {
                         return _.str.sprintf(_t("Last sign in: %s,<br />%s.<br />Click to sign out."), last_text, duration);
                     } else {

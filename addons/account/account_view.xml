@@ -204,7 +204,7 @@
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
-                        <group>
+                        <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
                         </group>
@@ -489,7 +489,7 @@
                         <group>
                             <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="currency"/>
+                            <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -1067,9 +1067,10 @@
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="state" invisible="1"/>
-                    <field name="reconcile_id" invisible="1"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="reconcile_id"/>
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -1117,7 +1118,7 @@
 	                                    <field name="tax_amount"/>
 	                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
 	                                </group>
-	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
+	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
 	                                    <field name="currency_id"/>
 	                                    <field name="amount_currency"/>
 	                                </group>
@@ -1165,8 +1166,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id"/>
-                                <field name="amount_currency"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="amount_currency" groups="base.group_multi_currency"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1393,7 +1394,7 @@
                                                     <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                                 </group>
 
-                                                <group string="Currency">
+                                                <group string="Currency" groups="base.group_multi_currency">
                                                     <field name="currency_id"/>
                                                     <field name="amount_currency"/>
                                                 </group>
@@ -1431,7 +1432,7 @@
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>
                                     <field name="state"/>
@@ -2060,7 +2061,7 @@
                                 <field name="type"/>
                                 <field name="user_type"/>
 
-                                <field name="currency_id"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
                                 <field name="reconcile"/>
                                 <field name="chart_template_id"/>
                             </group>
@@ -2353,22 +2354,15 @@
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <div groups="base.group_multi_company">
-                        <label for="company_id"/>
-                        <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    </div>
-                    <label for="currency_id"/>
-                    <field name="currency_id" />
-                    <group>
-                        <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
-                            <label for="chart_template_id"/>
+                    <group col="1">
+                        <group attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
-                        </div>
-                        <newline/>
-                        <group groups="account.group_account_user">
-                            <field name="code_digits"/>
+                        </group>
+                        <group groups="base.group_multi_company">
+                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                         </group>
                         <group>
+                            <field name="currency_id" class="oe_inline"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
@@ -2380,17 +2374,10 @@
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%
                             </div>
                         </group>
+                        <group groups="account.group_account_user">
+                            <field name="code_digits"/>
+                        </group>
                     </group>
-                    <div groups="account.group_account_user">
-                        <label for="bank_accounts_id" string="Bank Information"/>
-                        <field name="bank_accounts_id">
-                            <tree editable="bottom">
-                                <field name="acc_name"/>
-                                <field name="account_type"/>
-                                <field name="currency_id" widget="selection"/>
-                            </tree>
-                        </field>
-                    </div>
                 </group>
             </field>
         </record>
@@ -2552,7 +2539,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1"/>
+                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>

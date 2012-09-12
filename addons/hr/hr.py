@@ -180,17 +180,16 @@ class hr_employee(osv.osv):
         'resource_id': fields.many2one('resource.resource', 'Resource', ondelete='cascade', required=True),
         'coach_id': fields.many2one('hr.employee', 'Coach'),
         'job_id': fields.many2one('hr.job', 'Job'),
+        # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Photo",
-            help="This field holds the image used as a photo for the "\
-                 "employee. The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as photo for the employee, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized photo of the employee. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
@@ -198,7 +197,7 @@ class hr_employee(osv.osv):
                 'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the employee. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'passport_id':fields.char('Passport No', size=64),
         'color': fields.integer('Color Index'),
@@ -290,8 +289,12 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-hr_department()
-
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['member_ids'] = []
+        return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
 class res_users(osv.osv):
     _name = 'res.users'
