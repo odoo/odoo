@@ -288,13 +288,13 @@ class product_template(osv.osv):
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
-        'standard_price': fields.float('Cost Price', required=True, digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
+        'standard_price': fields.float('Cost', digits_compute=dp.get_precision('Product Price'), help="Product's cost for accounting stock valuation. It is the base price for the supplier price.", groups="base.group_user"),
         'volume': fields.float('Volume', help="The volume in m3."),
         'weight': fields.float('Gross Weight', digits_compute=dp.get_precision('Stock Weight'), help="The gross weight in Kg."),
         'weight_net': fields.float('Net Weight', digits_compute=dp.get_precision('Stock Weight'), help="The net weight in Kg."),
         'cost_method': fields.selection([('standard','Standard Price'), ('average','Average Price')], 'Costing Method', required=True,
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
-        'warranty': fields.float('Warranty (months)'),
+        'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
         'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),
@@ -302,7 +302,7 @@ class product_template(osv.osv):
             ('sellable','Normal'),
             ('end','End of Lifecycle'),
             ('obsolete','Obsolete')], 'Status', help="Tells the user if he can use the product or not."),
-        'uom_id': fields.many2one('product.uom', 'Default Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
+        'uom_id': fields.many2one('product.uom', 'Unit of Measure', required=True, help="Default Unit of Measure used for all stock operation."),
         'uom_po_id': fields.many2one('product.uom', 'Purchase Unit of Measure', required=True, help="Default Unit of Measure used for purchase orders. It must be in the same category than the default unit of measure."),
         'uos_id' : fields.many2one('product.uom', 'Unit of Sale',
             help='Used by companies that manage two units of measure: invoicing and inventory management. For example, in food industries, you will manage a stock of ham but invoice in Kg. Keep empty to use the default Unit of Measure.'),
@@ -354,7 +354,7 @@ class product_template(osv.osv):
         'list_price': lambda *a: 1,
         'cost_method': lambda *a: 'standard',
         'supply_method': lambda *a: 'buy',
-        'standard_price': lambda *a: 1,
+        'standard_price': lambda *a: 0.0,
         'sale_ok': lambda *a: 1,
         'sale_delay': lambda *a: 7,
         'produce_delay': lambda *a: 1,
@@ -509,7 +509,7 @@ class product_product(osv.osv):
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
-            result[obj.id] = tools.image_get_resized_images(obj.image)
+            result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
         return result
     
     def _set_image(self, cr, uid, id, name, value, args, context=None):
@@ -535,9 +535,9 @@ class product_product(osv.osv):
         'outgoing_qty': fields.function(_product_outgoing_qty, type='float', string='Outgoing'),
         'price': fields.function(_product_price, type='float', string='Pricelist', digits_compute=dp.get_precision('Product Price')),
         'lst_price' : fields.function(_product_lst_price, type='float', string='Public Price', digits_compute=dp.get_precision('Product Price')),
-        'code': fields.function(_product_code, type='char', string='Reference'),
+        'code': fields.function(_product_code, type='char', string='Internal Reference'),
         'partner_ref' : fields.function(_product_partner_ref, type='char', string='Customer ref'),
-        'default_code' : fields.char('Reference', size=64, select=True),
+        'default_code' : fields.char('Internal Reference', size=64, select=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the product without removing it."),
         'variants': fields.char('Variants', size=64),
         'product_tmpl_id': fields.many2one('product.template', 'Product Template', required=True, ondelete="cascade"),
@@ -548,25 +548,24 @@ class product_product(osv.osv):
         'pricelist_id': fields.dummy(string='Pricelist', relation='product.pricelist', type='many2one'),
         'name_template': fields.related('product_tmpl_id', 'name', string="Name", type='char', size=128, store=True, select=True),
         'color': fields.integer('Color Index'),
+        # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used for the product. "\
-                 "The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as image for the product, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the product. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
-                 "Use this field in form views or some kanban views."),
+                 "resized as a 128x128px image, with aspect ratio preserved, "\
+                 "only when the image exceeds one of those sizes. Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Small-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'product.product': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the product. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'seller_info_id': fields.function(_calc_seller, type='many2one', relation="product.supplierinfo", multi="seller_info"),
         'seller_delay': fields.function(_calc_seller, type='integer', string='Supplier Lead Time', multi="seller_info", help="This is the average delay in days between the purchase order confirmation and the reception of goods for this product and for the default supplier. It is used by the scheduler to order requests based on reordering delays."),
@@ -580,7 +579,7 @@ class product_product(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Product has been <b>created</b>."), context=context)
 
     def unlink(self, cr, uid, ids, context=None):
         unlink_ids = []

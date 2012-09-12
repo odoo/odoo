@@ -72,7 +72,7 @@ class crm_claim(base_stage, osv.osv):
     _description = "Claim"
     _order = "priority,date desc"
     _inherit = ['mail.thread']
-    _mail_compose_message = True
+
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'name': fields.char('Claim Subject', size=128, required=True),
@@ -194,13 +194,12 @@ class crm_claim(base_stage, osv.osv):
         if custom_values is None: custom_values = {}
         custom_values.update({
             'name': msg.get('subject') or _("No Subject"),
-            'description': msg.get('body_text'),
+            'description': msg.get('body'),
             'email_from': msg.get('from'),
             'email_cc': msg.get('cc'),
         })
         if msg.get('priority'):
             custom_values['priority'] = msg.get('priority')
-        custom_values.update(self.message_partner_by_email(cr, uid, msg.get('from'), context=context))
         return super(crm_claim,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
@@ -220,7 +219,7 @@ class crm_claim(base_stage, osv.osv):
             'revenue': 'planned_revenue',
             'probability':'probability'
         }
-        for line in msg['body_text'].split('\n'):
+        for line in msg['body'].split('\n'):
             line = line.strip()
             res = tools.misc.command_re.match(line)
             if res and maps.get(res.group(1).lower()):
@@ -239,16 +238,16 @@ class crm_claim(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>created</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def case_refuse_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>refused</b>.')
-        return self.message_append_note(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_append_note(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
 
 class res_partner(osv.osv):

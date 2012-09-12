@@ -26,7 +26,6 @@
             <span class="oe_header_txt"> <t t-esc="action.attrs.string"/> </span>
             <input class = "oe_header_text" type="text"/>
             <t t-if="!action.attrs.string">&amp;nbsp;</t>
-            <button t-if="action.attrs.creatable and action.attrs.creatable !== 'false'" class="oe_button oe_button_create">Create</button>
             <span class='oe_icon oe_close'></span>
             <span class='oe_icon oe_minimize oe_fold' t-if="!action.attrs.fold"></span>
             <span class='oe_icon oe_maximize oe_fold' t-if="action.attrs.fold"></span>
