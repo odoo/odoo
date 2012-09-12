@@ -109,7 +109,7 @@ class res_partner_bank(osv.osv):
         if not context.get('address'):
             return value
 
-        for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
+        for address in self.pool.get('res.partner').resolve_2many_commands(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
             if address.get('type') == 'default':
@@ -199,9 +199,8 @@ class res_partner_bank(osv.osv):
                         if not val._data[val.id]['bank_name']:
                             val._data[val.id]['bank_name'] = _('BANK')
                         result = self._prepare_name_get(cr, uid, t, val, context=context)
-                    except:
-                        result += ' [Formatting Error]'
-                        raise
+                    except Exception:
+                        raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
             res.append((val.id, result))
         return res
 

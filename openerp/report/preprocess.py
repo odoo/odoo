@@ -48,7 +48,7 @@ class report(object):
                         try:
                             while n.tag != txt.group(3):
                                 n = n.getparent()
-                        except:
+                        except Exception:
                             n = node
                     else:
                         n = node.getparent()

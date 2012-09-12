@@ -716,6 +716,15 @@ class test_m2m(ImporterCase):
 class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 
+    def test_name_get(self):
+        # FIXME: bloody hell why can't this just name_create the record?
+        self.assertRaises(
+            IndexError,
+            self.import_,
+            ['const', 'value'],
+            [['5', u'Java is a DSL for taking large XML files'
+                   u' and converting them to stack traces']])
+
     def test_single(self):
         self.assertEqual(
             self.import_(['const', 'value/value'], [
