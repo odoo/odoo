@@ -2539,11 +2539,6 @@ class stock_move(osv.osv):
                 }
                 self.write(cr, uid, [move.id], update_val)
 
-        product_obj = self.pool.get('product.product')
-        for new_move in self.browse(cr, uid, res, context=context):
-            message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
-            product_obj.message_post(cr, uid, [new_move.product_id.id], body=message, context=context)
-
         self.action_done(cr, uid, res, context=context)
 
         return res
