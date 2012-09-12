@@ -137,7 +137,7 @@ class mail_mail(osv.Model):
             mail.unlink()
         return True
 
-    def _send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
+    def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
         """ if void and related document: '<Author> posted on <Resource>'
 
             :param force: force the 'Author posted'... subject
@@ -148,7 +148,7 @@ class mail_mail(osv.Model):
             return '%s posted on %s' % (mail.author_id.name, mail.record_name)
         return mail.subject
 
-    def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
+    def send_get_mail_body(self, cr, uid, mail, partner=None, context=None):
         """ Return a specific ir_email body. The main purpose of this method
             is to be inherited by Portal, to add a link for signing in, in
             each notification email a partner receives.
@@ -158,15 +158,15 @@ class mail_mail(osv.Model):
         """
         return mail.body_html
 
-    def _send_get_ir_email_dict(self, cr, uid, mail, partner=None, context=None):
+    def send_get_ir_email_dict(self, cr, uid, mail, partner=None, context=None):
         """ Return a dictionary for specific ir_email values, depending on a
             partner, or generic to the whole recipients given by mail.email_to.
 
             :param mail: mail.mail browse_record
             :param partner: browse_record of the specific recipient partner
         """
-        body = self._send_get_mail_body(cr, uid, mail, partner=partner, context=context)
-        subject = self._send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
+        body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
+        subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
         body_alternative = tools.html2plaintext(body)
         email_to = [partner.email] if partner else tools.email_split(mail.email_to)
         return {
@@ -200,9 +200,9 @@ class mail_mail(osv.Model):
                 ir_email_list = []
                 if notifier_ids:
                     for partner in self.pool.get('res.partner').browse(cr, uid, notifier_ids, context=context):
-                        ir_email_list.append(self._send_get_ir_email_dict(cr, uid, mail, partner=partner, context=context))
+                        ir_email_list.append(self.send_get_ir_email_dict(cr, uid, mail, partner=partner, context=context))
                 else:
-                    ir_email_list.append(self._send_get_ir_email_dict(cr, uid, mail, context=context))
+                    ir_email_list.append(self.send_get_ir_email_dict(cr, uid, mail, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
                 for ir_email in ir_email_list:
