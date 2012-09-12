@@ -61,7 +61,7 @@
                         <page string="Accounts">
                             <field name="account_ids"/>
                         </page>
-                        <page string="Budget Lines">
+                        <page string="Budget Lines" groups="account.group_account_user">
                             <field name="crossovered_budget_line" widget="one2many_list" mode="graph,tree">
                                 <graph type="bar" string="Lines">
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
