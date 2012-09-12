@@ -248,15 +248,16 @@ openerp.mail = function(session) {
 
         /**
          * @param {Object} parent parent
-         * @param {Object} [options]
-         * @param {Object} [options.context] context of the thread. It should
+         * @param {Array} [domain]
+         * @param {Object} [context] context of the thread. It should
             contain at least default_model, default_res_id. Please refer to
             the ComposeMessage widget for more information about it.
-         * @param {Number} [options.thread_level=0] number of thread levels
+         * @param {Object} [options]
          * @param {Number} [options.message_ids=null] ids for message_fetch
          * @param {Number} [options.message_data=null] already formatted message
             data, for subthreads getting data from their parent
-         * @param {Boolean} [options.composer] use the advanced composer, or
+         * @param {Number} [options.thread_level=0] number of thread levels
+         * @param {Boolean} [options.use_composer] use the advanced composer, or
             the default basic textarea if not set
          * @param {Number} [options.truncate_limit=250] number of character to
          *      display before having a "show more" link; note that the text
