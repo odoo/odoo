@@ -62,6 +62,9 @@ class purchase_config_settings(osv.osv_memory):
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
+        'group_analytic_account_for_purchases': fields.boolean('analytic accounting for purchases',
+            implied_group='purchase.group_analytic_accounting',
+            help="Allows you to specify an analytic account on purchase orders."),
     }
 
     _defaults = {
