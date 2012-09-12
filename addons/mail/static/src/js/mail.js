@@ -281,6 +281,7 @@ openerp.mail = function(session) {
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
             // display customization vars
             this.display = {
+                show_record_name: true,
                 truncate_limit: options.truncate_limit || 250,
                 show_header_compose: options.show_header_compose || false,
                 show_reply: options.show_reply || false,
@@ -380,7 +381,7 @@ openerp.mail = function(session) {
                     'default_parent_id': this.options.default_parent_id,
                     'default_content_subtype': 'plain'} );
             }
-            return this._super(action, on_close);
+            // return this._super(action, on_close);
         },
 
         /** Instantiate the composition form, with every parameters in context
@@ -486,7 +487,7 @@ openerp.mail = function(session) {
             // render, add the expand feature
             var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.options, 'display': this.display});
             $(rendered).appendTo(this.$el.children('div.oe_mail_thread_display:first'));
-            this.$el.find('div.oe_mail_msg_record_body').expander({
+            this.$el.find('div.oe_mail_msg_body').expander({
                 slicePoint: this.options.msg_more_limit,
                 expandText: 'read more',
                 userCollapseText: '[^]',
@@ -633,9 +634,11 @@ openerp.mail = function(session) {
         /**
          * @param {Object} parent parent
          * @param {Object} [options]
-         * @param {Number} [options.domain] domain on the Wall, is an array.
-         * @param {Number} [options.domain] context, is an object. It should
+         * @param {Array} [options.domain] domain on the Wall
+         * @param {Object} [options.context] context, is an object. It should
          *      contain default_model, default_res_id, to give it to the threads.
+         * @param {Number} [options.thread_level] number of thread levels to display
+         *      0 being flat.
          */
         init: function (parent, options) {
             this._super(parent);
@@ -649,9 +652,9 @@ openerp.mail = function(session) {
 
         start: function () {
             this._super.apply(this, arguments);
-            var search_view_ready = this.load_search_view({}, false);
-            var thread_displayed = this.message_display();
-            return (search_view_ready && thread_displayed);
+            var searchview_ready = this.load_searchview({}, false);
+            var thread_displayed = this.message_render();
+            return (searchview_ready && thread_displayed);
         },
 
         /**
@@ -659,7 +662,7 @@ openerp.mail = function(session) {
          * @param {Object} defaults ??
          * @param {Boolean} hidden some kind of trick we do not care here
          */
-        load_search_view: function (defaults, hidden) {
+        load_searchview: function (defaults, hidden) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
             return this.searchview.appendTo(this.$el.find('.oe_view_manager_view_search')).then(function () {
@@ -668,9 +671,8 @@ openerp.mail = function(session) {
         },
 
         /**
-         * Aggregate the domains, contexts and groupbys in parameter
-         * with those from search form, and then calls fetch_comments
-         * to actually fetch comments
+         * Get the domains, contexts and groupbys in parameter from search
+         * view, then render the filtered threads.
          * @param {Array} domains
          * @param {Array} contexts
          * @param {Array} groupbys
@@ -685,27 +687,26 @@ openerp.mail = function(session) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
                 self.search_results['groupby'] = results.group_by;
-                self.message_clean();
-                return self.message_display();
+                return self.message_render();
             });
         },
 
-        /** Clean the wall */
-        message_clean: function() {
+        /** Cleand and display the threads */
+        message_render: function () {
             this.$el.find('ul.oe_mail_wall_threads').empty();
-        },
-
-        /** Display the Wall threads */
-        message_display: function () {
             var domain = this.options.domain.concat(this.search_results['domain']);
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
             var thread = new mail.Thread(this, {
-                'context': this.options.context, 'domain': domain,
+                'context': this.options.context,
+                'domain': domain,
                 // display options
-                'thread_level': this.options.thread_level, 'composer': true,
-                'show_header_compose': true,  'show_reply': this.options.thread_level > 0,
-                'show_hide': true, 'show_reply_by_email': true,
+                'thread_level': this.options.thread_level,
+                'composer': true,
+                'show_header_compose': true,
+                'show_reply': this.options.thread_level > 0,
+                'show_hide': true,
+                'show_reply_by_email': true,
                 }
             );
             return thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
