@@ -53,8 +53,8 @@ This application allows an operational project management to organize your activ
 
 Gantt diagrams will give you graphical representation of your project plans, as well as resources' availability and workload.
 
-Dashboard/Reports for Project Management will include:
-------------------------------------------------------
+Dashboard / Reports for Project Management will include:
+--------------------------------------------------------
 * My Tasks
 * Open Tasks
 * Tasks Analysis
