@@ -205,10 +205,14 @@ openerp.mail = function(session) {
             this.options.context = _.extend(this.options.context, new_context || {});
             this.ds_compose.context = _.extend(this.ds_compose.context, this.options.context);
             return this.ds_compose.call('default_get', [
-                ['subject', 'body_text', 'body', 'attachment_ids', 'partner_ids', 'composition_mode',
+                ['subject', 'body_text', 'body', 'partner_ids', 'composition_mode',
                     'use_template', 'template_id', 'model', 'res_id', 'parent_id', 'content_subtype'],
                 this.ds_compose.get_context(),
-            ]).then( function (result) { self.form_view.on_processed_onchange({'value': result}, []); });
+            ]).then( function (result) {
+                self.form_view.on_processed_onchange({'value': result}, []);
+                self.attachment_ids = [];
+                self.display_attachments();
+            });
         },
 
         /**
