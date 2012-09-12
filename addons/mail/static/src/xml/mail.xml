@@ -114,16 +114,14 @@
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
-                        <t t-if="record.is_author">
-                            <li t-if="display['show_delete']"><a class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
-                        </t>
-                        <li t-if="display['show_hide']"><a class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
+                        <li t-if="record.is_author &amp; options.show_dd_delete"><a class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                        <li t-if="options.show_dd_hide"><a class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
 <!--                    Uncomment when adding subtype hiding
                         <li t-if="display['show_hide']">
                             <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                         </li> -->
-                        <li><a t-attf-data-msg_id="{record.id}" class="oe_mail_msg_reply_by_email">Quote and reply</a></li>
-                        <li t-if="record.type == 'email'"><a t-attf-href="#model=mail.message&amp;id=#{record.id}" class="oe_mail_msg_details">Details</a></li>
+                        <li t-if="options.show_dd_reply_by_email"><a class="oe_mail_msg_reply_by_email" t-attf-data-msg_id="{record.id}">Quote and reply</a></li>
+                        <li t-if="record.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{record.id}" >Details</a></li>
                     </ul>
                 </span>
                 <!-- message itself -->
@@ -132,26 +130,29 @@
                         <t t-raw="record.subject"/>
                     </h1>
                     <div class="oe_mail_msg_body">
-                        <t t-if="display.show_record_name">
-                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}" t-if="(params.thread_level > 0) &amp; (!record.subject)"><t t-raw="record.record_name"/></a>
+                        <t t-if="options.show_record_name &amp; (!record.subject) &amp; (options.thread_level > 0)">
+                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </t>
                         <t t-raw="record.body"/>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
-                      <li t-if="record.subject &amp; params.thread_level > 0"><a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a></li>
-                      <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
-                      <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
-                      <li t-if="display['show_reply']"><a class="oe_mail_msg_reply">Reply</a></li>
-                      <!-- uncomment when merging vote
-                      <li><a href="#">Like</a></li>
-                      -->
-                      <li t-if="record.attachment_ids.length > 0">
-                          <a class="oe_mail_msg_view_attachments">
-                              <t t-if="record.attachment_ids.length == 1">1 Attachment</t>
-                              <t t-if="record.attachment_ids.length > 1"><t t-raw="record.attachment_ids.length"/> Attachments</t>
-                          </a>
-                      </li>
+                        <li t-if="options.show_record_name &amp; record.subject &amp; options.thread_level > 0">
+                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
+                        </li>
+                        <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
+                        <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
+                        <li t-if="options.show_reply"><a class="oe_mail_msg_reply">Reply</a></li>
+                        <li t-if="options.show_reply_by_email"><a class="oe_mail_msg_reply_by_email" t-attf-data-msg_id="{record.id}">Reply</a></li>
+                        <!-- uncomment when merging vote
+                        <li><a href="#">Like</a></li>
+                        -->
+                        <li t-if="record.attachment_ids.length > 0">
+                            <a class="oe_mail_msg_view_attachments">
+                                <t t-if="record.attachment_ids.length == 1">1 Attachment</t>
+                                <t t-if="record.attachment_ids.length > 1"><t t-raw="record.attachment_ids.length"/> Attachments</t>
+                            </a>
+                        </li>
                     </ul>
                     <t t-if="record.attachment_ids.length > 0">
                         <div class="oe_clear"></div>

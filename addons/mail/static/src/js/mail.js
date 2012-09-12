@@ -262,34 +262,33 @@ openerp.mail = function(session) {
          *      display before having a "show more" link; note that the text
          *      will not be truncated if it does not have 110% of the parameter
          */
-        init: function(parent, options) {
+        init: function(parent, domain, context, options) {
             this._super(parent);
-            // options
-            this.options = options || {};
-            this.options.domain = options.domain || [];
-            this.options.context = _.extend({
+            this.domain = domain || [];
+            this.context = _.extend({
                 default_model: 'mail.thread',
                 default_res_id:  0,
-                default_parent_id: false }, options.context || {});
-            this.options.thread_level = options.thread_level || 0;
-            this.options.composer = options.composer || false;
-            this.options.message_ids = options.message_ids || null;
-            this.options.message_data = options.message_data || null;
+                default_parent_id: false }, context || {});
+            // options
+            this.options = {
+                message_ids: options.message_ids || null,
+                message_data: options.message_data || null,
+                thread_level: options.thread_level || 0,
+                use_composer: options.use_composer || false,
+                show_header_compose: options.show_header_compose != undefined ? options.show_header_compose: true,
+                show_record_name: options.show_record_name != undefined ? options.show_record_name: true,
+                show_reply: options.show_reply || false,
+                show_reply_by_email: options.show_reply_by_email || false,
+                show_dd_reply_by_email:options.show_dd_reply_by_email != undefined ? options.show_dd_reply_by_email: true,
+                show_dd_delete: options.show_dd_delete || false,
+                show_dd_hide: options.show_dd_hide || false,
+                show_more: options.show_more || false,
+                truncate_limit: options.truncate_limit || 250,
+            }
             // datasets and internal vars
-            this.ds_thread = new session.web.DataSetSearch(this, this.options.context.default_model);
+            this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model);
             this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
-            // display customization vars
-            this.display = {
-                show_record_name: true,
-                truncate_limit: options.truncate_limit || 250,
-                show_header_compose: options.show_header_compose || false,
-                show_reply: options.show_reply || false,
-                show_delete: options.show_delete || false,
-                show_hide: options.show_hide || false,
-                show_reply_by_email: options.show_reply_by_email || false,
-                show_more: options.show_more || false,
-            }
         },
         
         start: function() {
@@ -299,7 +298,7 @@ openerp.mail = function(session) {
             // fetch and display message, using message_ids if set
             var display_done = $.when(this.message_fetch(true, [], {})).then(this.proxy('do_customize_display'));
             // add message composition form view
-            if (this.display.show_header_compose && this.options.composer) {
+            if (this.options.show_header_compose && this.options.use_composer) {
                 var compose_done = this.instantiate_composition_form();
             }
             return display_done && compose_done;
@@ -309,7 +308,9 @@ openerp.mail = function(session) {
          * - show_header_compose: show the composition form in the header */
         do_customize_display: function() {
             this.display_user_avatar();
-            if (this.display.show_header_compose) { this.$el.find('div.oe_mail_thread_action').eq(0).show(); }
+            if (this.options.show_header_compose) {
+                this.$el.find('div.oe_mail_thread_action').eq(0).show();
+            }
         },
 
         /**
@@ -378,7 +379,7 @@ openerp.mail = function(session) {
             if (this.compose_message_widget) {
                 this.compose_message_widget.refresh({
                     'default_composition_mode': 'comment',
-                    'default_parent_id': this.options.default_parent_id,
+                    'default_parent_id': this.context.default_parent_id,
                     'default_content_subtype': 'plain'} );
             }
             // return this._super(action, on_close);
@@ -391,7 +392,7 @@ openerp.mail = function(session) {
                 this.compose_message_widget.destroy();
             }
             this.compose_message_widget = new mail.ComposeMessage(this, {
-                'context': _.extend(context || {}, this.options.context),
+                'context': _.extend(context || {}, this.context),
             });
             var composition_node = this.$el.find('div.oe_mail_thread_action');
             composition_node.empty();
@@ -413,14 +414,14 @@ openerp.mail = function(session) {
          * @param {Bool} initial_mode: initial mode: try to use message_data or
          *  message_ids, if nothing available perform a message_read; otherwise
          *  directly perform a message_read
-         * @param {Array} additional_domain: added to options.domain
-         * @param {Object} additional_context: added to options.context
+         * @param {Array} additional_domain: added to this.domain
+         * @param {Object} additional_context: added to this.context
          */
         message_fetch: function (initial_mode, additional_domain, additional_context) {
             var self = this;
             // domain and context: options + additional
-            fetch_domain = _.flatten([this.options.domain, additional_domain || []], true)
-            fetch_context = _.extend(this.options.context, additional_context || {})
+            fetch_domain = _.flatten([this.domain, additional_domain || []], true)
+            fetch_context = _.extend(this.context, additional_context || {})
             // initial mode: try to use message_data or message_ids
             if (initial_mode && this.options.message_data) {
                 return this.message_display(this.options.message_data);
@@ -446,15 +447,17 @@ openerp.mail = function(session) {
                 }
                 else {
                     self.display_record(record);
-                    self.thread = new mail.Thread(self, {
-                        'context': {
-                            'default_model': record.model,
+                    self.thread = new mail.Thread(self, self.domain,
+                        {   'default_model': record.model,
                             'default_res_id': record.res_id,
                             'default_parent_id': record.id },
-                        'message_data': record.child_ids, 'thread_level': self.options.thread_level-1,
-                        'show_header_compose': false, 'show_reply': self.options.thread_level > 1,
-                        'show_hide': self.display.show_hide, 'show_delete': self.display.show_delete,
-                    });
+                        {   'message_data': record.child_ids,
+                            'thread_level': self.options.thread_level - 1,
+                            'show_header_compose': false,
+                            'show_reply': self.options.show_reply && self.options.thread_level > 1,
+                            'show_reply_by_email': self.options.show_reply_by_email,
+                            'show_dd_hide': self.options.show_dd_hide,
+                            'show_dd_delete': self.options.show_dd_delete });
                     self.$el.find('li.oe_mail_thread_msg:last').append('<div class="oe_mail_thread_subthread"/>');
                     self.thread.appendTo(self.$el.find('div.oe_mail_thread_subthread:last'));
                 }
@@ -485,10 +488,10 @@ openerp.mail = function(session) {
             }
             record.is_author = mail.ChatterUtils.is_author(this, record.author_user_id[0]);
             // render, add the expand feature
-            var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'params': this.options, 'display': this.display});
+            var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'options': this.options});
             $(rendered).appendTo(this.$el.children('div.oe_mail_thread_display:first'));
             this.$el.find('div.oe_mail_msg_body').expander({
-                slicePoint: this.options.msg_more_limit,
+                slicePoint: this.options.truncate_limit,
                 expandText: 'read more',
                 userCollapseText: '[^]',
                 detailClass: 'oe_mail_msg_tail',
@@ -519,7 +522,7 @@ openerp.mail = function(session) {
                 comment_node.val('');
             }
             return this.ds_thread.call('message_post', [
-                [this.options.context.default_res_id], body, false, 'comment', this.options.context.default_parent_id, undefined]
+                [this.context.default_res_id], body, false, 'comment', this.context.default_parent_id, undefined]
                 ).then(self.message_fetch());
         },
 
@@ -608,11 +611,11 @@ openerp.mail = function(session) {
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
             // create and render Thread widget
             this.$el.find('div.oe_mail_recthread_main').empty();
-            var thread = new mail.Thread(self, {
-                'context': this.options.context, 'domain': domain, 'message_ids': this.get_value(),
-                // display
-                'thread_level': this.options.thread_level, 'show_header_compose': true, 'show_delete': true, 'composer': true,
-            });
+            var thread = new mail.Thread(self, domain, this.options.context,
+                {   'thread_level': this.options.thread_level,
+                    'use_composer': true,
+                    'show_dd_delete': true,
+                    'show_reply_by_email': true });
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
     });
@@ -691,22 +694,17 @@ openerp.mail = function(session) {
             });
         },
 
-        /** Cleand and display the threads */
+        /** Clean and display the threads */
         message_render: function () {
             this.$el.find('ul.oe_mail_wall_threads').empty();
             var domain = this.options.domain.concat(this.search_results['domain']);
             var render_res = session.web.qweb.render('mail.wall_thread_container', {});
             $(render_res).appendTo(this.$el.find('ul.oe_mail_wall_threads'));
-            var thread = new mail.Thread(this, {
-                'context': this.options.context,
-                'domain': domain,
-                // display options
-                'thread_level': this.options.thread_level,
-                'composer': true,
-                'show_header_compose': true,
-                'show_reply': this.options.thread_level > 0,
-                'show_hide': true,
-                'show_reply_by_email': true,
+            var thread = new mail.Thread(this, domain, this.options.context,
+                {   'thread_level': this.options.thread_level,
+                    'use_composer': true,
+                    'show_reply': this.options.thread_level > 0,
+                    'show_dd_hide': true,
                 }
             );
             return thread.appendTo(this.$el.find('li.oe_mail_wall_thread:last'));
