@@ -145,6 +145,14 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
+    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = False
+            if sale.invoice_ids:
+                res[sale.id] = True
+        return res
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -156,7 +164,7 @@ class sale_order(osv.osv):
                     if invoice.state != 'paid':
                         res[sale.id] = False
                         break
-            if not invoice_existence:
+            if not invoice_existence or sale.state == 'manual':
                 res[sale.id] = False
         return res
 
@@ -245,6 +253,8 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
+        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
@@ -546,7 +556,6 @@ class sale_order(osv.osv):
             })
         result.update(view_id = res and res[1] or False)
         return result
-
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''

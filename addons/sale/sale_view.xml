@@ -163,7 +163,7 @@
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
-                              attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
+                              attrs="{'invisible': ['|', '|', '|', ('state', 'not in',('progress','manual')), ('invoiced', '=', True), ('invoice_exists', '=', False), ('order_policy','=','picking')]}"/>
                             <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
                               attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
                             <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
@@ -320,6 +320,7 @@
                                 <group>
                                     <field name="invoiced"/>
                                     <field name="shipped"/>
+                                    <field name="invoice_exists"/>
                                 </group>
                             </group>
                         </page>
