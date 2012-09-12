@@ -2516,21 +2516,24 @@ class account_account_template(osv.osv):
         'nocreate': False,
     }
 
-    def _check_type(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
-            if account.parent_id and account.parent_id.type != 'view':
-                return False
-        return True
-
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou cannot define children to an account that has internal type other than  "View".', ['type']),
-
     ]
+
+    def create(self, cr, uid, vals, context=None):
+        if 'parent_id' in vals:
+            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
+            if parent and parent[0]['type'] != 'view':
+                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
+        return super(account_account_template, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'parent_id' in vals:
+            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
+            if parent and parent[0]['type'] != 'view':
+                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
+        return super(account_account_template, self).write(cr, uid, ids, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
