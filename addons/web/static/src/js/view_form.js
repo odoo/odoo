@@ -2954,14 +2954,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var lines = _.escape(str).split("\n");
             var link = "";
             var follow = "";
-            if (! this.options.highlight_first_line) {
-                link = lines.join("<br />");
-            } else {
-                link = lines[0];
-                follow = _.rest(lines).join("<br />");
-                if (follow)
-                    link += "<br />";
-            }
+            link = lines[0];
+            follow = _.rest(lines).join("<br />");
+            if (follow)
+                link += "<br />";
             var $link = this.$el.find('.oe_form_uri')
                  .unbind('click')
                  .html(link);
