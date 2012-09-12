@@ -370,14 +370,21 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.label = options.label || 'button';
             this.rightalign = options.rightalign || false;
             this.click_action = options.click;
+            this.disabled = options.disabled || false;
             if(options.icon){
                 this.icon = options.icon;
                 this.template = this.icon_template;
             }
         },
+        set_disabled: function(disabled){
+            if(this.disabled != disabled){
+                this.disabled = !!disabled;
+                this.renderElement();
+            }
+        },
         renderElement: function(){
             this._super();
-            if(this.click_action){
+            if(this.click_action && !this.disabled){
                 this.$el.click(_.bind(this.click_action, this));
             }
         },
@@ -388,12 +395,12 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         init: function(parent, options){
             this._super(parent,options);
             this.button_list = [];
-            this.fake_buttons  = {};
+            this.buttons = {};
             this.visibility = {};
         },
         set_element_visible: function(element, visible, action){
             if(visible != this.visibility[element]){
-                this.visibility[element] = visible;
+                this.visibility[element] = !!visible;
                 if(visible){
                     this.$('.'+element).show();
                 }else{
@@ -401,7 +408,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 }
             }
             if(visible && action){
+                this.action[element] = action;
                 this.$('.'+element).off('click').click(action);
+            }
+        },
+        set_button_disabled: function(name, disabled){
+            var b = this.buttons[name];
+            if(b){
+                b.set_disabled(disabled);
             }
         },
         destroy_buttons:function(){
@@ -409,6 +423,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                 this.button_list[i].destroy();
             }
             this.button_list = [];
+            this.buttons = {};
             return this;
         },
         get_button_count: function(){
@@ -417,6 +432,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         add_new_button: function(button_options){
             var button = new module.ActionButtonWidget(this,button_options);
             this.button_list.push(button);
+            if(button_options.name){
+                this.buttons[button_options.name] = button;
+            }
             button.appendTo(this.$('.pos-actionbar-button-list'));
             return button;
         },

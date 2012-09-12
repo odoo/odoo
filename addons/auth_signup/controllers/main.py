@@ -5,6 +5,7 @@ import werkzeug.urls
 from openerp.modules.registry import RegistryManager
 from openerp.addons.web.controllers.main import login_and_redirect
 import openerp.addons.web.common.http as openerpweb
+from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
@@ -18,7 +19,7 @@ class OpenIDController(openerpweb.Controller):
         with registry.cursor() as cr:
             try:
                 Users = registry.get('res.users')
-                credentials = Users.auth_signup(cr, 1, name, login, password)
+                credentials = Users.auth_signup(cr, SUPERUSER_ID, name, login, password)
                 cr.commit()
                 return login_and_redirect(req, *credentials)
             except AttributeError:

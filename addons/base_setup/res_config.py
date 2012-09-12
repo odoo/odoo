@@ -35,6 +35,7 @@ class base_config_settings(osv.osv_memory):
         'module_auth_anonymous': fields.boolean('activate the public portal',
             help="""Enable the public part of openerp, openerp becomes a public website."""),
         'module_auth_oauth': fields.boolean('use external authentication providers, sign in with google, facebook, ...'),
+        'module_base_import': fields.boolean("Allow users to import data from CSV files"),
     }
 
     def open_company(self, cr, uid, ids, context=None):

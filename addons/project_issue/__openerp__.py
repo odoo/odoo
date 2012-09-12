@@ -21,11 +21,11 @@
 ##############################################################################
 
 {
-    'name': 'Issues Tracker',
+    'name': 'Issue Tracker',
     'version': '1.0',
     'category': 'Project Management',
     'sequence': 22,
-    'summary': 'Support, Bug Traker, Helpdesk',
+    'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """
 This module provides Issues/Bugs Management in Project.
 =======================================================
