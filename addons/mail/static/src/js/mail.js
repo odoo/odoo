@@ -292,12 +292,17 @@ openerp.mail = function(session) {
             $(parent_element).html(vote_element);
             self.add_vote_event($(parent_element));
         },
-        
+        fetch_voters: function (message_id) {
+            var self= this
+            this.ds_message.call('message_read', [[parseInt(message_id)]]).then(function(result){
+                self.render_vote(result[0]);
+            });
+        },
         subscribe_vote: function(message_id){
             var self = this;
             this.mail_message = new session.web.DataSet(this, 'mail.message');
             return this.mail_message.call('vote_toggle', [[parseInt(message_id)]]).then(function(result){
-                //self.render_vote(message_id);
+                self.fetch_voters(message_id);
             });
         },
 
