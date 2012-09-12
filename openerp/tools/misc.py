@@ -142,6 +142,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
+    basename = name
+
     if os.path.isabs(name):
         # It is an absolute path
         # Is it below 'addons_path' or 'root_path'?
@@ -154,7 +156,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         else:
             # It is outside the OpenERP root: skip zipfile lookup.
             base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
 
     if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
@@ -172,16 +174,19 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         for adp in adps:
             try:
                 return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo)
+                                 pathinfo=pathinfo, basename=basename)
             except IOError:
                 pass
 
     # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo)
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
 
 
-def _fileopen(path, mode, basedir, pathinfo):
+def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.join(basedir, path))
+
+    if basename is None:
+        basename = name
     # Give higher priority to module directories, which is
     # a more common case than zipped modules.
     if os.path.isfile(name):
@@ -220,8 +225,8 @@ def _fileopen(path, mode, basedir, pathinfo):
                 pass
     # Not found
     if name.endswith('.rml'):
-        raise IOError('Report %r doesn\'t exist or deleted' % name)
-    raise IOError('File not found: %s' % name)
+        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+    raise IOError('File not found: %s' % basename)
 
 
 #----------------------------------------------------------
