@@ -837,8 +837,12 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 });
                 break;
             case 'print_workflow':
-                var self = this
-                if (current_view.get_selected_ids().length != 1) {
+                var self = this;
+                if (self.active_view !== "form" && self.active_view !== "list"){
+                    instance.web.dialog($("<div />").text(_t("Workflow can be printed from 'Form' or 'List' view only.")), { title: _t("Warning"), modal: true });
+                    evt.currentTarget.selectedIndex = 0;
+                    return false;
+                }else if (current_view.get_selected_ids().length != 1) {
                     instance.web.dialog($("<div />").text(_t("You must choose only one record.")), { title: _t("Warning"), modal: true });
                     evt.currentTarget.selectedIndex = 0;
                     return false;
