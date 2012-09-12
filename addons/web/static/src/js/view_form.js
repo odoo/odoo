@@ -2779,7 +2779,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
         this.$follow_button = $(".oe_m2o_cm_button", this.$el);
 
-        this.$follow_button.click(function() {
+        this.$follow_button.click(function(ev) {
+            ev.preventDefault();
             if (!self.get('value')) {
                 self.focus();
                 return;
