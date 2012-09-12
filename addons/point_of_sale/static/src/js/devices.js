@@ -184,6 +184,8 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *          price_with_tax:     (number) the price paid for this orderline, tax included
          *          price_without_tax:  (number) the price paid for this orderline, without taxes
          *          tax:                (number) the price paid in taxes on this orderline
+         *          product_description:         (string) generic description of the product
+         *          product_description_sale:    (string) sales related information of the product
          *     }
          *  - paymentlines : list of paymentlines :
          *     {

@@ -100,7 +100,7 @@
                         </group>
                         <group>
                             <field name="purchase_date"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company" on_change="onchange_company_id(company_id)"/>
                         </group>
                     </group>
@@ -192,7 +192,7 @@
                 <field name="partner_id"/>
                 <field name="purchase_value"/>
                 <field name="value_residual"/>
-                <field name="currency_id"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>
@@ -211,7 +211,7 @@
                 <field name="purchase_date"/>
                 <field name="purchase_value"/>
                 <field name="value_residual"/>
-                <field name="currency_id"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="state"/>
             </tree>

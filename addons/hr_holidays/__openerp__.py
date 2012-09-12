@@ -21,7 +21,7 @@
 
 
 {
-    'name': 'Leaves Management',
+    'name': 'Leave Management',
     'version': '1.5',
     'author': 'OpenERP SA',
     'category': 'Human Resources',
@@ -29,8 +29,8 @@
     'summary': 'Holidays, Allocation and Leave Requests',
     'website': 'http://www.openerp.com',
     'description': """
-This module allows you to manage leaves and leave's requests.
-=============================================================
+This module allows you to manage leaves and leave requests.
+===========================================================
 
 Implements a dashboard for human resource management that includes:
 -------------------------------------------------------------------

@@ -1,0 +1,137 @@
+@charset "utf-8"
+
+// Variables {{{
+$section-title-color: #8786b7
+$tag-bg-light: #f0f0fa
+$tag-bg-dark: #8786b7
+$tag-border: #afafb6
+$tag-border-selected: #a6a6fe
+$hover-background: #f0f0fa
+$link-color: #8a89ba
+$sheet-max-width: 860px
+// }}}
+// Mixins {{{
+@font-face
+  font-family: 'mnmliconsRegular'
+  src: url('/web/static/src/font/mnmliconsv21-webfont.eot') format('eot')
+  src: url('/web/static/src/font/mnmliconsv21-webfont.woff') format('woff')
+  src: url('/web/static/src/font/mnmliconsv21-webfont.ttf') format('truetype')
+  src: url('/web/static/src/font/mnmliconsv21-webfont.svg') format('svg') active
+  font-weight: normal
+  font-style: normal
+
+@font-face
+  font-family: 'EntypoRegular'
+  src: url('/web/static/src/font/entypo-webfont.eot') format('eot')
+  src: url('/web/static/src/font/entypo-webfont.eot?#iefix') format('embedded-opentype')
+  src: url('/web/static/src/font/entypo-webfont.woff') format('woff')
+  src: url('/web/static/src/font/entypo-webfont.ttf') format('truetype')
+  src: url('/web/static/src/font/entypo-webfont.svg') format('svg') active
+  font-weight: normal
+  font-style: normal
+
+@mixin reset()
+  border: none
+  padding: 0
+  margin: 0
+  background: none
+  @include radius(none)
+  @include box-shadow(none)
+
+@mixin vertical-gradient($startColor: #555, $endColor: #333)
+  background-color: $startColor
+  background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, $startColor, $endColor) /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image:    -moz-linear-gradient(top, $startColor, $endColor) /* FF3.6 */
+  background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
+  background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
+  background-image:         linear-gradient(to bottom, $startColor, $endColor)
+
+@mixin radial-gradient($gradient)
+  background-position: center center
+  background-image: -webkit-radial-gradient(circle, $gradient)
+  background-image: -moz-radial-gradient($gradient)
+  background-image: -ms-radial-gradient($gradient)
+  background-image: radial-gradient($gradient)
+
+@mixin radius($radius: 5px)
+  -moz-border-radius: $radius
+  -webkit-border-radius: $radius
+  border-radius: $radius
+
+@mixin box-shadow($bsval: 0px 1px 4px #777)
+  -moz-box-shadow: $bsval
+  -webkit-box-shadow: $bsval
+  box-shadow: $bsval
+
+@mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
+  -webkit-transition: $transval
+  -moz-transition: $transval
+  -ms-transition: $transval
+  -o-transition: $transval
+  transition: $transval
+
+@mixin opacity($opacity: .5)
+  filter: alpha(opacity=$opacity * 100)
+  opacity: $opacity
+
+@mixin background-clip($clip: padding-box)
+  -webkit-background-clip: $clip
+  -moz-background-clip: $clip
+  background-clip: $clip
+
+@mixin box-sizing($type: content)
+  // type = border || content || padding
+  -webkit-box-sizing: #{$type}-box
+  -moz-box-sizing: #{$type}-box
+  -ms-box-sizing: #{$type}-box
+  box-sizing: #{$type}-box
+
+// Transforms the (readable) text of an inline element into an mmlicons icon,
+// allows for actual readable text in-code (and in readers?) with iconic looks
+@mixin text-to-icon($icon-name, $color: #404040)
+  font-size: 1px
+  letter-spacing: -1px
+  color: transparent
+  &:before
+    font: 21px "mnmliconsRegular"
+    content: $icon-name
+    color: $color
+        
+// }}}
+// CSS animation bounces {{{
+@-moz-keyframes bounce
+  0%
+    -moz-transform: scale(0)
+    opacity: 0
+  50%
+    -moz-transform: scale(1.3)
+    opacity: 0.4
+  75%
+    -moz-transform: scale(0.9)
+    opacity: 0.7
+  100%
+    -moz-transform: scale(1)
+    opacity: 1
+
+@-webkit-keyframes bounce
+  0%
+    -webkit-transform: scale(0)
+    opacity: 0
+  50%
+    -webkit-transform: scale(1.3)
+    opacity: 0.4
+  75%
+    -webkit-transform: scale(0.9)
+    opacity: 0.7
+  100%
+    -webkit-transform: scale(1)
+    opacity: 1
+// }}}
+
+
+.oe_kanban_color_2
+  background-color:red
+				  
+// au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
+
