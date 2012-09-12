@@ -149,8 +149,8 @@
                             <field name="number_of_days_temp"/>
                         </group>
                         <group>
-                            <field name="holiday_type" on_change="onchange_type(holiday_type)"/>
-                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}"/>
+                            <field name="holiday_type" on_change="onchange_type(holiday_type)" groups="base.group_hr_user"/>
+                            <field name="employee_id" attrs="{'required':[('holiday_type','=','employee')], 'invisible':[('holiday_type','=','category')]}" groups="base.group_hr_user"/>
                             <field name="category_id" attrs="{'required':[('holiday_type','=','category')], 'invisible':[('holiday_type','=','employee')]}"/>
                             <field name="department_id" attrs="{'invisible':[('holiday_type','=','category')]}"/>
                         </group>
