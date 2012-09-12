@@ -52,6 +52,7 @@
     partner_name: 'John Bruno'
     state: 'done'
     job_id: hr.job_developer
+    color: 5
     stage_id: stage_job5
     name: 'Marketing Job'
 -
@@ -100,6 +101,9 @@
     partner_name: 'David Armstrong'
     job_id: hr.job_developer
     stage_id: stage_job2
+    color: 4
     name: 'Advertisement'
     salary_expected: 11000.0
-
+-
+  !record {model: hr.job, id: hr.job_developer}:
+    survey_id: hr_recruitment.survey_job_0
