@@ -29,11 +29,13 @@ class document_page(osv.osv):
     _description = "Document Page"
     _order = 'name'
 
-    def _get_page_index(self, cr, uid, page):
+    def _get_page_index(self, cr, uid, page, link=True):
         index = []
         for subpage in page.child_ids:
             index += ["<li>"+ self._get_page_index(cr, uid, subpage) +"</li>"]
-        r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
+        r = ''
+        if link:
+            r = '<a href="#id=%s">%s</a>'%(page.id,page.name)
         if index:
             r += "<ul>" + "".join(index) + "</ul>"
         return r
@@ -42,7 +44,7 @@ class document_page(osv.osv):
         res = {}
         for page in self.browse(cr, uid, ids, context=context):
             if page.type == "category":
-               content = self._get_page_index(cr, uid, page)
+               content = self._get_page_index(cr, uid, page, link=False)
             else:
                content = page.content
             res[page.id] =  content
@@ -120,12 +122,12 @@ class document_page_history(osv.osv):
         text2 = history_pool.read(cr, uid, [v2], ['content'])[0]['content']
         line1 = line2 = ''
         if text1:
-            line1 = tools.ustr(text1.splitlines(1))
+            line1 = text1.splitlines(1)
         if text2:
-            line2=tools.ustr(text2.splitlines(1))
+            line2 = text2.splitlines(1)
         if (not line1 and not line2) or (line1 == line2):
             raise osv.except_osv(_('Warning!'), _('There are no changes in revisions.'))
         diff = difflib.HtmlDiff()
-        return diff.make_file(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=False)
+        return diff.make_table(line1, line2, "Revision-%s" % (v1), "Revision-%s" % (v2), context=True)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

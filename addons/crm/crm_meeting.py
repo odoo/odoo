@@ -44,7 +44,7 @@ class crm_meeting(osv.Model):
     def create_send_note(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        # update context: if come from phonecall, default state values can make the message_append_note crash
+        # update context: if come from phonecall, default state values can make the message_post crash
         context.pop('default_state', False)
         for meeting in self.browse(cr, uid, ids, context=context):
             # in the message, transpose meeting.date to the timezone of the current user
@@ -53,14 +53,14 @@ class crm_meeting(osv.Model):
             if meeting.opportunity_id: # meeting can be create from phonecalls or opportunities, therefore checking for the parent
                 lead = meeting.opportunity_id
                 message = _("Meeting linked to the opportunity <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (lead.name, meeting_date_tz)
-                lead.message_append_note(_('System Notification'), message)
+                lead.message_post(body=message)
             elif meeting.phonecall_id:
                 phonecall = meeting.phonecall_id
                 message = _("Meeting linked to the phonecall <em>%s</em> has been <b>created</b> and <b>scheduled</b> on <em>%s</em>.") % (phonecall.name, meeting_date_tz)
-                phonecall.message_append_note(body=message)
+                phonecall.message_post(body=message)
             else:
                 message = _("A meeting has been <b>scheduled</b> on <em>%s</em>.") % (meeting_date_tz)
-            meeting.message_append_note(body=message)
+            meeting.message_post(body=message)
         return True
 
 class calendar_attendee(osv.osv):

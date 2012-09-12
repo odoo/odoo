@@ -116,7 +116,6 @@ class survey_send_invitation(osv.osv_memory):
         existing = ""
         created = ""
         error = ""
-        user_exists = False
         new_user = []
         attachments = {}
         current_sur = survey_ref.browse(cr, uid, context.get('active_id'), context=context)
@@ -150,8 +149,14 @@ class survey_send_invitation(osv.osv_memory):
                 mail = record['mail']%{'login':partner.email, 'passwd':user.password, \
                                             'name' : partner.name}
                 if record['send_mail_existing']:
-                    mail_message.schedule_with_attach(cr, uid, record['mail_from'], [partner.email] , \
-                                     record['mail_subject_existing'] , mail, context=context)
+                    vals = {
+                        'state': 'outgoing',
+                        'subject': record['mail_subject_existing'],
+                        'body_html': '<pre>%s</pre>' % mail,
+                        'email_to': partner.email,
+                        'email_from': record['mail_from'],
+                    }
+                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
                     existing+= "- %s (Login: %s,  Password: %s)\n" % (user.name, partner.email, \
                                                                       user.password)
                 continue
@@ -160,8 +165,19 @@ class survey_send_invitation(osv.osv_memory):
             out+= partner.email + ',' + passwd + '\n'
             mail= record['mail'] % {'login' : partner.email, 'passwd' : passwd, 'name' : partner.name}
             if record['send_mail']:
-                ans = mail_message.schedule_with_attach(cr, uid, record['mail_from'], [partner.email], \
-                                       record['mail_subject'], mail, attachments=attachments, context=context)
+                vals = {
+                        'state': 'outgoing',
+                        'subject': record['mail_subject'],
+                        'body_html': '<pre>%s</pre>' % mail,
+                        'email_to': partner.email,
+                        'email_from': record['mail_from'],
+                }
+                if attachments:
+                    vals['attachment_ids'] = [(0,0,{'name': a_name,
+                                                    'datas_fname': a_name,
+                                                    'datas': str(a_content).encode('base64')})
+                                                    for a_name, a_content in attachments]
+                ans = self.pool.get('mail.mail').create(cr, uid, vals, context=context)
                 if ans:
                     res_data = {'name': partner.name or _('Unknown'),
                                 'login': partner.email,
