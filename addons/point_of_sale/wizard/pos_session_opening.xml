@@ -12,7 +12,7 @@
                         <field name="pos_config_id" on_change="on_change_config(pos_config_id)"
                             widget="selection" domain="[('state','=','active')]"
                             class="oe_inline"/>
-                        <field name="pos_state" class="oe_inline" attrs="{'invisible' : [('pos_state', '=', False)]}" />
+                        <field name="pos_state" invisible="1" />
                     </group>
                     <field name="pos_session_id" invisible="1"/>
                     <button name="open_ui" type="object" string="Start Selling" 
@@ -49,8 +49,8 @@
                             Click to continue the session.
                         </p>
                         <p>
-                            The session <field name="pos_session_name" class="oe_inline" /> (<field name="pos_session_username" class="oe_inline" />) is "<b><field name="pos_state" class="oe_inline" /></b>"<br/>
-                            You can continue sales from the touchscreen interface by clicking on "<b>Settings</b>" or close the cash register session ?
+                            The session <field name="pos_session_name" class="oe_inline" /> (<field name="pos_session_username" class="oe_inline" />) is "<b><field name="pos_state_str" class="oe_inline" /></b>"<br/>
+                            You can continue sales from the touchscreen interface by clicking on "<b>Sellings</b>" or close the cash register session ?
                         </p>
                     </div>
 
