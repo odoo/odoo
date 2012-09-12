@@ -96,22 +96,6 @@ class account_analytic_account(osv.osv):
                 res[row['id']][field] = row[field]
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids=[ids]
-        if not ids:
-            return []
-        res = []
-        for account in self.browse(cr, uid, ids, context=context):
-            data = []
-            acc = account
-            while acc:
-                data.insert(0, acc.name)
-                acc = acc.parent_id
-            data = ' / '.join(data)
-            res.append((account.id, data))
-        return res
-
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = self.name_get(cr, uid, ids)
         return dict(res)
