@@ -1937,7 +1937,8 @@ class Reports(View):
                  # maybe we should take of what characters can appear in a file name?
                  ('Content-Disposition', 'attachment; filename="%s.%s"' % (file_name, report_struct['format'])),
                  ('Content-Type', report_mimetype),
-                 ('Content-Length', len(report))],)
+                 ('Content-Length', len(report))],
+                 cookies={'fileToken': int(token)})
 
     @openerpweb.httprequest
     def print_workflow(self, req, action, token):
