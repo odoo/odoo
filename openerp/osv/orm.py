@@ -1443,7 +1443,7 @@ class BaseModel(object):
 
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
-        lng = context.get('lang', False) or 'en_US'
+        lng = context.get('lang')
         trans = self.pool.get('ir.translation')
         error_msgs = []
         for constraint in self._constraints:
@@ -1459,7 +1459,7 @@ class BaseModel(object):
                     else:
                         translated_msg = tmp_msg
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -3431,24 +3431,25 @@ class BaseModel(object):
                 res[f]['readonly'] = True
                 res[f]['states'] = {}
 
-            if 'string' in res[f]:
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-                if res_trans:
-                    res[f]['string'] = res_trans
-            if 'help' in res[f]:
-                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                if help_trans:
-                    res[f]['help'] = help_trans
-            if 'selection' in res[f]:
-                if isinstance(field.selection, (tuple, list)):
-                    sel = field.selection
-                    sel2 = []
-                    for key, val in sel:
-                        val2 = None
-                        if val:
-                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                        sel2.append((key, val2 or val))
-                    res[f]['selection'] = sel2
+            if 'lang' in context:
+                if 'string' in res[f]:
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context['lang'])
+                    if res_trans:
+                        res[f]['string'] = res_trans
+                if 'help' in res[f]:
+                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context['lang'])
+                    if help_trans:
+                        res[f]['help'] = help_trans
+                if 'selection' in res[f]:
+                    if isinstance(field.selection, (tuple, list)):
+                        sel = field.selection
+                        sel2 = []
+                        for key, val in sel:
+                            val2 = None
+                            if val:
+                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection',  context['lang'], val)
+                            sel2.append((key, val2 or val))
+                        res[f]['selection'] = sel2
 
         return res
 

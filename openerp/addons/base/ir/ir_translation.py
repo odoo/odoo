@@ -267,7 +267,7 @@ class ir_translation(osv.osv):
         # FIXME: should assert that `source` is unicode and fix all callers to always pass unicode
         # so we can remove the string encoding/decoding.
         if not lang:
-            return u''
+            return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
         if source:
