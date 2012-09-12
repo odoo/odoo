@@ -844,7 +844,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     return false;
                 } else {
                     instance.web.blockUI();
-                    var action={"id":current_view.get_selected_ids()[0],
+                    var action={"ids":current_view.get_selected_ids(),
                                 "model":self.dataset.model}
                     self.session.get_file({
                         url: '/web/report/print_workflow',

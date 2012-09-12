@@ -1944,10 +1944,11 @@ class Reports(View):
     def print_workflow(self, req, action, token):
         action = simplejson.loads(action)
         report_srv = req.session.proxy("report")
-        action.update({'nested': True})
+        ids = action.pop('ids')
+        action.update({'nested': True, 'id': ids[0]})
         report_id = report_srv.report(
             req.session._db, req.session._uid, req.session._password,
-            'workflow.instance.graph', action['id'], action)
+            'workflow.instance.graph', ids, action)
         report_struct = None
         while True:
             report_struct = report_srv.report_get(
