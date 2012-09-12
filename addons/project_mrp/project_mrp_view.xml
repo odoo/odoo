@@ -16,8 +16,8 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="after">
-                    <field name="project_id" attrs="{'readonly':[('type','!=','service')]}" />
+                <field name="type" position="after">
+                    <field name="project_id" attrs="{'invisible':[('type','!=','service')]}" />
                 </field>
             </field>
         </record>

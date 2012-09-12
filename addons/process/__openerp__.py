@@ -45,5 +45,15 @@ This module shows the basic processes involved in the selected modules and in th
     'auto_install': False,
     'certificate': '0055447636669',
     'images': ['images/process_nodes.jpeg','images/process_transitions.jpeg', 'images/processes.jpeg'],
+    'js': [
+        'static/src/js/process.js'
+    ],
+    'css': [
+        'static/src/css/process.css'
+    ],
+    'qweb': [
+        'static/src/xml/*.xml'
+    ],
+    'auto_install': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
