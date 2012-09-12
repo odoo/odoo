@@ -6,7 +6,6 @@
         <record id="view_report_crm_lead_assign_filter" model="ir.ui.view">
             <field name="name">crm.lead.report.assign.select</field>
             <field name="model">crm.lead.report.assign</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Leads Analysis">
                     <filter icon="terp-check" string="Current" domain="[('state','in',('draft','open'))]"/>
@@ -53,7 +52,6 @@
         <record id="view_report_crm_lead_assign_graph" model="ir.ui.view">
             <field name="name">crm.lead.assign.graph</field>
             <field name="model">crm.lead.report.assign</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Lead Assign" type="bar">
                     <field name="state"/>
@@ -66,7 +64,6 @@
         <record id="view_report_crm_opportunity_assign_tree" model="ir.ui.view">
             <field name="name">crm.lead.assign.report.tree</field>
             <field name="model">crm.lead.report.assign</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
             <tree string="Opportunities Assignment Analysis">
                 <field name="year" invisible="1"/>

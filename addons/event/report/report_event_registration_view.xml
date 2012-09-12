@@ -6,7 +6,6 @@
         <record model="ir.ui.view" id="report_event_registration_tree">
             <field name="name">report.event.registration.tree</field>
             <field name="model">report.event.registration</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:event_state == 'draft';black:event_state == 'confirm';gray:event_state in('done','cancel')" string="Events Analysis">
                     <field name="event_date" invisible="1"/>
@@ -33,7 +32,6 @@
         <record model ="ir.ui.view" id="report_event_registration_graph">
             <field name="name">report.event.registration.graph</field>
             <field name="model">report.event.registration</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Event on Registration"  type="bar" >
                     <field name="event_id"/>
@@ -49,7 +47,6 @@
         <record model="ir.ui.view" id="view_report_event_registration_search">
             <field name="name">report.event.registration.search</field>
             <field name="model">report.event.registration</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Event on Registration">
                     <filter icon="terp-document-new" string="New" domain="[('event_state','=','draft')]" help="Events which are in New state"/>

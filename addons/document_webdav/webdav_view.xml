@@ -5,7 +5,6 @@
     <record model="ir.ui.view" id="view_dir_props_form">
         <field name="name">document.webdav.dir.property.form</field>
         <field name="model">document.webdav.dir.property</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Properties">
                 <group col="4">
@@ -22,7 +21,6 @@
     <record model="ir.ui.view" id="view_dir_props_tree">
         <field name="name">document.webdav.dir.property.tree</field>
         <field name="model">document.webdav.dir.property</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
                 <field name="dir_id" />
@@ -35,7 +33,6 @@
     <record id="view_dir_props_filter" model="ir.ui.view">
             <field name="name">Search View: Directory DAV properties</field>
             <field name="model">document.webdav.dir.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document property"/>
@@ -73,7 +70,6 @@
         <field name="name">document.directory.webdav.inherit</field>
         <field name="model">document.directory</field>
         <field name="inherit_id" ref="document.view_document_directory_form" />
-        <field name="type">form</field>
         <field name="arch" type="xml">
         <xpath expr="/form/notebook/page[@string='Dynamic context']" position="after" version="7.0">
         <page string="WebDAV properties">
@@ -103,7 +99,6 @@
     <record model="ir.ui.view" id="view_file_props_form">
         <field name="name">document.webdav.file.property.form</field>
         <field name="model">document.webdav.file.property</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Properties">
                 <group col="4">
@@ -121,7 +116,6 @@
     <record model="ir.ui.view" id="view_file_props_tree">
         <field name="name">document.webdav.file.property.tree</field>
         <field name="model">document.webdav.file.property</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Properties" toolbar="1">
         <field name="file_id" />
@@ -134,7 +128,6 @@
     <record id="view_file_props_filter" model="ir.ui.view">
             <field name="name">Search View: File DAV properties</field>
             <field name="model">document.webdav.file.property</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Document properties">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('namespace','ilike',self)]" string="Document Property"/>

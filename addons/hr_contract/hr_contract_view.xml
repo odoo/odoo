@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        
+        
+<!-- Contracts Button on Employee Form -->
 
+        <act_window
+        context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
+        id="act_hr_employee_2_hr_contract"
+        name="Contracts"
+        res_model="hr.contract"
+        src_model="hr.employee"
+        groups="base.group_hr_manager"/>
+        
         <menuitem id="next_id_56" name="Contract" parent="hr.menu_hr_configuration" sequence="30" groups="base.group_no_one"/>
         <record id="hr_hr_employee_view_form2" model="ir.ui.view">
             <field name="name">hr.hr.employee.view.form2</field>
@@ -9,19 +20,20 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='parent_id']" position="before">
+                    <xpath expr="//div[@name='button_box']" position="inside">
+                        <button name="%(act_hr_employee_2_hr_contract)d" string="Contracts" type="action"/>
+                    </xpath>
+                    <xpath expr="//field[@name='coach_id']" position="after">
                         <field name="manager"/>
                     </xpath>
                     <xpath expr="//group[@name='active_group']" position="before">
-                        <group>
+                        <group string="Contract">
+                            <field name="medic_exam" string="Medical Exam"/>
                             <field name="vehicle"/>
                             <field name="vehicle_distance"/>
                         </group>
                     </xpath>
-                    <field name="active" position="before">
-                        <field name="medic_exam" string="Medical Exam"/>
-                    </field>
-                    <field name="birthday" position="before">
+                    <field name="marital" position="after">
                         <field name="children"/>
                     </field>
                     <field name="birthday" position="after">
@@ -37,7 +49,6 @@
         <record id="hr_contract_view_search" model="ir.ui.view">
             <field name="name">hr.contract.view.search</field>
             <field name="model">hr.contract</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract">
                    <field name="name" string="Contracts"/>
@@ -58,7 +69,6 @@
         <record id="hr_contract_view_form" model="ir.ui.view">
             <field name="name">hr.contract.view.form</field>
             <field name="model">hr.contract</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contract" version="7.0">
                     <sheet>
@@ -114,7 +124,6 @@
         <record id="hr_contract_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.view.tree</field>
             <field name="model">hr.contract</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contracts">
                     <field name="name"/>
@@ -142,7 +151,6 @@
         <record id="hr_contract_type_view_form" model="ir.ui.view">
             <field name="name">hr.contract.type.view.form</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Contract Type">
                     <field colspan="4" name="name"/>
@@ -153,7 +161,6 @@
          <record id="hr_contract_type_view_tree" model="ir.ui.view">
             <field name="name">hr.contract.type.view.tree</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Contract Type">
                     <field colspan="4" name="name"/>
@@ -164,7 +171,6 @@
         <record id="hr_contract_type_view_search" model="ir.ui.view">
             <field name="name">hr.contract.type.view.search</field>
             <field name="model">hr.contract.type</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Contract Type">
                     <field name="name" string="Contract Type"/>
@@ -182,16 +188,6 @@
 
         <menuitem action="action_hr_contract_type" id="hr_menu_contract_type" parent="next_id_56" sequence="6" groups="base.group_no_one"/>
         <menuitem action="action_hr_contract" id="hr_menu_contract" parent="hr.menu_hr_main" name="Contracts" sequence="4" groups="base.group_hr_manager"/>
-
-        <!-- Contracts Button on Employee Form -->
-
-        <act_window
-        context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-        id="act_hr_employee_2_hr_contract"
-        name="Contracts"
-        res_model="hr.contract"
-        src_model="hr.employee"
-        groups="base.group_hr_manager"/>
 
     </data>
 </openerp>

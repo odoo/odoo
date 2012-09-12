@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_consultant')
+            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
             return result[1]
         except ValueError:
             pass
@@ -172,9 +172,9 @@ class hr_analytic_timesheet(osv.osv):
         if emp_id:
             ename = emp_obj.browse(cr, uid, emp_id[0], context=context).name
         if not vals.get('journal_id',False):
-           raise osv.except_osv(_('Warning !'), _('Analytic journal is not defined for employee %s \nDefine an employee for the selected user and assign an analytic journal!')%(ename,))
+           raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for employee %s \nDefine an employee for the selected user and assign an \'Analytic Journal\'!')%(ename,))
         if not vals.get('account_id',False):
-           raise osv.except_osv(_('Warning !'), _('No analytic account defined on the project.\nPlease set one or we can not automatically fill the timesheet.'))
+           raise osv.except_osv(_('Warning!'), _('No analytic account is defined on the project.\nPlease set one or we cannot automatically fill the timesheet.'))
         return super(hr_analytic_timesheet, self).create(cr, uid, vals, context=context)
 
     def on_change_user_id(self, cr, uid, ids, user_id):

@@ -24,9 +24,8 @@
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Marketing Campaign" version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Done" states="running" class="oe_highlight"/>
@@ -68,7 +67,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_tree">
         <field name="name">marketing.campaign.tree</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Campaigns">
                 <field name="name"/>
@@ -83,7 +81,6 @@
     <record id="view_marketing_campaign_diagram" model="ir.ui.view">
         <field name="name">marketing.campaign.diagram</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">diagram</field>
         <field name="arch" type="xml">
             <diagram string="Campaign Editor">
                 <node object="marketing.campaign.activity" shape="rectangle:type=='subcampaign'" bgcolor="gray:start==True">
@@ -105,7 +102,6 @@
     <record id="view_marketing_campaign_search" model="ir.ui.view">
         <field name="name">marketing.campaign.search</field>
         <field name="model">marketing.campaign</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Campaigns">
                 <field name="name" string="Campaign"/>
@@ -133,7 +129,20 @@
         <field name="view_id" ref="view_marketing_campaign_tree"/>
         <field name="context">{'group_by': []}</field>
         <field name="search_view_id" ref="view_marketing_campaign_search"/>
-        <field name="help">A marketing campaign is an event or activity that will help you manage and reach your partners with specific messages. A campaign can have many activities that will be triggered from a specific situation. One action could be sending an email template that has previously been created in the system.</field>
+        <field name="help" type="html">
+          <p class="oe_view_nocontent_create">
+            Click to create a marketing campaign.
+          </p><p>
+            OpenERP's marketing campaign allows you to automate communication
+            to your prospects. You can define a segment (set of conditions) on
+            your leads and partners to fullfil the campaign.
+          </p><p>
+            A campaign can have many activities like sending an email, printing
+            a letter, assigning to a team, etc. These activities are triggered
+            from specific situations; contact form, 10 days after first
+            contact, if a lead is not closed yet, etc.
+          </p>
+        </field>
     </record>
 
     <menuitem name="Campaigns" id="menu_marketing_campaign" parent="base.marketing_menu"/>
@@ -143,9 +152,8 @@
     <record model="ir.ui.view" id="view_marketing_campaign_segment_form">
         <field name="name">marketing.campaign.segment.form</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Marketing Campaign Segment" version="7.0">
             <header>
                 <button name="state_running_set" string="Run" states="draft" class="oe_highlight"/>
                 <button name="state_done_set" string="Close" states="running" class="oe_highlight"/>
@@ -181,7 +189,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_segment_tree">
         <field name="name">marketing.campaign.segment.tree</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'running';gray:state in ('done','cancelled')" string="Segments">
                 <field name="name"/>
@@ -196,7 +203,6 @@
     <record id="view_marketing_campaign_segment_search" model="ir.ui.view">
         <field name="name">marketing.campaign.segment.search</field>
         <field name="model">marketing.campaign.segment</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Segments">
                 <field name="name" string="Segment"/>
@@ -238,7 +244,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_activity_form">
         <field name="name">marketing.campaign.activity.form</field>
         <field name="model">marketing.campaign.activity</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Activities" version="7.0">
                 <group>
@@ -309,7 +314,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_activity_tree">
         <field name="name">marketing.campaign.activity.tree</field>
         <field name="model">marketing.campaign.activity</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Activities">
                 <field name="name"/>
@@ -325,7 +329,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_workitem_tree">
         <field name="name">marketing.campaign.workitem.tree</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="red:state == 'exception';black:state == 'todo';gray:state == 'cancelled'" string="Marketing Campaign Activities">
                 <field name="campaign_id"/>
@@ -347,7 +350,6 @@
     <record model="ir.ui.view" id="view_marketing_campaign_workitem_form">
         <field name="name">marketing.campaign.workitem.form</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Marketing Campaign Activities" version="7.0">
             <header>
@@ -383,7 +385,6 @@
     <record id="view_marketing_campaign_workitem_search" model="ir.ui.view">
         <field name="name">marketing.campaign.workitem.search</field>
         <field name="model">marketing.campaign.workitem</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Marketing Campaign Activities">
                 <field name="res_name" string="Marketing Campaign Activity"/>

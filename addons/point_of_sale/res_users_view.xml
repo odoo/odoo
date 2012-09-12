@@ -5,7 +5,6 @@
     <record id="res_users_form_preference_view" model="ir.ui.view">
         <field name="name">res.users.form.view</field>
         <field name="model">res.users</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_users_form_simple_modif" />
         <field name="arch" type="xml">
             <xpath expr="//group[@name='preferences']" position="inside">
@@ -17,13 +16,15 @@
     <record id="res_users_form_view" model="ir.ui.view">
         <field name="name">res.users.form.view</field>
         <field name="model">res.users</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.view_users_form" />
         <field name="arch" type="xml">
             <notebook position="inside">
                 <page string="Point Of Sale">
-                    <field name="ean13" />
-                    <field name="pos_config" />
+                    <group>
+                        <field name="pos_config" />
+                        <field name="ean13" />
+                        <button name="edit_ean" type="object" string="Edit" />
+                    </group>
                 </page>
             </notebook>
         </field>

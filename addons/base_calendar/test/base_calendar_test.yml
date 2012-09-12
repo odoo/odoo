@@ -1,5 +1,5 @@
--   |
-    In Order to test base_calendar, I will first create One Simple Event with real data
+-
+  In Order to test base_calendar, I will first create One Simple Event with real data
 -
     !record {model: calendar.event, id: calendar_event_technicalpresentation0}:
         class: private
@@ -11,27 +11,25 @@
         location: OpenERP S.A.
         name: Technical Presentation
         rrule_type: none
--   |
-    Now I will set recurrence for this event to occur monday and friday of week
+-   
+  Now I will set recurrence for this event to occur monday and friday of week
 -
     !python {model: calendar.event}: |
      data = {'fr': 1, 'mo': 1, 'interval': 1, 'rrule_type': 'weekly', 'end_type': 'end_date', 'end_date': '2011-05-31 00:00:00', 'recurrency' : True}
      self.write(cr, uid, [ref("calendar_event_technicalpresentation0")], data)
--   |
-    In order to check that recurrent events are views successfully in calendar view,
-    I will open calendar view of events
+-
+  In order to check that recurrent events are views successfully in calendar view, I will open calendar view of events
 -
     !python {model: calendar.event}: |
      self.fields_view_get(cr, uid, False, 'calendar', context)
--   |
-    In order to check that recurrent events are views successfully in calendar view,
-    I will search for one of the recurrent event and count the number of events
+-
+  In order to check that recurrent events are views successfully in calendar view, I will search for one of the recurrent event and count the number of events
 -
     !python {model: calendar.event}: |
      ids = self.search(cr, uid, [('date', '>=', '2011-04-30 16:00:00'), ('date', '<=', '2011-05-31 00:00:00')], context={'virtual_id': True} )
      assert len(ids) == 9
--   |
-    Now I will make All day event and test it
+-
+  Now I will make All day event and test it
 -
     !record {model: calendar.event, id: calendar_event_alldaytestevent0}:
         allday: 1
@@ -42,8 +40,8 @@
         location: School
         name: All day test event
         rrule_type: none
--   |
-    In order to check reminder I will first create reminder 
+-
+  In order to check reminder I will first create reminder
 - 
   !record {model: res.alarm, id: res_alarm_daybeforeeventstarts0}:
     name: 1 Day before event starts
@@ -51,13 +49,13 @@
     trigger_interval: days
     trigger_occurs: before
     trigger_related: start
--   |
-    Now I will assign this reminder to all day event
+-
+  Now I will assign this reminder to all day event
 -
     !python {model: calendar.event}: |
      self.write(cr, uid, [ref("calendar_event_alldaytestevent0")], {'alarm_id': ref("res_alarm_daybeforeeventstarts0")})
--   |
-    In order to assign attendee I will invite Demo user
+-
+  In order to assign attendee I will invite Demo user
 - 
   !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
     type: internal
@@ -65,13 +63,13 @@
     partner_id: base.res_partner_9 # Put bcz of problem in read
     user_ids:
       - base.user_demo
--   |
-    Then I click on Invite Button
+-
+  Then I click on Invite Button
 -
     !python {model: base_calendar.invite.attendee}: |
      self.do_invite(cr, uid, [ref("base_calendar_invite_attendee_0")], {'active_id': ref("calendar_event_alldaytestevent0"), 'model' : 'calendar.event', 'attendee_field':'attendee_ids'})
--   |
-    Now I will Accept this invitation
+-
+  Now I will Accept this invitation
 -
     !python {model: calendar.attendee}: |
         ids = self.search(cr, uid, [('ref', '=', 'calendar.event' + ',' + str(ref("calendar_event_alldaytestevent0")))])

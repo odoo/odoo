@@ -140,7 +140,7 @@ class account_analytic_account(osv.osv):
         for account in self.browse(cr, uid, ids, context=context):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
-                    raise osv.except_osv(_('Error !'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
+                    raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
         return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
@@ -153,9 +153,9 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account Name', size=128, required=True),
+        'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
-        'code': fields.char('Code/Reference', size=24, select=True),
+        'code': fields.char('Reference', size=24, select=True),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
@@ -171,7 +171,7 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
+        'quantity_max': fields.float('Prepaid Units', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
@@ -232,7 +232,7 @@ class account_analytic_account(osv.osv):
 
     _order = 'name asc'
     _constraints = [
-        (check_recursion, 'Error! You can not create recursive analytic accounts.', ['parent_id']),
+        (check_recursion, 'Error! You cannot create recursive analytic accounts.', ['parent_id']),
     ]
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -297,8 +297,7 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
 
 account_analytic_account()
 
@@ -333,7 +332,7 @@ class account_analytic_line(osv.osv):
         return True
 
     _constraints = [
-        (_check_no_view, 'You can not create analytic line on view account.', ['account_id']),
+        (_check_no_view, 'You cannot create analytic line on view account.', ['account_id']),
     ]
 
 account_analytic_line()

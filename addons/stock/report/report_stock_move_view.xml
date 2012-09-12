@@ -11,7 +11,6 @@
     <record id="view_stock_tree" model="ir.ui.view">
         <field name="name">report.stock.move.tree</field>
         <field name="model">report.stock.move</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Moves Analysis">
                 <field name="date" invisible="1"/>
@@ -41,7 +40,6 @@
     <record id="view_stock_graph" model="ir.ui.view">
          <field name="name">report.stock.move.graph</field>
          <field name="model">report.stock.move</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Moves Analysis" type="bar">
                  <field name="product_id"/>
@@ -53,7 +51,6 @@
     <record id="view_stock_search" model="ir.ui.view">
         <field name="name">report.stock.move.search</field>
         <field name="model">report.stock.move</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Moves Analysis">
                 <filter string="Done" name="done" icon="terp-dialog-close" domain="[('state','=','done')]" help = "Completed Stock-Moves"/>
@@ -106,7 +103,6 @@
     <record id="view_stock_inventory_tree" model="ir.ui.view">
         <field name="name">report.stock.inventory.tree</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Inventory Analysis">
                 <field name="date" invisible="1"/>
@@ -129,7 +125,6 @@
     <record id="view_stock_inventory_graph" model="ir.ui.view">
          <field name="name">report.stock.inventory.graph</field>
          <field name="model">report.stock.inventory</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Inventory Analysis" type="bar">
                  <field name="product_id"/>
@@ -141,7 +136,6 @@
     <record id="view_stock_inventory_search" model="ir.ui.view">
         <field name="name">report.stock.inventory.search</field>
         <field name="model">report.stock.inventory</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Inventory Analysis">
                 <filter string="Real" name="real" icon="terp-check" domain="[('state','=','done')]"
@@ -169,8 +163,10 @@
                     <filter name="group_lot" string="Lot" icon="terp-accessories-archiver" context="{'group_by':'prodlot_id'}"/>
                     <filter name="group_company" string="Company" groups="base.group_multi_company" icon="terp-go-home" context="{'group_by':'company_id'}"/>
                     <filter name="group_location" string="Location" icon="terp-go-home" context="{'group_by':'location_id'}"/>
-                    <filter string="Date" icon="terp-go-month" context="{'group_by':'date'}"/>
                     <filter string="Status" icon="terp-stock_effects-object-colorize" context="{'group_by':'state'}"/>
+                    <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
+                    <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}"/>
+                    <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}"/>
                 </group>
             </search>
         </field>

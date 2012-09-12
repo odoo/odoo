@@ -9,14 +9,13 @@
         <record model="ir.ui.view" id="view_audittrail_rule_form">
             <field name="name">audittrail.rule.form</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Rule" version="7.0">
                    <header>
                        <button string="_Subscribe" name="subscribe" icon="gtk-ok"
-                           type="object" states="draft" />
+                           type="object" states="draft"/>
                        <button string="UnSubscribe" name="unsubscribe" icon="gtk-cancel"
-                           type="object" states="subscribed" />
+                           type="object" states="subscribed"/>
                        <field name="state" widget="statusbar"/>
                    </header>
                  <sheet>
@@ -29,11 +28,11 @@
                         <field name="log_create"/>
                         <field name="log_action"/>
                         <field name="log_workflow"/>
-                        <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4" />
-                        <field name="user_id" colspan="4" nolabel="1" />
+                        <separator string="Users (if User is not added then it will applicable for all users)"  colspan="4"/>
+                        <field name="user_id" colspan="4" nolabel="1"/>
                         <field name="action_id" colspan="4" readonly="1" groups="base.group_no_one"/>
                     </group>
-                   </sheet>  
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -41,18 +40,17 @@
         <record model="ir.ui.view" id="view_audittrail_rule_tree">
             <field name="name">audittrail.rule.tree</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state == 'subscribed'" string="AuditTrail Rules">
-                    <field name="name" />
+                    <field name="name"/>
                     <field name="object_id"/>
-                    <field name="log_read" />
-                    <field name="log_write" />
-                    <field name="log_unlink" />
-                    <field name="log_create" />
+                    <field name="log_read"/>
+                    <field name="log_write"/>
+                    <field name="log_unlink"/>
+                    <field name="log_create"/>
                     <field name="log_action"/>
                     <field name="log_workflow"/>
-                    <field name="state" />
+                    <field name="state"/>
                 </tree>
             </field>
         </record>
@@ -60,7 +58,6 @@
         <record id="view_audittrail_rule_search" model="ir.ui.view">
             <field name="name">audittrail.rule.search</field>
             <field name="model">audittrail.rule</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Audittrail Rule">
                     <field name="name" string="Audittrail Rule"/>
@@ -91,7 +88,6 @@
         <record model="ir.ui.view" id="view_audittrail_log_form">
             <field name="name">audittrail.log.form</field>
             <field name="model">audittrail.log</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="AuditTrail Logs" version="7.0">
                  <sheet>
@@ -108,36 +104,36 @@
                         <form string="Log Lines" version="7.0">
                             <group col="4">
                             <field name="field_id" colspan="4"
-                                readonly="1" />
-                            <newline />
+                                readonly="1"/>
+                            <newline/>
                             <field name="field_description" colspan="4"
-                                readonly="1" />
-                            <newline />
+                                readonly="1"/>
+                            <newline/>
                             <separator string="Old Value : "
-                                colspan="2" />
+                                colspan="2"/>
                             <separator string="New Value : "
-                                colspan="2" />
-                            <newline />
+                                colspan="2"/>
+                            <newline/>
                             <field name="old_value" nolabel="1"
-                                colspan="2" readonly="1" />
+                                colspan="2" readonly="1"/>
                             <field name="new_value" nolabel="1"
-                                colspan="2" readonly="1" />
-                            <newline />
+                                colspan="2" readonly="1"/>
+                            <newline/>
                             <separator string="Old Value Text : "
-                                colspan="2" />
+                                colspan="2"/>
                             <separator string="New Value Text: "
-                                colspan="2" />
-                            <newline />
+                                colspan="2"/>
+                            <newline/>
                             <field name="old_value_text" nolabel="1"
-                                colspan="2" readonly="1" />
+                                colspan="2" readonly="1"/>
                             <field name="new_value_text" nolabel="1"
-                                colspan="2" readonly="1" />
+                                colspan="2" readonly="1"/>
                             </group>
                         </form>
                         <tree string="Log Lines">
-                            <field name="field_description" />
-                            <field name="old_value_text" />
-                            <field name="new_value_text" />
+                            <field name="field_description"/>
+                            <field name="old_value_text"/>
+                            <field name="new_value_text"/>
                         </tree>
                     </field>
                   </sheet>
@@ -148,14 +144,13 @@
         <record model="ir.ui.view" id="view_audittrail_log_tree">
             <field name="name">audittrail.log.tree</field>
             <field name="model">audittrail.log</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="AuditTrail Logs">
-                    <field name="timestamp" />
-                    <field name="name" />
-                    <field name="object_id" />
-                    <field name="method" />
-                    <field name="user_id" />
+                    <field name="timestamp"/>
+                    <field name="name"/>
+                    <field name="object_id"/>
+                    <field name="method"/>
+                    <field name="user_id"/>
                 </tree>
             </field>
         </record>
@@ -163,7 +158,6 @@
        <record id="view_audittrail_log_search" model="ir.ui.view">
             <field name="name">audittrail.log.search</field>
             <field name="model">audittrail.log</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Audittrail Log">
                     <field name="name" string="Audittrail Log"/>
@@ -185,7 +179,7 @@
             <field name="search_view_id" ref="view_audittrail_log_search"/>
         </record>
 
-        <menuitem id="menu_audit_logs" name="Audit Logs" parent="menu_audit" action="action_audittrail_log_tree" />
+        <menuitem id="menu_audit_logs" name="Audit Logs" parent="menu_audit" action="action_audittrail_log_tree"/>
 
     </data>
 </openerp>

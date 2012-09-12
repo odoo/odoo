@@ -302,16 +302,16 @@ class DummyAuthorizer:
         provide customized response strings when user log-in and quit.
         """
         if self.has_user(username):
-            raise AuthorizerError('User "%s" already exists' %username)
+            raise AuthorizerError('User "%s" already exists.' %username)
         homedir = os.path.realpath(homedir)
         if not os.path.isdir(homedir):
-            raise AuthorizerError('No such directory: "%s"' %homedir)
+            raise AuthorizerError('No such directory: "%s".' %homedir)
         for p in perm:
             if p not in 'elradfmw':
-                raise AuthorizerError('No such permission "%s"' %p)
+                raise AuthorizerError('No such permission: "%s".' %p)
         for p in perm:
             if (p in self.write_perms) and (username == 'anonymous'):
-                warnings.warn("write permissions assigned to anonymous user.",
+                warnings.warn("Write permissions are assigned to anonymous user.",
                               RuntimeWarning)
                 break
         dic = {'pwd': str(password),
@@ -532,7 +532,7 @@ class ActiveDTP(asyncore.dispatcher):
         try:
             self.connect((ip, port))
         except socket.gaierror:
-            self.cmd_channel.respond("425 Can't connect to specified address.")
+            self.cmd_channel.respond("425 Cannot connect to specified address.")
             self.close()
 
     # --- connection / overridden
@@ -542,14 +542,14 @@ class ActiveDTP(asyncore.dispatcher):
 
     def handle_connect(self):
         """Called when connection is established."""
-        self.cmd_channel.respond('200 Active data connection established.')
+        self.cmd_channel.respond('200 Active data connection has been established.')
         # delegate such connection to DTP handler
         handler = self.cmd_channel.dtp_handler(self.socket, self.cmd_channel)
         self.cmd_channel.data_channel = handler
         self.cmd_channel.on_dtp_connection()
 
     def handle_expt(self):
-        self.cmd_channel.respond("425 Can't connect to specified address.")
+        self.cmd_channel.respond("425 Cannot connect to specified address.")
         self.close()
 
     def handle_error(self):
@@ -562,7 +562,7 @@ class ActiveDTP(asyncore.dispatcher):
             pass
         except:
             logerror(traceback.format_exc())
-        self.cmd_channel.respond("425 Can't connect to specified address.")
+        self.cmd_channel.respond("425 Cannot connect to specified address.")
         self.close()
 
 class DTPHandler(asyncore.dispatcher):
@@ -638,7 +638,7 @@ class DTPHandler(asyncore.dispatcher):
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type"
+            raise TypeError, "Unsupported type."
         self.receive = True
 
     def get_transmitted_bytes(self):
@@ -767,7 +767,7 @@ class DTPHandler(asyncore.dispatcher):
             # some other exception occurred;  we don't want to provide
             # confidential error messages
             logerror(traceback.format_exc())
-            error = "Internal error"
+            error = "Internal error."
         self.cmd_channel.respond("426 %s; transfer aborted." %error)
         self.close()
 
@@ -823,7 +823,7 @@ class FileProducer:
         elif type == 'i':
             self.data_wrapper = lambda x: x
         else:
-            raise TypeError, "Unsupported type"
+            raise TypeError, "Unsupported type."
 
     def more(self):
         """Attempt a chunk of data of size self.buffer_size."""
@@ -1485,7 +1485,7 @@ class FTPHandler(asynchat.async_chat):
         buflimit = 2048
         if self.in_buffer_len > buflimit:
             self.respond('500 Command too long.')
-            self.log('Command received exceeded buffer limit of %s.' %(buflimit))
+            self.log('Command has been received exceeds buffer limit of %s.' %(buflimit))
             self.in_buffer = []
             self.in_buffer_len = 0
 
@@ -1528,12 +1528,12 @@ class FTPHandler(asynchat.async_chat):
         # let's check if user provided an argument for those commands
         # needing one
         if not arg and cmd in self.arg_cmds:
-            self.respond("501 Syntax error: command needs an argument.")
+            self.respond("501 Syntax error! Command needs an argument.")
             return
 
         # let's do the same for those commands requiring no argument.
         elif arg and cmd in self.unarg_cmds:
-            self.respond("501 Syntax error: command does not accept arguments.")
+            self.respond("501 Syntax error! Command does not accept arguments.")
             return
 
         # provide a limited set of commands if user isn't
@@ -1617,7 +1617,7 @@ class FTPHandler(asynchat.async_chat):
             else:
                 self.in_buffer.append(data)
                 return
-        self.log("Can't handle OOB data.")
+        self.log("Cannot handle OOB data.")
         self.close()
 
     def handle_error(self):
@@ -1801,7 +1801,7 @@ class FTPHandler(asynchat.async_chat):
         except NotImplementedError, err:
             cmdname = function.__name__
             why = err.args[0] or 'Not implemented'
-            self.log('FAIL %s() not implemented:  %s.' %(cmdname, why))
+            self.log('FAIL %s() is not implemented:  %s.' %(cmdname, why))
             self.respond('502 %s.' %why)
             raise FTPExceptionSent(why)
         except EnvironmentError, err:
@@ -1811,7 +1811,7 @@ class FTPHandler(asynchat.async_chat):
             except Exception:
                 pass
             ret_code = eresp.get(err.errno, '451')
-            why = (err.strerror) or 'Error in command'
+            why = (err.strerror) or 'Error in command.'
             self.log('FAIL %s() %s errno=%s:  %s.' %(cmdname, uline, err.errno, why))
             self.respond('%s %s.' % (str(ret_code), why))
 
@@ -1841,15 +1841,15 @@ class FTPHandler(asynchat.async_chat):
             if ip != self.remote_ip:
                 self.log("Rejected data connection to foreign address %s:%s."
                          %(ip, port))
-                self.respond("501 Can't connect to a foreign address.")
+                self.respond("501 Cannot connect to a foreign address.")
                 return
 
         # ...another RFC-2577 recommendation is rejecting connections
         # to privileged ports (< 1024) for security reasons.
         if not self.permit_privileged_ports:
             if port < 1024:
-                self.log('PORT against the privileged port "%s" refused.' %port)
-                self.respond("501 Can't connect over a privileged port.")
+                self.log('PORT against the privileged port "%s" has been refused.' %port)
+                self.respond("501 Cannot connect over a privileged port.")
                 return
 
         # close existent DTP-server instance, if any.
@@ -1889,7 +1889,7 @@ class FTPHandler(asynchat.async_chat):
         # make sure we are not hitting the max connections limit
         if self.server.max_cons:
             if len(self._map) >= self.server.max_cons:
-                msg = "Too many connections. Can't open data channel."
+                msg = "Too many connections. Cannot open data channel."
                 self.respond("425 %s" %msg)
                 self.log(msg)
                 return
@@ -2150,7 +2150,7 @@ class FTPHandler(asynchat.async_chat):
             datacr = self.get_crdata2(line, mode='list')
             # RFC-3659 requires 501 response code if path is not a directory
             if not self.fs.isdir(datacr[1]):
-                err = 'No such directory'
+                err = 'No such directory.'
                 self.log('FAIL MLSD "%s". %s.' %(line, err))
                 self.respond("501 %s." %err)
                 return
@@ -2191,7 +2191,7 @@ class FTPHandler(asynchat.async_chat):
                 fd.seek(self.restart_position)
                 ok = 1
             except AssertionError:
-                why = "Invalid REST parameter"
+                why = "Invalid REST parameter."
             except IOError, err:
                 why = _strerror(err)
             self.restart_position = 0
@@ -2240,7 +2240,7 @@ class FTPHandler(asynchat.async_chat):
                 fd.seek(self.restart_position)
                 ok = 1
             except AssertionError:
-                why = "Invalid REST parameter"
+                why = "Invalid REST parameter."
             except IOError, err:
                 why = _strerror(err)
             self.restart_position = 0
@@ -2275,7 +2275,7 @@ class FTPHandler(asynchat.async_chat):
 
         # watch for STOU preceded by REST, which makes no sense.
         if self.restart_position:
-            self.respond("450 Can't STOU while REST request is pending.")
+            self.respond("450 Cannot STOU while REST request is pending.")
             return
 
 
@@ -2296,7 +2296,7 @@ class FTPHandler(asynchat.async_chat):
             # hitted the max number of tries to find out file with
             # unique name
             if err.errno == errno.EEXIST:
-                why = 'No usable unique file name found'
+                why = 'No usable unique file name found.'
             # something else happened
             else:
                 why = _strerror(err)
@@ -2307,9 +2307,9 @@ class FTPHandler(asynchat.async_chat):
 
         filename = line
         if not self.authorizer.has_perm(self.username, 'w', filename):
-            self.log('FAIL STOU "%s". Not enough privileges'
+            self.log('FAIL STOU "%s". Not enough privileges.'
                      %self.fs.ftpnorm(line))
-            self.respond("550 Can't STOU: not enough privileges.")
+            self.respond("550 Cannot STOU: not enough privileges.")
             self.fs.close_cr(datacr)
             return
 
@@ -2329,7 +2329,7 @@ class FTPHandler(asynchat.async_chat):
         """Append data to an existing file on the server."""
         # watch for APPE preceded by REST, which makes no sense.
         if self.restart_position:
-            self.respond("550 Can't APPE while REST request is pending.")
+            self.respond("550 Cannot APPE while REST request is pending.")
         else:
             self.ftp_STOR(line, mode='a')
 
@@ -2405,7 +2405,7 @@ class FTPHandler(asynchat.async_chat):
             # and account information already supplied and beginning the
             # login sequence again.
             self.flush_account()
-            msg = 'Previous account information was flushed'
+            msg = 'Previous account information is flushed.'
             self.log('OK USER "%s". %s.' %(line, msg))
             self.respond('331 %s, send password.' %msg)
         self.username = line
@@ -2554,7 +2554,7 @@ class FTPHandler(asynchat.async_chat):
             else:
                 datacr = self.get_crdata2(line)
                 if not datacr:
-                    raise IOError(errno.ENOENT, "%s is not retrievable" %line)
+                    raise IOError(errno.ENOENT, "%s is not retrievable." %line)
 
                 lmt = self.try_as_current_user(self.fs.getmtime, (datacr,), line=line)
             lmt = time.strftime("%Y%m%d%H%M%S", time.localtime(lmt))
@@ -2584,7 +2584,7 @@ class FTPHandler(asynchat.async_chat):
         try:
             datacr = self.get_crdata2(line, mode='delete')
             if not datacr[1]:
-                msg = "Can't remove root directory."
+                msg = "Cannot remove root directory."
                 self.respond("553 %s" %msg)
                 self.log('FAIL MKD "/". %s' %msg)
                 self.fs.close_cr(datacr)
@@ -2617,7 +2617,7 @@ class FTPHandler(asynchat.async_chat):
             if not datacr[1]:
                 self.respond("550 No such file or directory.")
             elif not datacr[1]:
-                self.respond("553 Can't rename the home directory.")
+                self.respond("553 Cannot rename the home directory.")
             else:
                 self.fs.rnfr = datacr[1]
                 self.respond("350 Ready for destination name.")
@@ -2760,14 +2760,14 @@ class FTPHandler(asynchat.async_chat):
     def ftp_OPTS(self, line):
         """Specify options for FTP commands as specified in RFC-2389."""
         try:
-            assert (not line.count(' ') > 1), 'Invalid number of arguments'
+            assert (not line.count(' ') > 1), 'Invalid number of arguments.'
             if ' ' in line:
                 cmd, arg = line.split(' ')
-                assert (';' in arg), 'Invalid argument'
+                assert (';' in arg), 'Invalid argument!'
             else:
                 cmd, arg = line, ''
             # actually the only command able to accept options is MLST
-            assert (cmd.upper() == 'MLST'), 'Unsupported command "%s"' %cmd
+            assert (cmd.upper() == 'MLST'), 'Unsupported command "%s".' %cmd
         except AssertionError, err:
             self.respond('501 %s.' %err)
         else:

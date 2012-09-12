@@ -7,7 +7,6 @@
         <record id="view_survey_print_statistics" model="ir.ui.view">
             <field name="name">Survey Print Statistics</field>
             <field name="model">survey.print.statistics</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Survey Print Statistics" version="7.0">
                     <header>
@@ -32,7 +31,7 @@
         </record>
 
         <menuitem name="Surveys Statistics" action="action_view_survey_print_statistics" id="menu_print_survey_statistics"
-            parent="menu_reporting" icon="STOCK_PRINT" groups="base.group_tool_manager"/>
+            parent="base.next_id_10" icon="STOCK_PRINT" groups="base.group_tool_manager"/>
 
     </data>
 </openerp>

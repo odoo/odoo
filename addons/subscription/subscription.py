@@ -133,7 +133,7 @@ class subscription_subscription(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context or {}):
             if record.state=="running":
-                raise osv.except_osv(_('Error !'),_('You cannot delete an active subscription !'))
+                raise osv.except_osv(_('Error!'),_('You cannot delete an active subscription !'))
         return super(subscription_subscription, self).unlink(cr, uid, ids, context)
 
     def set_done(self, cr, uid, ids, context=None):

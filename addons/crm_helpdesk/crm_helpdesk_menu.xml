@@ -18,7 +18,18 @@
             <field name="view_id" ref="crm_case_tree_view_helpdesk"/>
             <field name="search_view_id" ref="view_crm_case_helpdesk_filter"/>
             <field name="context">{"search_default_user_id":uid}</field>
-            <field name="help">Helpdesk and Support allow you to track your interventions. Select a customer, add notes and categorize interventions with partners if necessary. You can also assign a priority level. Use the OpenERP Issues system to manage your support activities. Issues can be connected to the email gateway: new emails may create issues, each of them automatically gets the history of the conversation with the customer.</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new request. 
+              </p><p>
+                Helpdesk and Support allow you to track your interventions.
+              </p><p>
+                Use the OpenERP Issues system to manage your support
+                activities. Issues can be connected to the email gateway: new
+                emails may create issues, each of them automatically gets the
+                history of the conversation with the customer.
+              </p>
+            </field>
         </record>
 
         <record model="ir.actions.act_window.view" id="action_crm_sec_tree_view_act111">
