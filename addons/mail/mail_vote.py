@@ -30,7 +30,7 @@ class mail_vote(osv.Model):
     _name = 'mail.vote'
     _description = 'Mail Vote'
     _columns = {
-            'msg_id': fields.many2one('mail.message', 'Message', required=True),
+            'message_id': fields.many2one('mail.message', 'Message', required=True),
             'user_id': fields.many2one('res.users', 'User', required=True),
         }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
