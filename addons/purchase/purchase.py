@@ -349,6 +349,8 @@ class purchase_order(osv.osv):
         res_id = res and res[1] or False
         ctx = dict(context, active_model='purchase.order', active_id=ids[0])
         ctx.update({'mail.compose.template_id': template_id})
+        wf_service = netsvc.LocalService("workflow")
+        wf_service.trg_validate(uid, 'purchase.order',ids[0], 'send_rfq', cr)
         return {
             'view_type': 'form',
             'view_mode': 'form',
