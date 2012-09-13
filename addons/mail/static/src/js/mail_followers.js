@@ -9,7 +9,7 @@ openerp_mail_followers = function(session, mail) {
      * mail_followers Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display of a list of records as a vetical
+     * This widget handles the display of a list of records as a vertical
      * list, with an image on the left. The widget itself is a floatting
      * right-sided box.
      * This widget is mainly used to display the followers of records
@@ -24,12 +24,8 @@ openerp_mail_followers = function(session, mail) {
 
         init: function() {
             this._super.apply(this, arguments);
-            this.params = {};
-            this.params.image = this.node.attrs.image || 'image_small';
-            this.params.title = this.node.attrs.title || 'Followers';
-            this.params.display_followers = true;
-            this.params.display_control = this.node.attrs.display_control || false;
-            this.params.display_actions = this.node.attrs.display_actions || false;
+            this.options.image = this.node.attrs.image || 'image_small';
+            this.options.title = this.node.attrs.title || 'Followers';
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
         },
@@ -40,9 +36,6 @@ openerp_mail_followers = function(session, mail) {
             // any other method to know if the view is in create mode anymore
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
-            this.$el.find('button.oe_mail_button_followers').click(function () { self.do_toggle_followers(); });
-            if (! this.params.display_control) {
-                this.$el.find('button.oe_mail_button_followers').hide(); }
             this.$el.find('button.oe_mail_button_follow').click(function () { self.do_follow(); })
                 .mouseover(function () { $(this).html('Follow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Not following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
@@ -61,10 +54,6 @@ openerp_mail_followers = function(session, mail) {
         },
 
         reinit: function() {
-            this.params.display_followers = true;
-            this.params.display_control = this.node.attrs.display_control || false;
-            this.params.display_actions = this.node.attrs.display_actions || false;
-            this.$el.find('button.oe_mail_button_followers').html('Hide followers')
             this.$el.find('button.oe_mail_button_follow').hide();
             this.$el.find('button.oe_mail_button_unfollow').hide();
         },
@@ -76,27 +65,24 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            return this.fetch_subscribers(value_);
+            return this.fetch_followers(value_);
         },
 
-        fetch_subscribers: function (value_) {
-            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', this.params.image]]).then(this.proxy('display_subscribers'));
+        fetch_followers: function (value_) {
+            return this.ds_follow.call('read', [value_ || this.get_value(), ['name', 'user_ids']]).then(this.proxy('display_followers'));
         },
 
-        /**
-         * Display the followers.
-         * TODO: replace the is_subscriber check by fields read */
-        display_subscribers: function (records) {
+        /** Display the followers, evaluate is_follower directly */
+        display_followers: function (records) {
             var self = this;
-            this.is_subscriber = false;
-            var user_list = this.$el.find('ul.oe_mail_followers_display').empty();
-            this.$el.find('div.oe_mail_recthread_followers h4').html(this.params.title + ' (' + records.length + ')');
+            this.message_is_follower = _.indexOf(_.flatten(_.pluck(records, 'user_ids')), this.session.uid) != -1;
+            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
+            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
             _(records).each(function (record) {
-                if (record.id == self.session.uid) { self.is_subscriber = true; }
-                record.avatar_url = mail.ChatterUtils.get_image(self.session.prefix, self.session.session_id, 'res.users', 'image_small', record.id);
-                $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(user_list);
+                record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
+                $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
-            if (this.is_subscriber) {
+            if (this.message_is_follower) {
                 this.$el.find('button.oe_mail_button_follow').hide();
                 this.$el.find('button.oe_mail_button_unfollow').show(); }
             else {
@@ -105,18 +91,13 @@ openerp_mail_followers = function(session, mail) {
         },
 
         do_follow: function () {
-            return this.ds_model.call('message_subscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
+            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
+            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
         },
 
         do_unfollow: function () {
-            return this.ds_model.call('message_unsubscribe', [[this.view.datarecord.id]]).pipe(this.proxy('set_value'));
-        },
-
-        do_toggle_followers: function () {
-            this.params.see_subscribers = ! this.params.see_subscribers;
-            if (this.params.see_subscribers) { this.$el.find('button.oe_mail_button_followers').html('Hide followers'); }
-            else { this.$el.find('button.oe_mail_button_followers').html('Show followers'); }
-            this.$el.find('div.oe_mail_recthread_followers').toggle();
+            var context = new session.web.CompoundContext(this.build_context(), {'read_back': true});
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('set_value'));
         },
     });
 };
