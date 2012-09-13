@@ -33,10 +33,10 @@ class invite_wizard(osv.osv_memory):
         result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
         if 'message' in fields and result.get('res_model') and result.get('res_id'):
             document_name = self.pool.get(result.get('res_model')).name_get(cr, uid, [result.get('res_id')], context=context)[0][1]
-            message = _('You have been invited to follow %s.' % document_name)
+            message = _('<div>You have been invited to follow %s.</div>' % document_name)
             result['message'] = message
         elif 'message' in fields:
-            result['message'] = _('You have been invited to follow a new document.')
+            result['message'] = _('<div>You have been invited to follow a new document.</div>')
         return result
 
     _columns = {
@@ -46,7 +46,7 @@ class invite_wizard(osv.osv_memory):
         'res_id': fields.integer('Related Document ID', select=1,
                         help='Id of the followed resource'),
         'partner_ids': fields.many2many('res.partner', string='Partners'),
-        'message': fields.text('Message'),
+        'message': fields.html('Message'),
     }
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
@@ -74,7 +74,8 @@ class invite_wizard(osv.osv_memory):
                 for follower_id in new_follower_ids:
                     mail_mail = self.pool.get('mail.mail')
                     mail_id = mail_mail.create(cr, uid, {
-                        'body_html': '<pre>%s</pre>' % wizard.message,
+                        'subject': 'Invitation to follow %s' % document.name_get()[0][1],
+                        'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
                     mail_mail.send(cr, uid, [mail_id], notifier_ids=[follower_id], context=context)
