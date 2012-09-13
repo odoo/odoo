@@ -636,7 +636,3 @@ class test_mail(common.TransactionCase):
         msg_id = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body1, subject=_subject, type='comment',subtype_xml_id='mail_subtype_comment')
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id)])
         self.assertTrue(len(notif_ids) >= 1,"subtype is email and show notification on wall")
-        # New post: test automatic subject, signature in html, add a partner, email preference, parent_id previous message
-#        msg_id2 = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body2,subject=_subject, type='email', subtype='other')
-#        notif_ids2 = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id2)])
-#        self.assertTrue(len(notif_ids2) == 0,"subtype is false cannot show notification on wall")
