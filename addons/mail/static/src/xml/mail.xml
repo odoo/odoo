@@ -130,14 +130,14 @@
                         <t t-raw="record.subject"/>
                     </h1>
                     <div class="oe_mail_msg_body">
-                        <t t-if="options.show_record_name &amp; (!record.subject) &amp; (options.thread_level > 0)">
+                        <t t-if="options.show_record_name &amp; record.record_name &amp; (!record.subject) &amp; (options.thread_level > 0)">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </t>
                         <t t-raw="record.body"/>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
-                        <li t-if="options.show_record_name &amp; record.subject &amp; options.thread_level > 0">
+                        <li t-if="options.show_record_name &amp; record.record_name &amp; record.subject &amp; options.thread_level > 0">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </li>
                         <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>

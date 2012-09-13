@@ -20,6 +20,7 @@
 ##############################################################################
 
 import logging
+import openerp
 import tools
 
 from email.header import decode_header
@@ -58,7 +59,10 @@ class mail_message(osv.Model):
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            try:
+                result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            except openerp.exceptions.AccessDenied, e:
+                pass
         return result
 
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
