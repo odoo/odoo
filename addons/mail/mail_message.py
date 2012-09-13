@@ -24,6 +24,7 @@ import openerp
 import tools
 
 from email.header import decode_header
+from openerp import SUPERUSER_ID
 from operator import itemgetter
 from osv import osv, fields
 from tools.translate import _
@@ -138,7 +139,8 @@ class mail_message(osv.Model):
         return []
 
     def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        # remove context to avoid possible hack in browse with superadmin using context keys that could trigger a specific behavior
+        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
     _defaults = {
         'type': 'email',
@@ -274,15 +276,40 @@ class mail_message(osv.Model):
         if isinstance(ids, (int, long)):
             ids = [ids]
 
-        # check messages for which you have a notification
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        not_obj = self.pool.get('mail.notification')
-        not_ids = not_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('message_id', 'in', ids),
-        ], context=context)
-        notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, uid, not_ids, context=context)
-            if notification.message_id.id in ids]
+        # Rights
+        # - read: if
+        #   - notification exist (I receive pushed message) OR
+        #   - author_id = pid (I am the author) OR
+        #   - I can read the related document
+        # - create: if
+        #   - I can write on the related document OR
+        #   - I am in the document message_follower_ids
+        # - write: if
+        #   - I can write on the related document
+        # - unlink: if
+        #   - I can write on the related document
+        #
+
+        if operation != 'read':
+            notified_ids = []
+            author_ids = []
+        else:
+            # read: check for notifications
+            partner_id = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
+            not_obj = self.pool.get('mail.notification')
+            not_ids = not_obj.search(cr, uid, [
+                ('partner_id', '=', partner_id),
+                ('message_id', 'in', ids),
+            ], context=context)
+            notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, uid, not_ids, context=context)]
+
+            # read: check messages you are author
+            author_ids = self.search(cr, uid, [('author_id', '=', partner_id), ('id', 'in', ids)], context=context)
+
+        # if operation != 'create':
+        #     follower_ids = []
+        # else:
+            # write: check I am in the document followers
 
         # check messages linked to an existing document
         model_record_ids = {}
@@ -300,7 +327,7 @@ class mail_message(osv.Model):
             model_obj.check_access_rule(cr, uid, mids, operation, context=context)
 
         # fall back on classic operation for other ids
-        other_ids = set(ids).difference(set(notified_ids), set(document_ids))
+        other_ids = set(ids).difference(set(notified_ids), set(document_ids), set(author_ids))
         super(mail_message, self).check_access_rule(cr, uid, other_ids, operation, context=None)
 
     def create(self, cr, uid, values, context=None):
