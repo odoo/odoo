@@ -141,7 +141,10 @@ class hr_analytic_timesheet(osv.osv):
             emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
             if emp.journal_id:
                 return emp.journal_id.id
-        return False
+            else :
+                raise osv.except_osv(_('Warning!'), _('No \'Analytic Journal\' is defined for \'%s\'. \nDefine an \'Analytic Journal\' for the employee under : Human Resource > Employee > HR Settings.')%(emp.name))
+        if not emp_id :
+            raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
 
 
     _defaults = {
