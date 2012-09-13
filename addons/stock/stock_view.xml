@@ -1002,7 +1002,7 @@
                         <button name="action_assign" states="confirmed" string="Check Availability" type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="/form/header//button[@name='action_process']" position="replace">
-                        <button name="action_process" states="assigned" string="Deliver" type="object" icon="gtk-go-forward" class="oe_highlight"/>
+                        <button name="action_process" states="assigned" string="Deliver" type="object" class="oe_highlight"/>
                     </xpath>
                     <xpath expr="/form/header//field[@name='state']" position="replace">
                         <field name="state" nolabel="1" readonly="1" widget="statusbar" statusbar_visible="draft,confirmed,assigned,done" statusbar_colors='{"auto":"blue", "confirmed":"blue"}'/>
