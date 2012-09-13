@@ -96,22 +96,6 @@ class account_analytic_account(osv.osv):
                 res[row['id']][field] = row[field]
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids=[ids]
-        if not ids:
-            return []
-        res = []
-        for account in self.browse(cr, uid, ids, context=context):
-            data = []
-            acc = account
-            while acc:
-                data.insert(0, acc.name)
-                acc = acc.parent_id
-            data = ' / '.join(data)
-            res.append((account.id, data))
-        return res
-
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = self.name_get(cr, uid, ids)
         return dict(res)
@@ -297,7 +281,7 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
 
 account_analytic_account()
 
