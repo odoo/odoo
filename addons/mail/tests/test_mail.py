@@ -89,14 +89,14 @@ class test_mail(common.TransactionCase):
     def _mock_smtp_gateway(self, *args, **kwargs):
         return True
 
-    def _mock_build_email(self, *args, **kwargs):
-        self._build_email_args_list.append(args)
-        self._build_email_kwargs_list.append(kwargs)
-        return self.build_email_real(*args, **kwargs)
-
     def _init_mock_build_email(self):
         self._build_email_args_list = []
         self._build_email_kwargs_list = []
+
+    def _mock_build_email(self, *args, **kwargs):
+        self._build_email_args_list.append(args)
+        self._build_email_kwargs_list.append(kwargs)
+        return self._build_email(*args, **kwargs)
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
@@ -118,11 +118,12 @@ class test_mail(common.TransactionCase):
 
         # Install mock SMTP gateway
         self._init_mock_build_email()
-        self.build_email_real = self.registry('ir.mail_server').build_email
+        self._build_email = self.registry('ir.mail_server').build_email
         self.registry('ir.mail_server').build_email = self._mock_build_email
+        self._send_email = self.registry('ir.mail_server').send_email
         self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
-
         # Mock send_get_mail_body to test its functionality without other addons override
+        self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
         self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
 
         # groups@.. will cause the creation of new mail groups
@@ -132,6 +133,13 @@ class test_mail(common.TransactionCase):
         # create a 'pigs' group that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+
+    def tearDown(self):
+        # Remove mocks
+        self.registry('ir.mail_server').build_email = self._build_email
+        self.registry('ir.mail_server').send_email = self._send_email
+        self.registry('mail.mail').send_get_mail_body = self._send_get_mail_body
+        super(test_mail, self).tearDown()
 
     def test_00_message_process(self):
         cr, uid = self.cr, self.uid

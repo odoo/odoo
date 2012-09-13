@@ -30,7 +30,7 @@ class test_portal(common.TransactionCase):
     def _mock_build_email(self, *args, **kwargs):
         self._build_email_args_list.append(args)
         self._build_email_kwargs_list.append(kwargs)
-        return self.build_email_real(*args, **kwargs)
+        return self._build_email(*args, **kwargs)
 
     def _init_mock_build_email(self):
         self._build_email_args_list = []
@@ -46,13 +46,20 @@ class test_portal(common.TransactionCase):
 
         # Install mock SMTP gateway
         self._init_mock_build_email()
-        self.build_email_real = self.registry('ir.mail_server').build_email
+        self._build_email = self.registry('ir.mail_server').build_email
         self.registry('ir.mail_server').build_email = self._mock_build_email
+        self._send_email = self.registry('ir.mail_server').send_email
         self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
 
         # create a 'pigs' group that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+
+    def tearDown(self):
+        # Remove mocks
+        self.registry('ir.mail_server').build_email = self._build_email
+        self.registry('ir.mail_server').send_email = self._send_email
+        super(test_portal, self).tearDown()
 
     def test_00_mail_invite(self):
         cr, uid = self.cr, self.uid
