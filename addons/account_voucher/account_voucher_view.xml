@@ -75,7 +75,7 @@
                                 </group>
                                 <group string="Other Information">
                                     <field name="number"/>
-                                    <field name="currency_id"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </group>
                                 <group col="4" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
                                     <separator string="Total" colspan="4"/>

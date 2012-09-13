@@ -4,11 +4,6 @@ openerp.hr_attendance = function (instance) {
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
     var _lt = instance.web._lt;
-    
-    var tips = {
-        "true": _lt("You are currently signed in. Click here to sign out."),
-        "false": _lt("You are currently signed out. Click here to sign in."),
-    }
 
     instance.hr_attendance.AttendanceSlider = instance.web.Widget.extend({
         template: 'AttendanceSlider',
@@ -21,7 +16,6 @@ openerp.hr_attendance = function (instance) {
             var tmp = function() {
                 this.$el.toggleClass("oe_attendance_nosigned", ! this.get("signed_in"));
                 this.$el.toggleClass("oe_attendance_signed", this.get("signed_in"));
-                this.$el.attr("title", tips["" + this.get("signed_in")].toString());
             };
             this.on("change:signed_in", this, tmp);
             _.bind(tmp, this)();
@@ -31,6 +25,19 @@ openerp.hr_attendance = function (instance) {
             this.$(".oe_attendance_signout").click(function() {
                 self.do_update_attendance();
             });
+            this.$el.tipsy({
+                title: function() {
+                    var last_text = instance.web.format_value(self.last_sign, {type: "datetime"});
+                    var current_text = instance.web.format_value(new Date(), {type: "datetime"});
+                    var duration = self.last_sign ? $.timeago(self.last_sign) : "none";
+                    if (self.get("signed_in")) {
+                        return _.str.sprintf(_t("Last sign in: %s,<br />%s.<br />Click to sign out."), last_text, duration);
+                    } else {
+                        return _.str.sprintf(_t("Click to Sign In at %s."), current_text);
+                    }
+                },
+                html: true,
+            });
             return this.check_attendance();
         },
         do_update_attendance: function () {
@@ -39,6 +46,7 @@ openerp.hr_attendance = function (instance) {
             hr_employee.call('attendance_action_change', [
                 [self.employee.id]
             ]).done(function (result) {
+                self.last_sign = new Date();
                 self.set({"signed_in": ! self.get("signed_in")});
             });
         },
@@ -49,11 +57,12 @@ openerp.hr_attendance = function (instance) {
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [
                 ['user_id', '=', self.session.uid]
             ]);
-            return employee.read_slice(['id', 'name', 'state']).pipe(function (res) {
+            return employee.read_slice(['id', 'name', 'state', 'last_sign']).pipe(function (res) {
                 if (_.isEmpty(res))
                     return;
                 self.$el.show();
                 self.employee = res[0];
+                self.last_sign = instance.web.str_to_datetime(self.employee.last_sign);
                 self.set({"signed_in": self.employee.state !== "absent"});
             });
         },
