@@ -45,11 +45,14 @@ class plugin_handler(osv.osv_memory):
         url = ""
         name = ""
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
-        msg_id = msg.get('parent_id', False)
+        parent_id = msg.get('parent_id', False)
         message_id = msg.get('message_id')
-        if not msg_id:
+        msg_id = False
+        if message_id:
             msg_ids = mail_message_obj.search(cr, uid, [('message_id','=', message_id)])
             msg_id = len(msg_ids) and msg_ids[0] or False
+        if not msg_id and parent_id:
+            msg_id = parent_id 
         if msg_id:
             msg = mail_message_obj.browse(cr, uid, msg_id)
             res_id = msg.res_id
