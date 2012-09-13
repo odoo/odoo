@@ -926,12 +926,14 @@ class account_move_line(osv.osv):
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
-        cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
-        j = cr.fetchone()[0] or ''
-        cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
-        p = cr.fetchone()[0] or ''
-        if j or p:
-            return j + (p and (':' + p) or '')
+        if context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')
+            cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
+            j = cr.fetchone()[0] or ''
+            cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
+            p = cr.fetchone()[0] or ''
+            if j or p:
+                return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
