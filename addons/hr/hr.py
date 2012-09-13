@@ -289,8 +289,12 @@ class hr_department(osv.osv):
         'member_ids': fields.one2many('hr.employee', 'department_id', 'Members', readonly=True),
     }
 
-hr_department()
-
+    def copy(self, cr, uid, ids, default=None, context=None):
+        if default is None:
+            default = {}
+        default = default.copy()
+        default['member_ids'] = []
+        return super(hr_department, self).copy(cr, uid, ids, default, context=context)
 
 class res_users(osv.osv):
     _name = 'res.users'

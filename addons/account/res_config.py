@@ -43,8 +43,8 @@ class account_config_settings(osv.osv_memory):
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
-        'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank accounts on reports will display as followed', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
+        'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
+            string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
@@ -114,6 +114,9 @@ class account_config_settings(osv.osv_memory):
             help="This purchase tax will be assigned by default on new products."),
         'decimal_precision': fields.integer('Decimal precision on journal entries',
             help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
+        'group_multi_currency': fields.boolean('allow multi currencies',
+            implied_group='base.group_multi_currency',
+            help="Allows you multi currency environment"),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -157,7 +160,7 @@ class account_config_settings(osv.osv_memory):
                 'expects_chart_of_accounts': company.expects_chart_of_accounts,
                 'currency_id': company.currency_id.id,
                 'paypal_account': company.paypal_account,
-                'company_footer': company.rml_footer2,
+                'company_footer': company.rml_footer,
                 'has_chart_of_accounts': has_chart_of_accounts,
                 'has_fiscal_year': bool(fiscalyear_count),
                 'chart_template_id': False,
