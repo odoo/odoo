@@ -35,7 +35,7 @@ class crm_configuration(osv.osv_memory):
         'module_import_sugarcrm': fields.boolean("SugarCRM",
             help="""Import SugarCRM leads, opportunities, users, accounts, contacts, employees, meetings, phonecalls, emails, project and project tasks data.
                 This installs the module import_sugarcrm."""),
-        'module_import_google': fields.boolean("Google (Contacts and Calendar)",
+        'module_import_google': fields.boolean("Google (contacts and calendar)",
             help="""Import google contact in partner address and add google calendar events details in Meeting.
                 This installs the module import_google."""),
         'module_google_map': fields.boolean("Add google maps on customers",
