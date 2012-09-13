@@ -70,6 +70,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
         obj_tax_code = self.pool.get('account.tax.code')
         obj_acc_period = self.pool.get('account.period')
         obj_user = self.pool.get('res.users')
+        obj_partner = self.pool.get('res.partner')
         mod_obj = self.pool.get('ir.model.data')
 
         if context is None:
@@ -93,8 +94,9 @@ class l10n_be_vat_declaration(osv.osv_memory):
         ctx['period_id'] = data['period_id'][0]
         tax_info = obj_tax_code.read(cr, uid, tax_code_ids, ['code','sum_period'], context=ctx)
 
-        name = email = phone = address = post_code = city = country_code = ''
-        name, email, phone, city, post_code, address, country_code = self.pool.get('res.company')._get_default_ad(obj_company.partner_id)
+        default_address = obj_partner.address_get(cr, uid, [obj_company.partner_id.id])
+        default_address_id = default_address.get("default", obj_company.partner_id.id)
+        address_id= obj_partner.browse(cr, uid, default_address_id, context)
 
         account_period = obj_acc_period.browse(cr, uid, data['period_id'][0], context=context)
         issued_by = vat_no[:2]
@@ -106,21 +108,21 @@ class l10n_be_vat_declaration(osv.osv_memory):
         ending_month = account_period.date_stop[5:7]
         quarter = str(((int(starting_month) - 1) / 3) + 1)
 
-        if not email:
+        if not address_id.email:
             raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
-        if not phone:
+        if not address_id.phone:
             raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
         file_data = {
                         'issued_by': issued_by,
                         'vat_no': vat_no,
                         'only_vat': vat_no[2:],
                         'cmpny_name': obj_company.name,
-                        'address': address,
-                        'post_code': post_code,
-                        'city': city,
-                        'country_code': country_code,
-                        'email': email,
-                        'phone': phone.replace('.','').replace('/','').replace('(','').replace(')','').replace(' ',''),
+                        'address': "%s %s"%(address_id.street or "",address_id.street2 or ""),
+                        'post_code': address_id.zip or "",
+                        'city': address_id.city or "",
+                        'country_code': address_id.country_id and address_id.country_id.code or "",
+                        'email': address_id.email or "",
+                        'phone': address_id.phone.replace('.','').replace('/','').replace('(','').replace(')','').replace(' ',''),
                         'send_ref': send_ref,
                         'quarter': quarter,
                         'month': starting_month,
