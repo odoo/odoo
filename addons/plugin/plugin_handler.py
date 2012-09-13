@@ -48,7 +48,7 @@ class plugin_handler(osv.osv_memory):
         msg_id = msg.get('parent_id', False)
         message_id = msg.get('message_id')
         if not msg_id:
-            msg_ids = mail_message_obj.search(cr, uid, ('message_id','=', message_id))
+            msg_ids = mail_message_obj.search(cr, uid, [('message_id','=', message_id)])
             msg_id = len(msg_ids) and msg_ids[0] or False
         if msg_id:
             msg = mail_message_obj.browse(cr, uid, msg_id)
