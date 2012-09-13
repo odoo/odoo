@@ -3,24 +3,21 @@
 -  
   !record {model: mail.message.subtype, id: mail.mail_subtype_won }:
     name: won
-    model_ids:
-      - crm.model_crm_lead
+    res_model:crm.lead
     default: False
 -
   I have add the sub_type name email with default true
 -  
   !record {model: mail.message.subtype, id: mail.mail_subtype_email }:
     name: email
-    model_ids:
-      - crm.model_crm_lead
+    res_model:crm.lead
     default: True   
 -  
   I have add the sub_type name comment with default true
 -  
   !record {model: mail.message.subtype, id: mail.mail_subtype_comment }:
     name: comment
-    model_ids:
-      - crm.model_crm_lead
+    res_model:crm.lead
     default: True
 -  
   I have add the subtypes as won in feeds  
