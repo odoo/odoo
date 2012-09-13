@@ -65,7 +65,7 @@ class mrp_config_settings(osv.osv_memory):
             help="""Routings allow you to create and manage the manufacturing operations that should be followed
                 within your work centers in order to produce a product. They are attached to bills of materials
                 that will define the required raw materials."""),
-        'group_mrp_properties': fields.boolean("allow several bill of materials per products",
+        'group_mrp_properties': fields.boolean("allow several bill of materials per products using properties",
             implied_group='product.group_mrp_properties',
             help="""The selection of the right Bill of Material to use will depend on the  properties specified on the sale order and the Bill of Material."""),
         'module_product_manufacturer': fields.boolean("define manufacturers on products ",
