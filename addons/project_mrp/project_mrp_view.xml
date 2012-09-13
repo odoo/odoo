@@ -31,6 +31,16 @@
                 </field>
             </field>
         </record>
+        <record id="view_product_form" model="ir.ui.view">
+            <field name="name">product.form.view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="uom_po_id" position="before">
+                    <field name="supply_method" />
+                </field>
+            </field>
+        </record>
     </data>
 </openerp>
 
