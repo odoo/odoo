@@ -27,10 +27,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             success_callback = success_callback || function(){}; 
             error_callback   =  error_callback  || function(){};    
 
-            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-                console.log('PROXY:',name,params);
-            }
-
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);

@@ -686,6 +686,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             'open_cashbox',
             'print_receipt',
             'print_pdf_invoice',
+            'weighting_read_kg',
+            'is_payment_accepted',
         ],
         minimized: false,
         start: function(){
@@ -727,9 +729,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             _.each(this.events, function(name){
                 self.pos.proxy.add_notification(name,function(){
-                    console.log('Notification:',name);
-                    self.$('.status.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 
-                    self.$('.status.'+name).animate({'background-color':'black'},2000);
+                    self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 
+                    self.$('.event.'+name).animate({'background-color':'#1E1E1E'},2000);
                 });
             });
             self.pos.proxy.add_notification('help_needed',function(){

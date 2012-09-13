@@ -21,6 +21,8 @@ function openerp_pos_db(instance, module){
             this.category_childs = {};
             this.category_parent    = {};
             this.category_search_string = {};
+            this.packagings_by_product_id = {};
+            this.packagings_by_product_id = {};
         },
         /* returns the category object from its id. If you pass a list of id as parameters, you get
          * a list of category objects. 
@@ -157,6 +159,12 @@ function openerp_pos_db(instance, module){
             }
             this.save('products',stored_products);
             this.save('categories',stored_categories);
+        },
+        add_packagings: function(packagings){
+            this.packagings_by_product_id
+            for(var i = 0, len = packagings.length; i < len; i++){
+                var pack = packagings[i];
+            }
         },
         /* removes all the data from the database. TODO : being able to selectively remove data */
         clear: function(stores){
