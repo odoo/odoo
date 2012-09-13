@@ -671,7 +671,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
     module.DebugWidget = module.PosBaseWidget.extend({
         template: "DebugWidget",
         eans:{
-            admin_badge:  '0410300000004',
+            admin_badge:  '0410100000006',
             client_badge: '0420100000005',
             invalid_ean:  '1232456',
             soda_33cl:    '5449000000996',
