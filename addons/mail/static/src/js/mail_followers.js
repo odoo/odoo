@@ -35,6 +35,7 @@ openerp_mail_followers = function(session, mail) {
             this.view.on("change:actual_mode", this, this._check_visibility);
             this._check_visibility();
             this.reinit();
+            this.bind_events();
         },
 
         _check_visibility: function() {
@@ -48,11 +49,11 @@ openerp_mail_followers = function(session, mail) {
 
         bind_events: function() {
             var self = this;
-            this.$el.find('button.oe_mail_button_follow').on('click', function () { self.do_follow(); })
-            this.$el.find('button.oe_mail_button_unfollow').on('click', function () { self.do_unfollow(); })
+            this.$('button.oe_mail_button_unfollow').on('click', function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
-            this.$el.find('button.oe_mail_button_invite').on('click', function(event) {
+            this.$el.on('click', 'button.oe_mail_button_follow', function () { self.do_follow(); });
+            this.$el.on('click', 'button.oe_mail_button_invite', function(event) {
                 action = {
                     type: 'ir.actions.act_window',
                     res_model: 'mail.wizard.invite',
@@ -83,7 +84,6 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            this.bind_events();
             return this.fetch_followers(value_  || this.get_value());
         },
 
