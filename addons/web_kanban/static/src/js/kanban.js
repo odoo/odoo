@@ -742,7 +742,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
-        this.$el.find('.oe_kanban_action').click(function() {
+        this.$el.find('.oe_kanban_action').click(function(ev) {
+            ev.preventDefault();
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);

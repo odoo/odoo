@@ -48,7 +48,6 @@ This module provides the core of the OpenERP Web Client.
         "static/src/js/views.js",
         "static/src/js/data.js",
         "static/src/js/data_export.js",
-        "static/src/js/data_import.js",
         "static/src/js/search.js",
         "static/src/js/view_form.js",
         "static/src/js/view_list.js",
@@ -63,7 +62,6 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.textext/jquery.textext.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
-        "static/src/css/data_import.css",
         "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [
