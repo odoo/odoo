@@ -102,6 +102,7 @@
             <field name="arch" type="xml">
                 <form string="Account Period" version="7.0">
 	                <header>
+	                    <button string="Close Period" name="%(account.action_account_period_close)d" type="action" class="oe_highlight"/>
 	                    <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
 	                    <field name="state" widget="statusbar" nolabel="1"/>
 	                </header>
