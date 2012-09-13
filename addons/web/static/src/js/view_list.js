@@ -1417,7 +1417,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
         if ((dataset.sort && dataset.sort())
             || !_(this.columns).any(function (column) {
                     return column.widget === 'handle'
-                        || column.name === 'sequence'; })) {
+                        || column.name === 'sequence'; }) || !list.options.reorderable){
             return;
         }
         var sequence_field = _(this.columns).find(function (c) {
