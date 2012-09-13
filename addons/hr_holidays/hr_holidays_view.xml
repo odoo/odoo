@@ -513,13 +513,17 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <label for="remaining_leaves"/>
-                    <div>
-                        <field name="remaining_leaves" class="oe_inline"/>
-                        <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" class="oe_inline oe_right"/>
-                    </div>
-                </field>
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Leaves">
+                        <label for="remaining_leaves"/>
+                        <div>
+                            <field name="remaining_leaves" class="oe_inline"/>
+                        </div>
+                    </group>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action"/>
+                </xpath>
             </field>
         </record>
 

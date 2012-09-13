@@ -70,7 +70,7 @@ class sale_order(osv.osv):
         return result
 
     def _get_order(self, cr, uid, ids, context=None):
-        return super(self,sale_order)._get_order(cr, uid, ids, context=context)
+        return super(sale_order, self)._get_order(cr, uid, ids, context=context)
 
     _columns = {
         'margin': fields.function(_product_margin, string='Margin', help="It gives profitability by calculating the difference between the Unit Price and Cost Price.", store={

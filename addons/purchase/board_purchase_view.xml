@@ -62,7 +62,7 @@
                 <form string="Purchase Dashboard" version="7.0">
                     <board style="2-1">
                         <column>
-                            <action name="%(purchase_draft)d" string="Request for Quotations" creatable="true"/>
+                            <action name="%(purchase_draft)d" string="Request for Quotations"/>
                         </column>
                         <column>
                             <action name="%(action_purchase_order_monthly_categ_graph)d" string="Monthly Purchases by Category"/>
@@ -85,8 +85,7 @@
                   icon="terp-graph"
                   id="menu_board_purchase"
                   parent="base.menu_reporting_dashboard"
-                  groups="group_purchase_user"
-                  sequence="20"/>
-
+                  sequence="20"
+                  groups="purchase.group_purchase_user"/>
     </data>
 </openerp>
