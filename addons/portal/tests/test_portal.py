@@ -20,7 +20,6 @@
 ##############################################################################
 
 from openerp.addons.mail.tests import test_mail
-# from openerp.tests import common
 from openerp.tools import append_content_to_html
 
 
