@@ -103,7 +103,7 @@ class plugin_handler(osv.osv_memory):
             if model == 'res.partner':
                 notify = 'User the Partner button to create a new partner'
             else:
-                res_id = model_obj.message_new(cr, uid, msg)
+                res_id = model_obj.message_process(cr, uid, model, email)
                 notify = "Mail successfully pushed, a new %s has been created " % model
         else:
             model_obj.message_post(cr, uid, [res_id], 
