@@ -1496,7 +1496,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','in')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'product_receive\' : True, \'default_location_id\':%d, \'default_location_dest_id\':%d, \'search_default_future\': 1}' % (ref('stock_location_suppliers'),ref('stock_location_stock') )"/>
+            <field name="context">{'product_receive': True, 'search_default_future': True, 'picking_type': 'in'}</field>
             <field name="help" type="html">
               <p>
                 Click to register a product reception. 
@@ -1631,7 +1631,7 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">['|','&amp;',('picking_id','=',False),('location_dest_id.usage', 'in', ['customer','supplier']),'&amp;',('picking_id','!=',False),('picking_id.type','=','out')]</field>
             <field name="view_id" ref="view_move_tree_reception_picking"/>
-            <field name="context" eval="'{\'default_location_id\':%d, \'default_location_dest_id\':%d, \'search_default_future\': 1}' % (ref('stock_location_stock'),ref('stock_location_customers'))"/>
+            <field name="context">{'picking_type': 'out', 'search_default_future': True}</field>
             <field name="help" type="html">
               <p>
                 You will find in this list all products you have to deliver to
