@@ -1375,8 +1375,14 @@ class account_voucher_line(osv.osv):
         'company_id': fields.related('voucher_id','company_id', relation='res.company', type='many2one', string='Company', store=True, readonly=True),
         'currency_id': fields.function(_currency_id, string='Currency', type='many2one', relation='res.currency', readonly=True),
     }
+    
+    def _default_account_id(self, cr, uid, ids, context=None):
+        prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
+        return prop and prop.id or False
+    
     _defaults = {
         'name': '',
+        'account_id':_default_account_id
     }
 
     def onchange_reconcile(self, cr, uid, ids, reconcile, amount, amount_unreconciled, context=None):
