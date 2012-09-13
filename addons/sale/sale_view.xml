@@ -158,8 +158,8 @@
                             <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                             <button name="action_quotation_send" string="Send by Mail" type="object" states="draft" class="oe_highlight"/>
                             <button name="action_quotation_send" string="Send by Mail" type="object" states="sent"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="draft" class="oe_highlight"/>
-                            <button name="print_quotation" string="Send by Post" type="object" states="sent"/>
+                            <button name="print_quotation" string="Print" type="object" states="draft" class="oe_highlight"/>
+                            <button name="print_quotation" string="Print" type="object" states="sent"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
                             <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
@@ -183,7 +183,7 @@
                     </h1>
                     <group>
                         <group>
-                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)" domain="[('customer','=',True)]" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_invoice_id" groups="sale.group_delivery_invoice_address" context="{'default_parent_id': partner_id}"/>
                             <field domain="[('parent_id','=',partner_id)]" name="partner_shipping_id" groups="sale.group_delivery_invoice_address" context="{'default_parent_id': partner_id}"/>
                             <field name="project_id" context="{'partner_id':partner_id, 'pricelist_id':pricelist_id, 'default_name':name}" groups="sale.group_analytic_accounting" domain="[('type','in',['view','normal','contract'])]"/>
