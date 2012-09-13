@@ -21,14 +21,14 @@
 
 
 {
-    'name': 'Expenses Management',
+    'name': 'Expense Management',
     'version': '1.0',
     'category': 'Human Resources',
     'sequence': 30,
     'summary': 'Expenses Validation, Invoicing',
     'description': """
-This module aims to manage employee's expenses.
-===============================================
+This module aims to manage employee expenses.
+=============================================
 
 The whole workflow is implemented:
 ----------------------------------

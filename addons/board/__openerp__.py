@@ -28,9 +28,7 @@
 Lets the user create a custom dashboard.
 ========================================
 
-This module also creates the Administration Dashboard.
-
-The user can also publish notes.
+Allows users to create custom dashboard.
     """,
     'author': 'OpenERP SA',
     'depends': ['base'],

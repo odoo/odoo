@@ -30,27 +30,27 @@ A business oriented Social Networking with a fully-integrated email and message 
 ===========================================================================================
 
 The Social Networking module provides an unified social network
-abstraction layer allowing applications to display a complete 
+abstraction layer allowing applications to display a complete
 communication history on documents. It gives the users the possibility
 to read and send messages and emails in an unified way.
 
-It also provides a feeds page combined to a subscription mechanism, that 
+It also provides a feeds page combined to a subscription mechanism, that
 allows to follow documents, and to be constantly updated about recent
 news.
-        
+
 The main features of the module are:
 ------------------------------------
     * a clean and renewed communication history for any OpenERP
       document that can act as a discussion topic,
     * a discussion mean on documents,
-    * a subscription mechanism to be updated about new messages on 
+    * a subscription mechanism to be updated about new messages on
       interesting documents,
-    * an unified feeds page to see recent messages and activity 
+    * an unified feeds page to see recent messages and activity
       on followed documents,
     * user communication through the feeds page,
     * a threaded discussion design,
     * relies on the global outgoing mail server, an integrated email
-      management system allowing to send emails with a configurable 
+      management system allowing to send emails with a configurable
       scheduler-based processing engine
     * includes an extensible generic email composition assistant, that can turn
       into a mass-mailing assistant, and is capable of interpreting
@@ -64,6 +64,7 @@ The main features of the module are:
         'wizard/mail_compose_message_view.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
+        'mail_mail_view.xml',
         'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',

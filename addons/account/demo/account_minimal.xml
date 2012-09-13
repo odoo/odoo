@@ -19,7 +19,6 @@
         <record id="chart0" model="account.account">
             <field name="code">X0</field>
             <field name="name">Chart For Automated Tests</field>
-            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
@@ -383,7 +382,7 @@
             <field name="type">cash</field>
             <field name="profit_account_id" model="account.account" ref="rsa" />
             <field name="loss_account_id" model="account.account" ref="rsa" />
-            <field name="internal_account_id" model="account.account" ref="chart0" />
+            <field name="internal_account_id" model="account.account" ref="rsa" />
             <field name="with_last_closing_balance" eval="True" />
             <field name="cash_control" eval="True" />
             <field name="view_id" ref="account_journal_bank_view"/>
