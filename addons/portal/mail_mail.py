@@ -29,8 +29,8 @@ class mail_mail_portal(osv.Model):
     _name = 'mail.mail'
     _inherit = ['mail.mail']
 
-    def _generate_portal_url(self, cr, uid, partner_id, portal_group_id, key, context=None):
-        """ . """
+    def _generate_signin_url(self, cr, uid, partner_id, portal_group_id, key, context=None):
+        """ Generate the signin url """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='', context=context)
         return base_url + '/login?action=signin&partner_id=%s&group=%s&key=%s' % (partner_id, portal_group_id, key)
 
@@ -45,7 +45,7 @@ class mail_mail_portal(osv.Model):
         if partner:
             portal_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'portal')
             portal_id = portal_ref and portal_ref[1] or False
-            url = self._generate_portal_url(cr, uid, partner.id, portal_id, 1234, context=context)
+            url = self._generate_signin_url(cr, uid, partner.id, portal_id, 1234, context=context)
             body = tools.append_content_to_html(mail.body_html, url)
             return body
         else:

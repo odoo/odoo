@@ -51,12 +51,19 @@ class test_portal(test_mail.TestMailMockups):
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
 
         # ----------------------------------------
-        # CASE1: invite Bert
+        # CASE1: generated URL
+        # ----------------------------------------
+
+        url = self.mail_mail._generate_signin_url(cr, uid, p_b_id, portal_id, 1234)
+        self.assertEqual(url,  base_url + '/login?action=signin&partner_id=%s&group=%s&key=%s' % (p_b_id, portal_id, 1234),
+            'generated signin URL incorrect')
+
+        # ----------------------------------------
+        # CASE2: invite Bert
         # ----------------------------------------
 
         _sent_email_subject = 'Invitation to follow Pigs'
-        _sent_email_body = append_content_to_html('<div>You have been invited to follow Pigs.</div>',
-            base_url + '/login?action=signin&partner_id=%s&group=%s&key=%s' % (p_b_id, portal_id, 1234))
+        _sent_email_body = append_content_to_html('<div>You have been invited to follow Pigs.</div>', url)
 
         # Do: create a mail_wizard_invite, validate it
         self._init_mock_build_email()
