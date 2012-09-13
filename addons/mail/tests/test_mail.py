@@ -84,7 +84,7 @@ Sylvie
 """
 
 
-class test_mail(common.TransactionCase):
+class TestMailMockups(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
         return True
@@ -97,6 +97,24 @@ class test_mail(common.TransactionCase):
         self._build_email_args_list.append(args)
         self._build_email_kwargs_list.append(kwargs)
         return self._build_email(*args, **kwargs)
+
+    def setUp(self):
+        super(TestMailMockups, self).setUp()
+        # Install mock SMTP gateway
+        self._init_mock_build_email()
+        self._build_email = self.registry('ir.mail_server').build_email
+        self.registry('ir.mail_server').build_email = self._mock_build_email
+        self._send_email = self.registry('ir.mail_server').send_email
+        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
+
+    def tearDown(self):
+        # Remove mocks
+        self.registry('ir.mail_server').build_email = self._build_email
+        self.registry('ir.mail_server').send_email = self._send_email
+        super(TestMailMockups, self).tearDown()
+
+
+class test_mail(TestMailMockups):
 
     def _mock_send_get_mail_body(self, *args, **kwargs):
         # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
@@ -116,12 +134,6 @@ class test_mail(common.TransactionCase):
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
-        # Install mock SMTP gateway
-        self._init_mock_build_email()
-        self._build_email = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self._send_email = self.registry('ir.mail_server').send_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
         # Mock send_get_mail_body to test its functionality without other addons override
         self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
         self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
@@ -136,8 +148,6 @@ class test_mail(common.TransactionCase):
 
     def tearDown(self):
         # Remove mocks
-        self.registry('ir.mail_server').build_email = self._build_email
-        self.registry('ir.mail_server').send_email = self._send_email
         self.registry('mail.mail').send_get_mail_body = self._send_get_mail_body
         super(test_mail, self).tearDown()
 
