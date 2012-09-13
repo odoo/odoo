@@ -29,7 +29,7 @@ Received: by mail1.openerp.com (Postfix, from userid 10002)
 From: Sylvie Lelitre <sylvie.lelitre@agrolait.com>
 Subject: {subject}
 MIME-Version: 1.0
-Content-Type: multipart/alternative; 
+Content-Type: multipart/alternative;
     boundary="----=_Part_4200734_24778174.1344608186754"
 Date: Fri, 10 Aug 2012 14:16:26 +0000
 Message-ID: <1198923581.41972151344608186760.JavaMail@agrolait.com>
@@ -52,9 +52,9 @@ Content-Transfer-Encoding: quoted-printable
   <meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dutf-8" />
  </head>=20
  <body style=3D"margin: 0; padding: 0; background: #ffffff;-webkit-text-size-adjust: 100%;">=20
-  
+
   <p>Please call me as soon as possible this afternoon!</p>
-  
+
   <p>--<br/>
      Sylvie
   <p>
@@ -154,7 +154,7 @@ class test_mail(common.TransactionCase):
         test_msg_id = '<deadcafe.1337@smtp.agrolait.com>'
         mail_text = MAIL_TEMPLATE_PLAINTEXT.format(to='groups@example.com', subject='frogs', extra='', msg_id=test_msg_id)
         self.mail_thread.message_process(cr, uid, None, mail_text)
-        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id','=',test_msg_id)])[0])
+        new_mail = self.mail_message.browse(cr, uid, self.mail_message.search(cr, uid, [('message_id', '=', test_msg_id)])[0])
         self.assertEqual(new_mail.body, '\n<pre>\nPlease call me as soon as possible this afternoon!\n\n--\nSylvie\n</pre>\n',
                          'plaintext mail incorrectly parsed')
 
@@ -410,12 +410,14 @@ class test_mail(common.TransactionCase):
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
 
         # 2. Post the comment, get created message
+        parent_id = message.id
         mail_compose.send_mail(cr, uid, [compose_id])
         group_pigs.refresh()
         message = group_pigs.message_ids[0]
-        # Test: mail.message: subject as Re:.., body in html
+        # Test: mail.message: subject as Re:.., body in html, parent_id
         self.assertEqual(message.subject, _msg_reply, 'mail.message incorrect subject')
         self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote></div>', message.body, 'mail.message body is incorrect')
+        self.assertEqual(message.parent_id and message.parent_id.id, parent_id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
         for attach in message.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
@@ -459,6 +461,7 @@ class test_mail(common.TransactionCase):
         # It will be updated as soon as we have fixed specs !
         cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+
         def _compare_structures(struct1, struct2, n=0):
             # print '%scompare structure' % ('\t' * n)
             self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
