@@ -13,27 +13,18 @@ If you want to use advanced accounting features, you should install the "Account
             <value>Module eInvoicing &amp; Payments has been installed.</value>
         </function>
         <!-- Message Sub Type -->
-        <record id="mail.mail_subtype_new" model="mail.message.subtype">
-        	<field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
+        <record id="mail.voucher_subtype_new" model="mail.message.subtype">
+            <field name="res_model">account.voucher</field>
         </record>
-        <record id="mail.mail_subtype_post" model="mail.message.subtype">
+        <record id="mail.voucher_subtype_post" model="mail.message.subtype">
             <field name="name">post</field>
-            <field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
+            <field name="res_model">account.voucher</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_reconcile" model="mail.message.subtype">
+        <record id="mail.voucher_subtype_reconcile" model="mail.message.subtype">
             <field name="name">reconcile</field>
-            <field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
+            <field name="res_model">account.voucher</field>
             <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mail_subtype_email" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
-        </record>
-        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
-        </record>
-        <record id="mail.mail_subtype_other" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('account_voucher.model_account_voucher'))]"/>
         </record>
     </data>
 </openerp>

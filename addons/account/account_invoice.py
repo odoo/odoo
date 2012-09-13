@@ -395,23 +395,18 @@ class account_invoice(osv.osv):
         template_id = template and template[1] or False
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
-        ctx = dict(context)
-        ctx.update({
-            'default_model': 'account.invoice',
-            'default_res_id': ids[0],
-            'default_use_template': True,
-            'default_template_id': template_id,
-            })
+        ctx = dict(context, active_model='account.invoice', active_id=ids[0])
+        ctx.update({'mail.compose.template_id': template_id})
         return {
-            'view_type': 'form',
-            'view_mode': 'form',
-            'res_model': 'mail.compose.message',
-            'views': [(res_id, 'form')],
-            'view_id': res_id,
-            'type': 'ir.actions.act_window',
-            'target': 'new',
-            'context': ctx,
-            'nodestroy': True,
+                'view_type': 'form',
+                'view_mode': 'form',
+                'res_model': 'mail.compose.message',
+                'views': [(res_id, 'form')],
+                'view_id': res_id,
+                'type': 'ir.actions.act_window',
+                'target': 'new',
+                'context': ctx,
+                'nodestroy': True,
         }
 
     def confirm_paid(self, cr, uid, ids, context=None):
@@ -1306,15 +1301,15 @@ class account_invoice(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), subtype="new", context=context)
+            self.message_post(cr, uid, [obj.id],body=_("%s <b>created</b>.") % (self._get_document_type(obj.type)), subtype_xml_id="analytic_subtype_new", context=context)
 
     def confirm_paid_send_note(self, cr, uid, ids, context=None):
          for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), subtype="paid", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>paid</b>.") % (self._get_document_type(obj.type)), subtype_xml_id="invoice_subtype_paid", context=context)
 
     def invoice_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), subtype="cancelled", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s <b>cancelled</b>.") % (self._get_document_type(obj.type)), subtype_xml_id="invoice_subtype_cancelled", context=context)
 account_invoice()
 
 class account_invoice_line(osv.osv):

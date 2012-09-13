@@ -32,33 +32,24 @@
         </record>
         
         <!--Sub type Data -->
-        <record id="mail.mail_subtype_new" model="mail.message.subtype">
+        <record id="mail.issue_subtype_new" model="mail.message.subtype">
             <field name="name">new</field>
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_stage_change" model="mail.message.subtype">
+        <record id="mail.issue_subtype_stage_change" model="mail.message.subtype">
             <field name="name">stage change</field>
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_cancelled" model="mail.message.subtype">
+        <record id="mail.issue_subtype_cancelled" model="mail.message.subtype">
             <field name="name">cancelled</field>
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="res_model">project.issue</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mail_subtype_closed" model="mail.message.subtype">
+        <record id="mail.issue_subtype_closed" model="mail.message.subtype">
             <field name="name">closed</field>
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
-        </record>
-        <record id="mail.mail_subtype_email" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
-        </record>
-        <record id="mail.mail_subtype_comment" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
-        </record>
-        <record id="mail.mail_subtype_other" model="mail.message.subtype">
-            <field name="model_ids" eval="[(4,ref('project_issue.model_project_issue'))]"/>
+            <field name="res_model">project.issue</field>
         </record>
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">

@@ -41,9 +41,8 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Common to All Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
-                        help="The status of your document is automatically changed regarding the selected stage. " \
-                            "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
+        'state': fields.selection(_TASK_STATE, 'State', required=True,
+                        help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
@@ -514,23 +513,23 @@ def Project():
         return project_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype="new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype_xml_id="project_subtype_new", context=context)
 
     def set_open_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>opened</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="open", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_open", context=context)
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
         message = _("Project is now <b>pending</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="pending", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_pending", context=context)
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>cancelled</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="cancelled", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_cancelled", context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
         message = _("Project has been <b>closed</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="closed", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_closed", context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
@@ -728,7 +727,7 @@ class task(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'categ_ids': fields.many2many('project.category', string='Tags'),
+        'categ_ids': fields.many2many('project.category', string='Categories'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -1231,10 +1230,10 @@ class task(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype="stage change", context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype_xml_id="task_subtype_stage_change", context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype="new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype_xml_id="task_subtype_new", context=context)
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
         msg = _('Task has been set as <b>draft</b>.')
