@@ -1,7 +1,18 @@
 openerp.account = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
-    instance.web.views.add('form_clone', 'instance.account.extend_form_view');
+    
+    instance.web.account = {};
+    
+    instance.web.views.add('account_reconciliation_list', 'instance.web.account.ReconciliationListView');
+    instance.web.account.ReconciliationListView = instance.web.ListView.extend({
+        init: function() {
+            this._super.apply(this, arguments);
+            console.log("coucou");
+        }
+    });
+    
+    /*instance.web.views.add('form_clone', 'instance.account.extend_form_view');
 
     instance.account.extend_viewmanager = instance.web.ViewManagerAction.include({
         start: function () {
@@ -119,6 +130,6 @@ openerp.account = function (instance) {
                 });
             }
         },
-    });
+    });*/
 
 };
