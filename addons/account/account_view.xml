@@ -1728,8 +1728,10 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
-                    <field name="name"/>
-                    <field name="sequence"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
                     <group>
                         <group string="Amount Computation">
                             <field name="value"/>
@@ -1777,12 +1779,11 @@
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
-                    <group>
+                    <group col="4" colspan="4">
                         <field name="name"/>
                         <field name="active"/>
                     </group>
-                    <separator string="Description on Invoices"/>
-                    <field name="note"/>
+                    <field name="note" placeholder="Description on Invoices"/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
                 </form>
