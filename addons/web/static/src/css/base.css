@@ -25,6 +25,7 @@
     display: none !important;
   }
 }
+
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
@@ -40,7 +41,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */
+   */ */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -243,7 +244,7 @@
   border-radius: 0 0 2px 2px;
 }
 .openerp.ui-dialog .ui-dialog-buttonpane button {
-  margin: 0;
+  margin: 0 4px 0 0;
 }
 .openerp.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
   float: left;
@@ -792,9 +793,10 @@
   font-size: 14px;
   height: 100%;
 }
-.openerp .oe_login li {
+.openerp .oe_login ul, .openerp .oe_login li {
+  margin: 0;
   list-style-type: none;
-  padding-bottom: 4px;
+  padding: 0 0 4px 0;
 }
 .openerp .oe_login button {
   float: right;
@@ -1238,6 +1240,13 @@
 }
 .openerp .oe_application > div {
   height: 100%;
+}
+.openerp .oe_application .oe_breadcrumb_item:not(:last-child) {
+  display: inline-block;
+  max-width: 7em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .openerp .oe_view_manager .oe_view_manager_body {
   height: inherit;
@@ -2458,7 +2467,7 @@
 .openerp .oe_list.oe_list_editable.oe_editing .oe_m2o_cm_button {
   display: none;
 }
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input {
+.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
   height: 27px;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
@@ -2467,9 +2476,6 @@
   border-radius: 0;
   border: 1px solid #aaaaff;
   margin: 0;
-}
-.openerp .oe_list.oe_list_editable.oe_editing .oe_form_field textarea {
-  height: 60px;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   text-align: right;

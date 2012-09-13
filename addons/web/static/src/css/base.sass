@@ -266,7 +266,7 @@ $sheet-max-width: 860px
             margin: 0
             @include radius(0 0 2px 2px)
             button
-                margin: 0
+                margin: 0 4px 0 0
             .ui-dialog-buttonset
                 float: left
                 .ui-button
@@ -654,9 +654,10 @@ $sheet-max-width: 860px
         text-align: center
         font-size: 14px
         height: 100%
-        li
+        ul, li
+            margin: 0
             list-style-type: none
-            padding-bottom: 4px
+            padding: 0 0 4px 0
         button
             float: right
             display: inline-block
@@ -987,6 +988,12 @@ $sheet-max-width: 860px
                 text-decoration: underline
         > div
             height: 100%
+        .oe_breadcrumb_item:not(:last-child)
+            display: inline-block
+            max-width: 7em
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
     // }}}
     // ViewManager common {{{
     .oe_view_manager
@@ -1930,14 +1937,12 @@ $sheet-max-width: 860px
         .oe_m2o_cm_button
             display: none
         .oe_form_field
-            input
+            input, textarea
                 height: $row-height
             input, textarea
                 @include radius(0)
                 border: 1px solid #aaf
                 margin: 0
-            textarea
-                height: 60px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right

@@ -20,7 +20,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$el.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
+        this.$el.on('click', 'a.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -95,7 +95,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 break;
             }
         }
-        var subindex = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        var subindex = $e.parent().find('a.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
         this.select_breadcrumb(index, subindex);
     },
     select_breadcrumb: function(index, subindex) {
@@ -148,7 +148,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             for (var j = 0; j < tit.length; j += 1) {
                 var label = _.escape(tit[j]);
                 if (i === this.breadcrumbs.length - 1 && j === tit.length - 1) {
-                    titles.push(label);
+                    titles.push(_.str.sprintf('<span class="oe_breadcrumb_item">%s</span>', label));
                 } else {
                     titles.push(_.str.sprintf('<a href="#" class="oe_breadcrumb_item" data-id="%s">%s</a>', item.id, label));
                 }
@@ -566,7 +566,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     }
                     return controller.get('title');
                 });
-                if (next && next.action && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                if (next && next.action && next.action.res_id && self.dataset &&
+                    self.active_view === 'form' && self.dataset.model === next.action.res_model && id === next.action.res_id) {
                     // If the current active view is a formview and the next item in the breadcrumbs
                     // is an action on same object (model / res_id), then we omit the current formview's title
                     titles.pop();

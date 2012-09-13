@@ -45,7 +45,7 @@ then
     for mod in $(find ${target_dir} -type d -name 'static' -exec sh -c 'basename $(dirname {})' \;); do
        echo ${mod}
        mod_pot=${target_dir}/${mod}/i18n/${mod}.pot
-       web_pot=${mod_pot}.web 
+       web_pot=${mod_pot}.web
        mkdir -p $(dirname ${web_pot})
        $executable ${target_dir}/${mod} ${web_pot} 
        if [ -f "${mod_pot}" ]; then
