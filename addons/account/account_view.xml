@@ -1651,8 +1651,8 @@
                 <form string="Journal Entry Model" version="7.0">
                     <group col="4">
                         <field name="name"/>
-                        <field name="journal_id"/>
-                        <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
 
                     <field name="lines_id" widget="one2many_list"/>
