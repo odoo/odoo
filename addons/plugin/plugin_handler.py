@@ -45,13 +45,13 @@ class plugin_handler(osv.osv_memory):
         url = ""
         name = ""
         msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
-        references = [msg.get('message-id')]
-        refs =  msg.get('references',False)
-        if refs:
-            references.extend(refs.split())
-        msg_ids = mail_message_obj.search(cr, uid, [('message_id','in',references)])
-        if msg_ids:
-            msg = mail_message_obj.browse(cr, uid, msg_ids[0])
+        msg_id = msg.get('parent_id', False)
+        message_id = msg.get('message_id')
+        if not msg_id:
+            msg_ids = mail_message_obj.search(cr, uid, ('message_id','=', message_id))
+            msg_id = len(msg_ids) and msg_ids[0] or False
+        if msg_id:
+            msg = mail_message_obj.browse(cr, uid, msg_id)
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
@@ -80,7 +80,7 @@ class plugin_handler(osv.osv_memory):
             @return : the result of name_search a list of tuple 
             [(id, 'name')]
         """
-        return self.pool.get(model).name_search(cr,uid,name)
+        return self.pool.get(model).name_search(cr, uid, name)
 
     def push_message(self, cr, uid, model, email, res_id=0):
         """
@@ -163,6 +163,6 @@ class plugin_handler(osv.osv_memory):
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         if mail_ids:
-            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
+            ids =  mail_message.write(cr, uid, mail_ids[0], { 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url)
