@@ -143,7 +143,7 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Owned by'),
+        'parent_id': fields.many2one('res.partner', 'Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
