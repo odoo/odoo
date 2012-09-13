@@ -61,7 +61,7 @@ class partner_vat(osv.osv_memory):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
         if not period_ids:
-             raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
+             raise osv.except_osv(_('insufficient data!'), _('no data for the selected year.'))
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)

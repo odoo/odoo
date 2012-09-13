@@ -108,7 +108,7 @@ class partner_vat_intra(osv.osv_memory):
         # Get Company vat
         company_vat = data_company.partner_id.vat
         if not company_vat:
-            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with the company.'))
+            raise osv.except_osv(_('insufficient data!'),_('no vat number associated with company.'))
         company_vat = company_vat.replace(' ','').upper()
         issued_by = company_vat[:2]
 

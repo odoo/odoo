@@ -45,8 +45,8 @@ class l10n_be_vat_declaration(osv.osv_memory):
         'tax_code_id': fields.many2one('account.tax.code', 'Tax Code', domain=[('parent_id', '=', False)], required=True),
         'msg': fields.text('File created', size=64, readonly=True),
         'file_save': fields.binary('Save File'),
-        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to made or not?'),
-        'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to made or not?'),
+        'ask_restitution': fields.boolean('Ask Restitution',help='It indicates whether a restitution is to make or not?'),
+        'ask_payment': fields.boolean('Ask Payment',help='It indicates whether a payment is to make or not?'),
         'client_nihil': fields.boolean('Last Declaration, no clients in client listing', help='Tick this case only if it concerns only the last statement on the civil or cessation of activity: ' \
             'no clients to be included in the client listing.'),
         'comments': fields.text('Comments'),
@@ -83,7 +83,7 @@ class l10n_be_vat_declaration(osv.osv_memory):
             obj_company = obj_user.browse(cr, uid, uid, context=context).company_id
         vat_no = obj_company.partner_id.vat
         if not vat_no:
-            raise osv.except_osv(_('Insufficient Data!'), _('No VAT Number Associated with Main Company.'))
+            raise osv.except_osv(_('insufficient data!'), _('no vat number associated with company.'))
         vat_no = vat_no.replace(' ','').upper()
         vat = vat_no[2:]
 
