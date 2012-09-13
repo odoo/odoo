@@ -355,7 +355,7 @@ class purchase_order(osv.osv):
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(res_id,'form')],
+            'views': [(res_id, 'form')],
             'view_id': res_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
