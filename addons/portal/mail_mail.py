@@ -43,7 +43,9 @@ class mail_mail_portal(osv.Model):
             :param partner: browse_record of the specific recipient partner
         """
         if partner:
-            url = self._generate_portal_url(cr, uid, partner.id, 12, 1234, context=context)
+            portal_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal', 'portal')
+            portal_id = portal_ref and portal_ref[1] or False
+            url = self._generate_portal_url(cr, uid, partner.id, portal_id, 1234, context=context)
             body = tools.append_content_to_html(mail.body_html, url)
             return body
         else:
