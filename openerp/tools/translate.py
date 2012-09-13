@@ -262,7 +262,7 @@ class TinyPoFile(object):
         self.lines_count = len(self.lines);
 
         self.first = True
-        self.tnrs= []
+        self.extra_lines= []
         return self
 
     def _get_lines(self):
@@ -278,14 +278,14 @@ class TinyPoFile(object):
         return (self.lines_count - len(self.lines))
 
     def next(self):
-        type = name = res_id = source = trad = None
-
-        if self.tnrs:
-            type, name, res_id, source, trad = self.tnrs.pop(0)
+        trans_type = name = res_id = source = trad = None
+        if self.extra_lines:
+            trans_type, name, res_id, source, trad, comments = self.extra_lines.pop(0)
             if not res_id:
                 res_id = '0'
         else:
-            tmp_tnrs = []
+            comments = []
+            targets = []
             line = None
             fuzzy = False
             while (not line):
@@ -295,15 +295,20 @@ class TinyPoFile(object):
             while line.startswith('#'):
                 if line.startswith('#~ '):
                     break
-                if line.startswith('#:'):
+                if line.startswith('#.'):
+                    line = line[2:].strip()
+                    if not line.startswith('module:'):
+                        comments.append(line)
+                elif line.startswith('#:'):
                     for lpart in line[2:].strip().split(' '):
                         trans_info = lpart.strip().split(':',2)
                         if trans_info and len(trans_info) == 2:
-                            # looks like the translation type is missing, which is not
+                            # looks like the translation trans_type is missing, which is not
                             # unexpected because it is not a GetText standard. Default: 'code'
                             trans_info[:0] = ['code']
                         if trans_info and len(trans_info) == 3:
-                            tmp_tnrs.append(trans_info)
+                            # this is a ref line holding the destination info (model, field, record)
+                            targets.append(trans_info)
                 elif line.startswith('#,') and (line[2:].strip() == 'fuzzy'):
                     fuzzy = True
                 line = self.lines.pop(0).strip()
@@ -326,7 +331,7 @@ class TinyPoFile(object):
                 # if the source is "" and it's the first msgid, it's the special
                 # msgstr with the informations about the traduction and the
                 # traductor; we skip it
-                self.tnrs = []
+                self.extra_lines = []
                 while line:
                     line = self.lines.pop(0).strip()
                 return self.next()
@@ -343,10 +348,10 @@ class TinyPoFile(object):
                 trad += unquote(line)
                 line = self.lines.pop(0).strip()
 
-            if tmp_tnrs and not fuzzy:
-                type, name, res_id = tmp_tnrs.pop(0)
-                for t, n, r in tmp_tnrs:
-                    self.tnrs.append((t, n, r, source, trad))
+            if targets and not fuzzy:
+                trans_type, name, res_id = targets.pop(0)
+                for t, n, r in targets:
+                    self.extra_lines.append((t, n, r, source, trad, comments))
 
         self.first = False
 
@@ -355,7 +360,7 @@ class TinyPoFile(object):
                 self.warn('Missing "#:" formated comment at line %d for the following source:\n\t%s',
                         self.cur_line(), source[:30])
             return self.next()
-        return type, name, res_id, source, trad
+        return trans_type, name, res_id, source, trad, '\n'.join(comments)
 
     def write_infos(self, modules):
         import openerp.release as release
@@ -843,21 +848,14 @@ def trans_generate(lang, modules, cr):
 
     return out
 
-def trans_load(cr, filename, lang, verbose=True, flag=None, module_name=None, context=None):
+def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
     try:
         fileobj = misc.file_open(filename)
-        traslation_obj = pooler.get_pool(cr.dbname).get('ir.translation')
         _logger.info("loading %s", filename)
-        transl = []
-        if flag == 'web':
-            cr.execute("select DISTINCT src,value from ir_translation where module='%s' AND lang='%s' AND value != ''"% (module_name,lang))
-            for src, value in cr.fetchall():
-                transl.append({'id': src, 'string': value})
-        else:
-            fileformat = os.path.splitext(filename)[-1][1:].lower()
-            trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
+        fileformat = os.path.splitext(filename)[-1][1:].lower()
+        result = trans_load_data(cr, fileobj, fileformat, lang, verbose=verbose, module_name=module_name, context=context)
         fileobj.close()
-        return transl
+        return result
     except IOError:
         if verbose:
             _logger.error("couldn't read translation file %s", filename)
@@ -875,8 +873,7 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
     trans_obj = pool.get('ir.translation')
     iso_lang = misc.get_iso_codes(lang)
     try:
-        uid = 1
-        ids = lang_obj.search(cr, uid, [('code','=', lang)])
+        ids = lang_obj.search(cr, SUPERUSER_ID, [('code','=', lang)])
 
         if not ids:
             # lets create the language with locale information
@@ -893,14 +890,14 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
                 break
         elif fileformat == 'po':
             reader = TinyPoFile(fileobj)
-            f = ['type', 'name', 'res_id', 'src', 'value', 'module']
+            f = ['type', 'name', 'res_id', 'src', 'value', 'comments']
         else:
             _logger.error('Bad file format: %s', fileformat)
             raise Exception(_('Bad file format'))
 
         # read the rest of the file
         line = 1
-        irt_cursor = trans_obj._get_import_cursor(cr, uid, context=context)
+        irt_cursor = trans_obj._get_import_cursor(cr, SUPERUSER_ID, context=context)
 
         for row in reader:
             line += 1
@@ -911,11 +908,9 @@ def trans_load_data(cr, fileobj, fileformat, lang, lang_name=None, verbose=True,
             # dictionary which holds values for this line of the csv file
             # {'lang': ..., 'type': ..., 'name': ..., 'res_id': ...,
             #  'src': ..., 'value': ..., 'module':...}
-            dic = dict.fromkeys(('name', 'res_id', 'src', 'type', 'imd_model', 'imd_name', 'module', 'value'))
+            dic = dict.fromkeys(('name', 'res_id', 'src', 'type', 'imd_model', 'imd_name', 'module', 'value', 'comments'))
             dic['lang'] = lang
             for i, field in enumerate(f):
-                if field == 'module':
-                    continue
                 dic[field] = row[i]
 
             # This would skip terms that fail to specify a res_id

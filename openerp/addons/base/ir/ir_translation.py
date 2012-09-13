@@ -19,10 +19,11 @@
 #
 ##############################################################################
 
-from osv import fields, osv
 import tools
 import logging
+
 import openerp.modules
+from openerp.osv import fields, osv
 
 _logger = logging.getLogger(__name__)
 
@@ -58,7 +59,6 @@ class ir_translation_import_cursor(object):
         the data.
         @param parent an instance of ir.translation ORM model
         """
-
         self._cr = cr
         self._uid = uid
         self._context = context
@@ -77,8 +77,9 @@ class ir_translation_import_cursor(object):
         """Feed a translation, as a dictionary, into the cursor
         """
         params = dict(trans_dict, state="translated" if trans_dict['value'] else "to_translate")
-        self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state)
-                            VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s, %%(imd_name)s, %%(value)s, %%(state)s)""" % self._table_name,
+        self._cr.execute("""INSERT INTO %s (name, lang, res_id, src, type, imd_model, module, imd_name, value, state, comments)
+                            VALUES (%%(name)s, %%(lang)s, %%(res_id)s, %%(src)s, %%(type)s, %%(imd_model)s, %%(module)s,
+                                    %%(imd_name)s, %%(value)s, %%(state)s, %%(comments)s)""" % self._table_name,
                          params)
 
     def finish(self):
@@ -106,11 +107,10 @@ class ir_translation_import_cursor(object):
             for row in cr.fetchall():
                 _logger.debug("ir.translation.cursor: missing res_id for %s. %s/%s ", *row)
 
-        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
-            self._table_name)
-
         # Records w/o res_id must _not_ be inserted into our db, because they are
         # referencing non-existent data.
+        cr.execute("DELETE FROM %s WHERE res_id IS NULL AND module IS NOT NULL" % \
+            self._table_name)
 
         find_expr = "irt.lang = ti.lang AND irt.type = ti.type " \
                     " AND irt.name = ti.name AND irt.src = ti.src " \
@@ -120,14 +120,14 @@ class ir_translation_import_cursor(object):
         if self._overwrite:
             cr.execute("""UPDATE ONLY %s AS irt
                 SET value = ti.value,
-                state = 'translated' 
+                state = 'translated'
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                 """ % (self._parent_table, self._table_name, find_expr))
 
         # Step 3: insert new translations
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state)
-            SELECT name, lang, res_id, src, type, value, module, state
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
+            SELECT name, lang, res_id, src, type, value, module, state, comments
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -155,29 +155,37 @@ class ir_translation(osv.osv):
         return [(d['code'], d['name']) for d in lang_data]
 
     _columns = {
-        'name': fields.char('Field Name', size=128, required=True),
-        'res_id': fields.integer('Resource ID', select=True),
-        'lang': fields.selection(_get_language, string='Language', size=16),
-        'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
+        'name': fields.char('Translated field', required=True),
+        'res_id': fields.integer('Record ID', select=True),
+        'lang': fields.selection(_get_language, string='Language'),
+        'type': fields.selection(TRANSLATION_TYPE, string='Type', select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
-        'module': fields.char('Module Name', size=128),
-        'state': fields.selection([('to_translate','To Translate'),
-                                   ('inprogress','Translation in Progress'),
-                                   ('translated','Translated')])
+        'module': fields.char('Module', help="Module this term belongs to", select=True),
+
+        'state': fields.selection(
+            [('to_translate','To Translate'),
+             ('inprogress','Translation in Progress'),
+             ('translated','Translated')],
+            string="State",
+            help="Automatically set to let administators find new terms that might need to be translated"),
+
+        # aka gettext extracted-comments - we use them to flag openerp-web translation
+        # cfr: http://www.gnu.org/savannah-checkouts/gnu/gettext/manual/html_node/PO-Files.html
+        'comments': fields.text('Translation comments', select=True),
     }
-    
+
     _defaults = {
-        'state':'to_translate',
+        'state': 'to_translate',
     }
-    
-    _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
+
+    _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)',
         'Language code of translation item must be among known languages' ), ]
 
     def _auto_init(self, cr, context=None):
         super(ir_translation, self)._auto_init(cr, context)
 
-        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree. 
+        # FIXME: there is a size limit on btree indexed values so we can't index src column with normal btree.
         cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', ('ir_translation_ltns',))
         if cr.fetchone():
             #temporarily removed: cr.execute('CREATE INDEX ir_translation_ltns ON ir_translation (name, lang, type, src)')
@@ -203,7 +211,7 @@ class ir_translation(osv.osv):
         if field == 'lang':
             return
         return super(ir_translation, self)._check_selection_field_value(cr, uid, field, value, context=context)
-    
+
     @tools.ormcache_multi(skiparg=3, multi=6)
     def _get_ids(self, cr, uid, name, tt, lang, ids):
         translations = dict.fromkeys(ids, False)
@@ -263,14 +271,14 @@ class ir_translation(osv.osv):
         # FIXME: should assert that `source` is unicode and fix all callers to always pass unicode
         # so we can remove the string encoding/decoding.
         if not lang:
-            return u''
+            return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
         if source:
-            query = """SELECT value 
-                       FROM ir_translation 
-                       WHERE lang=%s 
-                        AND type in %s 
+            query = """SELECT value
+                       FROM ir_translation
+                       WHERE lang=%s
+                        AND type in %s
                         AND src=%s"""
             params = (lang or '', types, tools.ustr(source))
             if name:
@@ -304,9 +312,9 @@ class ir_translation(osv.osv):
         if isinstance(ids, (int, long)):
             ids = [ids]
         if vals.get('src') or ('value' in vals and not(vals.get('value'))):
-            result = vals.update({'state':'to_translate'})
+            vals.update({'state':'to_translate'})
         if vals.get('value'):
-            result = vals.update({'state':'translated'})
+            vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
@@ -374,40 +382,35 @@ class ir_translation(osv.osv):
         """ Return a cursor-like object for fast inserting translations
         """
         return ir_translation_import_cursor(cr, uid, self, context=context)
-    
-    def load(self, cr, modules, langs, flag=None, context=None):
-        translated_data = {}
+
+    def load(self, cr, modules, langs, context=None):
+        context = dict(context or {}) # local copy
         for module_name in modules:
-            translated_data[module_name] = {'messages':[]}
             modpath = openerp.modules.get_module_path(module_name)
             if not modpath:
-                # unable to find the module. we skip
                 continue
             for lang in langs:
-                iso_lang = tools.get_iso_codes(lang)
-                f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
-                context2 = context and context.copy() or {}
-                if f and '_' in iso_lang:
-                    iso_lang2 = iso_lang.split('_')[0]
-                    f2 = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang2 + '.po')
-                    if f2:
-                        _logger.info('module %s: loading base translation file %s for language %s', module_name, iso_lang2, lang)
-                        translated_data[module_name]['messages'].extend(tools.trans_load(cr, f2, lang, verbose=False, flag=flag, module_name=module_name, context=context))
-                        context2['overwrite'] = True
-                # Implementation notice: we must first search for the full name of
-                # the language derivative, like "en_UK", and then the generic,
-                # like "en".
-                if (not f) and '_' in iso_lang:
-                    iso_lang = iso_lang.split('_')[0]
-                    f = openerp.modules.get_module_resource(module_name, 'i18n', iso_lang + '.po')
-                if f:
-                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, iso_lang, lang)
-                    translated_data[module_name]['messages'].extend(tools.trans_load(cr, f, lang, verbose=False, flag=flag, module_name=module_name, context=context2))
-                elif iso_lang != 'en':
-                    _logger.warning('module %s: no translation for language %s', module_name, iso_lang)
-        return translated_data
+                lang_code = tools.get_iso_codes(lang)
+                base_lang_code = None
+                if '_' in lang_code:
+                    base_lang_code = lang_code.split('_')[0]
 
-ir_translation()
+                # Step 1: for sub-languages, load base language first (e.g. es_CL.po is loaded over es.po)
+                if base_lang_code:
+                    base_trans_file = openerp.modules.get_module_resource(module_name, 'i18n', base_lang_code + '.po')
+                    if base_trans_file:
+                        _logger.info('module %s: loading base translation file %s for language %s', module_name, base_lang_code, lang)
+                        tools.trans_load(cr, base_trans_file, lang, verbose=False, module_name=module_name, context=context)
+                        context['overwrite'] = True # make sure the requested translation will override the base terms later
+
+                # Step 2: then load the main translation file, possibly overriding the terms coming from the base language
+                trans_file = openerp.modules.get_module_resource(module_name, 'i18n', lang_code + '.po')
+                if trans_file:
+                    _logger.info('module %s: loading translation file (%s) for language %s', module_name, lang_code, lang)
+                    tools.trans_load(cr, trans_file, lang, verbose=False, module_name=module_name, context=context)
+                elif lang_code != 'en':
+                    _logger.warning('module %s: no translation for language %s', module_name, lang_code)
+        return True
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-
