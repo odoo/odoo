@@ -1,10 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
+        <record id="partner_demo" model="res.partner">
+            <field name="name">Demo User</field>
+            <field name="company_id" ref="main_company"/>
+            <field name="customer" eval="False"/>
+        </record>
         <record id="user_demo" model="res.users">
+            <field name="partner_id" ref="base.partner_demo"/>
             <field name="login">demo</field>
             <field name="password">demo</field>
-            <field name="name">Demo User</field>
             <field name="signature">Mr Demo</field>
             <field name="company_id" ref="main_company"/>
             <field name="groups_id" eval="[(6,0,[ref('base.group_user')])]"/>

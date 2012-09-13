@@ -134,7 +134,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     @param name name of the file
     @param mode file open mode
     @param subdir subdirectory
-    @param pathinfo if True returns tupple (fileobject, filepath)
+    @param pathinfo if True returns tuple (fileobject, filepath)
 
     @return fileobject if pathinfo is False else (fileobject, filepath)
     """
@@ -142,44 +142,65 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
-    if name.replace(os.path.sep, '/').startswith('addons/'):
+    basename = name
+
+    if os.path.isabs(name):
+        # It is an absolute path
+        # Is it below 'addons_path' or 'root_path'?
+        name = os.path.normcase(os.path.normpath(name))
+        for root in adps + [rtp]:
+            if name.startswith(root):
+                base = root.rstrip(os.sep)
+                name = name[len(base) + 1:]
+                break
+        else:
+            # It is outside the OpenERP root: skip zipfile lookup.
+            base, name = os.path.split(name)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
+
+    if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
-        name = name[7:]
+        name2 = name[7:]
+    elif subdir:
+        name = os.path.join(subdir, name)
+        if name.replace(os.sep, '/').startswith('addons/'):
+            subdir = 'addons'
+            name2 = name[7:]
+        else:
+            name2 = name
 
-    # First try to locate in addons_path
+    # First, try to locate in addons_path
     if subdir:
-        subdir2 = subdir
-        if subdir2.replace(os.path.sep, '/').startswith('addons/'):
-            subdir2 = subdir2[7:]
-
-        subdir2 = (subdir2 != 'addons' or None) and subdir2
-
         for adp in adps:
             try:
-                if subdir2:
-                    fn = os.path.join(adp, subdir2, name)
-                else:
-                    fn = os.path.join(adp, name)
-                fn = os.path.normpath(fn)
-                fo = file_open(fn, mode=mode, subdir=None, pathinfo=pathinfo)
-                if pathinfo:
-                    return fo, fn
-                return fo
+                return _fileopen(name2, mode=mode, basedir=adp,
+                                 pathinfo=pathinfo, basename=basename)
             except IOError:
                 pass
 
-    if subdir:
-        name = os.path.join(rtp, subdir, name)
-    else:
-        name = os.path.join(rtp, name)
+    # Second, try to locate in root_path
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
 
-    name = os.path.normpath(name)
 
-    # Check for a zipfile in the path
-    head = name
+def _fileopen(path, mode, basedir, pathinfo, basename=None):
+    name = os.path.normpath(os.path.join(basedir, path))
+
+    if basename is None:
+        basename = name
+    # Give higher priority to module directories, which is
+    # a more common case than zipped modules.
+    if os.path.isfile(name):
+        fo = open(name, mode)
+        if pathinfo:
+            return (fo, name)
+        return fo
+
+    # Support for loading modules in zipped form.
+    # This will not work for zipped modules that are sitting
+    # outside of known addons paths.
+    head = os.path.normpath(path)
     zipname = False
-    name2 = False
-    while True:
+    while os.sep in head:
         head, tail = os.path.split(head)
         if not tail:
             break
@@ -187,9 +208,10 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
             zipname = os.path.join(tail, zipname)
         else:
             zipname = tail
-        if zipfile.is_zipfile(head+'.zip'):
+        zpath = os.path.join(basedir, head + '.zip')
+        if zipfile.is_zipfile(zpath):
             from cStringIO import StringIO
-            zfile = zipfile.ZipFile(head+'.zip')
+            zfile = zipfile.ZipFile(zpath)
             try:
                 fo = StringIO()
                 fo.write(zfile.read(os.path.join(
@@ -197,20 +219,14 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
                         os.sep, '/')))
                 fo.seek(0)
                 if pathinfo:
-                    return fo, name
+                    return (fo, name)
                 return fo
             except Exception:
-                name2 = os.path.normpath(os.path.join(head + '.zip', zipname))
                 pass
-    for i in (name2, name):
-        if i and os.path.isfile(i):
-            fo = file(i, mode)
-            if pathinfo:
-                return fo, i
-            return fo
-    if os.path.splitext(name)[1] == '.rml':
-        raise IOError, 'Report %s doesn\'t exist or deleted : ' %str(name)
-    raise IOError, 'File not found : %s' % name
+    # Not found
+    if name.endswith('.rml'):
+        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+    raise IOError('File not found: %s' % basename)
 
 
 #----------------------------------------------------------
@@ -395,6 +411,42 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
         cr.close()
     return res
 
+def email_split(text):
+    """ Return a list of the email addresses found in ``text`` """
+    if not text: return []
+    return re.findall(r'([^ ,<@]+@[^> ,]+)', text)
+
+def append_content_to_html(html, content, plaintext=True):
+    """Append extra content at the end of an HTML snippet, trying
+       to locate the end of the HTML document (</body>, </html>, or
+       EOF), and wrapping the provided content in a <pre/> block
+       unless ``plaintext`` is False. A side-effect of this
+       method is to coerce all HTML tags to lowercase in ``html``,
+       and strip enclosing <html> or <body> tags in content if
+       ``plaintext`` is False.
+       
+       :param str html: html tagsoup (doesn't have to be XHTML)
+       :param str content: extra content to append
+       :param bool plaintext: whether content is plaintext and should
+           be wrapped in a <pre/> tag.
+    """
+    html = ustr(html)
+    if plaintext:
+        content = u'\n<pre>%s</pre>\n' % ustr(content)
+    else:
+        content = re.sub(r'(?i)(</?html.*>|</?body.*>|<!\W*DOCTYPE.*>)', '', content)
+        content = u'\n%s\n'% ustr(content)
+    # Force all tags to lowercase
+    html = re.sub(r'(</?)\W*(\w+)([ >])',
+        lambda m: '%s%s%s' % (m.group(1),m.group(2).lower(),m.group(3)), html)
+    insert_location = html.find('</body>')
+    if insert_location == -1:
+        insert_location = html.find('</html>')
+    if insert_location == -1:
+        return '%s%s' % (html, content)
+    return '%s%s%s' % (html[:insert_location], content, html[insert_location:])  
+
+
 #----------------------------------------------------------
 # SMS
 #----------------------------------------------------------
@@ -554,10 +606,7 @@ def get_iso_codes(lang):
             lang = lang.split('_')[0]
     return lang
 
-def get_languages():
-    # The codes below are those from Launchpad's Rosetta, with the exception
-    # of some trivial codes where the Launchpad code is xx and we have xx_XX.
-    languages={
+ALL_LANGUAGES = {
         'ab_RU': u'Abkhazian / аҧсуа',
         'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
@@ -616,8 +665,8 @@ def get_languages():
         'nl_BE': u'Flemish (BE) / Vlaams (BE)',
         'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
-        'pt_BR': u'Portugese (BR) / Português (BR)',
-        'pt_PT': u'Portugese / Português',
+        'pt_BR': u'Portuguese (BR) / Português (BR)',
+        'pt_PT': u'Portuguese / Português',
         'ro_RO': u'Romanian / română',
         'ru_RU': u'Russian / русский язык',
         'si_LK': u'Sinhalese / සිංහල',
@@ -638,15 +687,14 @@ def get_languages():
         'th_TH': u'Thai / ภาษาไทย',
         'tlh_TLH': u'Klingon',
     }
-    return languages
 
 def scan_languages():
-    # Now it will take all languages from get languages function without filter it with base module languages
-    lang_dict = get_languages()
-    ret = [(lang, lang_dict.get(lang, lang)) for lang in list(lang_dict)]
-    ret.sort(key=lambda k:k[1])
-    return ret
+    """ Returns all languages supported by OpenERP for translation
 
+    :returns: a list of (lang_code, lang_name) pairs
+    :rtype: [(str, unicode)]
+    """
+    return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
 
 def get_user_companies(cr, user):
     def _get_company_children(cr, ids):
