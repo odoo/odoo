@@ -367,21 +367,24 @@ class base_stage(object):
         subtype_obj = self.pool.get('mail.message.subtype')
         irmodel_obj = self.pool.get('ir.model.data')
         subtype_id = subtype_obj.search(cr,uid,[('res_model','=',self._name),('name','=',name)])
-        ir_ids = irmodel_obj.search(cr,uid,[('model','=','mail.message.subtype'),('res_id','=',subtype_id)])
+        ir_ids = irmodel_obj.search(cr,uid,[('model','=','mail.message.subtype'),('res_id','in',subtype_id)])
+        xml_id = False
         ir_model_browse = irmodel_obj.browse(cr,uid,ir_ids)
-        return ir_model_browse.name
+        if ir_model_browse:
+            xml_id = ir_model_browse[0].name
+        return xml_id
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_xml_id(cr, uid, ids, name="closed", context)
+            xml_id = self.find_xml_id(cr, uid, ids, name="closed", context=context)
             self.message_post(cr, uid, [id], body=msg, subtype_xml_id=xml_id, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_xml_id(cr, uid, ids, name="cancelled", context)
+            xml_id = self.find_xml_id(cr, uid, ids, name="cancelled", context=context)
             self.message_post(cr, uid, [id], body=msg, subtype_xml_id=xml_id, context=context)
         return True
 
