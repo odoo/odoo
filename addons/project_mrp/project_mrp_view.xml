@@ -31,14 +31,14 @@
                 </field>
             </field>
         </record>
-        <record id="view_product_form" model="ir.ui.view">
-            <field name="name">product.form.view</field>
+        <record id="product.product_normal_form_supply_view" model="ir.ui.view">
+            <field name="name">product.normal.form.project_mrp.inherit</field>
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <field name="uom_po_id" position="before">
-                    <field name="supply_method" />
-                </field>
+                <xpath expr="//field[@name='procure_method']" position="after">
+                    <field name="supply_method" groups="base.group_user"/>
+                </xpath>
             </field>
         </record>
     </data>
