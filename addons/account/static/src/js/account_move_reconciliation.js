@@ -68,6 +68,7 @@ openerp.account = function (instance) {
                     });
                 });
             });
+            return true;
         },
 
 
@@ -84,6 +85,7 @@ openerp.account = function (instance) {
                     self.on_pager_action('next');
                 });
             });
+            return true;
         },
 
         do_update_pager: function (hide_index) {
