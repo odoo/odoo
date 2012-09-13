@@ -172,8 +172,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/add_custom', {
             view_id: this.view.fields_view.view_id,
             arch: arch
-        }, function() {
-            self.$el.find('.oe_dashboard_link_reset').show();
         });
     },
     on_load_action: function(result, index, action_attrs) {
