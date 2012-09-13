@@ -154,6 +154,10 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 }).pipe(function(shops){
                     self.set('shop',shops[0]);
 
+                    return self.fetch('product.packaging',['ean','product_id']);
+                }).pipe(function(packagings){
+                    self.db.add_packagings(packagings);
+
                     return self.fetch('pos.category', ['id','name','parent_id','child_id','image'])
                 }).pipe(function(categories){
                     self.db.add_categories(categories);
