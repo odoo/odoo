@@ -47,7 +47,7 @@ class format_address(object):
             '%(zip)s %(city)s': """
                 <div class="address_format">
                     <field name="zip" placeholder="ZIP" style="width: 40%%"/>
-                    <field name="city" placeholder="City" style="width: 59%%"/>
+                    <field name="city" placeholder="City" style="width: 57%%"/>
                     <br/>
                     <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
                 </div>
