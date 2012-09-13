@@ -28,7 +28,7 @@ Here is the list of contracts to renew:
   % for account in accounts:
     - Name: ${account.name}
       % if account.quantity_max != 0.0:
-      - Quantity: ${account.quantity}/${account.quantity_max} hours
+      - Quantity: ${account.hours_quantity}/${account.quantity_max} hours
       % endif
       - Dates: ${account.date_start} to ${account.date and account.date or '???'}
       - Contacts:
