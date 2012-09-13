@@ -28,6 +28,7 @@ from tools.translate import _
 import logging
 import pooler
 import pytz
+from lxml import etree
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
@@ -513,6 +514,47 @@ class res_partner(osv.osv):
         elif address.parent_id:
             address_format = '%(company_name)s\n' + address_format
         return address_format % args
+
+    def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(res_partner,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            user_obj = self.pool.get('res.users')
+            fmt = user_obj.browse(cr, uid, uid,context).company_id.country_id
+            fmt = fmt and fmt.address_format
+            layouts = {
+                '%(city)s %(state_code)s\n%(zip)s': """
+                    <div class="address_format">
+                        <field name="city" placeholder="City" style="width: 50%%"/>
+                        <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+                        <br/>
+                        <field name="zip" placeholder="ZIP"/>
+                    </div>
+                """,
+                '%(zip)s %(city)s': """
+                    <div class="address_format">
+                        <field name="zip" placeholder="ZIP" style="width: 40%%"/>
+                        <field name="city" placeholder="City" style="width: 59%%"/>
+                        <br/>
+                        <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    </div>
+                """,
+                '%(city)s\n%(state_name)s\n%(zip)s': """
+                    <div class="address_format">
+                        <field name="city" placeholder="City"/>
+                        <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                        <field name="zip" placeholder="ZIP"/>
+                    </div>
+                """
+            }
+            for k,v in layouts.items():
+                if fmt and (k in fmt):
+                    doc = etree.fromstring(res['arch'])
+                    for node in doc.xpath("//div[@class='address_format']"):
+                        tree = etree.fromstring(v)
+                        node.getparent().replace(node, tree)
+                    res['arch'] = etree.tostring(doc)
+                    break
+        return res
 
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):
