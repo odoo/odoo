@@ -1052,7 +1052,7 @@
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write" default_selection="get_unreconcile_entry">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
                     <field name="date"/>
                     <field name="period_id"  invisible="1"/>
                     <field name="move_id"/>
@@ -1943,7 +1943,7 @@
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
             <field name="arch" type="xml">
-                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" default_selection="get_unreconcile_entry">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items">
                     <field name="date"/>
                     <field name="move_id"/>
                     <field name="statement_id" string="St."/>
