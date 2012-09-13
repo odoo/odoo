@@ -23,6 +23,7 @@ from osv import osv
 from osv import fields
 import tools
 
+
 class mail_followers(osv.Model):
     """ mail_followers holds the data related to the follow mechanism inside
         OpenERP. Partners can choose to follow documents (records) of any kind
@@ -87,7 +88,7 @@ class mail_notification(osv.Model):
     def get_partners_to_notify(self, cr, uid, partner_ids, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
 
-            :param message: browse_record of a mail.message
+            :param browse_record message: mail.message to notify
         """
         notify_pids = []
         for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
@@ -137,4 +138,4 @@ class mail_notification(osv.Model):
         }
         mail_values['email_to'] = ', '.join(mail_values['email_to'])
         email_notif_id = mail_mail.create(cr, uid, mail_values, context=context)
-        return mail_mail.send(cr, uid, [email_notif_id], notifier_ids=notify_partner_ids, context=context)
+        return mail_mail.send(cr, uid, [email_notif_id], recipient_ids=notify_partner_ids, context=context)

@@ -57,7 +57,7 @@ class invite_wizard(osv.osv_memory):
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
             return
-        res.update(self.pool.get('mail.message').verify_partner_email(cr, uid, value[0][2], context=context))
+        res.update(self.pool.get('mail.message').check_partners_email(cr, uid, value[0][2], context=context))
         return res
 
     def add_followers(self, cr, uid, ids, context=None):
@@ -78,5 +78,5 @@ class invite_wizard(osv.osv_memory):
                         'body_html': '%s' % wizard.message,
                         'auto_delete': True,
                         }, context=context)
-                    mail_mail.send(cr, uid, [mail_id], notifier_ids=[follower_id], context=context)
+                    mail_mail.send(cr, uid, [mail_id], recipient_ids=[follower_id], context=context)
         return {'type': 'ir.actions.act_window_close'}

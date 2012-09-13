@@ -201,7 +201,7 @@ class mail_compose_message(osv.TransientModel):
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
             return
-        res.update(self.verify_partner_email(cr, uid, value[0][2], context=context))
+        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
         return res
 
     def dummy(self, cr, uid, ids, context=None):

@@ -138,11 +138,11 @@ class mail_mail(osv.Model):
         return True
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
-        """ if void and related document: '<Author> posted on <Resource>'
+        """ If subject is void and record_name defined: '<Author> posted on <Resource>'
 
-            :param force: force the 'Author posted'... subject
-            :param mail: mail.mail browse_record
-            :param partner: browse_record of the specific recipient partner
+            :param boolean force: force the subject replacement
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
         """
         if force or (not mail.subject and mail.model and mail.res_id):
             return '%s posted on %s' % (mail.author_id.name, mail.record_name)
@@ -153,17 +153,17 @@ class mail_mail(osv.Model):
             is to be inherited by Portal, to add a link for signing in, in
             each notification email a partner receives.
 
-            :param mail: mail.mail browse_record
-            :param partner: browse_record of the specific recipient partner
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
         """
         return mail.body_html
 
-    def send_get_ir_email_dict(self, cr, uid, mail, partner=None, context=None):
-        """ Return a dictionary for specific ir_email values, depending on a
+    def send_get_email_dict(self, cr, uid, mail, partner=None, context=None):
+        """ Return a dictionary for specific email values, depending on a
             partner, or generic to the whole recipients given by mail.email_to.
 
-            :param mail: mail.mail browse_record
-            :param partner: browse_record of the specific recipient partner
+            :param browse_record mail: mail.mail browse_record
+            :param browse_record partner: specific recipient partner
         """
         body = self.send_get_mail_body(cr, uid, mail, partner=partner, context=context)
         subject = self.send_get_mail_subject(cr, uid, mail, partner=partner, context=context)
@@ -176,7 +176,7 @@ class mail_mail(osv.Model):
             'email_to': email_to,
         }
 
-    def send(self, cr, uid, ids, auto_commit=False, notifier_ids=None, context=None):
+    def send(self, cr, uid, ids, auto_commit=False, recipient_ids=None, context=None):
         """ Sends the selected emails immediately, ignoring their current
             state (mails that have already been sent should not be passed
             unless they should actually be re-sent).
@@ -187,6 +187,10 @@ class mail_mail(osv.Model):
             :param bool auto_commit: whether to force a commit of the mail status
                 after sending each mail (meant only for scheduler processing);
                 should never be True during normal transactions (default: False)
+            :param list recipient_ids: specific list of res.partner recipients.
+                If set, one email is sent to each partner. Its is possible to
+                tune the sent email through ``send_get_mail_body`` and ``send_get_mail_subject``.
+                If not specified, one email is sent to mail_mail.email_to.
             :return: True
         """
         ir_mail_server = self.pool.get('ir.mail_server')
@@ -197,21 +201,21 @@ class mail_mail(osv.Model):
                 for attach in mail.attachment_ids:
                     attachments.append((attach.datas_fname, base64.b64decode(attach.datas)))
                 # specific behavior to customize the send email for notified partners
-                ir_email_list = []
-                if notifier_ids:
-                    for partner in self.pool.get('res.partner').browse(cr, uid, notifier_ids, context=context):
-                        ir_email_list.append(self.send_get_ir_email_dict(cr, uid, mail, partner=partner, context=context))
+                email_list = []
+                if recipient_ids:
+                    for partner in self.pool.get('res.partner').browse(cr, uid, recipient_ids, context=context):
+                        email_list.append(self.send_get_email_dict(cr, uid, mail, partner=partner, context=context))
                 else:
-                    ir_email_list.append(self.send_get_ir_email_dict(cr, uid, mail, context=context))
+                    email_list.append(self.send_get_email_dict(cr, uid, mail, context=context))
 
                 # build an RFC2822 email.message.Message object and send it without queuing
-                for ir_email in ir_email_list:
+                for email in email_list:
                     msg = ir_mail_server.build_email(
                         email_from = mail.email_from,
-                        email_to = ir_email.get('email_to'),
-                        subject = ir_email.get('subject'),
-                        body = ir_email.get('body'),
-                        body_alternative = ir_email.get('body_alternative'),
+                        email_to = email.get('email_to'),
+                        subject = email.get('subject'),
+                        body = email.get('body'),
+                        body_alternative = email.get('body_alternative'),
                         email_cc = tools.email_split(mail.email_cc),
                         reply_to = mail.reply_to,
                         attachments = attachments,

@@ -37,6 +37,7 @@ def decode(text):
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
 
+
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
         comments (OpenChatter discussion) and incoming emails. """
@@ -351,7 +352,7 @@ class mail_message(osv.Model):
     # Tools
     #------------------------------------------------------
 
-    def verify_partner_email(self, cr, uid, partner_ids, context=None):
+    def check_partners_email(self, cr, uid, partner_ids, context=None):
         """ Verify that selected partner_ids have an email_address defined.
             Otherwise throw a warning. """
         partner_wo_email_lst = []
@@ -368,4 +369,3 @@ class mail_message(osv.Model):
                     'message': warning_msg,
                     }
                 }
-
