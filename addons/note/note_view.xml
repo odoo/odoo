@@ -24,9 +24,9 @@
       <field name="field_parent"></field>
       <field name="arch" type="xml">
         <tree string="Stages of memos" editable="bottom">
-              <field name="sequence" widget="handle"/>
-              <field name="name"/>
-              <field name="fold"/>
+            <field name="sequence" widget="handle"/>
+            <field name="name"/>
+            <field name="fold"/>
         </tree>
       </field>
     </record>
@@ -39,8 +39,7 @@
       <field name="domain">[('user_id','=',uid)]</field>
     </record>
 
-    <menuitem name="Categories"
-      id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
+    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
 
     <!-- New memo Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
@@ -86,11 +85,8 @@
                   <field name="name"/>
                 </div>
 
-                <div class="oe_left oe_kanban_list_many2many" data-model="note.tag" groups="note.group_note_tags">
-                  <t t-foreach="record.tag_ids.raw_value" t-as="tag">
-                    <span class="oe_tag" t-att-data-list_id="tag"/>
-                  </t>
-                </div>
+                <div widget="many2many_tags" t-att-data="record.tag_ids.raw_value" model="note.tag"/>
+                
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                     <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
@@ -105,22 +101,36 @@
     </record>
 
     <!-- New memo Form View -->
+    <record model="ir.ui.view" id="view_note_note_tree">
+      <field name="name">note.note.tree</field>
+      <field name="model">note.note</field>
+      <field name="arch" type="xml">
+        <tree string="Stages">
+          <field name="name"/>
+          <field name="active"/>
+          <field name="stage_id"/>
+          <field name="tag_ids" widget="many2many_tags" groups="note.group_note_tags"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- New memo Form View -->
     <record model="ir.ui.view" id="view_note_note_form">
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
         <form string="Memo" version="7.0">
           <header>
-              <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+              <field name="stage_id" domain="[('user_id','=',uid)]"/><!-- widget="statusbar" clickable="1"/-->
           </header>
-          <field colspan="4" name="memo" widget="html" editor_width="100%%" editor_height="400px" nolabel="1"/>
+          <field colspan="4" name="memo" widget="html" editor_width="100%%" editor_height="100%%" nolabel="1"/>
           <group groups="note.group_note_tags" col="2">
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
-          <div class="oe_chatter" groups="note.group_note_thread">
-              <field name="message_ids" widget="mail_thread"/>
-              <field name="message_follower_ids" widget="mail_followers"/>
-          </div>
+            <div class="oe_chatter" groups="note.group_note_thread">
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+            <field name="message_follower_ids" widget="mail_followers"/>
         </form>
       </field>
     </record>
@@ -180,7 +190,7 @@
 
     <!-- memo Action -->
     <record model="ir.actions.act_window" id="action_note_note">
-      <field name="name">note</field>
+      <field name="name">Memos</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>

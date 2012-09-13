@@ -29,12 +29,13 @@ class note_pad_note(osv.osv):
     _inherit = ['pad.common','note.note']
 
     _pad_fields = ['note_pad']
-    _description = "Memo pad"
 
     _columns = {
-        'note_pad_url': fields.char('Pad Url', size=250),
+        'note_pad_url': fields.char('Pad Url', 
+            pad_content_field='memo',
+            size=250 ),
     }
 
-    _defaults = {
-        'note_pad_url': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
-    }
+    #_defaults = {
+    #    'note_pad_url': lambda self, cr, uid, context: self.pad_generate_url(cr, uid, context),
+    #}

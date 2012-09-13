@@ -44,7 +44,7 @@ Memos can be found in the 'Home' menu.
     ],
     'data': [
         'security/res.groups.csv',
-        'security/note_security.xml',
+        'security/ir.rule.xml',
         'security/ir.model.access.csv',
         'note_data.xml',
         'note_view.xml',

@@ -70,11 +70,6 @@ class note_note(osv.osv):
             
         return res
 
-    #return the default stage for the uid user
-    def _get_default_stage_id(self,cr,uid,context=None):
-        ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)])
-        return ids and ids[0] or False
-
     #unactivate a memo and record the date
     def onclick_note_is_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'active' : False, 'date_done' : fields.date.today() })
@@ -95,27 +90,34 @@ class note_note(osv.osv):
 
     #look that the title (first line of the memo) have more of one caracter
     def _constraints_min_len(self, cr, uid, ids, context=None):
-        
         res = self._get_note_first_line(cr, uid, ids, context=context)
-
-        for note in self.browse(cr, uid, ids, context=context):
-            if len(res[note.id])<1 :
-                return False
-        
-        return True
-
+        return dict.fromkeys(ids, (len(res[ids])>0) )
 
     #used for undisplay the follower if it's the current user
     def _get_my_current_partner(self, cr, uid, ids, name, args, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         pid = user.partner_id and user.partner_id.id or False
-        
-        result = {}
-        for record in self.browse(cr, uid, ids, context=context):
-            result[record.id]=pid
-        
-        return result
+        return dict.fromkeys(ids, pid)
 
+    #return the default stage for the uid user
+    def _get_default_stage_id(self,cr,uid,context=None):
+        ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+        return ids and ids[0] or 0
+
+    def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
+        note = self.browse(cr, uid, id, context=context)
+        if not value: return False
+        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
+        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, stage_ids)]}, context=context)
+
+    #used for undisplay the follower if it's the current user
+    def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for record in self.browse(cr, uid, ids, context=context):
+            for stage in record.stage_ids:
+                if stage.user_id.id == uid:
+                    result[record.id] = stage.id
+        return result
 
 
     _columns = {
@@ -126,13 +128,18 @@ class note_note(osv.osv):
             store=True),
         'memo': fields.html('Pad Content'),
         'sequence': fields.integer('Sequence'),
-        # the stage_id depending on the uid
-        'stage_id': fields.many2one('note.stage', 'Stage'),
 
-        # ERROR for related & stage_ids => group_by for kanban
-        #'stage_id': fields.related('stage_ids', 'id', string='Stage', type="many2one", relation="note.stage"),
+        #'stage_id': fields.many2one('note.stage', 'Stage'),
+
+        # the stage_id depending on the uid
+        'stage_id': fields.function(_get_stage_per_user, 
+            fnct_inv=_set_stage_per_user, 
+            string='Stages', 
+            type='many2one', 
+            relation='note.stage'),
+
         # stage per user
-        #'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Linked stages users'),
+        'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Linked stages users'),
 
         'active': fields.boolean('Active'),
         # when the user unactivate the memo, record de date for un display memo after 1 days
@@ -144,16 +151,50 @@ class note_note(osv.osv):
         'current_partner_id' : fields.function(_get_my_current_partner),
     }
 
-    _constraints = [
-        (_constraints_min_len,'The title (first line on the memo) must have at least one character.',['memo']),
-    ]
-
     _defaults = {
         'active' : 1,
         'stage_id' : _get_default_stage_id,
         'memo': " "
     }
     _order = 'sequence asc'
+
+
+    def read_group(self, cr, uid, domain, fields, groupby, offset=0, limit=None, context=None, orderby=False):
+        if groupby and groupby[0]=="stage_id":
+
+            #search all stages
+            stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+            stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, stage_ids, context=context)) #dict: map l'id sur le nom
+
+            result = [{ #notes by stage for stages user
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids.id', '=', stage_id)],
+                    'stage_id': (stage_id, stage_name[stage_id]),
+                    'stage_id_count': len(self.search(cr,uid, domain+[('stage_ids', '=', stage_id)], context=context ))
+                } for stage_id in stage_ids]
+
+            nb_notes_ws = len(self.search(cr,uid, domain+[('stage_ids', 'not in', stage_ids)], context=context ))
+            
+            if nb_notes_ws>0:
+                result += [{ #notes for unknown stage
+                    '__context': {'group_by': groupby[1:]},
+                    '__domain': domain + [('stage_ids', 'not in', stage_ids)],
+                    'stage_id': (0, 'Unknown'),
+                    'stage_id_count':nb_notes_ws
+                }]
+
+            return result
+
+        else:
+            return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
+                offset=offset, limit=limit, context=context, orderby=orderby)
+
+ # object.execute_kw time:0.017s [{'__context': {'group_by': []},
+ #                                 '__domain': [('author', '=', u'OpenERP SA'), ['application', '=', 1]],
+ #                                 'author': u'OpenERP SA',
+ #                                 'author_count': 20L}]
+
+
 
 
 #upgrade config setting page to configure pad, fancy and tags mode
@@ -165,5 +206,5 @@ class note_base_config_settings(osv.osv_memory):
         #auto group user => automatic with "group_"
         'group_note_fancy': fields.boolean('Use fancy render', implied_group='note.group_note_fancy'),
         'group_note_tags': fields.boolean('Use tags for memo', implied_group='note.group_note_tags'),
-        'group_note_thread': fields.boolean('Use mail thread and follower', implied_group='note.group_note_thread'),
+        'group_note_thread': fields.boolean('Use mail thread', implied_group='note.group_note_thread'),
     }

@@ -6,9 +6,8 @@
       <field name="model">note.note</field>
       <field name="inherit_id" ref="note.view_note_note_form"/>
       <field name="arch" type="xml">
-        <field name="note" position="replace">
-          <field name="note_pad_url" invisible="1"/>
-          <field name="name" widget="pad"/>
+        <field name="memo" position="replace">
+           <field name="note_pad_url" widget="pad"/>
         </field>
       </field>
     </record>

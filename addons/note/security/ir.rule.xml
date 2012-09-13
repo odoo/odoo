@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<openerp>
+<data>
+  <record id="note_note_rule_global" model="ir.rule">
+    <field name="name">Only followers can read a memos</field>
+    <field model="ir.model" ref="model_note_note" name="model_id"/>
+    <field name="domain_force">['|',('message_follower_ids.id','=',user.partner_id.id),('message_follower_ids','=',False)]</field>
+    <field eval="True" name="global"/>
+  </record>
+</data>
+</openerp>
+
