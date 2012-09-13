@@ -268,9 +268,9 @@ class res_partner(osv.osv, format_address):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
             view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
-        res = super(res_partner,self).fields_view_get(cr, uid, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
         if view_type == 'form':
-            res['arch'] = self.fields_view_get_address(cr, uid, res['arch'], context=context)
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
         return res
 
     _defaults = {
