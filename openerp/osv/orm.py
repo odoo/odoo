@@ -3412,7 +3412,8 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        write_access = self.check_access_rights(cr, user, 'write') or self.check_access_rights(cr, user, 'create')
+        write_access = self.check_access_rights(cr, user, 'write', raise_exception=False) \
+            or self.check_access_rights(cr, user, 'create', raise_exception=False)
 
         res = {}
 
