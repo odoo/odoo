@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 05:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:39+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -222,11 +222,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
 msgstr "Pentru materiale achizitionate"
-
-#. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Revizie"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
@@ -505,11 +500,6 @@ msgid "For Services."
 msgstr "Pentru servicii."
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Data Modificarii"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -569,11 +559,6 @@ msgstr "Configureaza centrele dumneavoastra de lucru"
 #: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "Impune Rezervarea"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Autor"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -877,11 +862,6 @@ msgstr "Total Cicluri"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Pregatit de productie"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Nume modificare"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1480,11 +1460,6 @@ msgid "Work Center Loads"
 msgstr "Sarcini Centru de lucru"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Revizuire Lista de materiale"
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -2033,12 +2008,6 @@ msgid "Orange Juice"
 msgstr "Suc de portocale"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "LdM"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -2054,17 +2023,6 @@ msgstr "Repartizare din stoc."
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Bunuri in asteptare"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "ultimul indice"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "Revizuiri LdM"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2257,19 +2215,6 @@ msgid "Change Product Qty"
 msgstr "Schimba Cant Produsului"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Descriere"
-
-#. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
 msgstr "Panou fabricatie"
@@ -2386,11 +2331,23 @@ msgstr "Da ordinea atunci cand afiseaza o lista cu listele de materiale."
 msgid "Products to Consume"
 msgstr "Produse de consumat"
 
+#~ msgid "Revision"
+#~ msgstr "Revizie"
+
 #~ msgid "BOM"
 #~ msgstr "LDM"
 
+#~ msgid "Author"
+#~ msgstr "Autor"
+
 #~ msgid "Draft"
 #~ msgstr "Ciornă"
+
+#~ msgid "Description"
+#~ msgstr "Descriere"
+
+#~ msgid "Modification name"
+#~ msgstr "Nume modificare"
 
 #~ msgid "Day"
 #~ msgstr "Zi"
@@ -2433,6 +2390,9 @@ msgstr "Produse de consumat"
 
 #~ msgid "Current"
 #~ msgstr "Curent"
+
+#~ msgid "BoM"
+#~ msgstr "LdM"
 
 #~ msgid "December"
 #~ msgstr "Decembrie"
@@ -2509,6 +2469,9 @@ msgstr "Produse de consumat"
 
 #~ msgid "mrp.installer"
 #~ msgstr "mrp.installer"
+
+#~ msgid "last indice"
+#~ msgstr "ultimul indice"
 
 #~ msgid "Order quantity cannot be negative or zero !"
 #~ msgstr "Cantitatea din comandă nu poate fi negativă sau zero !"
@@ -2762,3 +2725,12 @@ msgstr "Produse de consumat"
 #~ "Fișa tehnologică indică toate centrele de lucru folosite, pentru cât timp și "
 #~ "/ sau cicluri. Dacă fișa tehnologică este indicată, atunci al treilea tab al "
 #~ "unei comenzi de producție (centre de lucru) va fi pre-completat automat."
+
+#~ msgid "Modification Date"
+#~ msgstr "Data Modificarii"
+
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Revizuire Lista de materiale"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Revizuiri LdM"
