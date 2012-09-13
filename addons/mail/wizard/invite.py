@@ -29,6 +29,16 @@ class invite_wizard(osv.osv_memory):
     _name = 'mail.wizard.invite'
     _description = 'Invite wizard'
 
+    def default_get(self, cr, uid, fields, context=None):
+        result = super(invite_wizard, self).default_get(cr, uid, fields, context=context)
+        if 'message' in fields and result.get('res_model') and result.get('res_id'):
+            document_name = self.pool.get(result.get('res_model')).name_get(cr, uid, [result.get('res_id')], context=context)[0][1]
+            message = _('You have been invited to follow %s.' % document_name)
+            result['message'] = message
+        elif 'message' in fields:
+            result['message'] = _('You have been invited to follow a new document.')
+        return result
+
     _columns = {
         'res_model': fields.char('Related Document Model', size=128,
                         required=True, select=1,
@@ -38,13 +48,6 @@ class invite_wizard(osv.osv_memory):
         'partner_ids': fields.many2many('res.partner', string='Partners'),
         'message': fields.text('Message'),
     }
-
-    _defaults = {
-        'message': lambda s, *a, **k: s._get_default_message(*a, **k),
-    }
-
-    def _get_default_message(self, cr, uid, context=None):
-        return _('You have been invited to follow a new document.')
 
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
