@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 05:58+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:38+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -224,11 +224,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
 msgstr "Voor ingekocht materiaal"
-
-#. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Revisie"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
@@ -508,11 +503,6 @@ msgid "For Services."
 msgstr "Voor services"
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Wijzigingsdatum"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -572,11 +562,6 @@ msgstr "Configureer uw werkplekken"
 #: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "Forceer reservering"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Auteur"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -881,11 +866,6 @@ msgstr "Totaal aantal cycli"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Gereed voor productie"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Naamswijziging"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1484,11 +1464,6 @@ msgid "Work Center Loads"
 msgstr "Werkplek belastingen"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Grondstoffenlijst revisie"
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -1555,7 +1530,7 @@ msgstr "Verantwoordelijke"
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action2
 msgid "Manufacturing Orders To Start"
-msgstr "Porductieorers te starten"
+msgstr "Productieorders te starten"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_workcenter
@@ -1737,7 +1712,7 @@ msgstr ""
 "In de 'Alleen verbruiken' modus worden alleen producten met de geselecteerde "
 "hoeveelheid verbruikt.\n"
 "In de 'Verbruik & Produceer' modus worden producten verbruikt met de "
-"geselecteerde hoeveelheid en het zal de productieporder afronden wanneer de "
+"geselecteerde hoeveelheid en het zal de productieorder afronden wanneer de "
 "totaal bestelde hoeveelheid zijn geproduceerd."
 
 #. module: mrp
@@ -2036,12 +2011,6 @@ msgid "Orange Juice"
 msgstr "Sinasappelsap"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "Materiaallijst"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -2057,17 +2026,6 @@ msgstr "Toegewezen van voorraad"
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Wacht op materialen"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "laatste index"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "Materiaallijst versies"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2260,19 +2218,6 @@ msgid "Change Product Qty"
 msgstr "Wijzig producthoeveelheid"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Beschrijving"
-
-#. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
 msgstr "Productie dashboard"
@@ -2420,6 +2365,9 @@ msgstr "Producten te verbruiken"
 #~ msgid "Product Standard Price"
 #~ msgstr "Standaard productprijs"
 
+#~ msgid "Modification Date"
+#~ msgstr "Wijzigingsdatum"
+
 #~ msgid "For stockable and consumable"
 #~ msgstr "Voor voorraadartikel en verbruiksartikel"
 
@@ -2520,6 +2468,9 @@ msgstr "Producten te verbruiken"
 
 #~ msgid "max"
 #~ msgstr "max"
+
+#~ msgid "Author"
+#~ msgstr "Auteur"
 
 #~ msgid "Latest error"
 #~ msgstr "Laatste fout"
@@ -2836,6 +2787,9 @@ msgstr "Producten te verbruiken"
 #~ msgid "New Production Order"
 #~ msgstr "Nieuwe productieopdracht"
 
+#~ msgid "Description"
+#~ msgstr "Beschrijving"
+
 #~ msgid "Service Product"
 #~ msgstr "Dienstverleningsproduct"
 
@@ -3033,6 +2987,12 @@ msgstr "Producten te verbruiken"
 #~ msgid "Canceled"
 #~ msgstr "Geannuleerd"
 
+#~ msgid "BoM"
+#~ msgstr "Materiaallijst"
+
+#~ msgid "last indice"
+#~ msgstr "laatste index"
+
 #~ msgid "An entry is being made from billing material to routing."
 #~ msgstr ""
 #~ "Er wordt een boeking gemaakt van doorbelastbaar materiaal naar routering."
@@ -3111,6 +3071,9 @@ msgstr "Producten te verbruiken"
 #~ msgid "UoS Quantity"
 #~ msgstr "VE aantal"
 
+#~ msgid "Revision"
+#~ msgstr "Revisie"
+
 #~ msgid "Routing Workcenters"
 #~ msgstr "Routing werkcentra"
 
@@ -3125,6 +3088,9 @@ msgstr "Producten te verbruiken"
 
 #~ msgid "Workcenter Operations"
 #~ msgstr "Werkcenter operaties"
+
+#~ msgid "Modification name"
+#~ msgstr "Naamswijziging"
 
 #~ msgid "alphabetical indices"
 #~ msgstr "Alfabetische index"
@@ -3185,3 +3151,9 @@ msgstr "Producten te verbruiken"
 
 #~ msgid "Repairs"
 #~ msgstr "Reparaties"
+
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Grondstoffenlijst revisie"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Materiaallijst versies"
