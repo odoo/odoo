@@ -193,7 +193,7 @@ class res_partner_bank(osv.osv):
                     name = bank_code_format[data['state']] % data
                 except Exception:
                     raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
-            res.append((data['id'], name))
+            res.append((data.get('id', False), name))
         return res
 
     def name_get(self, cr, uid, ids, context=None):
