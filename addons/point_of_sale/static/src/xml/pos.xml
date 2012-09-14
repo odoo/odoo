@@ -4,7 +4,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="PosWidget">
-        <div class="point-of-sale oe_semantic_html_override">
+        <div class="point-of-sale">
             <div id="topheader">
                 <div id="branding">
                     <img src="/point_of_sale/static/src/img/logo.png" />
@@ -185,8 +185,8 @@
                     <span class="product-price">
                         <t t-esc="widget.format_currency(widget.get_product_price()) + '/Kg'" />
                     </span> 
-                    <t t-if="widget.get_product_image()">
-                        <img t-att-src="'data:image/png;base64,'+ widget.get_product_image()" />
+                    <t t-if="widget.get_product()">
+                        <img t-att-src="widget.get_product().get_image_url()" />
                     </t>
                 </div>
             </div>
@@ -313,17 +313,15 @@
         </div>
     </t>
 
-    <t t-name="ReceiptPopupWidget">
+    <t t-name="ChooseReceiptPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message">Welcome Mr. John Smith <br /> Choose your type of receipt:</p>
+                <p class="message">Welcome <t t-esc="widget.get_client_name()" /><br /> Choose your type of receipt:</p>
                 <div class = "button big-left receipt">
                     Ticket
                 </div>
                 <div class = "button big-right invoice">
                     Invoice
-                </div>
-                <div class="footer">
                 </div>
             </div>
         </div>
@@ -348,7 +346,8 @@
     <t t-name="ErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
-                <p class="message"><t t-esc=" widget.message || 'Error.' " /></p>
+                <p class="message"><t t-esc=" widget.message || 'Error' " /></p>
+                <p class="comment"><t t-esc=" widget.comment || '' "/></p>
             </div>
         </div>
     </t>
@@ -412,6 +411,57 @@
             </div>
             <div class="shadow-top"></div>
             <span class="placeholder-ScrollbarWidget"></span>
+        </div>
+    </t>
+
+    <t t-name="DebugWidget">
+        <div class="debug-widget">
+            <h1>Debug Window</h1>
+            <div class="toggle">▾</div>
+            <div class="content">
+                <p class="category">Payment Terminal</p>
+
+                <ul>
+                    <li class="button accept_payment">Accept Payment</li>
+                    <li class="button reject_payment">Reject Payment</li>
+                </ul>
+                <p class="category">Electronic Scale</p>
+                <ul>
+                    <li><input type="text" class="weight"></input></li>
+                    <li class="button set_weight">Set Weight</li>
+                </ul>
+
+                <p class="category">Barcode Scanner</p>
+                <ul>
+                    <li><input type="text" class="ean"></input></li>
+                    <li class="button custom_ean">Custom Ean13</li>
+                    <li class="button admin_badge">Admin Badge</li>
+                    <li class="button client_badge">Client Badge</li>
+                    <li class="button soda_33cl">Soda 33cl</li>
+                    <li class="button oranges_kg">3.141Kg Oranges</li>
+                    <li class="button lemon_price">1.54€ Lemon</li>
+                    <li class="button unknown_product">Unknown Product</li>
+                    <li class="button invalid_ean">Invalid Ean</li>
+                </ul>
+
+                <p class="category">Hardware Status</p>
+                <ul>
+                    <li class="status help_needed">Help needed</li>
+                    <li class="status weighting">Weighting</li>
+                    <li class="status transaction">In Transaction</li>
+                </ul>
+                <p class="category">Hardware Events</p>
+                <ul>
+                    <li class="event scan_item_success">Scan Item Success</li>
+                    <li class="event scan_item_error_unrecognized">Scan Item Unrecognized</li>
+                    <li class="event payment_request">Payment Request</li>
+                    <li class="event open_cashbox">Open Cashbox</li>
+                    <li class="event print_receipt">Print Receipt</li>
+                    <li class="event print_pdf_invoice">Print Invoice</li>
+                    <li class="event weighting_read_kg">Read Weighting Scale</li>
+                    <li class="event is_payment_accepted">Check Payment</li>
+                </ul>
+            </div>
         </div>
     </t>
 

@@ -27,13 +27,15 @@ import time
 import tools
 from tools.translate import _
 
+from base.res.res_partner import format_address
+
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(base_stage, osv.osv):
+class crm_lead(base_stage, format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -87,8 +89,8 @@ class crm_lead(base_stage, osv.osv):
         search_domain = []
         section_id = self._resolve_section_id_from_context(cr, uid, context=context)
         if section_id:
-            search_domain += ['|', '&', ('section_ids', '=', section_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+            search_domain += ['|', ('section_ids', '=', section_id)]
+        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         # retrieve type from the context (if set: choose 'type' or 'both')
         type = self._resolve_type_from_context(cr, uid, context=context)
         if type:
@@ -98,7 +100,18 @@ class crm_lead(base_stage, osv.osv):
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+
+        return result, fold
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -200,7 +213,7 @@ class crm_lead(base_stage, osv.osv):
         'priority': fields.selection(crm.AVAILABLE_PRIORITIES, 'Priority', select=True),
         'date_closed': fields.datetime('Closed', readonly=True),
         'stage_id': fields.many2one('crm.case.stage', 'Stage',
-                        domain="['&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
+                        domain="['&', ('fold', '=', False), '&', '|', ('section_ids', '=', section_id), ('case_default', '=', True), '|', ('type', '=', type), ('type', '=', 'both')]"),
         'user_id': fields.many2one('res.users', 'Salesperson'),
         'referred': fields.char('Referred By', size=64),
         'date_open': fields.datetime('Opened', readonly=True),

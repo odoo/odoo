@@ -24,13 +24,13 @@ from tools.translate import _
 import re
 
 class note_stage(osv.osv):
-    """ Category of memo """
+    """ Category of Note """
     _name = "note.stage"
-    _description = "Memo Stage"
+    _description = "Note Stage"
     _columns = {
         'name': fields.char('Category Name', size=64, required=True),
-        'sequence': fields.integer('Sequence', help="Used to order the memo stages"),
-        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the memo stage.", required=True, readonly=True),
+        'sequence': fields.integer('Sequence', help="Used to order the note stages"),
+        'user_id': fields.many2one('res.users', 'Owner', help="Owner of the note stage.", required=True, readonly=True),
         'fold': fields.boolean('Folded'),
     }
     _order = 'sequence asc'
@@ -50,7 +50,7 @@ class note_tag(osv.osv):
     }
 
 class note_note(osv.osv):
-    """ memo """
+    """ Note """
     _name = 'note.note'
     _inherit = ['mail.thread']
     _description = "Memo"

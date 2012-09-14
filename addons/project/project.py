@@ -41,8 +41,9 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Common to All Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'state': fields.selection(_TASK_STATE, 'State', required=True,
-                        help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
+                        help="The status of your document is automatically changed regarding the selected stage. " \
+                            "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
@@ -582,13 +583,17 @@ class task(base_stage, osv.osv):
         search_domain = []
         project_id = self._resolve_project_id_from_context(cr, uid, context=context)
         if project_id:
-            search_domain += ['|', '&', ('project_ids', '=', project_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('case_default', '=', True), ('fold', '=', False)]
+            search_domain += ['|', ('project_ids', '=', project_id)]
+        search_domain += ['|', ('id', 'in', ids), ('case_default', '=', True)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
 
     def _read_group_user_id(self, cr, uid, ids, domain, read_group_order=None, access_rights_uid=None, context=None):
         res_users = self.pool.get('res.users')
@@ -605,7 +610,7 @@ class task(base_stage, osv.osv):
         result = res_users.name_get(cr, access_rights_uid, ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(ids.index(x[0]), ids.index(y[0])))
-        return result
+        return result, {}
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids,
@@ -715,7 +720,7 @@ class task(base_stage, osv.osv):
         'priority': fields.selection([('4','Very Low'), ('3','Low'), ('2','Medium'), ('1','Important'), ('0','Very important')], 'Priority', select=True),
         'sequence': fields.integer('Sequence', select=True, help="Gives the sequence order when displaying a list of tasks."),
         'stage_id': fields.many2one('project.task.type', 'Stage',
-                        domain="['|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
+                        domain="['&', ('fold', '=', False), '|', ('project_ids', '=', project_id), ('case_default', '=', True)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=_TASK_STATE, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
@@ -723,7 +728,7 @@ class task(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'categ_ids': fields.many2many('project.category', string='Categories'),
+        'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"

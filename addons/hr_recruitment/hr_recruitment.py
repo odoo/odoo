@@ -131,13 +131,17 @@ class hr_applicant(base_stage, osv.Model):
         department_id = self._resolve_department_id_from_context(cr, uid, context=context)
         search_domain = []
         if department_id:
-            search_domain += ['|', '&', ('department_id', '=', department_id), ('fold', '=', False)]
-        search_domain += ['|', ('id', 'in', ids), '&', ('department_id', '=', False), ('fold', '=', False)]
+            search_domain += ['|', ('department_id', '=', department_id)]
+        search_domain += ['|', ('id', 'in', ids), ('department_id', '=', False)]
         stage_ids = stage_obj._search(cr, uid, search_domain, order=order, access_rights_uid=access_rights_uid, context=context)
         result = stage_obj.name_get(cr, access_rights_uid, stage_ids, context=context)
         # restore order of the search
         result.sort(lambda x,y: cmp(stage_ids.index(x[0]), stage_ids.index(y[0])))
-        return result
+
+        fold = {}
+        for stage in stage_obj.browse(cr, access_rights_uid, stage_ids, context=context):
+            fold[stage.id] = stage.fold or False
+        return result, fold
 
     def _compute_day(self, cr, uid, ids, fields, args, context=None):
         """
@@ -182,7 +186,7 @@ class hr_applicant(base_stage, osv.Model):
         'create_date': fields.datetime('Creation Date', readonly=True, select=True),
         'write_date': fields.datetime('Update Date', readonly=True),
         'stage_id': fields.many2one ('hr.recruitment.stage', 'Stage',
-                        domain="['|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
+                        domain="['&', ('fold', '=', False), '|', ('department_id', '=', department_id), ('department_id', '=', False)]"),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=AVAILABLE_STATES, string="State", readonly=True,
                 help='The state is set to \'Draft\', when a case is created.\
