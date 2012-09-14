@@ -30,6 +30,7 @@ import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
+from openerp import SUPERUSER_ID
 from osv import osv, fields
 from tools.safe_eval import safe_eval as eval
 
@@ -120,14 +121,15 @@ class mail_thread(osv.AbstractModel):
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
+        # search for unread messages, by reading directly mail.notification, as SUPERUSER 
         notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
+        notif_ids = notif_obj.search(cr, SUPERUSER_ID, [
             ('partner_id.user_ids', 'in', [uid]),
             ('message_id.res_id', 'in', ids),
             ('message_id.model', '=', self._name),
             ('read', '=', False)
         ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+        for notif in notif_obj.browse(cr, SUPERUSER_ID, notif_ids, context=context):
             res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
