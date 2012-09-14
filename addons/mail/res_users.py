@@ -55,12 +55,26 @@ class res_users(osv.Model):
         return init_res
 
     def _auto_init(self, cr, context=None):
-        """Installation hook to create aliases for all users and avoid constraint errors."""
-        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users,self)._auto_init,
+        """ Installation hook: aliases, partner following themselves """
+        # create aliases for all users and avoid constraint errors
+        self.pool.get('mail.alias').migrate_to_alias(cr, self._name, self._table, super(res_users, self)._auto_init,
             self._columns['alias_id'], 'login', alias_force_key='id', context=context)
+        # make already existing users follow themselves, using SQL to avoid using the ORM during the auto_init
+        cr.execute("""  SELECT p.id FROM res_partner p
+                        LEFT JOIN mail_followers n
+                        ON (n.partner_id = p.id AND n.res_model = 'res.partner' AND n.res_id = p.id)
+                        WHERE n.id IS NULL
+                    """)
+        params = [(res[0], res[0]) for res in cr.fetchall()]
+        cr.executemany("""  INSERT INTO mail_followers (partner_id, res_model, res_id)
+                            VALUES (%s, 'res.partner', %s)
+                        """, params)
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
+        if not data.get('login', False):
+            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user.'))
+
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
