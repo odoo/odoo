@@ -8,7 +8,7 @@
             <field name="inherit_id" ref="account.view_partner_property_form" />
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
+                    <xpath expr="//field[@name='bank_ids']/form/group/field[@name='acc_number']" position="before">
                         <newline />
                         <field name="bank_code" />
                         <field name="office" />
