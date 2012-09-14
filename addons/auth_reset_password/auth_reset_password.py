@@ -32,13 +32,10 @@ def message_check(msg, secret):
 class res_users(osv.osv):
     _inherit = 'res.users'
 
-    _columns = {
-        'email': fields.char('Email', size=240),
-    }
-
-    _sql_constraints = [
-        ('email_uniq', 'UNIQUE (email)', 'You can not have two users with the same email!')
-    ]
+#   TODO: uesr_email field is dpericated replace user_email with email.
+#    _sql_constraints = [
+#        ('email_uniq', 'UNIQUE (user_email)', 'You can not have two users with the same email!')
+#    ]
 
     def _auth_reset_password_secret(self, cr, uid, context=None):
         uuid = self.pool.get('ir.config_parameter').get_param(cr, uid, 'database.uuid')
@@ -81,7 +78,7 @@ class res_users(osv.osv):
         MailMessage.send(cr, uid, [msg_id], context=context)
 
     def send_reset_password_request(self, cr, uid, email, context=None):
-        ids = self.pool.get('res.users').search(cr, SUPERUSER_ID, [('email', '=', email)], context=context)
+        ids = self.pool.get('res.users').search(cr, SUPERUSER_ID, [('user_email', '=', email)], context=context)
         if ids:
             self._auth_reset_password_send_email(cr, SUPERUSER_ID, email, 'reset_password_email', ids[0], context=context)
             return True
