@@ -666,7 +666,6 @@ class hr_payslip(osv.osv):
                     'company_id': employee_id.company_id.id
         })
 
-        struct_record = False
         if not context.get('contract', False):
             #fill with the first contract of the employee
             contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
