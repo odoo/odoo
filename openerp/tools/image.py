@@ -66,8 +66,9 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     # check image size: do not create a thumbnail if avoiding smaller images
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
         return base64_source
-    # create a thumbnail: will resize and keep ratios
+    # create a thumbnail: will resize and keep ratios, then sharpen for better looking result
     image.thumbnail(size, Image.ANTIALIAS)
+    image.convert('RGB')
     image = image.filter(ImageFilter.SHARPEN)
     # create a transparent image for background
     background = Image.new('RGBA', size, (255, 255, 255, 0))
