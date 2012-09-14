@@ -837,6 +837,21 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                     }
                 });
                 break;
+            case 'print_workflow':
+                if (current_view.get_selected_ids  && current_view.get_selected_ids().length == 1) {
+                    instance.web.blockUI();
+                    var action = {
+                        context: { active_ids: current_view.get_selected_ids() },
+                        report_name: "workflow.instance.graph",
+                        datas: {
+                            model: this.dataset.model,
+                            id: current_view.get_selected_ids()[0],
+                            nested: true,
+                        }
+                    };
+                    this.session.get_file({ url: '/web/report', data: {action: JSON.stringify(action)}, complete: instance.web.unblockUI });
+                }
+                break;
             default:
                 if (val) {
                     console.log("No debug handler for ", val);
