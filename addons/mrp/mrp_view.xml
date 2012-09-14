@@ -345,28 +345,14 @@
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
                 <form string="Bill of Material" version="7.0">
-                    <label for="product_id" string="Product and Quantity" class="oe_edit_only"/>
-                    <h1>
-                        <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>:
-                        <field name="product_qty" class="oe_inline"/>
-                        <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
-                    </h1>
-                    <div groups="mrp.group_mrp_routings">
-                        <label for="routing_id" class="oe_edit_only"/>
-                        <h2><field name="routing_id" class="oe_inline"/></h2>
-                    </div>
                     <group>
                         <group>
-                            <field name="name"/>
-                            <field name="code" string="Reference"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
-                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
-                                When processing a sale order for this product, the delivery order
-                                will contain the raw materials, instead of the finished product.
-                            </p>
-                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                            <field name="product_id" on_change="onchange_product_id(product_id, name, context)" class="oe_inline"/>
+                            <label for="product_qty" string="Quantity"/>
+                            <div>
+                                <field name="product_qty" class="oe_inline"/>
+                                <field name="product_uom" class="oe_inline" groups="product.group_uom"/>
+                            </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos" >
                                 <field name="product_uos_qty"
@@ -374,6 +360,20 @@
                                 <label string="-" attrs="{'invisible':[('product_uos','=',False)]}" class="oe_inline"/>
                                 <field name="product_uos" class="oe_inline"/>
                             </div>
+                            <div groups="mrp.group_mrp_routings">
+                                <label for="routing_id" class="oe_edit_only"/>
+                                <h2><field name="routing_id" class="oe_inline"/></h2>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="name" class="oe_inline"/>
+                            <field name="code" string="Reference"/>
+                            <field name="type"/>
+                            <p colspan="2" class="oe_grey" attrs="{'invisible': [('type','=','normal')]}">
+                                When processing a sale order for this product, the delivery order
+                                will contain the raw materials, instead of the finished product.
+                            </p>
+                            <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                     </group>
                     <notebook>
@@ -388,9 +388,6 @@
                                     <field name="date_stop"/>
                                 </tree>
                             </field>
-                        </page>
-                        <page string="Revisions" attrs="{'invisible': [('bom_id','!=',False)]}">
-                            <field name="revision_ids"/>
                         </page>
                         <page string="Properties" groups="product.group_mrp_properties">
                             <group>
@@ -411,6 +408,10 @@
                             <field name="property_ids" widget="many2many_tags"/>
                         </page>
                     </notebook>
+                    <div class="oe_chatter">
+                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                         <field name="message_follower_ids" widget="mail_followers"/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -543,35 +544,6 @@
             <field eval="'ir.actions.act_window,'+str(action2)" name="value"/>
         </record>
 
-        <record id="mrp_bom_revision_tree" model="ir.ui.view">
-            <field name="name">mrp.bom.revision</field>
-            <field name="model">mrp.bom.revision</field>
-            <field name="arch" type="xml">
-                <tree string="BoM Revisions">
-                    <field name="indice"/>
-                    <field name="author_id"/>
-                    <field name="date"/>
-                    <field colspan="4" name="name"/>
-                </tree>
-            </field>
-        </record>
-        <record id="mrp_bom_revision_form" model="ir.ui.view">
-            <field name="name">mrp.bom.revision</field>
-            <field name="model">mrp.bom.revision</field>
-            <field name="arch" type="xml">
-                <form string="BoM Revisions" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="indice"/>
-                        <field name="date"/>
-                        <field name="author_id" readonly="1"/>
-                    </group>
-                    <separator string="Description"/>
-                    <field name="description"/>
-                </form>
-            </field>
-        </record>
-
         <!--
         Production Management
         -->
@@ -653,7 +625,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','&lt;&gt;',False),('bom_ids.bom_id','=',False)]" class="oe_inline"/>
+                            <field name="product_id" on_change="product_id_change(product_id)" domain="[('bom_ids','!=',False),('bom_ids.bom_id','=',False)]" class="oe_inline" context='{"default_supply_method":"produce", "default_type": "product"}'/>
                             <label for="product_qty"/>
                             <div>
                                 <field name="product_qty" class="oe_inline"/>
@@ -661,7 +633,7 @@
                                 <button type="action"
                                     icon="terp-accessories-archiver+"
                                     name="%(mrp.action_change_production_qty)d"
-                                    string="(Update)" states="ready,confirmed" class="oe_edit_only oe_link"/>
+                                    string="(Update)" states="confirmed" class="oe_edit_only oe_link"/>
                             </div>
                             <label for="product_uos_qty" groups="product.group_uos"/>
                             <div groups="product.group_uos">
@@ -686,12 +658,12 @@
                         <page string="Consumed Products">
                             <group>
                                 <group string="Products to Consume">
-                                    <field name="move_lines" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_lines" nolabel="1">
                                         <tree colors="blue:state == 'draft';black:state in ('picking_except','confirmed','ready','in_production');gray:state in ('cancel','done') " string="Products to Consume">
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="location_id"  string="Source Loc." groups="stock.group_locations"/>
+                                            <field name="prodlot_id" groups="stock.group_production_lot"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
@@ -701,7 +673,8 @@
                                                    name="%(stock.track_line)d"
                                                    string="Split in Serial Numbers"
                                                    type="action" icon="gtk-justify-fill"
-                                                   states="draft,waiting,confirmed,assigned"/>
+                                                   states="draft,waiting,confirmed,assigned" 
+                                                   groups="stock.group_production_lot"/>
                                             <button name="%(stock.move_scrap)d"
                                                 string="Scrap Products" type="action"
                                                 icon="gtk-convert" context="{'scrap': True}"
@@ -710,12 +683,12 @@
                                     </field>
                                 </group>
                                 <group string="Consumed Product">
-                                    <field name="move_lines2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_lines2" nolabel="1">
                                        <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state == 'cancel' " string="Consumed Products" editable="bottom">
                                            <field name="product_id" readonly="1"/>
                                            <field name="product_qty" readonly="1"/>
                                            <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
-                                           <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                           <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                            <field name="state" invisible="1"/>
                                            <field name="scrapped" invisible="1"/>
                                            <button
@@ -731,7 +704,7 @@
                         <page string="Finished Products">
                             <group>
                                 <group string="Products to Produce">
-                                    <field name="move_created_ids" domain="[('state','&lt;&gt;', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_created_ids" nolabel="1">
                                         <tree string="Products to Finish">
                                             <field name="product_id"/>
                                             <field name="product_qty"/>
@@ -749,13 +722,13 @@
                                     </field>
                                 </group>
                                 <group string="Produced Products">
-                                    <field name="move_created_ids2" domain="[('state','in', ('done', 'cancel'))]" nolabel="1">
+                                    <field name="move_created_ids2" nolabel="1">
                                         <tree colors="red:scrapped==True;blue:state == 'draft';black:state in('picking_except','confirmed','ready','in_production');gray:state in('cancel','done') " string="Finished Products">
                                             <field name="product_id" readonly="1"/>
                                             <field name="product_qty" readonly="1"/>
                                             <field name="product_uom" readonly="1" string="Unit of Measure" groups="product.group_uom"/>
                                             <field name="location_dest_id"  readonly="1" string="Destination Loc." widget="selection" groups="stock.group_locations"/>
-                                            <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                            <field name="prodlot_id" context="{'product_id': product_id}" groups="stock.group_production_lot"/>
                                             <field name="scrapped" invisible="1"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.track_line)d"
