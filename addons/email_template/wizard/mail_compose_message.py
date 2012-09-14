@@ -51,9 +51,11 @@ class mail_compose_message(osv.osv_memory):
             context = {}
         result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
         result['template_id'] = context.get('default_template_id', context.get('mail.compose.template_id', False))
-        # force html when using templates
+        # pre-render the template if any
         if result.get('use_template'):
-            result['content_subtype'] = 'html'
+            onchange_res = self.onchange_use_template(cr, uid, [], result.get('use_template'), result.get('template_id'),
+                result.get('composition_mode'), result.get('model'), result.get('res_id'), context=context)
+            result.update(onchange_res['value'])
         return result
 
     _columns = {
