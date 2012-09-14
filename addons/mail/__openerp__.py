@@ -61,6 +61,7 @@ The main features of the module are:
     'website': 'http://www.openerp.com',
     'depends': ['base', 'base_tools', 'base_setup'],
     'data': [
+        'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
         'mail_message_subtype.xml',
         'res_config_view.xml',

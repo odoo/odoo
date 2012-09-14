@@ -629,20 +629,14 @@ class mail_thread(osv.AbstractModel):
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids,subtype_ids = None, context=None):
-        """ Add partners to the records followers.
-            :param partner_ids: a list of partner_ids to subscribe
-            :param return: new value of followers if read_back key in context
-        """
-        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+    def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
+        """ Add partners to the records followers. """
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
             subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('res_model', '=', self._name)],context=context)
         if subtype_ids:
             self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
-        if context and context.get('read_back'):
-            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
-        return []
+        return self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
@@ -652,14 +646,8 @@ class mail_thread(osv.AbstractModel):
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
-        """ Remove partners from the records followers.
-            :param partner_ids: a list of partner_ids to unsubscribe
-            :param return: new value of followers if read_back key in context
-        """
-        self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
-        if context and context.get('read_back'):
-            return [follower.id for thread in self.browse(cr, uid, ids, context=context) for follower in thread.message_follower_ids]
-        return []
+        """ Remove partners from the records followers. """
+        return self.write(cr, uid, ids, {'message_follower_ids': [(3, pid) for pid in partner_ids]}, context=context)
 
     #------------------------------------------------------
     # Thread state
