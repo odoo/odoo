@@ -318,21 +318,26 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
-        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
-        res_id = res and res[1] or False
-
-        return {
-            'name': _('Receptions'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'stock.picking',
-            'context': "{'contact_display': 'partner'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': pick_ids and pick_ids[0] or False,
-        }
+        action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree4'))
+        action = self.pool.get(action_model).read(cr, uid, action_id, context=context)
+        ctx = eval(action['context'])
+        ctx.update({
+            'search_default_purchase_id': ids[0]
+        })
+        if pick_ids and len(pick_ids) == 1:
+            form_view_ids = [view_id for view_id, view in action['views'] if view == 'form']
+            view_id = form_view_ids and form_view_ids[0] or False
+            action.update({
+                'views': [],
+                'view_mode': 'form',
+                'view_id': view_id,
+                'res_id': pick_ids[0]
+            })
+            
+        action.update({
+            'context': ctx,
+        })
+        return action
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
