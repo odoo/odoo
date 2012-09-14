@@ -63,7 +63,6 @@ class report_document_user(osv.osv):
              )
         """)
 
-report_document_user()
 
 class report_document_file(osv.osv):
     _name = "report.document.file"
@@ -88,6 +87,5 @@ class report_document_file(osv.osv):
              )
         """)
 
-report_document_file()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
