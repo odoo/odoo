@@ -170,7 +170,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                     })
                 );
             }
-            return loaded.then(function () {
+            return loaded.pipe(function () {
                 return self.do_load_js(file_list);
             }).then(function() {
                 self.on_modules_loaded();
