@@ -113,7 +113,7 @@
 		                        <field name="fiscalyear_id" widget="selection"/>
 		                        <label for="date_start" string="Duration"/>
 		                        <div>
-		                            <field name="date_start" class="oe_inline" nolabel="1"/> - 
+		                            <field name="date_start" class="oe_inline" nolabel="1"/> -
 		                            <field name="date_stop" nolabel="1" class="oe_inline"/>
 		                        </div>
 		                    </group>
@@ -182,7 +182,7 @@
                 <form string="Account" version="7.0">
                     <label for="code" class="oe_edit_only" string="Account Code and Name"/>
                     <h1>
-                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> - 
+                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> -
                         <field name="name" class="oe_inline" placeholder="Account name"/>
                     </h1>
                     <group>
@@ -1083,7 +1083,7 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Journal Item" version="7.0">
-                    <sheet> 
+                    <sheet>
 	                    <group>
 	                        <group>
 		                        <field name="name"/>
@@ -1350,7 +1350,7 @@
                             <field name="date"/>
                             <field name="to_check"/>
                             <field name="amount" invisible="1"/>
-                        </group>	
+                        </group>
                     </group>
                     <notebook>
                         <page string="Journal Items">
@@ -1652,8 +1652,8 @@
                 <form string="Journal Entry Model" version="7.0">
                     <group col="4">
                         <field name="name"/>
-                        <field name="journal_id"/>
-                        <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
 
                     <field name="lines_id" widget="one2many_list"/>
