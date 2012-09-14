@@ -71,7 +71,7 @@ class mail_message(osv.Model):
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, {'unread': False}) for id in ids)
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -156,10 +156,11 @@ class mail_message(osv.Model):
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
-        attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
-        author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
-        author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
-        partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+        # TDE TEMP: use SUPERUSER_ID
+        attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, SUPERUSER_ID, [x.id for x in msg.attachment_ids], context=context)]
+        author_id = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [msg.author_id.id], context=context)[0]
+        author_user_id = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [msg.author_id.user_ids[0].id], context=context)[0]
+        partner_ids = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [x.id for x in msg.partner_ids], context=context)
         return {
             'id': msg.id,
             'type': msg.type,
@@ -291,7 +292,7 @@ class mail_message(osv.Model):
             return
         if isinstance(ids, (int, long)):
             ids = [ids]
-        print 'check-access-rule', uid, ids, operation, context
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
 
         # Read mail_message.ids to have their values
         model_record_ids = {}
@@ -299,11 +300,10 @@ class mail_message(osv.Model):
         cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM mail_message WHERE id = ANY (%s)', (ids,))
         for id, rmod, rid, author_id in cr.fetchall():
             message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
-            model_record_ids.setdefault(rmod, set()).add(rid)
+            if rmod:
+                model_record_ids.setdefault(rmod, set()).add(rid)
 
-        partner_id = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
-
-        # R: Check for received notifications -> could become an ir.rule
+        # Read: Check for received notifications -> could become an ir.rule, but not till we do not have a many2one variable field
         if operation == 'read':
             not_obj = self.pool.get('mail.notification')
             not_ids = not_obj.search(cr, SUPERUSER_ID, [
@@ -313,14 +313,14 @@ class mail_message(osv.Model):
             notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
         else:
             notified_ids = []
-        # R: Check messages you are author -> could become an ir.rule
+        # Read: Check messages you are author -> could become an ir.rule, but not till we do not have a many2one variable field
         if operation == 'read':
             author_ids = [mid for mid, message in message_values.iteritems()
                 if message.get('author_id') and message.get('author_id') == partner_id]
         else:
             author_ids = []
 
-        # C: Check message_follower_ids
+        # Create: Check message_follower_ids
         if operation == 'create':
             doc_follower_ids = []
             for model, mids in model_record_ids.items():
@@ -332,15 +332,16 @@ class mail_message(osv.Model):
                     ], context=context)
                 fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
                 doc_follower_ids += [mid for mid, message in message_values.iteritems()
-                if message.get('res_model') == model and message.get('res_id') in fol_mids]
+                    if message.get('res_model') == model and message.get('res_id') in fol_mids]
         else:
             doc_follower_ids = []
 
-        # fall back on classic operation for other ids
+        # Calculate remaining ids, and related model/res_ids
         model_record_ids = {}
         other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids))
         for id in other_ids:
-            model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
+            if message_values[id]['res_model']:
+                model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
 
         # CRUD: Access rights related to the document
         document_related_ids = []
@@ -356,15 +357,13 @@ class mail_message(osv.Model):
             document_related_ids += [mid for mid, message in message_values.iteritems()
                 if message.get('res_model') == model and message.get('res_id') in mids]
 
-        # fall back on classic operation for other ids
+        # Calculate remaining ids: if not void, raise an error
         other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids), set(document_related_ids))
-
-        if other_ids:
-            raise except_orm(_('Access Denied'),
-                                _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                                (self._description, operation))
-
-        super(mail_message, self).check_access_rule(cr, uid, other_ids, operation, context=None)
+        if not other_ids:
+            return
+        raise except_orm(_('Access Denied'),
+                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                            (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
@@ -372,6 +371,14 @@ class mail_message(osv.Model):
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.notify(cr, uid, newid, context=context)
         return newid
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        """ Override to explicitely call check_access_rule, that is not called
+            by the ORM. It instead directly fetches ir.rules and apply them. """
+        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        # print '-->', res
+        self.check_access_rule(cr, uid, ids, 'read', context=context)
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
