@@ -373,7 +373,7 @@
 /*  ********* The product list  ********* */
 
 .point-of-sale .product-list {
-    padding:10px;
+    padding:10px !important;
 }
 
 .point-of-sale .product-list-scroller{
@@ -470,7 +470,7 @@
 }
 
 .point-of-sale .category-list{
-    padding:10px;
+    padding:10px !important;
 }
 /*  d) the category button */
 
@@ -479,7 +479,7 @@
     vertical-align: top;
     display: inline-block;
     font-size: 11px;
-    margin: 5px;
+    margin: 5px !important;
     width: 120px;
     height:120px;
     background:#fff;
@@ -566,7 +566,7 @@
     display: inline-block;
     line-height: 100px;
     font-size: 11px;
-    margin: 5px;
+    margin: 5px !important;
     width: 120px;
     height:120px;
     background:#fff;
@@ -809,6 +809,8 @@
 }
 
 .point-of-sale .scale-screen .product-picture img{
+    max-width: 178px;
+    max-height:178px;
     vertical-align: middle;
     cursor:pointer;
 }
@@ -860,7 +862,7 @@
 .point-of-sale .goodbye-message{
     position: absolute;
     left:50%;
-    top:30%;
+    top:40%;
     width:500px;
     height:400px;
     margin-left: -250px;
@@ -1099,6 +1101,79 @@
 
 .point-of-sale .pos-actionbar .button.rightalign{
     float:right;
+}
+/*  ********* The Debug Widget  ********* */
+
+.point-of-sale .debug-widget{
+    z-index:100000;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    width: 200px;
+    font-size: 10px;
+    
+    background: rgba(0,0,0,0.82);
+    color: white;
+    text-shadow: none;
+    padding-bottom: 10px;
+    box-shadow: 0px 3px 20px rgba(0,0,0,0.3);
+    cursor:move;
+}
+.point-of-sale .debug-widget .toggle{
+    position: absolute;
+    font-size: 16px;
+    cursor:pointer;
+    top:0px;
+    right:0px;
+    padding:10px;
+    padding-right:15px;
+}
+.point-of-sale .debug-widget .content{
+    overflow: hidden;
+}
+.point-of-sale .debug-widget h1{
+    background:black;
+    padding-top: 10px;
+    padding-left: 10px;
+    margin-top:0;
+    margin-bottom:0;
+}
+.point-of-sale .debug-widget .category{
+    background: black;
+    padding-left: 10px;
+    margin: 0px;
+    font-weight: bold;
+    padding-top:3px;
+    padding-bottom:3px;
+}
+.point-of-sale .debug-widget .button{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:pointer;
+}
+.point-of-sale .debug-widget .button:hover{
+    background: rgba(96,21,177,0.45);
+}
+.point-of-sale .debug-widget input{
+    margin-left:10px;
+    margin-top:7px;
+}
+.point-of-sale .debug-widget .status{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+}
+.point-of-sale .debug-widget .status.on{
+    background-color: #6cd11d;
+}
+.point-of-sale .debug-widget .event{
+    padding: 5px;
+    padding-left: 15px;
+    display: block;
+    cursor:default;
+    background-color: #1E1E1E;
 }
 
 /*  ********* The PopupWidgets  ********* */
