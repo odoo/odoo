@@ -4,7 +4,7 @@
 
         <record id="portal" model="res.portal">
             <field name="name">Portal</field>
-            <field name="group_id" ref="group_portal_member"/>
+            <field name="group_id" ref="group_portal"/>
             <field name="override_menu" eval="False"/>
             <!-- Insert the template user from auth_signup in the portal members group -->
             <field name="users" eval="[(4,ref('auth_signup.default_template_user'))]"/>
