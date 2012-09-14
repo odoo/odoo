@@ -6,7 +6,7 @@
             <field name="model">stock.change.product.qty</field>
             <field name="arch" type="xml">
                 <form string="Change Product Quantity" version="7.0">
-                    <group string="Select Quantity">
+                    <group>
                         <field name="new_quantity" />
                         <field name="product_id" invisible="1"/>
                         <field name="location_id" groups="stock.group_locations"/>
