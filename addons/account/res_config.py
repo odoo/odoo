@@ -223,6 +223,16 @@ class account_config_settings(osv.osv_memory):
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
 
+    def open_company_form(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Configure your Company',
+            'res_model': 'res.company',
+            'res_id': config.company_id.id,
+            'view_mode': 'form',
+        }
+
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """
         ir_values = self.pool.get('ir.values')
