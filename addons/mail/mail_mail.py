@@ -19,13 +19,12 @@
 #
 ##############################################################################
 
-# import ast
 import base64
 import logging
 import tools
 
-from osv import osv
-from osv import fields
+from openerp import SUPERUSER_ID
+from osv import osv, fields
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -134,7 +133,8 @@ class mail_mail(osv.Model):
         :return: True
         """
         if mail.auto_delete:
-            mail.unlink()
+            # done with SUPERUSER_ID to avoid giving large unlink access rights
+            self.unlink(cr, SUPERUSER_ID, [mail.id], context=context)
         return True
 
     def send_get_mail_subject(self, cr, uid, mail, force=False, partner=None, context=None):
