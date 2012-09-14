@@ -20,17 +20,10 @@
 ##############################################################################
 
 import base64
-from openerp.tests import common
+from openerp.addons.mail.tests import test_mail
 
-class test_message_compose(common.TransactionCase):
 
-    def _mock_smtp_gateway(self, *args, **kwargs):
-        return True
-
-    def _mock_build_email(self, *args, **kwargs):
-        self._build_email_args = args
-        self._build_email_kwargs = kwargs
-        return self.build_email_real(*args, **kwargs)
+class test_message_compose(test_mail.TestMailMockups):
 
     def setUp(self):
         super(test_message_compose, self).setUp()
@@ -39,11 +32,6 @@ class test_message_compose(common.TransactionCase):
         self.mail_message = self.registry('mail.message')
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
-
-        # Install mock SMTP gateway
-        self.build_email_real = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
 
         # create a 'pigs' and 'bird' groups that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
