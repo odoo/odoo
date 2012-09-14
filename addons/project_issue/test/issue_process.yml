@@ -19,7 +19,7 @@
   !assert {model: project.issue, id: crm_case_buginaccountsmodule0, severity: error, string: Issue should be in pending state}:
     - state == 'pending'
 -
-  I send mail to get more details. TODO: revert mail.mail to mail.compose.message (conversion to customer should be automatic).
+  I send mail to get more details. TODO revert mail.mail to mail.compose.message (conversion to customer should be automatic).
 -
   !python {model: mail.mail }: |
     ctx = context.copy()
