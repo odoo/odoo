@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- The portal group -->
+        <record id="group_portal_member" model="res.groups">
+            <field name="name">Portal</field>
+            <field name="comment">Portal members can access information through the portal menu.  Also, they are chrooted in this specific menu.</field>
+            <!-- Don't use any implied_ids here; this group's behavior is particular -->
+        </record>
+
+    </data>
+</openerp>
