@@ -31,7 +31,7 @@ class purchase_config_settings(osv.osv_memory):
         'default_invoice_method': fields.selection(
             [('manual', 'Based on purchase order lines'),
              ('picking', 'Based on receptions'),
-             ('order', 'Pre-Generate draft invoices based on purchase orders'),
+             ('order', 'Pre-generate draft invoices based on purchase orders'),
             ], 'Default invoicing control method', required=True, default_model='purchase.order'),
         'group_purchase_pricelist':fields.boolean("Manage pricelist per supplier",
             implied_group='product.group_purchase_pricelist',
