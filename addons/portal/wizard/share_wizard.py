@@ -44,9 +44,6 @@ class share_wizard_portal(osv.TransientModel):
         'group_ids': fields.many2many('res.groups', 'share_wizard_res_group_rel', 'share_id', 'group_id', 'Existing groups', domain=[('share', '=', False)]),
     }
 
-    def is_portal_manager(self, cr, uid, context=None):
-        return self.has_group(cr, uid, module='portal', group_xml_id='group_portal_manager', context=context)
-
     def _check_preconditions(self, cr, uid, wizard_data, context=None):
         if wizard_data.user_type == 'existing':
             self._assert(wizard_data.user_ids,
