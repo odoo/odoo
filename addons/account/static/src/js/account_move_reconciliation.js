@@ -15,6 +15,16 @@ openerp.account = function (instance) {
             this.$el.prepend(QWeb.render("AccountReconciliation"));
             return tmp;
         },
+        do_search: function(domain, context, group_by) {
+            var sup = this._super;
+            var mod = new instance.web.Model(this.model, context, domain);
+            return mod.query("partner_id").group_by(["partner_id"]).pipe(function(result) {
+                var vals = _.chain(result).pluck("attributes").pluck("value")
+                    .filter(function(el) {return !!el;}).value();
+                    debugger;
+                return sup(new instance.web.CompoundDomain(domain, [["partner_id", "in", _.pluck(vals, 0)]]), context, group_by);
+            });
+        },
     });
     
     /*instance.web.views.add('form_clone', 'instance.account.extend_form_view');

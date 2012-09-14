@@ -1,38 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Extended View of Reconciliation Entry -->
-         <record id="view_account_move_reconciliation_form_view" model="ir.ui.view">
-            <field name="name">account.move.reconciliation.form</field>
-            <field name="model">account.move.reconciliation</field>
-            <field name="type">form</field>
-            <field eval="2" name="priority"/>
-            <field name="arch" type="xml">
-                <form string="Journal Item" layout="manual"  version="7.0">
-                    <group>
-                        <h3>
-                            <a type="button" class="oe_pager_button" data-pager-action="previous">Previous</a>
-                            <a type="button" class="oe_pager_button" data-pager-action="next">Next</a>
-                            <field name="partner_id"/>
-                            (<span class="oe_pager_index_extend">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count_extend">0</span>)
-                        </h3>
-                        <div>
-                            <label for="last_reconciliation_date"/>
-                            <field name="last_reconciliation_date"  widget="date"/>
-                            <label for="latest_date"/>
-                            <field name="latest_date"/>
-                        </div>
-                        <div  class="oe_reconcile_row">
-                            <a type="button" class="oe_reconcile  oe_reconcile_button" name="%(action_view_account_move_line_reconcile)d">Reconcile</a>
-                            <a type="button" class="oe_nothing_to_reconcile  oe_reconcile_button" name="skip_partner">Nothing to Reconcile</a>
-                            <field name="reconciliation_progress" widget="progressbar"/>
-                        </div>         
-                        <div name="grp_followup"  class="oe_reconcile_row">
-                        </div>
-                    </group>
-                </form>
-            </field>
-        </record>
 
         <!-- Menu and Action -->
         <record id="action_account_receivable_manual_reconcile" model="ir.actions.act_window">
@@ -40,7 +8,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">account_reconciliation_list,form</field>
-            <field eval="False" name="auto_search"/>
+            <field eval="True" name="auto_search"/>
             <field name="context" eval="{'account_type':'receivable', 'search_default_unreconciled': 1}"></field>
         </record>
         
@@ -49,7 +17,7 @@
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">account_reconciliation_list,form</field>
-            <field eval="False" name="auto_search"/>
+            <field eval="True" name="auto_search"/>
             <field name="context" eval="{'account_type':'payable', 'search_default_unreconciled': 1}"></field>
         </record>
         
