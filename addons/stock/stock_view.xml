@@ -1010,6 +1010,9 @@
                     <xpath expr="//field[@name='partner_id']" position="replace">
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  colspan="4" string="Customer"/>
                     </xpath>
+                    <xpath expr="//field[@name='move_lines']" position="attributes">
+                        <attribute name="context">{'address_out_id': partner_id, 'picking_type': type}</attribute>
+                    </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
                             <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
