@@ -1,26 +1,6 @@
 
 function openerp_pos_devices(instance,module){ //module is instance.point_of_sale
 
-     var debug_devices = new (instance.web.Class.extend({
-        active: false,
-        payment_status: 'waiting_for_payment',
-        weight: 0,
-        activate: function(){
-            this.active = true;
-        },
-        deactivate: function(){
-            this.active = false;
-        },
-        set_weight: function(weight){ this.activate(); this.weight = weight; },
-        accept_payment: function(){ this.activate(); this.payment_status = 'payment_accepted'; },
-        reject_payment: function(){ this.activate(); this.payment_status = 'payment_rejected'; },
-        delay_payment:  function(){ this.activate(); this.payment_status = 'waiting_for_payment'; },
-    }))();
-
-    if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-        window.debug_devices = debug_devices;
-    }
-
     // this object interfaces with the local proxy to communicate to the various hardware devices
     // connected to the Point of Sale. As the communication only goes from the POS to the proxy,
     // methods are used both to signal an event, and to fetch information. 
@@ -38,32 +18,42 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
             this.connection = new instance.web.JsonRPC();
             this.connection.setup(url);
+
+            this.bypass_proxy = false;
+            this.notifications = {};
             
         },
         message : function(name,params,success_callback, error_callback){
             success_callback = success_callback || function(){}; 
             error_callback   =  error_callback  || function(){};    
 
-            
-            if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-                console.log('PROXY:',name,params);
+            var callbacks = this.notifications[name] || [];
+            for(var i = 0; i < callbacks.length; i++){
+                callbacks[i](params);
             }
 
-            if(!(debug_devices && debug_devices.active)){
-                this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
+            this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
+        },
+
+        // this allows the client to be notified when a proxy call is made. The notification 
+        // callback will be executed with the same arguments as the proxy call
+        add_notification: function(name, callback){
+            if(!this.notifications[name]){
+                this.notifications[name] = [];
             }
+            this.notifications[name].push(callback);
         },
         
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
         scan_item_success: function(ean){
-            this.message('scan_item_success',ean);
+            this.message('scan_item_success',{ean: ean});
         },
 
         // a product has been scanned but not recognized
         // ean is a parsed ean object
         scan_item_error_unrecognized: function(ean){
-            this.message('scan_item_error_unrecognized',ean);
+            this.message('scan_item_error_unrecognized',{ean: ean});
         },
 
         //the client is asking for help
@@ -78,12 +68,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
 
         //the client is starting to weight
         weighting_start: function(){
-            this.weight = 0;
-            if(debug_devices){
-                debug_devices.weigth = 0;
+            if(!this.weighting){
+                this.weight = 0;
+                this.weighting = true;
+                this.bypass_proxy = false;
+                this.message('weighting_start');
             }
-            this.weighting = true;
-            this.message('weighting_start');
         },
 
         //returns the weight on the scale. 
@@ -91,22 +81,29 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // and a weighting_end()
         weighting_read_kg: function(){
             var self = this;
-            if(debug_devices && debug_devices.active){
-                return debug_devices.weight;
+            if(this.bypass_proxy){
+                return this.weight;
             }else{
                 this.message('weighting_read_kg',{},function(weight){
-                    if(self.weighting){
+                    if(self.weighting && !self.bypass_proxy){
                         self.weight = weight;
                     }
                 });
-                return self.weight;
+                return this.weight;
             }
+        },
+
+        // sets a custom weight, ignoring the proxy returned value until the next weighting_end 
+        debug_set_weight: function(kg){
+            this.bypass_proxy = true;
+            this.weight = kg;
         },
 
         // the client has finished weighting products
         weighting_end: function(){
             this.weight = 0;
             this.weighting = false;
+            this.bypass_proxy = false;
             this.message('weighting_end');
         },
 
@@ -116,9 +113,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         payment_request: function(price, method, info){
             this.paying = true;
             this.payment_status = 'waiting_for_payment';
-            if(debug_devices){
-                debug_devices.payment_status = 'waiting_for_payment';
-            }
             this.message('payment_request',{'price':price,'method':method,'info':info});
         },
 
@@ -127,18 +121,30 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
         is_payment_accepted: function(){
             var self = this;
-            if(debug_devices.active){
-                return debug_devices.payment_status;
+            if(this.bypass_proxy){
+                this.bypass_proxy = false;
+                return this.payment_status;
             }else{
                 this.message('is_payment_accepted', {}, function(payment_status){
                     if(self.paying){
                         self.payment_status = payment_status;
                     }
                 });
-                return self.payment_status;
+                return this.payment_status;
             }
         },
+        
+        // override what the proxy says and accept the payment
+        debug_accept_payment: function(){
+            this.bypass_proxy = true;
+            this.payment_status = 'payment_accepted';
+        },
 
+        // override what the proxy says and reject the payment
+        debug_reject_payment: function(){
+            this.bypass_proxy = true;
+            this.payment_status = 'payment_rejected';
+        },
         // the client cancels his payment
         payment_canceled: function(){
             this.paying = false;
@@ -212,6 +218,11 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         print_receipt: function(receipt){
             this.message('print_receipt',{receipt: receipt});
         },
+
+        // asks the proxy to print an invoice in pdf form ( used to print invoices generated by the server ) 
+        print_pdf_invoice: function(pdfinvoice){
+            this.message('print_pdf_invoice',{pdfinvoice: pdfinvoice});
+        },
     });
 
     // this module interfaces with the barcode reader. It assumes the barcode reader
@@ -237,6 +248,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.cashier_prefix_set  = attributes.cashier_prefix_set  ||  {'041':''};
             this.client_prefix_set   = attributes.client_prefix_set   ||  {'042':''};
         },
+
         save_callbacks: function(){
             var callbacks = {};
             for(name in this.action_callback){
@@ -244,6 +256,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             }
             this.action_callback_stack.push(callbacks);
         },
+
         restore_callbacks: function(){
             if(this.action_callback_stack.length){
                 var callbacks = this.action_callback_stack.pop();
@@ -337,7 +350,6 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 value: 0,
                 unit: 'none',
             };
-            console.log('ean',ean);
 
             function match_prefix(prefix_set, type){
                 for(prefix in prefix_set){
@@ -380,6 +392,23 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             return parse_result;
         },
 
+        on_ean: function(ean){
+            var parse_result = this.parse_ean(ean);
+
+            if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
+                console.warn('WARNING: barcode checksum error:',parse_result);
+            }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
+                if(this.action_callback['product']){
+                    this.action_callback['product'](parse_result);
+                }
+                //this.trigger("codebar",parse_result );
+            }else{
+                if(this.action_callback[parse_result.type]){
+                    this.action_callback[parse_result.type](parse_result);
+                }
+            }
+        },
+
         // starts catching keyboard events and tries to interpret codebar 
         // calling the callbacks when needed.
         connect: function(){
@@ -410,21 +439,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                     lastTimeStamp = new Date().getTime();
                     if (codeNumbers.length == 13) {
                         //We have found what seems to be a valid codebar
-                        var parse_result = self.parse_ean(codeNumbers.join(''));
-
-                        if (parse_result.type === 'error') {    //most likely a checksum error, raise warning
-                            console.warn('WARNING: barcode checksum error:',parse_result);
-                        }else if(parse_result.type in {'unit':'', 'weight':'', 'price':''}){    //ean is associated to a product
-                            if(self.action_callback['product']){
-                                self.action_callback['product'](parse_result);
-                            }
-                            //this.trigger("codebar",parse_result );
-                        }else{
-                            if(self.action_callback[parse_result.type]){
-                                self.action_callback[parse_result.type](parse_result);
-                            }
-                        }
-
+                        self.on_ean(codeNumbers.join(''));
                         codeNumbers = [];
                     }
                 } else {

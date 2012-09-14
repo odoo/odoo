@@ -30,7 +30,7 @@ class sale_advance_payment_inv(osv.osv_memory):
         'advance_payment_method':fields.selection(
             [('all', 'Invoice the whole sale order'), ('percentage','Percentage'), ('fixed','Fixed price (deposit)'),
                 ('lines', 'Some order lines')],
-            'Invoice Method', required=True,
+            'What do you want to invoice?', required=True,
             help="""Use All to create the final invoice.
                 Use Percentage to invoice a percentage of the total amount.
                 Use Fixed Price to invoice a specific amound in advance.
