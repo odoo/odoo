@@ -28,14 +28,15 @@
     'website': 'http://www.openerp.com',
     'summary': 'All Infos on Employees',
     'description': """
-Module for Human Resource Management.
-=====================================
+Human Resources Management
+=========================
+This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
 
 You can manage:
 ---------------
-    * Employees and hierarchies : You can define your employee with User and display hierarchies
-    * HR Departments
-    * HR Jobs
+* Employees and hierarchies : You can define your employee with User and display hierarchies
+* HR Departments
+* HR Jobs
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

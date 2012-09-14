@@ -27,35 +27,25 @@
     'sequence': 2,
     'summary': 'Leads, Opportunities, Agenda',
     'description': """
-The generic OpenERP Customer Relationship Management.
+The generic OpenERP Customer Relationship Management
 =====================================================
 
-This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall.
+This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
 
-It manages key tasks such as communication, identification, prioritization,
-assignment, resolution and notification.
+It manages key tasks such as communication, identification, prioritization, assignment, resolution and notification.
 
-OpenERP ensures that all cases are successfully tracked by users, customers and
-suppliers. It can automatically send reminders, escalate the request, trigger
-specific methods and lots of other actions based on your own enterprise rules.
+OpenERP ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and lots of other actions based on your own enterprise rules.
 
-The greatest thing about this system is that users don't need to do anything
-special. They can just send email to the request tracker. OpenERP will take
-care of thanking them for their message, automatically routing it to the
-appropriate staff and make sure all future correspondence gets to the right
-place.
+The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker. 
 
-The CRM module has a email gateway for the synchronisation interface
-between mails and OpenERP.
+OpenERP will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
 
-Creates a dashboard for CRM that includes:
-------------------------------------------
-    * List of New Leads
-    * List of My Opportunities
-    * List of My Next Meetings
-    * Planned Revenue by Stage and User (graph)
-    * Opportunities by Stage (graph)
+
+Dashboard for CRM will include:
+-------------------------------
+* Planned Revenue by Stage and User (graph)
+* Opportunities by Stage (graph)
+
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
