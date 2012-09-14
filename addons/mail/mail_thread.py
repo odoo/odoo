@@ -121,7 +121,7 @@ class mail_thread(osv.AbstractModel):
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
-        # search for unread messages, by reading directly mail.notification, as SUPERUSER 
+        # search for unread messages, by reading directly mail.notification, as SUPERUSER
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, SUPERUSER_ID, [
             ('partner_id.user_ids', 'in', [uid]),
@@ -197,6 +197,13 @@ class mail_thread(osv.AbstractModel):
         fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         fol_obj.unlink(cr, uid, fol_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['message_ids'] = []
+        default['message_comment_ids'] = []
+        default['message_follower_ids'] = []
+        return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
