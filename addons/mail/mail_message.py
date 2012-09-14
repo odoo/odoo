@@ -20,11 +20,13 @@
 ##############################################################################
 
 import logging
+import openerp
 import tools
 
 from email.header import decode_header
 from operator import itemgetter
 from osv import osv, fields
+from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +36,7 @@ def decode(text):
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -57,7 +60,10 @@ class mail_message(osv.Model):
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            try:
+                result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            except openerp.exceptions.AccessDenied, e:
+                pass
         return result
 
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
@@ -147,7 +153,7 @@ class mail_message(osv.Model):
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
-        attachment_ids = self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)
+        attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
         author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
         author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
         partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
@@ -306,15 +312,15 @@ class mail_message(osv.Model):
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
-        # for mail.messages that act as parent for a standalone mail.mail record.
+        # for mail.messages that act as parent for a standalone mail.mail record).
         attachments_to_delete = []
-        for mail in self.browse(cr, uid, ids, context=context):
-            for attach in mail.attachment_ids:
-                if attach.res_model == 'mail.message' and attach.res_id == mail.id:
+        for message in self.browse(cr, uid, ids, context=context):
+            for attach in message.attachment_ids:
+                if attach.res_model == self._name and attach.res_id == message.id:
                     attachments_to_delete.append(attach.id)
         if attachments_to_delete:
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
-        return super(mail_message,self).unlink(cr, uid, ids, context=context)
+        return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
     def notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids.
@@ -341,3 +347,25 @@ class mail_message(osv.Model):
             default = {}
         default.update(message_id=False, headers=False)
         return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
+
+    #------------------------------------------------------
+    # Tools
+    #------------------------------------------------------
+
+    def check_partners_email(self, cr, uid, partner_ids, context=None):
+        """ Verify that selected partner_ids have an email_address defined.
+            Otherwise throw a warning. """
+        partner_wo_email_lst = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            if not partner.email:
+                partner_wo_email_lst.append(partner)
+        if not partner_wo_email_lst:
+            return {}
+        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
+        for partner in partner_wo_email_lst:
+            warning_msg += '\n- %s' % (partner.name)
+        return {'warning': {
+                    'title': _('Partners email addresses not found'),
+                    'message': warning_msg,
+                    }
+                }

@@ -609,7 +609,7 @@ class product_product(osv.osv):
         return res
 
 
-    _constraints = [(_check_ean_key, 'Error: Invalid ean code', ['ean13'])]
+    _constraints = [(_check_ean_key, 'You provided an invalid "EAN13 Barcode" reference. You may use the internal reference field instead.', ['ean13'])]
 
     def on_order(self, cr, uid, ids, orderline, quantity):
         pass

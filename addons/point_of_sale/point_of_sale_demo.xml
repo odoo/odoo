@@ -6,17 +6,17 @@
         </record>
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[(4,ref('group_pos_user'))]"/>
-            <field name="ean13">0410200000005</field>
+            <field name="ean13">0420100000005</field>
         </record>
         <record id="account.cash_journal" model="account.journal">
             <field eval="True" name="journal_user"/>
         </record>
         <record id="base.user_root" model="res.users">
-            <field name="ean13">0410300000004</field>
+            <field name="ean13">0410100000006</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
         </record>
         <record id="base.user_demo" model="res.users">
-            <field name="ean13">0410400000003</field>
+            <field name="ean13">0420100000005</field>
             <field name="groups_id" eval="[(4,ref('group_pos_manager'))]"/>
         </record>
 
@@ -189,6 +189,7 @@
         <record id="citron" model="product.product">
           <field name="list_price">1.98</field>
           <field name="name">Lemon</field>
+          <field name="ean13">2301000000006</field>
           <field name="to_weight">True</field>
           <field name="pos_categ_id" ref="autres_agrumes"/>
           <field name="uom_id" ref="product.product_uom_kgm" />
