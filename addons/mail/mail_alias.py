@@ -86,7 +86,7 @@ class mail_alias(osv.Model):
                                       help="Optional ID of a thread (record) to which all incoming "
                                            "messages will be attached, even if they did not reply to it. "
                                            "If set, this will disable the creation of new records completely."),
-        'alias_domain': fields.function(_get_alias_domain, string="Alias Domain", type='char', size=None),
+        'alias_domain': fields.function(_get_alias_domain, string="Alias domain", type='char', size=None),
     }
 
     _defaults = {
