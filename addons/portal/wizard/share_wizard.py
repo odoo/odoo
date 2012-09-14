@@ -119,16 +119,14 @@ class share_wizard_portal(osv.TransientModel):
         # alter the rules of the groups so they can see the shared data
         if wizard_data.group_ids:
             # get the list of portals and the related groups to install their menus.
-            Portals = self.pool.get('res.portal')
-            all_portals = Portals.browse(cr, UID_ROOT, Portals.search(cr, UID_ROOT, [])) #no context!
-            all_portal_group_ids = [p.group_id.id for p in all_portals]
+            res_groups = self.pool.get('res.groups')
+            all_portal_group_ids = res_groups.search(cr, UID_ROOT, [('is_portal', '=', True)])
 
             # populate result lines with the users of each group and
             # setup the menu for portal groups
             for group in wizard_data.group_ids:
                 if group.id in all_portal_group_ids:
-                    portal = all_portals[all_portal_group_ids.index(group.id)]
-                    self._create_shared_data_menu(cr, uid, wizard_data, portal, context=context)
+                    self._create_shared_data_menu(cr, uid, wizard_data, group.id, context=context)
 
                 for user in group.users:
                     new_line = {'user_id': user.id,

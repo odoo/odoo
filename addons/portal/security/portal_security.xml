@@ -6,7 +6,9 @@
         <record id="group_portal" model="res.groups">
             <field name="name">Portal</field>
             <field name="comment">Portal members can access information through the portal menu.  Also, they are chrooted in this specific menu.</field>
-            <!-- Don't use any implied_ids here; this group's behavior is particular -->
+            <field name="is_portal" eval="True"/>
+            <!-- Insert the template user from auth_signup in the portal members group -->
+            <field name="users" eval="[(4,ref('auth_signup.default_template_user'))]"/>
         </record>
 
     </data>

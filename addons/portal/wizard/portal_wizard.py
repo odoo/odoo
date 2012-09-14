@@ -78,7 +78,7 @@ class wizard(osv.osv_memory):
 
     _columns = {
         'partner_id': fields.many2one('res.partner', required=True, string="Partner"),
-        'portal_id': fields.many2one('res.portal', required=True,
+        'portal_id': fields.many2one('res.groups', domain=[('is_portal', '=', True)], required=True,
             string='Portal',
             help="The portal in which new users must be added"),
         'user_ids': fields.one2many('res.portal.wizard.user', 'wizard_id',
@@ -157,7 +157,7 @@ class wizard(osv.osv_memory):
         for address in partner.child_ids:
             _portal_user(address)
         partner_user_ids = self._search_partner_user(cr, uid, partner.id, context=context)
-        portal_users = [u.id for u in self.pool.get('res.portal').browse(cr, uid, portal_id, context=context).group_id.users]
+        portal_users = [u.id for u in self.pool.get('res.groups').browse(cr, uid, portal_id, context=context).users]
         for user in res_user.browse(cr, uid, partner_user_ids, context=context):
             email = user and user.email or False
             has_portal_user = False
@@ -302,17 +302,17 @@ class wizard_user(osv.osv_memory):
         return user_id
 
     def link_portal_user(self, cr, uid, portal_id, user_id, context=None):
-        res_portal = self.pool.get('res.portal')
-        portal = res_portal.browse(cr, uid, portal_id, context=context)
-        portal_user_ids = [u.id for u in portal.group_id.users]
+        res_groups = self.pool.get('res.groups')
+        portal = res_groups.browse(cr, uid, portal_id, context=context)
+        portal_user_ids = [u.id for u in portal.users]
         if user_id not in portal_user_ids:
             return portal.write({'users': [(4, user_id)]}, context=context)
         if user_id in portal_user_ids:
             return False
 
     def unlink_portal_user(self, cr, uid, portal_id, user_id, context=None):
-        res_portal = self.pool.get('res.portal')
-        return res_portal.write(cr, uid, [portal_id], {'users': [(3, user_id)]}, context=context)
+        res_groups = self.pool.get('res.groups')
+        return res_groups.write(cr, uid, [portal_id], {'users': [(3, user_id)]}, context=context)
 
     def unlink_user(self, cr, uid, user_id, context=None):
         #TODO: search portal groups
