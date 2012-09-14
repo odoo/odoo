@@ -216,5 +216,4 @@ class note_base_config_settings(osv.osv_memory):
         #auto group user => automatic with "group_"
         'group_note_fancy': fields.boolean('Use fancy render', implied_group='note.group_note_fancy'),
         'group_note_tags': fields.boolean('Use tags for sticky note', implied_group='note.group_note_tags'),
-        'group_note_thread': fields.boolean('Use mail thread', implied_group='note.group_note_thread'),
     }

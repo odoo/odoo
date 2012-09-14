@@ -128,9 +128,7 @@
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
           <field name="message_follower_ids" widget="mail_followers"/>
-          <span groups="note.group_note_thread">
-            <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
-          </span>
+          <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
         </form>
       </field>
     </record>
@@ -176,10 +174,6 @@
                   <div>
                       <field name="group_note_tags" class="oe_inline"/>
                       <label for="group_note_tags"/>
-                  </div>
-                  <div>
-                      <field name="group_note_thread" class="oe_inline"/>
-                      <label for="group_note_thread"/>
                   </div>
               </div>
           </group>
