@@ -121,7 +121,7 @@
       <field name="arch" type="xml">
         <form string="Memo" version="7.0">
           <header>
-              <field name="stage_id" domain="[('user_id','=',uid)]"/><!-- widget="statusbar" clickable="1"/-->
+              <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
           <field colspan="4" name="memo" widget="html" editor_width="100%%" editor_height="100%%" nolabel="1"/>
           <group groups="note.group_note_tags" col="2">

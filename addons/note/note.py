@@ -64,7 +64,7 @@ class note_note(osv.osv):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
             text_note = (note.memo or '').strip().split('\n')[0]
-            text_note = re.sub(r'(<br[ /]*>|</p>|</div>)[\s\S]*','',text_note)
+            text_note = re.sub(r'(\S?)(<br[ /]*>|<[/]?p>|<[/]?div>|<table>)[\s\S]*',r'\1',text_note)
             text_note = re.sub(r'<[^>]+>','',text_note)
             res[note.id] = text_note
             
@@ -119,7 +119,6 @@ class note_note(osv.osv):
                     result[record.id] = stage.id
         return result
 
-
     _columns = {
         'name': fields.function(_get_note_first_line, 
             fnct_inv=_set_note_first_line, 
@@ -164,25 +163,43 @@ class note_note(osv.osv):
 
             #search all stages
             stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
-            stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, stage_ids, context=context)) #dict: map l'id sur le nom
 
-            result = [{ #notes by stage for stages user
-                    '__context': {'group_by': groupby[1:]},
-                    '__domain': domain + [('stage_ids.id', '=', stage_id)],
-                    'stage_id': (stage_id, stage_name[stage_id]),
-                    'stage_id_count': len(self.search(cr,uid, domain+[('stage_ids', '=', stage_id)], context=context ))
-                } for stage_id in stage_ids]
+            if stage_ids: #if the user have some stages
 
-            nb_notes_ws = len(self.search(cr,uid, domain+[('stage_ids', 'not in', stage_ids)], context=context ))
+                #dict of stages: map les ids sur les noms
+                stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, stage_ids, context=context))
+
+                result = [{ #notes by stage for stages user
+                        '__context': {'group_by': groupby[1:]},
+                        '__domain': domain + [('stage_ids.id', '=', stage_id)],
+                        'stage_id': (stage_id, stage_name[stage_id]),
+                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage_id)], context=context, count=True)
+                    } for stage_id in stage_ids]
+
+                #note without user's stage
+                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', stage_ids)], context=context, count=True)
+                if nb_notes_ws:
+                    result += [{ #notes for unknown stage and if stage_ids is not empty
+                        '__context': {'group_by': groupby[1:]},
+                        '__domain': domain + [('stage_ids', 'not in', stage_ids)],
+                        'stage_id': (0, 'Unknown'),
+                        'stage_id_count':nb_notes_ws
+                    }]
+
+            else: # if stage_ids is empty
+
+                #note without user's stage
+                nb_notes_ws = self.search(cr,uid, domain, context=context, count=True)
+                if nb_notes_ws:
+                    result = [{ #notes for unknown stage
+                        '__context': {'group_by': groupby[1:]},
+                        '__domain': domain,
+                        'stage_id': (0, 'Unknown'),
+                        'stage_id_count':nb_notes_ws
+                    }]
+                else:
+                    result = []
             
-            if nb_notes_ws>0:
-                result += [{ #notes for unknown stage
-                    '__context': {'group_by': groupby[1:]},
-                    '__domain': domain + [('stage_ids', 'not in', stage_ids)],
-                    'stage_id': (0, 'Unknown'),
-                    'stage_id_count':nb_notes_ws
-                }]
-
             return result
 
         else:
