@@ -1577,7 +1577,13 @@ class stock_move(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for line in self.browse(cr, uid, ids, context=context):
-            res.append((line.id, (line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
+            name = line.location_id.name+' > '+line.location_dest_id.name
+            # optional prefixes
+            if line.product_id.code:
+                name = line.product_id.code + ': ' + name
+            if line.picking_id.origin:
+                name = line.picking_id.origin + '/ ' + name
+            res.append((line.id, name))
         return res
 
     def _check_tracking(self, cr, uid, ids, context=None):
@@ -2538,11 +2544,6 @@ class stock_move(osv.osv):
                         'location_id': location_id or move.location_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
-
-        product_obj = self.pool.get('product.product')
-        for new_move in self.browse(cr, uid, res, context=context):
-            message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
-            product_obj.message_post(cr, uid, [new_move.product_id.id], body=message, context=context)
 
         self.action_done(cr, uid, res, context=context)
 
