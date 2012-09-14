@@ -127,8 +127,8 @@
                     <label for="state"/>
                     <div>
                         <field name="state" class="oe_inline"/> - 
-                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" groups="base.group_hr_manager"/>
-                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" groups="base.group_hr_manager"/>
+                        <button class="oe_link" name="attendance_action_change" states="present" string="Sign Out" type="object" context="{'type':'sign_out'}" groups="base.group_hr_user"/>
+                        <button class="oe_link" name="attendance_action_change" states="absent" string="Sign In" type="object" context="{'type':'sign_in'}" groups="base.group_hr_user"/>
                     </div>
                 </field>
             </field>
