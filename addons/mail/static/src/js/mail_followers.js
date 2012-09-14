@@ -156,7 +156,7 @@ openerp_mail_followers = function(session, mail) {
         //fetch subtype from subtype model
         fetch_subtype: function () {
             var self = this
-            var subtype_object = this.sub_model.call('search', [[['model_ids.model','=',this.view.model]]]);
+            var subtype_object = this.sub_model.call('search', [[['res_model','=',this.view.model]]]);
             subtype_object.then(function (subtype_ids){
                 self.sub_model.call('read',  [subtype_ids || self.get_value(),['name', 'default']]).then(self.proxy('display_subtype'));
             });

@@ -462,38 +462,29 @@ You can automatically receive job application though an email gateway, see the H
     </record>
 
     <!--Data for the sub type -->
-    <record id="mail.mail_subtype_new" model="mail.message.subtype">
+    <record id="mail.hr_recruitment_subtype_new" model="mail.message.subtype">
         <field name="name">new</field>
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
     </record>
-    <record id="mail.mail_subtype_hired" model="mail.message.subtype">
+    <record id="mail.hr_recruitment_subtype_hired" model="mail.message.subtype">
         <field name="name">hired</field>
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="res_model">hr.applicant</field>
     </record>
-    <record id="mail.mail_subtype_refused" model="mail.message.subtype">
+    <record id="mail.hr_recruitment_subtype_refused" model="mail.message.subtype">
         <field name="name">refused</field>
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
         </record>
-    <record id="mail.mail_subtype_stage_change" model="mail.message.subtype">
+    <record id="mail.hr_recruitment_subtype_stage_change" model="mail.message.subtype">
         <field name="name">stage change</field>
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
     </record>
-    <record id="mail.mail_subtype_in_progress" model="mail.message.subtype">
+    <record id="mail.hr_recruitment_subtype_in_progress" model="mail.message.subtype">
         <field name="name">in progress</field>
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
+        <field name="res_model">hr.applicant</field>
         <field name="default" eval="False"/>
     </record>
-    <record id="mail.mail_subtype_email" model="mail.message.subtype">
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
-    </record>
-    <record id="mail.mail_subtype_comment" model="mail.message.subtype">
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
-    </record>
-    <record id="mail.mail_subtype_other" model="mail.message.subtype">
-        <field name="model_ids" eval="[(4,ref('hr_recruitment.model_hr_applicant'))]"/>
-    </record>    
 </data>
 </openerp>

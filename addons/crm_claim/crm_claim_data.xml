@@ -75,6 +75,31 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
+        
+            <!-- SUBTYPE -->
+    <record id="mail.claim_subtype_new" model="mail.message.subtype">
+        <field name="name">new</field>
+        <field name="res_model">crm.claim</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.claim_subtype_refused" model="mail.message.subtype">
+        <field name="name">refused</field>
+        <field name="res_model">crm.claim</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.claim_subtype_stage_change" model="mail.message.subtype">
+        <field name="name">stage change</field>
+        <field name="res_model">crm.claim</field>
+    </record>
+    <record id="mail.claim_subtype_cancelled" model="mail.message.subtype">
+        <field name="name">cancelled</field>
+        <field name="res_model">crm.claim</field>
+        <field name="default" eval="False"/>
+    </record>
+    <record id="mail.claim_subtype_closed" model="mail.message.subtype">
+        <field name="name">closed</field>
+        <field name="res_model">crm.claim</field>
+    </record>
 
     </data>
 </openerp>
