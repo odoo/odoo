@@ -4773,6 +4773,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             }
             this.render_elements();
         }
+        console.log('end selection');
     },
     /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
      *  attribute in the widget. This allows to set a given color to a given
