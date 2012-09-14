@@ -114,7 +114,7 @@
                 <!-- dropdown menu with message options and actions -->
                 <span class="oe_dropdown_toggle oe_dropdown_arrow">
                     <ul class="oe_dropdown_menu">
-                        <li t-if="record.is_author &amp; options.show_dd_delete"><a class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
+                        <li t-if="record.is_author and options.show_dd_delete"><a class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
                         <li t-if="options.show_dd_hide"><a class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
 <!--                    Uncomment when adding subtype hiding
                         <li t-if="display['show_hide']">
@@ -130,14 +130,14 @@
                         <t t-raw="record.subject"/>
                     </h1>
                     <div class="oe_mail_msg_body">
-                        <t t-if="options.show_record_name &amp; (!record.subject) &amp; (options.thread_level > 0)">
+                        <t t-if="options.show_record_name and record.record_name and (!record.subject) and (options.thread_level > 0)">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </t>
                         <t t-raw="record.body"/>
                     </div>
                     <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
-                        <li t-if="options.show_record_name &amp; record.subject &amp; options.thread_level > 0">
+                        <li t-if="options.show_record_name and record.record_name and record.subject and options.thread_level > 0">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </li>
                         <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
