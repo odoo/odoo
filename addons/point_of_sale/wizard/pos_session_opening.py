@@ -52,6 +52,9 @@ class pos_session_opening(osv.osv_memory):
                 'config_id' : wizard.pos_config_id.id,
             }
             session_id = proxy.create(cr, uid, values, context=context)
+            s = proxy.browse(cr, uid, session_id, context=context)
+            if s.state=='opened':
+                return self.open_ui(cr, uid, ids, context=context)
             return self._open_session(session_id)
         return self._open_session(wizard.pos_session_id.id)
 
