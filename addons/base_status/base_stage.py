@@ -365,13 +365,13 @@ class base_stage(object):
     
     def find_xml_id(self,cr,uid,ids,name,context=None):
         subtype_obj = self.pool.get('mail.message.subtype')
-        irmodel_obj = self.pool.get('ir.model.data')
-        subtype_id = subtype_obj.search(cr,uid,[('res_model','=',self._name),('name','=',name)])
-        ir_ids = irmodel_obj.search(cr,uid,[('model','=','mail.message.subtype'),('res_id','in',subtype_id)])
-        xml_id = False
-        ir_model_browse = irmodel_obj.browse(cr,uid,ir_ids)
-        if ir_model_browse:
-            xml_id = ir_model_browse[0].name
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        subtype_ids = subtype_obj.search(cr,uid,[('res_model','=',self._name),('name','=',name)])
+        ir_data_ids = ir_model_data_obj.search(cr,uid,[('model','=','mail.message.subtype'),('res_id','in',subtype_ids)])
+        xml_id = 'mail_subtype_comment'
+        ir_model_data_record = ir_model_data_obj.browse(cr,uid,ir_data_ids)
+        if ir_model_data_record:
+            xml_id = ir_model_data_record[0].name
         return xml_id
 
     def case_close_send_note(self, cr, uid, ids, context=None):

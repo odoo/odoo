@@ -604,7 +604,7 @@ class mail_thread(osv.AbstractModel):
             subtype_browse = subtype_obj.browse(cr, uid, ref[1],context=context)
             if self._name == subtype_browse.res_model:
                 values['subtype_id']=subtype_browse.id
-            else:
+            if not subtype_browse.res_model:
                 values['subtype_id']=subtype_browse.id
         values.update({
             'model': context.get('thread_model', self._name) if thread_id else False,
@@ -629,7 +629,7 @@ class mail_thread(osv.AbstractModel):
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
