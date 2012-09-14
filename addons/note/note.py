@@ -26,7 +26,7 @@ import re
 class note_stage(osv.osv):
     """ Category of Note """
     _name = "note.stage"
-    _description = "Note Stage"
+    _description = "Sticky note Stage"
     _columns = {
         'name': fields.char('Category Name', size=64, required=True),
         'sequence': fields.integer('Sequence', help="Used to order the note stages"),
@@ -53,7 +53,7 @@ class note_note(osv.osv):
     """ Note """
     _name = 'note.note'
     _inherit = ['mail.thread']
-    _description = "Memo"
+    _description = "Sticky note"
 
     #writing method (no modification of values)
     def _set_note_first_line(self, cr, uid, id, name, value, args={}, context=None):
@@ -70,25 +70,25 @@ class note_note(osv.osv):
             
         return res
 
-    #unactivate a memo and record the date
+    #unactivate a sticky note and record the date
     def onclick_note_is_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'active' : False, 'date_done' : fields.date.today() })
         
-        self.message_post(cr, uid, ids[0], body='This memo is active', subject=False, 
+        self.message_post(cr, uid, ids[0], body='This sticky note is active', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
 
         return False
 
-    #activate a memo
+    #activate a Sticky note
     def onclick_note_not_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'active' : True })
 
-        self.message_post(cr, uid, ids[0], body='This memo is close', subject=False, 
+        self.message_post(cr, uid, ids[0], body='This sticky note is close', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
 
         return False
 
-    #look that the title (first line of the memo) have more of one caracter
+    #look that the title (first line of the Sticky note) have more of one caracter
     def _constraints_min_len(self, cr, uid, ids, context=None):
         res = self._get_note_first_line(cr, uid, ids, context=context)
         return dict.fromkeys(ids, (len(res[ids])>0) )
@@ -122,7 +122,7 @@ class note_note(osv.osv):
     _columns = {
         'name': fields.function(_get_note_first_line, 
             fnct_inv=_set_note_first_line, 
-            string='Memo Summary', 
+            string='Sticky note Summary', 
             type='text',
             store=True),
         'memo': fields.html('Pad Content'),
@@ -141,7 +141,7 @@ class note_note(osv.osv):
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Linked stages users'),
 
         'active': fields.boolean('Active'),
-        # when the user unactivate the memo, record de date for un display memo after 1 days
+        # when the user unactivate the Sticky note, record de date for un display Sticky note after 1 days
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         # put tags on the memo (optional)
@@ -162,26 +162,26 @@ class note_note(osv.osv):
         if groupby and groupby[0]=="stage_id":
 
             #search all stages
-            stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
+            current_stage_ids = self.pool.get('note.stage').search(cr,uid,[('user_id','=',uid)], context=context)
 
-            if stage_ids: #if the user have some stages
+            if current_stage_ids: #if the user have some stages
 
                 #dict of stages: map les ids sur les noms
-                stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, stage_ids, context=context))
+                stage_name = dict(self.pool.get('note.stage').name_get(cr, uid, current_stage_ids, context=context))
 
                 result = [{ #notes by stage for stages user
                         '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids.id', '=', stage_id)],
-                        'stage_id': (stage_id, stage_name[stage_id]),
-                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', stage_id)], context=context, count=True)
-                    } for stage_id in stage_ids]
+                        '__domain': domain + [('stage_ids.id', '=', current_stage_id)],
+                        'stage_id': (current_stage_id, stage_name[current_stage_id]),
+                        'stage_id_count': self.search(cr,uid, domain+[('stage_ids', '=', current_stage_id)], context=context, count=True)
+                    } for current_stage_id in current_stage_ids]
 
                 #note without user's stage
-                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', stage_ids)], context=context, count=True)
+                nb_notes_ws = self.search(cr,uid, domain+[('stage_ids', 'not in', current_stage_ids)], context=context, count=True)
                 if nb_notes_ws:
                     result += [{ #notes for unknown stage and if stage_ids is not empty
                         '__context': {'group_by': groupby[1:]},
-                        '__domain': domain + [('stage_ids', 'not in', stage_ids)],
+                        '__domain': domain + [('stage_ids', 'not in', current_stage_ids)],
                         'stage_id': (0, 'Unknown'),
                         'stage_id_count':nb_notes_ws
                     }]
@@ -206,13 +206,6 @@ class note_note(osv.osv):
             return super(note_note, self).read_group(self, cr, uid, domain, fields, groupby, 
                 offset=offset, limit=limit, context=context, orderby=orderby)
 
- # object.execute_kw time:0.017s [{'__context': {'group_by': []},
- #                                 '__domain': [('author', '=', u'OpenERP SA'), ['application', '=', 1]],
- #                                 'author': u'OpenERP SA',
- #                                 'author_count': 20L}]
-
-
-
 
 #upgrade config setting page to configure pad, fancy and tags mode
 class note_base_config_settings(osv.osv_memory):
@@ -222,6 +215,6 @@ class note_base_config_settings(osv.osv_memory):
         'module_note_pad': fields.boolean('Use an etherpad'),
         #auto group user => automatic with "group_"
         'group_note_fancy': fields.boolean('Use fancy render', implied_group='note.group_note_fancy'),
-        'group_note_tags': fields.boolean('Use tags for memo', implied_group='note.group_note_tags'),
+        'group_note_tags': fields.boolean('Use tags for sticky note', implied_group='note.group_note_tags'),
         'group_note_thread': fields.boolean('Use mail thread', implied_group='note.group_note_thread'),
     }

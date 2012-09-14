@@ -119,7 +119,7 @@
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <form string="Memo" version="7.0">
+        <form string="Sticky note" version="7.0">
           <header>
               <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
@@ -127,10 +127,8 @@
           <group groups="note.group_note_tags" col="2">
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
-            <div class="oe_chatter" groups="note.group_note_thread">
-                <field name="message_ids" widget="mail_thread"/>
-            </div>
-            <field name="message_follower_ids" widget="mail_followers"/>
+          <field name="message_follower_ids" widget="mail_followers"/>
+          <field class="oe_chatter" name="message_ids" widget="mail_thread" groups="note.group_note_thread"/>
         </form>
       </field>
     </record>
@@ -140,9 +138,9 @@
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <search string="Memos">
+        <search string="Sticky notes">
           <field name="name" string="Title"/>
-          <field name="memo" string="Memo"/>
+          <field name="memo" string="Sticky note"/>
           <field name="stage_id"/>
           <field name="tag_ids" groups="note.group_note_tags"/>
           <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
@@ -164,7 +162,7 @@
       <field name="arch" type="xml">
         <xpath expr="//label[@string='Authentication']/.." position="after">
           <group>
-              <label for="id" string="Memos"/>
+              <label for="id" string="Sticky notes"/>
               <div>
                   <div>
                       <field name="module_note_pad" class="oe_inline"/>
