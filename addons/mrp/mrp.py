@@ -47,13 +47,13 @@ class mrp_workcenter(osv.osv):
         'time_start': fields.float('Time before prod.', help="Time in hours for the setup."),
         'time_stop': fields.float('Time after prod.', help="Time in hours for the cleaning."),
         'costs_hour': fields.float('Cost per hour', help="Specify Cost of Work Center per hour."),
-        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','<>','view')],
+        'costs_hour_account_id': fields.many2one('account.analytic.account', 'Hour Account', domain=[('type','!=','view')],
             help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_cycle': fields.float('Cost per cycle', help="Specify Cost of Work Center per cycle."),
-        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','<>','view')],
+        'costs_cycle_account_id': fields.many2one('account.analytic.account', 'Cycle Account', domain=[('type','!=','view')],
             help="Fill this only if you want automatic analytic accounting entries on production orders."),
         'costs_journal_id': fields.many2one('account.analytic.journal', 'Analytic Journal'),
-        'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','<>','view')]),
+        'costs_general_account_id': fields.many2one('account.account', 'General Account', domain=[('type','!=','view')]),
         'resource_id': fields.many2one('resource.resource','Resource', ondelete='cascade', required=True),
         'product_id': fields.many2one('product.product','Work Center Product', help="Fill this product to easily track your production costs in the analytic accounting."),
     }
@@ -214,7 +214,6 @@ class mrp_bom(osv.osv):
         'bom_id': fields.many2one('mrp.bom', 'Parent BoM', ondelete='cascade', select=True),
         'routing_id': fields.many2one('mrp.routing', 'Routing', help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production planning."),
         'property_ids': fields.many2many('mrp.property', 'mrp_bom_property_rel', 'bom_id','property_id', 'Properties'),
-        'revision_ids': fields.one2many('mrp.bom.revision', 'bom_id', 'BoM Revisions'),
         'child_complete_ids': fields.function(_child_compute, relation='mrp.bom', string="BoM Hierarchy", type='many2many'),
         'company_id': fields.many2one('res.company','Company',required=True),
     }
@@ -374,26 +373,6 @@ class mrp_bom(osv.osv):
 
 mrp_bom()
 
-class mrp_bom_revision(osv.osv):
-    _name = 'mrp.bom.revision'
-    _description = 'Bill of Material Revision'
-    _columns = {
-        'name': fields.char('Modification name', size=64, required=True),
-        'description': fields.text('Description'),
-        'date': fields.date('Modification Date'),
-        'indice': fields.char('Revision', size=16),
-        'last_indice': fields.char('last indice', size=64),
-        'author_id': fields.many2one('res.users', 'Author'),
-        'bom_id': fields.many2one('mrp.bom', 'BoM', select=True),
-    }
-
-    _defaults = {
-        'author_id': lambda x, y, z, c: z,
-        'date': fields.date.context_today,
-    }
-
-mrp_bom_revision()
-
 def rounding(f, r):
     import math
     if not r:
@@ -457,41 +436,59 @@ class mrp_production(osv.osv):
         return dest_location_id.id
 
     _columns = {
-        'name': fields.char('Reference', size=64, required=True),
-        'origin': fields.char('Source Document', size=64, help="Reference of the document that generated this production order request."),
-        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority', select=True),
+        'name': fields.char('Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'origin': fields.char('Source Document', size=64, readonly=True, states={'draft': [('readonly', False)]},
+            help="Reference of the document that generated this production order request."),
+        'priority': fields.selection([('0','Not urgent'),('1','Normal'),('2','Urgent'),('3','Very Urgent')], 'Priority',
+            select=True, readonly=True, states=dict.fromkeys(['draft', 'confirmed'], [('readonly', False)])),
 
-        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft':[('readonly',False)]}),
-        'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uos_qty': fields.float('Product UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
-        'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
+        'product_id': fields.many2one('product.product', 'Product', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'product_qty': fields.float('Product Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True, readonly=True, states={'draft':[('readonly',False)]}),
+        'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'product_uos_qty': fields.float('Product UoS Quantity', readonly=True, states={'draft': [('readonly', False)]}),
+        'product_uos': fields.many2one('product.uom', 'Product UoS', readonly=True, states={'draft': [('readonly', False)]}),
 
         'location_src_id': fields.many2one('stock.location', 'Raw Materials Location', required=True,
-            readonly=True, states={'draft':[('readonly',False)]}, help="Location where the system will look for components."),
+            readonly=True, states={'draft':[('readonly',False)]},
+            help="Location where the system will look for components."),
         'location_dest_id': fields.many2one('stock.location', 'Finished Products Location', required=True,
-            readonly=True, states={'draft':[('readonly',False)]}, help="Location where the system will stock the finished products."),
+            readonly=True, states={'draft':[('readonly',False)]},
+            help="Location where the system will stock the finished products."),
 
         'date_planned_end': fields.function(_production_date_end, type='date', string='Scheduled End Date'),
         'date_planned_date': fields.function(_production_date, type='date', string='Scheduled Date'),
-        'date_planned': fields.datetime('Scheduled Date', required=True, select=1),
-        'date_start': fields.datetime('Start Date', select=True),
-        'date_finished': fields.datetime('End Date', select=True),
+        'date_planned': fields.datetime('Scheduled Date', required=True, select=1, readonly=True, states={'draft':[('readonly',False)]}),
+        'date_start': fields.datetime('Start Date', select=True, readonly=True),
+        'date_finished': fields.datetime('End Date', select=True, readonly=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]}),
-        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]}, help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
+        'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
+            help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",
             help="This is the Internal Picking List that brings the finished product to the production plan"),
         'move_prod_id': fields.many2one('stock.move', 'Product Move', readonly=True),
-        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products', domain=[('state','in', ('done', 'cancel'))]),
-        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce', domain=[('state','not in', ('done', 'cancel'))], states={'done':[('readonly',True)]}),
-        'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products', domain=[('state','in', ('done', 'cancel'))]),
-        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods'),
-        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation'),
-        'state': fields.selection([('draft','New'),('cancel','Cancelled'),('picking_except', 'Picking Exception'),('confirmed','Waiting Goods'),('ready','Ready to Produce'),('in_production','Production Started'),('done','Done')],'Status', readonly=True,
-                                    help='When the production order is created the state is set to \'Draft\'.\n If the order is confirmed the state is set to \'Waiting Goods\'.\n If any exceptions are there, the state is set to \'Picking Exception\'.\
-                                    \nIf the stock is available then the state is set to \'Ready to Produce\'.\n When the production gets started then the state is set to \'In Production\'.\n When the production is over, the state is set to \'Done\'.'),
+        'move_lines': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Products to Consume',
+            domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
+        'move_lines2': fields.many2many('stock.move', 'mrp_production_move_ids', 'production_id', 'move_id', 'Consumed Products',
+            domain=[('state','in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
+        'move_created_ids': fields.one2many('stock.move', 'production_id', 'Products to Produce',
+            domain=[('state','not in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
+        'move_created_ids2': fields.one2many('stock.move', 'production_id', 'Produced Products',
+            domain=[('state','in', ('done', 'cancel'))], readonly=True, states={'draft':[('readonly',False)]}),
+        'product_lines': fields.one2many('mrp.production.product.line', 'production_id', 'Scheduled goods',
+            readonly=True, states={'draft':[('readonly',False)]}),
+        'workcenter_lines': fields.one2many('mrp.production.workcenter.line', 'production_id', 'Work Centers Utilisation',
+            readonly=True, states={'draft':[('readonly',False)]}),
+        'state': fields.selection(
+            [('draft', 'New'), ('cancel', 'Cancelled'), ('picking_except', 'Picking Exception'), ('confirmed', 'Waiting Goods'),
+                ('ready', 'Ready to Produce'), ('in_production', 'Production Started'), ('done', 'Done')],
+            string='Status', readonly=True,
+            help="When the production order is created the state is set to 'Draft'.\n\
+                If the order is confirmed the state is set to 'Waiting Goods'.\n\
+                If any exceptions are there, the state is set to 'Picking Exception'.\n\
+                If the stock is available then the state is set to 'Ready to Produce'.\n\
+                When the production gets started then the state is set to 'In Production'.\n\
+                When the production is over, the state is set to 'Done'."),
         'hour_total': fields.function(_production_calc, type='float', string='Total Hours', multi='workorder', store=True),
         'cycle_total': fields.function(_production_calc, type='float', string='Total Cycles', multi='workorder', store=True),
         'user_id':fields.many2one('res.users', 'Responsible'),
@@ -728,7 +725,7 @@ class mrp_production(osv.osv):
 
         produced_qty = 0
         for produced_product in production.move_created_ids2:
-            if (produced_product.scrapped) or (produced_product.product_id.id <> production.product_id.id):
+            if (produced_product.scrapped) or (produced_product.product_id.id != production.product_id.id):
                 continue
             produced_qty += produced_product.product_qty
         if production_mode in ['consume','consume_produce']:
@@ -935,7 +932,7 @@ class mrp_production(osv.osv):
         # If usage of routing location is a internal, make outgoing shipment otherwise internal shipment
         if production.bom_id.routing_id and production.bom_id.routing_id.location_id:
             routing_loc = production.bom_id.routing_id.location_id
-            if routing_loc.usage <> 'internal':
+            if routing_loc.usage != 'internal':
                 pick_type = 'out'
             partner_id = routing_loc.partner_id and routing_loc.partner_id.id or False
 
