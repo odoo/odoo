@@ -919,8 +919,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
             this.records.bind(event, callback);
         }, this);
 
-        this.$_element = $('<tbody>')
-            .appendTo(document.body)
+        this.$current = $('<tbody>')
             .delegate('th.oe_list_record_selector', 'click', function (e) {
                 e.stopPropagation();
                 var selection = self.get_selection();
@@ -1011,11 +1010,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         });
     },
     render: function () {
-        var self = this;
-        if (this.$current) {
-            this.$current.remove();
-        }
-        this.$current = this.$_element.clone(true);
         this.$current.empty().append(
             QWeb.render('ListView.rows', _.extend({
                     render_cell: function () {
@@ -1091,7 +1085,6 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
         if (!this.$current) { return; }
         this.$current.remove();
         this.$current = null;
-        this.$_element.remove();
     },
     get_records: function () {
         return this.records.map(function (record) {
