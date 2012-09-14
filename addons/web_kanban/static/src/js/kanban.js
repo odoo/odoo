@@ -429,7 +429,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         );
         var create_nocontent = this.$buttons;
         this.$el.find('.oe_view_nocontent').click(function() {
-            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150)
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
         });
     }
 });
