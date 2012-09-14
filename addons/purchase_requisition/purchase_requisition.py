@@ -177,7 +177,6 @@ class purchase_requisition(osv.osv):
                     'product_uom': default_uom_po_id,
                     'price_unit': seller_price,
                     'date_planned': date_planned,
-                    'notes': product.description_purchase,
                     'taxes_id': [(6, 0, taxes)],
                 }, context=context)
                 
