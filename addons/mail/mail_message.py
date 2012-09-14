@@ -222,7 +222,7 @@ class mail_message(osv.Model):
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
-            ids = self.search(cr, uid, domain, context=context, limit=limit)
+            ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
 
         result = []
