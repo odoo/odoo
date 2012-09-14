@@ -1,6 +1,7 @@
 openerp.account = function (instance) {
     var _t = instance.web._t,
         _lt = instance.web._lt;
+    var QWeb = instance.web.qweb;
     
     instance.web.account = {};
     
@@ -8,8 +9,12 @@ openerp.account = function (instance) {
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
         init: function() {
             this._super.apply(this, arguments);
-            console.log("coucou");
-        }
+        },
+        on_loaded: function() {
+            var tmp = this._super.apply(this, arguments);
+            this.$el.prepend(QWeb.render("AccountReconciliation"));
+            return tmp;
+        },
     });
     
     /*instance.web.views.add('form_clone', 'instance.account.extend_form_view');

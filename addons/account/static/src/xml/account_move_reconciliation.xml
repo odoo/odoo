@@ -2,6 +2,70 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
+    
+    <t t-name="AccountReconciliation">
+        <div class="oe_extended_form_view">
+            <div class="oe_formview oe_form_readonly">
+                <div class="oe_form_container">
+                    <div class="oe_form">
+                        <div class="oe_form_nosheet">
+                            <table border="0" cellpadding="0" cellspacing="0" class="oe_form_group ">
+                                <tbody>
+                                    <tr class="oe_form_group_row">
+                                        <td class="oe_form_group_cell" colspan="1" width="50%">
+                                            <h3>
+                                                <a class="oe_pager_button" data-pager-action="previous" type="button">Previous</a>
+                                                <a class="oe_pager_button" data-pager-action="next" type="button">Next</a>
+                                                <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button">
+                                                    <a class="oe_form_uri" href="#" />
+                                                    <span class="oe_form_m2o_follow" />
+                                                </span>
+                                                (
+                                                <span class="oe_pager_index_extend">0</span>
+                                                <span class="oe_pager_separator">/</span>
+                                                <span class="oe_pager_count_extend">0</span>
+                                                )
+                                            </h3>
+                                        </td>
+                                        <td class="oe_form_group_cell" colspan="1" width="50%">
+                                            <!--<div>
+                                                <label class=" oe_form_label oe_align_right" for="oe-field-input-100" title="">Last Reconciliation</label>
+                                                <span class="oe_form_field oe_datepicker_root oe_form_field_date" />
+                                                <label class=" oe_form_label oe_align_right" for="oe-field-input-101" title="">Latest Entry</label>
+                                                <span class="oe_form_field oe_datepicker_root oe_form_field_date" />
+                                            </div>-->
+                                        </td>
+                                    </tr>
+                                    <tr class="oe_form_group_row">
+                                        <td class="oe_form_group_cell" colspan="1" width="50%">
+                                            <div class="oe_reconcile_row">
+                                                <a class="oe_reconcile oe_reconcile_button" name="339" type="button">Reconcile</a>
+                                                <!--<a class="oe_nothing_to_reconcile oe_reconcile_button" name="skip_partner" type="button">Nothing to Reconcile</a>-->
+                                                <!--<span aria-valuemax="100" aria-valuemin="0" aria-valuenow="0" class="oe_form_field oe_form_field_progressbar ui-progressbar ui-widget ui-widget-content ui-corner-all" role="progressbar">
+                                                    <span>0.00%</span>
+                                                    <div class="ui-progressbar-value ui-widget-header ui-corner-left" style="display: none; width: 0%; " />
+                                                </span>-->
+                                            </div>
+                                        </td>
+                                        <td class="oe_form_group_cell" colspan="1" width="50%">
+                                            <!--<div class="oe_reconcile_row" name="grp_followup">
+                                                <label class=" oe_form_label oe_align_right" for="oe-field-input-102" title="">Latest Follow-up</label>
+                                                <span class="oe_form_field oe_datepicker_root oe_form_field_date" />
+                                                <span class="oe_form_field oe_form_field_many2one oe_form_field_with_button">
+                                                    <a class="oe_form_uri" href="#" />
+                                                    <span class="oe_form_m2o_follow" />
+                                                </span>
+                                            </div>-->
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
 
     <t t-extend="ViewManagerAction">
           <t t-jquery=".oe_view_manager_header" t-operation="after">
