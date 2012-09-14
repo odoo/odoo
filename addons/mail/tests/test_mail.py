@@ -23,7 +23,6 @@ import tools
 
 from openerp.tests import common
 from openerp.tools.html_sanitize import html_sanitize
-from osv.orm import except_orm
 
 MAIL_TEMPLATE = """Return-Path: <whatever-2a840@postmaster.twitter.com>
 To: {to}
@@ -276,78 +275,6 @@ class test_mail(TestMailMockups):
         group_pigs.refresh()
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
         self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
-
-    def test_15_access_rights(self):
-        cr, uid = self.cr, self.uid
-        self.res_groups = self.registry('res.groups')
-
-        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
-
-        # Find Employee group
-        group_employee_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'base', 'group_user')
-        group_employee_id = group_employee_ref and group_employee_ref[1] or False
-        group_employee = self.res_groups.browse(cr, uid, group_employee_id)
-
-        self.group_jobs_id = self.mail_group.create(cr, uid, {'name': 'Jobs', 'public': 'public'})
-
-        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert Tartopoils', 'login': 'bert', 'groups_id': [(6, 0, [])]})
-        user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul', 'groups_id': [(6, 0, [group_employee_id])]})
-
-        user_bert = self.res_users.browse(cr, uid, user_bert_id)
-        user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
-
-        print '-----'
-        for group in user_bert.groups_id:
-            print group.name
-        print '-----'
-        for group in user_raoul.groups_id:
-            print group.name
-
-        # Summary
-        # group_pigs: groups (Employee)
-        # group_jobs: public
-
-        # ----------------------------------------
-        # CASE1: Bert, without groups
-        # ----------------------------------------
-
-        # Do: Bert creates a group, should crash because perm_create only for employees
-        self.assertRaises(except_orm,
-                          self.mail_group.create,
-                          cr, user_bert_id, {'name': 'Bert\'s Group'})
-        # Do: Bert reads Jobs basic fields, ok because public = read access on the group
-        self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['name', 'description'])
-        # Do: Bert reads Jobs messages, ok because read access on the group = read access on its messages
-        jobs_message_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_ids'])['message_ids']
-        self.mail_message.read(cr, user_bert_id, jobs_message_ids)
-        # Do: Bert reads Jobs followers, ko because partner are accessible to employees or partner manager
-        jobs_followers_ids = self.mail_group.read(cr, user_bert_id, self.group_jobs_id, ['message_follower_ids'])['message_follower_ids']
-        self.assertRaises(except_orm,
-                          self.res_partner.read,
-                          cr, user_bert_id, jobs_followers_ids)
-        # Do: Bert comments Jobs, ko because not write access on the group and not in the followers
-        self.assertRaises(except_orm,
-                          self.mail_group.message_post,
-                          cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
-
-        # Do: Bert reads Pigs, should crash because mail.group security=groups only for employee group
-        self.assertRaises(except_orm,
-                          self.mail_group.read,
-                          cr, user_bert_id, self.group_pigs_id)
-
-        # Do: add Bert to jobs followers
-        self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [user_bert.partner_id.id])
-        # Do: Bert comments Jobs, ok because he is in the followers
-        self.mail_group.message_post(cr, user_bert_id, self.group_jobs_id, body='I love Pigs')
-
-        # ----------------------------------------
-        # CASE1: Raoul, employee
-        # ----------------------------------------
-
-        # Do: Bert read Jobs, ok because public
-        self.mail_group.read(cr, user_raoul_id, self.group_pigs_id)
-        # Do: Bert read Jobs, ok because public
-        self.mail_group.read(cr, user_raoul_id, self.group_jobs_id)
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
