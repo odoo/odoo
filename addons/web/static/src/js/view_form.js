@@ -321,7 +321,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : "New record" });
+        this.set({ 'title' : record.id ? record.display_name : "New" });
 
         if (this.qweb) {
             this.kill_current_form();
@@ -1399,6 +1399,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             if (! page.__ic)
                 return;
             page.__ic.on("change:effective_invisible", null, function() {
+                if (!page.__ic.get('effective_invisible')) {
+                    $new_notebook.tabs('select', i);
+                    return;
+                }
                 var current = $new_notebook.tabs("option", "selected");
                 if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
                     return;
@@ -2400,10 +2404,6 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
     template: 'FieldTextHtml',
     init: function() {
         this._super.apply(this, arguments);
-        if (this.field.type !== 'html' && ! this.options.safe) {
-            throw new Error(_.str.sprintf(
-                _t("Error with field %s, it is not allowed to use the widget 'html' with any other field type than 'html'"), this.string));
-        }
     },
     initialize_content: function() {
         var self = this;
@@ -2437,7 +2437,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
     },
     render_value: function() {
         if (! this.get("effective_readonly")) {
-            this.$textarea.val(this.get('value'));
+            this.$textarea.val(this.get('value') || '');
             this._updating_editor = true;
             this.$cleditor.updateFrame();
             this._updating_editor = false;
@@ -2712,8 +2712,10 @@ instance.web.form.CompletionFieldMixin = {
     _create_context: function(name) {
         var tmp = {};
         var field = (this.options || {}).create_name_field;
-        if (field !== false && (this.options || {}).quick_create !== false)
-            tmp["default_" + field] = name || "name";
+        if (field === undefined)
+            field = "name";
+        if (field !== false && name && (this.options || {}).quick_create !== false)
+            tmp["default_" + field] = name;
         return tmp;
     },
 };
@@ -2773,7 +2775,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
         this.$follow_button = $(".oe_m2o_cm_button", this.$el);
 
-        this.$follow_button.click(function() {
+        this.$follow_button.click(function(ev) {
+            ev.preventDefault();
             if (!self.get('value')) {
                 self.focus();
                 return;
@@ -2951,14 +2954,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var lines = _.escape(str).split("\n");
             var link = "";
             var follow = "";
-            if (! this.options.highlight_first_line) {
-                link = lines.join("<br />");
-            } else {
-                link = lines[0];
-                follow = _.rest(lines).join("<br />");
-                if (follow)
-                    link += "<br />";
-            }
+            link = lines[0];
+            follow = _.rest(lines).join("<br />");
+            if (follow)
+                link += "<br />";
             var $link = this.$el.find('.oe_form_uri')
                  .unbind('click')
                  .html(link);

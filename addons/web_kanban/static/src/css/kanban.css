@@ -74,7 +74,6 @@
 .openerp .oe_kanban_view .oe_kanban_group_title {
   font-size: 16px;
   font-weight: bold;
-  min-height: 32px;
   color: #333333;
   text-shadow: 0 1px 0 white;
 }
@@ -84,6 +83,11 @@
 .openerp .oe_kanban_view .oe_kanban_column, .openerp .oe_kanban_view .oe_kanban_group_header {
   vertical-align: top;
   padding: 6px 6px 6px 5px;
+}
+.openerp .oe_kanban_view .oe_kanban_column ul, .openerp .oe_kanban_view .oe_kanban_column li, .openerp .oe_kanban_view .oe_kanban_group_header ul, .openerp .oe_kanban_view .oe_kanban_group_header li {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
 }
 .openerp .oe_kanban_view .oe_kanban_group_header.oe_kanban_no_group {
   padding: 0px;
@@ -105,6 +109,7 @@
 }
 .openerp .oe_kanban_view .oe_kanban_aggregates {
   padding: 0;
+  margin: 0px;
 }
 .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_group_title, .openerp .oe_kanban_view .oe_kanban_group_folded.oe_kanban_column > *, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_aggregates, .openerp .oe_kanban_view .oe_kanban_group_folded .oe_kanban_add {
   display: none;

@@ -20,7 +20,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
     },
     start: function() {
         this._super.apply(this, arguments);
-        this.$el.on('click', '.oe_breadcrumb_item', this.on_breadcrumb_clicked);
+        this.$el.on('click', 'a.oe_breadcrumb_item', this.on_breadcrumb_clicked);
     },
     dialog_stop: function () {
         if (this.dialog) {
@@ -95,7 +95,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 break;
             }
         }
-        var subindex = $e.parent().find('.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
+        var subindex = $e.parent().find('a.oe_breadcrumb_item[data-id=' + $e.data('id') + ']').index($e);
         this.select_breadcrumb(index, subindex);
     },
     select_breadcrumb: function(index, subindex) {
@@ -148,7 +148,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
             for (var j = 0; j < tit.length; j += 1) {
                 var label = _.escape(tit[j]);
                 if (i === this.breadcrumbs.length - 1 && j === tit.length - 1) {
-                    titles.push(label);
+                    titles.push(_.str.sprintf('<span class="oe_breadcrumb_item">%s</span>', label));
                 } else {
                     titles.push(_.str.sprintf('<a href="#" class="oe_breadcrumb_item" data-id="%s">%s</a>', item.id, label));
                 }
@@ -566,7 +566,8 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     }
                     return controller.get('title');
                 });
-                if (next && next.action && next.action.res_id && self.active_view === 'form' && self.model === next.action.res_model && id === next.action.res_id) {
+                if (next && next.action && next.action.res_id && self.dataset &&
+                    self.active_view === 'form' && self.dataset.model === next.action.res_model && id === next.action.res_id) {
                     // If the current active view is a formview and the next item in the breadcrumbs
                     // is an action on same object (model / res_id), then we omit the current formview's title
                     titles.pop();
@@ -835,6 +836,21 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                         search_default_model_id: this.dataset.model
                     }
                 });
+                break;
+            case 'print_workflow':
+                if (current_view.get_selected_ids  && current_view.get_selected_ids().length == 1) {
+                    instance.web.blockUI();
+                    var action = {
+                        context: { active_ids: current_view.get_selected_ids() },
+                        report_name: "workflow.instance.graph",
+                        datas: {
+                            model: this.dataset.model,
+                            id: current_view.get_selected_ids()[0],
+                            nested: true,
+                        }
+                    };
+                    this.session.get_file({ url: '/web/report', data: {action: JSON.stringify(action)}, complete: instance.web.unblockUI });
+                }
                 break;
             default:
                 if (val) {
