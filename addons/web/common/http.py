@@ -7,6 +7,7 @@ import cgi
 import contextlib
 import functools
 import logging
+import mimetypes
 import os
 import pprint
 import sys
@@ -420,6 +421,10 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
 #----------------------------------------------------------
 # OpenERP Web WSGI Application
 #----------------------------------------------------------
+# Add potentially missing (older ubuntu) font mime types
+mimetypes.add_type('application/font-woff', '.woff')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('application/x-font-ttf', '.ttf')
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app

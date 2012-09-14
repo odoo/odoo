@@ -21,8 +21,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         // whether the view rows can be reordered (via vertical drag & drop)
         'reorderable': true,
         'action_buttons': true,
-        // if true, the 'Import', 'Export', etc... buttons will be shown
-        'import_enabled': true,
     },
     /**
      * Core class for list-type displays.
@@ -281,7 +279,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             self.reload_content();
         });
 
-        // Add button and Import link
+        // Add button
         if (!this.$buttons) {
             this.$buttons = $(QWeb.render("ListView.buttons", {'widget':self}));
             if (this.options.$buttons) {
@@ -292,10 +290,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.$buttons.find('.oe_list_add')
                     .click(this.proxy('do_add_record'))
                     .prop('disabled', grouped);
-            this.$buttons.on('click', '.oe_list_button_import', function() {
-                self.on_sidebar_import();
-                return false;
-            });
         }
 
         // Pager
@@ -358,7 +352,6 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
             this.sidebar = new instance.web.Sidebar(this);
             this.sidebar.appendTo(this.options.$sidebar);
             this.sidebar.add_items('other', _.compact([
-                self.is_action_enabled('create') && { label: _t("Import"), callback: this.on_sidebar_import },
                 { label: _t("Export"), callback: this.on_sidebar_export },
                 self.is_action_enabled('delete') && { label: _t('Delete'), callback: this.do_delete_selected }
             ]));
@@ -480,7 +473,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         if (this.embedded_view) {
             return $.Deferred().then(callback).resolve(this.embedded_view);
         } else {
-            return this.rpc('/web/listview/load', {
+            return this.rpc('/web/view/load', {
                 model: this.model,
                 view_id: this.view_id,
                 view_type: "tree",
@@ -1265,7 +1258,7 @@ instance.web.ListView.Groups = instance.web.Class.extend( /** @lends instance.we
             self.bind_child_events(child);
             child.datagroup = group;
 
-            var $row = child.$row = $('<tr>');
+            var $row = child.$row = $('<tr class="oe_group_header">');
             if (group.openable && group.length) {
                 $row.click(function (e) {
                     if (!$row.data('open')) {

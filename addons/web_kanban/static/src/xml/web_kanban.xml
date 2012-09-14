@@ -47,9 +47,8 @@
                 <div class="oe_fold_column">
                     <div t-attf-class="oe_kanban_group_title #{widget.undefined_title ? 'oe_kanban_group_title_undefined' : ''}">
                         <span><t t-esc="widget.title"/></span>
-                        <span class="oe_kanban_group_length">(<t t-esc="widget.group.length"/>)</span>
+                        <span class="oe_kanban_group_length oe_tag" style="position:relative; top:-2px;"><t t-esc="widget.group.length"/></span>
                     </div>
-                    <div class="oe_clear"/>
                     <ul class="oe_kanban_aggregates">
                         <li t-foreach="widget.aggregates" t-as="aggregate">
                             <span><t t-esc="aggregate"/>:</span> <t t-esc="aggregate_value"/>
@@ -83,7 +82,7 @@
     </li>
 </t>
 <div t-name="KanbanView.quick_create" class="oe_kanban_quick_create">
-    <input t-att-placeholder="_t('Create a new record')"/>
+    <input/>
     <t t-if="widget._buttons">
         <div class="oe_kanban_quick_create_buttons">
             <button class="oe_kanban_quick_create_add">Add</button>

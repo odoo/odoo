@@ -508,7 +508,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var key = this.view.group_by + '-' + this.value;
         if (!this.view.state.groups[key]) {
             this.view.state.groups[key] = {
-                folded: false
+                folded: group?group.folded:false
             };
         }
         this.state = this.view.state.groups[key];
@@ -779,7 +779,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
-        this.$el.find('.oe_kanban_action').click(function() {
+        this.$el.find('.oe_kanban_action').click(function(ev) {
+            ev.preventDefault();
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);

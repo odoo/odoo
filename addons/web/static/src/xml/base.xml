@@ -79,7 +79,7 @@
             </form>
             <div class="oe_login_footer">
                 <a href="#" class="oe_login_manage_db">Manage Databases</a> |
-                <a href="http://www.openerp.com">Powered by <span>OpenERP</span></a>
+                <a href="http://www.openerp.com" target="_blank">Powered by <span>OpenERP</span></a>
             </div>
         </div>
     </div>
@@ -404,13 +404,10 @@
         </tr>
         <tr>
             <td class="oe_leftbar" valign="top">
-                <t t-js="d">
-                    d.url = '/' + (window.location.search || '');
-                </t>
-                <a t-att-href="url" class="oe_logo"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
+                <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com"><span>Open</span>ERP</a>
+                    Powered by <a href="http://www.openerp.com" target="_blank"><span>Open</span>ERP</a>
                 </div>
             </td>
             <td class="oe_application">
@@ -430,9 +427,9 @@
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
             <col width="20%"/>
-            <col width="25%"/>
-            <col width="20%"/>
             <col width="35%"/>
+            <col width="15%"/>
+            <col width="30%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
@@ -479,6 +476,7 @@
     <option value="">Debug View#<t t-esc="view.fields_view.view_id"/></option>
     <option t-if="view_manager.active_view === 'form'" value="perm_read" data-views="form,page">View Log (perm_read)</option>
     <option t-if="view_manager.active_view === 'form'" value="toggle_layout_outline">Toggle Form Layout Outline</option>
+    <option value="tests">JS Tests</option>
     <option value="fields">View Fields</option>
     <option value="fvg">Fields View Get</option>
     <option value="manage_filters">Manage Filters</option>
@@ -489,6 +487,7 @@
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
         <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
         <option value="edit_workflow">Edit Workflow</option>
+        <option value="print_workflow">Print Workflow</option>
     </t>
 </t>
 <t t-name="ViewManagerDebugViewLog">
@@ -654,9 +653,6 @@
         <button type="button" class="oe_button oe_list_add oe_highlight">
             <t t-esc="widget.options.addable"/>
         </button>
-        <span class="oe_alternative" t-if="widget.options.import_enabled">
-            <span class="oe_fade">or</span> <a href="#" class="oe_bold oe_list_button_import">Import</a>
-        </span>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -700,9 +696,10 @@
     <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
-    </t>
-    <t t-jquery="a.oe_list_button_import" t-operation="after">
-        <a href="#" class="oe_bold oe_list_discard">Discard</a>
+        <span class="oe_alternative">
+            <span class="oe_fade">or</span>
+            <a href="#" class="oe_bold oe_list_discard">Discard</a>
+        </span>
     </t>
 </t>
 <t t-extend="ListView.row">
@@ -1066,7 +1063,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">

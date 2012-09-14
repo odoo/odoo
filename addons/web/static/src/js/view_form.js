@@ -92,6 +92,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
         });
+        instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
+            if (!this.can_be_discarded()) {
+                e.preventDefault();
+            }
+        });
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -316,7 +321,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.datarecord = record;
         this._actualize_mode();
-        this.set({ 'title' : record.id ? record.display_name : "New record" });
+        this.set({ 'title' : record.id ? record.display_name : "New" });
 
         if (this.qweb) {
             this.kill_current_form();
@@ -748,7 +753,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return def.promise();
     },
     can_be_discarded: function() {
-        return !this.$el.is('.oe_form_dirty') || confirm(_t("Warning, the record has been modified, your changes will be discarded."));
+        if (this.$el.is('.oe_form_dirty')) {
+            if (!confirm(_t("Warning, the record has been modified, your changes will be discarded.\n\nAre you sure you want to leave this page ?"))) {
+                return false;
+            }
+            this.$el.removeClass('oe_form_dirty');
+        }
+        return true;
     },
     /**
      * Triggers saving the form's record. Chooses between creating a new
@@ -1388,6 +1399,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             if (! page.__ic)
                 return;
             page.__ic.on("change:effective_invisible", null, function() {
+                if (!page.__ic.get('effective_invisible')) {
+                    $new_notebook.tabs('select', i);
+                    return;
+                }
                 var current = $new_notebook.tabs("option", "selected");
                 if (! pages[current].__ic || ! pages[current].__ic.get("effective_invisible"))
                     return;
@@ -2387,6 +2402,9 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
  */
 instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldTextHtml',
+    init: function() {
+        this._super.apply(this, arguments);
+    },
     initialize_content: function() {
         var self = this;
         if (! this.get("effective_readonly")) {
@@ -2419,7 +2437,7 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
     },
     render_value: function() {
         if (! this.get("effective_readonly")) {
-            this.$textarea.val(this.get('value'));
+            this.$textarea.val(this.get('value') || '');
             this._updating_editor = true;
             this.$cleditor.updateFrame();
             this._updating_editor = false;
@@ -2694,8 +2712,10 @@ instance.web.form.CompletionFieldMixin = {
     _create_context: function(name) {
         var tmp = {};
         var field = (this.options || {}).create_name_field;
-        if (field !== false && (this.options || {}).quick_create !== false)
-            tmp["default_" + field] = name || "name";
+        if (field === undefined)
+            field = "name";
+        if (field !== false && name && (this.options || {}).quick_create !== false)
+            tmp["default_" + field] = name;
         return tmp;
     },
 };
@@ -2755,7 +2775,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
         this.$follow_button = $(".oe_m2o_cm_button", this.$el);
 
-        this.$follow_button.click(function() {
+        this.$follow_button.click(function(ev) {
+            ev.preventDefault();
             if (!self.get('value')) {
                 self.focus();
                 return;
@@ -2933,14 +2954,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             var lines = _.escape(str).split("\n");
             var link = "";
             var follow = "";
-            if (! this.options.highlight_first_line) {
-                link = lines.join("<br />");
-            } else {
-                link = lines[0];
-                follow = _.rest(lines).join("<br />");
-                if (follow)
-                    link += "<br />";
-            }
+            link = lines[0];
+            follow = _.rest(lines).join("<br />");
+            if (follow)
+                link += "<br />";
             var $link = this.$el.find('.oe_form_uri')
                  .unbind('click')
                  .html(link);

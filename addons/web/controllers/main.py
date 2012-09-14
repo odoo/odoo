@@ -484,15 +484,13 @@ def fix_view_modes(action):
     if not action.get('views'):
         generate_views(action)
 
-    id_form = None
-    for index, (id, mode) in enumerate(action['views']):
-        if mode == 'form':
-            id_form = id
-            break
-
     if action.pop('view_type', 'form') != 'form':
         return action
 
+    if 'view_mode' in action:
+        action['view_mode'] = ','.join(
+            mode if mode != 'tree' else 'list'
+            for mode in action['view_mode'].split(','))
     action['views'] = [
         [id, mode if mode != 'tree' else 'list']
         for id, mode in action['views']
@@ -1350,27 +1348,6 @@ class View(openerpweb.Controller):
     @openerpweb.jsonrequest
     def load(self, req, model, view_id, view_type, toolbar=False):
         return self.fields_view_get(req, model, view_id, view_type, toolbar=toolbar)
-
-class ListView(View):
-    _cp_path = "/web/listview"
-
-    def process_colors(self, view, row, context):
-        colors = view['arch']['attrs'].get('colors')
-
-        if not colors:
-            return None
-
-        color = [
-            pair.split(':')[0]
-            for pair in colors.split(';')
-            if eval(pair.split(':')[1], dict(context, **row))
-        ]
-
-        if not color:
-            return None
-        elif len(color) == 1:
-            return color[0]
-        return 'maroon'
 
 class TreeView(View):
     _cp_path = "/web/treeview"
