@@ -62,12 +62,7 @@
                             <field name="account_ids"/>
                         </page>
                         <page string="Budget Lines">
-                            <field name="crossovered_budget_line" widget="one2many_list" mode="graph,tree">
-                                <graph type="bar" string="Lines">
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
-                                    <field name="planned_amount" operator="+"/>
-                                    <field group="True" name="general_budget_id"/>
-                                </graph>
+                            <field name="crossovered_budget_line" widget="one2many_list" mode="tree">
                                 <tree string="Budget Lines"  editable="top">
                                     <field name="crossovered_budget_id"/>
                                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
