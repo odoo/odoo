@@ -77,7 +77,7 @@ class lang(osv.osv):
             _logger.warning(msg, lang, lc)
 
         if not lang_name:
-            lang_name = tools.get_languages().get(lang, lang)
+            lang_name = tools.ALL_LANGUAGES.get(lang, lang)
 
 
         def fix_xa0(s):
