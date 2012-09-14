@@ -31,17 +31,18 @@
     'description': """
 Manage leaves and allocation requests
 =====================================
-This application controls the holiday's schedule of your company. It allow employees to request holidays. Then, managers can review requests for holiday and approve or reject. This way you can control the overall holiday's planning for the company or departement.
 
-You can configure all kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to employee or departement quickly using allocation requests. An employee can also make an ask for more off-days by making a new Allocation. It will increase his total of that leave type available (if the request is accepted).
+This application controls the holiday schedule of your company. It allows employees to request holidays. Then, managers can review requests for holidays and approve or reject them. This way you can control the overall holiday planning for the company or department.
 
-You can keep record of leaves different ways by following reports: 
+You can configure several kinds of leaves (sickness, holidays, paid days, ...) and allocate leaves to an employee or department quickly using allocation requests. An employee can also make a request for more days off by making a new Allocation. It will increase the total of available days for that leave type (if the request is accepted).
+
+You can keep track of leaves in different ways by following reports: 
 
 * Leaves Summary
 * Leaves by Department
 * Leaves Analysis
 
-A synchronisation with an internal agenda (meeting of the CRM module) is also possible: in order to automatically create a meeting when an holiday request is accepted by setting up in type of meeting in Leave Type.
+A synchronization with an internal agenda (Meetings of the CRM module) is also possible in order to automatically create a meeting when a holiday request is accepted by setting up a type of meeting in Leave Type.
 """,
     'images': ['images/hr_allocation_requests.jpeg', 'images/hr_leave_requests.jpeg', 'images/leaves_analysis.jpeg'],
     'depends': ['hr', 'base_calendar', 'process', 'resource'],

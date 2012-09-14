@@ -28,9 +28,11 @@
     'website': 'http://www.openerp.com',
     'summary': 'Jobs, Departments, Employees Details',
     'description': """
-Human Resource Management
+Human Resources Management
 =========================
-This application enables you to manage important aspects of staff of company and some details about them such as their skills, contacts, working time etc.
+
+This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
+
 
 You can manage:
 ---------------

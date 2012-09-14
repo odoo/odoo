@@ -29,13 +29,14 @@
     'description': """
 Organization and management of Events.
 ======================================
-The event module allows you efficiently organise events and all related tasks: planification, registration tracking,
+
+The event module allows you to efficiently organise events and all related tasks: planification, registration tracking,
 attendances, etc.
 
 Key Features
 ------------
 * Manage your Events and Registrations
-* Use emails to automatically confirm and send acknowledgements for any registration of an event
+* Use emails to automatically confirm and send acknowledgements for any event registration
 """,
     'author': 'OpenERP SA',
     'depends': ['base_setup', 'board', 'email_template', 'google_map'],

@@ -29,7 +29,8 @@
     'description': """
 Record and validate timesheets and attendances easily
 =====================================================
-This application supplies a new screen enabling you to manage both attendances(Sign in/Sign out) and your work encoding(timesheet) by period. Timesheet entries are made by employees each day. At the end of the defined period, employees validate their sheet and then the services manager must approve his team's entries. Periods are defined in the company forms, and you can set them to run monthly or weekly.
+
+This application supplies a new screen enabling you to manage both attendances (Sign in/Sign out) and your work encoding (timesheet) by period. Timesheet entries are made by employees each day. At the end of the defined period, employees validate their sheet and the manager must then approve his team's entries. Periods are defined in the company forms and you can set them to run monthly or weekly.
 
 The complete timesheet validation process is:
 ---------------------------------------------

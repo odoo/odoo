@@ -31,19 +31,20 @@
     'description': """
 Periodical Employees evaluation and appraisals
 ==============================================
-By using this application you can maintain the motivational process by periodical evaluation of employees' performance. The regular assessment of human resources can benefit your people as well your organization. 
 
-Each employee can be assigned an evaluation plan. These plans define the frequency and the way you manage your periodic personal evaluation. You will be able to define steps and attach interview forms to each step. 
+By using this application you can maintain the motivational process by doing periodical evaluations of your employees' performance. The regular assessment of human resources can benefit your people as well your organization. 
 
-Manages all kinds of evaluations: bottom-up, top-down, self evaluation and final evaluation by the manager.
+An evaluation plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal evaluations. You will be able to define steps and attach interview forms to each step. 
+
+Manages several types of evaluations: bottom-up, top-down, self-evaluations and the final evaluation by the manager.
 
 Key Features
 ------------
-* Ability to create employees evaluation.
+* Ability to create employees evaluations.
 * An evaluation can be created by an employee for subordinates, juniors as well as his manager.
-* The evaluation is done under a plan in which various surveys can be created. Each survey can be answered by a particular level of employee hierarchy. The final review and evaluation is done by the manager.
-* Every evaluation filled by employees can be viewed through a PDF form.
-* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform evaluation of their colleagues periodically.
+* The evaluation is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and evaluation is done by the manager.
+* Every evaluation filled by employees can be viewed in a PDF form.
+* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
 """,
     "demo": ["hr_evaluation_demo.xml"],
     "data": [

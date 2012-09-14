@@ -49,9 +49,9 @@
 Track multi-level projects, tasks, work done on tasks
 =====================================================
 
-This application allows an operational project management to organize your activities into tasks and plan the work you need to get the tasks completed.
+This application allows an operational project management system to organize your activities into tasks and plan the work you need to get the tasks completed.
 
-Gantt diagrams will give you graphical representation of your project plans, as well as resources' availability and workload.
+Gantt diagrams will give you a graphical representation of your project plans, as well as resources availability and workload.
 
 Dashboard / Reports for Project Management will include:
 --------------------------------------------------------

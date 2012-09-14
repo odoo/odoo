@@ -29,10 +29,10 @@
 Business oriented Social Networking
 ===================================
 The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete 
-communication history on documents with a fully-integrated email and message management.
+communication history on documents with a fully-integrated email and message management system.
 
-It gives the users a possibility to read and send messages and emails. It also provides a feeds page combined to a subscription mechanism, that allows to follow documents, and to be constantly updated about recent news.
-        
+It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
+
 Main Features
 -------------
 * Clean and renewed communication history for any OpenERP document that can act as a discussion topic
@@ -40,7 +40,7 @@ Main Features
 * Unified feeds page to see recent messages and activity on followed documents
 * User communication through the feeds page
 * Threaded discussion design on documents
-* Relies on the global outgoing mail server—an integrated email management system—allowing to send emails with a configurable scheduler-based processing engine
+* Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
 * Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'author': 'OpenERP SA',

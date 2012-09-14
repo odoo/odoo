@@ -29,8 +29,9 @@
     'description': """
 Manage expenses by Employees
 ============================
-This application allows you to manage employees' daily expenses of your company. It gives you access to your employees’s notes fees and give you the right to complete and validate or refuse the notes. After validation it creates an invoice for the employee.
-Employee can encode their own expenses and the validation flow puts it automatically in the accounting after validation of managers.
+
+This application allows you to manage your employees' daily expenses. It gives you access to your employees’ fee notes and give you the right to complete and validate or refuse the notes. After validation it creates an invoice for the employee.
+Employee can encode their own expenses and the validation flow puts it automatically in the accounting after validation by managers.
 
 
 The whole flow is implemented as:
@@ -40,7 +41,7 @@ The whole flow is implemented as:
 * Validation by his manager
 * Validation by the accountant and receipt creation
 
-This module also uses the analytic accounting and is compatible with the invoice on timesheet module so that you will be able to automatically re-invoice your customer's expenses if your work by project.
+This module also uses analytic accounting and is compatible with the invoice on timesheet module so that you are able to automatically re-invoice your customers' expenses if your work by project.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

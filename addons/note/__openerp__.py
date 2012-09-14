@@ -26,7 +26,8 @@
     'description': """
 Allows users to create their own notes
 =======================================
-Use notes to write meeting minutes, organize ideas, organize personnal todo lists, etc. Each user manages his own personnal notes. Notes are available to their authors only, but they can share notes to others users so that several people can work on the same note in real time. It's very efficient to share meeting minutes.
+
+Use notes to write meeting minutes, organize ideas, organize personal to-do lists, etc. Each user manages his own personal notes. Notes are available to their authors only, but they can share notes with others users so that several people can work on the same note in real time. 
 
 Notes can be found in the 'Home' menu.
 """,

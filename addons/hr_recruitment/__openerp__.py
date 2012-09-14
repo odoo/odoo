@@ -29,11 +29,12 @@
     'description': """
 Manage job positions and the recruitment process
 =================================================
-This application allows you to easily keep track of jobs, vacancies, applications, interviews etc.
 
-It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in list of applications. It's also integrated with the document management system to store and search in CV base and find required candidate. It is also integrated with the survey module to allow you to define interview for different jobs.
-You can define different phases of interview and easily rate applicant from kanban view.
-    """,
+This application allows you to easily keep track of jobs, vacancies, applications, interviews...
+
+It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it is integrated with the survey module to allow you to define interviews for different jobs.
+You can define the different phases of interviews and easily rate the applicant from the kanban view.
+""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],

@@ -25,10 +25,12 @@
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
     'description' : """
-Manage multi-warehouses, multi and structured stock locations
-=============================================================
-The warehouse and inventory management is based on hierarchical location structure, from warehouses to storage bins. 
-The double entry inventory system allows you to manage customers, suppliers and manufacturing inventories as well. 
+Manage multi-warehouses, multi- and structured stock locations
+==============================================================
+
+The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins. 
+The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories. 
+
 OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
 
 Key Features
@@ -37,7 +39,7 @@ Key Features
 * Stock valuation (standard or average price, ...)
 * Robustness faced with Inventory differences
 * Automatic reordering rules
-* Bar code supported
+* Support for barcodes
 * Rapid detection of mistakes through double entry system
 * Traceability (Upstream / Downstream, Serial numbers, ...)
 

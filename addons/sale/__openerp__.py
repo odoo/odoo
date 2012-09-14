@@ -28,27 +28,28 @@
     'description': """
 Manage sales quotations and orders
 ==================================
+
 This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-It handles full sales workflow:
+It handles the full sales workflow:
 
 * **Quotation** -> **Sales order** -> **Invoice**
 
 Preferences
 -----------
 * Shipping: Choice of delivery at once or partial delivery
-* Invoicing: Choice of how invoice will be paid
-* Incoterm: International Commercial terms
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
 
-You can choose flexible invoicing method:
+You can choose flexible invoicing methods:
 
-* *On Demand*: Invoice is created manually from Sale Order when needed
-* *On Delivery Order*: Invoice is generated from picking(delivery)
-* *Before Delivery*: Draft invoice is created, and it must be paid before delivery
+* *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
 
-Dashboard for Sales Manager will include
-----------------------------------------
+The Dashboard for the Sales Manager will include
+------------------------------------------------
 * My Quotations
 * Monthly Turnover (Graph)
     """,

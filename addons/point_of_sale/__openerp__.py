@@ -29,8 +29,9 @@
     'description': """
 Quick and Easy sale process
 ============================
-This module allows you to manage your shop sales very easily with fully web based touchscreen interface.
-It is compatible with all PC tablets and iPad, offering multiple payment methods. 
+
+This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
+It is compatible with all PC tablets and the iPad, offering multiple payment methods. 
 
 Product selection can be done in several ways: 
 
@@ -40,11 +41,11 @@ Product selection can be done in several ways:
 Main Features
 -------------
 * Fast encoding of the sale
-* Allow to choose one payment mode (the quick way) or to split the payment between several payment mode
+* Choose one payment method (the quick way) or split the payment between several payment methods
 * Computation of the amount of money to return
-* Create and confirm picking list automatically
-* Allow the user to create invoice automatically
-* Allow to refund former sales
+* Create and confirm the picking list automatically
+* Allows the user to create an invoice automatically
+* Refund previous sales
     """,
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
