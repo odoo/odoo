@@ -72,6 +72,9 @@ class res_users(osv.Model):
 
     def create(self, cr, uid, data, context=None):
         # create default alias same as the login
+        if not data.get('login', False):
+            raise osv.except_osv(_('Invalid Action!'), _('You may not create a user.'))
+
         mail_alias = self.pool.get('mail.alias')
         alias_id = mail_alias.create_unique_alias(cr, uid, {'alias_name': data['login']}, model_name=self._name, context=context)
         data['alias_id'] = alias_id
