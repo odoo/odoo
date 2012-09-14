@@ -842,7 +842,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.case.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), mail_subtype_new="crm_subtype_stage_change",context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype_xml_id="crm_subtype_stage_change",context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, lead, context=None):
         if isinstance(lead, (int, long)):
