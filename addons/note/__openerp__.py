@@ -52,6 +52,9 @@ Memos can be found in the 'Home' menu.
     'demo': [
         'note_demo.xml',
     ],
+    'test': [
+        'test/note_create.yml',
+    ],
     'css': [
         'static/src/css/note.css',
     ],

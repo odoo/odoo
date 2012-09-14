@@ -46,7 +46,7 @@
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <kanban default_group_by="stage_id" class="oe_notes" version="7.0">
+        <kanban default_group_by="stage_id" class="oe_notes oe_kanban_quickcreate_textarea" version="7.0">
           <field name="color"/>
           <field name="sequence"/>
           <field name="name"/>
@@ -114,26 +114,28 @@
       </field>
     </record>
 
-    <!-- New memo Form View -->
+    <!-- New note Form View -->
     <record model="ir.ui.view" id="view_note_note_form">
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
         <form string="Sticky note" version="7.0">
           <header>
-              <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+            <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
-          <field colspan="4" name="memo" widget="html" editor_width="100%%" editor_height="100%%" nolabel="1"/>
+          <field colspan="4" name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
           <group groups="note.group_note_tags" col="2">
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
           <field name="message_follower_ids" widget="mail_followers"/>
-          <field class="oe_chatter" name="message_ids" widget="mail_thread" groups="note.group_note_thread"/>
+          <span groups="note.group_note_thread">
+            <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
+          </span>
         </form>
       </field>
     </record>
 
-    <!-- Search memo  -->
+    <!-- Search note  -->
     <record model="ir.ui.view" id="view_note_note_filter">
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
@@ -146,8 +148,7 @@
           <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
           <filter name="active_false" string="Old" domain="[('active', '=', False)]"/>
           <group expand="0" string="Group By...">
-            <filter icon="terp-personal" string="Creator" help="By Creators" context="{'group_by':'create_uid'}"/>
-            <filter icon="terp-stock_symbol-selection" string="Stage" help="By memo Category" context="{'group_by':'stage_id'}"/>
+            <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
       </field>
@@ -186,9 +187,9 @@
       </field>
     </record>
 
-    <!-- memo Action -->
+    <!-- Action -->
     <record model="ir.actions.act_window" id="action_note_note">
-      <field name="name">Memos</field>
+      <field name="name">Sticky notes</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
@@ -196,7 +197,7 @@
       <field name="context">{'search_default_active_true':True}</field>
     </record>
 
-    <menuitem name="Memos" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+    <menuitem name="Sticky notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
 
   </data>
 </openerp>

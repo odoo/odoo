@@ -56,8 +56,9 @@ class note_note(osv.osv):
     _description = "Sticky note"
 
     #writing method (no modification of values)
-    def _set_note_first_line(self, cr, uid, id, name, value, args={}, context=None):
-        return self.write(cr, uid, [id], {'memo': value}, context=context)
+    def name_create(self, cr, uid, name, context=None):
+        rec_id = self.create(cr, uid, {'memo': name}, context=context)
+        return self.name_get(cr, uid, [rec_id], context)[0]
 
     #read the first line (convert hml into text)
     def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
@@ -119,12 +120,11 @@ class note_note(osv.osv):
                     result[record.id] = stage.id
         return result
 
+
     _columns = {
         'name': fields.function(_get_note_first_line, 
-            fnct_inv=_set_note_first_line, 
             string='Sticky note Summary', 
-            type='text',
-            store=True),
+            type='text', store=True),
         'memo': fields.html('Pad Content'),
         'sequence': fields.integer('Sequence'),
 
@@ -144,7 +144,7 @@ class note_note(osv.osv):
         # when the user unactivate the Sticky note, record de date for un display Sticky note after 1 days
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
-        # put tags on the memo (optional)
+        # put tags on the note (optional)
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
 
         'current_partner_id' : fields.function(_get_my_current_partner),
