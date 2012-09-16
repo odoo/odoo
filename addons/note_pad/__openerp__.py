@@ -20,45 +20,30 @@
 ##############################################################################
 
 {
-    'name': 'Memos',
-    'version': '1.0',
+    'name': 'Memos pad',
+    'version': '0.1',
     'category': 'Tools',
     'description': """
-This module allows users to create their own memos inside OpenERP
-=================================================================
+This module update memos inside OpenERP for using an external pad
+===================================================================
 
-Use memos to write meeting minutes, organize ideas, organize personnal todo
-lists, etc. Each user manages his own personnal memos. Memos are available to
-their authors only, but they can share memos to others users so that several
-people can work on the same memo in real time. It's very efficient to share
-meeting minutes.
+Use for update your text memo in real time with the following user that you invite.
 
-Memos can be found in the 'Home' menu.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'summary': 'Sticky notes, Collaborative, Memos',
+    'summary': 'Sticky memos, Collaborative',
     'depends': [
         'base_tools',
         'mail',
+        'pad',
+        'note',
     ],
     'data': [
-        'security/res.groups.csv',
-        'security/ir.rule.xml',
-        'security/ir.model.access.csv',
-        'note_data.xml',
-        'note_view.xml',
-    ],
-    'demo': [
-        'note_demo.xml',
-    ],
-    'test': [
-    ],
-    'css': [
-        'static/src/css/note.css',
+        'note_pad_view.xml',
     ],
     'installable': True,
-    'application': True,
+    'application': False,
     'auto_install': False,
 }
 

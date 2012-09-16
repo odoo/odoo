@@ -1,128 +1,147 @@
 <?xml version="1.0"?>
 <openerp>
-  <data>
+  <data noupdate="1">
+    <record model="note.stage" id="demo_note_stage_01">
+      <field name="name">Today</field>
+      <field name="sequence">1</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_02">
+      <field name="name">Tomorrow</field>
+      <field name="sequence">2</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_03">
+      <field name="name">Later</field>
+      <field name="sequence">3</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_04">
+      <field name="name">Notes</field>
+      <field name="sequence">4</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
 
     <record id="note_1" model="note.note">
-      <field name="note"><![CDATA[Buying list
-    * coffee
-    * fruits
-    * ice cream
-    * towels
-    ]]>
+      <field name="name">Customer report #349872</field>
+      <field name="memo"><![CDATA[Customer report #349872
+    <br/><br/>* Calendar app in Home
+    <br/>*  The base_calendar module should create a menu in Home, like described above.
+    <br/>*  This module should become a main application (in the first screen at installation)
+    <br/>*  We should use the term Calendar, not Meeting.
+     ]]>
       </field>
       <field name="stage_id" ref="note_stage_01"/>
       <field name="color">2</field>
     </record>
+
     <record id="note_2" model="note.note">
-      <field name="note"><![CDATA[Buying list
-    * more coffee
-    * tee
-    * sugar
-    * towels
+      <field name="memo"><![CDATA[Call Fabien
+    <br/><br/>* Followed by the telephone conversation and mail about D.544.3
     ]]>
       </field>
       <field name="stage_id" ref="note_stage_01"/>
     </record>
 
     <record id="note_3" model="note.note">
-      <field name="note"><![CDATA[Idea to develop
-    * Phasellus vel eros lorem, vel tristique risus.
-    * Cras elementum risus ut massa bibendum ac sollicitudin quam feugiat.
-    * Phasellus ullamcorper mauris quis lectus volutpat non dignissim elit lacinia.
-
-    Nulla vitae metus risus, nec placerat diam.
-    Proin quis nunc sodales dolor tempus eleifend.
-    Praesent iaculis libero ut orci egestas a dapibus libero ornare.
-
-    * Proin at nisl sit amet ante feugiat euismod nec at orci.
-    * Nam aliquam massa id neque tincidunt eu pellentesque neque euismod.
-    * Proin eget mi sit amet erat tempus pellentesque.
-
-    * Phasellus congue est lectus, vitae semper arcu.
-    * Suspendisse sodales tortor ut odio volutpat fringilla.
-    * Vestibulum mattis est quis risus dignissim sit amet faucibus nisl mattis.
-    * Pellentesque ullamcorper neque neque, vitae rhoncus massa.
-
-    Ut id magna massa, quis scelerisque sapien.
-
-    ]]>
+      <field name="memo"><![CDATA[Call Marc
+    <br/><br/>]]>
       </field>
       <field name="stage_id" ref="note_stage_01"/>
     </record>
 
     <record id="note_4" model="note.note">
-      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
-      ]]>
+      <field name="memo"><![CDATA[Project N.947.5
+    <br/><br/>]]>
       </field>
       <field name="stage_id" ref="note_stage_02"/>
     </record>
 
     <record id="note_5" model="note.note">
-      <field name="note"><![CDATA[New computer specs
-      * Motherboard
-      according to processor
-      * Processor
-      need to decide
-      * Graphic card
-      with great performance for games !
-      * Hard drive
-      big, for lot of internet backups
-      * Tower
-      silent, better when watching films
-      * Blueray drive ?
-      is it interesting yet ?
-      * Screen
-      a big one, full of pixels, of course !
-      ]]>
+      <field name="memo"><![CDATA[Shop for family dinner
+    <br/>* stuffed turkey
+    <br/>* wine
+    ]]>
       </field>
       <field name="stage_id" ref="note_stage_02"/>
-      <field name="color">3</field>
     </record>
 
     <record id="note_6" model="note.note">
-      <field name="note"><![CDATA[Read those books
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
-      ]]>
+      <field name="memo"><![CDATA[Idea to develop
+    <br/><br/>* Create a module note_pad
+    it transforms the html editable memo text field into widget='pad', similar to project_pad depends on 'memo' and 'pad' modules
+    ]]>
       </field>
       <field name="stage_id" ref="note_stage_02"/>
     </record>
 
     <record id="note_7" model="note.note">
-      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
+      <field name="memo"><![CDATA[Read some documentation about OpenERP before diving into the code
+      <br/><br/>* Open ERP: a modern approach to integrated business management
+      <br/>* Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="stage_id" ref="note_stage_03"/>
     </record>
 
     <record id="note_8" model="note.note">
-      <field name="note"><![CDATA[Read those books
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
+      <field name="memo"><![CDATA[New computer specs
+      <br/><br/>* Motherboard
+      according to processor
+      <br/>* Processor
+      need to decide
+      <br/>* Graphic card
+      with great performance for games !
+      <br/>* Hard drive
+      big, for lot of internet backups
+      <br/>* Tower
+      silent, better when watching films
+      <br/>* Blueray drive ?
+      is it interesting yet ?
+      <br/>* Screen
+      a big one, full of pixels, of course !
       ]]>
       </field>
       <field name="stage_id" ref="note_stage_03"/>
-      <field name="color">5</field>
+      <field name="color">3</field>
     </record>
 
     <record id="note_9" model="note.note">
-      <field name="note"><![CDATA[Read some documentation about OpenERP before diving into the code
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
+      <field name="memo"><![CDATA[Read those books
+      <br/><br/>* Open ERP: a modern approach to integrated business management
+      <br/>* Open ERP for Retail and Industrial Management
+      ]]>
+      </field>
+      <field name="stage_id" ref="note_stage_02"/>
+    </record>
+
+    <record id="note_10" model="note.note">
+      <field name="memo"><![CDATA[Read some documentation about OpenERP before diving into the code
+      <br/><br/>* Open ERP: a modern approach to integrated business management
+      <br/>* Open ERP for Retail and Industrial Management
+      ]]>
+      </field>
+      <field name="stage_id" ref="note_stage_03"/>
+    </record>
+
+    <record id="note_12" model="note.note">
+      <field name="memo"><![CDATA[Read some documentation about OpenERP before diving into the code
+      <br/><br/>* Open ERP: a modern approach to integrated business management
+      <br/>* Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="stage_id" ref="note_stage_03"/>
       <field name="color">7</field>
     </record>
 
-    <record id="note_10" model="note.note">
-      <field name="note"><![CDATA[Read those books
-      * Open ERP: a modern approach to integrated business management
-      * Open ERP for Retail and Industrial Management
+    <record id="note_13" model="note.note">
+      <field name="memo"><![CDATA[Read those books
+      <br/><br/>* Open ERP: a modern approach to integrated business management
+      <br/>* Open ERP for Retail and Industrial Management
       ]]>
       </field>
       <field name="stage_id" ref="note_stage_03"/>
