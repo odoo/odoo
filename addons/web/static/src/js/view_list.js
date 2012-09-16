@@ -830,6 +830,10 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
+        var create_nocontent = this.$buttons;
+        this.$el.find('.oe_view_nocontent').click(function() {
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+        });
     }
 });
 instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.ListView.List# */{
