@@ -584,7 +584,7 @@ class sale_order(osv.osv):
 
     def test_no_product(self, cr, uid, order, context):
         for line in order.order_line:
-            if line.product_id:
+            if line.product_id and (line.product_id.type<>'service'):
                 return False
         return True
 
