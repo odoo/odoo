@@ -20,6 +20,7 @@
 ##############################################################################
 
 import io
+import sys
 import StringIO
 
 from PIL import Image
@@ -66,15 +67,18 @@ def image_resize_image(base64_source, size=(1024, 1024), encoding='base64', file
     # check image size: do not create a thumbnail if avoiding smaller images
     if avoid_if_small and image.size[0] <= size[0] and image.size[1] <= size[1]:
         return base64_source
-    # create a thumbnail: will resize and keep ratios, then sharpen for better looking result
-    image.thumbnail(size, Image.ANTIALIAS)
-    image.convert('RGB')
-    image = image.filter(ImageFilter.SHARPEN)
-    # create a transparent image for background
-    background = Image.new('RGBA', size, (255, 255, 255, 0))
-    # past the resized image on the background
-    background.paste(image, ((size[0] - image.size[0]) / 2, (size[1] - image.size[1]) / 2))
-    # return an encoded image
+
+    if (float(image.size[0])/image.size[1]) > (float(size[0]) / size[1]):
+        ibox = (size[1] * image.size[0] / image.size[1] , size[1])
+        deltax = max((size[1] * image.size[0] / image.size[1] - size[0]) / 2, 0)
+        deltay = 0
+    else:
+        ibox = (size[0],size[0] * image.size[1] / image.size[0])
+        deltax = 0
+        deltay = max((size[0] * image.size[1] / image.size[0] - size[1]) / 2, 0)
+
+    im2 = image.resize(ibox, Image.ANTIALIAS)
+    background = im2.crop((deltax, deltay, deltax+size[0], deltay+size[1]))
     background_stream = StringIO.StringIO()
     background.save(background_stream, filetype)
     return background_stream.getvalue().encode(encoding)
@@ -157,3 +161,4 @@ def image_get_resized_images(base64_source, return_big=False, return_medium=True
     if return_small:
         return_dict[small_name] = image_resize_image_small(base64_source, avoid_if_small=avoid_resize_small)
     return return_dict
+
