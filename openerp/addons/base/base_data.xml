@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
+    <data>
+        <record id="action_client_base_menu" model="ir.actions.client">
+            <field name="name">Open Settings Menu</field>
+            <field name="tag">reload</field>
+            <field name="params" eval="{'menu_id': ref('base.menu_administration')}"/>
+        </record>
+        <record id="open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="action_client_base_menu"/>
+            <field name="type">automatic</field>
+            <field name="sequence">100</field>
+            <field name="state">done</field>
+        </record>
+
+    </data>
     <data noupdate="1">
         <record id="view_menu" model="ir.ui.view">
             <field name="name">ir.ui.menu.tree</field>
