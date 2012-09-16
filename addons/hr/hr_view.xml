@@ -332,7 +332,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('category_ids','=', active_ids)]</field>
-            <field name="context">{'default_category_ids': active_ids}</field>
         </record>
 
         <record id="hr_employee_category_open" model="ir.values">
