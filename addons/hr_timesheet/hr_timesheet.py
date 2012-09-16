@@ -137,13 +137,11 @@ class hr_analytic_timesheet(osv.osv):
         if context is None:
             context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
-        if not emp_id :
-            raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
-        emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
-        if emp.journal_id:
-            return emp.journal_id.id
-        else :
-            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.')%(emp.name))
+        if emp_id:
+            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
+            if emp.journal_id:
+                return emp.journal_id.id
+        return False
 
 
     _defaults = {
