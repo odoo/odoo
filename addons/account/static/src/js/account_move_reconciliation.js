@@ -13,7 +13,8 @@ openerp.account = function (instance) {
         },
         on_loaded: function() {
             var tmp = this._super.apply(this, arguments);
-            this.$el.prepend(QWeb.render("AccountReconciliation", {widget: self}));
+            if (this.partners)
+                this.$el.prepend(QWeb.render("AccountReconciliation", {widget: this}));
             return tmp;
         },
         do_search: function(domain, context, group_by) {
