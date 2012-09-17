@@ -16,15 +16,15 @@ openerp.account = function (instance) {
             var tmp = this._super.apply(this, arguments);
             if (this.partners) {
                 this.$el.prepend(QWeb.render("AccountReconciliation", {widget: this}));
-                this.$("oe_account_recon_previous").click(function() {
+                this.$(".oe_account_recon_previous").click(function() {
                     self.current_partner = (self.current_partner - 1) % self.partners.length;
                     self.search_by_partner();
                 });
-                this.$("oe_account_recon_next").click(function() {
+                this.$(".oe_account_recon_next").click(function() {
                     self.current_partner = (self.current_partner + 1) % self.partners.length;
                     self.search_by_partner();
                 });
-                this.$("oe_account_recon_reconcile").click(function() {
+                this.$(".oe_account_recon_reconcile").click(function() {
                     self.reconcile();
                 });
             }
@@ -38,7 +38,7 @@ openerp.account = function (instance) {
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model(this.model, context, domain);
             return mod.query("partner_id").group_by(["partner_id"]).pipe(function(result) {
-                var current = self.current_partner !== null ? self.partner[self.current_partner][0] : null;
+                var current = self.current_partner !== null ? self.partners[self.current_partner][0] : null;
                 self.partners = _.chain(result).pluck("attributes").pluck("value")
                     .filter(function(el) {return !!el;}).value();
                 var index = _.find(_.range(self.partners.length), function(el) {
@@ -59,6 +59,33 @@ openerp.account = function (instance) {
         reconcile: function() {
             var self = this;
             var ids = this.get_selected_ids();
+            if (ids.length === 0) {
+                instance.web.dialog($("<div />").text(_t("You must choose at least one record.")), {
+                    title: _t("Warning"),
+                    modal: true
+                });
+                return false;
+            }
+
+            new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_account_reconcile_select"]).pipe(function(result) {
+                var additional_context = _.extend({
+                    active_id: ids[0],
+                    active_ids: ids,
+                    active_model: self.model
+                });
+                return self.rpc("/web/action/load", {
+                    action_id: result[1],
+                    context: additional_context
+                }, function (result) {
+                    result = result.result;
+                    result.context = _.extend(result.context || {}, additional_context);
+                    result.flags = result.flags || {};
+                    result.flags.new_window = true;
+                    return self.do_action(result, function () {
+                        self.do_search(self.last_domain, self.last_context, self.last_group_by);
+                    });
+                });
+            });
         },
     });
     
