@@ -366,6 +366,7 @@ class mail_thread(osv.AbstractModel):
                                     context=context)
         msg = self.message_parse(cr, uid, msg_txt, save_original=save_original, context=context)
         if strip_attachments: msg.pop('attachments', None)
+        thread_id = False
         for model, thread_id, custom_values, user_id in routes:
             if self._name != model:
                 context.update({'thread_model': model})
@@ -378,7 +379,7 @@ class mail_thread(osv.AbstractModel):
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
             self.message_post(cr, uid, [thread_id], context=context, **msg)
-        return True
+        return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
         """Called by ``message_process`` when a new message is received
