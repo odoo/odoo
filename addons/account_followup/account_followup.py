@@ -20,7 +20,6 @@
 ##############################################################################
 
 from osv import fields, osv
-import tools
 
 class followup(osv.osv):
     _name = 'account_followup.followup'

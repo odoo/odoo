@@ -334,15 +334,9 @@ class account_voucher(osv.osv):
     }
 
     def create(self, cr, uid, vals, context=None):
-        if context is None:
-            context = {}
-        bank_line_id = context.get('bank_statement_line_id', False)
-        bank_line_obj = self.pool.get("account.bank.statement.line")
-        voucher_id =  super(account_voucher, self).create(cr, uid, vals, context=context)
-        if bank_line_id:
-            bank_line_obj.write(cr, uid, bank_line_id, {'voucher_id': voucher_id})
-        self.create_send_note(cr, uid, [voucher_id], context=context)
-        return voucher_id
+        voucher =  super(account_voucher, self).create(cr, uid, vals, context=context)
+        self.create_send_note(cr, uid, [voucher], context=context)
+        return voucher
 
     def compute_tax(self, cr, uid, ids, context=None):
         tax_pool = self.pool.get('account.tax')
@@ -1502,37 +1496,7 @@ account_bank_statement()
 
 class account_bank_statement_line(osv.osv):
     _inherit = 'account.bank.statement.line'
-   
-    def action_payment_reconcile(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        ctx = dict(context)
-        statement_id = ids[0]
-        statement = self.browse(cr, uid, statement_id, context=context)
-        ctx['bank_statement_line_id'] = statement.id
-        ctx.update({
-            'line_type': statement.type, 
-            'type': statement.amount > 0 and 'payment' or 'receipt', 
-            'partner_id': statement.partner_id and statement.partner_id.id or False, 
-            'journal_id': statement.statement_id.journal_id and statement.statement_id.journal_id.id or False, 
-            'amount': abs(statement.amount), 
-            'reference': statement.ref, 
-            'date': statement.date, 
-            'name': statement.name
-        })
-        voucher = statement.voucher_id or False
-        voucher_id = voucher and voucher.id or False
-        return {
-           'name': _('Payment Entry'),
-           'res_model': 'account.voucher',
-           'view_type': 'form',
-           'view_mode': 'form',
-           'target':'new',
-           'context': ctx,
-           'res_id':voucher_id,
-           'type': 'ir.actions.act_window'
-        }
-       
+
     def _amount_reconciled(self, cursor, user, ids, name, args, context=None):
         if not ids:
             return {}
@@ -1557,11 +1521,6 @@ class account_bank_statement_line(osv.osv):
     ]
 
     _columns = {
-        'voucher_state': fields.related('voucher_id', 'state', type="selection", selection= [('draft','Draft'),
-             ('cancel','Cancelled'),
-             ('proforma','Pro-forma'),
-             ('posted','Posted')
-            ], string='Voucher State'),
         'amount_reconciled': fields.function(_amount_reconciled,
             string='Amount reconciled', type='float'),
         'voucher_id': fields.many2one('account.voucher', 'Payment'),

@@ -213,8 +213,7 @@
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
-                    <button class="reconcile_btn" attrs="{'readonly':[('voucher_state','=','posted')]}" name="action_payment_reconcile" string="Reconcile" type="object"/>
-                     <field name="voucher_state" invisible="1"/>
+                    <field name="voucher_id" context="{'line_type': type, 'default_type': amount &lt; 0 and 'payment' or 'receipt', 'type': amount &lt; 0 and 'payment' or 'receipt', 'default_partner_id': partner_id, 'default_journal_id': parent.journal_id, 'default_amount': abs(amount), 'default_reference': ref, 'default_date': date, 'default_name': name}"/>
                 </xpath>
             </field>
         </record>

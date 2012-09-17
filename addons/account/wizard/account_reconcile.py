@@ -97,7 +97,7 @@ class account_move_line_reconcile(osv.osv_memory):
                     debit_ml_ids.remove(ml_id)
                 if ml_id in credit_ml_ids:
                     credit_ml_ids.remove(ml_id)
-            if not debit_ml_ids and not credit_ml_ids:
+            if not debit_ml_ids and credit_ml_ids:
                 context.update({'stop_reconcile': True})
         account_move_line_obj.reconcile(cr, uid, context['active_ids'], 'manual', account_id,
                                         period_id, journal_id, context=context)

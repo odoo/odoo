@@ -1047,6 +1047,7 @@
         <!--
     Entries lines
     -->
+
         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
@@ -1054,12 +1055,12 @@
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items" editable="top" on_write="on_create_write">
                     <field name="date"/>
-                    <field name="period_id"  invisible="1"/>
+                    <field name="period_id"/>
                     <field name="move_id"/>
                     <field name="ref"/>
-                    <field name="invoice" invisible="1"/>
-                    <field name="name" invisible="1" />
-                    <field name="partner_id" invisible="1" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
+                    <field name="invoice"/>
+                    <field name="name"/>
+                    <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                     <field name="account_id" domain="[('journal_id','=',journal_id), ('company_id', '=', company_id)]"/>
                     <field name="journal_id"/>
                     <field name="debit" sum="Total debit"/>
@@ -1539,6 +1540,20 @@
             <field name="view_mode">form</field>
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
+
+        <act_window
+            context="{'search_default_next_partner':1,'view_mode':True}"
+            id="action_account_manual_reconcile" name="Journal Items"
+            res_model="account.move.line"
+            view_id="view_move_line_tree"/>
+
+
+        <menuitem
+             name="Manual Reconciliation" icon="STOCK_EXECUTE"
+             action="action_account_manual_reconcile"
+             id="menu_manual_reconcile"
+             parent="account.periodical_processing_reconciliation"/>
+
 
         <act_window
             id="act_account_acount_move_line_open"
