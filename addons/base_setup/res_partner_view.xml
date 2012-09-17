@@ -9,9 +9,11 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_kanban_partner_categories']" position="inside">
-                    <t t-foreach="record.category_id.raw_value" t-as="category">
-                        <span class="oe_tag" t-att-data-category_id="category"/>
-                    </t>
+                    <span class="oe_kanban_list_many2many" data-model="res.partner.category">
+                        <t t-foreach="record.category_id.raw_value" t-as="category">
+                            <span class="oe_tag" t-att-data-list_id="category"/>
+                        </t>
+                    </span>
                 </xpath>
             </field>
         </record>
