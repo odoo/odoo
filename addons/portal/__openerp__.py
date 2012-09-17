@@ -44,6 +44,7 @@ very handy when used in combination with the module 'share'.
     """,
     'website': 'http://www.openerp.com',
     'data': [
+        'security/portal_security.xml',
         'security/ir.model.access.csv',
         'portal_data.xml',
         'portal_view.xml',
