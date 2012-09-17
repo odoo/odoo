@@ -447,9 +447,9 @@
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
                             <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
-                            <label string="  e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                            <label string="e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                            <label string="e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
