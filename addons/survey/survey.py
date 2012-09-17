@@ -35,7 +35,7 @@ class survey_type(osv.osv):
     _name = 'survey.type'
     _description = 'Survey Type'
     _columns = {
-        'name': fields.char("Name", size=128, required=1),
+        'name': fields.char("Name", size=128, required=1, translate=True),
         'code': fields.char("Code", size=64),
     }
 survey_type()
