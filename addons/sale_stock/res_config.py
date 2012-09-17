@@ -30,7 +30,7 @@ class sale_configuration(osv.osv_memory):
             implied_group='sale.group_invoice_so_lines',
             help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
         'group_invoice_deli_orders': fields.boolean('Generate invoices after and based on delivery orders',
-            implied_group='sale.group_invoice_deli_orders',
+            implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
         'task_work': fields.boolean("Prepare invoices based on task's activities",
             help="""Lets you transfer the entries under tasks defined for Project Management to
