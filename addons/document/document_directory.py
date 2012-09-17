@@ -69,7 +69,7 @@ class document_directory(osv.osv):
     }
 
 
-    def _get_root_directory(self, cr,uid, context=None):
+    def _get_root_directory(self, cr, uid, context=None):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
@@ -77,9 +77,7 @@ class document_directory(osv.osv):
                 return False
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             return root_id
-        except Exception, e:
-
-            _logger.warning('Cannot set directory root:'+ str(e))
+        except Exception:
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 

@@ -181,7 +181,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
             selection= [('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
@@ -838,6 +838,7 @@ class account_journal(osv.osv):
         """
         if not ids:
             return []
+
         if isinstance(ids, (int, long)):
             ids = [ids]
         result = self.browse(cr, user, ids, context=context)
