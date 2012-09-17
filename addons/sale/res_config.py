@@ -70,7 +70,8 @@ class sale_configuration(osv.osv_memory):
                 This installs the module analytic_user_function."""),
         'module_project': fields.boolean("Project"),
         'module_sale_stock': fields.boolean("Sale and Warehouse Management",
-            help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock """),
+            help="""Allows you to Make Quotation, Sale Order using different Order policy and Manage Related Stock.
+                    This installs the module sale_stock."""),
     }
 
     def default_get(self, cr, uid, fields, context=None):

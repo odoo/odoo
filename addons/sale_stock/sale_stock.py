@@ -212,20 +212,14 @@ class sale_order(osv.osv):
 
     
     def action_wait(self, cr, uid, ids, context=None):
+        res = super(sale_order, self).action_wait(cr, uid, ids, context=context)
         for o in self.browse(cr, uid, ids):
-            if not o.order_line:
-                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
             noprod = self.test_no_product(cr, uid, o, context)
             if noprod and o.order_policy=='picking':
                 self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
-            if (o.order_policy == 'manual') or noprod:
-                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
-            else:
+            if not (o.order_policy == 'manual') or not noprod:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
-            self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
-            self.confirm_send_note(cr, uid, ids, context)
-        return True
-        
+        return res
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         picking_obj = self.pool.get('stock.picking')
