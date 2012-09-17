@@ -124,19 +124,6 @@ $sheet-max-width: 860px
         content: $icon-name
         color: $color
 
-@mixin ul-html-override()
-    margin: 0
-    padding: 0
-    ul, ol, li
-        margin: 0
-        padding: 0
-    li
-        list-style-type: none
-
-@mixin semantic-html-override()
-    ul, ol
-        @include ul-html-override()
-
 // }}}
 
 @media print
@@ -200,10 +187,6 @@ $sheet-max-width: 860px
         vertical-align: middle
     h4
         margin: 4px 0
-    .oe_semantic_html_override
-        @include semantic-html-override
-    ul.oe_semantic_html_override
-        @include ul-html-override
     // }}}
     // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
@@ -283,7 +266,7 @@ $sheet-max-width: 860px
             margin: 0
             @include radius(0 0 2px 2px)
             button
-                margin: 0
+                margin: 0 4px 0 0
             .ui-dialog-buttonset
                 float: left
                 .ui-button
@@ -509,8 +492,6 @@ $sheet-max-width: 860px
         padding: 0 16px
         list-style: none
         zoom: 1
-        @include ul-html-override
-        @include semantic-html-override
     .oe_notebook.ui-corner-all
         @include radius(0)
     .oe_notebook:before, .oe_notebook:after
@@ -567,6 +548,8 @@ $sheet-max-width: 860px
         top: 26px
         left: 0
         z-index: 1
+        margin: 0
+        padding: 0
         border: 1px solid $tag-border
         background: white
         padding: 4px 0
@@ -582,6 +565,7 @@ $sheet-max-width: 860px
             float: none
             display: block
             position: relative
+            margin: 0
             padding: 2px 8px
             > a
                 white-space: nowrap
@@ -670,9 +654,10 @@ $sheet-max-width: 860px
         text-align: center
         font-size: 14px
         height: 100%
-        li
+        ul, li
+            margin: 0
             list-style-type: none
-            padding-bottom: 4px
+            padding: 0 0 4px 0
         button
             float: right
             display: inline-block
@@ -730,7 +715,6 @@ $sheet-max-width: 860px
             text-align: left
             @include radius(8px)
             @include box-shadow(0 0 18px rgba(0, 0, 0, 0.9))
-            @include semantic-html-override
             h2
                 margin-top: 0
                 font-size: 18px
@@ -795,7 +779,6 @@ $sheet-max-width: 860px
         width: 100%
         height: 31px
         @include vertical-gradient(#646060, #262626)
-        @include semantic-html-override
         .oe_topbar_item
             display: block
             padding: 5px 10px 7px
@@ -846,7 +829,6 @@ $sheet-max-width: 860px
         border-right: 1px solid $tag-border
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
-        @include semantic-html-override
     a.oe_logo
         width: 220px
         display: block
@@ -897,6 +879,9 @@ $sheet-max-width: 860px
         padding: 0
         margin: 0
         > li
+            list-style-type: none
+            padding: 0
+            margin: 0
             float: left
             > a
                 display: block
@@ -926,7 +911,9 @@ $sheet-max-width: 860px
         display: inline-block
         li
             position: relative
+            margin: 0
             padding: 1px 0 1px 20px !important
+            list-style-type: none
             a
                 display: block
                 color: #4c4c4c
@@ -1001,6 +988,12 @@ $sheet-max-width: 860px
                 text-decoration: underline
         > div
             height: 100%
+        .oe_breadcrumb_item:not(:last-child)
+            display: inline-block
+            max-width: 7em
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
     // }}}
     // ViewManager common {{{
     .oe_view_manager
@@ -1012,14 +1005,6 @@ $sheet-max-width: 860px
         table.oe_view_manager_header
             width: 100%
             table-layout: fixed
-            ul
-                padding: 0
-                margin-right: 0
-                margin-top: 0
-                margin-bottom: 0
-                li
-                    list-style-type: none
-                    margin: 0
             .oe_header_row
                 //min-height: 26px
                 //line-height: 26px
@@ -1074,6 +1059,9 @@ $sheet-max-width: 860px
         .oe_pager_value
             float: left
             margin-right: 8px
+        ul.oe_pager_group
+            padding: 0
+            margin: 0
         .oe_pager_group
             float: left
             height: 24px
@@ -1086,6 +1074,8 @@ $sheet-max-width: 860px
                 height: 24px
                 line-height: 24px
                 padding: 0
+                margin: 0
+                list-style-type: none
                 float: left
                 border-right: 1px solid #ababab
                 &:last-child
@@ -1104,13 +1094,16 @@ $sheet-max-width: 860px
         // }}}
         // ViewManager.switches {{{
         .oe_view_manager_switch
-            margin-left: 8px
+            padding: 0
+            margin: 0 0 0 8px
             li
-                text-align: center
+                margin: 0
                 width: 24px
                 height: 24px
                 line-height: 16px
                 padding: 0
+                text-align: center
+                list-style-type: none
                 a
                     position: relative
             .oe_vm_switch_list:after, .oe_vm_switch_tree:after
@@ -1571,72 +1564,6 @@ $sheet-max-width: 860px
                 padding: 1px 0
             .oe_form_group_cell div div
                 padding: 1px 0
-        ul.oe_form_steps, ul.oe_form_steps_clickable
-            display: inline-block
-            padding-right: 18px
-            li 
-                display: inline-block
-                margin-right: -20px
-                @include vertical-gradient(#fcfcfc, #dedede)
-                &:first-child .label
-                    border-left: 1px solid #cacaca
-                    padding-left: 14px
-                &:last-child
-                    border-right: 1px solid #cacaca
-                    .label
-                        padding-right: 14px
-                    .arrow
-                        display: none
-                .label 
-                    color: #4c4c4c
-                    text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
-                    padding: 7px
-                    display: inline-block
-                    padding-left: 24px
-                    margin: 0
-                    position: relative
-                .arrow
-                    width: 17px
-                    display: inline-block
-                    vertical-align: top
-                    overflow: hidden
-                    margin-left: -5px
-                    span 
-                        position: relative
-                        width: 24px
-                        height: 24px
-                        display: inline-block
-                        margin-left: -12px
-                        margin-top: 3px
-                        box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
-                        @include skew-gradient(#fcfcfc, #dedede)
-                        @include radius(3px)
-                        @include transform(rotate(45deg))
-            li.oe_active
-                @include vertical-gradient(#729fcf, #3465a4)
-                .arrow span 
-                    @include skew-gradient(#729fcf, #3465a4)
-                .label
-                    color: white
-                    text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
-        ul.oe_form_steps_clickable
-            li
-                cursor: pointer
-                &:hover 
-                    @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-                    .label
-                        text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
-                    .arrow span 
-                        @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
-                .label
-                    color: $link-color
-            li.oe_active
-                &:hover 
-                    @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
-                    .label
-                        text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
-                    .arrow span 
-                        @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
         .oe_subtotal_footer
             width: 1% !important
             td.oe_form_group_cell
@@ -1878,9 +1805,75 @@ $sheet-max-width: 860px
             margin-top: 10px
     // }}}
     // FormView.fieldstatus {{{
-    .oe_form_field_status
-        @include semantic-html-override
-        @include ul-html-override
+    ul.oe_form_status, ul.oe_form_status_clickable
+        display: inline-block
+        margin: 0
+        padding: 0 18px 0 0
+        li 
+            display: inline-block
+            list-style-type: none
+            margin: 0 -20px 0 0
+            padding: 0
+            @include vertical-gradient(#fcfcfc, #dedede)
+            &:first-child .label
+                border-left: 1px solid #cacaca
+                padding-left: 14px
+            &:last-child
+                border-right: 1px solid #cacaca
+                .label
+                    padding-right: 14px
+                .arrow
+                    display: none
+            .label
+                color: #4c4c4c
+                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
+                padding: 7px
+                display: inline-block
+                padding-left: 24px
+                margin: 0
+                position: relative
+            .arrow
+                width: 17px
+                display: inline-block
+                vertical-align: top
+                overflow: hidden
+                margin-left: -5px
+                span 
+                    position: relative
+                    width: 24px
+                    height: 24px
+                    display: inline-block
+                    margin-left: -12px
+                    margin-top: 3px
+                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
+                    @include skew-gradient(#fcfcfc, #dedede)
+                    @include radius(3px)
+                    @include transform(rotate(45deg))
+        li.oe_active
+            @include vertical-gradient(#729fcf, #3465a4)
+            .arrow span 
+                @include skew-gradient(#729fcf, #3465a4)
+            .label
+                color: white
+                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+    ul.oe_form_status_clickable
+        li
+            cursor: pointer
+            &:hover 
+                @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+                .label
+                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                .arrow span 
+                    @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+            .label
+                color: $link-color
+        li.oe_active
+            &:hover 
+                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                .label
+                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                .arrow span 
+                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
     // }}}
     // FormView.one2many {{{
     .oe_form .oe_form_field_one2many > .oe_view_manager
@@ -1944,14 +1937,12 @@ $sheet-max-width: 860px
         .oe_m2o_cm_button
             display: none
         .oe_form_field
-            input
+            input, textarea
                 height: $row-height
             input, textarea
                 @include radius(0)
                 border: 1px solid #aaf
                 margin: 0
-            textarea
-                height: 60px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
@@ -2170,15 +2161,6 @@ $sheet-max-width: 860px
         float: right
         color: #333
     // }}}
-    .oe_semantic_html // a style to use normal html
-        li
-            list-style-type: disc
-            display: list-item
-        ul
-            padding-left: 1em
-        p
-            color: #4C4C4C !important
-        
 // Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)

@@ -427,9 +427,9 @@
     <div class="oe_view_manager">
         <table class="oe_view_manager_header">
             <col width="20%"/>
-            <col width="25%"/>
-            <col width="20%"/>
             <col width="35%"/>
+            <col width="15%"/>
+            <col width="30%"/>
             <tr class="oe_header_row oe_header_row_top">
                 <td colspan="2">
                         <h2 class="oe_view_title" t-if="widget.flags.display_title !== false">
@@ -487,6 +487,7 @@
         <option t-if="view_manager.searchview" value="edit" data-model="ir.ui.view" t-att-data-id="view_manager.searchview.view_id">Edit SearchView</option>
         <option t-if="view_manager.action" value="edit" t-att-data-model="view_manager.action.type" t-att-data-id="view_manager.action.id">Edit Action</option>
         <option value="edit_workflow">Edit Workflow</option>
+        <option value="print_workflow">Print Workflow</option>
     </t>
 </t>
 <t t-name="ViewManagerDebugViewLog">
@@ -649,9 +650,11 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <button type="button" class="oe_button oe_list_add oe_highlight">
-            <t t-esc="widget.options.addable"/>
-        </button>
+        <div name="oe_list_add_div">
+            <button type="button" class="oe_button oe_list_add oe_highlight">
+                <t t-esc="widget.options.addable"/>
+            </button>
+        </div>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -692,7 +695,7 @@
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="button.oe_list_add" t-operation="after">
+    <t t-jquery="div.oe_list_add_div" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
         <span class="oe_alternative">
@@ -1062,7 +1065,7 @@
     </span>
 </t>
 <t t-name="FieldStatus">
-    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_steps_clickable' : 'oe_form_steps')" t-att-style="widget.node.attrs.style"/>
+    <ul t-att-class="'oe_form_field_status ' + (widget.options.clickable ? 'oe_form_status_clickable' : 'oe_form_status')" t-att-style="widget.node.attrs.style"/>
 </t>
 <t t-name="FieldStatus.content">
     <t t-foreach="widget.selection" t-as="i">

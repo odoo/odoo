@@ -427,6 +427,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
+        var create_nocontent = this.$buttons;
+        this.$el.find('.oe_view_nocontent').click(function() {
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+        });
     }
 });
 
@@ -742,7 +746,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 .toggleClass('oe_kanban_draghandle', this.view.is_action_enabled('edit'));
         }
 
-        this.$el.find('.oe_kanban_action').click(function() {
+        this.$el.find('.oe_kanban_action').click(function(ev) {
+            ev.preventDefault();
             var $action = $(this),
                 type = $action.data('type') || 'button',
                 method = 'do_action_' + (type === 'action' ? 'object' : type);
