@@ -181,7 +181,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
             selection= [('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
@@ -836,6 +836,8 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
@@ -2338,6 +2340,16 @@ class account_model(osv.osv):
 
         return move_ids
 
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        company_id = False
+
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            if journal.company_id.id:
+                company_id = journal.company_id.id
+
+        return {'value': {'company_id': company_id}}
+
 account_model()
 
 class account_model_line(osv.osv):
@@ -3013,9 +3025,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
-    
+
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        currency_id = False        
+        currency_id = False
         if company_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
         return {'value': {'currency_id': currency_id}}
