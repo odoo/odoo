@@ -30,5 +30,15 @@
             view_type="form"
             target="new"
             id="action_stock_invoice_onshipping"/>
+
+        <act_window name="Create invoice"
+            res_model="stock.invoice.onshipping"
+            src_model="stock.picking.in"
+            key2="client_action_multi"
+            multi="True"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            id="action_stock_invoice_onshipping"/>
     </data>
 </openerp>

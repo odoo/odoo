@@ -112,10 +112,12 @@
                 </group>
                 <field name="account_ids">
                     <tree string="Analytic Distribution" editable="bottom">
+                        <field name="name"/>
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </tree>
                     <form string="Analytic Distribution" version="7.0">
+                        <field name="name"/>
                         <field name="rate"/>
                         <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     </form>
@@ -159,6 +161,7 @@
         <field name="arch" type="xml">
             <form string="Analytic Distribution Line" version="7.0">
                 <group col="4">
+                    <field name="name"/>
                     <field name="plan_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                     <field name="rate"/>
@@ -172,6 +175,7 @@
         <field name="model">account.analytic.plan.instance.line</field>
         <field name="arch" type="xml">
             <tree string="Analytic Distribution Lines">
+                <field name="name"/>
                 <field name="plan_id"/>
                 <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                 <field name="rate"/>

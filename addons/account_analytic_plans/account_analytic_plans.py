@@ -263,6 +263,7 @@ class account_analytic_plan_instance_line(osv.osv):
     _name = "account.analytic.plan.instance.line"
     _description = "Analytic Instance Line"
     _columns = {
+        'name': fields.char('Plan Name', size=64),
         'plan_id': fields.many2one('account.analytic.plan.instance', 'Plan Id'),
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', required=True, domain=[('type','<>','view')]),
         'rate': fields.float('Rate (%)', required=True),
