@@ -1,3 +1,3 @@
-note.css: note.sass
-	sass -t expanded note.sass note.css
+memo.css: memo.sass
+	sass -t expanded memo.sass memo.css
 
