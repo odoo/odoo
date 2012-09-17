@@ -16,12 +16,11 @@ openerp.account = function (instance) {
             return tmp;
         },
         do_search: function(domain, context, group_by) {
-            var sup = this._super;
+            var sup = _.bind(this._super, this);
             var mod = new instance.web.Model(this.model, context, domain);
             return mod.query("partner_id").group_by(["partner_id"]).pipe(function(result) {
                 var vals = _.chain(result).pluck("attributes").pluck("value")
                     .filter(function(el) {return !!el;}).value();
-                    debugger;
                 return sup(new instance.web.CompoundDomain(domain, [["partner_id", "in", _.pluck(vals, 0)]]), context, group_by);
             });
         },
