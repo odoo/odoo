@@ -5,7 +5,7 @@
             <field name="name">Change Product Quantity</field>
             <field name="model">stock.change.product.qty</field>
             <field name="arch" type="xml">
-                <form string="Change Product Quantity" version="7.0">
+                <form string="Update Product Quantity" version="7.0">
                     <group>
                         <field name="new_quantity" />
                         <field name="product_id" invisible="1"/>
@@ -22,7 +22,7 @@
         </record>
 
         <record id="action_view_change_product_quantity" model="ir.actions.act_window">
-            <field name="name">Change Product Quantity</field>
+            <field name="name">Update Product Quantity</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">stock.change.product.qty</field>
             <field name="view_type">form</field>
