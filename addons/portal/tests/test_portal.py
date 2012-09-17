@@ -42,7 +42,7 @@ class test_portal(test_mail.TestMailMockups):
         user_admin = self.res_users.browse(cr, uid, uid)
         self.mail_invite = self.registry('mail.wizard.invite')
         base_url = self.registry('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='')
-        portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'portal_group')
+        portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
         portal_id = portal_ref and portal_ref[1] or False
 
         # 0 - Admin
