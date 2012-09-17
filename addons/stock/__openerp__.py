@@ -25,26 +25,32 @@
     'author': 'OpenERP SA',
     'summary': 'Inventory, Logistic, Storage',
     'description' : """
-OpenERP Inventory Management module can manage multi-warehouses, multi and structured stock locations.
-======================================================================================================
+Manage multi-warehouses, multi- and structured stock locations
+==============================================================
 
-Thanks to the double entry management, the inventory controlling is powerful and flexible:
-------------------------------------------------------------------------------------------
-    * Moves history and planning,
-    * Stock valuation (standard or average price, ...)
-    * Robustness faced with Inventory differences
-    * Automatic reordering rules (stock level, JIT, ...)
-    * Bar code supported
-    * Rapid detection of mistakes through double entry system
-    * Traceability (upstream/downstream, production lots, serial number, ...)
-    
-Dashboard for warehouse that includes:
---------------------------------------
-    * Procurement in exception
-    * List of Incoming Products
-    * List of Outgoing Products
-    * Graph : Products to receive in delay (date <= today)
-    * Graph : Products to send in delay (date <= today)
+The warehouse and inventory management is based on a hierarchical location structure, from warehouses to storage bins. 
+The double entry inventory system allows you to manage customers, suppliers as well as manufacturing inventories. 
+
+OpenERP has the capacity to manage lots and serial numbers ensuring compliance with the traceability requirements imposed by the majority of industries.
+
+Key Features
+-------------
+* Moves history and planning,
+* Stock valuation (standard or average price, ...)
+* Robustness faced with Inventory differences
+* Automatic reordering rules
+* Support for barcodes
+* Rapid detection of mistakes through double entry system
+* Traceability (Upstream / Downstream, Serial numbers, ...)
+
+Dashboard / Reports for Warehouse Management will include:
+----------------------------------------------------------
+* Incoming Products (Graph)
+* Outgoing Products (Graph)
+* Procurement in Exception
+* Inventory Analysis
+* Last Product Inventories
+* Moves Analysis
     """,
     'website': 'http://www.openerp.com',
     'images': ['images/stock_forecast_report.png', 'images/delivery_orders.jpeg', 'images/inventory_analysis.jpeg','images/location.jpeg','images/moves_analysis.jpeg','images/physical_inventories.jpeg','images/warehouse_dashboard.jpeg'],
