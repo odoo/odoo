@@ -12,9 +12,22 @@ openerp.account = function (instance) {
             this.current_partner = null;
         },
         on_loaded: function() {
+            var self = this;
             var tmp = this._super.apply(this, arguments);
-            if (this.partners)
+            if (this.partners) {
                 this.$el.prepend(QWeb.render("AccountReconciliation", {widget: this}));
+                this.$("oe_account_recon_previous").click(function() {
+                    self.current_partner = (self.current_partner - 1) % self.partners.length;
+                    self.search_by_partner();
+                });
+                this.$("oe_account_recon_next").click(function() {
+                    self.current_partner = (self.current_partner + 1) % self.partners.length;
+                    self.search_by_partner();
+                });
+                this.$("oe_account_recon_reconcile").click(function() {
+                    self.reconcile();
+                });
+            }
             return tmp;
         },
         do_search: function(domain, context, group_by) {
@@ -25,15 +38,27 @@ openerp.account = function (instance) {
             this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model(this.model, context, domain);
             return mod.query("partner_id").group_by(["partner_id"]).pipe(function(result) {
+                var current = self.current_partner !== null ? self.partner[self.current_partner][0] : null;
                 self.partners = _.chain(result).pluck("attributes").pluck("value")
                     .filter(function(el) {return !!el;}).value();
-                self.current_partner = self.partners.length == 0 ? null : 0;
+                var index = _.find(_.range(self.partners.length), function(el) {
+                    if (current === self.partners[el][0])
+                        return true;
+                });
+                if (index !== undefined)
+                    self.current_partner = index;
+                else
+                    self.current_partner = self.partners.length == 0 ? null : 0;
                 self.search_by_partner();
             });
         },
         search_by_partner: function() {
             return this.old_search(new instance.web.CompoundDomain(this.last_domain, [["partner_id", "in", this.current_partner === null ? [] :
                 [this.partners[this.current_partner][0]] ]]), this.last_context, this.last_group_by);
+        },
+        reconcile: function() {
+            var self = this;
+            var ids = this.get_selected_ids();
         },
     });
     
