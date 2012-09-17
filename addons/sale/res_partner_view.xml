@@ -50,6 +50,7 @@
                 <xpath expr="//div[@name='buttons']" position="inside">
                     <button name="%(sale.act_res_partner_2_sale_order)d" type="action"
                         string="Quotations and Sales"
+                        attrs="{'invisible': [('customer', '=', False)]}"
                         groups="base.group_sale_salesman"/>
                 </xpath>
             </field>

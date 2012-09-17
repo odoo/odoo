@@ -582,6 +582,12 @@ class sale_order(osv.osv):
         result.update(view_id = res and res[1] or False)
         return result
 
+    def test_no_product(self, cr, uid, order, context):
+        for line in order.order_line:
+            if line.product_id and (line.product_id.type<>'service'):
+                return False
+        return True
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -751,7 +757,10 @@ class sale_order(osv.osv):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
                 raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
-            if (o.order_policy == 'manual'):
+            noprod = self.test_no_product(cr, uid, o, context)
+            if noprod and o.order_policy=='picking':
+                self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
+            if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
                 self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
