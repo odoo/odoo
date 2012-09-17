@@ -28,17 +28,51 @@ from tools.translate import _
 import logging
 import pooler
 import pytz
+from lxml import etree
+
+class format_address(object):
+    def fields_view_get_address(self, cr, uid, arch, context={}):
+        user_obj = self.pool.get('res.users')
+        fmt = user_obj.browse(cr, uid, uid,context).company_id.country_id
+        fmt = fmt and fmt.address_format
+        layouts = {
+            '%(city)s %(state_code)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City" style="width: 50%%"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+                    <br/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """,
+            '%(zip)s %(city)s': """
+                <div class="address_format">
+                    <field name="zip" placeholder="ZIP" style="width: 40%%"/>
+                    <field name="city" placeholder="City" style="width: 57%%"/>
+                    <br/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                </div>
+            """,
+            '%(city)s\n%(state_name)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """
+        }
+        for k,v in layouts.items():
+            if fmt and (k in fmt):
+                doc = etree.fromstring(arch)
+                for node in doc.xpath("//div[@class='address_format']"):
+                    tree = etree.fromstring(v)
+                    node.getparent().replace(node, tree)
+                arch = etree.tostring(doc)
+                break
+        return arch
+
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
-
-class res_payterm(osv.osv):
-    _description = 'Payment term'
-    _name = 'res.payterm'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Payment Term (short name)', size=64),
-    }
 
 class res_partner_category(osv.osv):
 
@@ -127,7 +161,7 @@ def _lang_get(self, cr, uid, context=None):
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
-class res_partner(osv.osv):
+class res_partner(osv.osv, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
@@ -151,7 +185,7 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Owned by'),
+        'parent_id': fields.many2one('res.partner', 'Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
@@ -230,6 +264,14 @@ class res_partner(osv.osv):
         else:
             image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
         return tools.image_resize_image_big(image.encode('base64'))
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
+        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _defaults = {
         'active': True,
@@ -498,7 +540,7 @@ class res_partner(osv.osv):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id and address.country_id.address_format or \
-                                         '%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s'
+              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
             'state_code': address.state_id and address.state_id.code or '',
             'state_name': address.state_id and address.state_id.name or '',
@@ -511,9 +553,9 @@ class res_partner(osv.osv):
             args[field] = getattr(address, field) or ''
         if without_company:
             args['company_name'] = ''
+        elif address.parent_id:
+            address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-
 
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):

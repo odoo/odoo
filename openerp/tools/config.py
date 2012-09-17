@@ -223,7 +223,7 @@ class configmanager(object):
                          help="specify the database port", type="int")
         group.add_option("--db_maxconn", dest="db_maxconn", type='int', my_default=64,
                          help="specify the the maximum number of physical connections to posgresql")
-        group.add_option("--db-template", dest="db_template", my_default="template0",
+        group.add_option("--db-template", dest="db_template", my_default="template1",
                          help="specify a custom database template to create a new database")
         parser.add_option_group(group)
 
