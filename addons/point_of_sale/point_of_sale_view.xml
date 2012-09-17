@@ -1035,7 +1035,7 @@
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <field name="user_id"/>
                     <field name="session_id"/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
@@ -1053,7 +1053,6 @@
         <record model="ir.ui.view" id="pos_ean13_generator">
             <field name="name">pos.ean_wizard</field>
             <field name="model">pos.ean_wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Ean13 Generator" version="7.0">  
                     <p class="oe_grey">

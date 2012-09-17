@@ -5,7 +5,6 @@
     <record id="view_payslip_tree" model="ir.ui.view">
         <field name="name">payslip.report.tree</field>
         <field name="model">payslip.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'done';gray:state == 'cancel' " string="Payslip Analysis">
                 <field name="nbr" sum="# Payslip Lines"/>
@@ -30,7 +29,6 @@
     <record id="view_payslip_search" model="ir.ui.view">
         <field name="name">payslip.report.search</field>
         <field name="model">payslip.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Payslip Analysis">
                  <group>
