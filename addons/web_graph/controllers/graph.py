@@ -53,6 +53,9 @@ class GraphView(View):
             if fields[field]['type']=='many2one':
                 data = data and data[1]
             if tick:
+                if fields[field]['type']=='selection':
+                    d = dict(fields[field]['selection'])
+                    data = d[data]
                 return ticks.setdefault(data, len(ticks))
             return data or 0
 
