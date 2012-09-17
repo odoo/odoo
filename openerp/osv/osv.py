@@ -120,6 +120,7 @@ class object_proxy(object):
                     raise except_osv('Database not ready', 'Currently, this database is not fully loaded and can not be used.')
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
+                raise
                 raise except_osv(inst.name, inst.value)
             except except_osv:
                 raise

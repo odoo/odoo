@@ -193,21 +193,6 @@ class res_users(osv.osv):
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
 
-    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        def override_password(o):
-            if 'password' in o and ( 'id' not in o or o['id'] != uid ):
-                o['password'] = '********'
-            return o
-        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
-        if not canwrite:
-            if isinstance(ids, (int, long)):
-                result = override_password(result)
-            else:
-                result = map(override_password, result)
-        return result
-
-
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
 
@@ -276,8 +261,34 @@ class res_users(osv.osv):
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
-    # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
+    # User can write to a few of its own fields (but not her groups for example)
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    # user can read a few of its own fields
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id']
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        def override_password(o):
+            if 'password' in o and ('id' not in o or o['id'] != uid):
+                o['password'] = '********'
+            return o
+
+        if (isinstance(ids, (list, tuple)) and ids == [uid]) or ids == uid:
+            for key in fields:
+                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_') or key in ['__last_update']):
+                    break
+            else:
+                # safe fields only, so we read as super-user to bypass access rights
+                uid = 1
+
+        result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
+        if not canwrite:
+            if isinstance(ids, (int, long)):
+                result = override_password(result)
+            else:
+                result = map(override_password, result)
+
+        return result
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
