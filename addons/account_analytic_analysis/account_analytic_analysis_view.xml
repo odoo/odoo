@@ -140,6 +140,16 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('type','=','template')]</field>
             <field name="context">{'search_default_type':'template','default_type' : 'template'}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click here to create a template of contract.
+                </p><p>
+                    Templates are used to prefigure contract/project that 
+                    can be selected by the salespeople to quickly configure the
+                    terms and conditions of the contract.
+                </p>
+            </field>
+             
         </record>
         <menuitem action="template_of_contract_action" id="menu_template_of_contract_action" parent="base.menu_base_config"/>
     </data>
