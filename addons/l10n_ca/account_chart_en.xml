@@ -6,9 +6,8 @@
         <record id="chart0_en" model="account.account.template">
             <field name="code">0</field>
             <field name="name">Account Chart CA EN</field>
-            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
-            <field name="user_type" ref="user_type_view_en"/>
+            <field name="user_type" ref="account.data_account_type_view"/>
         </record>
 
     <!-- ASSET -->
@@ -17,7 +16,7 @@
         <field name="code">1</field>
         <field name="parent_id" ref="chart0_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">ASSETS</field>
     </record>
     
@@ -25,7 +24,7 @@
         <field name="code">11</field>
         <field name="parent_id" ref="chart1_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CURRENT ASSETS</field>
     </record>
     
@@ -33,7 +32,7 @@
         <field name="code">111</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CASH</field>
     </record>
 
@@ -41,7 +40,7 @@
         <field name="code">1111</field>
         <field name="parent_id" ref="chart111_en"/>
         <field name="type">liquidity</field>
-        <field name="user_type" ref="user_type_asset_en"/>
+        <field name="user_type" ref="account.data_account_type_bank"/>
         <field name="name">Checking Account</field>
     </record>
 
@@ -49,7 +48,7 @@
         <field name="code">112</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">TREASURY OR TREASURY EQUIVALENTS</field>
     </record>
 
@@ -57,7 +56,7 @@
         <field name="code">113</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CERTIFICATES OF DEPOSITS</field>
     </record>
 
@@ -65,7 +64,7 @@
         <field name="code">114</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">STOCKS</field>
     </record>
 
@@ -73,7 +72,7 @@
         <field name="code">115</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">ACCOUNTS RECEIVABLES</field>
     </record>
 
@@ -81,7 +80,7 @@
         <field name="code">1151</field>
         <field name="parent_id" ref="chart115_en"/>
         <field name="type">receivable</field>
-        <field name="user_type" ref="user_type_receivable_en"/>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">Customers Account</field>
     </record>
@@ -90,7 +89,7 @@
         <field name="code">1152</field>
         <field name="parent_id" ref="chart115_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">ALLOWANCE FOR DOUBTFUL ACCOUNTS</field>
     </record>
 
@@ -98,7 +97,7 @@
         <field name="code">116</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">PREPAID EXPENSES</field>
     </record>
 
@@ -106,7 +105,7 @@
         <field name="code">117</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INVESTMENTS HELD FOR TRADING</field>
     </record>
 
@@ -114,15 +113,15 @@
         <field name="code">118</field>
         <field name="parent_id" ref="chart11_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">TAXES RECEIVABLES</field>
     </record>
 
     <record id="chart1181_en" model="account.account.template">
         <field name="code">1181</field>
         <field name="parent_id" ref="chart118_en"/>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="user_type_receivable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">GST receivable</field>
     </record>
@@ -130,8 +129,8 @@
     <record id="chart1182_en" model="account.account.template">
         <field name="code">1182</field>
         <field name="parent_id" ref="chart118_en"/>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="user_type_receivable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">PST/QST receivable</field>
     </record>
@@ -139,8 +138,8 @@
     <record id="chart1183_en" model="account.account.template">
         <field name="code">1183</field>
         <field name="parent_id" ref="chart118_en"/>
-        <field name="type">receivable</field>
-        <field name="user_type" ref="user_type_receivable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_receivable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">HST receivable</field>
     </record>
@@ -149,7 +148,7 @@
         <field name="code">15</field>
         <field name="parent_id" ref="chart1_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">NON-CURRENT ASSETS</field>
     </record>
 
@@ -157,7 +156,7 @@
         <field name="code">151</field>
         <field name="parent_id" ref="chart15_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INVESTMENTS AVAILABLE FOR SALE</field>
     </record>
 
@@ -165,7 +164,7 @@
         <field name="code">152</field>
         <field name="parent_id" ref="chart15_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">TANGIBLE ASSETS</field>
     </record>
 
@@ -173,7 +172,7 @@
         <field name="code">1527</field>
         <field name="parent_id" ref="chart152_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">ACCUMULATED DEPRECIATIONS</field>
     </record>
 
@@ -181,7 +180,7 @@
         <field name="code">153</field>
         <field name="parent_id" ref="chart15_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INTANGIBLE ASSETS</field>
     </record>
 
@@ -189,7 +188,7 @@
         <field name="code">1531</field>
         <field name="parent_id" ref="chart153_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">PATENTS, TRADEMARKS AND COPYRIGHTS</field>
     </record>
 
@@ -199,7 +198,7 @@
         <field name="code">2</field>
         <field name="parent_id" ref="chart0_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">LIABILITIES</field>
     </record>
 
@@ -207,7 +206,7 @@
         <field name="code">21</field>
         <field name="parent_id" ref="chart2_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CURRENT LIABILITIES</field>
     </record>
 
@@ -215,7 +214,7 @@
         <field name="code">211</field>
         <field name="parent_id" ref="chart21_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">ACCOUNTS PAYABLES</field>
     </record>
 
@@ -223,7 +222,7 @@
         <field name="code">2111</field>
         <field name="parent_id" ref="chart211_en"/>
         <field name="type">payable</field>
-        <field name="user_type" ref="user_type_payable_en"/>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">Suppliers Account</field>
     </record>
@@ -232,15 +231,15 @@
         <field name="code">212</field>
         <field name="parent_id" ref="chart21_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">TAXES PAYABLES</field>
     </record>
 
     <record id="chart2121_en" model="account.account.template">
         <field name="code">2121</field>
         <field name="parent_id" ref="chart212_en"/>
-        <field name="type">payable</field>
-        <field name="user_type" ref="user_type_payable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">GST to pay</field>
     </record>
@@ -248,8 +247,8 @@
     <record id="chart2122_en" model="account.account.template">
         <field name="code">2122</field>
         <field name="parent_id" ref="chart212_en"/>
-        <field name="type">payable</field>
-        <field name="user_type" ref="user_type_payable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">PST/QST to pay</field>
     </record>
@@ -257,8 +256,8 @@
     <record id="chart2123_en" model="account.account.template">
         <field name="code">2123</field>
         <field name="parent_id" ref="chart212_en"/>
-        <field name="type">payable</field>
-        <field name="user_type" ref="user_type_payable_en"/>
+        <field name="type">other</field>
+        <field name="user_type" ref="account.data_account_type_payable"/>
         <field name="reconcile" eval="True"/>
         <field name="name">HST to pay</field>
     </record>
@@ -267,7 +266,7 @@
         <field name="code">213</field>
         <field name="parent_id" ref="chart21_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CURRENT FINANCIAL DEBTS</field>
     </record>
 
@@ -275,7 +274,7 @@
         <field name="code">25</field>
         <field name="parent_id" ref="chart2_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">NON-CURRENT LIABILITIES</field>
     </record>
 
@@ -283,7 +282,7 @@
         <field name="code">251</field>
         <field name="parent_id" ref="chart25_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">NON-CURRENT FINANCIAL DEBTS</field>
     </record>
 
@@ -291,7 +290,7 @@
         <field name="code">252</field>
         <field name="parent_id" ref="chart25_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">PROVISIONS FOR PENSIONS AND OTHER POST-EMPLOYMENT ADVANTAGES</field>
     </record>
 
@@ -299,7 +298,7 @@
         <field name="code">253</field>
         <field name="parent_id" ref="chart25_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">DEFERRED TAXES</field>
     </record>
 
@@ -307,7 +306,7 @@
         <field name="code">259</field>
         <field name="parent_id" ref="chart25_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OTHER NON-CURRENT LIABILITIES</field>
     </record>
 
@@ -317,7 +316,7 @@
         <field name="code">3</field>
         <field name="parent_id" ref="chart0_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">EQUITY</field>
     </record>
 
@@ -325,7 +324,7 @@
         <field name="code">31</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">SHARE CAPITAL</field>
     </record>
 
@@ -333,7 +332,7 @@
         <field name="code">32</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">PREMIUMS</field>
     </record>
 
@@ -341,7 +340,7 @@
         <field name="code">33</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">RETAINED EARNINGS</field>
     </record>
 
@@ -349,7 +348,7 @@
         <field name="code">34</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">DIVIDENDS</field>
     </record>
 
@@ -357,7 +356,7 @@
         <field name="code">35</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">TRANSLATION ADJUSTMENTS</field>
     </record>
 
@@ -365,7 +364,7 @@
         <field name="code">36</field>
         <field name="parent_id" ref="chart3_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">CONTRIBUTED SURPLUS</field>
     </record>
 
@@ -375,7 +374,7 @@
         <field name="code">4</field>
         <field name="parent_id" ref="chart0_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INCOMES</field>
     </record>
 
@@ -383,7 +382,7 @@
         <field name="code">41</field>
         <field name="parent_id" ref="chart4_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OPERATING INCOMES</field>
     </record>
 
@@ -391,7 +390,7 @@
         <field name="code">411</field>
         <field name="parent_id" ref="chart41_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_income_en"/>
+        <field name="user_type" ref="account.data_account_type_income"/>
         <field name="name">Inside Sales</field>
     </record>
 
@@ -399,7 +398,7 @@
                 <field name="code">412</field>
                 <field name="parent_id" ref="chart41_en"/>
                 <field name="type">other</field>
-                <field name="user_type" ref="user_type_income_en"/>
+                <field name="user_type" ref="account.data_account_type_income"/>
                 <field name="name">Harmonized Provinces Sales</field>
         </record>
 
@@ -407,7 +406,7 @@
                 <field name="code">413</field>
                 <field name="parent_id" ref="chart41_en"/>
                 <field name="type">other</field>
-                <field name="user_type" ref="user_type_income_en"/>
+                <field name="user_type" ref="account.data_account_type_income"/>
                 <field name="name">Non-Harmonized Provinces Sales</field>
         </record>
 
@@ -415,7 +414,7 @@
                 <field name="code">414</field>
                 <field name="parent_id" ref="chart41_en"/>
                 <field name="type">other</field>
-                <field name="user_type" ref="user_type_income_en"/>
+                <field name="user_type" ref="account.data_account_type_income"/>
                 <field name="name">International Sales</field>
         </record>
 
@@ -423,7 +422,7 @@
         <field name="code">419</field>
         <field name="parent_id" ref="chart41_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OTHER OPERATING INCOMES</field>
     </record>
 
@@ -431,7 +430,7 @@
         <field name="code">42</field>
         <field name="parent_id" ref="chart4_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">NON-OPERATING INCOMES</field>
     </record>
 
@@ -439,7 +438,7 @@
         <field name="code">421</field>
         <field name="parent_id" ref="chart42_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INTERESTS</field>
     </record>
 
@@ -447,7 +446,7 @@
         <field name="code">429</field>
         <field name="parent_id" ref="chart42_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OTHER NON-OPERATING INCOMES</field>
     </record>
 
@@ -457,7 +456,7 @@
         <field name="code">5</field>
         <field name="parent_id" ref="chart0_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">EXPENSES</field>
     </record>
 
@@ -465,7 +464,7 @@
         <field name="code">51</field>
         <field name="parent_id" ref="chart5_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OPERATING EXPENSES</field>
     </record>
 
@@ -473,7 +472,7 @@
         <field name="code">511</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">COST OF GOODS SOLD</field>
     </record>
 
@@ -481,7 +480,7 @@
         <field name="code">5111</field>
         <field name="parent_id" ref="chart511_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Inside Purchases</field>
     </record>
 
@@ -489,7 +488,7 @@
         <field name="code">5112</field>
         <field name="parent_id" ref="chart511_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Purchases in harmonized provinces</field>
     </record>
 
@@ -497,7 +496,7 @@
         <field name="code">5113</field>
         <field name="parent_id" ref="chart511_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Purchases in non-harmonized provinces</field>
     </record>
 
@@ -505,7 +504,7 @@
         <field name="code">5114</field>
         <field name="parent_id" ref="chart511_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">International Purchases</field>
     </record>
 
@@ -513,7 +512,7 @@
         <field name="code">512</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">LABOUR EXPENSES</field>
     </record>
 
@@ -521,7 +520,7 @@
         <field name="code">5121</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Salaries, wages and commissions</field>
     </record>
 
@@ -529,7 +528,7 @@
         <field name="code">5122</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Holidays</field>
     </record>
 
@@ -537,7 +536,7 @@
         <field name="code">5123</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Employment Insurance</field>
     </record>
 
@@ -545,7 +544,7 @@
         <field name="code">5124</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Health Services Fund</field>
     </record>
 
@@ -553,7 +552,7 @@
         <field name="code">5125</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Annuities</field>
     </record>
 
@@ -561,7 +560,7 @@
         <field name="code">5126</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Parental Insurance</field>
     </record>
 
@@ -569,7 +568,7 @@
         <field name="code">5127</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Labour Health and Safety</field>
     </record>
 
@@ -577,7 +576,7 @@
         <field name="code">5128</field>
         <field name="parent_id" ref="chart512_en"/>
         <field name="type">other</field>
-        <field name="user_type" ref="user_type_expense_en"/>
+        <field name="user_type" ref="account.data_account_type_expense"/>
         <field name="name">Labour Standards</field>
     </record>
 
@@ -585,7 +584,7 @@
         <field name="code">513</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">SALES EXPENSES</field>
     </record>
 
@@ -593,7 +592,7 @@
         <field name="code">514</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">GENERAL EXPENSES</field>
     </record>
 
@@ -601,7 +600,7 @@
         <field name="code">515</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">RESEARCH AND DEVELOPMENT EXPENSES</field>
     </record>
 
@@ -609,7 +608,7 @@
         <field name="code">519</field>
         <field name="parent_id" ref="chart51_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OTHER OPERATING EXPENSES</field>
     </record>
 
@@ -617,7 +616,7 @@
         <field name="code">55</field>
         <field name="parent_id" ref="chart5_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">NON-OPERATING EXPENSES</field>
     </record>
 
@@ -625,7 +624,7 @@
         <field name="code">551</field>
         <field name="parent_id" ref="chart55_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">INTEREST EXPENSES</field>
     </record>
 
@@ -633,7 +632,7 @@
         <field name="code">559</field>
         <field name="parent_id" ref="chart55_en"/>
         <field name="type">view</field>
-        <field name="user_type" ref="user_type_view_en"/>
+        <field name="user_type" ref="account.data_account_type_view"/>
         <field name="name">OTHER NON-OPERATING EXPENSES</field>
     </record>
 

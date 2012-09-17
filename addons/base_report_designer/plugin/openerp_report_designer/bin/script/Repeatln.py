@@ -288,7 +288,7 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
                         widget.insertTextContent(cursor,oInputList,False)
                 self.win.endExecute()
         else:
-            ErrorDialog("Please Fill appropriate data in Object Field or Name field \nor select perticular value from the list of fields")
+            ErrorDialog("Please fill appropriate data in Object Field or Name field \nor select particular value from the list of fields.")
 
     def btnCancel_clicked( self, oActionEvent ):
         self.win.endExecute()

@@ -7,14 +7,16 @@
         <record model="ir.ui.view" id="phonecall2opportunity_view">
             <field name="name">crm.phonecall2opportunity.form</field>
             <field name="model">crm.phonecall2opportunity</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Convert To Opportunity " version="7.0">
-                    <group col="4">
+                    <group>
                         <field name="name"/>
                         <field name="partner_id" />
-                        <field name="planned_revenue"/>
-                        <field name="probability"/>
+                        <label for="planned_revenue"/>
+                        <div>
+                            <field name="planned_revenue" class="oe_inline"/> at 
+                            <field name="probability" class="oe_inline"/> %%
+                        </div>
                     </group>
                     <footer>
                         <button name="make_opportunity" type="object" string="_Convert" class="oe_highlight"/>
@@ -28,7 +30,7 @@
 <!-- Phonecall to Opportunity action -->
 
         <record model="ir.actions.act_window" id="phonecall2opportunity_act">
-            <field name="name">Convert To Opportunity</field>
+            <field name="name">Convert to opportunity</field>
             <field name="res_model">crm.phonecall2opportunity</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>

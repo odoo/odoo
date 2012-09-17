@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="1">
+
+        <!-- Default template user for new users signing in -->
+        <record id="default_template_user" model="res.users">
+            <field name="name">Template User</field>
+            <field name="login">portaltemplate</field>
+            <!-- No password: this template user doesn't need to log in -->
+            <field name="password"></field>
+            <field name="active" eval="False"/>
+            <!-- Avoid auto-including this user in any default group, just like a typical portal member -->
+            <field name="groups_id" eval="[(5,)]"/>
+        </record>
+
+        <record id="default_template_user" model="ir.config_parameter">
+            <field name="key">auth_signup.template_user_id</field>
+            <field name="value" ref="default_template_user"/>
+        </record>
+
+    </data>
+</openerp>

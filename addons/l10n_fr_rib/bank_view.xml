@@ -6,10 +6,9 @@
             <field name="name">res.partner.form.rib1.inherit</field>
             <field name="model">res.partner</field>
             <field name="inherit_id" ref="account.view_partner_property_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
-                    <xpath expr="//page[@string='Accounting']/group/field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
+                    <xpath expr="//field[@name='bank_ids']/form/field[@name='acc_number']" position="before">
                         <newline />
                         <field name="bank_code" />
                         <field name="office" />
@@ -17,7 +16,7 @@
                         <field name="key" />
                         <newline />
                     </xpath>
-                    <xpath expr="//page[@string='Accounting']/group/field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
+                    <xpath expr="//field[@name='bank_ids']/tree/field[@name='acc_number']" position="after">
                         <field name="rib_acc_number"/>
                     </xpath>
                 </data>
@@ -29,7 +28,6 @@
             <field name="name">res.partner.bank.form.rib.inherit</field>
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="acc_number" position="before">
                     <field name="bank_code" />
@@ -47,7 +45,6 @@
             <field name="name">res.partner.bank.tree.rib.inherit</field>
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_tree" />
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="acc_number" position="after">
                     <field name="rib_acc_number" />
@@ -60,7 +57,6 @@
             <field name="name">res.bank.form.rib.inherit</field>
             <field name="model">res.bank</field>
             <field name="inherit_id" ref="base.view_res_bank_form" />
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="bic" position="before">
                     <field name="rib_code" />

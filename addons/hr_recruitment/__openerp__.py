@@ -19,21 +19,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
 {
     'name': 'Recruitment Process',
     'version': '1.0',
     'category': 'Human Resources',
-    "sequence": 24,
+    'sequence': 24,
+    'summary': 'Jobs, Recruitment, Applications, Job Interviews',
     'description': """
-Manages job positions and the recruitment process.
-==================================================
+Manage job positions and the recruitment process
+=================================================
 
-It's integrated with the survey module to allow you to define interview for different jobs.
+This application allows you to easily keep track of jobs, vacancies, applications, interviews...
 
-This module is integrated with the mail gateway to automatically tracks email
-sent to jobs@YOURCOMPANY.com. It's also integrated with the document management
-system to store and search in your CV base.
-    """,
+It is integrated with the mail gateway to automatically fetch email sent to <jobs@yourcompany.com> in the list of applications. It's also integrated with the document management system to store and search in the CV base and find the candidate that you are looking for. Similarly, it is integrated with the survey module to allow you to define interviews for different jobs.
+You can define the different phases of interviews and easily rate the applicant from the kanban view.
+""",
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/hr_recruitment_analysis.jpeg','images/hr_recruitment_applicants.jpeg'],
@@ -45,7 +46,7 @@ system to store and search in your CV base.
         'base_calendar',
         'fetchmail',
     ],
-    'update_xml': [
+    'data': [
         'wizard/hr_recruitment_employee_hired.xml',
         'wizard/hr_recruitment_create_partner_job_view.xml',
         'hr_recruitment_view.xml',
@@ -56,19 +57,14 @@ system to store and search in your CV base.
         'board_hr_recruitment_statistical_view.xml',
         'hr_recruitment_installer_view.xml',
         'res_config_view.xml',
-     ],
-    'init_xml': [
         'hr_recruitment_data.xml'
     ],
-    'demo_xml': [
-        'hr_recruitment_demo.yml',
-    ],
-    'test':[
-            'test/recruitment_process.yml',
-            ],
+    'demo': ['hr_recruitment_demo.yml'],
+    'js': ['static/src/js/hr_recruitment.js'],
+    'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001073437025460275621',
+    'certificate': '001073437025460275621',
     'application': True,
 }
 

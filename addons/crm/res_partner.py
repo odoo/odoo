@@ -46,6 +46,14 @@ class res_partner(osv.osv):
         'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
     }
 
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
+
+        super(res_partner, self).copy(cr, uid, record_id, default, context)
+
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
         value = {
@@ -74,7 +82,7 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'categ_id' : categ_ids and categ_ids[0] or '',
+                'categ_ids' : categ_ids and categ_ids[0:1] or [],
                 'state' :'draft',
                 'type': 'opportunity'
             }, context=context)

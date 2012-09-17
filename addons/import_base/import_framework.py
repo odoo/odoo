@@ -186,7 +186,7 @@ class import_framework(Thread):
 
         model_obj = self.obj.pool.get(model)
         if not model_obj:
-            raise ValueError(_("%s is not a valid model name") % model)
+            raise ValueError(_("%s is not a valid model name.") % model)
         _logger.debug(_(" fields imported : ") + str(fields))
         (p, r, warning, s) = model_obj.import_data(self.cr, self.uid, fields, res, mode='update', current_module=self.module_name, noupdate=True, context=self.context)
         for (field, field_name) in self_dependencies:
@@ -421,11 +421,11 @@ class import_framework(Thread):
     def _send_notification_email(self, result, error):
         if not self.email:
             return False	
-        email_obj = self.obj.pool.get('mail.message')
+        email_obj = self.obj.pool.get('mail.mail')
         email_id = email_obj.create(self.cr, self.uid, {
             'email_from' : 'import@module.openerp',
             'email_to' : self.email,
-            'body_text' : self.get_email_body(result, error),
+            'body_html' : self.get_email_body(result, error),
             'subject' : self.get_email_subject(result, error),
             'auto_delete' : True})
         email_obj.send(self.cr, self.uid, [email_id])

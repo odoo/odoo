@@ -20,13 +20,16 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class stock_location_product(osv.osv_memory):
     _name = "stock.location.product"
     _description = "Products by Location"
     _columns = {
         'from_date': fields.datetime('From'), 
-        'to_date': fields.datetime('To'), 
+        'to_date': fields.datetime('To'),
+        'type': fields.selection([('inventory','Analyse Current Inventory'),
+            ('period','Analyse a Period')], 'Analyse Type', required=True), 
     }
 
     def action_open_window(self, cr, uid, ids, context=None):
@@ -43,7 +46,7 @@ class stock_location_product(osv.osv_memory):
         location_products = self.read(cr, uid, ids, ['from_date', 'to_date'], context=context)
         if location_products:
             return {
-                'name': False,
+                'name': _('Current Inventory'),
                 'view_type': 'form',
                 'view_mode': 'tree,form',
                 'res_model': 'product.product',

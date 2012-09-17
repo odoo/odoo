@@ -27,7 +27,7 @@ try:
     from gdata.docs.service import DOCUMENT_LABEL
     import gdata.auth
 except ImportError:
-    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
+    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list.'))
 
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
@@ -46,7 +46,7 @@ class google_docs_ir_attachment(osv.osv):
         #login gmail account
         client = google_pool.google_login( user_config['user'], user_config['password'], type='docs_client', context=context)
         if not client:
-            raise osv.except_osv( _('Google Docs Error!'), _("Check your google configuration in users/synchronization"))
+            raise osv.except_osv( _('Google Docs Error!'), _("Check your google configuration in Users/Users/Synchronization tab."))
         return client
 
     def create_empty_google_doc(self, cr, uid, res_model, res_id, context=None):
@@ -88,7 +88,7 @@ class google_docs_ir_attachment(osv.osv):
             #copy the document you choose in the configuration
             copy_resource = client.copy_resource(original_resource, 'copy_%s' % original_resource.title.text)
         except:
-            raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL"))
+            raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment
         self.create(cr, uid, {
             'res_model': res_model,

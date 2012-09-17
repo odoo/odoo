@@ -3,17 +3,17 @@
 -
   First I check the total amount of the Quotation before Approved.
 -
-  !assert {model: sale.order, id: order, string: The amount of the Quotation is not correctly computed}:
+  !assert {model: sale.order, id: sale_order_6, string: The amount of the Quotation is not correctly computed}:
     - sum([l.price_subtotal for l in order_line]) == amount_untaxed
 -
-  I confirm the quotation with "Invoice based on deliveries" policy.
+  I confirm the quotation with Invoice based on deliveries policy.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: order}
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_6}
 -
   I check that invoice should not created before dispatch delivery.
 -
   !python {model: sale.order}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("order"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_6"))
     assert order.state == 'progress', 'Order should be in inprogress.'
     assert len(order.invoice_ids) == False, "Invoice should not created."
 -
@@ -23,7 +23,7 @@
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
     from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-    order = self.browse(cr, uid, ref("order"))
+    order = self.browse(cr, uid, ref("sale_order_6"))
     for order_line in order.order_line:
         procurement = order_line.procurement_id
         date_planned = datetime.strptime(order.date_order, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=order_line.delay or 0.0)
@@ -45,7 +45,7 @@
     from datetime import datetime, timedelta
     from dateutil.relativedelta import relativedelta
     from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-    sale_order = self.browse(cr, uid, ref("order"))
+    sale_order = self.browse(cr, uid, ref("sale_order_6"))
     assert sale_order.picking_ids, "Delivery order is not created."
     for picking in sale_order.picking_ids:
       assert picking.state == "auto" or "confirmed", "Delivery order should be in 'Waitting Availability' state."
@@ -77,7 +77,7 @@
   Now, I dispatch delivery order.
 -
   !python {model: stock.partial.picking}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("order"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_6"))
     for pick in order.picking_ids:
         data = pick.force_assign()
         if data == True:
@@ -87,7 +87,7 @@
   I check sale order to verify shipment.
 -
   !python {model: sale.order}: |
-    order = self.pool.get('sale.order').browse(cr, uid, ref("order"))
+    order = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_6"))
     assert order.shipped == True, "Sale order is not Delivered."
     assert order.picked_rate == 100, "Shipment progress is not 100%."
     #assert order.state == 'progress', 'Order should be in inprogress.'
@@ -97,7 +97,7 @@
 -
   !python {model: stock.invoice.onshipping}: |
     sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("order"))
+    sale_order = sale.browse(cr, uid, ref("sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]
     wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
@@ -106,7 +106,7 @@
   I check the invoice details after dispatched delivery.
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order"))
+    order = self.browse(cr, uid, ref("sale_order_6"))
     assert order.invoice_ids, "Invoice is not created."
     ac = order.partner_id.property_account_receivable.id
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale'), ('company_id', '=', order.company_id.id)])
@@ -116,7 +116,7 @@
         assert invoice.reference == order.client_order_ref or order.name,"Reference is not correspond."
         assert invoice.partner_id.id == order.partner_id.id,"Customer is not correspond."
         assert invoice.currency_id.id == order.pricelist_id.currency_id.id, "Currency is not correspond."
-        assert invoice.comment == order.note or '',"Note is not correspond."
+        assert invoice.comment == (order.note or ''),"Note is not correspond."
         assert invoice.journal_id.id in journal_ids,"Sales Journal is not link on Invoice."
         assert invoice.payment_term.id == order.payment_term.id, "Payment term is not correspond."
     for so_line in order.order_line:
@@ -134,7 +134,7 @@
   !python {model: sale.order}: |
     import netsvc
     wf_service = netsvc.LocalService("workflow")
-    so = self.browse(cr, uid, ref("order"))
+    so = self.browse(cr, uid, ref("sale_order_6"))
     for invoice in so.invoice_ids:
       wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_open', cr)
 -
@@ -142,7 +142,7 @@
 -
   !python {model: account.invoice}: |
     sale_order = self.pool.get('sale.order')
-    order = sale_order.browse(cr, uid, ref("order"))
+    order = sale_order.browse(cr, uid, ref("sale_order_6"))
     journal_ids = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'cash'), ('company_id', '=', order.company_id.id)], limit=1)
     for invoice in order.invoice_ids:
         invoice.pay_and_reconcile(
@@ -154,7 +154,7 @@
   I check the order after paid invoice.
 -
   !python {model: sale.order}: |
-    order = self.browse(cr, uid, ref("order"))
+    order = self.browse(cr, uid, ref("sale_order_6"))
     assert order.invoiced == True, "Sale order is not invoiced."
     assert order.invoiced_rate == 100, "Invoiced progress is not 100%."
     assert order.state == 'done', 'Order should be in closed.'
@@ -163,7 +163,7 @@
 -
   !python {model: sale.order}: |
     import netsvc, tools, os
-    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('order')], {}, {})
+    (data, format) = netsvc.LocalService('report.sale.order').create(cr, uid, [ref('sale_order_6')], {}, {})
     if tools.config['test_report_directory']:
         file(os.path.join(tools.config['test_report_directory'], 'sale-sale_order.'+format), 'wb+').write(data)
 

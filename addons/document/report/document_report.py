@@ -32,7 +32,7 @@ class report_document_user(osv.osv):
         'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'), ('05','May'), ('06','June'),
                                   ('07','July'), ('08','August'), ('09','September'), ('10','October'), ('11','November'), ('12','December')],'Month',readonly=True),
         'user_id':fields.integer('Owner', readonly=True),
-        'user':fields.char('User',size=64,readonly=True),
+        'user': fields.related('user_id', 'name', type='char', size=64, readonly=True),
         'directory': fields.char('Directory',size=64,readonly=True),
         'datas_fname': fields.char('File Name',size=64,readonly=True),
         'create_date': fields.datetime('Date Created', readonly=True),
@@ -50,7 +50,6 @@ class report_document_user(osv.osv):
                      to_char(f.create_date, 'YYYY') as name,
                      to_char(f.create_date, 'MM') as month,
                      f.user_id as user_id,
-                     u.name as user,
                      count(*) as nbr,
                      d.name as directory,
                      f.datas_fname as datas_fname,
@@ -60,8 +59,7 @@ class report_document_user(osv.osv):
                      f.write_date as change_date
                  FROM ir_attachment f
                      left join document_directory d on (f.parent_id=d.id and d.name<>'')
-                     inner join res_users u on (f.user_id=u.id)
-                 group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,u.name,d.type,f.write_date,f.datas_fname
+                 group by to_char(f.create_date, 'YYYY'), to_char(f.create_date, 'MM'),d.name,f.parent_id,d.type,f.create_date,f.user_id,f.file_size,d.type,f.write_date,f.datas_fname
              )
         """)
 

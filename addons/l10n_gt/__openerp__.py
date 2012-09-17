@@ -40,18 +40,19 @@
 This is the base module to manage the accounting chart for Guatemala.
 =====================================================================
 
-Agrega una nomenclatura contable para Guatemala. También icluye impuestos y la moneda del Quetzal. -- Adds accounting chart for Guatemala.  It also includes taxes and the Quetzal currency""",
+Agrega una nomenclatura contable para Guatemala. También icluye impuestos y
+la moneda del Quetzal. -- Adds accounting chart for Guatemala. It also includes
+taxes and the Quetzal currency.""",
     'author': 'José Rodrigo Fernández Menegazzo',
     'website': 'http://solucionesprisma.com/',
     'depends': ['base', 'account', 'account_chart'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'account_types.xml',
         'account_chart.xml',
         'account_tax.xml',
         'l10n_gt_base.xml',
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'certificate': '00815146661827601309',
     'images': ['images/config_chart_l10n_gt.jpeg','images/l10n_gt_chart.jpeg'],
