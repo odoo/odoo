@@ -16,14 +16,24 @@ openerp.account = function (instance) {
             return tmp;
         },
         do_search: function(domain, context, group_by) {
-            var sup = _.bind(this._super, this);
+            var self = this;
+            this.last_domain = domain;
+            this.last_context = context;
+            this.last_group_by = group_by;
+            this.old_search = _.bind(this._super, this);
             var mod = new instance.web.Model(this.model, context, domain);
             return mod.query("partner_id").group_by(["partner_id"]).pipe(function(result) {
-                var vals = _.chain(result).pluck("attributes").pluck("value")
+                self.partners = _.chain(result).pluck("attributes").pluck("value")
                     .filter(function(el) {return !!el;}).value();
-                return sup(new instance.web.CompoundDomain(domain, [["partner_id", "in", _.pluck(vals, 0)]]), context, group_by);
+                self.current_partner = self.partners.length == 0 ? null : 0;
+                return self.search_by_partner(self.current_partner);
+                
             });
         },
+        search_by_partner: function(partner) {
+            return this.old_search(new instance.web.CompoundDomain(this.last_domain, [["partner_id", "in", partner === null ? [] : [this.partners[partner][0]] ]]),
+                this.last_context, this.last_group_by);
+        }
     });
     
     /*instance.web.views.add('form_clone', 'instance.account.extend_form_view');
