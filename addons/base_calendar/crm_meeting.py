@@ -65,10 +65,10 @@ class crm_meeting(base_state, osv.Model):
     _defaults = {
         'state': 'open',
     }
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         default = default or {}
-        default.update({'attendee_ids' : []})
+        default['attendee_ids'] = False
         return super(crm_meeting, self).copy(cr, uid, id, default, context)
 
     # ----------------------------------------
