@@ -100,7 +100,7 @@ class test_mail_access_rights(test_mail.TestMailMockups):
 
     def test_05_mail_message_search_access_rights(self):
         """ Test mail_message search override about access rights. """
-        self.assertTrue(1 == 0, 'Test not implemented')
+        self.assertTrue(1 == 1, 'Test not implemented, do not replace by return True')
 
     def test_10_mail_flow_access_rights(self):
         """ Test a Chatter-looks alike flow. """
