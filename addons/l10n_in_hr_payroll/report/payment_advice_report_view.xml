@@ -5,7 +5,6 @@
     <record id="view_payment_advice_tree" model="ir.ui.view">
         <field name="name">payment.advice.report.tree</field>
         <field name="model">payment.advice.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:state == 'draft';black:state == 'confirm';gray:state == 'cancel' " string="Advices Analysis">
                 <field name="nbr" sum="# Payment Lines"/>
@@ -31,7 +30,6 @@
     <record id="view_payment_advice_search" model="ir.ui.view">
         <field name="name">payment.advice.report.search</field>
         <field name="model">payment.advice.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Advices Analysis">
                  <group>
