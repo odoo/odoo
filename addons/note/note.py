@@ -22,6 +22,7 @@
 from openerp.osv import osv, fields
 from tools.translate import _
 import re
+from openerp.tools.misc import html2plaintext
 
 class note_stage(osv.osv):
     """ Category of Note """
@@ -60,6 +61,10 @@ class note_note(osv.osv):
         rec_id = self.create(cr, uid, {'memo': name}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
+    def _from_xml(self, mappings):
+        return chr(int( mappings.group(1) ))
+    
+
     #read the first line (convert hml into text)
     def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
         res = {}
@@ -67,13 +72,14 @@ class note_note(osv.osv):
             text_note = (note.memo or '').strip().split('\n')[0]
             text_note = re.sub(r'(\S?)(<br[ /]*>|<[/]?p>|<[/]?div>|<table>)[\s\S]*',r'\1',text_note)
             text_note = re.sub(r'<[^>]+>','',text_note)
+            text_note = html2plaintext(text_note)
             res[note.id] = text_note
             
         return res
 
     #unactivate a sticky note and record the date
     def onclick_note_is_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'active' : False, 'date_done' : fields.date.today() })
+        self.write(cr, uid, ids, { 'open' : False, 'date_done' : fields.date.today() })
         
         self.message_post(cr, uid, ids[0], body='This sticky note is active', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
@@ -82,7 +88,7 @@ class note_note(osv.osv):
 
     #activate a Sticky note
     def onclick_note_not_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'active' : True })
+        self.write(cr, uid, ids, { 'open' : True })
 
         self.message_post(cr, uid, ids[0], body='This sticky note is close', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
@@ -124,7 +130,8 @@ class note_note(osv.osv):
     _columns = {
         'name': fields.function(_get_note_first_line, 
             string='Sticky note Summary', 
-            type='text', store=True),
+            type='text',
+            store=True),
         'memo': fields.html('Pad Content'),
         'sequence': fields.integer('Sequence'),
 
@@ -140,7 +147,7 @@ class note_note(osv.osv):
         # stage per user
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Linked stages users'),
 
-        'active': fields.boolean('Active'),
+        'open': fields.boolean('Active'),
         # when the user unactivate the Sticky note, record de date for un display Sticky note after 1 days
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
@@ -151,7 +158,7 @@ class note_note(osv.osv):
     }
 
     _defaults = {
-        'active' : 1,
+        'open' : 1,
         'stage_id' : _get_default_stage_id,
         'memo': " "
     }
