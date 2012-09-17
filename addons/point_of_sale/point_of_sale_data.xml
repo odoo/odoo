@@ -7,22 +7,14 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('menu_point_root')}"/>
         </record>
-        <record id="todo_open_pos_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_pos_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
         </record>
         <record model="pos.config" id="pos_config_main">
             <field name="name">Main</field>
         </record>
-    </data>
-    <data>
-        <record id="sale.todo_open_sale_menu" model="ir.actions.todo">
-            <field name="state">done</field>
-        </record>
-    </data>
 
-    <data noupdate="1">
         <!-- notify all employees of module installation -->
         <record model="mail.message" id="module_install_notification">
             <field name="model">mail.group</field>
