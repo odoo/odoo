@@ -9,7 +9,9 @@
             <field name="password">portal</field>
             <!-- Avoid auto-including this user in any default group -->
             <field name="groups_id" eval="[(5,)]"/>
-            <field name="partner_id" eval="ref('base.res_partner_1')"/>
+            <field name="supplier" eval="False"/>
+            <field name="customer" eval="True"/>
+            <field name="email">demo@portal.wrong.address</field>
         </record>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->
