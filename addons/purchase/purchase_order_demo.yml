@@ -1,85 +1,81 @@
 -
-  !record {model: purchase.order, id: order_purchase1}:
-    partner_id: base.res_partner_asus
+  !record {model: purchase.order, id: purchase_order_1}:
+    partner_id: base.res_partner_1
     invoice_method: order
     order_line:
-      - product_id: product.product_product_pc2
-        price_unit: 150.50
+      - product_id: product.product_product_15
+        price_unit: 79.80
+        product_qty: 15.0
+      - product_id: product.product_product_25
+        price_unit: 2868.70
         product_qty: 5.0
-      - product_id: product.product_product_pc1
-        price_unit: 450.20
-        product_qty: 2.0
+      - product_id: product.product_product_27
+        price_unit: 3297.20
+        product_qty: 4.0
 
 -
-  !record {model: purchase.order, id: order_purchase2}:
+  !record {model: purchase.order, id: purchase_order_2}:
     partner_id: base.res_partner_3
     invoice_method: picking
     order_line:
-      - product_id: product.product_product_pc3
-        price_unit: 900
-
--
-  !record {model: purchase.order, id: order_purchase3}:
-    partner_id: base.res_partner_desertic_hispafuentes
-    order_line:
-      - product_id: product.product_product_0
-        price_unit: 900.20
-        product_qty: 10.0
-      - product_id: product.product_product_1
-        price_unit: 100.00
+      - product_id: product.product_product_31
+        price_unit: 132.50
+        product_qty: 20.0
+      - product_id: product.product_product_29
+        price_unit: 89
         product_qty: 5
 
 -
-  !record {model: purchase.order, id: order_purchase4}:
+  !record {model: purchase.order, id: purchase_order_3}:
+    partner_id: base.res_partner_12
+    order_line:
+      - product_id: product.product_product_2
+        price_unit: 25.50
+        product_qty: 10.0
+
+-
+  !record {model: purchase.order, id: purchase_order_4}:
     partner_id: base.res_partner_4
     order_line:
-      - product_id: product.product_product_pc2
-        price_unit: 40
-        product_qty: 5
-      - product_id: product.product_product_mb1
-        price_unit: 45
-        product_qty: 15.0
-      - product_id: product.product_product_mb2
-        price_unit: 45
-        product_qty: 15
+      - product_id: product.product_product_14
+        price_unit: 85.50
+        product_qty: 6.0
+      - product_id: product.product_product_20
+        price_unit: 1690
+        product_qty: 5.0
+      - product_id: product.product_product_6
+        price_unit: 800
+        product_qty: 7.0
 
 -
-  !record {model: purchase.order, id: order_purchase5}:
-    partner_id: base.res_partner_maxtor
+  !record {model: purchase.order, id: purchase_order_5}:
+    partner_id: base.res_partner_19
     order_line:
-      - product_id: product.product_product_cpu1
+      - product_id: product.product_product_22
         product_qty: 3
-      - product_id: product.product_product_cpu3
-        product_qty: 13
-      - product_id: product.product_product_hdd1
-        product_qty: 10
+      - product_id: product.product_product_24
+        product_qty: 3
 
 -
-  !record {model: purchase.order, id: order_purchase6}:
-    partner_id: base.res_partner_vickingdirect0
+  !record {model: purchase.order, id: purchase_order_6}:
+    partner_id: base.res_partner_22
     order_line:
-      - product_id: product.product_product_hdd2
-        product_qty: 10
-      - product_id: product.product_product_ram
-        product_qty: 10
-      - product_id: product.product_product_ram512
-        product_qty: 10
+      - product_id: product.product_product_38
+        price_unit: 58
+        product_qty: 9
+      - product_id: product.product_product_39
+        product_qty: 3
+        price_unit: 65
+      - product_id: product.product_product_44
+        product_qty: 4
+        price_unit: 154.5
 
 -
-  !record {model: purchase.order, id: order_purchase7}:
-    partner_id: base.res_partner_desertic_hispafuentes
+  !record {model: purchase.order, id: purchase_order_7}:
+    partner_id: base.res_partner_4
     order_line:
-      - product_id: product.product_product_0
+      - product_id: product.product_product_12
         product_qty: 5
-      - product_id: product.product_product_1
+      - product_id: product.product_product_34
         product_qty: 15
-
--
-  !record {model: product.product, id: stock.product_icecream}:
-    uom_id: product.product_uom_gram
--
-  !record {model: purchase.order, id: order_purchase_icecream}:
-    partner_id: base.res_partner_asus
-    order_line:
-      - product_id: stock.product_icecream
 

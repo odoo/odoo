@@ -23,49 +23,41 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    "sequence": 14,
-    "summary": "Quotations, Sales, Invoicing",
+    'sequence': 14,
+    'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
-The base module to manage quotations and sales orders.
-======================================================
+Manage sales quotations and orders
+==================================
 
-Workflow with validation steps:
--------------------------------
-    * Quotation -> Sales order -> Invoice
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-Create Invoice:
----------------
-    * Invoice on Demand
-    * Invoice on Delivery Order
-    * Invoice Before Delivery
+It handles the full sales workflow:
 
-Partners preferences:
----------------------
-    * Incoterm
-    * Shipping
-    * Invoicing
+* **Quotation** -> **Sales order** -> **Invoice**
 
-Products stocks and prices:
---------------------------
+Preferences
+-----------
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
 
-Delivery method:
------------------
-    * The Poste
-    * Free Delivery Charges
-    * Normal Delivery Charges
-    * Based on the Delivery Order(if not Add to sale order) 
+You can choose flexible invoicing methods:
 
-Dashboard for Sales Manager that includes:
-------------------------------------------
-    * My Quotations
-    * Monthly Turnover (Graph)
+* *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
+
+
+The Dashboard for the Sales Manager will include
+------------------------------------------------
+* My Quotations
+* Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['stock', 'procurement', 'board', 'account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
@@ -85,7 +77,7 @@ Dashboard for Sales Manager that includes:
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
         'test/picking_order_policy.yml',

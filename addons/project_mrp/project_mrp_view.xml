@@ -4,7 +4,6 @@
         <record id="view_procurement_task_form" model="ir.ui.view">
             <field name="name">procurement.procurement.form.view.inherit</field>
             <field name="model">procurement.order</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="procurement.procurement_form_view"/>
             <field name="arch" type="xml">
                 <field name="close_move" position="after">
@@ -15,23 +14,38 @@
         <record id="view_product_task_form" model="ir.ui.view">
             <field name="name">product.form.view.inherit</field>
             <field name="model">product.product</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="stock.view_normal_procurement_locations_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="after">
-                    <field name="project_id" attrs="{'readonly':[('type','!=','service')]}" />
+                <field name="type" position="after">
+                    <field name="project_id" attrs="{'invisible':[('type','!=','service')]}" />
                 </field>
             </field>
         </record>
         <record id="view_project_mrp_inherit_form2" model="ir.ui.view">
             <field name="name">project.mrp.form.view.inherit</field>
             <field name="model">project.task</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.view_task_form2"/>
             <field name="arch" type="xml">
                 <field name="state" position="after">
                     <field name="sale_line_id" string="Order Line"/>
                 </field>
+            </field>
+        </record>
+        <record id="product.product_normal_form_supply_view" model="ir.ui.view">
+            <field name="name">product.normal.form.project_mrp.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='supply_method']" position="attributes">
+                    <attribute name="invisible">False</attribute>
+                </xpath>
+                <group name="procurement_help" position="inside">
+                    <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
+                        When you sell this service to a customer, <b>a task</b> will be 
+                        created to follow up the job to do. This task will appear
+                        in the project related to the contract of the sale order.
+                    </p>
+                </group>
             </field>
         </record>
     </data>

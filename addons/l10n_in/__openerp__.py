@@ -20,32 +20,32 @@
 ##############################################################################
 
 {
-    "name": "Indian - Accounting",
-    "version": "1.0",
-    "description": """
+    'name': 'Indian - Accounting',
+    'version': '1.0',
+    'description': """
 Indian Accounting: Chart of Account.
 ====================================
 
 Indian accounting chart and localization.
     """,
-    "author": ['OpenERP SA', 'Axelor'],
-    "category": "Localization/Account Charts",
-    "depends": [
-        "account",
-        "account_chart"
+    'author': ['OpenERP SA', 'Axelor'],
+    'category': 'Localization/Account Charts',
+    'depends': [
+        'account',
+        'account_chart'
     ],
-    "demo_xml": [],
-    "update_xml": [
-        "l10n_in_tax_code_template.xml",
-        "l10n_in_public_chart.xml",
-        "l10n_in_public_tax_template.xml",
-        "l10n_in_private_chart.xml",
-        "l10n_in_private_tax_template.xml",
-        "l10n_in_wizard.xml",
+    'demo': [],
+    'data': [
+        'l10n_in_tax_code_template.xml',
+        'l10n_in_public_chart.xml',
+        'l10n_in_public_tax_template.xml',
+        'l10n_in_private_chart.xml',
+        'l10n_in_private_tax_template.xml',
+        'l10n_in_wizard.xml',
     ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "001308250150600713245",
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '001308250150600713245',
     'images': ['images/config_chart_l10n_in.jpeg','images/l10n_in_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

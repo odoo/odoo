@@ -19,7 +19,7 @@ class plugin_handler(osv.osv_memory):
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url', default='http://localhost:8069', context=context)
         if base_url:
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-            base_url += '/web/webclient/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
+            base_url += '/login?db=%s&login=%s&key=%s#id=%s&model=%s' % (cr.dbname, user.login, user.password, res_id, model)
         return base_url
 
     def is_installed(self, cr, uid):
@@ -44,14 +44,17 @@ class plugin_handler(osv.osv_memory):
         res_id = 0
         url = ""
         name = ""
-        msg = mail_message_obj.parse_message(email)
-        references = [msg.get('message-id')]
-        refs =  msg.get('references',False)
-        if refs:
-            references.extend(refs.split())
-        msg_ids = mail_message_obj.search(cr, uid, [('message_id','in',references)])
-        if msg_ids:
-            msg = mail_message_obj.browse(cr, uid, msg_ids[0])
+        msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
+        parent_id = msg.get('parent_id', False)
+        message_id = msg.get('message_id')
+        msg_id = False
+        if message_id:
+            msg_ids = mail_message_obj.search(cr, uid, [('message_id','=', message_id)])
+            msg_id = len(msg_ids) and msg_ids[0] or False
+        if not msg_id and parent_id:
+            msg_id = parent_id 
+        if msg_id:
+            msg = mail_message_obj.browse(cr, uid, msg_id)
             res_id = msg.res_id
             model = msg.model
             url = self._make_url(cr, uid, res_id, model)
@@ -80,7 +83,7 @@ class plugin_handler(osv.osv_memory):
             @return : the result of name_search a list of tuple 
             [(id, 'name')]
         """
-        return self.pool.get(model).name_search(cr,uid,name)
+        return self.pool.get(model).name_search(cr, uid, name)
 
     def push_message(self, cr, uid, model, email, res_id=0):
         """
@@ -91,7 +94,7 @@ class plugin_handler(osv.osv_memory):
         """
         mail_message = self.pool.get('mail.message')
         model_obj = self.pool.get(model)
-        msg = mail_message.parse_message(email)
+        msg = self.pool.get('mail.thread').message_parse(cr, uid, email)
         message_id = msg.get('message-id')
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         
@@ -101,21 +104,22 @@ class plugin_handler(osv.osv_memory):
             notify = "Email already pushed"
         elif res_id == 0:
             if model == 'res.partner':
-                notify = 'User the button Partner to create a new partner'
+                notify = 'User the Partner button to create a new partner'
             else:
-                res_id = model_obj.message_new(cr, uid, msg)
-                notify = "Mail succefully pushed, a new %s has been created " % model
+                res_id = model_obj.message_process(cr, uid, model, email)
+                notify = "Mail successfully pushed, a new %s has been created " % model
         else:
-            if model == 'res.partner':
-                model_obj = self.pool.get('mail.thread')
-            res = self.pool.get(model).browse(cr, uid, [res_id])
-            model_obj.message_append_dict(cr, uid, res, msg)
-            notify = "Mail succefully pushed"
-            
+            model_obj.message_post(cr, uid, [res_id], 
+                            body= msg.get('body'), 
+                            subject= msg.get('subject'), 
+                            type= 'email', 
+                            parent_id= msg.get('parent_id'), 
+                            attachments= msg.get('attachments'))
+            notify = "Mail successfully pushed"
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url, notify)
 
-    def contact_create(self, cr, uid, data, partner_id):
+    def contact_create(self, cr, uid, data, partner_id, context=None):
         """
             @param data : the data use to create the res.partner
                 [('field_name', value)], field name is required
@@ -124,16 +128,17 @@ class plugin_handler(osv.osv_memory):
             @return : the partner_id sended or created, this allow the plugin to open the right partner page
         """
         partner_obj = self.pool.get('res.partner')
-        dictcreate = dict(data) 
-        if partner_id == 0:
-            partner_id =  partner_obj.create(cr, uid, {'name':dictcreate.get('name')})
-        dictcreate['partner_id'] = partner_id
-        self.pool.get('res.partner').create(cr, uid, dictcreate)
+        dictcreate = dict(data)
+        if partner_id:
+            is_company = partner_obj.browse(cr, uid, partner_id, context=context).is_company
+            if is_company:
+                dictcreate['parent_id'] = partner_id
+        partner_id = partner_obj.create(cr, uid, dictcreate)
         url = self._make_url(cr, uid, partner_id, 'res.partner')
         return ('res.partner', partner_id, url)
 
     # Specific to outlook rfc822 is not available so we split in arguments headerd,body,attachemnts
-    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body_text=False, body_html=False, attachments=False):
+    def push_message_outlook(self, cr, uid, model, headers,res_id=0 ,body=False, body_html=False, attachments=False):
         # ----------------------------------------
         # solution 1
         # construct a fake rfc822 from the separated arguement
@@ -147,7 +152,7 @@ class plugin_handler(osv.osv_memory):
         mail_message = self.pool.get('mail.message')        
         ir_attachment_obj = self.pool.get('ir.attachment')
         attach_ids = []
-        msg = mail_message.parse_message(headers)
+        msg = self.pool.get('mail.thread').message_parse(cr, uid, headers)
         message_id = msg.get('message-id')    
         push_mail = self.push_message(cr, uid, model, headers, res_id)
         res_id = push_mail[1]
@@ -161,6 +166,6 @@ class plugin_handler(osv.osv_memory):
                 attach_ids.append(ir_attachment_obj.create(cr, uid, vals))
         mail_ids = mail_message.search(cr, uid, [('message_id','=',message_id),('res_id','=',res_id),('model','=',model)])
         if mail_ids:
-            ids =  mail_message.write(cr, uid,mail_ids[0],{ 'attachment_ids': [(6, 0, attach_ids)],'body_text':body_text,'body_html':body_html})
+            ids =  mail_message.write(cr, uid, mail_ids[0], { 'attachment_ids': [(6, 0, attach_ids)],'body':body,'body_html':body_html})
         url = self._make_url(cr, uid, res_id, model)
         return (model, res_id, url)

@@ -19,18 +19,18 @@
 #
 ##############################################################################
 {
-    "name" : "DB Password Encryption",
-    "version" : "1.1",
-    "author" : ['OpenERP SA', "FS3"],
-    "maintainer" : "OpenERP SA",
-    "website" : "http://www.openerp.com",
-    "category" : "Tools",
-    "description": """
+    'name': 'DB Password Encryption',
+    'version': '1.1',
+    'author': ['OpenERP SA', 'FS3'],
+    'maintainer': 'OpenERP SA',
+    'website': 'http://www.openerp.com',
+    'category': 'Tools',
+    'description': """
 Replaces cleartext passwords in the database with a secure hash.
 ================================================================
 
 For your existing user base, the removal of the cleartext passwords occurs 
-immediately when you instal base_crypt.
+immediately when you install base_crypt.
 
 All passwords will be replaced by a secure, salted, cryptographic hash, 
 preventing anyone from reading the original password in the database.
@@ -49,16 +49,16 @@ contain critical data. Appropriate security measures need to be implemented
 by the system administrator in all areas, such as: protection of database
 backups, system files, remote shell access, physical server access.
 
-Interation with LDAP authentication:
-------------------------------------
+Interaction with LDAP authentication:
+-------------------------------------
 This module is currently not compatible with the ``user_ldap`` module and
 will disable LDAP authentication completely if installed at the same time.
 """,
-    "depends" : ["base"],
-    "data" : [],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00721290471310299725",
+    'depends': ['base'],
+    'data': [],
+    'auto_install': False,
+    'installable': True,
+    'certificate': '00721290471310299725',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

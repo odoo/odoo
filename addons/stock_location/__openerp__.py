@@ -29,12 +29,13 @@ This module supplements the Warehouse application by effectively implementing Pu
 ============================================================================================================
 
 Typically this could be used to:
+--------------------------------
     * Manage product manufacturing chains
     * Manage default locations per product
     * Define routes within your warehouse according to business needs, such as:
-       - Quality Control
-       - After Sales Services
-       - Supplier Returns
+        - Quality Control
+        - After Sales Services
+        - Supplier Returns
 
     * Help rental management, by generating automated return moves for rented products
 
@@ -77,16 +78,17 @@ all the way between the Customer and Supplier.
 
 Technically, Pull flows allow to process procurement orders differently, not
 only depending on the product being considered, but also depending on which
-location holds the "need" for that product (i.e. the destination location of
+location holds the 'need' for that product (i.e. the destination location of
 that procurement order).
 
 Use-Case:
 ---------
 
 You can use the demo data as follow:
-  CPU1: Sell some CPU1 from Shop 1 and run the scheduler
-     - Warehouse: delivery order, Shop 1: reception
-  CPU3:
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  **CPU1:** Sell some CPU1 from Chicago Shop and run the scheduler
+     - Warehouse: delivery order, Chicago Shop: reception
+  **CPU3:**
      - When receiving the product, it goes to Quality Control location then
        stored to shelf 2.
      - When delivering the customer: Pick List -> Packing -> Delivery Order from Gate A
@@ -94,16 +96,15 @@ You can use the demo data as follow:
     'author': 'OpenERP SA',
     'images': ['images/pulled_flow.jpeg','images/pushed_flow.jpeg'],
     'depends': ['procurement','stock','sale'],
-    'init_xml': [],
-    'update_xml': ['stock_location_view.xml', "security/stock_location_security.xml", 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
-    'demo_xml': [
+    'data': ['stock_location_view.xml', 'security/stock_location_security.xml', 'security/ir.model.access.csv', 'procurement_pull_workflow.xml'],
+    'demo': [
         'stock_location_demo_cpu1.xml',
         'stock_location_demo_cpu3.yml',
     ],
     'installable': True,
-    'test':[
-            'test/stock_location_pull_flow.yml',
-            'test/stock_location_push_flow.yml',
+    'test': [
+        'test/stock_location_pull_flow.yml',
+        'test/stock_location_push_flow.yml',
     ],
     'auto_install': False,
     'certificate': '0046505115101',

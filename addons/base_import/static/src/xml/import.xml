@@ -1,0 +1,103 @@
+<templates>
+    <t t-name="ImportView">
+        <t t-set="_id" t-value="_.uniqueId('export')"/>
+        <form action="" method="post" enctype="multipart/form-data" class="oe_import">
+            <input type="hidden" name="session_id"
+                   t-att-value="widget.session.session_id"/>
+            <input type="hidden" name="import_id"/>
+            <h2>Upload your file</h2>
+            <p>Select the <a href="#" class="oe_import_csv">.CSV</a>
+            file to import. If you need a sample importable file, you
+            can use <a href="#" class="oe_import_export">the export
+            tool</a> to generate one.</p>
+            <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
+            <input type="file" id-attf-id="file_#{_id}"
+                   name="file" class="oe_import_file"/>
+
+            <div class="oe_import_with_file">
+                <h2>Map your data to OpenERP</h2>
+                <input type="checkbox" class="oe_import_has_header"
+                       id="oe_import_has_header" checked="checked"/>
+                <label for="oe_import_has_header">The first row of the
+                file contains the label of the column</label>
+                <p class="oe_import_noheaders">If the file contains
+                the column names, OpenERP can try auto-detecting the
+                field corresponding to the column. This makes imports
+                simpler especially when the file has many columns.</p>
+
+                <div class="oe_import_error_report"></div>
+                <table class="oe_import_grid" width="100%"/>
+                <a href="#" class="oe_import_toggle">
+                    File Format Options…</a>
+                <div class="oe_import_toggled oe_import_options">
+                    <p t-foreach="widget.opts" t-as="option">
+                        <!-- no @name, avoid submission when file_update called -->
+                        <label t-attf-for="#{option.name}_#{_id}">
+                            <t t-esc="option.label"/></label>
+                        <input t-attf-id="#{option.name}_#{_id}"
+                               t-attf-class="oe_import_#{option.name}"
+                               t-att-value="option.value"/>
+                    </p>
+                </div>
+
+                <h2>Frequently Asked Questions</h2>
+                <dl>
+                    <dt><a href="#" class="oe_import_toggle">
+                        Need to import data from an other application?</a></dt>
+                    <dd>
+                        <p>In order to re-create relationships between
+                        different records, you should use the unique
+                        identifier from the original application and
+                        map it to the <abbr title="External ID">ID</abbr>
+                        column in OpenERP. When you
+                        import an other record that links to the first
+                        one, use <abbr title="XXX/External ID">XXX/ID</abbr>
+                        to the original unique identifier.</p>
+                        <p>The <abbr title="External ID">ID</abbr>
+                        will also be used to update the original
+                        import if you need to re-import modified data
+                        later, it's thus good practice to specify it
+                        whenever possible</p>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+    </t>
+    <t t-name="ImportView.preview">
+        <tr t-if="headers" class="oe_import_grid-header">
+            <td t-foreach="headers" t-as="header" class="oe_import_grid-cell"
+                ><t t-esc="header"/></td>
+        </tr>
+        <tr class="oe_import_fields">
+            <!-- Iterate on first row to ensure we have all columns -->
+            <td t-foreach="preview[0]" t-as="column">
+                <input placeholder="Don't Import"
+                       class="oe_import_match_field"/>
+            </td>
+        </tr>
+        <tr t-foreach="preview" t-as="row" class="oe_import_grid-row">
+            <td t-foreach="row" t-as="cell" class="oe_import_grid-cell"
+                ><t t-esc="cell"/></td>
+        </tr>
+    </t>
+    <t t-name="ImportView.preview.error">
+        <p>Import preview failed due to: <t t-esc="error"/></p>
+        <p>Here is the start of the file we could not import:</p>
+        <pre><t t-esc="preview"/></pre>
+    </t>
+    <ul t-name="ImportView.error">
+        <li t-foreach="errors" t-as="error" t-attf-class="oe_import_report_#{error.type}">
+            <!-- can also have error.record, but may be *huge* if
+                 e.g. has image fields -->
+            <t t-esc="error.message"/>
+        </li>
+    </ul>
+    <t t-extend="ListView.buttons">
+        <t t-jquery="span.oe_alternative">
+            this.attr('t-if', 'widget.options.import_enabled');
+        </t>
+        <t t-jquery="span.oe_alternative" t-operation="append">
+            <a href="#" class="oe_bold oe_list_button_import">Import</a>
+        </t>
+    </t>
+</templates>

@@ -2,22 +2,22 @@
   I create a draft Sale Order
 -
   !record {model: sale.order, id: sale_order_edi_1}:
-    partner_id: base.res_partner_agrolait
-    partner_invoice_id: base.res_partner_address_8invoice
-    partner_shipping_id: base.res_partner_address_8invoice
+    partner_id: base.res_partner_2
+    partner_invoice_id: base.res_partner_address_3
+    partner_shipping_id: base.res_partner_address_3
     pricelist_id: 1
     order_line:
-      - product_id: product.product_product_pc1
+      - product_id: product.product_product_3
         product_uom_qty: 1.0
         product_uom: 1
         price_unit: 150.0
-        name: 'Basic pc'
+        name: 'PC Assemble SC234'
     order_line:
-      - product_id: product.product_product_pc3
+      - product_id: product.product_product_5
         product_uom_qty: 10.0
         product_uom: 1
         price_unit: 200.0
-        name: 'Medium pc'
+        name: 'PC Assemble + Custom (PC on Demand)'
 -
   I confirm the sale order
 -
@@ -72,10 +72,10 @@
                 "__model": "purchase.order.line",
                 "__import_module": "sale",
                 "__import_model": "sale.order.line",
-                "name": "Basic PC",
+                "name": "PC Assemble SC234",
                 "date_planned": "2011-09-30",
                 "price_unit": 150.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc1", "[PC1] Basic PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_3", "[PCSC234] PC Assemble SC234"],
                 "product_qty": 1.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         },
@@ -85,10 +85,10 @@
                 "__model": "purchase.order.line",
                 "__import_module": "sale",
                 "__import_model": "sale.order.line",
-                "name": "Medium PC",
+                "name": "PC on Demand",
                 "date_planned": "2011-09-15",
                 "price_unit": 100.0,
-                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_pc3", "[PC3] Medium PC"],
+                "product_id": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_product_5", "[PC-DEM] PC on Demand"],
                 "product_qty": 2.0,
                 "product_uom": ["product:5af1272e-dd26-11e0-b65e-701a04e25543.product_uom_unit", "Unit"],
         }],
@@ -107,12 +107,12 @@
     assert order_new.amount_untaxed == 350, "Untaxed amount is wrong"
     assert len(order_new.order_line) == 2, "Sale order lines mismatch"
     for sale_line in order_new.order_line:
-        if sale_line.name == 'Basic PC':
+        if sale_line.name == 'PC Assemble SC234':
             assert sale_line.delay == 18 , "incorrect delay: got %s, expected 18"%(sale_line.delay,)
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
             assert sale_line.price_unit == 150 , "unit price is not same, got %s, expected 150"%(sale_line.price_unit,)
             assert sale_line.product_uom_qty == 1 , "product qty is not same"
-        elif sale_line.name == 'Medium PC':
+        elif sale_line.name == 'PC on Demand':
             assert sale_line.delay == 3 , "incorrect delay: got %s, expected 3"%(sale_line.delay,)
             assert sale_line.product_uom.name == "Unit" , "uom is not same"
             assert sale_line.price_unit == 100 , "unit price is not same, got %s, expected 100"%(sale_line.price_unit,)

@@ -93,13 +93,13 @@ class indexer(object):
             except NhException:
                 pass
 
-        raise NhException('No appropriate method to index file')
+        raise NhException('No appropriate method to index file.')
 
     def _doIndexContent(self,content):
-        raise NhException("Content not handled here")
+        raise NhException("Content cannot be handled here.")
 
     def _doIndexFile(self,fpath):
-        raise NhException("Content not handled here")
+        raise NhException("Content cannot be handled here.")
 
     def __repr__(self):
         return "<indexer %s.%s>" %(self.__module__, self.__class__.__name__)
@@ -116,7 +116,7 @@ def mime_match(mime, mdict):
     return (None, None)
 
 class contentIndex(object):
-    
+
     def __init__(self):
         self.mimes = {}
         self.exts = {}
@@ -132,9 +132,9 @@ class contentIndex(object):
             f = True
 
         if f:
-            _logger.debug('Register content indexer: %r', obj)
+            _logger.debug('Register content indexer: %r.', obj)
         if not f:
-            raise Exception("Your indexer should at least suport a mimetype or extension")
+            raise Exception("Your indexer should at least support a mimetype or extension.")
 
     def doIndex(self, content, filename=None, content_type=None, realfname = None, debug=False):
         fobj = None
@@ -169,22 +169,22 @@ class contentIndex(object):
                 (result, _) = pop.communicate()
 
                 mime2 = result.split(';')[0]
-                _logger.debug('File gave us: %s', mime2)
+                _logger.debug('File gives us: %s', mime2)
                 # Note that the temporary file still exists now.
                 mime,fobj = mime_match(mime2, self.mimes)
                 if not mime:
                     mime = mime2
             except Exception:
-                _logger.exception('Cannot determine mime type')
+                _logger.exception('Cannot determine mime type.')
 
         try:
             if fobj:
                 res = (mime, fobj.indexContent(content,filename,fname or realfname) )
             else:
-                _logger.debug("Have no object, return (%s, None)", mime)
+                _logger.debug("Have no object, return (%s, None).", mime)
                 res = (mime, None )
         except Exception:
-            _logger.exception("Could not index file %s (%s)",
+            _logger.exception("Cannot index file %s (%s).",
                                     filename, fname or realfname)
             res = None
 
@@ -193,7 +193,7 @@ class contentIndex(object):
             try:
                 os.unlink(fname)
             except Exception:
-                _logger.exception("Could not unlink %s", fname)
+                _logger.exception("Cannot unlink %s.", fname)
         return res
 
 cntIndex = contentIndex()

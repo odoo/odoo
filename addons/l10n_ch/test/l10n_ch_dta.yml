@@ -12,7 +12,7 @@
     currency_id: base.EUR
     account_id: account.a_pay
     type : in_invoice
-    partner_id: base.res_partner_agrolait
+    partner_id: base.res_partner_2
     reference_type: bvr
     reference: 11111111111111111111 
     date_invoice: !eval "'%s-01-01' %(datetime.now().year)"
@@ -25,10 +25,10 @@
 -
   !record {model: account.invoice.line, id: dta_invoice_line, view: False}:
     account_id: account.a_expense
-    name: '[PC1] Basic PC'
+    name: '[PCSC234] PC Assemble SC234'
     price_unit: 700.0
     quantity: 10.0
-    product_id: product.product_product_pc1
+    product_id: product.product_product_3
     uos_id: product.product_uom_unit
     invoice_id: dta_account_invoice
 
@@ -77,7 +77,7 @@
     move_line_id: !ref {model: account.move.line, search: "[('ref','=','11111111111111111111')]"}
     #name  (reference)
     order_id: dta_payment_order
-    partner_id: base.res_partner_agrolait
+    partner_id: base.res_partner_2
     state: normal
     
 -
@@ -85,7 +85,7 @@
 -
   !python {model: create.dta.wizard}: |
     import base64
-    wiz_id = self.create(cr,uid,[])
+    wiz_id = self.create(cr, uid, {})
     wiz = self.browse(cr, uid, wiz_id)
     pay_order_id =  ref("dta_payment_order")
     #set the payment order as the active id
@@ -146,7 +146,7 @@
 #  I import the payment line
 #-
 #  !python {model: account.payment.populate.statement}: |
-#    wiz_id = self.create(cr,uid,[])
+#    wiz_id = self.create(cr, uid, {})
 #    wiz = self.browse(cr, uid, wiz_id)
 #    
 #    line_obj = self.pool.get('payment.line')

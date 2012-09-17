@@ -68,7 +68,7 @@ class stock_planning_createlines(osv.osv_memory):
                 prod_categ_ids = prod_categ_obj.search(cr,uid,[('parent_id','child_of',categ_ids)])
                 products_id1 = product_obj.search(cr,uid,[('categ_id','in',prod_categ_ids)])
             if len(products_id1)==0:
-                raise osv.except_osv(_('Error !'), _('No forecasts for selected period or no products in selected category !'))
+                raise osv.except_osv(_('Error!'), _('No forecasts for selected period or no products available in selected category !'))
 
             for p in product_obj.browse(cr, uid, products_id1,context=context):
                 if len(planning_obj.search(cr, uid, [('product_id','=',p.id),

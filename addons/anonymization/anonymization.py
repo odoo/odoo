@@ -64,11 +64,13 @@ class ir_model_fields_anonymization(osv.osv):
             state = 'anonymized' # all fields are anonymized
         else:
             state = 'unstable' # fields are mixed: this should be fixed
+
         return state
 
     def _check_write(self, cr, uid, context=None):
         # check that the field is created from the menu and not from an database update
         # otherwise the database update can crash:
+
         if context.get('manual'):
             global_state = self._get_global_state(cr, uid, context=context)
             if global_state == 'anonymized':
@@ -100,12 +102,16 @@ class ir_model_fields_anonymization(osv.osv):
         # check field state: all should be clear before we can add a new field to anonymize:
         self._check_write(cr, uid, context=context)
 
+        global_state = self._get_global_state(cr, uid, context=context)
+
         if 'field_name' in vals and vals['field_name'] and 'model_name' in vals and vals['model_name']:
             vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(cr, uid, vals, context=context)
 
         # check not existing fields:
         if not vals.get('field_id'):
             vals['state'] = 'not_existing'
+        else:
+            vals['state'] = global_state
 
         res = super(ir_model_fields_anonymization, self).create(cr, uid, vals, context=context)
 
@@ -340,8 +346,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                # unstable ?
-                raise
+                msg = "The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                  " while some fields are not anonymized. You should try to solve this problem before trying to do anything else."
+                raise osv.except_osv('Error !', msg)
 
             res['arch'] = etree.tostring(eview)
 
@@ -425,7 +432,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 elif field_type == 'integer':
                     anonymized_value = 0
                 elif field_type in ['binary', 'many2many', 'many2one', 'one2many', 'reference']: # cannot anonymize these kind of fields
-                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference"
+                    msg = "Cannot anonymize fields of these types: binary, many2many, many2one, one2many, reference."
                     self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
                 if anonymized_value is None:
@@ -453,9 +460,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         # add a result message in the wizard:
         msgs = ["Anonymization successful.",
                "",
-               "Don't forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
+               "Donot forget to save the resulting file to a safe place because you will not be able to revert the anonymization without this file.",
                "",
-               "This file is also stored in the %s directory. The absolute file path is: %s",
+               "This file is also stored in the %s directory. The absolute file path is: %s.",
               ]
         msg = '\n'.join(msgs) % (dirpath, abs_filepath)
 
@@ -515,7 +522,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         wizards = self.browse(cr, uid, ids, context=context)
         for wizard in wizards:
             if not wizard.file_import:
-                msg = "The anonymization export file was not supplied. It is not possible to reverse the anonymization process without this file."
+                msg = "It is not possible to reverse the anonymization process without supplying anonymization export file."
                 self._raise_after_history_update(cr, uid, history_id, 'Error !', msg)
 
             # reverse the anonymization:
