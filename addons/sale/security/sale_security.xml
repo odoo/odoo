@@ -6,6 +6,7 @@
         <field name="name">See Own Leads</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="comment">the user will have access to his own data in the sales application.</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="base.group_sale_salesman_all_leads" model="res.groups">

@@ -46,15 +46,19 @@
         'web_kanban'
     ],
     'description': """
-Project Management module tracks multi-level projects, tasks, work done on tasks.
-=================================================================================
+Track multi-level projects, tasks, work done on tasks
+=====================================================
 
-It is able to render planning, order tasks.
+This application allows an operational project management system to organize your activities into tasks and plan the work you need to get the tasks completed.
 
-Dashboard for project management that includes:
------------------------------------------------
-    * List of My Open Tasks
-    * Graph of My Remaining Hours by Project
+Gantt diagrams will give you a graphical representation of your project plans, as well as resources availability and workload.
+
+Dashboard / Reports for Project Management will include:
+--------------------------------------------------------
+* My Tasks
+* Open Tasks
+* Tasks Analysis
+* Cumulative Flow
     """,
     'data': [
         'security/project_security.xml',

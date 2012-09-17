@@ -27,43 +27,43 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
-        'timesheet': fields.boolean('prepare invoices based on timesheets',
+        'timesheet': fields.boolean('Prepare invoices based on timesheets',
             help = """For modifying account analytic view to show important data to project manager of services companies.
                 You can also view the report of account analytic summary user-wise as well as month wise.
                 This installs the module account_analytic_analysis."""),
-        'module_account_analytic_analysis': fields.boolean('use contracts management',
+        'module_account_analytic_analysis': fields.boolean('Use contracts management',
             help = """Allows to define your customer contracts conditions: invoicing
             method (fixed price, on timesheet, advance invoice), the exact pricing
             (650€/day for a developer), the duration (one year support contract).
             You will be able to follow the progress of the contract and invoice automatically.
             It installs the account_analytic_analysis module."""),
-        'time_unit': fields.many2one('product.uom', 'the default working time unit for services is'),
-        'group_sale_pricelist':fields.boolean("use pricelists to adapt your price per customers",
+        'time_unit': fields.many2one('product.uom', 'The default working time unit for services is'),
+        'group_sale_pricelist':fields.boolean("Use pricelists to adapt your price per customers",
             implied_group='product.group_sale_pricelist',
             help="""Allows to manage different prices based on rules per category of customers.
                 Example: 10% for retailers, promotion of 5 EUR on this product, etc."""),
-        'group_uom':fields.boolean("allow using different units of measures",
+        'group_uom':fields.boolean("Allow using different units of measures",
             implied_group='product.group_uom',
             help="""Allows you to select and maintain different units of measure for products."""),
-        'group_sale_delivery_address': fields.boolean("allow a different address for delivery and invoicing ",
+        'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
             implied_group='sale.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a sale order."),
-        'group_discount_per_so_line': fields.boolean("allow setting a discount on the sale order lines",
+        'group_discount_per_so_line': fields.boolean("Allow setting a discount on the sale order lines",
             implied_group='sale.group_discount_per_so_line',
             help="Allows you to apply some discount per sale order line."),
-        'module_warning': fields.boolean("allow configuring alerts by customer or products",
+        'module_warning': fields.boolean("Allow configuring alerts by customer or products",
             help="""Allow to configure warnings on products and trigger them when a user wants to sale a given product or a given customer.
             Example: Product: this product is deprecated, do not purchase more than 5.
             Supplier: don't forget to ask for an express delivery."""),
-        'module_sale_margin': fields.boolean("display margins on sales orders",
+        'module_sale_margin': fields.boolean("Display margins on sales orders",
             help="""This adds the 'Margin' on sales order.
                 This gives the profitability by calculating the difference between the Unit Price and Cost Price.
                 This installs the module sale_margin."""),
-        'module_sale_journal': fields.boolean("allow batch invoicing of delivery orders through journals",
+        'module_sale_journal': fields.boolean("Allow batch invoicing of delivery orders through journals",
             help="""Allows you to categorize your sales and deliveries (picking lists) between different journals,
                 and perform batch operations on journals.
                 This installs the module sale_journal."""),
-        'module_analytic_user_function': fields.boolean("one employee can have different roles per contract",
+        'module_analytic_user_function': fields.boolean("One employee can have different roles per contract",
             help="""Allows you to define what is the default function of a specific user on a given account.
                 This is mostly used when a user encodes his timesheet. The values are retrieved and the fields are auto-filled.
                 But the possibility to change these values is still available.
@@ -121,9 +121,9 @@ class sale_configuration(osv.osv_memory):
 class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
-        'module_sale_analytic_plans': fields.boolean('several analytic accounts on sales',
+        'module_sale_analytic_plans': fields.boolean('Several analytic accounts on sales',
             help="""This allows install module sale_analytic_plans."""),
-        'group_analytic_account_for_sales': fields.boolean('analytic accounting for sales',
+        'group_analytic_account_for_sales': fields.boolean('Analytic accounting for sales',
             implied_group='sale.group_analytic_accounting',
             help="Allows you to specify an analytic account on sale orders."),
     }

@@ -369,6 +369,36 @@ class sale_order(osv.osv):
         }
         return {'type': 'ir.actions.report.xml', 'report_name': 'sale.order', 'datas': datas, 'nodestroy': True}
 
+    def manual_invoice(self, cr, uid, ids, context=None):
+        """ create invoices for the given sale orders (ids), and open the form
+            view of one of the newly created invoices
+        """
+        mod_obj = self.pool.get('ir.model.data')
+        wf_service = netsvc.LocalService("workflow")
+
+        # create invoices through the sale orders' workflow
+        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
+        for id in ids:
+            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
+        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
+        # determine newly created invoices
+        new_inv_ids = list(inv_ids1 - inv_ids0)
+
+        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
+        res_id = res and res[1] or False,
+
+        return {
+            'name': _('Customer Invoices'),
+            'view_type': 'form',
+            'view_mode': 'form',
+            'view_id': [res_id],
+            'res_model': 'account.invoice',
+            'context': "{'type':'out_invoice'}",
+            'type': 'ir.actions.act_window',
+            'nodestroy': True,
+            'target': 'current',
+            'res_id': new_inv_ids and new_inv_ids[0] or False,
+        }
 
     def action_view_invoice(self, cr, uid, ids, context=None):
         '''
@@ -404,37 +434,13 @@ class sale_order(osv.osv):
         result.update(view_id = res and res[1] or False)
         return result
 
-    def manual_invoice(self, cr, uid, ids, context=None):
-        """ create invoices for the given sale orders (ids), and open the form
-            view of one of the newly created invoices
-        """
-        mod_obj = self.pool.get('ir.model.data')
-        wf_service = netsvc.LocalService("workflow")
 
-        # create invoices through the sale orders' workflow
-        inv_ids0 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        for id in ids:
-            wf_service.trg_validate(uid, 'sale.order', id, 'manual_invoice', cr)
-        inv_ids1 = set(inv.id for sale in self.browse(cr, uid, ids, context) for inv in sale.invoice_ids)
-        # determine newly created invoices
-        new_inv_ids = list(inv_ids1 - inv_ids0)
-
-        res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-        res_id = res and res[1] or False,
-
-        return {
-            'name': _('Customer Invoices'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': new_inv_ids and new_inv_ids[0] or False,
-        }
-
+    def test_no_product(self, cr, uid, order, context):
+        for line in order.order_line:
+            if line.product_id and (line.product_id.type<>'service'):
+                return False
+        return True
+        
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -584,8 +590,10 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
-            self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
+            noprod = self.test_no_product(cr, uid, o, context)
+            if (o.order_policy == 'manual') or noprod:
+                self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
             self.confirm_send_note(cr, uid, ids, context)
         return True

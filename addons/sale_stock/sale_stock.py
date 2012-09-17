@@ -10,6 +10,7 @@
 #    License, or (at your option) any later version.
 #
 #    This program is distributed in the hope that it will be useful,
+
 #    but WITHOUT ANY WARRANTY; without even the implied warranty of
 #    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #    GNU Affero General Public License for more details.
@@ -213,11 +214,14 @@ class sale_order(osv.osv):
     def action_wait(self, cr, uid, ids, context=None):
         for o in self.browse(cr, uid, ids):
             if not o.order_line:
-                raise osv.except_osv(_('Error !'),_('You cannot confirm a sale order which has no line.'))
-            if (o.order_policy == 'manual'):
+                raise osv.except_osv(_('Error!'),_('You cannot confirm a sale order which has no line.'))
+            noprod = self.test_no_product(cr, uid, o, context)
+            if noprod and o.order_policy=='picking':
+                self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
+            if (o.order_policy == 'manual') or noprod:
                 self.write(cr, uid, [o.id], {'state': 'manual', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             else:
-               self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
+                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
             self.pool.get('sale.order.line').button_confirm(cr, uid, [x.id for x in o.order_line])
             self.confirm_send_note(cr, uid, ids, context)
         return True
@@ -257,6 +261,7 @@ class sale_order(osv.osv):
                for pick in r['picking_ids']:
                     wf_service.trg_validate(uid, 'stock.picking', pick, 'button_cancel', cr)
         return super(sale_order, self).action_cancel(cr, uid, ids, context=context)
+
 
     def procurement_lines_get(self, cr, uid, ids, *args):
         res = []
@@ -320,8 +325,7 @@ class sale_order(osv.osv):
             'procure_method': line.type,
             'move_id': move_id,
             'company_id': order.company_id.id,
-            'note': '\n'.join(line.name.split('\n')[1:]),
-            'property_ids': [(6, 0, [x.id for x in line.property_ids])]
+            'note': '\n'.join(line.name.split('\n')[1:])
         }
 
     def _prepare_order_line_move(self, cr, uid, order, line, picking_id, date_planned, context=None):
@@ -492,6 +496,7 @@ class sale_order(osv.osv):
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
                     return True
         return False
+
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
