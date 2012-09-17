@@ -9,10 +9,11 @@ openerp.account = function (instance) {
     instance.web.account.ReconciliationListView = instance.web.ListView.extend({
         init: function() {
             this._super.apply(this, arguments);
+            this.current_partner = null;
         },
         on_loaded: function() {
             var tmp = this._super.apply(this, arguments);
-            this.$el.prepend(QWeb.render("AccountReconciliation"));
+            this.$el.prepend(QWeb.render("AccountReconciliation", {widget: self}));
             return tmp;
         },
         do_search: function(domain, context, group_by) {
@@ -26,14 +27,13 @@ openerp.account = function (instance) {
                 self.partners = _.chain(result).pluck("attributes").pluck("value")
                     .filter(function(el) {return !!el;}).value();
                 self.current_partner = self.partners.length == 0 ? null : 0;
-                return self.search_by_partner(self.current_partner);
-                
+                self.search_by_partner();
             });
         },
-        search_by_partner: function(partner) {
-            return this.old_search(new instance.web.CompoundDomain(this.last_domain, [["partner_id", "in", partner === null ? [] : [this.partners[partner][0]] ]]),
-                this.last_context, this.last_group_by);
-        }
+        search_by_partner: function() {
+            return this.old_search(new instance.web.CompoundDomain(this.last_domain, [["partner_id", "in", this.current_partner === null ? [] :
+                [this.partners[this.current_partner][0]] ]]), this.last_context, this.last_group_by);
+        },
     });
     
     /*instance.web.views.add('form_clone', 'instance.account.extend_form_view');
