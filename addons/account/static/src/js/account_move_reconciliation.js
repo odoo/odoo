@@ -67,7 +67,7 @@ openerp.account = function (instance) {
                 return false;
             }
 
-            new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_account_reconcile_select"]).pipe(function(result) {
+            new instance.web.Model("ir.model.data").call("get_object_reference", ["account", "action_view_account_move_line_reconcile"]).pipe(function(result) {
                 var additional_context = _.extend({
                     active_id: ids[0],
                     active_ids: ids,
