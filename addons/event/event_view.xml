@@ -101,7 +101,7 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
-                        <span groups="base.user_group">
+                        <span groups="base.group_user">
                             <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
                             <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
                             <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
@@ -166,7 +166,7 @@
                                         <field name="nb_register" />
                                         <field name="state"/>
                                         <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                        <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </tree>
                                     <form string="Registration">
