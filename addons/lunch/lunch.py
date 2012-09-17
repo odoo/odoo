@@ -210,7 +210,7 @@ class report_lunch_amount(osv.osv):
     _name = 'report.lunch.amount'
     _description = "Amount available by user and box"
     _auto = False
-    _rec_name = "user"
+    _rec_name = "user_id"
 
     _columns = {
         'user_id': fields.many2one('res.users', 'User Name', readonly=True),

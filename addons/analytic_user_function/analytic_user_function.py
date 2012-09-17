@@ -92,7 +92,7 @@ class hr_analytic_timesheet(osv.osv):
             if not a:
                 a = r.product_id.categ_id.property_account_expense_categ.id
             if not a:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _('There is no expense account define ' \
                                 'for this product: "%s" (id:%d)') % \
                                 (r.product_id.name, r.product_id.id,))
@@ -127,7 +127,7 @@ class hr_analytic_timesheet(osv.osv):
                 if not a:
                     a = r.product_id.categ_id.property_account_expense_categ.id
                 if not a:
-                    raise osv.except_osv(_('Error !'),
+                    raise osv.except_osv(_('Error!'),
                             _('There is no expense account define ' \
                                     'for this product: "%s" (id:%d)') % \
                                     (r.product_id.name, r.product_id.id,))

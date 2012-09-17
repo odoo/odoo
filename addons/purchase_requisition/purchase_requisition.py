@@ -31,7 +31,7 @@ import decimal_precision as dp
 class purchase_requisition(osv.osv):
     _name = "purchase.requisition"
     _description="Purchase Requisition"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _columns = {
         'name': fields.char('Requisition Reference', size=32,required=True),
         'origin': fields.char('Source', size=32),
@@ -69,7 +69,7 @@ class purchase_requisition(osv.osv):
         purchase_order_obj = self.pool.get('purchase.order')
         for purchase in self.browse(cr, uid, ids, context=context):
             for purchase_id in purchase.purchase_ids:
-                if str(purchase_id.state) in('draft','wait'):
+                if str(purchase_id.state) in('draft'):
                     purchase_order_obj.action_cancel(cr,uid,[purchase_id.id])
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.cancel_send_note(cr, uid, ids, context=context)
@@ -91,16 +91,16 @@ class purchase_requisition(osv.osv):
         return True
 
     def in_progress_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
     
     def reset_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
      
     def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
         
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -150,7 +150,7 @@ class purchase_requisition(osv.osv):
         res = {}
         for requisition in self.browse(cr, uid, ids, context=context):
             if supplier.id in filter(lambda x: x, [rfq.state <> 'cancel' and rfq.partner_id.id or None for rfq in requisition.purchase_ids]):
-                 raise osv.except_osv(_('Warning'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
+                 raise osv.except_osv(_('Warning!'), _('You have already one %s purchase order for this partner, you must cancel this purchase order to create a new quotation.') % rfq.state)
             location_id = requisition.warehouse_id.lot_input_id.id
             purchase_id = purchase_order.create(cr, uid, {
                         'origin': requisition.name,
@@ -177,14 +177,13 @@ class purchase_requisition(osv.osv):
                     'product_uom': default_uom_po_id,
                     'price_unit': seller_price,
                     'date_planned': date_planned,
-                    'notes': product.description_purchase,
                     'taxes_id': [(6, 0, taxes)],
                 }, context=context)
                 
         return res
     
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
+        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
 
     def create(self, cr, uid, vals, context=None):
         requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
@@ -193,26 +192,6 @@ class purchase_requisition(osv.osv):
         return requisition
 
 purchase_requisition()
-
-class mail_message(osv.osv):
-    _inherit = 'mail.message'
-    
-    def schedule_with_attach(self, cr, uid, email_from, email_to, subject, body, model=False, email_cc=None,
-                             email_bcc=None, reply_to=False, attachments=None, message_id=False, references=False,
-                             res_id=False, subtype='plain', headers=None, mail_server_id=False, auto_delete=False,
-                             context=None):
-        purchase_order_obj = self.pool.get('purchase.order')
-        requisition_id = purchase_order_obj.browse(cr, uid, res_id, context=context).requisition_id.id
-        result = super(mail_message, self).schedule_with_attach(cr, uid, email_from, email_to, subject, body, model=model, email_cc=email_cc,
-                     email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                     res_id=res_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
-                     context=context)
-        if requisition_id:
-            result = self.schedule_with_attach(cr, uid, email_from, email_to, subject, body, 'purchase.requisition', email_cc=email_cc,
-                             email_bcc=email_bcc, reply_to=reply_to, attachments=attachments, message_id=message_id, references=references,
-                             res_id=requisition_id, subtype='plain', headers=headers, mail_server_id=mail_server_id, auto_delete=auto_delete,
-                             context=context)
-        return result
 
 class purchase_requisition_line(osv.osv):
 

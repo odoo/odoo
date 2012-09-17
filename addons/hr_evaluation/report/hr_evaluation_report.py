@@ -26,7 +26,6 @@ class hr_evaluation_report(osv.osv):
     _name = "hr.evaluation.report"
     _description = "Evaluations Statistics"
     _auto = False
-    _rec_name = 'date'
     _columns = {
         'create_date': fields.date('Create Date', readonly=True),
         'delay_date':fields.float('Delay to Start', digits=(16,2),readonly=True),

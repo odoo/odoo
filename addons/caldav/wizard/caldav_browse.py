@@ -178,7 +178,7 @@ configuration
         res = {}
         host = context.get('host')
         if not config.get_misc('webdav','enable',True):
-            raise Exception("WebDAV is disabled, cannot continue")
+            raise Exception("WebDAV is disabled, cannot continue.")
         user_pool = self.pool.get('res.users')
         current_user = user_pool.browse(cr, uid, uid, context=context)
         #TODO write documentation

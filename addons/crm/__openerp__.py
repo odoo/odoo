@@ -24,34 +24,27 @@
     'name': 'CRM',
     'version': '1.0',
     'category': 'Customer Relationship Management',
-    "sequence": 2,
-    "summary": "Agenda, Leads, Opportunities",
+    'sequence': 2,
+    'summary': 'Leads, Opportunities, Agenda',
     'description': """
-The generic OpenERP Customer Relationship Management.
+The generic OpenERP Customer Relationship Management
 =====================================================
 
-This system enables a group of people to intelligently and efficiently manage
-leads, opportunities, meeting, phonecall etc.
-It manages key tasks such as communication, identification, prioritization,
-assignment, resolution and notification.
+This application enables a group of people to intelligently and efficiently manage leads, opportunities, meetings and phone calls.
 
-OpenERP ensures that all cases are successfully tracked by users, customers and
-suppliers. It can automatically send reminders, escalate the request, trigger
-specific methods and lots of other actions based on your own enterprise rules.
+It manages key tasks such as communication, identification, prioritization, assignment, resolution and notification.
 
-The greatest thing about this system is that users don't need to do anything
-special. They can just send email to the request tracker. OpenERP will take
-care of thanking them for their message, automatically routing it to the
-appropriate staff, and make sure all future correspondence gets to the right
-place.
+OpenERP ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and many other actions based on your own enterprise rules.
 
-The CRM module has a email gateway for the synchronisation interface
-between mails and OpenERP.
+The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker. 
 
-Creates a dashboard for CRM that includes:
-    * Opportunities by Categories (graph)
-    * Opportunities by Stage (graph)
-    * Planned Revenue by Stage and User (graph)
+OpenERP will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
+
+
+Dashboard for CRM will include:
+-------------------------------
+* Planned Revenue by Stage and User (graph)
+* Opportunities by Stage (graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -66,12 +59,11 @@ Creates a dashboard for CRM that includes:
         'board',
         'fetchmail'
     ],
-    'init_xml': [
+    'data': [
         'crm_data.xml',
         'crm_lead_data.xml',
         'crm_phonecall_data.xml',
-    ],
-    'update_xml': [
+
         'security/crm_security.xml',
         'security/ir.model.access.csv',
 
@@ -111,22 +103,22 @@ Creates a dashboard for CRM that includes:
         'res_config_view.xml',
 
     ],
-    'demo_xml': [
+    'demo': [
         'crm_demo.xml',
         'crm_lead_demo.xml',
         'crm_phonecall_demo.xml',
     ],
     'test': [
-            'test/process/communication_with_customer.yml',
-            'test/process/lead2opportunity2win.yml',
-            'test/process/merge_opportunity.yml',
-            'test/process/cancel_lead.yml',
-            'test/process/action_rule.yml',
-            'test/process/segmentation.yml',
-            'test/ui/crm_demo.yml',
-            'test/ui/duplicate_lead.yml',
-            'test/ui/delete_lead.yml'
-             ],
+        'test/process/communication_with_customer.yml',
+        'test/process/lead2opportunity2win.yml',
+        'test/process/merge_opportunity.yml',
+        'test/process/cancel_lead.yml',
+        'test/process/action_rule.yml',
+        'test/process/segmentation.yml',
+        'test/ui/crm_demo.yml',
+        'test/ui/duplicate_lead.yml',
+        'test/ui/delete_lead.yml'
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,

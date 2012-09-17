@@ -20,43 +20,49 @@
 ##############################################################################
 
 {
-    "name" : "Employee Appraisals",
-    "version": "0.1",
-    "author": "OpenERP SA",
-    "category": "Human Resources",
-    "website": "http://www.openerp.com",
-    "summary": "Top-Down and Bottom-Up Evaluation",
-    "images": ["images/hr_evaluation_analysis.jpeg","images/hr_evaluation.jpeg"],
-    "depends": ["hr","base_calendar","survey"],
-    "description": """
-Ability to create employees evaluation.
-=======================================
+    'name' : 'Employee Appraisals',
+    'version': '0.1',
+    'author': 'OpenERP SA',
+    'category': 'Human Resources',
+    'website': 'http://www.openerp.com',
+    'summary': 'Periodical Evaluations, Appraisals, Surveys',
+    'images': ['images/hr_evaluation_analysis.jpeg','images/hr_evaluation.jpeg'],
+    'depends': ['hr','base_calendar','survey'],
+    'description': """
+Periodical Employees evaluation and appraisals
+==============================================
 
-An evaluation can be created by employee for subordinates,
-juniors as well as his manager.The evaluation is done under a plan
-in which various surveys can be created and it can be defined which
-level of employee hierarchy fills what and final review and evaluation
-is done by the manager.Every evaluation filled by the employees can be viewed
-in the form of pdf file. Implements a dashboard for My Current Evaluations
-         """,
+By using this application you can maintain the motivational process by doing periodical evaluations of your employees' performance. The regular assessment of human resources can benefit your people as well your organization. 
+
+An evaluation plan can be assigned to each employee. These plans define the frequency and the way you manage your periodic personal evaluations. You will be able to define steps and attach interview forms to each step. 
+
+Manages several types of evaluations: bottom-up, top-down, self-evaluations and the final evaluation by the manager.
+
+Key Features
+------------
+* Ability to create employees evaluations.
+* An evaluation can be created by an employee for subordinates, juniors as well as his manager.
+* The evaluation is done according to a plan in which various surveys can be created. Each survey can be answered by a particular level in the employees hierarchy. The final review and evaluation is done by the manager.
+* Every evaluation filled by employees can be viewed in a PDF form.
+* Interview Requests are generated automatically by OpenERP according to employees evaluation plans. Each user receives automatic emails and requests to perform a periodical evaluation of their colleagues.
+""",
     "demo": ["hr_evaluation_demo.xml"],
     "data": [
-        "security/ir.model.access.csv",
-        "security/hr_evaluation_security.xml",
-#        "wizard/hr_evaluation_mail_view.xml",
-        "hr_evaluation_view.xml",
-        "report/hr_evaluation_report_view.xml",
-        "board_hr_evaluation_view.xml",
+        'security/ir.model.access.csv',
+        'security/hr_evaluation_security.xml',
+        'hr_evaluation_view.xml',
+        'report/hr_evaluation_report_view.xml',
+        'board_hr_evaluation_view.xml',
         'hr_evaluation_data.xml',
         'hr_evaluation_installer.xml',
     ],
-    "test": [
-        "test/test_hr_evaluation.yml",
-        "test/hr_evalution_demo.yml",
+    'test': [
+        'test/test_hr_evaluation.yml',
+        'test/hr_evalution_demo.yml',
     ],
-    "auto_install": False,
-    "installable": True,
-    "certificate" : "00883207679172998429",
+    'auto_install': False,
+    'installable': True,
+    'certificate' : '00883207679172998429',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

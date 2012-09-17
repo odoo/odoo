@@ -59,7 +59,7 @@ openerp.event = function(instance, mod) {
                     address = _.str.sprintf('%(street)s, %(zip)s %(city)s', value);
                 }
                 // TODO repalce by widget_option selector self.options.selector
-                var el = self.view.$element.find(".oe_google_map")[0];
+                var el = self.view.$el.find(".oe_google_map")[0];
                 self.map.render_map(address,el);
             });
         },

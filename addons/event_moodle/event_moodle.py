@@ -54,7 +54,7 @@ class event_moodle(osv.osv):
         """
         moodle_config_wiz_ids = self.search(cr, uid, [], context=context)
         if not moodle_config_wiz_ids:
-            raise osv.except_osv(('Error!'),("Configure your moodle connexion before"))
+            raise osv.except_osv(('Error!'),("First configure your moodle connection."))
         return moodle_config_wiz_ids[0]
 
     def make_url(self, cr, uid, ids, context=None):
@@ -132,7 +132,7 @@ class event_moodle(osv.osv):
         """
         if email:
             if (email.count('@') != 1 and email.count('.') < 1):
-                raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong") % (email))
+                raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong.") % (email))
 
     def make_username(self, username, response_courses):
         """
