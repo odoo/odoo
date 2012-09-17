@@ -60,7 +60,7 @@
   !record {model: hr.attendance, id: hr_attendance_1}:
     action: sign_out
     employee_id: 'hr.employee_qdp'
-    name: !eval (datetime.now() + timedelta(hours=8.25)).strftime('%Y-%m-%d %H:%M:%S')
+    name: !eval (datetime.now() + timedelta(minutes=1)).strftime('%Y-%m-%d %H:%M:%S')
 -
   I create Timesheet Entry for time spend on today work.
 -
@@ -102,6 +102,11 @@
         product_id: product.product_product_consultant
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
+-
+  I set an allowed difference of 25 hours
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 25.00
 -
   I tried again to confirm the timesheet after modification.
 -
