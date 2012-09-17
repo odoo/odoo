@@ -217,8 +217,6 @@ class sale_order(osv.osv):
             noprod = self.test_no_product(cr, uid, o, context)
             if noprod and o.order_policy=='picking':
                 self.write(cr, uid, [o.id], {'order_policy': 'manual'}, context=context)
-            if not (o.order_policy == 'manual') or not noprod:
-                self.write(cr, uid, [o.id], {'state': 'progress', 'date_confirm': fields.date.context_today(self, cr, uid, context=context)})
         return res
     
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
