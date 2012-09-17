@@ -88,7 +88,24 @@ openerp_mail_followers = function(session, mail) {
         },
 
         fetch_followers: function (value_) {
-            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'));
+            this.value = value_;
+            this.message_is_follower = this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value() || undefined;
+            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
+        },
+
+
+        /* Display generic info about follower, for people not having access to res_partner */
+        display_generic: function (error, event) {
+            event.preventDefault();
+            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
+            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + this.value.length + ')');
+            if (this.message_is_follower) {
+                this.$el.find('button.oe_mail_button_follow').hide();
+                this.$el.find('button.oe_mail_button_unfollow').show(); }
+            else {
+                this.$el.find('button.oe_mail_button_follow').show();
+                this.$el.find('button.oe_mail_button_unfollow').hide(); }
+            return $.when();
         },
 
         /** Display the followers, evaluate is_follower directly */

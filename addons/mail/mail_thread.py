@@ -119,7 +119,7 @@ class mail_thread(osv.AbstractModel):
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
         # search for unread messages, by reading directly mail.notification, as SUPERUSER
         notif_obj = self.pool.get('mail.notification')
@@ -132,10 +132,10 @@ class mail_thread(osv.AbstractModel):
         for notif in notif_obj.browse(cr, SUPERUSER_ID, notif_ids, context=context):
             res[notif.message_id.res_id]['message_unread'] = True
 
-        for thread in self.browse(cr, uid, ids, context=context):
-            cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
-            res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
+        for thread in self.read(cr, uid, ids, ['message_follower_ids', 'message_comment_ids', 'message_ids'], context=context):
+            cls = res[thread['id']]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
+            res[thread['id']]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread['message_comment_ids']), len(thread['message_follower_ids']))
+            res[thread['id']]['message_is_follower'] = partner_id in thread['message_follower_ids']
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
