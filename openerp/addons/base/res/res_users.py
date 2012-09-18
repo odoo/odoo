@@ -52,7 +52,7 @@ class groups(osv.osv):
             else:
                 res[g.id] = g.name
         return res
-    
+
     def _search_group(self, cr, uid, obj, name, args, context=None):
         operand = args[0][2]
         operator = args[0][1]
@@ -64,7 +64,7 @@ class groups(osv.osv):
             group_name = values[1]
             where = ['|',('category_id.name', operator, application_name)] + where
         return where
-    
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -138,7 +138,7 @@ class res_users(osv.osv):
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
-    
+
     _columns = {
         'id': fields.integer('ID'),
         'login_date': fields.date('Latest connection', select=1),
@@ -261,9 +261,9 @@ class res_users(osv.osv):
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
-    # User can write to a few of its own fields (but not her groups for example)
+    # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
-    # user can read a few of its own fields
+    # User can read a few of his own fields
     SELF_READABLE_FIELDS = ['signature', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id']
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -506,14 +506,14 @@ class res_users(osv.osv):
         """
         assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
         module, ext_id = group_ext_id.split('.')
-        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN 
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
 
 #
-# Extension of res.groups and res.users with a relation for "implied" or 
+# Extension of res.groups and res.users with a relation for "implied" or
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs
 # to the implied groups (transitively).
 #
