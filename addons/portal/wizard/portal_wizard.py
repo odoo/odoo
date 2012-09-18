@@ -94,17 +94,21 @@ class wizard(osv.osv_memory):
         # for each partner, determine corresponding portal.wizard.user records
         res_partner = self.pool.get('res.partner')
         partner_ids = context and context.get('active_ids') or []
+        contact_ids = set()
         user_changes = []
         for partner in res_partner.browse(cr, SUPERUSER_ID, partner_ids, context):
             for contact in (partner.child_ids or [partner]):
-                in_portal = False
-                if contact.user_ids:
-                    in_portal = portal_id in [g.id for g in contact.user_ids[0].groups_id]
-                user_changes.append((0, 0, {
-                    'partner_id': contact.id,
-                    'email': contact.email,
-                    'in_portal': in_portal,
-                }))
+                # make sure that each contact appears at most once in the list
+                if contact.id not in contact_ids:
+                    contact_ids.add(contact.id)
+                    in_portal = False
+                    if contact.user_ids:
+                        in_portal = portal_id in [g.id for g in contact.user_ids[0].groups_id]
+                    user_changes.append((0, 0, {
+                        'partner_id': contact.id,
+                        'email': contact.email,
+                        'in_portal': in_portal,
+                    }))
         return {'value': {'user_ids': user_changes}}
 
     def action_apply(self, cr, uid, ids, context=None):
