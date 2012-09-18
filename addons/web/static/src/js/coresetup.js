@@ -57,7 +57,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             if(self.session_is_valid()) {
                 return deferred.pipe(function() { return self.load_modules(); });
             }
-            return deferred;
+            return $.when(
+                    deferred, 
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).pipe(function(trans) {
+                        instance.web._t.database.set_bundle(trans);
+                    })
+            );
         });
     },
     /**

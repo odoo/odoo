@@ -19,7 +19,6 @@ import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
-import babel.messages.pofile
 import werkzeug.utils
 import werkzeug.wrappers
 try:
@@ -203,47 +202,8 @@ def module_installed(req):
     sorted_modules = module_topological_sort(modules)
     return sorted_modules
 
-def module_installed_bypass_session(dbname):
-    loadable = openerpweb.addons_manifest.keys()
-    modules = {}
-    try:
-        import openerp.modules.registry
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            m = registry.get('ir.module.module')
-            # TODO The following code should move to ir.module.module.list_installed_modules()
-            domain = [('state','=','installed'), ('name','in', loadable)]
-            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
-            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
-                modules[module['name']] = []
-                deps = module.get('dependencies_id')
-                if deps:
-                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
-                    dependencies = [i['name'] for i in deps_read]
-                    modules[module['name']] = dependencies
-    except Exception,e:
-        pass
-    sorted_modules = module_topological_sort(modules)
-    return sorted_modules
-
 def module_boot(req):
-    serverside = []
-    dbside = []
-    for i in req.config.server_wide_modules:
-        if i in openerpweb.addons_manifest:
-            serverside.append(i)
-    # if only one db load every module at boot
-    dbs = []
-    try:
-        dbs = db_list(req)
-    except xmlrpclib.Fault:
-        # ignore access denied
-        pass
-    if len(dbs) == 1:
-        dbside = module_installed_bypass_session(dbs[0])
-        dbside = [i for i in dbside if i not in serverside]
-    addons = serverside + dbside
-    return addons
+    return [m for m in req.config.server_wide_modules if m in openerpweb.addons_manifest]
 
 def concat_xml(file_list):
     """Concatenate xml files
@@ -531,6 +491,38 @@ def parse_context(context, session):
     except ValueError:
         return common.nonliterals.Context(session, context)
 
+
+# PO file parsing - only used to boostrap translations on the login page
+try:
+    # Use the faster PO parser from OpenERP server when available
+    from openerp.tools.translate import TinyPoFile
+    def _local_web_translations(trans_file):
+        messages = []
+        try:
+            with open(trans_file) as t_file:
+                po = TinyPoFile(t_file)
+                for _, _, _, source, value, comments in po:
+                    if "openerp-web" in comments:
+                        messages.append({'id': source, 'string': value})        
+        except Exception:
+            pass
+        return messages
+except ImportError:
+    # Otherwise fallback to Babel's slightly slower PO parser
+    import babel.messages.pofile
+    def _local_web_translations(trans_file):
+        messages = []
+        try:
+            with open(trans_file) as t_file:
+                po = babel.messages.pofile.read_po(t_file)
+        except Exception:
+            return
+        for x in po:
+            if x.id and x.string and "openerp-web" in x.auto_comments:
+                messages.append({'id': x.id, 'string': x.string})
+        return messages
+
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -575,6 +567,7 @@ class Home(openerpweb.Controller):
     @openerpweb.httprequest
     def login(self, req, db, login, key):
         return login_and_redirect(req, db, login, key)
+
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -658,41 +651,59 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.jsonrequest
-    def translations(self, req, mods, lang):
-        lang_model = req.session.model('res.lang')
-        ids = lang_model.search([("code", "=", lang)])
-        if ids:
-            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
-                                                "grouping", "decimal_point", "thousands_sep"])
-        else:
-            lang_obj = None
+    def bootstrap_translations(self, req, mods):
+        """ Load local translations from *.po files, as a temporary solution
+            until we have established a valid session. This is meant only
+            for translating the login page and db management chrome, using
+            the browser's language. """
+        lang = req.httprequest.accept_languages.best or 'en'
+        # For performance reasons we only load a single translation, so for
+        # sub-languages (that should only be partially translated) we load the
+        # main language PO instead - that should be enough for the login screen.
+        if '-' in lang: # RFC2616 uses '-' separators for sublanguages
+            lang = [lang.split('-',1)[0], lang]
 
-        if "_" in lang:
-            separator = "_"
-        else:
-            separator = "@"
-        langs = lang.split(separator)
-        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-
-        proxy = req.session.proxy("translation")
-        messages = proxy.load(req.session._db, mods, langs, "web")
+        translations_per_module = {}
         for addon_name in mods:
-            if not messages[addon_name]['messages']:
-                addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-                for l in langs:
-                    f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
-                    if not os.path.exists(f_name):
-                        continue
-                    try:
-                        with open(f_name) as t_file:
-                            po = babel.messages.pofile.read_po(t_file)
-                    except Exception:
-                        continue
-                    for x in po:
-                        if x.id and x.string and "openerp-web" in x.auto_comments:
-                            messages[addon_name]["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": messages,
-                "lang_parameters": lang_obj} 
+            addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
+            f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
+            if not os.path.exists(f_name):
+                continue
+            translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
+            
+        return {"modules": translations_per_module,
+                "lang_parameters": None}
+
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        res_lang = req.session.model('res.lang')
+        ids = res_lang.search([("code", "=", lang)])
+        lang_params = None
+        if ids:
+            lang_params = res_lang.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        start = datetime.datetime.now()
+        ir_translation = req.session.model('ir.translation')
+        translations_per_module = {}
+        messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
+                                               ('comments','like','openerp-web'),('value','!=',False),
+                                               ('value','!=','')],
+                                              ['module','src','value','lang'], order='module') 
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+            translations_per_module.setdefault(mod,{'messages':[]})
+            translations_per_module[mod]['messages'].extend({'id': m['src'],
+                                                             'string': m['value']} \
+                                                                for m in msg_group)
+
+        print "Loaded translations in ", datetime.datetime.now()-start
+        import pprint
+        pprint.pprint(translations_per_module)
+
+        return {"modules": translations_per_module,
+                "lang_parameters": lang_params}
 
     @openerpweb.jsonrequest
     def version_info(self, req):
@@ -769,7 +780,7 @@ class Database(openerpweb.Controller):
                {'fileToken': int(token)}
             )
         except xmlrpclib.Fault, e:
-             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
+            return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
