@@ -92,6 +92,7 @@ class base_stage(object):
         if  part:
             addr = self.pool.get('res.partner').address_get(cr, uid, [part], ['contact'])
             data.update(self.onchange_partner_address_id(cr, uid, ids, addr['contact'])['value'])
+        print "----------data---------------------",data
         return {'value': data}
 
     def _get_default_section_id(self, cr, uid, context=None):

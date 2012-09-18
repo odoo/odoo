@@ -300,6 +300,10 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
 
