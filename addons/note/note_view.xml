@@ -2,8 +2,6 @@
 <openerp>
   <data>
 
-    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-
     <!-- memo Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
@@ -38,8 +36,6 @@
       <field name="view_mode">tree,form</field>
       <field name="domain">[('user_id','=',uid)]</field>
     </record>
-
-    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
 
     <!-- New memo Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
@@ -85,7 +81,8 @@
                   <field name="name"/>
                 </div>
 
-                <div widget="many2many_tags" t-att-data="record.tag_ids.raw_value" model="note.tag"/>
+                <field name="tag_ids"/>
+
                 
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
@@ -192,7 +189,11 @@
       <field name="context">{'search_default_open_true':True}</field>
     </record>
 
-    <menuitem name="Sticky notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+
+    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
+    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
+    <menuitem name="Sticky notes" id="note_notes" parent="note_my_stuff" sequence="10" action="action_note_note"/>
+    <menuitem name="Calendar" id="menu_events_organizer" parent="note_my_stuff" sequence="11" action="base_calendar.action_view_event"/>
 
   </data>
 </openerp>
