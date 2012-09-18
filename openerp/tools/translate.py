@@ -351,6 +351,7 @@ class TinyPoFile(object):
             if targets and not fuzzy:
                 trans_type, name, res_id = targets.pop(0)
                 for t, n, r in targets:
+                    if t == trans_type == 'code': continue
                     self.extra_lines.append((t, n, r, source, trad, comments))
 
         self.first = False
