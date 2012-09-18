@@ -53,7 +53,7 @@ openerp_mail_followers = function(session, mail) {
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$el.on('click', 'button.oe_mail_button_follow', function () { self.do_follow(); });
-            this.$el.on('click', 'button.oe_mail_button_invite', function(event) {
+            this.$el.on('click', 'a.oe_mail_invite', function(event) {
                 action = {
                     type: 'ir.actions.act_window',
                     res_model: 'mail.wizard.invite',
@@ -126,9 +126,9 @@ openerp_mail_followers = function(session, mail) {
         display_buttons: function () {
             this.$('button.oe_mail_button_follow').hide();
             this.$('button.oe_mail_button_unfollow').hide();
-            this.$('button.oe_mail_button_invite').hide();
+            this.$('span.oe_mail_invite_wrapper').hide();
             if (! this.view.is_action_enabled('edit')) return;
-            this.$('button.oe_mail_button_invite').show();
+            this.$('span.oe_mail_invite_wrapper').show();
             if (this.message_is_follower) { this.$('button.oe_mail_button_unfollow').show(); }
             else if (this.message_is_follower == false) { this.$('button.oe_mail_button_follow').show(); }
         },
