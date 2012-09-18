@@ -89,7 +89,7 @@ openerp_mail_followers = function(session, mail) {
 
         fetch_followers: function (value_) {
             this.value = value_;
-            this.message_is_follower = this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value() || undefined;
+            this.message_is_follower = this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value();
             return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
         },
 
@@ -126,8 +126,11 @@ openerp_mail_followers = function(session, mail) {
         display_buttons: function () {
             this.$('button.oe_mail_button_follow').hide();
             this.$('button.oe_mail_button_unfollow').hide();
+            this.$('button.oe_mail_button_invite').hide();
+            if (! this.view.is_action_enabled('edit')) return;
+            this.$('button.oe_mail_button_invite').show();
             if (this.message_is_follower) { this.$('button.oe_mail_button_unfollow').show(); }
-            else if (this.message_is_follow == false) { this.$('button.oe_mail_button_unfollow').hide(); }
+            else if (this.message_is_follower == false) { this.$('button.oe_mail_button_follow').show(); }
         },
 
         do_follow: function () {

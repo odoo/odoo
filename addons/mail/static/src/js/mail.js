@@ -615,12 +615,15 @@ openerp.mail = function(session) {
             // update domain
             var domain = this.options.domain.concat([['model', '=', this.view.model], ['res_id', '=', this.view.datarecord.id]]);
             // create and render Thread widget
+            var show_header_compose = this.view.is_action_enabled('edit') ||
+                (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
             this.$el.find('div.oe_mail_recthread_main').empty();
             var thread = new mail.Thread(self, domain, this.options.context,
                 {   'thread_level': this.options.thread_level,
-                    'use_composer': true,
+                    'show_header_compose': show_header_compose,
+                    'use_composer': show_header_compose,
                     'show_dd_delete': true,
-                    'show_reply_by_email': true });
+                    'show_reply_by_email': show_header_compose });
             return thread.appendTo(this.$el.find('div.oe_mail_recthread_main'));
         },
     });
