@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
   <data>
+    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
 
-    <!-- memo Stage Form View -->
+    <!-- note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
       <field name="model">note.stage</field>
       <field name="arch" type="xml">
-        <form string="Stage of memos" version="7.0">
+        <form string="Stage of Notes" version="7.0">
           <group>
             <field name="name"/>
           </group>
@@ -15,13 +16,13 @@
       </field>
     </record>
 
-    <!-- memo Stage Tree View -->
+    <!-- note Stage Tree View -->
     <record model="ir.ui.view" id="view_note_stage_tree">
       <field name="name">note.stage.tree</field>
       <field name="model">note.stage</field>
       <field name="field_parent"></field>
       <field name="arch" type="xml">
-        <tree string="Stages of memos" editable="bottom">
+        <tree string="Stages of Notes" editable="bottom">
             <field name="sequence" widget="handle"/>
             <field name="name"/>
             <field name="fold"/>
@@ -29,15 +30,17 @@
       </field>
     </record>
 
-    <!-- memo Stage Action -->
+    <!-- note Stage Action -->
     <record model="ir.actions.act_window" id="action_note_stage">
-      <field name="name">Stages</field>
-      <field name="res_model">note.stage</field>
-      <field name="view_mode">tree,form</field>
-      <field name="domain">[('user_id','=',uid)]</field>
+        <field name="name">Stages</field>
+        <field name="res_model">note.stage</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('user_id','=',uid)]</field>
     </record>
 
-    <!-- New memo Kanban View -->
+    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
+
+    <!-- New note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
       <field name="name">note.note.kanban</field>
       <field name="model">note.note</field>
@@ -74,16 +77,12 @@
                     </ul>
                   </div>
                 </div>
-
                 <!-- kanban memo -->
                 <div t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </div>
-
                 <field name="tag_ids"/>
-
-                
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                     <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
@@ -97,7 +96,7 @@
       </field>
     </record>
 
-    <!-- New memo Form View -->
+    <!-- New note Form View -->
     <record model="ir.ui.view" id="view_note_note_tree">
       <field name="name">note.note.tree</field>
       <field name="model">note.note</field>
@@ -116,11 +115,11 @@
       <field name="name">note.note.form</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <form string="Sticky note" version="7.0">
+        <form string="Note" version="7.0">
           <header>
             <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
-          <field colspan="4" name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
+          <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
           <group groups="note.group_note_tags" col="2">
             <field name="tag_ids" widget="many2many_tags"/>
           </group>
@@ -135,10 +134,8 @@
       <field name="name">note.note.search</field>
       <field name="model">note.note</field>
       <field name="arch" type="xml">
-        <search string="Sticky notes">
-          <field name="name" string="Title"/>
-          <field name="memo" string="Sticky note"/>
-          <field name="stage_id"/>
+        <search string="Notes">
+          <field name="memo" string="Note"/>
           <field name="tag_ids" groups="note.group_note_tags"/>
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_today" string="Today" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
@@ -159,8 +156,8 @@
       <field name="arch" type="xml">
         <xpath expr="//label[@string='Authentication']/.." position="after">
           <group>
-              <label for="id" string="Sticky notes"/>
-              <div>
+              <label for="id" string="Notes"/>
+              <div name="note">
                   <div>
                       <field name="module_note_pad" class="oe_inline"/>
                       <label for="module_note_pad"/>
@@ -181,7 +178,7 @@
 
     <!-- Action -->
     <record model="ir.actions.act_window" id="action_note_note">
-      <field name="name">Sticky notes</field>
+      <field name="name">Notes</field>
       <field name="res_model">note.note</field>
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
@@ -189,11 +186,7 @@
       <field name="context">{'search_default_open_true':True}</field>
     </record>
 
-
-    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
-    <menuitem name="Sticky notes" id="note_notes" parent="note_my_stuff" sequence="10" action="action_note_note"/>
-    <menuitem name="Calendar" id="menu_events_organizer" parent="note_my_stuff" sequence="11" action="base_calendar.action_view_event"/>
+    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
 
   </data>
 </openerp>

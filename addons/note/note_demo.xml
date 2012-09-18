@@ -1,6 +1,30 @@
 <?xml version="1.0"?>
 <openerp>
-  <data>
+  <data noupdate="1">
+    <record model="note.stage" id="demo_note_stage_01">
+      <field name="name">Today</field>
+      <field name="sequence">1</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_02">
+      <field name="name">Tomorrow</field>
+      <field name="sequence">2</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_03">
+      <field name="name">Later</field>
+      <field name="sequence">3</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
+    <record model="note.stage" id="demo_note_stage_04">
+      <field name="name">Notes</field>
+      <field name="sequence">4</field>
+      <field name="user_id" eval="ref('base.user_demo')"/>
+    </record>
+
 
     <record id="note_1" model="note.note">
       <field name="name">Customer report #349872</field>
@@ -93,7 +117,6 @@
       ]]>
       </field>
       <field name="stage_id" ref="note_stage_02"/>
-      
     </record>
 
     <record id="note_10" model="note.note">

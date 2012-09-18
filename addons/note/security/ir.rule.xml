@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
 <data>
-
   <record id="note_note_rule_global" model="ir.rule">
     <field name="name">Only followers can access a sticky notes</field>
     <field model="ir.model" ref="model_note_note" name="model_id"/>
@@ -15,7 +14,6 @@
     <field name="domain_force">['|',('user_id','=',False),('user_id','=',user.id)]</field>
     <field eval="True" name="global"/>
   </record>
-
 </data>
 </openerp>
 
