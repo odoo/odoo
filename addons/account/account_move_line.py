@@ -703,7 +703,9 @@ class account_move_line(osv.osv):
             context = {}
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
-                partner = self.get_next_partner_only(cr, uid, offset, context)
+                partner = self.list_partners_to_reconcile(cr, uid, context=context)
+                if partner:
+                    partner = partner[0]
             else:
                 partner = context.get('partner_id', False)
             if not partner:
@@ -711,26 +713,26 @@ class account_move_line(osv.osv):
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
-    def get_next_partner_only(self, cr, uid, offset=0, context=None):
+    def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """
-             SELECT p.id
-             FROM res_partner p
-             RIGHT JOIN (
-                SELECT l.partner_id AS partner_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
+             SELECT partner_id
+             FROM (
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit
                 FROM account_move_line l
-                LEFT JOIN account_account a ON (a.id = l.account_id)
-                    LEFT JOIN res_partner p ON (l.partner_id = p.id)
+                RIGHT JOIN account_account a ON (a.id = l.account_id)
+                RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
                     AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
                     AND l.state <> 'draft'
-                    GROUP BY l.partner_id
-                ) AS s ON (p.id = s.partner_id)
+                    GROUP BY l.partner_id, p.last_reconciliation_date
+                ) AS s
                 WHERE debit > 0 AND credit > 0
-                ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset, )
-            )
-        return cr.fetchone()
+                ORDER BY last_reconciliation_date""")
+        ids = cr.fetchall()
+        ids = len(ids) and list(ids[0]) or []
+        return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -910,8 +912,8 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if partner_id and context and context.get('stop_reconcile', False):
-                partner_obj.write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
