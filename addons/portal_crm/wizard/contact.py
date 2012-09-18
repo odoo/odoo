@@ -61,11 +61,11 @@ class crm_contact_us(osv.TransientModel):
 
     def create(self, cr, uid, values, context=None):
         """
-        Since they potentially sensitive, we don't want any user to be able to
-        read datas generated through this module.  That's why we'll write those
-        information in the crm.lead table and leave blank entries in the
-        portal_crm.crm_contact_us table.  This is why the create() method is
-        overwritten.
+        Since they are potentially sensitive, we don't want any user to be able
+        to read datas generated through this module.  That's why we'll write
+        those information directly in the crm.lead table and leave blank
+        entries in the portal_crm.crm_contact_us table.
+        This is why the create() method is overwritten.
         """
         crm_lead = self.pool.get('crm.lead')
 
