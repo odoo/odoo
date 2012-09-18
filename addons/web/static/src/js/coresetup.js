@@ -156,30 +156,32 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = $.Deferred().resolve().promise();
-            if (to_load.length) {
+            var loaded = self.rpc('/web/webclient/translations', params).then(function(trans) {
+                instance.web._t.database.set_bundle(trans);
+            });
+            var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+            if(to_load.length) {
                 loaded = $.when(
-                    self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                    loaded,
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).then(self.do_load_css),
                     self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                    self.rpc('/web/webclient/translations', params).pipe(function(trans) {
-                        instance.web._t.database.set_bundle(trans);
-                        var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                        return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
-                            return self.do_load_js(file_list.concat(files));
-                        }).then(function () {
-                            if (!Date.CultureInfo.pmDesignator) {
-                                // If no am/pm designator is specified but the openerp
-                                // datetime format uses %i, date.js won't be able to
-                                // correctly format a date. See bug#938497.
-                                Date.CultureInfo.amDesignator = 'AM';
-                                Date.CultureInfo.pmDesignator = 'PM';
-                            }
-                        });
-                    }))
+                    self.rpc('/web/webclient/jslist', {mods: to_load}).then(function(files) {
+                        file_list = file_list.concat(files);
+                    })
+                );
             }
-            return loaded.then(function() {
+            return loaded.pipe(function () {
+                return self.do_load_js(file_list);
+            }).then(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
+                if (!Date.CultureInfo.pmDesignator) {
+                    // If no am/pm designator is specified but the openerp
+                    // datetime format uses %i, date.js won't be able to
+                    // correctly format a date. See bug#938497.
+                    Date.CultureInfo.amDesignator = 'AM';
+                    Date.CultureInfo.pmDesignator = 'PM';
+                }
             });
         });
     },

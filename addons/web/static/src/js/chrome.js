@@ -79,6 +79,9 @@ instance.web.Dialog = instance.web.Widget.extend({
             }
         }
         if (options) {
+            if (options.buttons) {
+                this.params_buttons = true;
+            }
             _.extend(this.dialog_options, options);
         }
     },
@@ -123,7 +126,13 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
+        if (! this.params_buttons) {
+            this.$buttons.appendTo($("body"));
+        }
         instance.web.dialog(this.$el, o).dialog('open');
+        if (! this.params_buttons) {
+            this.$buttons.appendTo(this.$el.dialog("widget"));
+        }
         if (o.height === 'auto' && o.max_height) {
             this.$el.css({ 'max-height': o.max_height, 'overflow-y': 'auto' });
         }
@@ -133,6 +142,10 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.renderElement();
         var o = this.get_options(options);
         instance.web.dialog(this.$el, o);
+        if (! this.params_buttons) {
+            this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
+            this.$el.dialog("widget").append(this.$buttons);
+        }
         var res = this.start();
         this.dialog_inited = true;
         return res;

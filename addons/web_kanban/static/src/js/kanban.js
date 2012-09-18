@@ -396,8 +396,6 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         } else {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
-
-        this.transform_widget_many2many();
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
@@ -414,7 +412,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             var data = {};
             data[this.group_by] = new_group.value;
             this.dataset.write(record.id, data, {}, function() {
-                //self.do_reload();
+                record.do_reload();
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
                 evt.preventDefault();
@@ -475,6 +473,10 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.$el.prepend(
             $('<div class="oe_view_nocontent">').html(this.options.action.help)
         );
+        var create_nocontent = this.$buttons;
+        this.$el.find('.oe_view_nocontent').click(function() {
+            create_nocontent.effect('bounce', {distance: 18, times: 5}, 150);
+        });
     }
 });
 
@@ -809,7 +811,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             }
         });
 
-        if (this.$el.find('.oe_kanban_global_click,.oe_kanban_global_click_edit').length) {
+        if (this.$el.find('.oe_kanban_global_click').length) {
             this.$el.on('click', function(ev) {
                 if (!ev.isTrigger && !$(ev.target).data('events')) {
                     var trigger = true;
@@ -850,15 +852,8 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             });
         }
     },
-    /* actions when user click on the block with a specific class
-    *  open on normal view : oe_kanban_global_click
-    *  open on form/edit view : oe_kanban_global_click_edit
-    */
     on_card_clicked: function(ev) {
-        if(this.$el.find('.oe_kanban_global_click_edit').size()>0)
-            this.do_action_edit();
-        else
-            this.do_action_open();
+        this.view.open_record(this.id);
     },
     setup_color_picker: function() {
         var self = this;
