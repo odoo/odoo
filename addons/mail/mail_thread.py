@@ -139,7 +139,7 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         res = {}
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
