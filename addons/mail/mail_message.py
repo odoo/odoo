@@ -131,7 +131,6 @@ class mail_message(osv.Model):
             type='boolean', string='Unread',
             help='Functional field to search for unread messages linked to uid'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', 'Votes'),
-
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -148,23 +147,25 @@ class mail_message(osv.Model):
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
     }
-    
-    #---------------------------------------------------
-    #Mail Vote system (Like or Unlike comments
-    #-----------------------------------------------------
+
+    #------------------------------------------------------
+    # Vote/Like
+    #------------------------------------------------------
+
     def vote_toggle(self, cr, uid, ids, user_ids=None, context=None):
         '''
         Toggles when Comment is liked or unlike.
         create vote entries if current user like comment..
         '''
-        vote_pool = self.pool.get('mail.vote')
-        if not user_ids: user_ids = [uid]
-        for message in self.browse(cr, uid, ids, context):
-            voters_ids = [user.id for user in message.vote_user_ids if user.id == uid]
-            if not voters_ids:
-                self.write(cr, uid, ids, {'vote_user_ids': [(4, user_id) for user_id in user_ids]}, context=context)
-            else:
-                self.write(cr, uid, ids, {'vote_user_ids': [(3, user_id) for user_id in user_ids]}, context=context)
+        if not user_ids:
+            user_ids = [uid]
+        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
+            for user_id in user_ids:
+                has_voted = user_id in message['vote_user_ids']
+                if not has_voted:
+                    self.write(cr, uid, ids, {'vote_user_ids': [(4, user_id)]}, context=context)
+                else:
+                    self.write(cr, uid, ids, {'vote_user_ids': [(3, user_id)]}, context=context)
         return True
 
     #------------------------------------------------------
@@ -174,12 +175,12 @@ class mail_message(osv.Model):
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
         vote_pool = self.pool.get('mail.vote')
-        has_voted = False;
-        vote_ids = []
-        vote_ids = vote_pool.name_get(cr, uid, [user.id for user in msg.vote_user_ids], context=context)
+        has_voted = False
+        vote_ids = self.pool.get('res.users').name_get(cr, uid, [user.id for user in msg.vote_user_ids], context=context)
         for user_id in msg.vote_user_ids:
             if (user_id.id == uid):
-                has_voted = True;
+                has_voted = True
+                break
         attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
         author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
         author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]

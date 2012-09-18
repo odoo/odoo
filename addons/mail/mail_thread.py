@@ -176,7 +176,7 @@ class mail_thread(osv.AbstractModel):
     #------------------------------------------------------
     # Automatic subscription when creating
     #------------------------------------------------------
-    
+
     def create(self, cr, uid, vals, context=None):
         """ Override to subscribe the current user. """
         thread_id = super(mail_thread, self).create(cr, uid, vals, context=context)

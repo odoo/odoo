@@ -20,17 +20,20 @@
 ##############################################################################
 
 from osv import osv, fields
-from tools.translate import _
+
 
 class mail_vote(osv.Model):
-    '''
-    Mail vote feature allow users to like and unlike particular  message or Document's message comment.
-    It counts the number of votes per document.
-    '''
+    ''' Mail vote feature allow users to like and unlike messages attached
+        to a document. This allows for example to build a ranking-based
+        displaying of messages, for FAQ. '''
+
     _name = 'mail.vote'
     _description = 'Mail Vote'
     _columns = {
-            'message_id': fields.many2one('mail.message', 'Message', required=True),
-            'user_id': fields.many2one('res.users', 'User', required=True),
+            'message_id': fields.many2one('mail.message', 'Message', required=True,
+                select=1),
+            'user_id': fields.many2one('res.users', 'User', required=True,
+                select=1),
         }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
