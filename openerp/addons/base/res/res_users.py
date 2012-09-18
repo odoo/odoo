@@ -278,7 +278,7 @@ class res_users(osv.osv):
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
-                uid = 1
+                uid = SUPERUSER_ID
 
         result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
