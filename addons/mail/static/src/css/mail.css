@@ -261,15 +261,10 @@
 }
 
 /*--------------------------------------------------------------*/
-/* Mail Vote System (Like or Unlike Comment)
+/* mail.vote
 /*--------------------------------------------------------------*/
 
-.oe_mail_vote_image{
-    height='12px';
-    width='16px';	
-}
-
-button.oe_mail_msg_vote_like{
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote {
     height:21px;
     width: 30px;
     padding: 1px;
@@ -277,17 +272,18 @@ button.oe_mail_msg_vote_like{
     margin-top: -4px;
 }
 
-button.oe_mail_msg_vote_like:hover{
-    background: #8A89BA;
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote_true {
+    background:#DC5F59;
 }
 
-button.oe_mail_msg_vote_like span {
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote span {
     color: white;
 }
 
-span.oe_mail_vote_string{
+.openerp .oe_mail_msg_content span.oe_mail_vote_count{
     color: #807FB4;
 }
+
 
 /* ------------------------------------------------------------ */
 /* mail.compose.message form view & OpenERP hacks
