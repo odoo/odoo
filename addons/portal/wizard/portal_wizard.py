@@ -123,9 +123,17 @@ class wizard_user(osv.osv_memory):
     _columns = {
         'wizard_id': fields.many2one('portal.wizard', string='Wizard', required=True),
         'partner_id': fields.many2one('res.partner', string='Contact', required=True, readonly=True),
-        'email': fields.related('partner_id', 'email', type='char', string='Email'),
+        'email': fields.char(size=240, string='Email'),
         'in_portal': fields.boolean('In Portal'),
     }
+
+    def create(self, cr, uid, values, context=None):
+        """ overridden to update the partner's email (if necessary) """
+        id = super(wizard_user, self).create(cr, uid, values, context)
+        wuser = self.browse(cr, uid, id, context)
+        if wuser.partner_id.email != wuser.email:
+            wuser.partner_id.write({'email': wuser.email})
+        return id
 
     def action_apply(self, cr, uid, ids, context=None):
         res_users = self.pool.get('res.users')

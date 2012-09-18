@@ -19,7 +19,11 @@
                     <group>
                         <field name="portal_id" widget="selection" on_change="onchange_portal_id(portal_id, context)"/>
                     </group>
-                    <label string="Fill in check boxes below to determine which contacts should belong to the portal."/>
+                    <div>
+                        Select which contacts should belong to the portal in the list below.
+                        The email address of each selected contact must be valid and unique.
+                        If necessary, you can fix any contact's email address directly in the list.
+                    </div>
                     <field name="user_ids"/>
                     <field name="message" placeholder="This text will be included in the welcome email sent to users."/>
                     <footer>
