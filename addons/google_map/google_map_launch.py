@@ -38,9 +38,9 @@ class launch_map(osv.osv):
         if partner.zip:
             url+='+'+partner.zip.replace(' ','+')
         return {
-        'type': 'ir.actions.act_url',
-        'url':url,
-        'target': 'new'
+            'type': 'ir.actions.act_url',
+            'url':url,
+            'target': 'new'
         }
 
 launch_map()
