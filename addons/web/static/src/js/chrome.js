@@ -126,11 +126,11 @@ instance.web.Dialog = instance.web.Widget.extend({
         if (! this.dialog_inited)
             this.init_dialog();
         var o = this.get_options(options);
-        if (! this.no_erase_buttons) {
+        if (! this.params_buttons) {
             this.$buttons.appendTo($("body"));
         }
         instance.web.dialog(this.$el, o).dialog('open');
-        if (! this.no_erase_buttons) {
+        if (! this.params_buttons) {
             this.$buttons.appendTo(this.$el.dialog("widget"));
         }
         if (o.height === 'auto' && o.max_height) {
