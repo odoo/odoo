@@ -27,7 +27,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_project"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_unread" model="ir.values">
             <field name="name">action_project_unread</field>
@@ -45,7 +45,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_project"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_read" model="ir.values">
             <field name="name">action_project_read</field>
@@ -354,7 +354,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_task"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_unread(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_unread(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_task_unread" model="ir.values">
             <field name="name">action_project_task_unread</field>
@@ -372,7 +372,7 @@
             <field name="type">ir.actions.server</field>
             <field name="model_id" ref="model_project_task"/>
             <field name="state">code</field>
-            <field name="code">self.message_check_and_set_read(cr, uid, context.get('active_ids'), context=context)</field>
+            <field name="code">self.message_mark_as_read(cr, uid, context.get('active_ids'), context=context)</field>
         </record>
         <record id="action_project_task_read" model="ir.values">
             <field name="name">action_project_task_read</field>
