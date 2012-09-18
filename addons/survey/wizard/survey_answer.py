@@ -600,7 +600,6 @@ class survey_question_wiz(osv.osv_memory):
             if context.has_key('cur_id'):
                 if context.has_key('request') and context.get('request',False):
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})
-                    self.pool.get(context.get('object',False)).survey_req_done(cr, uid, [int(context.get('cur_id'))], context)
                 else:
                     self.pool.get(context.get('object',False)).write(cr, uid, [int(context.get('cur_id',False))], {'response' : response_id})        
         if sur_name_read['store_ans'] and type(safe_eval(sur_name_read['store_ans'])) == dict:
