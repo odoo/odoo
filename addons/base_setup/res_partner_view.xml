@@ -9,7 +9,7 @@
             <field name="inherit_id" ref="base.res_partner_kanban_view"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@class='oe_kanban_partner_categories']" position="inside">
-                    <span class="oe_kanban_list_many2many" data-model="res.partner.category">
+                    <span class="oe_kanban_list_many2many">
                         <field name="category_id"/>
                     </span>
                 </xpath>

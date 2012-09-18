@@ -82,7 +82,9 @@
                   <!-- title -->
                   <field name="name"/>
                 </div>
+                
                 <field name="tag_ids"/>
+
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                     <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
