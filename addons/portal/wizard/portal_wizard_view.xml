@@ -17,8 +17,7 @@
             <field name="arch" type="xml">
                 <form string="Portal Access Management" version="7.0">
                     <group>
-                        <field name="partner_id" invisible="1"/>
-                        <field name="portal_id" widget="selection" on_change="onchange_portal_id(partner_id, portal_id)"/>
+                        <field name="portal_id" widget="selection" on_change="onchange_portal_id(portal_id, context)"/>
                     </group>
                     <label string="Fill in check boxes below to determine which contacts should belong to the portal."/>
                     <field name="user_ids"/>

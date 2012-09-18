@@ -75,7 +75,6 @@ class wizard(osv.osv_memory):
     _description = 'Portal Access Management'
 
     _columns = {
-        'partner_id': fields.many2one('res.partner', required=True, string="Partner"),
         'portal_id': fields.many2one('res.groups', domain=[('is_portal', '=', True)], required=True,
             string='Portal', help="The portal that users can be added in or removed from."),
         'user_ids': fields.one2many('portal.wizard.user', 'wizard_id', string='Users'),
@@ -83,23 +82,18 @@ class wizard(osv.osv_memory):
             help="This text is included in the welcome email sent to the users."),
     }
 
-    def _default_partner(self, cr, uid, context):
-        return context and context.get('active_id') or False
-
     def _default_portal(self, cr, uid, context):
         portal_ids = self.pool.get('res.groups').search(cr, uid, [('is_portal', '=', True)])
         return portal_ids and portal_ids[0] or False
 
     _defaults = {
-        'partner_id': _default_partner,
         'portal_id': _default_portal,
     }
 
-    def onchange_portal_id(self, cr, uid, ids, partner_id, portal_id, context=None):
-        assert partner_id
+    def onchange_portal_id(self, cr, uid, ids, portal_id, context=None):
         # for each partner, determine corresponding portal.wizard.user records
         res_partner = self.pool.get('res.partner')
-        partner_ids = [partner_id]
+        partner_ids = context and context.get('active_ids') or []
         user_changes = []
         for partner in res_partner.browse(cr, SUPERUSER_ID, partner_ids, context):
             for contact in (partner.child_ids or [partner]):
