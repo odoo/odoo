@@ -25,7 +25,6 @@
     display: none !important;
   }
 }
-
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
@@ -41,7 +40,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -1154,7 +1153,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightGray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1179,7 +1178,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightGray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -1521,6 +1520,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  font-weight: normal;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1957,6 +1957,9 @@
   background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
   background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
 }
+.openerp .oe_form header > span {
+  margin-left: 4px;
+}
 .openerp .oe_form header ul {
   display: inline-block;
   float: right;
@@ -2001,6 +2004,8 @@
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
   width: 108px;
   border-top: 1px solid #cacaca;
+  margin-top: 4px;
+  padding-top: 4px;
   font-weight: bold;
   font-size: 18px;
 }
@@ -2043,7 +2048,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -2638,20 +2643,24 @@
 }
 .openerp .oe_list_content td.oe_list_field_handle {
   width: 1em;
+  padding: 0 !important;
   cursor: ns-resize;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  font-weight: normal;
+  margin-right: 7px;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
-  font: 21px "mnmliconsRegular";
-  content: "ö";
-  color: #404040;
+  font: 18px "entypoRegular";
+  content: "}";
+  color: #e0e0e0;
 }
 .openerp .oe_list_cannot_edit .oe_list_header_handle, .openerp .oe_list_cannot_edit .oe_list_field_handle {
   display: none !important;
+  padding: 0 !important;
 }
 .openerp .oe_list_cannot_delete .oe_list_record_delete {
   display: none !important;
