@@ -447,8 +447,9 @@ class CalDAV(object):
                                 dtfield.params['TZID'] = [tzval.title()]
                                 dtfield.value = self.format_date_tz(parser.parse(data[map_field]), tzval.title())
                             else:
+                                dtfield.params['TZID'] = ['UTC']								
                                 dtfield.value = parser.parse(data[map_field])
-                                
+
                         elif map_type == 'utc'and data[map_field]:
                             if tzval:
                                 local = pytz.timezone (tzval.title())
