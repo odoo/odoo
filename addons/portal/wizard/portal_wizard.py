@@ -144,10 +144,14 @@ class wizard_user(osv.osv_memory):
                 # remove the user (if it exists) from the portal group
                 if user:
                     if portal in user.groups_id:
-                        values = {'groups_id': [(3, portal.id)]}
                         if len(user.groups_id) == 1:
-                            values['active'] = False            # deactivate user
-                        user.write(values)
+                            # delete or deactivate the user
+                            try:
+                                user.unlink()
+                            except:
+                                user.write({'groups_id': [(3, portal.id)], 'active': False})
+                        else:
+                            user.write({'groups_id': [(3, portal.id)]})
 
     def _retrieve_user(self, cr, uid, wizard_user, context=None):
         """ retrieve the (possibly inactive) user corresponding to wizard_user.partner_id
