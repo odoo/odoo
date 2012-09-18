@@ -207,6 +207,8 @@ class event_event(osv.osv):
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'street': fields.related('address_id','street',type='char',string='Street'),
+        'street2': fields.related('address_id','street2',type='char',string='Street2'),
+        'state_id': fields.related('address_id','state_id',type='many2one', relation="res.country.state", string='State'),
         'zip': fields.related('address_id','zip',type='char',string='zip'),
         'city': fields.related('address_id','city',type='char',string='city'),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
@@ -265,16 +267,20 @@ class event_event(osv.osv):
     def on_change_address_id(self, cr, uid, ids, address_id, context=None):
         values = {
             'street' : False,
+            'street2' : False,
             'city' : False,
             'zip' : False,
+            'country_id' : False,
+            'state_id' : False,
         }
         if isinstance(address_id, (long, int)):
             address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
-
             values.update({
                 'street' : address.street,
-
+                'street2' : address.street2,
                 'city' : address.city,
+                'country_id' : address.country_id and address.country_id.id,
+                'state_id' : address.state_id and address.state_id.id,
                 'zip' : address.zip,
             })
 
