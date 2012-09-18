@@ -47,10 +47,10 @@ class crm_contact_us(osv.TransientModel):
 
         @return current user's email if the user isn't "anonymous", None otherwise
         """
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'email'], context)
 
-        if (user.login != 'anonymous'):
-            return user.email
+        if (user['login'] != 'anonymous'):
+            return user['email']
         else:
             return None
 
