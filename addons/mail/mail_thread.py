@@ -629,7 +629,7 @@ class mail_thread(osv.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if not user_ids: user_ids = [uid]
-        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        partner_ids = [user['partner_id'][0] for user in self.pool.get('res.users').read(cr, uid, user_ids, ['partner_id'], context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
@@ -640,7 +640,7 @@ class mail_thread(osv.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, unsubscribe uid instead. """
         if not user_ids: user_ids = [uid]
-        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        partner_ids = [user['partner_id'][0] for user in self.pool.get('res.users').read(cr, uid, user_ids, ['partner_id'], context=context)]
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):
