@@ -43,8 +43,8 @@ openerp_mail_followers = function(session, mail) {
         },
 
         reinit: function() {
-            this.$el.find('button.oe_mail_button_follow').hide();
-            this.$el.find('button.oe_mail_button_unfollow').hide();
+            this.message_is_follower == undefined;
+            this.display_buttons();
         },
 
         bind_events: function() {
@@ -81,7 +81,7 @@ openerp_mail_followers = function(session, mail) {
             this.reinit();
             if (! this.view.datarecord.id ||
                 session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
-                this.$el.find('div.oe_mail_recthread_aside').hide();
+                this.$('div.oe_mail_recthread_aside').hide();
                 return;
             }
             return this.fetch_followers(value_  || this.get_value());
@@ -97,33 +97,37 @@ openerp_mail_followers = function(session, mail) {
         /* Display generic info about follower, for people not having access to res_partner */
         display_generic: function (error, event) {
             event.preventDefault();
-            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
-            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + this.value.length + ')');
+            var node_user_list = this.$('ul.oe_mail_followers_display').empty();
+            // format content: Followers (You and 0 other) // Followers (3)
+            var content = this.options.title;
             if (this.message_is_follower) {
-                this.$el.find('button.oe_mail_button_follow').hide();
-                this.$el.find('button.oe_mail_button_unfollow').show(); }
+                content += ' (You and ' + (this.value.length-1) + ' other)';
+            }
             else {
-                this.$el.find('button.oe_mail_button_follow').show();
-                this.$el.find('button.oe_mail_button_unfollow').hide(); }
+                content += ' (' + this.value.length + ')'
+            }
+            this.$('div.oe_mail_recthread_followers h4').html(content);
+            this.display_buttons();
             return $.when();
         },
 
         /** Display the followers, evaluate is_follower directly */
         display_followers: function (records) {
             var self = this;
-            this.message_is_follower = _.indexOf(_.flatten(_.pluck(records, 'user_ids')), this.session.uid) != -1;
-            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
-            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
+            var node_user_list = this.$('ul.oe_mail_followers_display').empty();
+            this.$('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
             _(records).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
-            if (this.message_is_follower) {
-                this.$el.find('button.oe_mail_button_follow').hide();
-                this.$el.find('button.oe_mail_button_unfollow').show(); }
-            else {
-                this.$el.find('button.oe_mail_button_follow').show();
-                this.$el.find('button.oe_mail_button_unfollow').hide(); }
+            this.display_buttons();
+        },
+
+        display_buttons: function () {
+            this.$('button.oe_mail_button_follow').hide();
+            this.$('button.oe_mail_button_unfollow').hide();
+            if (this.message_is_follower) { this.$('button.oe_mail_button_unfollow').show(); }
+            else if (this.message_is_follow == false) { this.$('button.oe_mail_button_unfollow').hide(); }
         },
 
         do_follow: function () {
