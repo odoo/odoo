@@ -422,9 +422,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     do_update_pager: function(hide_index) {
         var index = hide_index ? '-' : this.dataset.index + 1;
-        this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2).end()
-                   .find('span.oe_pager_index').html(index).end()
-                   .find('span.oe_pager_count').html(this.dataset.ids.length);
+        this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2);
+        if (this.dataset.ids.length <= 1) {
+            $(".oe_form_pager_state", this.$pager).html("");
+        } else {
+            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), index, this.dataset.ids.length));
+        }
     },
     parse_on_change: function (on_change, widget) {
         var self = this;
