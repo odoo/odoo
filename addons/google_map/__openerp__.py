@@ -33,7 +33,9 @@ Using this you can directly open Google Map from the URL widget.""",
     'website': 'http://www.openerp.com',
     'images': ['images/google_map.jpeg'],
     'depends': ['base'],
-    'data': [],
+    'data': [
+        'google_map_view.xml'
+    ],
     'demo': [],
     'js': ['static/src/js/google_map.js'],
     'installable': True,
