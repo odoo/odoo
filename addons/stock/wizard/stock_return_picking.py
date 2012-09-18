@@ -72,9 +72,10 @@ class stock_return_picking(osv.osv_memory):
                     res.update({'invoice_state': 'none'})
             return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
-                qty = line.product_qty - return_history[line.id]
-                if qty > 0:
-                    result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
+                if (return_history.get(line.id) is not None) and (line.product_qty * line.product_uom.factor > return_history[line.id]):
+                    qty = line.product_qty - return_history[line.id]
+                    if qty > 0:
+                        result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
             if 'product_return_moves' in fields:
                 res.update({'product_return_moves': result1})
         return res
