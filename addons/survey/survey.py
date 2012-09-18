@@ -59,7 +59,7 @@ class survey(osv.osv):
                      help="Set to one if survey is answerable only once"),
         'response_user': fields.integer('Maximum Answer per User',
                      help="Set to one if  you require only one Answer per user"),
-        'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
+        'state': fields.selection([('draft', 'Draft'),('open', 'Open'), ('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
         'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
         'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
@@ -87,8 +87,8 @@ class survey(osv.osv):
         self.write(cr, uid, ids, {'state': 'close', 'date_close': strftime("%Y-%m-%d %H:%M:%S") })
         return True
 
-    def survey_cancel(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'cancel' })
+    def survey_draft(self, cr, uid, ids, arg):
+        self.write(cr, uid, ids, {'state': 'draft' })
         return True
 
     def copy(self, cr, uid, ids, default=None, context=None):
