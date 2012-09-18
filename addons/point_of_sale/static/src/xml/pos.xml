@@ -327,15 +327,20 @@
         </div>
     </t>
 
-    <t t-name="ErrorProductNotRecognizedPopupWidget">
+    <t t-name="ProductErrorPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
                 <p class="message">The scanned product was not recognized<br /> Please wait, a cashier is on the way</p>
             </div>
         </div>
+        <div class="footer">
+            <div class="button">
+                Ok
+            </div>
+        </div>
     </t>
 
-    <t t-name="ErrorNoSessionPopupWidget">
+    <t t-name="ErrorSessionPopupWidget">
         <div class="modal-dialog">
             <div class="popup popup-help">
                 <p class="message">Sorry, we could not create a session for this user.</p>
@@ -455,11 +460,11 @@
                     <li class="event scan_item_success">Scan Item Success</li>
                     <li class="event scan_item_error_unrecognized">Scan Item Unrecognized</li>
                     <li class="event payment_request">Payment Request</li>
+                    <li class="event payment_status">Payment Status</li>
                     <li class="event open_cashbox">Open Cashbox</li>
                     <li class="event print_receipt">Print Receipt</li>
                     <li class="event print_pdf_invoice">Print Invoice</li>
                     <li class="event weighting_read_kg">Read Weighting Scale</li>
-                    <li class="event is_payment_accepted">Check Payment</li>
                 </ul>
             </div>
         </div>
