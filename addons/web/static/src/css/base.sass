@@ -119,8 +119,19 @@ $sheet-max-width: 860px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    font-weight: normal 
     &:before
         font: 21px "mnmliconsRegular"
+        content: $icon-name
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    font-weight: normal 
+    &:before
+        font: $size "entypoRegular"
         content: $icon-name
         color: $color
 
@@ -1540,6 +1551,8 @@ $sheet-max-width: 860px
             border-bottom: 1px solid #cacaca
             padding-left: 2px
             @include vertical-gradient(#fcfcfc, #dedede)
+            > span
+                margin-left: 4px
             ul
                 display: inline-block
                 float: right
@@ -1574,6 +1587,8 @@ $sheet-max-width: 860px
             .oe_subtotal_footer_separator
                 width: 108px
                 border-top: 1px solid #cacaca
+                margin-top: 4px
+                padding-top: 4px
                 font-weight: bold
                 font-size: 18px
             label:after
@@ -2068,13 +2083,16 @@ $sheet-max-width: 860px
             text-indent: -9001px
         td.oe_list_field_handle
             width: 1em
+            padding: 0 !important
             cursor: ns-resize
             .oe_list_handle
-                @include text-to-icon("ö")
+                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                margin-right: 7px
 
     .oe_list_cannot_edit
         .oe_list_header_handle, .oe_list_field_handle
             display: none !important
+            padding: 0 !important
     .oe_list_cannot_delete
         .oe_list_record_delete
             display: none !important
