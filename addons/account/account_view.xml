@@ -1078,7 +1078,7 @@
 	                        <group>
 		                        <field name="name"/>
 		                        <field name="ref"/>
-		                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+		                        <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
 	                        </group>
 	                        <group>
 		                        <field name="journal_id"/>
@@ -1152,7 +1152,7 @@
                                 <field name="journal_id" readonly="False"/>
                                 <field name="period_id" readonly="False"/>
                                 <field name="account_id" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation'),('company_id', '=', company_id)]"/>
-                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                                <field name="partner_id" on_change="onchange_partner_id(move_id, partner_id, account_id, debit, credit, date, journal_id)"/>
                                 <newline/>
                                 <field name="debit"/>
                                 <field name="credit"/>

@@ -92,7 +92,7 @@ class account_move_journal(osv.osv_memory):
 
             journal = False
             if journal_id:
-                journal = journal_pool.read(cr, uid, journal_id, ['name'], context=context).name
+                journal = journal_pool.read(cr, uid, journal_id, ['name'], context=context).get('name',False)
                 journal_string = _("Journal: %s") % tools.ustr(journal)
             else:
                 journal_string = _("Journal: All")
