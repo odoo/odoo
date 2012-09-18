@@ -529,7 +529,7 @@ openerp.mail = function(session) {
                 record.vote_user_ids.splice(idx, 1);
             }
             else {
-                record.vote_user_ids.push([this.session.uid, 'Current user']);
+                record.vote_user_ids.push([this.session.uid, 'You']);
             }
             record.has_voted = ! record.has_voted;
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'record': record});
