@@ -3792,6 +3792,12 @@ class BaseModel(object):
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
 
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        """Send given workflow signal""" 
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            wf_service.trg_validate(uid, self._name, res_id, signal, cr)
+
     def unlink(self, cr, uid, ids, context=None):
         """
         Delete records with given ids
