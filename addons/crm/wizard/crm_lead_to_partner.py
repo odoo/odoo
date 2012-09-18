@@ -60,7 +60,7 @@ class crm_lead2partner(osv.osv_memory):
             partner_ids = partner.search(cr, uid, [('email', '=', this.email_from)], context=context)
             if partner_ids:
                 partner_id = partner_ids[0]
-        if not this.partner_id and this.partner_name:
+        if this.partner_id and this.partner_name:
             partner_ids = partner.search(cr, uid, [('name', '=', this.partner_name)], context=context)
             if partner_ids:
                 partner_id = partner_ids[0]
