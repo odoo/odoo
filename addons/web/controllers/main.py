@@ -19,6 +19,7 @@ import zlib
 from xml.etree import ElementTree
 from cStringIO import StringIO
 
+import babel.messages.pofile
 import werkzeug.utils
 import werkzeug.wrappers
 try:
@@ -492,35 +493,17 @@ def parse_context(context, session):
         return common.nonliterals.Context(session, context)
 
 
-# PO file parsing - only used to boostrap translations on the login page
-try:
-    # Use the faster PO parser from OpenERP server when available
-    from openerp.tools.translate import TinyPoFile
-    def _local_web_translations(trans_file):
-        messages = []
-        try:
-            with open(trans_file) as t_file:
-                po = TinyPoFile(t_file)
-                for _, _, _, source, value, comments in po:
-                    if "openerp-web" in comments:
-                        messages.append({'id': source, 'string': value})        
-        except Exception:
-            pass
-        return messages
-except ImportError:
-    # Otherwise fallback to Babel's slightly slower PO parser
-    import babel.messages.pofile
-    def _local_web_translations(trans_file):
-        messages = []
-        try:
-            with open(trans_file) as t_file:
-                po = babel.messages.pofile.read_po(t_file)
-        except Exception:
-            return
-        for x in po:
-            if x.id and x.string and "openerp-web" in x.auto_comments:
-                messages.append({'id': x.id, 'string': x.string})
-        return messages
+def _local_web_translations(trans_file):
+    messages = []
+    try:
+        with open(trans_file) as t_file:
+            po = babel.messages.pofile.read_po(t_file)
+    except Exception:
+        return
+    for x in po:
+        if x.id and x.string and "openerp-web" in x.auto_comments:
+            messages.append({'id': x.id, 'string': x.string})
+    return messages
 
 
 #----------------------------------------------------------
