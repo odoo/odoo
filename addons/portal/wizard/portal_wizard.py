@@ -184,36 +184,37 @@ class wizard_user(osv.osv_memory):
             @param wizard_user: browse record of model portal.wizard.user
             @return: the id of the created mail.mail record
         """
-        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context)
-        if not user.email:
+        this_context = context
+        this_user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context)
+        if not this_user.email:
             raise osv.except_osv(_('Email required'),
                 _('You must have an email address in your User Preferences to send emails.'))
 
         # determine subject and body in the portal user's language
-        portal_user = wizard_user.partner_id.user_ids[0]
-        main_context = context
-        context = dict(main_context or {}, lang=portal_user.lang)
+        url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url', context=this_context)
+        user = wizard_user.partner_id.user_ids[0]
+        context = dict(this_context or {}, lang=user.lang)
         data = {
-            'company': user.company_id.name,
+            'company': this_user.company_id.name,
             'portal': wizard_user.wizard_id.portal_id.name,
             'message': wizard_user.wizard_id.message or "",
-            'url': _("(missing url)"),
+            'url': url or _("(missing url)"),
             'db': cr.dbname,
-            'login': portal_user.login,
-            'password': portal_user.password,
-            'name': portal_user.name            
+            'login': user.login,
+            'password': user.password,
+            'name': user.name            
         }
         subject = _(WELCOME_EMAIL_SUBJECT) % data
         body = _(WELCOME_EMAIL_BODY) % data
 
         mail_mail = self.pool.get('mail.mail')
         mail_values = {
-            'email_from': user.email,
-            'email_to': portal_user.email,
+            'email_from': this_user.email,
+            'email_to': user.email,
             'subject': subject,
             'body_html': '<pre>%s</pre>' % body,
             'state': 'outgoing',
         }
-        return mail_mail.create(cr, uid, mail_values, context=main_context)
+        return mail_mail.create(cr, uid, mail_values, context=this_context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
