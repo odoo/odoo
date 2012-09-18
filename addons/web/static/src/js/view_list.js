@@ -399,10 +399,14 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
      */
     setup_columns: function (fields, grouped) {
         var registry = instance.web.list.columns;
+        var reorder = this.options.reorderable;
         this.columns.splice(0, this.columns.length);
         this.columns.push.apply(this.columns,
             _(this.fields_view.arch.children).map(function (field) {
                 var id = field.attrs.name;
+                if(field.attrs.widget == 'handle' && !reorder){
+                    field.attrs.reorderable = reorder || true;
+                }
                 return registry.for_(id, fields[id], field);
         }));
         if (grouped) {
@@ -411,9 +415,8 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
         }
 
         this.visible_columns = _.filter(this.columns, function (column) {
-            return column.invisible !== '1';
+            return column.invisible !== '1' && !column.reorderable;
         });
-
         this.aggregate_columns = _(this.visible_columns).invoke('to_aggregate');
     },
     /**
