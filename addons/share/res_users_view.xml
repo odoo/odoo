@@ -28,7 +28,9 @@
             <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <filter name="no_share" string="Regular groups only (no share groups)" icon="terp-partner" domain="[('share','=',False)]"/>
+                    <filter name="share" string="Share Groups" domain="[('share','=',True)]"/>
+                    <filter name="no_share" string="Non-Share Groups" domain="[('share','=',False)]"/>
+                    <separator orientation="vertical"/>
                 </field>
             </field>
         </record>

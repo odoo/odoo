@@ -28,8 +28,9 @@
             <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
                 <field name="name" position="after">
-                    <filter string="Portal" help="Portal groups" name="portal_groups"
-                        domain="[('is_portal','=',True)]"/>
+                    <filter name="portal" string="Portal Groups" domain="[('is_portal','=',True)]"/>
+                    <filter name="no_portal" string="Non-Portal Groups" domain="[('is_portal','=',False)]"/>
+                    <separator orientation="vertical"/>
                 </field>
             </field>
         </record>
