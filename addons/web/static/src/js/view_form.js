@@ -2753,11 +2753,8 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.render_editable();
         this.render_value();
     },
-    render_editable: function() {
-        var self = this;
-        this.$input = this.$el.find("input");
-
-        self.$input.tipsy({
+    init_error_displayer: function() {
+        this.$input.tipsy({
             title: function() {
                 return QWeb.render('Tipsy.alert', {
                     message: "No element was selected, you should create or select one from the dropdown list."
@@ -2770,9 +2767,21 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             opacity: 1,
             offset: 4,
         });
+    },
+    hide_error_displayer: function() {
+        this.$input.tipsy("hide");
+    },
+    show_error_displayer: function() {
+        this.$input.tipsy("show");
+    },
+    render_editable: function() {
+        var self = this;
+        this.$input = this.$el.find("input");
+
+        this.init_error_displayer();
 
         self.$input.on('focus', function() {
-            self.$input.tipsy("hide");
+            self.hide_error_displayer();
         });
 
         this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
@@ -2826,10 +2835,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
             }
         });
-        self.tip_def = $.Deferred();
-        self.untip_def = $.Deferred();
-        var tip_delay = 200;
-        var tip_duration = 15000;
+        self.ed_def = $.Deferred();
+        self.uned_def = $.Deferred();
+        var ed_delay = 200;
+        var ed_duration = 15000;
         var anyoneLoosesFocus = function() {
             var used = false;
             if (self.floating) {
@@ -2849,25 +2858,25 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_tipsy) {
-                self.tip_def.reject();
-                self.untip_def.reject();
-                self.tip_def = $.Deferred();
-                self.tip_def.then(function() {
-                    self.$input.tipsy("show");
+            if (used && self.get("value") === false && ! self.no_ed) {
+                self.ed_def.reject();
+                self.uned_def.reject();
+                self.ed_def = $.Deferred();
+                self.ed_def.then(function() {
+                    self.show_error_displayer();
                 });
                 setTimeout(function() {
-                    self.tip_def.resolve();
-                    self.untip_def.reject();
-                    self.untip_def = $.Deferred();
-                    self.untip_def.then(function() {
-                        self.$input.tipsy("hide");
+                    self.ed_def.resolve();
+                    self.uned_def.reject();
+                    self.uned_def = $.Deferred();
+                    self.uned_def.then(function() {
+                        self.hide_error_displayer();
                     });
-                    setTimeout(function() {self.untip_def.resolve();}, tip_duration);
-                }, tip_delay);
+                    setTimeout(function() {self.uned_def.resolve();}, ed_duration);
+                }, ed_delay);
             } else {
-                self.no_tipsy = false;
-                self.tip_def.reject();
+                self.no_ed = false;
+                self.ed_def.reject();
             }
         };
         var ignore_blur = false;
@@ -3007,13 +3016,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.focus();
     },
     _quick_create: function() {
-        this.no_tipsy = true;
-        this.tip_def.reject();
+        this.no_ed = true;
+        this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._quick_create.apply(this, arguments);
     },
     _search_create_popup: function() {
-        this.no_tipsy = true;
-        this.tip_def.reject();
+        this.no_ed = true;
+        this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
 });
