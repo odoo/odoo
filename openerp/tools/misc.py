@@ -142,6 +142,8 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
     adps = addons.module.ad_paths
     rtp = os.path.normcase(os.path.abspath(config['root_path']))
 
+    basename = name
+
     if os.path.isabs(name):
         # It is an absolute path
         # Is it below 'addons_path' or 'root_path'?
@@ -154,7 +156,7 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         else:
             # It is outside the OpenERP root: skip zipfile lookup.
             base, name = os.path.split(name)
-        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo)
+        return _fileopen(name, mode=mode, basedir=base, pathinfo=pathinfo, basename=basename)
 
     if name.replace(os.sep, '/').startswith('addons/'):
         subdir = 'addons'
@@ -172,16 +174,19 @@ def file_open(name, mode="r", subdir='addons', pathinfo=False):
         for adp in adps:
             try:
                 return _fileopen(name2, mode=mode, basedir=adp,
-                                 pathinfo=pathinfo)
+                                 pathinfo=pathinfo, basename=basename)
             except IOError:
                 pass
 
     # Second, try to locate in root_path
-    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo)
+    return _fileopen(name, mode=mode, basedir=rtp, pathinfo=pathinfo, basename=basename)
 
 
-def _fileopen(path, mode, basedir, pathinfo):
+def _fileopen(path, mode, basedir, pathinfo, basename=None):
     name = os.path.normpath(os.path.join(basedir, path))
+
+    if basename is None:
+        basename = name
     # Give higher priority to module directories, which is
     # a more common case than zipped modules.
     if os.path.isfile(name):
@@ -220,8 +225,8 @@ def _fileopen(path, mode, basedir, pathinfo):
                 pass
     # Not found
     if name.endswith('.rml'):
-        raise IOError('Report %r doesn\'t exist or deleted' % name)
-    raise IOError('File not found: %s' % name)
+        raise IOError('Report %r doesn\'t exist or deleted' % basename)
+    raise IOError('File not found: %s' % basename)
 
 
 #----------------------------------------------------------
@@ -601,10 +606,7 @@ def get_iso_codes(lang):
             lang = lang.split('_')[0]
     return lang
 
-def get_languages():
-    # The codes below are those from Launchpad's Rosetta, with the exception
-    # of some trivial codes where the Launchpad code is xx and we have xx_XX.
-    languages={
+ALL_LANGUAGES = {
         'ab_RU': u'Abkhazian / аҧсуа',
         'ar_AR': u'Arabic / الْعَرَبيّة',
         'bg_BG': u'Bulgarian / български език',
@@ -663,8 +665,8 @@ def get_languages():
         'nl_BE': u'Flemish (BE) / Vlaams (BE)',
         'oc_FR': u'Occitan (FR, post 1500) / Occitan',
         'pl_PL': u'Polish / Język polski',
-        'pt_BR': u'Portugese (BR) / Português (BR)',
-        'pt_PT': u'Portugese / Português',
+        'pt_BR': u'Portuguese (BR) / Português (BR)',
+        'pt_PT': u'Portuguese / Português',
         'ro_RO': u'Romanian / română',
         'ru_RU': u'Russian / русский язык',
         'si_LK': u'Sinhalese / සිංහල',
@@ -685,15 +687,14 @@ def get_languages():
         'th_TH': u'Thai / ภาษาไทย',
         'tlh_TLH': u'Klingon',
     }
-    return languages
 
 def scan_languages():
-    # Now it will take all languages from get languages function without filter it with base module languages
-    lang_dict = get_languages()
-    ret = [(lang, lang_dict.get(lang, lang)) for lang in list(lang_dict)]
-    ret.sort(key=lambda k:k[1])
-    return ret
+    """ Returns all languages supported by OpenERP for translation
 
+    :returns: a list of (lang_code, lang_name) pairs
+    :rtype: [(str, unicode)]
+    """
+    return sorted(ALL_LANGUAGES.iteritems(), key=lambda k: k[1])
 
 def get_user_companies(cr, user):
     def _get_company_children(cr, ids):

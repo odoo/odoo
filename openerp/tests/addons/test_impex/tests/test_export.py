@@ -245,7 +245,7 @@ class test_selection(CreatorCase):
             'translatable': True,
             'date_format': '%d.%m.%Y',
             'decimal_point': ',',
-            'thousand_sep': ' ',
+            'thousands_sep': ' ',
         })
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:
