@@ -71,6 +71,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
+        this._super.apply(this, arguments);
         return $.when();
     },
     _is_quick_create_enabled: function() {
@@ -85,6 +86,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             return false;
         return this._super(action);
     },
+    /*  add_qweb_template
+    *   select the nodes into the xml and send to extract_aggregates the nodes with TagName="field"
+    */
     add_qweb_template: function() {
         for (var i=0, ii=this.fields_view.arch.children.length; i < ii; i++) {
             var child = this.fields_view.arch.children[i];
@@ -97,6 +101,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             }
         }
     },
+    /*  extract_aggregates
+    *   extract the agggregates from the nodes (TagName="field")
+    */
     extract_aggregates: function(node) {
         for (var j = 0, jj = this.group_operators.length; j < jj;  j++) {
             if (node.attrs[this.group_operators[j]]) {
@@ -121,9 +128,15 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         }
         switch (node.tag) {
             case 'field':
-                node.tag = QWeb.prefix;
-                node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
-                this.extract_aggregates(node);
+                if(this.fields_view.fields[ node.attrs['name'] ].type == 'many2many'){
+                    node.tag =  'div';
+                    node.attrs['class'] = 'oe_kanban_many2many_tags';
+                    node.attrs['model'] = this.fields_view.fields[node.attrs['name']].relation;
+                    node.attrs['t-att-data'] = 'record.' + node.attrs['name'] + '.raw_value';
+                }else {
+                    node.tag = QWeb.prefix;
+                    node.attrs[QWeb.prefix + '-esc'] = 'record.' + node.attrs['name'] + '.value';
+                }
                 break;
             case 'button':
             case 'a':
@@ -160,6 +173,37 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         if (node.children) {
             for (var i = 0, ii = node.children.length; i < ii; i++) {
                 this.transform_qweb_template(node.children[i]);
+            }
+        }
+    },
+    /* widget for list of tags/categories...
+    */
+    transform_widget_many2many: function(){
+        var self=this,
+            arg={};
+        // select all widget
+        self.$el.find(".oe_kanban_many2many_tags").each(function(){
+            var model = $(this).attr("model");
+            var data = $(this).attr("data");
+            var list = data.split(",");
+            //select all id (per model)
+            if(!arg[model]) arg[model]=[];
+            for(var t=0;t<list.length;t++) if(list[t]!="") arg[model].push( list[t] );
+        });
+
+        // only one request by model
+        for(var model in arg){
+            if(arg[model].length>0){
+                var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
+                dataset.name_get(_.uniq( arg[model] )).then(
+                    function(result) {
+                        for(var t=0;t<result.length;t++){
+                            self.$el.find(".oe_kanban_many2many_tags[model='" + model + "']")
+                                .filter(function(){ return this.getAttribute("data").match(new RegExp('(^|,)'+result[t][0]+'(,|$)')); })
+                                .append('<span class="oe_tag" data-list_id="' + result[t][0] +'"">'+result[t][1]+'</span>');
+                        }
+                    }
+                );
             }
         }
     },
@@ -350,6 +394,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         } else {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
+        this.transform_widget_many2many();
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
@@ -762,7 +807,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             }
         });
 
-        if (this.$el.find('.oe_kanban_global_click').length) {
+        if (this.$el.find('.oe_kanban_global_click,.oe_kanban_global_click_edit').length) {
             this.$el.on('click', function(ev) {
                 if (!ev.isTrigger && !$(ev.target).data('events')) {
                     var trigger = true;
@@ -803,8 +848,15 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
             });
         }
     },
+    /* actions when user click on the block with a specific class
+     *  open on normal view : oe_kanban_global_click
+     *  open on form/edit view : oe_kanban_global_click_edit
+     */
     on_card_clicked: function(ev) {
-        this.view.open_record(this.id);
+        if(this.$el.find('.oe_kanban_global_click_edit').size()>0)
+            this.do_action_edit();
+        else
+            this.do_action_open();
     },
     setup_color_picker: function() {
         var self = this;
