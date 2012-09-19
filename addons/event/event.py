@@ -308,7 +308,7 @@ class event_event(osv.osv):
 
     def button_done_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="event_subtype_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
