@@ -117,12 +117,10 @@
       <field name="arch" type="xml">
         <form string="Note" version="7.0">
           <header>
+            <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
             <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
           <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
-          <group groups="note.group_note_tags" col="2">
-            <field name="tag_ids" widget="many2many_tags"/>
-          </group>
           <field name="message_follower_ids" widget="mail_followers"/>
           <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
         </form>
