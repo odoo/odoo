@@ -677,3 +677,30 @@ class test_mail(TestMailMockups):
         msg1.refresh()
         # Test: msg1 has Bert as voter
         self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
+
+    def test_70_read_unread(self):
+        """ Test designed for the message read or unread feature. """
+        cr, uid = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        user_admin = self.res_users.browse(cr, uid, uid)
+        
+        # 0 - Admin
+        p_a_id = user_admin.partner_id.id
+        # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
+        p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
+        # 2 - Carine Poilvache, with email, should never receive emails
+        p_c_id = self.res_partner.create(cr, uid, {'name': 'Carine Poilvache', 'email': 'c@c', 'notification_email_send': 'email'})
+        # 3 - Dédé Grosbedon, without email, to test email verification; should receive emails for every message
+        p_d_id = self.res_partner.create(cr, uid, {'name': 'Dédé Grosbedon', 'notification_email_send': 'all'})
+
+        # Subscribe #1, #2
+        group_pigs.message_subscribe([p_b_id, p_c_id])
+        
+        msg1 = group_pigs.message_post(body='My Body', subject='1')
+        context = {'default_model': 'mail.group', 'default_res_id': [self.group_pigs_id]}
+        self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2, limit=10,context=context)
+        if not context.has_key('mail_keep_unread'):
+            notif_ids = self.mail_notification.search(cr, uid, [('partner_id', '=', user_admin.partner_id.id),('message_id', '=', msg1)], context=context)
+            na_count = len(notif_ids)
+            self.assertTrue(len(notif_ids), 'unread notifications')
+            self.mail_notification.write(cr, uid, notif_ids, {'read': True}, context=context)
