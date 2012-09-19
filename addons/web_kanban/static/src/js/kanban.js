@@ -551,7 +551,9 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
 
         this.$el.find('.oe_kanban_add').click(function () {
-            if (self.quick) { return; }
+            if (self.quick) {
+                return self.quick.trigger('close');
+            }
             var ctx = {};
             ctx['default_' + self.view.group_by] = self.value;
             self.quick = new (get_class(self.view.quick_create_class))(this, self.dataset, ctx, true)
