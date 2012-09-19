@@ -1476,15 +1476,15 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-class mail_message(osv.osv):
-    _inherit = 'mail.message'
+class mail_mail(osv.osv):
+    _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'sale.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+        if mail.model == 'sale.order':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+            wf_service.trg_validate(uid, 'sale.order', mail.res_id, 'quotation_sent', cr)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
-mail_message()
+mail_mail()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
