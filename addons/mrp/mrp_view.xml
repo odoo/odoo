@@ -13,7 +13,7 @@
             parent="base.menu_mrp_root"
             sequence="1"/>
 
-        <menuitem name="Master Data"
+        <menuitem name="Products"
             id="menu_mrp_bom"
             parent="base.menu_mrp_root"
             sequence="5"/>
@@ -521,6 +521,10 @@
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
             sequence="10"/>
+       <menuitem name="Products" 
+            id="menu_procurement_partner_contact_form" 
+            action="product.product_normal_action_puchased"
+            parent="menu_mrp_bom"/>
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
@@ -644,7 +648,7 @@
                             <field name="date_planned"/>
                         </group>
                         <group>
-                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
+                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <field name="user_id"/>
                             <field name="origin"/>
