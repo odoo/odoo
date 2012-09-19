@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <openerp>
 	<data>
-		<menuitem id="hr_fleet_management_menu" name="Fleet Management" />
-	
-		<record model="ir.actions.act_window" id="car_list_action">
-			<field name="name">Cars</field>
-			<field name="res_model">car_fleet_management.car</field>
+
+		<record model='ir.ui.view' id='fleet_vehicle_model_form'>
+			<field name="name">fleet.vehicle.model.form</field>
+			<field name="model">fleet.vehicle.model</field>
+			<field name="arch" type="xml">
+				<form string="Model" version="7.0">
+					<field name="name" />
+				</form>
+			</field>
+		</record>	
+
+		<record model='ir.ui.view' id='fleet_vehicle_model_tree'>
+			<field name="name">fleet.vehicle.model.tree</field>
+			<field name="model">fleet.vehicle.model</field>
+			<field name="arch" type="xml">
+				<tree string="Model" version="7.0">
+					<field name="name" />
+				</tree>
+			</field>
+		</record>
+		<record model='ir.actions.act_window' id='fleet_vehicle_model_act'>
+			<field name="name">Vehicle Model</field>
+			<field name="res_model">fleet.vehicle.model</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
-		<menuitem id="car_menu" name="Cars" parent="hr_fleet_management_menu" action="car_list_action" />
+		<menuitem name="Fleet Management" id="menu_root" />
+		<menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
+		<menuitem action="fleet_vehicle_model_act" parent="fleet_vehicles" id="fleet_vehicle_model_menu" />
 	</data>
 </openerp>

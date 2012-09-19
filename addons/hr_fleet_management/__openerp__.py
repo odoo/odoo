@@ -31,7 +31,7 @@
 	- managing cars insurance
 	- remind insurance renewing
 	""",
-	'data': ['hr_fleet_management_view.xml'],
+	'data': ['view/hr_fleet_management_view.xml'],
 	'demo': [],
 	'installable': True,
 	'auto_install': False,
