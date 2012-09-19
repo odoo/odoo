@@ -30,19 +30,31 @@ from openerp import SUPERUSER_ID
 from base.res.res_partner import _lang_get
 _logger = logging.getLogger(__name__)
 
-# welcome email sent to new portal users (note that calling tools.translate._
-# has no effect except exporting those strings for translation)
+# welcome/goodbye email sent to portal users
+# (note that calling '_' has no effect except exporting those strings for translation)
 WELCOME_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
 WELCOME_EMAIL_BODY = _("""Dear %(name)s,
 
-You have been created an OpenERP account of %(portal)s at %(url)s.
+You have been given access to %(portal)s at %(url)s.
 
 Your login account data is:
 Database: %(db)s
 User:     %(login)s
 Password: %(password)s
 
-%(message)s
+%(welcome_message)s
+
+--
+OpenERP - Open Source Business Applications
+http://www.openerp.com
+""")
+
+GOODBYE_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
+GOODBYE_EMAIL_BODY = _("""Dear %(name)s,
+
+Your access to %(portal)s has been withdrawn.
+
+%(goodbye_message)s
 
 --
 OpenERP - Open Source Business Applications
@@ -78,8 +90,10 @@ class wizard(osv.osv_memory):
         'portal_id': fields.many2one('res.groups', domain=[('is_portal', '=', True)], required=True,
             string='Portal', help="The portal that users can be added in or removed from."),
         'user_ids': fields.one2many('portal.wizard.user', 'wizard_id', string='Users'),
-        'message': fields.text(string='Invitation Message',
-            help="This text is included in the welcome email sent to the users."),
+        'welcome_message': fields.text(string='Invitation Message',
+            help="This text is included in the email sent to new users of the portal."),
+        'goodbye_message': fields.text(string='Withdrawal Message',
+            help="This text is included in the email sent to users withdrawn from the portal."),
     }
 
     def _default_portal(self, cr, uid, context):
@@ -154,16 +168,14 @@ class wizard_user(osv.osv_memory):
                     self._send_email(cr, uid, wizard_user, context)
             else:
                 # remove the user (if it exists) from the portal group
-                if user:
-                    if portal in user.groups_id:
-                        if len(user.groups_id) == 1:
-                            # delete or deactivate the user
-                            try:
-                                user.unlink()
-                            except:
-                                user.write({'groups_id': [(3, portal.id)], 'active': False})
-                        else:
-                            user.write({'groups_id': [(3, portal.id)]})
+                if user and (portal in user.groups_id):
+                    # if user belongs to portal only, deactivate it
+                    if len(user.groups_id) <= 1:
+                        user.write({'groups_id': [(3, portal.id)], 'active': False})
+                    else:
+                        user.write({'groups_id': [(3, portal.id)]})
+                    wizard_user = self.browse(cr, SUPERUSER_ID, wizard_user.id, context)
+                    self._send_email(cr, uid, wizard_user, context)
 
     def _retrieve_user(self, cr, uid, wizard_user, context=None):
         """ retrieve the (possibly inactive) user corresponding to wizard_user.partner_id
@@ -196,7 +208,7 @@ class wizard_user(osv.osv_memory):
         return res_users.browse(cr, uid, user_id, context)
 
     def _send_email(self, cr, uid, wizard_user, context=None):
-        """ send invitation email to a new portal user
+        """ send notification email to a new/former portal user
             @param wizard_user: browse record of model portal.wizard.user
             @return: the id of the created mail.mail record
         """
@@ -208,20 +220,25 @@ class wizard_user(osv.osv_memory):
 
         # determine subject and body in the portal user's language
         url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url', context=this_context)
-        user = wizard_user.partner_id.user_ids[0]
+        user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
         context = dict(this_context or {}, lang=user.lang)
         data = {
             'company': this_user.company_id.name,
             'portal': wizard_user.wizard_id.portal_id.name,
-            'message': wizard_user.wizard_id.message or "",
+            'welcome_message': wizard_user.wizard_id.welcome_message or "",
+            'goodbye_message': wizard_user.wizard_id.goodbye_message or "",
             'url': url or _("(missing url)"),
             'db': cr.dbname,
             'login': user.login,
             'password': user.password,
             'name': user.name            
         }
-        subject = _(WELCOME_EMAIL_SUBJECT) % data
-        body = _(WELCOME_EMAIL_BODY) % data
+        if wizard_user.in_portal:
+            subject = _(WELCOME_EMAIL_SUBJECT) % data
+            body = _(WELCOME_EMAIL_BODY) % data
+        else:
+            subject = _(GOODBYE_EMAIL_SUBJECT) % data
+            body = _(GOODBYE_EMAIL_BODY) % data
 
         mail_mail = self.pool.get('mail.mail')
         mail_values = {

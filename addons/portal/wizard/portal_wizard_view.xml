@@ -25,7 +25,10 @@
                         If necessary, you can fix any contact's email address directly in the list.
                     </div>
                     <field name="user_ids"/>
-                    <field name="message" placeholder="This text will be included in the welcome email sent to users."/>
+                    <field name="welcome_message"
+                        placeholder="This text is included in the email sent to new portal users."/>
+                    <field name="goodbye_message"
+                        placeholder="This text is included in the email sent to users withdrawn from the portal."/>
                     <footer>
                         <button string="Apply" name="action_apply" type="object" class="oe_highlight"/>
                         or
