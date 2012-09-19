@@ -83,49 +83,41 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
-        
-        <!-- SUBTYPE -->
-        <record id="mail.project_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+
+        <!-- mail: subtypes -->
+        <record id="mail.mt_project_new" model="mail.message.subtype">
+            <field name="name">created</field>
             <field name="res_model">project.project</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.task_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
-            <field name="res_model">project.task</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.project_subtype_open" model="mail.message.subtype">
-            <field name="name">open</field>
-            <field name="res_model">project.project</field>
-        </record>
-        <record id="mail.project_subtype_pending" model="mail.message.subtype">
-            <field name="name">pending</field>
-            <field name="res_model">project.project</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.project_subtype_closed" model="mail.message.subtype">
+        <record id="mail.mt_project_closed" model="mail.message.subtype">
             <field name="name">closed</field>
             <field name="res_model">project.project</field>
         </record>
-        <record id="mail.task_subtype_closed" model="mail.message.subtype">
+        <record id="mail.mt_project_canceled" model="mail.message.subtype">
+            <field name="name">canceled</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mail.mt_project_stage" model="mail.message.subtype">
+            <field name="name">stage changed</field>
+            <field name="res_model">project.task</field>
+        </record>
+
+        <record id="mail.mt_task_new" model="mail.message.subtype">
+            <field name="name">created</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mail.mt_task_closed" model="mail.message.subtype">
             <field name="name">closed</field>
             <field name="res_model">project.task</field>
         </record>
-        <record id="mail.project_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">project.project</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.task_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
+        <record id="mail.mt_task_canceled" model="mail.message.subtype">
+            <field name="name">canceled</field>
             <field name="res_model">project.task</field>
-            <field name="default" eval="False"/>
         </record>
-        <record id="mail.task_subtype_stage_change" model="mail.message.subtype">
-            <field name="name">stage change</field>
+        <record id="mail.mt_task_change" model="mail.message.subtype">
+            <field name="name">stage changed</field>
             <field name="res_model">project.task</field>
-            <field name="default" eval="False"/>
         </record>
 
         <!-- notify all employees of module installation -->

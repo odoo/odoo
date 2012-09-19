@@ -514,23 +514,19 @@ def Project():
         return project_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype_xml_id="project_subtype_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), subtype_xml_id="mt_project_new", context=context)
 
     def set_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>opened</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_open", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>opened</b>."), context=context)
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
-        message = _("Project is now <b>pending</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_pending", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project is now <b>pending</b>."), context=context)
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>cancelled</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_cancelled", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>canceled</b>."), context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>closed</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="project_subtype_closed", context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>closed</b>."), subtype_xml_id="mt_project_closed", context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
@@ -1231,14 +1227,14 @@ class task(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype_xml_id="task_subtype_stage_change", context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
+            subtype_xml_id="mt_task_change", context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype_xml_id="task_subtype_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), subtype_xml_id="mt_task_new", context=context)
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
-        msg = _('Task has been set as <b>draft</b>.')
-        return self.message_post(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), subtype_xml_id="mt_task_new", context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):
