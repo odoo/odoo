@@ -16,24 +16,5 @@
             <field name="customer_name">50%</field>
             <field name="factor">50.0</field>
         </record>
-        <!-- Sub Type Data -->
-        <record id="mail.analytic_account_subtype_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
-        <record id="mail.analytic_account_subtype_pending" model="mail.message.subtype">
-            <field name="name">pending</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.analytic_account_subtype_open" model="mail.message.subtype">
-            <field name="name">open</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
-        <record id="mail.analytic_account_invoice_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="default" eval="False"/>
-        </record>
     </data>
 </openerp>
