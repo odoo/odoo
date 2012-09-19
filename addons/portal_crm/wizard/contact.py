@@ -88,11 +88,12 @@ class crm_contact_us(osv.TransientModel):
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """
-        return {'type': 'ir.actions.act_window',
-                'view_mode': 'form',
-                'view_type': 'form',
-                'res_model': self._name,
-                'res_id': ids[0],
-                'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_crm', 'wizard_contact_form_view_thanks')[1],
-                'target': 'inline'
-               }
+        return {
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'view_type': 'form',
+            'res_model': self._name,
+            'res_id': ids[0],
+            'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_crm', 'wizard_contact_form_view_thanks')[1],
+            'target': 'inline',
+        }
