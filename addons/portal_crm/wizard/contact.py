@@ -97,3 +97,11 @@ class crm_contact_us(osv.TransientModel):
             'view_id': self.pool.get('ir.model.data').get_object_reference(cr, uid, 'portal_crm', 'wizard_contact_form_view_thanks')[1],
             'target': 'inline',
         }
+
+    def _needaction_domain_get(self, cr, uid, context=None):
+        """
+        This model doesn't need the needactions mechanism inherited from
+        crm_lead, so simply override the method to return an empty domain
+        and, therefore, 0 needactions.
+        """
+        return False
