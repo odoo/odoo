@@ -26,27 +26,19 @@ From the Manufacturing Settings, you can choose to compute production schedules 
             <field name="number_next">1</field>
             <field name="number_increment">1</field>
         </record>
-        
-        <record id="mail.mrp_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+
+        <!-- mail: subtypes -->
+        <record id="mail.mt_mrp_order_new" model="mail.message.subtype">
+            <field name="name">created</field>
             <field name="res_model">mrp.production</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mrp_subtype_ready" model="mail.message.subtype">
-            <field name="name">ready</field>
+        <record id="mail.mt_mrp_order_canceled" model="mail.message.subtype">
+            <field name="name">canceled</field>
             <field name="res_model">mrp.production</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mrp_subtype_production" model="mail.message.subtype">
-            <field name="name">production</field>
-            <field name="res_model">mrp.production</field>
-        </record>
-        <record id="mail.mrp_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">mrp.production</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mrp_subtype_closed" model="mail.message.subtype">
+        <record id="mail.mt_mrp_order_closed" model="mail.message.subtype">
             <field name="name">closed</field>
             <field name="res_model">mrp.production</field>
             <field name="default" eval="False"/>

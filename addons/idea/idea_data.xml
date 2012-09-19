@@ -16,25 +16,6 @@
             <field name="groups_id" eval="[(4,ref('base.group_tool_user'))]"/>
         </record>
 
-        <!-- SUBTYPE -->
-        <record id="mail.idea_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
-            <field name="res_model">idea.idea</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.idea_subtype_open" model="mail.message.subtype">
-            <field name="name">open</field>
-            <field name="res_model">idea.idea</field>
-        </record>
-        <record id="mail.idea_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">idea.idea</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.idea_subtype_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">idea.idea</field>
-        </record>
     </data>
 </openerp>
 

@@ -352,44 +352,42 @@ class hr_holidays(osv.osv):
     def needaction_domain_get(self, cr, uid, ids, context=None):
         # to be tested, otherwise convert into employee_id in ...
         emp_obj = self.pool.get('hr.employee')
-        empids = emp_obj.search(cr, uid, [('parent_id.user_id','=',uid)], context=context)
-        dom = [
-            '&', ('state','=','confirm'),('employee_id', 'in', empids)
-        ]
+        empids = emp_obj.search(cr, uid, [('parent_id.user_id', '=', uid)], context=context)
+        dom = ['&', ('state', '=', 'confirm'), ('employee_id', 'in', empids)]
         # if this user is a hr.manager, he should do second validations
         if self.pool.get('res.users').has_group(cr, uid, 'base.group_hr_manager'):
-            dom = ['|'] + dom + [ ('state','=','validate1') ]
+            dom = ['|'] + dom + [('state', '=', 'validate1')]
         return dom
 
     def create_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, ids, 
-                _("The request has been <b>created</b> and is waiting confirmation."),subtype_xml_id="hr_holidays_subtype_new", context=context)
+            self.message_post(cr, uid, ids,
+                _("The request has been <b>created</b> and is waiting confirmation."), context=context)
         return True
-    
+
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), context=context)
-    
+                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), subtype_xml_id="mt_holidays_confirm", context=context)
+
     def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id],
                 _("The request has been <b>approved</b>. A second validation is necessary and is now pending."), context=context)
-            
+
     def holidays_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             if obj.double_validation:
-                self.message_post(cr, uid, [obj.id], 
+                self.message_post(cr, uid, [obj.id],
                     _("The request has been <b>double validated</b>. The validation process is now over."), context=context)
             else:
                 self.message_post(cr, uid, [obj.id],
-                    _("The request has been <b>approved</b>. The validation process is now over."), subtype_xml_id="hr_holidays_subtype_approved", context=context)
-    
+                    _("The request has been <b>approved</b>. The validation process is now over."), subtype_xml_id="mt_holidays_closed", context=context)
+
     def holidays_refuse_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>refused</b>. The validation process is now over."), subtype_xml_id="hr_holidays_subtype_refused", context=context)
+                _("The request has been <b>refused</b>. The validation process is now over."), subtype_xml_id="mt_holidays_refused", context=context)
 
 
 class resource_calendar_leaves(osv.osv):
