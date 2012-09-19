@@ -423,6 +423,9 @@ class product_pricelist_item(osv.osv):
             readonly=True, relation='res.company', string='Company', store=True)
     }
 
+    _sql_constraints = [
+        ('check_margin', 'CHECK (price_min_margin <= price_max_margin)', 'Minimum Margin must be lower than Maximum Margin !'),
+    ]
     _constraints = [
         (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id'])
     ]
