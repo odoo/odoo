@@ -40,13 +40,12 @@
                        <button name="ship_corrected" states="shipping_except" string="Ignore Exception"/>
                    </xpath>
                    <xpath expr="//button[@name='action_button_confirm']" position="after">
-                       <button name="action_view_invoice" string="Open Invoice" type="object" class="oe_highlight"
-                            attrs="{'invisible': ['|','|',('state', '!=','progress'), ('invoiced', '=', True),('order_policy','=','picking')]}"/>
+                       <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
+                           attrs="{'invisible': [('invoice_exists', '=', False)]}"/>
                    </xpath>
-                    <xpath expr="//button[@name='action_view_invoice']" position="after">
-                       <button name="action_view_delivery" string="Open Delivery Order" type="object" class="oe_highlight"
-                                 attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>
-                   </xpath>                   
+                   <xpath expr="//button[@name='action_view_invoice']" position="after">
+                       <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
+                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>                   </xpath>                   
                     <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel"/>
                     </xpath>
@@ -70,6 +69,7 @@
                    </field>
                    <field name='invoiced' position="after">
                        <field name="shipped"/>
+                       <field name="invoice_exists" invisible="1"/>
                    </field>
                    <field name="invoice_ids" position="after">
                        <separator string="Delivery Orders"/>

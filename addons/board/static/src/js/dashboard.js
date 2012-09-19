@@ -24,6 +24,10 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
             scroll: false
         }).bind('sortstop', self.do_save_dashboard);
 
+        var old_title = this.__parentedParent.get('title');
+        this.__parentedParent.on_record_loaded.add_last(function(){
+            self.__parentedParent.set({ 'title' : old_title});
+        });
         // Events
         this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
         this.$el.find('.oe_dashboard_link_change_layout').click(this.on_change_layout);
@@ -165,8 +169,6 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         this.rpc('/web/view/add_custom', {
             view_id: this.view.fields_view.view_id,
             arch: arch
-        }, function() {
-            self.$el.find('.oe_dashboard_link_reset').show();
         });
     },
     on_load_action: function(result, index, action_attrs) {

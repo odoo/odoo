@@ -103,6 +103,14 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
+    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = False
+            if sale.invoice_ids:
+                res[sale.id] = True
+        return res
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -114,7 +122,7 @@ class sale_order(osv.osv):
                     if invoice.state != 'paid':
                         res[sale.id] = False
                         break
-            if not invoice_existence:
+            if not invoice_existence or sale.state == 'manual':
                 res[sale.id] = False
         return res
 
@@ -191,6 +199,8 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
+        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
@@ -405,35 +415,23 @@ class sale_order(osv.osv):
         This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
-        result = {
-            'name': _('Cutomer Invoice'),
-            'view_type': 'form',
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-        }
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
         #compute the number of invoices to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             inv_ids += [invoice.id for invoice in so.invoice_ids]
         #choose the view_mode accordingly
         if len(inv_ids)>1:
-            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-            result.update({
-                'view_mode': 'tree,form',
-                'res_id': inv_ids or False
-            })
+            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            result.update({
-                'view_mode': 'form',
-                'res_id': inv_ids and inv_ids[0] or False,
-            })
-        result.update(view_id = res and res[1] or False)
+            result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
         return result
-
 
     def test_no_product(self, cr, uid, order, context):
         for line in order.order_line:
@@ -628,7 +626,7 @@ class sale_order(osv.osv):
             'context': ctx,
             'nodestroy': True,
         }
-        
+
     def action_done(self, cr, uid, ids, context=None):
         self.done_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
