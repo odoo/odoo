@@ -270,9 +270,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         if (this.$buttons) {
             this.$buttons.show();
         }
-        if (this.$pager) {
-            this.$pager.show();
-        }
         this.$el.show().css({
             opacity: '0',
             filter: 'alpha(opacity = 0)'
@@ -408,7 +405,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$pager.remove();
         if (this.get("actual_mode") === "create")
             return;
-        this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
+        this.$pager = $(QWeb.render("FormView.pager", {'widget':self})).hide();
         if (this.options.$pager) {
             this.$pager.appendTo(this.options.$pager);
         } else {
@@ -421,8 +418,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
-        this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2);
-        if (hide_index || this.dataset.ids.length <= 1) {
+        this.$pager.toggle(this.dataset.ids.length > 1);
+        if (hide_index) {
             $(".oe_form_pager_state", this.$pager).html("");
         } else {
             $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
