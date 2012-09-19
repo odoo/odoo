@@ -59,19 +59,12 @@ class note_note(osv.osv):
         rec_id = self.create(cr, uid, {'memo': name}, context=context)
         return self.name_get(cr, uid, [rec_id], context)[0]
 
-    def _from_xml(self, mappings):
-        return chr(int( mappings.group(1) ))
-    
-
     #read the first line (convert hml into text)
     def _get_note_first_line(self, cr, uid, ids, name="", args={}, context=None):
         res = {}
         for note in self.browse(cr, uid, ids, context=context):
-            text_note = (note.memo or '').strip().split('\n')[0]
-            text_note = re.sub(r'(\S?)(<br[ /]*>|<[/]?p>|<[/]?div>|<table>)[\s\S]*',r'\1',text_note)
-            text_note = re.sub(r'<[^>]+>','',text_note)
-            text_note = html2plaintext(text_note)
-            res[note.id] = text_note
+            res[note.id] = (note.memo and html2plaintext(note.memo) or "").strip().replace('*','').split("\n")[0]
+
         return res
 
     #unactivate a sticky note and record the date

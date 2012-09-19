@@ -20,15 +20,16 @@
 ##############################################################################
 
 {
-    'name': 'Contacts',
+    'name': 'Address Book',
     'version': '1.0',
     'category': 'Tools',
     'description': """
 This module gives you a quick view of your address book, accessible from your home page.
+You can track your suppliers, customers and other contacts.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'summary': 'Contacts, Address book',
+    'summary': 'Contacts, People and Companies',
     'depends': [
         'mail',
     ],
