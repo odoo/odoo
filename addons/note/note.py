@@ -22,6 +22,7 @@
 from openerp.osv import osv, fields
 from tools.translate import _
 import re
+from openerp.tools.misc import html2plaintext
 
 class note_stage(osv.osv):
     """ Category of Note """
@@ -65,23 +66,24 @@ class note_note(osv.osv):
             text_note = (note.memo or '').strip().split('\n')[0]
             text_note = re.sub(r'(\S?)(<br[ /]*>|<[/]?p>|<[/]?div>|<table>)[\s\S]*',r'\1',text_note)
             text_note = re.sub(r'<[^>]+>','',text_note)
+            text_note = html2plaintext(text_note)
             res[note.id] = text_note
         return res
 
     #unactivate a sticky note and record the date
     def onclick_note_is_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, { 'active' : False, 'date_done' : fields.date.today() })
+        self.write(cr, uid, ids, { 'open' : False, 'date_done' : fields.date.today() })
         self.message_post(cr, uid, ids[0], body='Note is done.', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
         return False
 
     #activate a note
     def onclick_note_not_done(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'active' : True})
+        self.write(cr, uid, ids, {'open' : True})
         self.message_post(cr, uid, ids[0], body='Note has been activated.', subject=False, 
             type='notification', parent_id=False, attachments=None, context=context)
         return False
-
+	
     #used for undisplay the follower if it's the current user
     def _get_my_current_partner(self, cr, uid, ids, name, args, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
@@ -119,14 +121,14 @@ class note_note(osv.osv):
             type='many2one', 
             relation='note.stage'),
         'stage_ids': fields.many2many('note.stage','note_stage_rel','note_id','stage_id','Stages of Users'),
-        'active': fields.boolean('Active'),
+        'open': fields.boolean('Active'),
         'date_done': fields.date('Date done'),
         'color': fields.integer('Color Index'),
         'tag_ids' : fields.many2many('note.tag','note_tags_rel','note_id','tag_id','Tags'),
         'current_partner_id' : fields.function(_get_my_current_partner),
     }
     _defaults = {
-        'active' : 1,
+        'open' : 1,
         'stage_id' : _get_default_stage_id,
     }
     _order = 'sequence'
