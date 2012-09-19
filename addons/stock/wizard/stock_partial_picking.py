@@ -99,13 +99,12 @@ class stock_partial_picking(osv.osv_memory):
         res = super(stock_partial_picking, self).default_get(cr, uid, fields, context=context)
         picking_ids = context.get('active_ids', [])
         active_model = context.get('active_model')
-
         if active_model == 'purchase.order':
             for purchase_order in self.pool.get('purchase.order').browse(cr, uid, picking_ids, context=context):
-                picking_ids = [picking_id.id for picking_id in purchase_order.picking_ids]
+                picking_ids = [picking_id.id for picking_id in purchase_order.picking_ids if picking_id.type == 'in' and picking_id.state not in ('done', 'cancel')]
         elif active_model == 'sale.order':
             for sale_order in self.pool.get('sale.order').browse(cr, uid, picking_ids, context=context):
-                picking_ids = [picking.id for picking in sale_order.picking_ids]
+                picking_ids = [picking.id for picking in sale_order.picking_ids if picking_id.type == 'out' and picking_id.state not in ('done', 'cancel')]
 
         if not picking_ids or len(picking_ids) != 1:
             # Partial Picking Processing may only be done for one picking at a time
