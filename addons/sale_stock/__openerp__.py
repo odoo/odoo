@@ -54,7 +54,7 @@ The Dashboard for the Sales Manager will include
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': [],
+    'images': ['images/deliveries_to_invoice.jpeg'],
     'depends': ['sale', 'stock', 'procurement'],
     'init_xml': [],
     'update_xml': ['security/sale_stock_security.xml',

@@ -276,11 +276,7 @@
                         </page>
                         <page string="Other Information" groups="base.group_user">
                             <group>
-                                <group name="logistics">
-                                    <field name="order_policy" readonly="1"/>
-                                    <field name="invoice_quantity" invisible="True"/>
-                                </group>
-                                <group groups="base.group_user">
+                                <group name="sales_person" groups="base.group_user">
                                     <field name="user_id"/>
                                     <field groups="base.group_no_one" name="origin"/>
                                 </group>
