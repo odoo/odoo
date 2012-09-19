@@ -83,13 +83,13 @@
 
 
         <!-- Project Phase -->
-        <act_window id="act_project_phases"
-            name="Phases"
-            src_model="project.project"
-            res_model="project.phase"
-            view_type="form"
-            view_mode="tree,form"
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"/>
+
+        <record id="act_project_phases" model="ir.actions.act_window">
+            <field name="res_model">project.phase</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+        </record>
 
         <record id="project_phase_form" model="ir.ui.view">
             <field name="name">Inherit project form : Phase</field>
@@ -123,6 +123,13 @@
                 </xpath>
             </field>
         </record>
+        
+        <record id="project_phase_task_list" model="ir.actions.act_window">
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}</field>
+        </record>
 
         <record id="view_project_phase_form" model="ir.ui.view">
             <field name="name">project.phase.form</field>
@@ -138,6 +145,7 @@
                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done" statusbar_colors='{"pending":"blue"}'/>
                 </header>
                 <sheet>
+                    <button name="%(project_phase_task_list)d" string="Related Tasks" type="action" class="oe_right"/>
                     <div class="oe_title">
                         <label for="name" class="oe_edit_only"/>
                         <h1><field name="name"/></h1>
@@ -335,14 +343,6 @@
                 </field>
             </field>
         </record>
-
-        <act_window
-            context="{'search_default_phase_id': [active_id], 'default_phase_id' : active_id}"
-            id="project_phase_task_list"
-            name="Related Tasks"
-            res_model="project.task"
-            src_model="project.phase"
-            view_mode="tree,form"/>
 
         <record id="analytic_account_inherited_phase_form" model="ir.ui.view">
             <field name="name">account.analytic.account.phase.form.inherit</field>

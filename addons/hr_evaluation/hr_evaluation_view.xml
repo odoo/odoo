@@ -409,12 +409,18 @@
                     'default_subject': 'Reminder to fill up Survey'}"/>
 
       <!-- Appraisal Interviews Button on Employee Form -->
-      <act_window
+      <!--act_window
         context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
         id="act_hr_employee_2_hr__evaluation_interview"
         name="Appraisal Interviews"
         res_model="hr.evaluation.interview"
-        src_model="hr.employee"/>
+        src_model="hr.employee"/-->
+      <record id="act_hr_employee_2_hr__evaluation_interview" model="ir.actions.act_window">
+          <field name="res_model">hr.evaluation.interview</field>
+          <field name="view_type">form</field>
+          <field name="view_mode">tree,form</field>
+          <field name="context">{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}</field>
+      </record>
 
     </data>
 </openerp>
