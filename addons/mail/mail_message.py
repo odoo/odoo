@@ -132,6 +132,8 @@ class mail_message(osv.Model):
         'unread': fields.function(_get_unread, fnct_search=_search_unread,
             type='boolean', string='Unread',
             help='Functional field to search for unread messages linked to uid'),
+        'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
+            help='Users that voted for this message'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -151,11 +153,35 @@ class mail_message(osv.Model):
     }
 
     #------------------------------------------------------
+    # Vote/Like
+    #------------------------------------------------------
+
+    def vote_toggle(self, cr, uid, ids, user_ids=None, context=None):
+        ''' Toggles voting. Done as SUPERUSER_ID because of write access on
+            mail.message not always granted. '''
+        if not user_ids:
+            user_ids = [uid]
+        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
+            for user_id in user_ids:
+                has_voted = user_id in message.get('vote_user_ids')
+                if not has_voted:
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
+                else:
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
+        return True
+
+    #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
+        has_voted = False
+        vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
+        for vote in vote_ids:
+            if vote[0] == uid:
+                has_voted = True
+                break
         # TDE TEMP: use SUPERUSER_ID
         # attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, SUPERUSER_ID, [x.id for x in msg.attachment_ids], context=context)]
         attachment_ids = []
@@ -179,6 +205,8 @@ class mail_message(osv.Model):
             'author_user_id': author_user_id,
             'partner_ids': partner_ids,
             'child_ids': [],
+            'vote_user_ids': vote_ids,
+            'has_voted': has_voted
         }
 
     def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):

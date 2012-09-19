@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
   <data>
-
     <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
 
     <!-- note Stage Form View -->
@@ -51,7 +50,7 @@
           <field name="sequence"/>
           <field name="name"/>
           <field name="stage_id"/>
-          <field name="active"/>
+          <field name="open"/>
           <field name="memo"/>
           <field name="date_done"/>
           <field name="current_partner_id"/>
@@ -65,8 +64,8 @@
               <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card #{record.group_fancy==1 ? 'oe_kanban_card_fancy' : ''}">
                 <div class="oe_dropdown_kanban">
                   <span>
-                    <a name="onclick_note_is_done" type="object" t-if="record.active.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.active.raw_value" class="oe_e">è</a>
+                    <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">è</a>
                   </span>
 
                   <!-- dropdown menu -->
@@ -78,13 +77,12 @@
                     </ul>
                   </div>
                 </div>
-
                 <!-- kanban note -->
-                <div t-attf-class="oe_kanban_content #{record.active.raw_value ? '' : 'note_text_line_through'}">
+                <div t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </div>
-                <div widget="many2many_tags" t-att-data="record.tag_ids.raw_value" model="note.tag"/>
+                <field name="tag_ids"/>
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                     <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
@@ -105,7 +103,7 @@
       <field name="arch" type="xml">
         <tree string="Stages">
           <field name="name"/>
-          <field name="active"/>
+          <field name="open"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags" groups="note.group_note_tags"/>
         </tree>
@@ -142,9 +140,8 @@
         <search string="Notes">
           <field name="memo" string="Note"/>
           <field name="tag_ids" groups="note.group_note_tags"/>
-          <field name="stage_id"/>
-          <filter name="active_true" string="Active" domain="['|',('active', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
-          <filter name="active_false" string="Old" domain="[('active', '=', False)]"/>
+          <filter name="open_true" string="Active" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
+          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By...">
             <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
@@ -188,7 +185,7 @@
       <field name="view_type">form</field>
       <field name="view_mode">kanban,tree,form</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
-      <field name="context">{'search_default_active_true':True}</field>
+      <field name="context">{'search_default_open_true':True}</field>
     </record>
 
     <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
