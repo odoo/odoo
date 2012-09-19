@@ -1485,7 +1485,7 @@ class stock_production_lot(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, type="float", string="Available", select=True,
-            help="Current quantity of products with this Production Lot Number available in company warehouses",
+            help="Current quantity of products with this Serial Number available in company warehouses",
             digits_compute=dp.get_precision('Product Unit of Measure')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
