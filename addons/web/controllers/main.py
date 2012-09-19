@@ -1922,7 +1922,7 @@ class Reports(View):
             report = zlib.decompress(report)
         report_mimetype = self.TYPES_MAPPING.get(
             report_struct['format'], 'octet-stream')
-        file_name = None
+        file_name = action.get('name', None)
         if 'name' not in action:
             reports = req.session.model('ir.actions.report.xml')
             res_id = reports.search([('report_name', '=', action['report_name']),],
