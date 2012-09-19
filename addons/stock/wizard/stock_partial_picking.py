@@ -78,7 +78,7 @@ class stock_partial_picking(osv.osv_memory):
         if context is None:
             context={}
         res = super(stock_partial_picking, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        type = context.get('active_model','').split('.')[-1]
+        type = context.get('default_type', False)
         if type:
             doc = etree.XML(res['arch'])
             for node in doc.xpath("//button[@name='do_partial']"):

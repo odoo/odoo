@@ -66,6 +66,11 @@ class crm_meeting(base_state, osv.Model):
         'state': 'open',
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['attendee_ids'] = False
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)
+
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
