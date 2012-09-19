@@ -44,3 +44,8 @@
   Then I click on the Ignore Exception button.
 -
   !workflow {model: sale.order, action: invoice_corrected, ref: sale_order_8}
+-
+  I check state of order is 'Done'.
+-
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Done state}:
+    - state == 'done'
