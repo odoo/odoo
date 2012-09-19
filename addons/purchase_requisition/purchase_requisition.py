@@ -92,15 +92,15 @@ class purchase_requisition(osv.osv):
 
     def in_progress_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
-    
+
     def reset_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), subtype_xml_id="requisition_subtype_new", context=context)
-     
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), subtype_xml_id="mt_requisition_new", context=context)
+
     def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), subtype_xml_id="requisition_subtype_closed", context=context)
-        
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), subtype_xml_id="mt_requisition_closed", context=context)
+
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), subtype_xml_id="requisition_subtype_cancelled", context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
     def _planned_date(self, requisition, delay=0.0):
         company = requisition.company_id
@@ -183,7 +183,7 @@ class purchase_requisition(osv.osv):
         return res
     
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), subtype_xml_id="requisition_subtype_new", context=context)  
+        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), subtype_xml_id="mt_requisition_new", context=context)  
 
     def create(self, cr, uid, vals, context=None):
         requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
