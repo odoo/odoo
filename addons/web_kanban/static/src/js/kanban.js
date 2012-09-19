@@ -71,9 +71,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         this.fields_keys = _.keys(this.fields_view.fields);
         this.add_qweb_template();
         this.has_been_loaded.resolve();
-
         this._super.apply(this, arguments);
-
         return $.when();
     },
     _is_quick_create_enabled: function() {
@@ -862,7 +860,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
         if(this.$el.find('.oe_kanban_global_click_edit').size()>0)
             this.do_action_edit();
         else
-        this.do_action_open();
+            this.do_action_open();
     },
     setup_color_picker: function() {
         var self = this;
