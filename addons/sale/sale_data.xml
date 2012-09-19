@@ -44,26 +44,16 @@
 If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.</value>
         </function>
         
-        <record id="mail.sale_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+        <record id="mail.mt_sale_new" model="mail.message.subtype">
+            <field name="name">create</field>
             <field name="res_model">sale.order</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.sale_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">sale.order</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.sale_subtype_paid" model="mail.message.subtype">
+        <record id="mail.mt_sale_paid" model="mail.message.subtype">
             <field name="name">paid</field>
             <field name="res_model">sale.order</field>
         </record>
-        <record id="mail.sale_subtype_pending" model="mail.message.subtype">
-            <field name="name">pending</field>
-            <field name="res_model">sale.order</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.sale_subtype_delivered" model="mail.message.subtype">
+        <record id="mail.mt_sale_delivered" model="mail.message.subtype">
             <field name="name">delivered</field>
             <field name="res_model">sale.order</field>
         </record>
