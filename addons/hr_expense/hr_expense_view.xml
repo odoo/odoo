@@ -195,9 +195,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-            <field name="purchase_ok" position="after">
-            <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>
-            </field>
+                <field name="purchase_ok" position="before">
+                    <field name="hr_expense_ok" on_change="on_change_hr_expense_ok(hr_expense_ok)"/>
+                    <label for="hr_expense_ok"/>
+                </field>
             </field>
         </record>
 
