@@ -648,8 +648,37 @@ class test_mail(TestMailMockups):
         msg1.refresh()
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
+
+    def test_60_vote(self):
+        """ Test designed for the vote/unvote feature. """
+        cr, uid = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        msg1 = group_pigs.message_post(body='My Body', subject='1')
+        msg1 = self.mail_message.browse(cr, uid, msg1)
+
+        # Create user Bert Tartopoils
+        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert', 'login': 'bert'})
+        user_bert = self.res_users.browse(cr, uid, user_bert_id)
+
+        # Test: msg1 and msg2 have void vote_user_ids
+        self.assertFalse(msg1.vote_user_ids, 'newly created message msg1 has not void vote_user_ids')
+        # Do: Admin vote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id])
+        msg1.refresh()
+        # Test: msg1 has Admin as voter
+        self.assertEqual(set(msg1.vote_user_ids), set([user_admin]), 'after voting, Admin is not the voter')
+        # Do: Bert vote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id], [user_bert_id])
+        msg1.refresh()
+        # Test: msg1 has Admin and Bert as voters
+        self.assertEqual(set(msg1.vote_user_ids), set([user_admin, user_bert]), 'after voting, Admin and Bert are not the voters')
+        # Do: Admin unvote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id])
+        msg1.refresh()
+        # Test: msg1 has Bert as voter
+        self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
         
-    def test_60_message_subtype(self):
+    def test_70_message_subtype(self):
         """ Tests designed for message_subtype. """
         cr, uid = self.cr, self.uid
         self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
@@ -676,3 +705,4 @@ class test_mail(TestMailMockups):
         msg_id = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body1, subject=_subject, type='comment',subtype_xml_id='mail_subtype_comment')
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id)])
         self.assertTrue(len(notif_ids) >= 1,"subtype is email and show notification on wall")
+
