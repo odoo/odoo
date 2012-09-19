@@ -26,8 +26,7 @@ import tools
 from email.header import decode_header
 from openerp import SUPERUSER_ID
 from operator import itemgetter
-from osv import osv, fields
-from osv.orm import except_orm
+from osv import osv, orm, fields
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -64,7 +63,7 @@ class mail_message(osv.Model):
                 continue
             try:
                 result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
-            except openerp.exceptions.AccessDenied, e:
+            except (orm.except_orm, osv.except_osv):
                 pass
         return result
 
@@ -175,22 +174,31 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     def _message_dict_get(self, cr, uid, msg, context=None):
-        """ Return a dict representation of the message browse record. """
+        """ Return a dict representation of the message browse record. A read
+            is performed to because of access rights issues (reading many2one
+            fields allow to have the foreign record name without having
+            to check external access rights).
+        """
         has_voted = False
         vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
             if vote[0] == uid:
                 has_voted = True
                 break
-        # TDE TEMP: use SUPERUSER_ID
-        # attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, SUPERUSER_ID, [x.id for x in msg.attachment_ids], context=context)]
-        attachment_ids = []
-        # author_id = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [msg.author_id.id], context=context)[0]
-        author_id = False
-        # author_user_id = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [msg.author_id.user_ids[0].id], context=context)[0]
-        author_user_id = False
-        # partner_ids = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [x.id for x in msg.partner_ids], context=context)
-        partner_ids = []
+        try:
+            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
+        except (orm.except_orm, osv.except_osv):
+            attachment_ids = []
+        try:
+            author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
+            is_author = uid in msg.author_id.user_ids
+        except (orm.except_orm, osv.except_osv):
+            author_id = False
+            is_author = False
+        try:
+            partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+        except (orm.except_orm, osv.except_osv):
+            partner_ids = []
         return {
             'id': msg.id,
             'type': msg.type,
@@ -202,7 +210,7 @@ class mail_message(osv.Model):
             'subject': msg.subject,
             'date': msg.date,
             'author_id': author_id,
-            'author_user_id': author_user_id,
+            'is_author': is_author,
             'partner_ids': partner_ids,
             'child_ids': [],
             'vote_user_ids': vote_ids,
@@ -393,7 +401,7 @@ class mail_message(osv.Model):
         other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids), set(document_related_ids))
         if not other_ids:
             return
-        raise except_orm(_('Access Denied'),
+        raise orm.except_orm(_('Access Denied'),
                             _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
                             (self._description, operation))
 
@@ -408,7 +416,6 @@ class mail_message(osv.Model):
         """ Override to explicitely call check_access_rule, that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
         res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
-        # print '-->', res
         self.check_access_rule(cr, uid, ids, 'read', context=context)
         return res
 
@@ -441,6 +448,8 @@ class mail_message(osv.Model):
             if missing_notified:
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified
+        # # remove uid from partners
+        self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, uid)]}, context=context)
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

@@ -56,11 +56,6 @@ openerp.mail = function(session) {
             return session.origin + '/web/binary/saveas?session_id=' + session.session_id + '&model=ir.attachment&field=datas&filename_field=datas_fname&id=' + attachment['id'];
         },
 
-        /** Check if the current user is the message author */
-        is_author: function (widget, message_user_id) {
-            return (widget.session && widget.session.uid != 0 && widget.session.uid == message_user_id);
-        },
-
         /** Replaces some expressions
          * - :name - shortcut to an image
          */
@@ -301,6 +296,7 @@ openerp.mail = function(session) {
             // TDE TODO: check for deferred, not sure it is correct
             this._super.apply(this, arguments);
             this.bind_events();
+            this.display_user_avatar();
             // fetch and display message, using message_ids if set
             var display_done = $.when(this.message_fetch(true, [], {})).then(this.proxy('do_customize_display'));
             // add message composition form view
@@ -313,7 +309,6 @@ openerp.mail = function(session) {
         /** Customize the display
          * - show_header_compose: show the composition form in the header */
         do_customize_display: function() {
-            this.display_user_avatar();
             if (this.options.show_header_compose) {
                 this.$el.find('div.oe_mail_thread_action').eq(0).show();
             }
@@ -489,8 +484,7 @@ openerp.mail = function(session) {
          * - record.date: formatting according to the user timezone
          * - record.timerelative: relative time givein by timeago lib
          * - record.avatar: image url
-         * - record.attachment_ids[].url: url of each attachment
-         * - record.is_author: is the current user the author of the record */
+         * - record.attachment_ids[].url: url of each attachment */
         display_record: function (record) {
             // formatting and additional fields
             record.date = session.web.format_value(record.date, {type:"datetime"});
@@ -504,7 +498,6 @@ openerp.mail = function(session) {
                 var attach = record.attachment_ids[l];
                 attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
             }
-            record.is_author = mail.ChatterUtils.is_author(this, record.author_user_id[0]);
             // add to internal storage
             this.records[record.id] = record;
             // render, add the expand feature
