@@ -12,16 +12,6 @@
             <field name="domain">[('year','=',time.strftime('%Y'))]</field>
         </record>
 
-        <record id="action_treasory_graph" model="ir.actions.act_window">
-            <field name="name">Treasury</field>
-            <field name="res_model">account.account</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">graph,tree</field>
-            <field name="domain">[('type','=','liquidity')]</field>
-            <field name="context">{'default_type': 'liquidity'}</field>
-            <field name="view_id" ref="account.view_treasory_graph"/>
-        </record>
-
         <record id="board_account_form" model="ir.ui.view">
             <field name="name">board.account.form</field>
             <field name="model">board.board</field>
@@ -30,9 +20,6 @@
                     <board style="2-1">
                         <column>
                             <action name="%(action_company_analysis_tree)d" string="Company Analysis"/>
-                        </column>
-                        <column>
-                            <action name="%(action_treasory_graph)d" string="Treasury"/>
                         </column>
                     </board>
                 </form>
