@@ -188,14 +188,6 @@ class sale_order(osv.osv, EDIMixin):
             self._edi_requires_attributes(( 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
             order_line['product_uom_qty'] = order_line['product_qty']
             del order_line['product_qty']
-            #Need to move sale_stock
-#            date_planned = order_line.pop('date_planned')
-#            delay = 0
-#            if date_order and date_planned:
-#                # no security_days buffer, this is the promised date given by supplier
-#                delay = (datetime.strptime(date_planned, DEFAULT_SERVER_DATE_FORMAT) - \
-#                         datetime.strptime(date_order, DEFAULT_SERVER_DATE_FORMAT)).days
-#            order_line['delay'] = delay
 
             # discard web preview fields, if present
             order_line.pop('price_subtotal', None)
@@ -219,9 +211,6 @@ class sale_order_line(osv.osv, EDIMixin):
 
             # company.security_days is for internal use, so customer should only
             # see the expected date_planned based on line.delay
-#            date_planned = datetime.strptime(line.order_id.date_order, DEFAULT_SERVER_DATE_FORMAT) + \
-#                            relativedelta(days=line.delay or 0.0)
-#            edi_doc['date_planned'] = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 

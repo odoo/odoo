@@ -1,15 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-        <!-- EDI Export + Send email Action  -->
-        <record id="ir_actions_server_edi_sale" model="ir.actions.server">
-            <field name="code">if not object.partner_id.opt_out: object.edi_export_and_email(template_ext_id='sale.email_template_edi_sale', context=context)</field>
-            <field name="state">code</field>
-            <field name="type">ir.actions.server</field>
-            <field name="model_id" ref="sale.model_sale_order"/>
-            <field name="condition">True</field>
-            <field name="name">Auto-email confirmed sale orders</field>
-        </record>
 
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
@@ -25,14 +16,9 @@
     </data>
 
 
-    <!-- Mail template and workflow bindings are done in a NOUPDATE block
+    <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
-         <!-- bind the mailing server action to sale.order confirmed activity
-        <record id="sale.act_wait_ship" model="workflow.activity">
-            <field name="action_id" ref="ir_actions_server_edi_sale"/>
-        </record>-->
-
 
         <!--Email template -->
         <record id="email_template_edi_sale" model="email.template">
