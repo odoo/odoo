@@ -130,7 +130,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             case 'field':
                 if(this.fields_view.fields[ node.attrs['name'] ].type == 'many2many'){
                     node.tag =  'div';
-                    node.attrs['class'] = 'oe_kanban_many2many_tags';
+                    node.attrs['class'] = 'oe_form_field oe_tags';
                     node.attrs['model'] = this.fields_view.fields[node.attrs['name']].relation;
                     node.attrs['t-att-data'] = 'record.' + node.attrs['name'] + '.raw_value';
                 }else {
@@ -182,7 +182,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var self=this,
             arg={};
         // select all widget
-        self.$el.find(".oe_kanban_many2many_tags").each(function(){
+        self.$el.find(".oe_form_field.oe_tags").each(function(){
              var model = $(this).attr("model");
             if(model.length){
                 var data = $(this).attr("data");
@@ -196,7 +196,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         // only one request by model
         for(var model in arg){
             if(arg[model].length>0){
-                var block = self.$el.find(".oe_kanban_many2many_tags[model='" + model + "']");
+                var block = self.$el.find(".oe_form_field.oe_tags[model='" + model + "']");
                 var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
                 dataset.name_get(_.uniq( arg[model] )).then(
                     function(result) {
