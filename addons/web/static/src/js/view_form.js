@@ -162,8 +162,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$el.find(".oe_form_group_row,.oe_form_field,label").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
-                $button.effect('bounce', {distance: 18, times: 5}, 150)
+                $button.effect('bounce', {distance: 18, times: 5}, 150);
                 e.stopPropagation();
+                instance.web.bus.trigger('click', e);
             }
         });
 
