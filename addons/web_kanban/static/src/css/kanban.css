@@ -7,14 +7,14 @@
   background: url(/web/static/src/img/form_sheetbg.png);
 }
 .openerp .oe_kanban_view .ui-sortable-placeholder {
-  border: 1px dotted black;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   visibility: visible !important;
   height: 60px !important;
 }
 .openerp .oe_kanban_view .ui-sortable-helper {
-  -moz-box-shadow: 0 1px 20px rgba(0, 0, 0, 0.9);
-  -webkit-box-shadow: 0 1px 20px rgba(0, 0, 0, 0.9);
-  -box-shadow: 0 1px 20px rgba(0, 0, 0, 0.9);
+  -moz-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  -webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
+  -box-shadow: 0 1px 10px rgba(0, 0, 0, 0.3);
   -moz-transform: rotate(3deg);
   -webkit-transform: rotate(3deg);
   -o-transform: rotate(3deg);
@@ -135,7 +135,8 @@
   white-space: nowrap;
   display: none;
   position: relative;
-  top: 5px;
+  opacity: 0.75;
+  top: 20px;
 }
 .openerp .oe_kanban_view .oe_kanban_add, .openerp .oe_kanban_view .oe_kanban_header .oe_dropdown_toggle {
   margin-left: 4px;
@@ -515,33 +516,43 @@
 }
 .openerp .oe_kanban_view .oe_kanban_color_0 {
   background-color: white;
+  color: #5a5a5a;
 }
 .openerp .oe_kanban_view .oe_kanban_color_1 {
   background-color: #cccccc;
+  color: #424242;
 }
 .openerp .oe_kanban_view .oe_kanban_color_2 {
   background-color: #ffc7c7;
+  color: #7a3737;
 }
 .openerp .oe_kanban_view .oe_kanban_color_3 {
   background-color: #fff1c7;
+  color: #756832;
 }
 .openerp .oe_kanban_view .oe_kanban_color_4 {
   background-color: #e3ffc7;
+  color: #5d6937;
 }
 .openerp .oe_kanban_view .oe_kanban_color_5 {
   background-color: #c7ffd5;
+  color: #1a7759;
 }
 .openerp .oe_kanban_view .oe_kanban_color_6 {
   background-color: #c7ffff;
+  color: #1a5d83;
 }
 .openerp .oe_kanban_view .oe_kanban_color_7 {
   background-color: #c7d5ff;
+  color: #3b3e75;
 }
 .openerp .oe_kanban_view .oe_kanban_color_8 {
   background-color: #e3c7ff;
+  color: #4c3668;
 }
 .openerp .oe_kanban_view .oe_kanban_color_9 {
   background-color: #ffc7f1;
+  color: #6d2c70;
 }
 
 .openerp .oe_form .oe_kanban_view .oe_kanban_column, .openerp .oe_form .oe_kanban_view .oe_kanban_group_header {
