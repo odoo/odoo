@@ -183,17 +183,19 @@
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
                                     string="Uncertain" type="object"
+                                    icon="terp-crm"
                                     />
                                 <button name="do_accept" string="Accept"
                                     states="needs-action,tentative,declined"
-                                    type="object" />
+                                    type="object" icon="gtk-apply"/>
                                 <button name="do_decline" string="Decline"
                                     states="needs-action,tentative,accepted"
-                                    type="object" />
+                                    type="object" icon="gtk-cancel"/>
                                 <button
                                     name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                                     string="Delegate" type="action"
                                     states="needs-action,tentative,declined,accepted"
+                                    icon="gtk-sort-descending"
                                     context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
                             <form string="Invitation details" version="7.0">
