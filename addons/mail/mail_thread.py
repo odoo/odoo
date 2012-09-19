@@ -600,8 +600,8 @@ class mail_thread(osv.AbstractModel):
 
         values = kwargs
         subtype_obj = self.pool.get('mail.message.subtype')
-        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype_xml_id)
         if subtype_xml_id:
+            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype_xml_id)
             subtype_browse = subtype_obj.browse(cr, uid, ref[1],context=context)
             if self._name == subtype_browse.res_model:
                 values['subtype_id']=subtype_browse.id
