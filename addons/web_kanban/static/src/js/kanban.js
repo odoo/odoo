@@ -185,27 +185,30 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             arg={};
         // select all widget
         self.$el.find(".oe_kanban_many2many_tags").each(function(){
-            var model = $(this).attr("model");
-            var data = $(this).attr("data");
-            var list = data.split(",");
-            //select all id (per model)
-            if(!arg[model]) arg[model]=[];
-            for(var t=0;t<list.length;t++) if(list[t]!="") arg[model].push( list[t] );
+             var model = $(this).attr("model");
+            if(model.length){
+                var data = $(this).attr("data");
+                var list = data.split(",");
+                //select all id (per model)
+                if(!arg[model]) arg[model]=[];
+                for(var t=0;t<list.length;t++) if(list[t]!="") arg[model].push( list[t] );
+            }
         });
 
         // only one request by model
         for(var model in arg){
             if(arg[model].length>0){
+                var block = self.$el.find(".oe_kanban_many2many_tags[model='" + model + "']");
                 var dataset = new instance.web.DataSetSearch(self, model, self.session.context);
                 dataset.name_get(_.uniq( arg[model] )).then(
                     function(result) {
                         for(var t=0;t<result.length;t++){
-                            self.$el.find(".oe_kanban_many2many_tags[model='" + model + "']")
-                                .filter(function(){ return this.getAttribute("data").match(new RegExp('(^|,)'+result[t][0]+'(,|$)')); })
+                            block.filter(function(){ return this.getAttribute("data").match(new RegExp('(^|,)'+result[t][0]+'(,|$)')); })
                                 .append('<span class="oe_tag" data-list_id="' + result[t][0] +'"">'+result[t][1]+'</span>');
                         }
                     }
                 );
+                console.log("kanban 212 ",block);
             }
         }
     },
@@ -396,8 +399,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         } else {
             this.$el.find('.oe_kanban_draghandle').removeClass('oe_kanban_draghandle');
         }
-
-        this.transform_widget_many2many();
+        self.transform_widget_many2many();
     },
     on_record_moved : function(record, old_group, old_index, new_group, new_index) {
         var self = this;
@@ -416,6 +418,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             this.dataset.write(record.id, data, {}, function() {
                 record.do_reload();
                 new_group.do_save_sequences();
+                self.transform_widget_many2many();
             }).fail(function(error, evt) {
                 evt.preventDefault();
                 alert("An error has occured while moving the record to this group.");
@@ -732,9 +735,6 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
     transform_record: function(record) {
         var self = this,
             new_record = {};
-
-        console.log(this, record);
-
         _.each(record, function(value, name) {
             var r = _.clone(self.view.fields_view.fields[name] || {});
             if ((r.type === 'date' || r.type === 'datetime') && value) {
