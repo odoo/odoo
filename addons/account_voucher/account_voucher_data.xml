@@ -12,18 +12,18 @@ You can track customer payments easily and automate the reminders. You get an ov
 If you want to use advanced accounting features, you should install the "Accounting and Finance" module.</value>
             <value>Module eInvoicing &amp; Payments has been installed.</value>
         </function>
-        <!-- Message Sub Type -->
-        <record id="mail.voucher_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+
+        <!-- mail: subtypes -->
+        <record id="mail.mt_voucher_new" model="mail.message.subtype">
+            <field name="name">created</field>
             <field name="res_model">account.voucher</field>
         </record>
-        <record id="mail.voucher_subtype_post" model="mail.message.subtype">
+        <record id="mail.mt_voucher_post" model="mail.message.subtype">
             <field name="name">post</field>
             <field name="res_model">account.voucher</field>
-            <field name="default" eval="False"/>
         </record>
-        <record id="mail.voucher_subtype_reconcile" model="mail.message.subtype">
-            <field name="name">reconcile</field>
+        <record id="mail.mt_voucher_reconciled" model="mail.message.subtype">
+            <field name="name">reconciled</field>
             <field name="res_model">account.voucher</field>
             <field name="default" eval="False"/>
         </record>
