@@ -349,6 +349,15 @@ class base_stage(object):
         """
         return ''
 
+    def find_subtype_xml_id(self, cr, uid, ids, name, context=None):
+        ir_model_data_obj = self.pool.get('ir.model.data')
+        subtype_ids = self.pool.get('mail.message.subtype').search(cr, uid, [('res_model', '=', self._name), ('name', '=', name)], context=context)
+        ir_data_ids = ir_model_data_obj.search(cr, uid, [('model', '=', 'mail.message.subtype'), ('res_id', 'in', subtype_ids)], context=context)
+        ir_model_data_record = ir_model_data_obj.browse(cr, uid, ir_data_ids, context=context)
+        if ir_model_data_record:
+            return ir_model_data_record[0].name
+        return None
+
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Send a notification when the stage changes. This method has
             to be overriden, because each document will have its particular
@@ -360,31 +369,21 @@ class base_stage(object):
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=msg, context=context)
+            xml_id = self.find_subtype_xml_id(cr, uid, ids, name="open", context=context)
+            self.message_post(cr, uid, [id], body=msg, subtype_xml_id=xml_id, context=context)
         return True
-    
-    def find_xml_id(self,cr,uid,ids,name,context=None):
-        subtype_obj = self.pool.get('mail.message.subtype')
-        ir_model_data_obj = self.pool.get('ir.model.data')
-        subtype_ids = subtype_obj.search(cr,uid,[('res_model','=',self._name),('name','=',name)])
-        ir_data_ids = ir_model_data_obj.search(cr,uid,[('model','=','mail.message.subtype'),('res_id','in',subtype_ids)])
-        xml_id = 'mail_subtype_comment'
-        ir_model_data_record = ir_model_data_obj.browse(cr,uid,ir_data_ids)
-        if ir_model_data_record:
-            xml_id = ir_model_data_record[0].name
-        return xml_id
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_xml_id(cr, uid, ids, name="closed", context=context)
+            xml_id = self.find_subtype_xml_id(cr, uid, ids, name="closed", context=context)
             self.message_post(cr, uid, [id], body=msg, subtype_xml_id=xml_id, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_xml_id(cr, uid, ids, name="cancelled", context=context)
+            xml_id = self.find_subtype_xml_id(cr, uid, ids, name="cancel", context=context)
             self.message_post(cr, uid, [id], body=msg, subtype_xml_id=xml_id, context=context)
         return True
 

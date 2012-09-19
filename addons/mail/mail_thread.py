@@ -562,8 +562,8 @@ class mail_thread(osv.AbstractModel):
                         "now deprecated res.log.")
         self.message_post(cr, uid, [id], message, context=context)
 
-    def message_post(self, cr, uid, thread_id, body='', subject=False,
-            type='notification', parent_id=False, attachments=None, subtype_xml_id='mail_subtype_comment', context=None, **kwargs):
+    def message_post(self, cr, uid, thread_id, body='', subject=False, type='notification',
+                        subtype_xml_id=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
