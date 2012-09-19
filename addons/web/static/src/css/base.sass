@@ -1771,6 +1771,9 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
