@@ -121,7 +121,8 @@ class object_proxy(object):
                 return f(self, dbname, *args, **kwargs)
             except orm.except_orm, inst:
                 raise
-                raise except_osv(inst.name, inst.value)
+                # TDE: commented to have more valuable stack traces
+                # raise except_osv(inst.name, inst.value)
             except except_osv:
                 raise
             except IntegrityError, inst:
