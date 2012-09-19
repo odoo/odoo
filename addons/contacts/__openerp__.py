@@ -20,42 +20,20 @@
 ##############################################################################
 
 {
-    'name': 'Notes',
+    'name': 'Contacts',
     'version': '1.0',
     'category': 'Tools',
     'description': """
-This module allows users to create their own notes inside OpenERP
-=================================================================
-
-Use notes to write meeting minutes, organize ideas, organize personnal todo
-lists, etc. Each user manages his own personnal Notes. Notes are available to
-their authors only, but they can share notes to others users so that several
-people can work on the same note in real time. It's very efficient to share
-meeting minutes.
-
-Notes can be found in the 'Home' menu.
+This module gives you a quick view of your address book, accessible from your home page.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
-    'summary': 'Sticky notes, Collaborative, Memos',
+    'summary': 'Contacts, Address book',
     'depends': [
-        'base_tools',
         'mail',
     ],
     'data': [
-        'security/res.groups.csv',
-        'security/ir.rule.xml',
-        'security/ir.model.access.csv',
-        'note_data.xml',
-        'note_view.xml',
-    ],
-    'demo': [
-        'note_demo.xml',
-    ],
-    'test': [
-    ],
-    'css': [
-        'static/src/css/note.css',
+        'contacts_view.xml',
     ],
     'installable': True,
     'application': True,
