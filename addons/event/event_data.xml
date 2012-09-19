@@ -11,43 +11,31 @@
             <field name="action_id" ref="action_client_event_menu"/>
             <field name="state">open</field>
         </record>
-        <!-- Event subtype -->
-        <record id="mail.event_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+
+        <!-- mail: event subtype -->
+        <record id="mail.mt_event_new" model="mail.message.subtype">
+            <field name="name">created</field>
             <field name="res_model">event.event</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.event_subtype_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">event.event</field>
-        </record>
-        <record id="mail.event_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
+        <record id="mail.mt_event_cancel" model="mail.message.subtype">
+            <field name="name">canceled</field>
             <field name="res_model">event.event</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.event_subtype_confirmed" model="mail.message.subtype">
+        <record id="mail.mt_event_confirm" model="mail.message.subtype">
             <field name="name">confirmed</field>
             <field name="res_model">event.event</field>
             <field name="default" eval="False"/>
         </record>
         
-        <!-- Event registration subtype -->
-        <record id="mail.registration_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
-            <field name="res_model">event.registration</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.registration_subtype_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">event.registration</field>
-        </record>
-        <record id="mail.registration_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
+        <!-- mail: event registration subtype -->
+        <record id="mail.mt_registration_cancel" model="mail.message.subtype">
+            <field name="name">canceled</field>
             <field name="res_model">event.event</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.registration_subtype_confirmed" model="mail.message.subtype">
+        <record id="mail.mt_registration_confirm" model="mail.message.subtype">
             <field name="name">confirmed</field>
             <field name="res_model">event.registration</field>
             <field name="default" eval="False"/>
