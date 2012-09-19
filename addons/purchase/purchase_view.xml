@@ -572,6 +572,20 @@
                      <separator string="Suppliers"/>
                      <field name="seller_ids" context="{'uom_id': uom_id}"/>
                 </group>
+                <group name="procurement_help" position="inside">
+                    <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                        When you sell this service to a customer, <b>a draft purchase order</b>
+                        will be created in order to subcontract the job 
+                        <i attrs="{'invisible': [('seller_id','=',False)]}">to 
+                        <field name="seller_id" class="oe_inline"/></i>.
+                    </p>
+                    <p attrs="{'invisible': [('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
+                        When you sell this product, OpenERP will trigger <b>a draft
+                        purchase order</b> to buy the required quantities to the supplier.
+                        The delivery order will be ready after having received the
+                        products.
+                    </p>
+                </group>
             </field>
         </record>
     </data>
