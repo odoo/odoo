@@ -145,6 +145,11 @@ $sheet-max-width: 860px
     height: 100%
     position: relative
 
+// jQueryUI css bug fixing
+.text-tag .text-button
+    height: auto !important
+    min-height: 16px
+
 .openerp
     // Global style {{{
     padding: 0
@@ -1961,6 +1966,7 @@ $sheet-max-width: 860px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
+                    width: 100%
             &.oe_form_field_datetime,&.oe_form_field_date
                 > span
                     width: 100%
