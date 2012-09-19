@@ -1,7 +1,7 @@
 {
 	'name': 'Fleet Management',
 	'version': '0.1',
-	'depends': ['base'],
+	'depends': ['base','hr'],
 	'author': 'OpenERP SA',
 	'category': 'Test',
 	'description': """
