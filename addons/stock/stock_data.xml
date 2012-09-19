@@ -167,30 +167,18 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="lot_output_id" ref="stock_location_output"/>
         </record>
 
-        <!--
-    Mail: mail.message.subtype
-    -->
-        <record id="mail.stock_in_subtype_new" model="mail.message.subtype">
-            <field name="name">new</field>
+        <!-- Mail: mail.message.subtype -->
+        <record id="mail.mt_stock_new" model="mail.message.subtype">
+            <field name="name">created</field>
             <field name="res_model">stock.picking.in</field>
         </record>
-        <record id="mail.stock_out_subtype_delivered" model="mail.message.subtype">
+        <record id="mail.mt_stock_delivered" model="mail.message.subtype">
             <field name="name">delivered</field>
             <field name="res_model">stock.picking.out</field>
-            <field name="default" eval="False"/>
         </record>
-        <record id="mail.stock_in_subtype_received" model="mail.message.subtype">
+        <record id="mail.mt_stock_received" model="mail.message.subtype">
             <field name="name">received</field>
             <field name="res_model">stock.picking.in</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.stock_in_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">stock.picking.in</field>
-        </record>
-        <record id="mail.stock_out_subtype_cancelled" model="mail.message.subtype">
-            <field name="name">cancelled</field>
-            <field name="res_model">stock.picking.out</field>
         </record>
     </data>
 </openerp>
