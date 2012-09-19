@@ -2616,6 +2616,7 @@ instance.web.form.CompletionFieldMixin = {
 
         var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
         var blacklist = this.get_search_blacklist();
+        this.last_query = search_val;
 
         return this.orderer.add(dataset.name_search(
                 search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
@@ -2723,6 +2724,32 @@ instance.web.form.CompletionFieldMixin = {
     },
 };
 
+instance.web.form.M2ODialog = instance.web.Dialog.extend({
+    template: "M2ODialog",
+    init: function(parent) {
+        this._super(parent, {
+            title: _.str.sprintf(_t("Add %s"), parent.string),
+            width: 312,
+        });
+    },
+    start: function() {
+        var self = this;
+        this.$buttons.html(QWeb.render("M2ODialog.buttons"));
+        this.$("input").val(this.getParent().last_query);
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
+            self.getParent()._quick_create(self.$("input").val());
+            self.destroy();
+        });
+        this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
+            self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
+            self.destroy();
+        });
+        this.$buttons.find(".oe_form_m2o_cancel_button").click(function(){
+            self.destroy();
+        });
+    },
+});
+
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
     init: function(field_manager, node) {
@@ -2754,25 +2781,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.render_value();
     },
     init_error_displayer: function() {
-        this.$input.tipsy({
-            title: function() {
-                return QWeb.render('Tipsy.alert', {
-                    message: "No element was selected, you should create or select one from the dropdown list."
-                });
-            },
-            trigger:'manual',
-            fade: true,
-            gravity: 's',
-            html: true,
-            opacity: 1,
-            offset: 4,
-        });
+        // nothing
     },
     hide_error_displayer: function() {
-        this.$input.tipsy("hide");
+        // doesn't work
     },
     show_error_displayer: function() {
-        this.$input.tipsy("show");
+        new instance.web.form.M2ODialog(this).open();
     },
     render_editable: function() {
         var self = this;
