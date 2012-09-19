@@ -15,9 +15,9 @@
             <field name="model">board.board</field>
             <field name="inherit_id" ref="stock.board_warehouse_form"/>
             <field name="arch" type="xml">
-              <xpath expr="//column" position="inside">
-                <action name="%(procurement_action_board)d" string="Procurements in Exception"/>
-              </xpath>
+                <xpath expr="//column" position="inside">
+                    <action name="%(procurement_action_board)d" string="Procurements in Exception"/>
+                </xpath>
             </field>
         </record>
     </data>

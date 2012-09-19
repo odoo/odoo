@@ -39,10 +39,9 @@
         </record>
 
         <!-- register configuration wizard -->
-        <record id="config_wizard_config_moodle" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="configure_moodle"/>
-            <field name="type">automatic</field>
-            <field name="name">Configuration of moodle</field>
+            <field name="state">open</field>
         </record>
 
         <menuitem name="Moodle Configuration" parent="base.menu_marketing_config_root" id="wizard_moodle" action="configure_moodle"/>
