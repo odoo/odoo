@@ -401,13 +401,13 @@ class product_pricelist_item(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', ondelete='cascade', help="Set a product if this rule only apply to one product. Keep empty for all products"),
         'categ_id': fields.many2one('product.category', 'Product Category', ondelete='cascade', help="Set a category of product if this rule only apply to products of a category and his children. Keep empty for all products"),
 
-        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells more than this quantity."),
+        'min_quantity': fields.integer('Min. Quantity', required=True, help="The rule only applies if the partner buys/sells quantity equal to or more than this quantity set."),
         'sequence': fields.integer('Sequence', required=True, help="Gives the order in which the pricelist items will be checked. The evaluation gives highest priority to lowest sequence and stops as soon as a matching item is found."),
         'base': fields.selection(_price_field_get, 'Based on', required=True, size=-1, help="The mode for computing the price for this rule."),
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
-            digits_compute= dp.get_precision('Product Price')),
+            digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add(or substract, if negative) to the amount calculated with the discount.'),
         'price_discount': fields.float('Price Discount', digits=(16,4)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
@@ -416,9 +416,9 @@ class product_pricelist_item(osv.osv):
               "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
             ),
         'price_min_margin': fields.float('Min. Price Margin',
-            digits_compute= dp.get_precision('Product Price')),
+            digits_compute= dp.get_precision('Product Price'), help='Specify the minimum amount of margin over the base price.'),
         'price_max_margin': fields.float('Max. Price Margin',
-            digits_compute= dp.get_precision('Product Price')),
+            digits_compute= dp.get_precision('Product Price'), help='Specify the maximum amount of margin over the base price.'),
         'company_id': fields.related('price_version_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }
