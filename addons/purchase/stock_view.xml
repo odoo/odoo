@@ -31,7 +31,7 @@
                     <field name="purchase_id"/>
                 </xpath>
                 <xpath expr="//field[@name='company_id']" position="after">
-                    <field name="warehouse_id"/>
+                    <field name="warehouse_id" groups="stock.group_locations"/>
                 </xpath>
             </field>
         </record>
