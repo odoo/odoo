@@ -230,7 +230,7 @@ class account_move_line(osv.osv):
         context = self.convert_to_period(cr, uid, context)
         #pass the right context when search_defaul_journal_id
         if context.get('search_default_journal_id',False):
-            context.update({'journal_id':context.get('search_default_journal_id',False)})
+            context['journal_id'] = context.get('search_default_journal_id')
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
@@ -933,12 +933,12 @@ class account_move_line(osv.osv):
             return False
         if context.get('search_default_journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
-            cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
-            j = cr.fetchone()[0] or ''
-            cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
-            p = cr.fetchone()[0] or ''
-            if j or p:
-                return j + (p and (':' + p) or '')
+        cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
+        j = cr.fetchone()[0] or ''
+        cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
+        p = cr.fetchone()[0] or ''
+        if j or p:
+            return j + (p and (':' + p) or '')
         return False
 
     def onchange_date(self, cr, user, ids, date, context=None):
