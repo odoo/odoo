@@ -52,13 +52,17 @@ import re
 import simplejson
 import time
 import types
+
+import psycopg2
 from lxml import etree
+import warnings
 
 import fields
 import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
+from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
@@ -1242,7 +1246,7 @@ class BaseModel(object):
         * The last item is currently unused, with no specific semantics
 
         :param fields: list of fields to import
-        :param data: data to import
+        :param datas: data to import
         :param mode: 'init' or 'update' for record creation
         :param current_module: module name
         :param noupdate: flag for record creation
@@ -1437,6 +1441,199 @@ class BaseModel(object):
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
         return position, 0, 0, 0
+
+    def load(self, cr, uid, fields, data, context=None):
+        """
+
+        :param cr: cursor for the request
+        :param int uid: ID of the user attempting the data import
+        :param fields: list of fields to import, at the same index as the corresponding data
+        :type fields: list(str)
+        :param data: row-major matrix of data to import
+        :type data: list(list(str))
+        :param dict context:
+        :returns:
+        """
+        cr.execute('SAVEPOINT model_load')
+        messages = []
+
+        fields = map(fix_import_export_id_paths, fields)
+        ModelData = self.pool['ir.model.data']
+
+        mode = 'init'
+        current_module = ''
+        noupdate = False
+
+        ids = []
+        for id, xid, record, info in self._convert_records(cr, uid,
+                self._extract_records(cr, uid, fields, data,
+                                      context=context, log=messages.append),
+                context=context, log=messages.append):
+            cr.execute('SAVEPOINT model_load_save')
+            try:
+                ids.append(ModelData._update(cr, uid, self._name,
+                     current_module, record, mode=mode, xml_id=xid,
+                     noupdate=noupdate, res_id=id, context=context))
+                cr.execute('RELEASE SAVEPOINT model_load_save')
+            except psycopg2.Error, e:
+                # Failed to write, log to messages, rollback savepoint (to
+                # avoid broken transaction) and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                messages.append(dict(info, type="error", message=str(e)))
+        if any(message['type'] == 'error' for message in messages):
+            cr.execute('ROLLBACK TO SAVEPOINT model_load')
+            return False, messages
+        return ids, messages
+    def _extract_records(self, cr, uid, fields_, data,
+                         context=None, log=lambda a: None):
+        """ Generates record dicts from the data iterable.
+
+        The result is a generator of dicts mapping field names to raw
+        (unconverted, unvalidated) values.
+
+        For relational fields, if sub-fields were provided the value will be
+        a list of sub-records
+
+        The following sub-fields may be set on the record (by key):
+        * None is the name_get for the record (to use with name_create/name_search)
+        * "id" is the External ID for the record
+        * ".id" is the Database ID for the record
+
+        :param ImportLogger logger:
+        """
+        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
+        # Fake columns to avoid special cases in extractor
+        columns[None] = fields.char('rec_name')
+        columns['id'] = fields.char('External ID')
+        columns['.id'] = fields.integer('Database ID')
+
+        # m2o fields can't be on multiple lines so exclude them from the
+        # is_relational field rows filter, but special-case it later on to
+        # be handled with relational fields (as it can have subfields)
+        is_relational = lambda field: columns[field]._type in ('one2many', 'many2many', 'many2one')
+        get_o2m_values = itemgetter_tuple(
+            [index for index, field in enumerate(fields_)
+                  if columns[field[0]]._type == 'one2many'])
+        get_nono2m_values = itemgetter_tuple(
+            [index for index, field in enumerate(fields_)
+                  if columns[field[0]]._type != 'one2many'])
+        # Checks if the provided row has any non-empty non-relational field
+        def only_o2m_values(row, f=get_nono2m_values, g=get_o2m_values):
+            return any(g(row)) and not any(f(row))
+
+        rows = CountingStream(data)
+        while True:
+            row = next(rows, None)
+            if row is None: return
+            record_row_index = rows.index
+
+            # copy non-relational fields to record dict
+            record = dict((field[0], value)
+                for field, value in itertools.izip(fields_, row)
+                if not is_relational(field[0]))
+
+            # Get all following rows which have relational values attached to
+            # the current record (no non-relational values)
+            # WARNING: replaces existing ``rows``
+            record_span, _rows = span(only_o2m_values, rows)
+            # stitch record row back on for relational fields
+            record_span = itertools.chain([row], record_span)
+            for relfield in set(
+                    field[0] for field in fields_
+                             if is_relational(field[0])):
+                column = columns[relfield]
+                # FIXME: how to not use _obj without relying on fields_get?
+                Model = self.pool[column._obj]
+
+                # copy stream to reuse for next relational field
+                fieldrows, record_span = itertools.tee(record_span)
+                # get only cells for this sub-field, should be strictly
+                # non-empty, field path [None] is for name_get column
+                indices, subfields = zip(*((index, field[1:] or [None])
+                                           for index, field in enumerate(fields_)
+                                           if field[0] == relfield))
+
+                # return all rows which have at least one value for the
+                # subfields of relfield
+                relfield_data = filter(any, map(itemgetter_tuple(indices), fieldrows))
+                record[relfield] = [subrecord
+                    for subrecord, _subinfo in Model._extract_records(
+                        cr, uid, subfields, relfield_data,
+                        context=context, log=log)]
+            # Ensure full consumption of the span (and therefore advancement of
+            # ``rows``) even if there are no relational fields. Needs two as
+            # the code above stiched the row back on (so first call may only
+            # get the stiched row without advancing the underlying operator row
+            # itself)
+            next(record_span, None)
+            next(record_span, None)
+
+            # old rows consumption (by iterating the span) should be done here,
+            # at this point the old ``rows`` is 1 past `span` (either on the
+            # next record row or past ``StopIteration``, so wrap new ``rows``
+            # (``_rows``) in a counting stream indexed 1-before the old
+            # ``rows``
+            rows = CountingStream(_rows, rows.index - 1)
+            yield record, {'rows': {'from': record_row_index,'to': rows.index}}
+    def _convert_records(self, cr, uid, records,
+                         context=None, log=lambda a: None):
+        """ Converts records from the source iterable (recursive dicts of
+        strings) into forms which can be written to the database (via
+        self.create or (ir.model.data)._update)
+
+        :param ImportLogger parent_logger:
+        :returns: a list of triplets of (id, xid, record)
+        :rtype: list((int|None, str|None, dict))
+        """
+        Converter = self.pool['ir.fields.converter']
+        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
+        converters = dict(
+            (k, Converter.to_field(cr, uid, self, column, context=context))
+            for k, column in columns.iteritems())
+
+        stream = CountingStream(records)
+        for record, extras in stream:
+            dbid = False
+            xid = False
+            converted = {}
+            # name_get/name_create
+            if None in record: pass
+            # xid
+            if 'id' in record:
+                xid = record['id']
+            # dbid
+            if '.id' in record:
+                try:
+                    dbid = int(record['.id'])
+                except ValueError:
+                    # in case of overridden id column
+                    dbid = record['.id']
+                if not self.search(cr, uid, [('id', '=', dbid)], context=context):
+                    log(dict(extras,
+                        type='error',
+                        record=stream.index,
+                        field='.id',
+                        message=_(u"Unknown database identifier '%s'") % dbid))
+                    dbid = False
+
+            for field, strvalue in record.iteritems():
+                if field in (None, 'id', '.id'): continue
+
+                message_base = dict(extras, record=stream.index, field=field)
+                with warnings.catch_warnings(record=True) as w:
+                    try:
+                        converted[field] = converters[field](strvalue)
+
+                        for warning in w:
+                            log(dict(message_base, type='warning',
+                                     message=unicode(warning.message) % message_base))
+                    except ValueError, e:
+                        log(dict(message_base,
+                            type='error',
+                            message=unicode(e) % message_base
+                        ))
+
+            yield dbid, xid, converted, dict(extras, record=stream.index)
 
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
@@ -5108,5 +5305,32 @@ class AbstractModel(BaseModel):
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
 
+def span(predicate, iterable):
+    """ Splits the iterable between the longest prefix of ``iterable`` whose
+    elements satisfy ``predicate`` and the rest.
 
+    If called with a list, equivalent to::
+
+        takewhile(predicate, lst), dropwhile(predicate, lst)
+
+    :param callable predicate:
+    :param iterable:
+    :rtype: (iterable, iterable)
+    """
+    it1, it2 = itertools.tee(iterable)
+    return (itertools.takewhile(predicate, it1),
+            itertools.dropwhile(predicate, it2))
+def itemgetter_tuple(items):
+    """ Fixes itemgetter inconsistency (useful in some cases) of not returning
+    a tuple if len(items) == 1: always returns an n-tuple where n = len(items)
+    """
+    if len(items) == 0:
+        return lambda a: ()
+    if len(items) == 1:
+        return lambda gettable: (gettable[items[0]],)
+    return operator.itemgetter(*items)
+class ImportWarning(Warning):
+    """ Used to send warnings upwards the stack during the import process
+    """
+    pass
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
