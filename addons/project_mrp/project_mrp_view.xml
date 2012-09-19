@@ -36,9 +36,16 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='procure_method']" position="after">
-                    <field name="supply_method" groups="base.group_user"/>
+                <xpath expr="//field[@name='supply_method']" position="attributes">
+                    <attribute name="invisible">False</attribute>
                 </xpath>
+                <group name="procurement_help" position="inside">
+                    <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
+                        When you sell this service to a customer, <b>a task</b> will be 
+                        created to follow up the job to do. This task will appear
+                        in the project related to the contract of the sale order.
+                    </p>
+                </group>
             </field>
         </record>
     </data>

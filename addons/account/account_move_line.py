@@ -215,8 +215,10 @@ class account_move_line(osv.osv):
     def _default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+        if not context.get('journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
+        if not context.get('period_id', False):
+            context['period_id'] = context.get('search_default_period_id')
         account_obj = self.pool.get('account.account')
         period_obj = self.pool.get('account.period')
         journal_obj = self.pool.get('account.journal')
