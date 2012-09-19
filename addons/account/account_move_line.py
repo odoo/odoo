@@ -226,6 +226,9 @@ class account_move_line(osv.osv):
         partner_obj = self.pool.get('res.partner')
         currency_obj = self.pool.get('res.currency')
         context = self.convert_to_period(cr, uid, context)
+        #pass the right context when search_defaul_journal_id
+        if context.get('search_default_journal_id',False):
+            context.update({'journal_id':context.get('search_default_journal_id',False)})
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
