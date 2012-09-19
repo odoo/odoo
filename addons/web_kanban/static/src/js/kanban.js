@@ -1013,7 +1013,8 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
         $(".oe_kanban_quick_create_add", this.$el).click(function () {
             self.quick_add();
         });
-        $(".oe_kanban_quick_create_close", this.$el).click(function () {
+        $(".oe_kanban_quick_create_close", this.$el).click(function (ev) {
+            ev.preventDefault();
             self.trigger('close');
         });
         self.$input.keyup(function(e) {
@@ -1031,7 +1032,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
     quick_add: function () {
         var self = this;
         this._dataset.call(
-            'name_create', [self.$input.val(), new instance.web.CompoundContext(
+            'name_create', [self.$input.val() || false, new instance.web.CompoundContext(
                     this._dataset.get_context(), this._context)])
             .pipe(function(record) {
                 self.$input.val("");
