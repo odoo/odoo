@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+        <record model='ir.ui.view' id='fleet_vehicle_model_form'>
+            <field name="name">fleet.vehicle.model.form</field>
+            <field name="model">fleet.vehicle.model</field>
+            <field name="arch" type="xml">
+                <form string="Model">
+                    <field name="name" />
+                </form>
+            </field>
+        </record>
+        <record model='ir.ui.view' id='fleet_vehicle_model_tree'>
+            <field name="name">fleet.vehicle.model.tree</field>
+            <field name="model">fleet.vehicle.model</field>
+            <field name="arch" type="xml">
+                <tree string="Models" version="7.0">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_model_act'>
+            <field name="name">Vehicle Model</field>
+            <field name="res_model">fleet.vehicle.model</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Fleet Management" id="menu_root" />
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
+        <menuitem action="fleet_vehicle_model_act" parent="fleet_vehicles" id="fleet_vehicle_model_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_form'>
+            <field name="name">fleet.vehicle.form</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="name" />
+                            <field name="model_id" on_change="on_change_model(model_id)" />
+                            <field name="message" />
+                        </group>
+                        <notebook>
+                            <page string="Repairing">
+                                <field name="next_repair_km" />
+                            </page>
+                            <page string="Logs">
+                                <field name="log_ids">
+                                    <tree string="Logs">
+                                        <field name="create_date" />
+                                        <field name="type" />
+                                        <field name="employee_id" />
+                                        <field name="description" />
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_tree'>
+            <field name="name">fleet.vehicle.tree</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicle" version="7.0">
+                    <field name="name" />
+                    <field name="model_id" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_act'>
+            <field name="name">Vehicles</field>
+            <field name="res_model">fleet.vehicle</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
+        <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_form'>
+            <field name="name">fleet.vehicle.log.form</field>
+            <field name="model">fleet.vehicle.log</field>
+            <field name="arch" type="xml">
+                <form string="Logs" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="type" />
+                            <field name="create_date" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_tree'>
+            <field name="name">fleet.vehicle.log.tree</field>
+            <field name="model">fleet.vehicle.log</field>
+            <field name="arch" type="xml">
+                <tree string="Logs">
+                    <field name="type" />
+                    <field name="create_date" />
+                    <field name="vehicle_id" />
+                    <field name="employee_id" />
+                    <field name="description" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_act'>
+            <field name="name">Vehicle Logs</field>
+            <field name="res_model">fleet.vehicle.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_act" parent="fleet_vehicles" id="fleet_vehicle_log_menu" />
+
+
+        <record model='ir.ui.view' id='fleet_hr_employee_form'>
+            <field name="name">fleet.hr.employee.form</field>
+            <field name="model">hr.employee</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="hr.view_employee_form" />
+            <field name="arch" type="xml">
+                <notebook position="inside">
+                    <page string="Vehicle">
+                        <group>
+                            <field name="vehicle_id" />
+                        </group>
+                    </page>
+                </notebook>
+            </field>
+        </record>
+
+<!--         <record model="fleet.vehicle.model" id="citroen">
+            <field name="name">Citroen</field>
+        </record>
+
+        <record model="fleet.vehicle" id="stw_vehicle">
+            <field name="name">240BTN</field>
+            <field name="model_id" ref="citroen" />
+        </record>
+ -->
+    </data>
+</openerp>
