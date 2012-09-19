@@ -49,7 +49,7 @@ class crm_contact_us(osv.TransientModel):
         """
         user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'email'], context)
 
-        if (user['login'] != 'anonymous'):
+        if (user['login'] != 'anonymous' and user['email']):
             return user['email']
         else:
             return None
