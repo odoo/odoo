@@ -956,9 +956,16 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='procure_method']" position="after">
-                    <field name="supply_method" groups="base.group_user"/>
+                <xpath expr="//field[@name='supply_method']" position="attributes">
+                    <attribute name="invisible">False</attribute>
                 </xpath>
+                <group name="procurement_help" position="inside">
+                    <p attrs="{'invisible': [('type','=','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','produce')]}">
+                        When you sell this product, OpenERP will trigger <b>a manufacturing
+                        order</b> using the bill of materials assigned to this product.
+                        The delivery order will be ready once the production is done.
+                    </p>
+</group>
             </field>
         </record>
 
