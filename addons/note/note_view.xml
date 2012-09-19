@@ -77,14 +77,12 @@
                     </ul>
                   </div>
                 </div>
-                <!-- kanban memo -->
+                <!-- kanban note -->
                 <div t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
                 </div>
-                
                 <field name="tag_ids"/>
-
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
                     <img t-if="record.current_partner_id.raw_value!=follower" t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar" t-att-data-member_id="follower"/>
@@ -139,9 +137,8 @@
         <search string="Notes">
           <field name="memo" string="Note"/>
           <field name="tag_ids" groups="note.group_note_tags"/>
-          <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
-          <filter name="open_today" string="Today" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
-          <filter name="open_false" string="Older" domain="[('open', '=', False)]"/>
+          <filter name="open_true" string="Active" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
+          <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By...">
             <filter icon="terp-stock_symbol-selection" string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>

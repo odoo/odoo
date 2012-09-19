@@ -142,11 +142,9 @@
                         </li>
                         <li><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                         <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
+                        <t t-call="mail.thread.message.vote"/>
                         <li t-if="options.show_reply"><a class="oe_mail_msg_reply">Reply</a></li>
                         <li t-if="options.show_reply_by_email"><a class="oe_mail_msg_reply_by_email" t-attf-data-msg_id="{record.id}">Reply</a></li>
-                        <!-- uncomment when merging vote
-                        <li><a href="#">Like</a></li>
-                        -->
                         <li t-if="record.attachment_ids.length > 0">
                             <a class="oe_mail_msg_view_attachments">
                                 <t t-if="record.attachment_ids.length == 1">1 Attachment</t>
@@ -179,5 +177,18 @@
             </t>
         </ul>
     </t>
+
+    <!-- mail.thread.message.vote
+        Template used to display Like/Unlike in a mail.message
+    -->
+    <li t-name="mail.thread.message.vote">
+        <t t-if='record.vote_user_ids.length > 0'>
+             <span class="oe_left oe_mail_vote_count"><t t-esc="record.vote_user_ids.length"/> votes</span>
+        </t>
+        <button t-attf-class="oe_mail_msg_vote oe_mail_msg_vote_#{record.has_voted}" t-attf-data-msg_id="{record.id}">
+            <t t-if="! record.has_voted"><span>+1</span></t>
+            <t t-if="record.has_voted"><span>-1</span></t>
+        </button>
+    </li>
 
 </template>

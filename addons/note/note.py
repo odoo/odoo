@@ -102,7 +102,8 @@ class note_note(osv.osv):
     def _set_stage_per_user(self, cr, uid, id, name, value, args=None, context=None):
         note = self.browse(cr, uid, id, context=context)
         if not value: return False
-        return self.write(cr, uid, [id], {'stage_ids': [(4, value)]}, context=context)
+        stage_ids = [value] + [stage.id for stage in note.stage_ids if stage.user_id.id != uid ]
+        return self.write(cr, uid, [id], {'stage_ids': [(6, 0, stage_ids)]}, context=context)
 
     def _get_stage_per_user(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
