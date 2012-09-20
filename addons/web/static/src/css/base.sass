@@ -475,6 +475,12 @@ $sheet-max-width: 860px
             text-decoration: none
         margin-bottom: 1px
     // }}}
+	.oe_form
+		header
+			.oe_tags
+			  margin:5px 0 0 5px
+			  width:400px
+			  padding-bottom:0
     // Tooltips {{{
     &.oe_tooltip
         font-size: 12px
@@ -563,7 +569,7 @@ $sheet-max-width: 860px
         position: absolute
         top: 26px
         left: 0
-        z-index: 1
+        z-index: 3
         margin: 0
         padding: 0
         border: 1px solid $tag-border
@@ -1552,7 +1558,7 @@ $sheet-max-width: 860px
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
-            padding: 8px
+            padding: 0
     .oe_form_sheetbg
         padding: 8px 0
     .oe_form_sheet_width
@@ -1798,6 +1804,9 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
