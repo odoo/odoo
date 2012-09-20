@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
   <data>
-    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-
     <!-- note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
@@ -37,8 +35,6 @@
         <field name="view_mode">tree,form</field>
         <field name="domain">[('user_id','=',uid)]</field>
     </record>
-
-    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
 
     <!-- New note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
@@ -117,12 +113,10 @@
       <field name="arch" type="xml">
         <form string="Note" version="7.0">
           <header>
+            <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
             <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
           <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
-          <group groups="note.group_note_tags" col="2">
-            <field name="tag_ids" widget="many2many_tags"/>
-          </group>
           <field name="message_follower_ids" widget="mail_followers"/>
           <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
         </form>
@@ -185,7 +179,8 @@
       <field name="context">{'search_default_open_true':True}</field>
     </record>
 
-    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+    <menuitem name="Notes" id="menu_note_notes" parent="mail.mail_my_stuff" sequence="20" action="note.action_note_note"/>
+    <menuitem name="Categories" id="menu_notes_stage" parent="mail.mail_my_stuff" action="note.action_note_stage" sequence="21" groups="base.group_no_one"/>
 
   </data>
 </openerp>
