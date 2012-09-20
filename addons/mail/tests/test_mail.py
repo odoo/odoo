@@ -253,29 +253,64 @@ class test_mail(TestMailMockups):
         follower_ids = set([follower.partner_id.id for follower in self.mail_followers.browse(cr, uid, fol_obj_ids)])
         self.assertEqual(follower_ids, set([partner_bert_id, user_admin.partner_id.id]), 'Bert and Admin should be the followers of dummy mail.group data')
 
-    def test_11_message_followers(self):
-        """ Tests designed for the subscriber API. """
+    def test_11_message_followers_and_subtypes(self):
+        """ Tests designed for the subscriber API as well as message subtypes """
         cr, uid = self.cr, self.uid
         user_admin = self.res_users.browse(cr, uid, uid)
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-
-        # Create user Raoul
+        # Data: user Raoul
         user_raoul_id = self.res_users.create(cr, uid, {'name': 'Raoul Grosbedon', 'login': 'raoul'})
         user_raoul = self.res_users.browse(cr, uid, user_raoul_id)
+        # Data: message subtypes
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_mg_def', 'default': True, 'res_model': 'mail.group'})
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_other_def', 'default': True, 'res_model': 'crm.lead'})
+        self.mail_message_subtype.create(cr, uid, {'name': 'mt_all_def', 'default': True, 'res_model': False})
+        mt_mg_nodef = self.mail_message_subtype.create(cr, uid, {'name': 'mt_mg_nodef', 'default': False, 'res_model': 'mail.group'})
+        mt_all_nodef = self.mail_message_subtype.create(cr, uid, {'name': 'mt_all_nodef', 'default': False, 'res_model': False})
+        default_group_subtypes = self.mail_message_subtype.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', 'mail.group'), ('res_model', '=', False)])
 
-        # Subscribe Raoul three times (niak niak) through message_subscribe_users
+        # ----------------------------------------
+        # CASE1: test subscriptions with subtypes
+        # ----------------------------------------
+
+        # Do: Subscribe Raoul three times (niak niak) through message_subscribe_users
         group_pigs.message_subscribe_users([user_raoul_id, user_raoul_id])
         group_pigs.message_subscribe_users([user_raoul_id])
         group_pigs.refresh()
+        # Test: 2 followers (Admin and Raoul)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
         self.assertEqual(len(follower_ids), 2, 'There should be 2 Pigs fans')
         self.assertEqual(set(follower_ids), set([user_raoul.partner_id.id, user_admin.partner_id.id]), 'Admin and Raoul should be the only 2 Pigs fans')
+        # Test: Raoul follows default subtypes
+        fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_raoul.partner_id.id)])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set(default_group_subtypes), 'subscription subtypes are incorrect')
 
-        # Unsubscribe Raoul twice through message_unsubscribe_users
+        # Do: Unsubscribe Raoul twice through message_unsubscribe_users
         group_pigs.message_unsubscribe_users([user_raoul_id, user_raoul_id])
         group_pigs.refresh()
+        # Test: 1 follower (Admin)
         follower_ids = [follower.id for follower in group_pigs.message_follower_ids]
         self.assertEqual(follower_ids, [user_admin.partner_id.id], 'Admin must be the only Pigs fan')
+
+        # Do: subscribe Admin with subtype_ids
+        group_pigs.message_subscribe_users([uid], [mt_mg_nodef, mt_all_nodef])
+        fol_ids = self.mail_followers.search(cr, uid, [('res_model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id), ('partner_id', '=', user_admin.partner_id.id)])
+        fol_obj = self.mail_followers.browse(cr, uid, fol_ids)[0]
+        fol_subtype_ids = set([subtype.id for subtype in fol_obj.subtype_ids])
+        self.assertEqual(set(fol_subtype_ids), set([mt_mg_nodef, mt_all_nodef]), 'subscription subtypes are incorrect')
+
+        # ----------------------------------------
+        # CASE2: test mail_thread fields
+        # ----------------------------------------
+
+        group_pigs.refresh()
+        subtype_data = eval(group_pigs.message_subtype_data)
+        self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
+        self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
+        self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
@@ -307,9 +342,12 @@ class test_mail(TestMailMockups):
         _mail_bodyalt2 = 'Pigs rules\nAdmin'
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
+        # ----------------------------------------
         # CASE1: post comment, body and subject specified
+        # ----------------------------------------
+
         self._init_mock_build_email()
-        msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment')
+        msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment', subtype='mt_comment')
         message = self.mail_message.browse(cr, uid, msg_id)
         sent_emails = self._build_email_kwargs_list
         # Test: notifications have been deleted
@@ -334,10 +372,13 @@ class test_mail(TestMailMockups):
         for sent_email in sent_emails:
             self.assertEqual(sent_email['email_to'], ['b@b'], 'sent_email email_to is incorrect')
 
+        # ----------------------------------------
         # CASE2: post an email with attachments, parent_id, partner_ids
+        # ----------------------------------------
+
         # TESTS: automatic subject, signature in body_html, attachments propagation
         self._init_mock_build_email()
-        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email',
+        msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email', subtype='mt_comment',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
         sent_emails = self._build_email_kwargs_list
@@ -608,7 +649,7 @@ class test_mail(TestMailMockups):
 
         # Post 4 message on group_pigs
         for dummy in range(4):
-            group_pigs.message_post(body='My Body')
+            group_pigs.message_post(body='My Body', subtype='mt_comment')
 
         # Check there are 4 new needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
@@ -652,6 +693,7 @@ class test_mail(TestMailMockups):
     def test_60_vote(self):
         """ Test designed for the vote/unvote feature. """
         cr, uid = self.cr, self.uid
+        user_admin = self.res_users.browse(cr, uid, uid)
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
         msg1 = group_pigs.message_post(body='My Body', subject='1')
         msg1 = self.mail_message.browse(cr, uid, msg1)
@@ -677,32 +719,3 @@ class test_mail(TestMailMockups):
         msg1.refresh()
         # Test: msg1 has Bert as voter
         self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
-        
-    def test_70_message_subtype(self):
-        """ Tests designed for message_subtype. """
-        cr, uid = self.cr, self.uid
-        self.res_users.write(cr, uid, [uid], {'signature': 'Admin', 'email': 'a@a'})
-        user_admin = self.res_users.browse(cr, uid, uid)
-        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
-        
-        # 0 - Admin
-        p_a_id = user_admin.partner_id.id
-        # Subscribe #1,
-   
-        group_pigs.message_subscribe_users([uid])
-
-        # Mail data
-        _subject = 'Pigs'
-        _mail_subject = '%s posted on %s' % (user_admin.name, group_pigs.name)
-        _body1 = 'Pigs rules'
-        _mail_body1 = 'Pigs rules\n<pre>Admin</pre>\n'
-        _mail_bodyalt1 = 'Pigs rules\nAdmin'
-        _body2 = '<html>Pigs rules</html>'
-        _mail_body2 = '<html>Pigs rules\n<pre>Admin</pre>\n</html>'
-        _mail_bodyalt2 = 'Pigs rules\nAdmin\n'
-        filter_subtype_id = self.mail_message_subtype.search(cr, uid, [('default','=',True)])
-        # Post comment with body and subject, comment preference
-        msg_id = self.mail_group.message_post(cr, uid, [self.group_pigs_id], body=_body1, subject=_subject, type='comment',subtype_xml_id='mt_comment')
-        notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', msg_id)])
-        self.assertTrue(len(notif_ids) >= 1,"subtype is email and show notification on wall")
-

@@ -45,10 +45,8 @@ class mail_followers(osv.Model):
                         help='Id of the followed resource'),
         'partner_id': fields.many2one('res.partner', string='Related Partner',
                         ondelete='cascade', required=True, select=1),
-        'subtype_ids': fields.many2many('mail.message.subtype',
-                                        'mail_message_subtyp_rel',
-                                        'subscription_id', 'subtype_id', 'Subtype',
-                                        help = "linking some subscription to several subtype for projet/task"),
+        'subtype_ids': fields.many2many('mail.message.subtype', string='Subtype',
+            help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
 
 

@@ -95,6 +95,7 @@ class many2many_reference(fields.many2many):
             else:
                 return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
 
+
 class mail_thread(osv.AbstractModel):
     ''' mail_thread model is meant to be inherited by any model that needs to
         act as a discussion topic on which messages can be attached. Public
@@ -117,8 +118,10 @@ class mail_thread(osv.AbstractModel):
     _description = 'Email Thread'
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
+        """ Computes:
+            - message_unread: has uid unread message for the document
+            - message_summary: html snippet summarizing the Chatter for kanban views """
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
@@ -133,7 +136,35 @@ class mail_thread(osv.AbstractModel):
         for thread in self.browse(cr, uid, ids, context=context):
             cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
             res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
-            res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
+        return res
+
+    def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
+        """ Computes:
+            - message_is_follower: is uid in the document followers
+            - message_subtype_data: data about document subtypes: which are
+                available, which are followed if any """
+        res = dict((id, dict(message_subtype_data='')) for id in ids)
+        user_pid = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
+
+        # find current model subtypes, add them to a dictionary
+        subtype_obj = self.pool.get('mail.message.subtype')
+        subtype_ids = subtype_obj.search(cr, uid, ['|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+        subtype_dict = dict((subtype.name, dict(default=subtype.default, followed=False)) for subtype in subtype_obj.browse(cr, uid, subtype_ids, context=context))
+
+        # find the document followers, update the data
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, uid, [
+            ('partner_id', '=', user_pid),
+            ('res_id', 'in', ids),
+            ('res_model', '=', self._name),
+        ], context=context)
+        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
+            thread_subtype_dict = subtype_dict.copy()
+            res[fol.res_id]['message_is_follower'] = True
+            for subtype in fol.subtype_ids:
+                thread_subtype_dict[subtype.name]['followed'] = True
+            res[fol.res_id]['message_subtype_data'] = '%s' % thread_subtype_dict
+
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
@@ -150,8 +181,13 @@ class mail_thread(osv.AbstractModel):
         return [('id', 'in', res.keys())]
 
     _columns = {
-        'message_is_follower': fields.function(_get_message_data,
-            type='boolean', string='Is a Follower', multi='_get_message_data'),
+        'message_is_follower': fields.function(_get_subscription_data,
+            type='boolean', string='Is a Follower', multi='_get_subscription_data,'),
+        'message_subtype_data': fields.function(_get_subscription_data,
+            type='text', string='Subscription data', multi="_get_subscription_data",
+            help="Holds data about the subtypes. The content of this field "\
+                  "is a structure holding the current model subtypes, and the "\
+                  "current document followed subtypes."),
         'message_follower_ids': many2many_reference('res.partner',
             'mail_followers', 'res_id', 'partner_id',
             reference_column='res_model', string='Followers'),
@@ -563,7 +599,7 @@ class mail_thread(osv.AbstractModel):
         self.message_post(cr, uid, [id], message, context=context)
 
     def message_post(self, cr, uid, thread_id, body='', subject=False, type='notification',
-                        subtype_xml_id=None, parent_id=False, attachments=None, context=None, **kwargs):
+                        subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
@@ -579,8 +615,8 @@ class mail_thread(osv.AbstractModel):
         """
         context = context or {}
         attachments = attachments or []
-        assert (not thread_id) or isinstance(thread_id, (int,long)) or \
-            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id" 
+        assert (not thread_id) or isinstance(thread_id, (int, long)) or \
+            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
@@ -598,15 +634,13 @@ class mail_thread(osv.AbstractModel):
             }
             attachment_ids.append((0, 0, data_attach))
 
+        if subtype:
+            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype)
+            subtype_id = ref and ref[1] or False
+        else:
+            subtype_id = False
+
         values = kwargs
-        subtype_obj = self.pool.get('mail.message.subtype')
-        if subtype_xml_id:
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype_xml_id)
-            subtype_browse = subtype_obj.browse(cr, uid, ref[1],context=context)
-            if self._name == subtype_browse.res_model:
-                values['subtype_id']=subtype_browse.id
-            if not subtype_browse.res_model:
-                values['subtype_id']=subtype_browse.id
         values.update({
             'model': context.get('thread_model', self._name) if thread_id else False,
             'res_id': thread_id or False,
@@ -615,34 +649,44 @@ class mail_thread(osv.AbstractModel):
             'type': type,
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
+            'subtype_id': subtype_id,
         })
-        for x in ('from', 'to', 'cc'): values.pop(x, None) # Avoid warnings 
+        # Avoid warnings about non-existing fields
+        for x in ('from', 'to', 'cc'):
+            values.pop(x, None)
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
     #------------------------------------------------------
     # Followers API
     #------------------------------------------------------
 
-    def message_subscribe_users(self, cr, uid, ids, user_ids=None, context=None):
+    def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
-        if not user_ids: user_ids = [uid]
+        if not user_ids:
+            user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
-        return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
+        return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
 
-    def message_subscribe(self, cr, uid, ids, partner_ids,subtype_ids=None, context=None):
+    def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
+        self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+
         if not subtype_ids:
             subtype_obj = self.pool.get('mail.message.subtype')
-            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', 'true'),('res_model', '=', self._name)],context=context)
-        if subtype_ids:
-            self.message_subscribe_udpate_subtypes(cr, uid, ids, partner_ids, subtype_ids, context=context)
-        return self.write(cr, uid, ids, {'message_follower_ids': [(4, pid) for pid in partner_ids]}, context=context)
+            subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
+
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
+        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+
+        return True
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, unsubscribe uid instead. """
-        if not user_ids: user_ids = [uid]
+        if not user_ids:
+            user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
@@ -678,9 +722,4 @@ class mail_thread(osv.AbstractModel):
         ''', (ids, self._name, partner_id))
         return True
 
-    def message_subscribe_udpate_subtypes(self, cr, uid, ids, user_id, subtype_ids,context=None):
-        followers_obj = self.pool.get('mail.followers')
-        followers_ids = followers_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
-        return followers_obj.write(cr, uid, followers_ids, {'subtype_ids': [(6, 0 , subtype_ids)]}, context = context)
-        
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -354,27 +354,24 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids.
             Call mail_notification.notify to manage the email sending
         """
-        followers_obj = self.pool.get("mail.followers")
         message = self.browse(cr, uid, newid, context=context)
         partners_to_notify = set([])
-        # add all partner_ids of the message
+        # message has no subtype_id: pure log message -> no partners, no one notified
+        if not message.subtype_id:
+            message.write({'partner_ids': [5]})
+            return True
+        # all partner_ids of the mail.message have to be notified
         if message.partner_ids:
             partners_to_notify |= set(partner.id for partner in message.partner_ids)
-        # add all followers and set add them in partner_ids
+        # all followers of the mail.message document have to be added as partners and notified
         if message.model and message.res_id:
-            record = self.pool.get(message.model).browse(cr, uid, message.res_id, context=context)
-            extra_notified = set(partner.id for partner in record.message_follower_ids)
+            fol_obj = self.pool.get("mail.followers")
+            fol_ids = fol_obj.search(cr, uid, [('res_model', '=', message.model), ('res_id', '=', message.res_id), ('subtype_ids', 'in', message.subtype_id.id)], context=context)
+            fol_objs = fol_obj.browse(cr, uid, fol_ids, context=context)
+            extra_notified = set(fol.partner_id.id for fol in fol_objs)
             missing_notified = extra_notified - partners_to_notify
-            missing_follow_ids = []
-            if message.subtype_id:
-                for p_id in missing_notified:
-                    follow_ids = followers_obj.search(cr, uid, [('partner_id','=',p_id),('subtype_ids','in',[message.subtype_id.id]),('res_model','=',message.model),('res_id','=',message.res_id)], context=context)
-                    if follow_ids and len(follow_ids):
-                        missing_follow_ids.append(p_id)
-                    subtype_record = self.pool.get('mail.message.subtype').browse(cr, uid, message.subtype_id.id,context=context)
-                    if not subtype_record.res_model:
-                        missing_follow_ids.append(p_id)
-            message.write({'partner_ids': [(4, p_id) for p_id in missing_follow_ids]})
+            if missing_notified:
+                message.write({'partner_ids': [(4, p_id) for p_id in missing_notified]})
             partners_to_notify |= extra_notified
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
