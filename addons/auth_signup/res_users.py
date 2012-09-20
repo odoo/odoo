@@ -14,7 +14,7 @@ class res_users(osv.Model):
         #   groups (optional)
         #   sign (for partner_id and groups)
         #
-        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth.signup_template_user_id', 0)
+        user_template_id = self.pool.get('ir.config_parameter').get_param(cr, uid, 'auth_signup.template_user_id', 0)
         if user_template_id:
             self.pool.get('res.users').copy(cr, SUPERUSER_ID, user_template_id, new_user, context=context)
         else:
