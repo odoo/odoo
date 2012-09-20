@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Model">
                     <field name="name" />
-                    <field name="submodel" />
+                    <field name="make" />
                 </form>
             </field>
         </record>
@@ -17,7 +17,7 @@
             <field name="arch" type="xml">
                 <tree string="Models" version="7.0">
                     <field name="name" />
-                    <field name="submodel" />
+                    <field name="make" />
                 </tree>
             </field>
         </record>
@@ -40,7 +40,7 @@
                 <form string="Vehicle" version="7.0">
                     <sheet>
                         <group>
-                            <field name="name" />
+                            <field name="registration" />
                             <field name="model_id" on_change="on_change_model(model_id)" />
                             <field name="message" />
                         </group>
@@ -69,7 +69,7 @@
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
                 <tree string="Vehicle" version="7.0">
-                    <field name="name" />
+                    <field name="registration" />
                     <field name="model_id" />
                 </tree>
             </field>
