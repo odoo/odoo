@@ -18,21 +18,22 @@
 -
   I create an invoice for the first line
 -
+   !python {model: sale.order.line.make.invoice}: |
+
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_20")], "active_id":ref("sale_order_line_20")})
+    pay_id = self.create(cr, uid, {})
+    self.make_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+-
+  I create an invoice for a fixed price (25% of the second line, thus 5)
+-
    !python {model: sale.advance.payment.inv}: |
     ctx = context.copy()
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
-    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("sale_order_line_20"), context=context)
-    pay_id = self.create(cr, uid, {'advance_payment_method': 'lines', 'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
     self.create_invoices(cr, uid, [pay_id], context=ctx)
--
-  I create an invoice for a fixed price (a percentage of the amount of the second line)
--
-   !python {model: sale.advance.payment.inv}: |
-    ctx = context.copy()
-    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
-    order_line = self.pool.get('sale.order.line').browse(cr, uid, ref("sale_order_line_21"), context=context)
-    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'product_id': order_line.product_id.id, 'amount': order_line.price_subtotal, 'qtty': order_line.product_uom_qty})
-    self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
 
 -
   I create an invoice for the remaining and check the amount (should be the remaining amount of second line)
@@ -42,8 +43,12 @@
     ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
     pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
     self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+    assert len(invoice_ids) == 3, "All invoices are not created"
+    for invoice in invoice_ids:
+        assert invoice.amount_total in (7290,5,20), "Invoice total is not correct"
 -
-  I cancel all the invoices.  
+  I cancel all the invoices.
 -
   !python {model: sale.order}: |
     import netsvc
@@ -65,9 +70,10 @@
 -
   !python {model: sale.order}: |
     sale_order = self.browse(cr, uid, ref("sale_order_8"))
-    total_order_line = []
+    total_order_line = 0
     assert len(sale_order.invoice_ids), "Invoice should be created."
-    for order_line in sale_order.invoice_ids:
-        total_order_line = order_line.invoice_line
-    assert len(total_order_line) == 2, "invoice lines are not same"
+    for invoice in sale_order.invoice_ids:
+        if invoice.state != 'cancel':
+            total_order_line += len(invoice.invoice_line)
+    assert total_order_line == 2, "wrong number of invoice lines"
 
