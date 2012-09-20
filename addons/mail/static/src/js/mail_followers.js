@@ -72,24 +72,24 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function() {
             var self = this;
-            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
-                return results[0].message_follower_ids;
-            }).pipe(this.proxy('set_value'));
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_is_follower', 'message_follower_ids']).then(function (results) {
+                self.set_value(results[0].message_follower_ids, results[0].message_is_follower);
+            });
         },
 
-        set_value: function(value_) {
+        set_value: function(value_, message_is_follower) {
             this.reinit();
             if (! this.view.datarecord.id ||
                 session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
                 this.$('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            return this.fetch_followers(value_  || this.get_value());
+            return this.fetch_followers(value_  || this.get_value(), message_is_follower);
         },
 
-        fetch_followers: function (value_) {
+        fetch_followers: function (value_, message_is_follower) {
             this.value = value_;
-            this.message_is_follower = this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value();
+            this.message_is_follower = message_is_follower || (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
             return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
         },
 
