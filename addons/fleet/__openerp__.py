@@ -13,6 +13,6 @@
     'installable' : True,
     'application' : True,
     'data' : [
-        'hr_car_view.xml',
+        'fleet_view.xml',
     ]
 }
