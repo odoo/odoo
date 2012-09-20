@@ -12,10 +12,10 @@ class fleet_vehicle_model(osv.Model):
     _description = ''
 
     _columns = {
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'brand', required=True),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True),
         'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
-        'name' : fields.char('Name', size=32, required=True),
-        'make' : fields.char('Make',size=32,required=True),
+        'name' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=True),
+        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=True),
         'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
 
@@ -24,6 +24,20 @@ class fleet_vehicle_model_brand(osv.Model):
     _description = 'Brand model of the vehicle'
     _columns = {
         'name' : fields.char('Brand Name',size=32, required=True),
+    }
+
+class fleet_vehicle_model_name(osv.Model):
+    _name = 'fleet.vehicle.model.name'
+    _description = 'Name model of the vehicle'
+    _columns = {
+        'name' : fields.char('Name',size=32, required=True),
+    }
+
+class fleet_vehicle_model_make(osv.Model):
+    _name = 'fleet.vehicle.model.make'
+    _description = 'Make model of the vehicle'
+    _columns = {
+        'name' : fields.char('Make',size=32, required=True),
     }
 
 class fleet_vehicle(osv.Model):
