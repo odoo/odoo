@@ -27,6 +27,9 @@ openerp.account = function (instance) {
                 this.$(".oe_account_recon_reconcile").click(function() {
                     self.reconcile();
                 });
+                this.$(".oe_account_recom_mark_as_reconciled").click(function() {
+                    self.mark_as_reconciled();
+                });
             }
             return tmp;
         },
@@ -84,6 +87,13 @@ openerp.account = function (instance) {
                         self.do_search(self.last_domain, self.last_context, self.last_group_by);
                     });
                 });
+            });
+        },
+        mark_as_reconciled: function() {
+            var self = this;
+            var id = self.partners[self.current_partner][0];
+            new instance.web.Model("res.partner").call("mark_as_reconciled", [[id]]).pipe(function() {
+                self.do_search(self.last_domain, self.last_context, self.last_group_by);
             });
         },
     });
