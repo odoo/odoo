@@ -40,10 +40,11 @@ class crm_contact_us(osv.TransientModel):
         r = self.pool.get('res.company').search(cr, uid, [], context=context)
         return r
 
-    def _get_current_user_name(self, cr, uid, context=None):
+    def _get_user_name(self, cr, uid, context=None):
         """
         If the user is logged in (i.e. not anonymous), get the user's name to
         pre-fill the partner_name field.
+        Same goes for the other _get_user_attr methods.
 
         @return current user's name if the user isn't "anonymous", None otherwise
         """
@@ -54,13 +55,7 @@ class crm_contact_us(osv.TransientModel):
         else:
             return None
 
-    def _get_current_user_email(self, cr, uid, context=None):
-        """
-        If the user is logged in (i.e. not anonymous), get the user's email to
-        pre-fill the email_from field.
-
-        @return current user's email if the user isn't "anonymous", None otherwise
-        """
+    def _get_user_email(self, cr, uid, context=None):
         user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'email'], context)
 
         if (user['login'] != 'anonymous' and user['email']):
@@ -68,13 +63,7 @@ class crm_contact_us(osv.TransientModel):
         else:
             return None
 
-    def _get_current_user_phone(self, cr, uid, context=None):
-        """
-        If the user is logged in (i.e. not anonymous), get the user's phone to
-        pre-fill the phone field.
-
-        @return current user's phone if the user isn't "anonymous", None otherwise
-        """
+    def _get_user_phone(self, cr, uid, context=None):
         user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'phone'], context)
 
         if (user['login'] != 'anonymous' and user['phone']):
@@ -83,9 +72,9 @@ class crm_contact_us(osv.TransientModel):
             return None
 
     _defaults = {
-        'partner_name': _get_current_user_name,
-        'email_from': _get_current_user_email,
-        'phone': _get_current_user_phone,
+        'partner_name': _get_user_name,
+        'email_from': _get_user_email,
+        'phone': _get_user_phone,
         'company_ids': _get_companies,
     }
 
