@@ -476,23 +476,23 @@ class hr_applicant(base_stage, osv.Model):
         for applicant in self.browse(cr, uid, ids, context=context):
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
-                self.message_post(cr, uid, [applicant.id], body=message, subtype_xml_id="mt_recruitment_hired", context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="mt_recruitment_hired", context=context)
             else:
                 message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, subtype_xml_id="mt_recruitment_hired", context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, subtype="mt_recruitment_hired", context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, subtype_xml_id="mt_recruitment_refused", context=context)
+        return self.message_post(cr, uid, ids, body=msg, subtype="mt_recruitment_refused", context=context)
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         message =_("Applicant has been set as <b>new</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_recruitment_new", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="mt_recruitment_new", context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been <b>created</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_recruitment_new", context=context)
+        return self.message_post(cr, uid, ids, body=message, subtype="mt_recruitment_new", context=context)
 
 
 class hr_job(osv.osv):

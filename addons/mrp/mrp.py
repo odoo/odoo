@@ -1044,12 +1044,12 @@ class mrp_production(osv.osv):
     # ---------------------------------------------------
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), subtype_xml_id="mt_mrp_order_new", context=context)
+        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), subtype="mt_mrp_order_new", context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_mrp_order_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_mrp_order_canceled", context=context)
         return True
 
     def action_ready_send_note(self, cr, uid, ids, context=None):
@@ -1064,7 +1064,7 @@ class mrp_production(osv.osv):
 
     def action_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_mrp_order_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_mrp_order_closed", context=context)
         return True
 
     def action_confirm_send_note(self, cr, uid, ids, context=None):

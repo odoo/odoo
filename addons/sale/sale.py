@@ -1029,7 +1029,7 @@ class sale_order(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), subtype_xml_id="mt_sale_new", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), subtype="mt_sale_new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1049,10 +1049,10 @@ class sale_order(osv.osv):
                 self.message_post(cr, uid, [order.id], body=_("Delivery Order <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
 
     def delivery_end_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), subtype_xml_id="mt_sale_delivered", context=context)
+        self.message_post(cr, uid, ids, body=_("Order <b>delivered</b>."), subtype="mt_sale_delivered", context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype_xml_id="sale_subtype_paid", context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="sale_subtype_paid", context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):

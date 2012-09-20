@@ -293,17 +293,17 @@ class event_event(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>created</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_event_new", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_event_new", context=context)
         return True
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_event_cancel", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_event_cancel", context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been set to <b>draft</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_event_new", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_event_new", context=context)
         return True
 
     def button_done_send_note(self, cr, uid, ids, context=None):
@@ -313,7 +313,7 @@ class event_event(osv.osv):
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>confirmed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_event_confirm", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_event_confirm", context=context)
         return True
 
 event_event()
@@ -359,7 +359,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_('State set to open'),subtype_xml_id="mt_registration_confirm", context=context)
+        self.message_post(cr, uid, ids, body=_('State set to open'),subtype="mt_registration_confirm", context=context)
         return self.write(cr, uid, ids, {'state': 'open'},context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -395,7 +395,7 @@ class event_registration(osv.osv):
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_post(cr, uid, ids, body=_('State set to Cancel'), subtype_xml_id="mt_registration_cancel", context=context)
+        self.message_post(cr, uid, ids, body=_('State set to Cancel'), subtype="mt_registration_cancel", context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):

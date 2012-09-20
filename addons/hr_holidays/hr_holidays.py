@@ -368,7 +368,7 @@ class hr_holidays(osv.osv):
     def holidays_confirm_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), subtype_xml_id="mt_holidays_confirm", context=context)
+                _("The request has been <b>submitted</b> and is waiting for validation by the manager."), subtype="mt_holidays_confirm", context=context)
 
     def holidays_first_validate_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -382,12 +382,12 @@ class hr_holidays(osv.osv):
                     _("The request has been <b>double validated</b>. The validation process is now over."), context=context)
             else:
                 self.message_post(cr, uid, [obj.id],
-                    _("The request has been <b>approved</b>. The validation process is now over."), subtype_xml_id="mt_holidays_closed", context=context)
+                    _("The request has been <b>approved</b>. The validation process is now over."), subtype="mt_holidays_closed", context=context)
 
     def holidays_refuse_notificate(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids):
             self.message_post(cr, uid, [obj.id],
-                _("The request has been <b>refused</b>. The validation process is now over."), subtype_xml_id="mt_holidays_refused", context=context)
+                _("The request has been <b>refused</b>. The validation process is now over."), subtype="mt_holidays_refused", context=context)
 
 
 class resource_calendar_leaves(osv.osv):

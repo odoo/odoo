@@ -95,13 +95,13 @@ class account_analytic_account(osv.osv):
     def set_close(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_account_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_account_closed", context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
         message = _("Contract has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype_xml_id="mt_account_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_account_canceled", context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):

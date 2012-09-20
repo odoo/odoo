@@ -496,22 +496,22 @@ class procurement_order(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>created</b>."), subtype_xml_id="procurement_subtype_new", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>created</b>."), subtype="procurement_subtype_new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), subtype_xml_id="procurement_subtype_confirmed", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), subtype="procurement_subtype_confirmed", context=context)
 
     def running_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), subtype_xml_id="procurement_subtype_running", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), subtype="procurement_subtype_running", context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), subtype_xml_id="procurement_subtype_ready", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), subtype="procurement_subtype_ready", context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), subtype_xml_id="procurement_subtype_cancelled", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), subtype="procurement_subtype_cancelled", context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), subtype_xml_id="procurement_subtype_closed", context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), subtype="procurement_subtype_closed", context=context)
 
 procurement_order()
 
