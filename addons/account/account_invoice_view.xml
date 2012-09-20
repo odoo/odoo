@@ -279,6 +279,9 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <!-- Invisible fields used in chatter widgets -->
+                    <field name="message_subtype_data" invisible="True"/>
+                    <field name="message_is_follower" invisible="True"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
@@ -438,6 +441,9 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                    <!-- Invisible fields used in chatter widgets -->
+                    <field name="message_subtype_data" invisible="True"/>
+                    <field name="message_is_follower" invisible="True"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>

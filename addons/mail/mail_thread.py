@@ -665,7 +665,6 @@ class mail_thread(osv.AbstractModel):
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
-        print cr, uid, ids, user_ids, subtype_ids, context
         if not user_ids:
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
