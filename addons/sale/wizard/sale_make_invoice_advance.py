@@ -43,26 +43,6 @@ class sale_advance_payment_inv(osv.osv_memory):
             help="The amount to be invoiced in advance."),
     }
 
-
-    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        if context is None:context = {}
-        user_obj = self.pool.get('res.users')
-        res = super(sale_advance_payment_inv, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-        active_ids = context.get('active_ids', False)
-        invoice_obj = self.pool.get('account.invoice')
-        model = context.get('active_model', '')
-        model_obj = self.pool.get(model)
-        if context.get('active_model', '') in ['sale.order'] and context.get('active_ids', []):
-             order_data = model_obj.read(cr, uid, context.get('active_ids'), ['invoice_ids'])[0]
-             for inv in invoice_obj.browse(cr, uid, order_data.get('invoice_ids')):
-                 for line in inv.invoice_line:
-                     # if percentage(Advance payment) is given then remove sale order lines option..
-                     if str(line.name).startswith("Advance of"):
-                         for field in res['fields']:
-                             if field == 'advance_payment_method':
-                                 res['fields'][field]['selection'] = [('all', 'Invoice all the Sale Order'), ('percentage', 'Percentage'), ('fixed', 'Fixed Price'),]
-        return res
-
     def _get_advance_product(self, cr, uid, context=None):
         try:
             product = self.pool.get('ir.model.data').get_object(cr, uid, 'sale', 'advance_product_0')
