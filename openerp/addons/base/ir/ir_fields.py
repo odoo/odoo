@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import functools
 import operator
+import itertools
 import warnings
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
@@ -55,7 +56,29 @@ class ir_fields_converter(orm.Model):
             converter, cr, uid, model, column, context=context)
 
     def _str_to_boolean(self, cr, uid, model, column, value, context=None):
-        return value.lower() not in ('', '0', 'false', 'off')
+        # all translatables used for booleans
+        true, yes, false, no = _(u"true"), _(u"yes"), _(u"false"), _(u"no")
+        # potentially broken casefolding? What about locales?
+        trues = set(word.lower() for word in itertools.chain(
+            [u'1', u"true", u"yes"], # don't use potentially translated values
+            self._get_translations(cr, uid, ['code'], u"true", context=context),
+            self._get_translations(cr, uid, ['code'], u"yes", context=context),
+        ))
+        if value.lower() in trues: return True
+
+        # potentially broken casefolding? What about locales?
+        falses = set(word.lower() for word in itertools.chain(
+            [u'', u"0", u"false", u"no"],
+            self._get_translations(cr, uid, ['code'], u"false", context=context),
+            self._get_translations(cr, uid, ['code'], u"no", context=context),
+        ))
+        if value.lower() in falses: return False
+
+        warnings.warn(
+            _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
+                % (value, yes),
+            orm.ImportWarning)
+        return True
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
         if not value: return False
@@ -86,7 +109,7 @@ class ir_fields_converter(orm.Model):
             selection = selection(model, cr, uid)
         for item, label in selection:
             labels = self._get_translations(
-                cr, uid, ('selection', 'model'), label, context=context)
+                cr, uid, ('selection', 'model', 'code'), label, context=context)
             labels.append(label)
             if value == unicode(item) or value in labels:
                 return item

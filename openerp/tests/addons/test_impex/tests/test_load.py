@@ -79,6 +79,27 @@ class ImporterCase(common.TransactionCase):
         })
         return '__test__.' + name
 
+    def add_translations(self, name, type, code, *tnx):
+        Lang = self.registry('res.lang')
+        if not Lang.search(self.cr, openerp.SUPERUSER_ID, [('code', '=', code)]):
+            Lang.create(self.cr, openerp.SUPERUSER_ID, {
+                'name': code,
+                'code': code,
+                'translatable': True,
+                'date_format': '%d.%m.%Y',
+                'decimal_point': ',',
+            })
+        Translations = self.registry('ir.translation')
+        for source, value in tnx:
+            Translations.create(self.cr, openerp.SUPERUSER_ID, {
+                'name': name,
+                'lang': code,
+                'type': type,
+                'src': source,
+                'value': value,
+                'state': 'translated',
+            })
+
 class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
@@ -139,41 +160,39 @@ class test_boolean_field(ImporterCase):
         ], values(records))
 
     def test_falses(self):
-        ids, messages = self.import_(
-            ['value'],
-            [[u'0'], [u'off'],
-             [u'false'], [u'FALSE'],
-             [u'OFF'], [u''],
-        ])
-        self.assertEqual(len(ids), 6)
+        for lang, source, value in [('fr_FR', 'no', u'non'),
+                                    ('de_DE', 'no', u'nein'),
+                                    ('ru_RU', 'no', u'нет'),
+                                    ('nl_BE', 'false', u'vals'),
+                                    ('lt_LT', 'false', u'klaidingas')]:
+            self.add_translations('test_import.py', 'code', lang, (source, value))
+        falses = [[u'0'], [u'no'], [u'false'], [u'FALSE'], [u''],
+                  [u'non'], # no, fr
+                  [u'nein'], # no, de
+                  [u'нет'], # no, ru
+                  [u'vals'], # false, nl
+                  [u'klaidingas'], # false, lt,
+        ]
+
+        ids, messages = self.import_(['value'], falses)
         self.assertFalse(messages)
-        self.assertEqual([
-                False,
-                False,
-                False,
-                False,
-                False,
-                False,
-            ],
-            values(self.read()))
+        self.assertEqual(len(ids), len(falses))
+        self.assertEqual([False] * len(falses), values(self.read()))
 
     def test_trues(self):
-        ids, messages = self.import_(
-            ['value'],
-            [['no'],
-             ['None'],
-             ['nil'],
-             ['()'],
-             ['f'],
-             ['#f'],
-             # Problem: OpenOffice (and probably excel) output localized booleans
-             ['VRAI'],
+        trues = [['None'], ['nil'], ['()'], ['f'], ['#f'],
+                  # Problem: OpenOffice (and probably excel) output localized booleans
+                  ['VRAI'], ['ok'], ['true'], ['yes'], ['1'], ]
+        ids, messages = self.import_(['value'], trues)
+        self.assertEqual(len(ids), 10)
+        self.assertEqual(messages, [
+            message(u"Unknown value '%s' for boolean field 'value', assuming 'yes'" % v[0],
+                    type='warning', from_=i, to_=i, record=i)
+            for i, v in enumerate(trues)
+            if v[0] != 'true' if v[0] != 'yes' if v[0] != '1'
         ])
-        self.assertEqual(len(ids), 7)
-        # FIXME: should warn for values which are not "true", "yes" or "1"
-        self.assertFalse(messages)
         self.assertEqual(
-            [True] * 7,
+            [True] * 10,
             values(self.read()))
 
 class test_integer_field(ImporterCase):
@@ -399,9 +418,9 @@ class test_text(ImporterCase):
 class test_selection(ImporterCase):
     model_name = 'export.selection'
     translations_fr = [
-        ("Qux", "toto"),
-        ("Bar", "titi"),
         ("Foo", "tete"),
+        ("Bar", "titi"),
+        ("Qux", "toto"),
     ]
 
     def test_imported(self):
@@ -416,23 +435,8 @@ class test_selection(ImporterCase):
         self.assertEqual([3, 2, 1, 2], values(self.read()))
 
     def test_imported_translated(self):
-        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': u'Français',
-            'code': 'fr_FR',
-            'translatable': True,
-            'date_format': '%d.%m.%Y',
-            'decimal_point': ',',
-            'thousand_sep': ' ',
-        })
-        Translations = self.registry('ir.translation')
-        for source, value in self.translations_fr:
-            Translations.create(self.cr, openerp.SUPERUSER_ID, {
-                'name': 'export.selection,value',
-                'lang': 'fr_FR',
-                'type': 'selection',
-                'src': source,
-                'value': value
-            })
+        self.add_translations(
+            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
 
         ids, messages = self.import_(['value'], [
             ['toto'],
@@ -474,7 +478,7 @@ class test_selection_function(ImporterCase):
     translations_fr = [
         ("Corge", "toto"),
         ("Grault", "titi"),
-        ("Whee", "tete"),
+        ("Wheee", "tete"),
         ("Moog", "tutu"),
     ]
 
@@ -483,7 +487,7 @@ class test_selection_function(ImporterCase):
         be good news) *and* serializes the selection function to reverse it:
         import does not actually know that the selection field uses a function
         """
-        # NOTE: conflict between a value and a label => ?
+        # NOTE: conflict between a value and a label => pick first
         ids, messages = self.import_(['value'], [
             ['3'],
             ["Grault"],
@@ -497,38 +501,20 @@ class test_selection_function(ImporterCase):
     def test_translated(self):
         """ Expects output of selection function returns translated labels
         """
-        self.registry('res.lang').create(self.cr, openerp.SUPERUSER_ID, {
-            'name': u'Français',
-            'code': 'fr_FR',
-            'translatable': True,
-            'date_format': '%d.%m.%Y',
-            'decimal_point': ',',
-            'thousand_sep': ' ',
-        })
-        Translations = self.registry('ir.translation')
-        for source, value in self.translations_fr:
-            Translations.create(self.cr, openerp.SUPERUSER_ID, {
-                'name': 'export.selection,value',
-                'lang': 'fr_FR',
-                'type': 'selection',
-                'src': source,
-                'value': value
-            })
+        self.add_translations(
+            'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
+
         ids, messages = self.import_(['value'], [
-            ['toto'],
+            ['titi'],
             ['tete'],
         ], context={'lang': 'fr_FR'})
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
-            'type': 'error',
-            'rows': {'from': 1, 'to': 1},
-            'record': 1,
-            'field': 'value',
-            'message': "Value 'tete' not found in selection field 'value'",
-        }])
-        ids, messages = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
-        self.assertEqual(len(ids), 1)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 2)
+        self.assertEqual(values(self.read()), ['1', '2'])
+
+        ids, messages = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
+        self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
