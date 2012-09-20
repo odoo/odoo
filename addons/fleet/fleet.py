@@ -1,11 +1,18 @@
 from osv import osv, fields
 
 class fleet_vehicle_model(osv.Model):
+    _name = 'fleet.vehicle.type'
+    _description = 'Type of the vehicle'
+    _columns = {
+        'name' : fields.char('Name', size=32, required=True),
+    }
+
+class fleet_vehicle_model(osv.Model):
     _name = 'fleet.vehicle.model'
     _description = '...'
 
     _columns = {
-        'type' : fields.char('Type', size=32, required=True),
+        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
         'brand' : fields.char('Brand', size=32, required=True),
         'name' : fields.char('Name', size=32, required=True),
         'make' : fields.char('Make',size=32,required=True),
