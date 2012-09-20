@@ -204,10 +204,19 @@ class ir_fields_converter(orm.Model):
             ids.append(id)
 
         return [(6, 0, ids)]
-    def _str_to_one2many(self, cr, uid, model, column, value, context=None):
+    def _str_to_one2many(self, cr, uid, model, column, records, context=None):
         commands = []
 
-        for record in value:
+        if len(records) == 1 and exclude_ref_fields(records[0]) == {}:
+            # only one row with only ref field, field=ref1,ref2,ref3 as in
+            # m2o/m2m
+            record = records[0]
+            subfield = self._referencing_subfield(record)
+            # transform [{subfield:ref1,ref2,ref3}] into
+            # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
+            records = ({subfield:item} for item in record[subfield].split(','))
+
+        for record in records:
             id = None
             refs = only_ref_fields(record)
             # there are ref fields in the record

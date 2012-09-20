@@ -850,6 +850,8 @@ class test_o2m(ImporterCase):
             'this is the rhythm'.split())
 
     def test_link_inline(self):
+        """ m2m-style specification for o2ms
+        """
         id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
             'str': 'Bf', 'value': 109
         })
@@ -857,17 +859,17 @@ class test_o2m(ImporterCase):
             'str': 'Me', 'value': 262
         })
 
-        try:
-            self.import_(['const', 'value/.id'], [
-                ['42', '%d,%d' % (id1, id2)]
-            ])
-            self.fail("Should have raised a valueerror")
-        except ValueError, e:
-            # should be Exception(Database ID doesn't exist: export.one2many.child : $id1,$id2)
-            self.assertIs(type(e), ValueError)
-            self.assertEqual(
-                e.args[0],
-                "invalid literal for int() with base 10: '%d,%d'" % (id1, id2))
+        ids, messages = self.import_(['const', 'value/.id'], [
+            ['42', '%d,%d' % (id1, id2)]
+        ])
+        self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
+
+        [b] = self.browse()
+        self.assertEqual(b.const, 42)
+        # automatically forces link between core record and o2ms
+        self.assertEqual(values(b.value), [109, 262])
+        self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link(self):
         """ O2M relating to an existing record (update) force a LINK_TO as well
