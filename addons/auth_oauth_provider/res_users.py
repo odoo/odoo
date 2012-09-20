@@ -19,15 +19,20 @@
 #
 ##############################################################################
 from openerp.osv import osv, fields
+import random
+import string
 
 class res_users(osv.osv):
     _inherit = 'res.users'
 
     _columns = {
-        'last_oauth_token': fields.char('Last OAuth Token', size=64, readonly=True, invisible=True),
+        'last_oauth_token': fields.char('Last OAuth Token', readonly=True, invisible=True),
     }
 
-    def get_oauth_token(self, cr, uid, context=None):
-        return "TOKENJEFILWJLK"
+    def get_oauth_token(self, cr, uid, client_id="", scope="", context=None):
+        chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
+        token = ''.join(random.choice(chars) for x in range(random.randrange(16, 24)))
+        self.write(cr, uid, [uid], { "last_oauth_token": token }, context=context)
+        return token
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

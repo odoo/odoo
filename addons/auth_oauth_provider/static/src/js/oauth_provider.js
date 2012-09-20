@@ -16,25 +16,30 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         if (!params.redirect_uri) {
             this.error(_t("No 'redirect_uri' parameter given"));
         }
-        // params.client_id TODO
-        // params.scope TODO
         // params.approval_prompt TODO
         if (!this._error) {
-            instance.session.rpc('/oauth2/get_token', {}).then(function(r) {
-                self.redirect(r.access_token);
+            instance.session.rpc('/oauth2/get_token', {
+                client_id: params.client_id || '',
+                scope: params.scope || '',
+            }).then(function(result) {
+                self.redirect(result);
             }).fail(function() {
                 self.error(_t("An error occured while contacting the OpenERP server."));
             });
         }
     },
-    redirect: function(access_token) {
+    redirect: function(result) {
         var params = $.deparam($.param.querystring());
         var a = document.createElement('a');
         a.href = params.redirect_uri;
-        var search = (a.search ? '&' : '?') + 'access_token=' + access_token;
+        var search = (a.search ? '&' : '?') + 'access_token=' + result.access_token;
         if (params.state) {
             search += "&state=" + params.state;
         }
+        if (params.expires_in) {
+            search += "&expires_in=" + expires_in;
+        }
+        search += '&token_type=Bearer';
         var redirect = a.protocol + '//' + a.host + a.pathname + search + a.hash;
         //window.location = redirect;
         console.log("redirect to", redirect);

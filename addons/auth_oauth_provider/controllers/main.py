@@ -30,8 +30,8 @@ class AuthOAuthProvider(openerpweb.Controller):
     _cp_path = '/oauth2'
 
     @openerpweb.jsonrequest
-    def get_token(self, req, **kw):
-        token = req.session.model('res.users').get_oauth_token()
+    def get_token(self, req, client_id="", scope="", **kw):
+        token = req.session.model('res.users').get_oauth_token(client_id, scope)
         return {
             'access_token': token,
         }
