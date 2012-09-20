@@ -9,7 +9,7 @@ class fleet_vehicle_model(osv.Model):
         'brand' : fields.char('Brand', size=32, required=True),
         'name' : fields.char('Name', size=32, required=True),
         'make' : fields.char('Make',size=32,required=True),
-        'vendors': fields.many2many('fleet.vehicle.model','fleet_vehicle_model_vendors','partner_id','Vendors'),
+        'partner_id': fields.many2many('fleet.vehicle.model','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
 
 class fleet_vehicle(osv.Model):

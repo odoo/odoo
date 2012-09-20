@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name' : 'Car Management',
+    'name' : 'Fleet Management',
     'version' : '0.1',
     'depends' : [
         'base',
