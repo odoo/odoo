@@ -45,10 +45,21 @@
             <field name="arch" type="xml">
                 <form string="Vehicle" version="7.0">
                     <sheet>
-                        <group>
-                            <field name="registration" />
-                            <field name="model_id" on_change="on_change_model(model_id)" />
-                            <field name="message" />
+                        <group col="2">
+                            <group>
+                                <field name="registration" />
+                                <field name="vin_sn" />
+                                <field name="model_id" on_change="on_change_model(model_id)" />
+                                <field name="acquisition_date" />
+                                <field name="message" />
+                            </group>
+                            <group>
+                                <field name="acquisition_price" />
+                                <field name="color" />
+                                <field name="location" />
+                                <field name="status" />
+                                <field name="driver" />
+                            </group>
                         </group>
                         <notebook>
                             <page string="Repairing">
@@ -77,6 +88,8 @@
                 <tree string="Vehicle" version="7.0">
                     <field name="registration" />
                     <field name="model_id" />
+                    <field name="vin_sn" />
+                    <field name="acquisition_date" />
                 </tree>
             </field>
         </record>

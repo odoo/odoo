@@ -45,10 +45,16 @@ class fleet_vehicle(osv.Model):
     _description = 'Fleet Vehicle'
 
     _columns = {
-        'registration' : fields.char('Registration', size=32, required=True),
+        'registration' : fields.char('Registration', size=32, required=False),
+        'vin_sn' : fields.char('VIN SN', size=32, required=False),
         'driver' : fields.many2one('fleet.vehicle', 'employee_id', required=False),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
+        'acquisition_date' : fields.date('Acquisition date', required=False),
+        'acquisition_price' : fields.integer('Price'),
+        'color' : fields.char('Color',size=32),
+        'status' : fields.char('Status',size=32),
+        'location' : fields.char('Location',size=32),
 
         'next_repair_km' : fields.integer('Next Repair Km'),
         'message' : fields.char('Message', size=128, readonly=True),
