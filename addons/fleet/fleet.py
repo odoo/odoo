@@ -6,6 +6,7 @@ class fleet_vehicle_model(osv.Model):
 
     _columns = {
         'name' : fields.char('Name', size=32, required=True),
+        'submodel' : fields.char('Submodel',size=32,required=True),
     }
 
 class fleet_vehicle(osv.Model):
