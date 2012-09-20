@@ -304,7 +304,7 @@ class account_bank_statement(osv.osv):
             'date': st_line.date,
             'ref': st_line.ref,
             'move_id': move_id,
-            'partner_id': partner_id,
+            'partner_id': par_id,
             'account_id': acc_id,
             'credit': credit,
             'debit': debit,

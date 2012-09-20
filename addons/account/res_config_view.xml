@@ -122,6 +122,10 @@
                         <label for="id" string="Features"/>
                         <div>
                             <div>
+                                <field name="group_multi_currency" class="oe_inline"/>
+                                <label for="group_multi_currency"/>
+                            </div>
+                            <div>
                                 <field name="module_account_accountant" class="oe_inline"/>
                                 <label for="module_account_accountant"/>
                             </div>
@@ -220,10 +224,8 @@
                         <div>
                             <div>
                                 <label for="company_footer"/>
-                                <button name="%(action_bank_tree)d"
-                                    string="Configure your bank accounts"
-                                    icon="gtk-go-forward"
-                                    type="action"
+                                <button name="open_company_form" type="object"
+                                    string="Configure your company bank accounts" icon="gtk-go-forward"
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>

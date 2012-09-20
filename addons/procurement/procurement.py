@@ -80,7 +80,7 @@ class procurement_order(osv.osv):
     """
     _name = "procurement.order"
     _description = "Procurement"
-    _order = 'priority,date_planned desc'
+    _order = 'priority desc,date_planned'
     _inherit = ['mail.thread']
     _log_create = False
     _columns = {
@@ -319,13 +319,13 @@ class procurement_order(osv.osv):
             if record.move_id and record.move_id.state == 'cancel':
                 return True
         return False
-    
+
     #Initialize get_phantom_bom_id method as it is raising an error from yml of mrp_jit
     #when one install first mrp and after that, mrp_jit. get_phantom_bom_id defined in mrp module
     #which is not dependent for mrp_jit.
     def get_phantom_bom_id(self, cr, uid, ids, context=None):
         return False
-    
+
     def action_confirm(self, cr, uid, ids, context=None):
         """ Confirms procurement and writes exception message if any.
         @return: True
@@ -554,7 +554,7 @@ class stock_warehouse_orderpoint(osv.osv):
         'logic': fields.selection([('max','Order to Max'),('price','Best price (not yet active!)')], 'Reordering Mode', required=True),
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse', required=True, ondelete="cascade"),
         'location_id': fields.many2one('stock.location', 'Location', required=True, ondelete="cascade"),
-        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','=','product')]),
+        'product_id': fields.many2one('product.product', 'Product', required=True, ondelete='cascade', domain=[('type','!=','service')]),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
         'product_min_qty': fields.float('Minimum Quantity', required=True,
             help="When the virtual stock goes below the Min Quantity specified for this field, OpenERP generates "\

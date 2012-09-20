@@ -130,19 +130,19 @@
                                 </div>
                             </group>
                             <group>
-                                <group string="Administration">
+                                <group string="Administration" groups="project.group_time_work_estimation_tasks">
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="effective_hours" widget="float_time"/>
                                     <field name="resource_calendar_id"/>
                                 </group>
                                 <group string="Miscellaneous" name="misc">
+                                    <field name="date"/>
                                     <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
 
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
                                     <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
-
                                 </group>
                             </group>
                         </page>
@@ -249,47 +249,21 @@
                                     <div class="oe_kanban_project_list">
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action"> <field name="task_count"/> Tasks</a>
                                     </div>
-                                    <table>
-                                      <tr class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">
-                                        <th>Deadline</th>
-                                        <td><field name="date"/></td>
-                                      </tr>
-                                      <tr class="oe_kanban_project_fields oe_kanban_project_progress">
-                                        <th>Progress</th>
-                                        <td><t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></td>
-                                      </tr>
-                                    </table>
+                                    <div class="oe_kanban_footer_left">
+                                        <span>
+                                            <span class="oe_e">R</span>
+                                            <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
+                                        </span>
+                                        <span t-if="record.date.raw_value">
+                                            <span class="oe_e">N</span>
+                                            <field name="date"/>
+                                        </span>
+                                    </div>
                                     <div class="oe_kanban_project_avatars">
                                         <t t-foreach="record.members.raw_value" t-as="member">
                                             <img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
                                         </t>
                                     </div>
-
-                                    <!--<h3 class="oe_kanban_ellipsis"><field name="name"/></h3>-->
-
-                                    <!--<div class="oe_kanban_project_list">-->
-                                        <!--<a t-if="record.use_tasks.raw_value"-->
-                                            <!--name="%(act_project_project_2_project_task_all)d" type="action">-->
-                                            <!--Tasks(<field name="task_count"/>)</a>-->
-                                    <!--</div>-->
-
-                                    <!--<div class="oe_kanban_project_fields oe_kanban_project_deadline" t-if="record.date.raw_value">-->
-                                        <!--<div>Deadline</div>-->
-                                        <!--<div><field name="date"/></div>-->
-                                    <!--</div>-->
-                                    <!--<div class="oe_kanban_project_fields oe_kanban_project_progress">-->
-                                        <!--<div>Progress</div>-->
-                                        <!--<div><t t-esc="Math.round(record.effective_hours.raw_value)"/> / <t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/></div>-->
-                                    <!--</div>-->
-                                    <!--<div name="alias_box" t-if="record.alias_domain.raw_value" class="oe_kanban_ellipsis">-->
-                                        <!--<a t-attf-href="mailto:#{record.alias_id.value}"><field name="alias_id"/></a>-->
-                                    <!--</div>-->
-                                    <!--<div class="oe_kanban_project_avatars">-->
-                                        <!--<t t-foreach="record.members.raw_value" t-as="member">-->
-                                            <!--<img t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>-->
-                                        <!--</t>-->
-                                    <!--</div>-->
-
                                 </div>
                             </div>
                         </t>
@@ -319,16 +293,14 @@
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                   Click to start a new project.
-                </p>
-                <p>
+                </p><p>
                   Projects are used to organize your activities; plan
                   tasks, track issues, invoice timesheets. You can define
                   internal projects (R&amp;D, Improve Sales Process),
                   private projects (My Todos) or customer ones.
-                </p>
-                <p>
-                    You will be able collaborate with internal users on
-                    projects or invite customers to share your activities.
+                </p><p>
+                  You will be able collaborate with internal users on
+                  projects or invite customers to share your activities.
                 </p>
             </field>
         </record>
@@ -427,8 +399,6 @@
                                     states="cancelled,done" context="{'button_reactivate':True}"/>
                             <button name="action_close" string="Done" type="object"
                                     states="draft,open,pending"/>
-                            <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
-                                    states="pending,open,draft" groups="project.group_delegate_task"/>
                             <button name="do_cancel" string="Cancel" type="object"
                                     states="draft,open,pending"/>
                         </span>
@@ -475,7 +445,9 @@
                             </group>
                             <div class="oe_clear"/>
                         </page>
-                        <page string="Delegations History" groups="project.group_delegate_task">
+                        <page string="Delegation" groups="project.group_delegate_task">
+                            <button name="%(action_project_task_delegate)d" string="Delegate" type="action"
+                                    states="pending,open,draft" groups="project.group_delegate_task"/>
                             <separator string="Parent Tasks"/>
                             <field name="parent_ids"/>
                             <separator string="Delegated tasks"/>
@@ -542,7 +514,7 @@
                                     <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
                                     <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                     <li>
-                                      <ul class="oe_kanban_project_times">
+                                      <ul class="oe_kanban_project_times" groups="project.group_time_work_estimation_tasks">
                                         <li><a name="set_remaining_time_1" type="object" class="oe_kanban_button">1</a></li>
                                         <li><a name="set_remaining_time_2" type="object" class="oe_kanban_button">2</a></li>
                                         <li><a name="set_remaining_time_5" type="object" class="oe_kanban_button">5</a></li>
@@ -559,7 +531,8 @@
                                 <div>
                                     <field name="project_id"/>
                                     <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/><br/>
-                                    <i><field name="date_deadline"/></i>
+                                    <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
                                 </div>
                                 <div class="oe_kanban_bottom_right">
                                     <a t-if="record.kanban_state.raw_value === 'normal'" type="object" string="Ready to Pull" name="set_kanban_state_done" class="oe_kanban_status"> </a>
@@ -779,7 +752,7 @@
                             <field name="case_default"/>
                         </group>
                         <group>
-                            <field name="state" string="Related State"/>
+                            <field name="state"/>
                             <field name="sequence"/>
                             <field name="fold"/>
                         </group>
@@ -820,7 +793,7 @@
 
         <menuitem id="menu_tasks_config" name="GTD" parent="base.menu_definitions" sequence="1"/>
 
-        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1"/>
+        <menuitem id="base.menu_project_config_project" name="Stages" parent="base.menu_definitions" sequence="1" groups="base.group_no_one"/>
 
         <menuitem action="open_task_type_form" name="Task Stages" id="menu_task_types_view" parent="base.menu_project_config_project" sequence="2"/>
         <menuitem action="open_view_project_all" id="menu_projects" name="Projects" parent="menu_project_management" sequence="1"/>

@@ -181,7 +181,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
             selection= [('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
@@ -836,6 +836,10 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
@@ -2338,6 +2342,16 @@ class account_model(osv.osv):
 
         return move_ids
 
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        company_id = False
+
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            if journal.company_id.id:
+                company_id = journal.company_id.id
+
+        return {'value': {'company_id': company_id}}
+
 account_model()
 
 class account_model_line(osv.osv):
@@ -2516,21 +2530,24 @@ class account_account_template(osv.osv):
         'nocreate': False,
     }
 
-    def _check_type(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
-            if account.parent_id and account.parent_id.type != 'view':
-                return False
-        return True
-
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou cannot define children to an account that has internal type other than  "View".', ['type']),
-
     ]
+
+    def create(self, cr, uid, vals, context=None):
+        if 'parent_id' in vals:
+            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
+            if parent and parent[0]['type'] != 'view':
+                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
+        return super(account_account_template, self).create(cr, uid, vals, context=context)
+
+    def write(self, cr, uid, ids, vals, context=None):
+        if 'parent_id' in vals:
+            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
+            if parent and parent[0]['type'] != 'view':
+                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
+        return super(account_account_template, self).write(cr, uid, ids, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -3010,9 +3027,9 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
-    
+
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
-        currency_id = False        
+        currency_id = False
         if company_id:
             currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
         return {'value': {'currency_id': currency_id}}

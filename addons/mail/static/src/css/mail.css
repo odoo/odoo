@@ -96,10 +96,6 @@
     width: 120px;
 }
 
-.openerp button.oe_mail_button_followers {
-    display: inline;
-}
-
 .openerp button.oe_mail_button_mouseout {
   color: white;
   background-color: #8a89ba;
@@ -230,6 +226,10 @@
     clear: both; 
 }
 
+.openerp .oe_mail_msg_content a {
+    cursor: pointer;
+}
+
 .openerp img.oe_mail_icon {
     width: 50px;
     height: 50px;
@@ -259,6 +259,31 @@
 .openerp .oe_mail_invisible {
     display: none;
 }
+
+/*--------------------------------------------------------------*/
+/* mail.vote
+/*--------------------------------------------------------------*/
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote {
+    height:21px;
+    width: 30px;
+    padding: 1px;
+    background: #8A89BA;
+    margin-top: -4px;
+}
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote_true {
+    background:#DC5F59;
+}
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote span {
+    color: white;
+}
+
+.openerp .oe_mail_msg_content span.oe_mail_vote_count{
+    color: #807FB4;
+}
+
 
 /* ------------------------------------------------------------ */
 /* mail.compose.message form view & OpenERP hacks
@@ -312,15 +337,22 @@
     display: inline-block;
     width: 24px;
     height: 24px;
+    margin: 2px;
+}
+.openerp .oe_mail_msg_content .oe_mail_compose_message_icons div.oe_hidden_input_file button {
+    margin: 0px;
 }
 .openerp .oe_mail_msg_content .oe_mail_compose_message_icons input.oe_form_binary_file {
     bottom: 0px;
     top: auto;
     left: auto;
-    right: 24px;
-    height: 24px;
-    width: 24px;
-    min-width: 24px;
+    right: 28px;
+    height: 26px;
+    width: 26px;
+    min-width: 22px;
+    font-size: 0px;
+    margin: 0px;
+    padding: 0px;
 }
 
 /* ------------------------------------------------------------ */
@@ -338,31 +370,20 @@
     text-decoration: none;
 }
 
-.openerp .oe_mail_msg_footer {
-    color: #888;
-}
-
-.openerp .oe_mail_msg_footer li {
-  float: left;
-  margin-right: 3px;
-}
-
-.openerp .oe_mail_msg_body {
+.openerp .oe_mail_msg .oe_mail_msg_body {
     margin-bottom: .5em;
     text-align: justify;
 }
 
-.openerp .oe_mail_msg_record_body pre {
+.openerp .oe_mail_msg .oe_mail_msg_body pre {
     font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif;
     margin: 0px;
-}
-
-.openerp .oe_mail_msg_body span.oe_mail_msg_tail {
+    white-space: pre-wrap;
     display: inline;
 }
 
 /* Read more/less link */
-.openerp .oe_mail_msg_content .oe_mail_reduce {
+.openerp .oe_mail_msg span.oe_mail_reduce {
     position: absolute;
     right: 0;
 }
@@ -380,11 +401,18 @@
     border-top: 4px solid #404040;
 }
 
-.openerp .oe_mail_msg_footer li:after {
+/* Message footer */
+.openerp .oe_mail_msg .oe_mail_msg_footer {
+    color: #888;
+}
+.openerp .oe_mail_msg .oe_mail_msg_footer li {
+    float: left;
+    margin-right: 3px;
+}
+.openerp .oe_mail_msg .oe_mail_msg_footer li:after {
     content: " · ";
 }
-
-.openerp .oe_mail_msg_footer li:last-child:after {
+.openerp .oe_mail_msg .oe_mail_msg_footer li:last-child:after {
     content: "";
 }
 

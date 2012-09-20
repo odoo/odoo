@@ -20,11 +20,13 @@
 ##############################################################################
 
 import logging
+import openerp
 import tools
 
 from email.header import decode_header
 from operator import itemgetter
 from osv import osv, fields
+from tools.translate import _
 
 _logger = logging.getLogger(__name__)
 
@@ -34,6 +36,7 @@ def decode(text):
     if text:
         text = decode_header(text.replace('\r', ''))
         return ''.join([tools.ustr(x[0], x[1]) for x in text])
+
 
 class mail_message(osv.Model):
     """ Messages model: system notification (replacing res.log notifications),
@@ -57,7 +60,10 @@ class mail_message(osv.Model):
         for message in self.browse(cr, uid, ids, context=context):
             if not message.model or not message.res_id:
                 continue
-            result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            try:
+                result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
+            except openerp.exceptions.AccessDenied, e:
+                pass
         return result
 
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
@@ -124,6 +130,8 @@ class mail_message(osv.Model):
         'unread': fields.function(_get_unread, fnct_search=_search_unread,
             type='boolean', string='Unread',
             help='Functional field to search for unread messages linked to uid'),
+        'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
+            help='Users that voted for this message'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -142,12 +150,35 @@ class mail_message(osv.Model):
     }
 
     #------------------------------------------------------
+    # Vote/Like
+    #------------------------------------------------------
+
+    def vote_toggle(self, cr, uid, ids, user_ids=None, context=None):
+        ''' Toggles voting '''
+        if not user_ids:
+            user_ids = [uid]
+        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
+            for user_id in user_ids:
+                has_voted = user_id in message.get('vote_user_ids')
+                if not has_voted:
+                    self.write(cr, uid, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
+                else:
+                    self.write(cr, uid, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
+        return True
+
+    #------------------------------------------------------
     # Message loading for web interface
     #------------------------------------------------------
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
         child_nbr = len(msg.child_ids)
+        has_voted = False
+        vote_ids = self.pool.get('res.users').name_get(cr, uid, [user.id for user in msg.vote_user_ids], context=context)
+        for vote in vote_ids:
+            if vote[0] == uid:
+                has_voted = True
+                break
         attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
         author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
         author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
@@ -167,6 +198,8 @@ class mail_message(osv.Model):
             'partner_ids': partner_ids,
             'child_ids': [],
             'child_nbr': child_nbr,
+            'vote_user_ids': vote_ids,
+            'has_voted': has_voted
         }
 
     def message_read_tree_get_expandable(self, cr, uid, parent_message, last_message, domain=[], current_level=0, level=0, context=None):
@@ -365,3 +398,25 @@ class mail_message(osv.Model):
             default = {}
         default.update(message_id=False, headers=False)
         return super(mail_message, self).copy(cr, uid, id, default=default, context=context)
+
+    #------------------------------------------------------
+    # Tools
+    #------------------------------------------------------
+
+    def check_partners_email(self, cr, uid, partner_ids, context=None):
+        """ Verify that selected partner_ids have an email_address defined.
+            Otherwise throw a warning. """
+        partner_wo_email_lst = []
+        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+            if not partner.email:
+                partner_wo_email_lst.append(partner)
+        if not partner_wo_email_lst:
+            return {}
+        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
+        for partner in partner_wo_email_lst:
+            warning_msg += '\n- %s' % (partner.name)
+        return {'warning': {
+                    'title': _('Partners email addresses not found'),
+                    'message': warning_msg,
+                    }
+                }

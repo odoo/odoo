@@ -129,7 +129,7 @@
 	                        </group>
                         </page>
                         <page string="Depreciation Board">
-                            <field name="depreciation_line_ids" mode="tree,graph">
+                            <field name="depreciation_line_ids" mode="tree">
                                 <tree string="Depreciation Lines" colors="blue:(move_check == False);black:(move_check == True)">
                                     <field name="depreciation_date"/>
                                     <field name="sequence" invisible="1"/>
@@ -159,11 +159,6 @@
                                         </group>
                                     </group>
                                 </form>
-                                <graph type="bar">
-                                    <field name="name"/>
-                                    <field name="amount"/>
-                                    <field name="depreciated_value"/>
-                                </graph>
                             </field>
                             <button type="object" name="compute_depreciation_board" string="Compute" icon="terp-stock_format-scientific" colspan="2" attrs="{'invisible':[('state','=','close')]}"/>
                         </page>
