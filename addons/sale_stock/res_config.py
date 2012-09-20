@@ -25,10 +25,11 @@ from tools.translate import _
 
 class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
+
     _columns = {
-        'group_invoice_so_lines': fields.boolean('Generate invoices based on the sale order',
+        'group_invoice_so_lines': fields.boolean('Generate invoices from the sale order',
             implied_group='sale.group_invoice_so_lines',
-            help="To allow your salesman to make invoices for sale order lines using the menu 'Lines to Invoice'."),
+            help="This option sets your sales as to be invoiced manually, from the Sale Order"),
         'group_invoice_deli_orders': fields.boolean('Generate invoices after and based on delivery orders',
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
@@ -59,6 +60,7 @@ class sale_configuration(osv.osv_memory):
 
     _defaults = {
         'default_order_policy': 'manual',
+        'group_invoice_so_lines': True,
     }
 
     def default_get(self, cr, uid, fields, context=None):
