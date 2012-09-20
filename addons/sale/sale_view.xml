@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <!-- Top menu item -->
         <!--
             This menu item's purpose is to overwrite another one defined in
@@ -155,9 +156,10 @@
                             <button name="print_quotation" string="Print" type="object" states="sent"/>
                             <button name="action_button_confirm" states="draft" string="Confirm" type="object"/>
                             <button name="action_button_confirm" states="sent" string="Confirm" class="oe_highlight" type="object"/>
+                            <button name="action_view_invoice" string="View Invoice" type="object" class="oe_highlight"
+                              attrs="{'invisible': [('invoice_exists', '=', False)]}"/>
                             <button name="%(action_view_sale_advance_payment_inv)d" string="Create Invoice"
                                 type="action" states="manual" class="oe_highlight"/>
-                                
                             <button name="cancel" states="draft,sent" string="Cancel"/>
                             <button name="action_cancel" states="manual,progress" string="Cancel" type="object"/>
                             <button name="invoice_cancel" states="invoice_except" string="Cancel"/>
@@ -179,7 +181,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="shop_id"  invisible="1"/>
+                            <field name="shop_id" invisible="1"/>
                             <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>
@@ -287,6 +289,7 @@
                                 </group>
                                 <group>
                                     <field name="invoiced"/>
+                                    <field name="invoice_exists" invisible="1"/>
                                 </group>
                             </group>
                         </page>
