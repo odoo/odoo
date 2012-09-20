@@ -208,7 +208,7 @@ class mail_message(osv.Model):
         if parent_message and current_level < level:
             base_domain += [('parent_id', '=', parent_message['id'])]
         elif parent_message:
-            base_domain += [('id', 'child_of', parent_message['id'])]
+            base_domain += [('id', 'child_of', parent_message['id']), ('id', '!=', parent_message['id'])]
         if domain:
             base_domain += domain
         extension = {   'type': 'expandable',
@@ -219,7 +219,7 @@ class mail_message(osv.Model):
                         }
         return extension
 
-    def message_read_tree_flatten(self, cr, uid, parent_message, messages, domain=[], level=0, current_level=0, context=None, limit=None):
+    def message_read_tree_flatten(self, cr, uid, parent_message, messages, domain=[], level=0, current_level=0, context=None, limit=None, add_expandable=True):
         """ Given a tree with several roots of following structure :
             [   {'id': 1, 'child_ids': [
                     {'id': 11, 'child_ids': [...] },],
@@ -238,33 +238,36 @@ class mail_message(osv.Model):
             child_ids = msg_dict.pop('child_ids', [])
             msg_dict['child_ids'] = []
             return [msg_dict] + child_ids
+
         context = context or {}
         limit = limit or self._message_read_limit
+
         # Depth-first flattening
         for message in messages:
             if message.get('type') == 'expandable':
                 continue
-            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message, message['child_ids'], domain, level, current_level + 1, context=context)
+            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message, message['child_ids'], domain, level, current_level + 1, context=context, limit=limit)
             for child in message['child_ids']:
+                if child.get('type') == 'expandable':
+                    continue
                 message['child_nbr'] += child['child_nbr']
         # Flatten if above maximum depth
         if current_level < level:
             return_list = messages
         else:
             return_list = [flat_message for message in messages for flat_message in _flatten(message)]
+
         # Add expandable
         return_list = sorted(return_list, key=itemgetter(context.get('sort_key', 'id')), reverse=context.get('sort_reverse', True))
-        if current_level == 0:
-            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, [], current_level, level, context=context)
-            if len(return_list) >= limit:
-                print 'we need an expandable here'
-            print 'expandable', expandable
-        elif current_level <= level:
-            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, [], current_level, level, context=context)
-            print 'expandable', expandable
+        if return_list and current_level == 0 and add_expandable:
+            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, domain, current_level, level, context=context)
+            return_list.append(expandable)
+        elif return_list and current_level <= level and add_expandable:
+            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, domain, current_level, level, context=context)
+            return_list.append(expandable)
         return return_list
 
-    def message_read(self, cr, uid, ids=False, domain=[], level=0, context=None, limit=None, parent_id=False):
+    def message_read(self, cr, uid, ids=False, domain=[], level=0, context=None, parent_id=False, limit=None):
         """ Read messages from mail.message, and get back a structured tree
             of messages to be displayed as discussion threads. If IDs is set,
             fetch these records. Otherwise use the domain to fetch messages.
@@ -278,11 +281,11 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
-        limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
+        add_expandable = (len(messages) >= limit)
 
         # key: ID, value: record
         tree = {}
@@ -305,7 +308,7 @@ class mail_message(osv.Model):
                 tree[msg.id] = record
 
         # Flatten the result
-        result = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context)
+        result = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context, limit=limit, add_expandable=add_expandable)
         return result
 
     #------------------------------------------------------
