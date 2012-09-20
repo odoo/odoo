@@ -291,6 +291,7 @@ openerp.mail = function(session) {
                 truncate_limit: options.truncate_limit || 250,
             }
             // datasets and internal vars
+            this.records = {};
             this.ds_thread = new session.web.DataSetSearch(this, this.context.default_model);
             this.ds_notification = new session.web.DataSetSearch(this, 'mail.notification');
             this.ds_message = new session.web.DataSetSearch(this, 'mail.message');
@@ -355,6 +356,8 @@ openerp.mail = function(session) {
                     'default_parent_id': parseInt(msg_id),
                     'default_content_subtype': 'html'} );
             });
+            // event: click on 'Vote' button
+            this.$el.on('click', 'button.oe_mail_msg_vote', this.on_vote);
         },
 
         on_message_delete: function (event) {
@@ -371,6 +374,16 @@ openerp.mail = function(session) {
             if (! msg_id) return false;
             $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
             return this.ds_notification.call('set_message_read', [parseInt(msg_id)]);
+        },
+
+        on_vote: function (event) {
+            event.stopPropagation();
+            var self = this;
+            var message_id = $(event.srcElement).parent().data().msg_id;
+            var vote_node = $(event.srcElement).parents('li').eq(0);
+            if (! message_id) { return false; }
+            return this.ds_message.call('vote_toggle', [[parseInt(message_id)]]).pipe(
+                self.toggle_vote(message_id, vote_node));
         },
 
         /**
@@ -492,6 +505,8 @@ openerp.mail = function(session) {
                 attach['url'] = mail.ChatterUtils.get_attachment_url(this.session, attach);
             }
             record.is_author = mail.ChatterUtils.is_author(this, record.author_user_id[0]);
+            // add to internal storage
+            this.records[record.id] = record;
             // render, add the expand feature
             var rendered = session.web.qweb.render('mail.thread.message', {'record': record, 'thread': this, 'options': this.options});
             $(rendered).appendTo(this.$el.children('div.oe_mail_thread_display:first'));
@@ -503,6 +518,23 @@ openerp.mail = function(session) {
                 moreClass: 'oe_mail_expand',
                 lessClass: 'oe_mail_reduce',
                 });
+        },
+
+        // Render vote Display template.
+        toggle_vote: function (message_id, vote_node) {
+            var self = this;
+            var record = this.records[message_id];
+            if (record.has_voted) {
+                var idx = _.map(record.vote_user_ids, function (x) { return x[0]; }).indexOf(message_id);
+                record.vote_user_ids.splice(idx, 1);
+            }
+            else {
+                record.vote_user_ids.push([this.session.uid, 'You']);
+            }
+            record.has_voted = ! record.has_voted;
+            var vote_element = session.web.qweb.render('mail.thread.message.vote', {'record': record});
+            vote_node.empty();
+            vote_node.html(vote_element);
         },
 
         /** Display 'show more' button */
