@@ -1,8 +1,8 @@
-# -*- coding: utf-8 -*-
+#!/usr/bin/env python
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2010-2011 OpenERP s.a. (<http://openerp.com>).
+#    Copyright (C) 2010-2012 OpenERP s.a. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -18,9 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import osv, fields
 
-import controllers
-import res_users
+class res_users(osv.osv):
+    _inherit = 'res.users'
+
+    _columns = {
+        'last_oauth_token': fields.char('Last OAuth Token', size=64, readonly=True, invisible=True),
+    }
+
+    def get_oauth_token(self, cr, uid, context=None):
+        return "TOKENJEFILWJLK"
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

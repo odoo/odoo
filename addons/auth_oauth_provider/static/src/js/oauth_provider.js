@@ -20,7 +20,7 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         // params.scope TODO
         // params.approval_prompt TODO
         if (!this._error) {
-            instance.session.rpc('/oauth2/get_access_token', {}).then(function(r) {
+            instance.session.rpc('/oauth2/get_token', {}).then(function(r) {
                 self.redirect(r.access_token);
             }).fail(function() {
                 self.error(_t("An error occured while contacting the OpenERP server."));

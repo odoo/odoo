@@ -30,9 +30,10 @@ class AuthOAuthProvider(openerpweb.Controller):
     _cp_path = '/oauth2'
 
     @openerpweb.jsonrequest
-    def get_access_token(self, req, **kw):
+    def get_token(self, req, **kw):
+        token = req.session.model('res.users').get_oauth_token()
         return {
-            'access_token': 'hefwjkhfejwk'
+            'access_token': token,
         }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
