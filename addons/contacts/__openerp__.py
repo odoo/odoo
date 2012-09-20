@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2011 OpenERP S.A (<http://www.openerp.com>).
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,15 +19,26 @@
 #
 ##############################################################################
 
-from osv import osv, fields
+{
+    'name': 'Address Book',
+    'version': '1.0',
+    'category': 'Tools',
+    'description': """
+This module gives you a quick view of your address book, accessible from your home page.
+You can track your suppliers, customers and other contacts.
+""",
+    'author': 'OpenERP SA',
+    'website': 'http://openerp.com',
+    'summary': 'Contacts, People and Companies',
+    'depends': [
+        'mail',
+    ],
+    'data': [
+        'contacts_view.xml',
+    ],
+    'installable': True,
+    'application': True,
+    'auto_install': False,
+}
 
-
-class portal(osv.osv):
-    """ A portal is simply a group of users with the flag 'is_portal' set to True.
-        The flag 'is_portal' makes a user group usable as a portal.
-    """
-    _inherit = 'res.groups'
-    _columns = {
-        'is_portal': fields.boolean('Portal', help="If checked, this group is usable as a portal."),
-    }
-
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

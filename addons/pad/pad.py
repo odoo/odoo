@@ -21,7 +21,7 @@ class pad_common(osv.osv_memory):
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
         # contruct the url
-        url = '%s/p/%s-%s-%s' % (pad_server, cr.dbname, self._name, salt)
+        url = '%s/p/%s-%s-%s' % (pad_server, cr.dbname.replace('_','-'), self._name, salt)
         return url
 
     def pad_get_content(self, cr, uid, url, context=None):
@@ -35,22 +35,21 @@ class pad_common(osv.osv_memory):
 
     # TODO
     # reverse engineer protocol to be setHtml without using the api key
-    # override read and copy to generate url and store the content if empty
-
-    def default_get(self, cr, uid, fields, context=None):
-        data = super(pad_common, self).default_get(cr, uid, fields, context)
-        for k in fields:
-            field = self._all_columns[k].column
-            if hasattr(field,'pad_content_field'):
-                data[k] = self.pad_generate_url(cr, uid, context=context)
-        return data
 
     def write(self, cr, uid, ids, vals, context=None):
+        self._set_pad_value(cr, uid, vals, context)
+        return super(pad_common, self).write(cr, uid, ids, vals, context=context)
+
+    def create(self, cr, uid, vals, context=None):
+        self._set_pad_value(cr, uid, vals, context)
+        return super(pad_common, self).create(cr, uid, vals, context=context)
+
+    # Set the pad content in vals
+    def _set_pad_value(self, cr, uid, vals, context=None):
         for k,v in vals.items():
             field = self._all_columns[k].column
             if hasattr(field,'pad_content_field'):
-                vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)
-        return super(pad_common, self).write(cr, uid, ids, vals, context=context)
+                vals[field.pad_content_field] = self.pad_get_content(cr, uid, v, context=context)        
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
