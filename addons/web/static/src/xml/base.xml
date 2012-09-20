@@ -742,7 +742,7 @@
 <t t-name="FormView.pager">
     <div class="oe_form_pager">
         <t t-if="widget.options.pager !== false" t-call="ViewPager">
-            <span class="oe_pager_index">0</span><span class="oe_pager_separator"> / </span><span class="oe_pager_count">0</span>
+            <span class="oe_form_pager_state"></span>
         </t>
     </div>
 </t>
@@ -919,6 +919,7 @@
                 t-att-tabindex="widget.node.attrs.tabindex"
                 t-att-autofocus="widget.node.attrs.autofocus"
                 t-att-placeholder="widget.node.attrs.placeholder"
+                t-att-maxlength="widget.field.size"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
         </t>
     </span>
@@ -933,6 +934,7 @@
                     t-att-tabindex="widget.node.attrs.tabindex"
                     t-att-autofocus="widget.node.attrs.autofocus"
                     t-att-placeholder="widget.node.attrs.placeholder"
+                t-att-maxlength="widget.field.size"
                 />
             </div>
         </t>
@@ -951,6 +953,7 @@
             t-att-tabindex="widget.node.attrs.tabindex"
             t-att-autofocus="widget.node.attrs.autofocus"
             t-att-placeholder="! widget.get('effective_readonly') ? widget.node.attrs.placeholder : ''"
+            t-att-maxlength="widget.field.size"
         ></textarea><img class="oe_field_translate oe_input_icon"
                         t-if="widget.field.translate and !widget.get('effective_readonly')"
                         t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"
@@ -1117,7 +1120,7 @@
                         <t t-call="HiddenInputFile">
                             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
                             <t t-set="fileupload_style">width: 83px;</t>
-                            <button class="oe_button oe_field_button" type="button" title="Set Image">
+                            <button class="oe_button oe_field_button" type="button">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
                             </button>
@@ -1237,8 +1240,8 @@
             <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save</button>
         </t>
         <t t-if="multi_select">
-            <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
             <button type="button" class="oe_button oe_abstractformpopup-form-save oe_highlight">Save &amp; Close</button>
+            <button type="button" class="oe_button oe_abstractformpopup-form-save-new oe_highlight">Save &amp; New</button>
         </t>
         or
     </t>
@@ -1699,5 +1702,15 @@
         <br />
         <div class="oe_throbber_message" style="color:white"></div>
     </div>
+</t>
+<t t-name="M2ODialog">
+    <div>
+        Name: <input class="oe_form_m2o_input_name" type="text"/>
+    </div>
+</t>
+<t t-name="M2ODialog.buttons">
+    <button class="oe_form_m2o_qc_button oe_button oe_highlight">Quick Add</button>
+    <button class="oe_form_m2o_sc_button oe_button">Add All Info...</button>
+    <button class="oe_form_m2o_cancel_button oe_button">Cancel</button>
 </t>
 </templates>

@@ -142,9 +142,11 @@ instance.web_graph.GraphView = instance.web.View.extend({
     options_bar: function (data) {
         var min = _(data.data).chain()
             .map(function (record) {
-                return _.min(record.data, function (item) {
-                    return item[1];
-                })[1];
+                if (record.data.length > 0){
+	                return _.min(record.data, function (item) {
+	                    return item[1];
+	                })[1];
+                }
             }).min().value();
         return {
             bars : {

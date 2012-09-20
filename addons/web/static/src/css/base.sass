@@ -119,8 +119,19 @@ $sheet-max-width: 860px
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    font-weight: normal 
     &:before
         font: 21px "mnmliconsRegular"
+        content: $icon-name
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    font-weight: normal 
+    &:before
+        font: $size "entypoRegular"
         content: $icon-name
         color: $color
 
@@ -133,6 +144,11 @@ $sheet-max-width: 860px
 .openerp.openerp_webclient_container
     height: 100%
     position: relative
+
+// jQueryUI css bug fixing
+.text-tag .text-button
+    height: auto !important
+    min-height: 16px
 
 .openerp
     // Global style {{{
@@ -459,6 +475,12 @@ $sheet-max-width: 860px
             text-decoration: none
         margin-bottom: 1px
     // }}}
+	.oe_form
+		header
+			.oe_tags
+			  margin:5px 0 0 5px
+			  width:400px
+			  padding-bottom:0
     // Tooltips {{{
     &.oe_tooltip
         font-size: 12px
@@ -547,7 +569,7 @@ $sheet-max-width: 860px
         position: absolute
         top: 26px
         left: 0
-        z-index: 1
+        z-index: 3
         margin: 0
         padding: 0
         border: 1px solid $tag-border
@@ -1509,7 +1531,7 @@ $sheet-max-width: 860px
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
-            padding: 8px
+            padding: 0
     .oe_form_sheetbg
         padding: 8px 0
     .oe_form_sheet_width
@@ -1540,6 +1562,8 @@ $sheet-max-width: 860px
             border-bottom: 1px solid #cacaca
             padding-left: 2px
             @include vertical-gradient(#fcfcfc, #dedede)
+            > span
+                margin-left: 4px
             ul
                 display: inline-block
                 float: right
@@ -1574,6 +1598,8 @@ $sheet-max-width: 860px
             .oe_subtotal_footer_separator
                 width: 108px
                 border-top: 1px solid #cacaca
+                margin-top: 4px
+                padding-top: 4px
                 font-weight: bold
                 font-size: 18px
             label:after
@@ -1751,6 +1777,9 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
@@ -1946,6 +1975,7 @@ $sheet-max-width: 860px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
+                    width: 100%
             &.oe_form_field_datetime,&.oe_form_field_date
                 > span
                     width: 100%
@@ -2068,13 +2098,16 @@ $sheet-max-width: 860px
             text-indent: -9001px
         td.oe_list_field_handle
             width: 1em
+            padding: 0 !important
             cursor: ns-resize
             .oe_list_handle
-                @include text-to-icon("ö")
+                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                margin-right: 7px
 
     .oe_list_cannot_edit
         .oe_list_header_handle, .oe_list_field_handle
             display: none !important
+            padding: 0 !important
     .oe_list_cannot_delete
         .oe_list_record_delete
             display: none !important

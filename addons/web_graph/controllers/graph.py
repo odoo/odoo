@@ -52,6 +52,9 @@ class GraphView(View):
         def _convert(field, data, tick=True):
             if fields[field]['type']=='many2one':
                 data = data and data[1]
+            elif (fields[field]['type']=='selection') and (type(fields[field]['selection']) in (list, tuple)):
+                d = dict(fields[field]['selection'])
+                data = d[data]
             if tick:
                 return ticks.setdefault(data, len(ticks))
             return data or 0

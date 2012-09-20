@@ -162,8 +162,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.$el.find(".oe_form_group_row,.oe_form_field,label").on('click', function (e) {
             if(self.get("actual_mode") == "view") {
                 var $button = self.options.$buttons.find(".oe_form_button_edit");
-                $button.effect('bounce', {distance: 18, times: 5}, 150)
+                $button.effect('bounce', {distance: 18, times: 5}, 150);
                 e.stopPropagation();
+                instance.web.bus.trigger('click', e);
             }
         });
 
@@ -269,9 +270,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         if (this.$buttons) {
             this.$buttons.show();
-        }
-        if (this.$pager) {
-            this.$pager.show();
         }
         this.$el.show().css({
             opacity: '0',
@@ -408,7 +406,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.$pager.remove();
         if (this.get("actual_mode") === "create")
             return;
-        this.$pager = $(QWeb.render("FormView.pager", {'widget':self}));
+        this.$pager = $(QWeb.render("FormView.pager", {'widget':self})).hide();
         if (this.options.$pager) {
             this.$pager.appendTo(this.options.$pager);
         } else {
@@ -421,10 +419,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.do_update_pager();
     },
     do_update_pager: function(hide_index) {
-        var index = hide_index ? '-' : this.dataset.index + 1;
-        this.$pager.find('button').prop('disabled', this.dataset.ids.length < 2).end()
-                   .find('span.oe_pager_index').html(index).end()
-                   .find('span.oe_pager_count').html(this.dataset.ids.length);
+        this.$pager.toggle(this.dataset.ids.length > 1);
+        if (hide_index) {
+            $(".oe_form_pager_state", this.$pager).html("");
+        } else {
+            $(".oe_form_pager_state", this.$pager).html(_.str.sprintf(_t("%d / %d"), this.dataset.index + 1, this.dataset.ids.length));
+        }
     },
     parse_on_change: function (on_change, widget) {
         var self = this;
@@ -2614,6 +2614,7 @@ instance.web.form.CompletionFieldMixin = {
 
         var dataset = new instance.web.DataSet(this, this.field.relation, self.build_context());
         var blacklist = this.get_search_blacklist();
+        this.last_query = search_val;
 
         return this.orderer.add(dataset.name_search(
                 search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
@@ -2721,6 +2722,32 @@ instance.web.form.CompletionFieldMixin = {
     },
 };
 
+instance.web.form.M2ODialog = instance.web.Dialog.extend({
+    template: "M2ODialog",
+    init: function(parent) {
+        this._super(parent, {
+            title: _.str.sprintf(_t("Add %s"), parent.string),
+            width: 312,
+        });
+    },
+    start: function() {
+        var self = this;
+        this.$buttons.html(QWeb.render("M2ODialog.buttons"));
+        this.$("input").val(this.getParent().last_query);
+        this.$buttons.find(".oe_form_m2o_qc_button").click(function(){
+            self.getParent()._quick_create(self.$("input").val());
+            self.destroy();
+        });
+        this.$buttons.find(".oe_form_m2o_sc_button").click(function(){
+            self.getParent()._search_create_popup("form", undefined, self.getParent()._create_context(self.$("input").val()));
+            self.destroy();
+        });
+        this.$buttons.find(".oe_form_m2o_cancel_button").click(function(){
+            self.destroy();
+        });
+    },
+});
+
 instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instance.web.form.CompletionFieldMixin, instance.web.form.ReinitializeFieldMixin, {
     template: "FieldMany2One",
     init: function(field_manager, node) {
@@ -2751,26 +2778,23 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             this.render_editable();
         this.render_value();
     },
+    init_error_displayer: function() {
+        // nothing
+    },
+    hide_error_displayer: function() {
+        // doesn't work
+    },
+    show_error_displayer: function() {
+        new instance.web.form.M2ODialog(this).open();
+    },
     render_editable: function() {
         var self = this;
         this.$input = this.$el.find("input");
 
-        self.$input.tipsy({
-            title: function() {
-                return QWeb.render('Tipsy.alert', {
-                    message: "No element was selected, you should create or select one from the dropdown list."
-                });
-            },
-            trigger:'manual',
-            fade: true,
-            gravity: 's',
-            html: true,
-            opacity: 1,
-            offset: 4,
-        });
+        this.init_error_displayer();
 
         self.$input.on('focus', function() {
-            self.$input.tipsy("hide");
+            self.hide_error_displayer();
         });
 
         this.$drop_down = this.$el.find(".oe_m2o_drop_down_button");
@@ -2824,10 +2848,10 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
             }
         });
-        self.tip_def = $.Deferred();
-        self.untip_def = $.Deferred();
-        var tip_delay = 200;
-        var tip_duration = 15000;
+        self.ed_def = $.Deferred();
+        self.uned_def = $.Deferred();
+        var ed_delay = 200;
+        var ed_duration = 15000;
         var anyoneLoosesFocus = function() {
             var used = false;
             if (self.floating) {
@@ -2847,25 +2871,25 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 }
                 self.floating = false;
             }
-            if (used && self.get("value") === false && ! self.no_tipsy) {
-                self.tip_def.reject();
-                self.untip_def.reject();
-                self.tip_def = $.Deferred();
-                self.tip_def.then(function() {
-                    self.$input.tipsy("show");
+            if (used && self.get("value") === false && ! self.no_ed) {
+                self.ed_def.reject();
+                self.uned_def.reject();
+                self.ed_def = $.Deferred();
+                self.ed_def.then(function() {
+                    self.show_error_displayer();
                 });
                 setTimeout(function() {
-                    self.tip_def.resolve();
-                    self.untip_def.reject();
-                    self.untip_def = $.Deferred();
-                    self.untip_def.then(function() {
-                        self.$input.tipsy("hide");
+                    self.ed_def.resolve();
+                    self.uned_def.reject();
+                    self.uned_def = $.Deferred();
+                    self.uned_def.then(function() {
+                        self.hide_error_displayer();
                     });
-                    setTimeout(function() {self.untip_def.resolve();}, tip_duration);
-                }, tip_delay);
+                    setTimeout(function() {self.uned_def.resolve();}, ed_duration);
+                }, ed_delay);
             } else {
-                self.no_tipsy = false;
-                self.tip_def.reject();
+                self.no_ed = false;
+                self.ed_def.reject();
             }
         };
         var ignore_blur = false;
@@ -3005,13 +3029,13 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.$input.focus();
     },
     _quick_create: function() {
-        this.no_tipsy = true;
-        this.tip_def.reject();
+        this.no_ed = true;
+        this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._quick_create.apply(this, arguments);
     },
     _search_create_popup: function() {
-        this.no_tipsy = true;
-        this.tip_def.reject();
+        this.no_ed = true;
+        this.ed_def.reject();
         return instance.web.form.CompletionFieldMixin._search_create_popup.apply(this, arguments);
     },
 });

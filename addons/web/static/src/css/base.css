@@ -25,10 +25,14 @@
     display: none !important;
   }
 }
-
 .openerp.openerp_webclient_container {
   height: 100%;
   position: relative;
+}
+
+.text-tag .text-button {
+  height: auto !important;
+  min-height: 16px;
 }
 
 .openerp {
@@ -41,7 +45,7 @@
   text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
   /* http://www.quirksmode.org/dom/inputfile.html
    * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
-   */ */
+   */
 }
 .openerp :-moz-placeholder {
   color: #afafb6 !important;
@@ -532,6 +536,11 @@
 .openerp .oe_tags.oe_inline {
   min-width: 250px;
 }
+.openerp .oe_form header .oe_tags {
+  margin:5px 0 0 5px;
+  width:400px;
+  padding-bottom:0;
+}
 .openerp .oe_tags .text-wrap {
   width: 100% !important;
 }
@@ -655,7 +664,7 @@
   position: absolute;
   top: 26px;
   left: 0;
-  z-index: 1;
+  z-index: 3;
   margin: 0;
   padding: 0;
   border: 1px solid #afafb6;
@@ -1521,6 +1530,7 @@
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  font-weight: normal;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   box-shadow: none;
@@ -1914,7 +1924,7 @@
 }
 .openerp .oe_form_nosheet > header {
   margin: -16px -16px 0 -16px;
-  padding: 8px;
+  padding: 0;
 }
 .openerp .oe_form_sheetbg {
   padding: 8px 0;
@@ -1956,6 +1966,9 @@
   background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
   background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
   background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
+}
+.openerp .oe_form header > span {
+  margin-left: 4px;
 }
 .openerp .oe_form header ul {
   display: inline-block;
@@ -2001,6 +2014,8 @@
 .openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
   width: 108px;
   border-top: 1px solid #cacaca;
+  margin-top: 4px;
+  padding-top: 4px;
   font-weight: bold;
   font-size: 18px;
 }
@@ -2213,6 +2228,9 @@
 }
 .openerp .oe_form_editable .oe_form .oe_form_field_datetime {
   width: 11.5em !important;
+}
+.openerp .oe_hidden_input_file {
+  position: relative;
 }
 .openerp .oe_hidden_input_file input.oe_form_binary_file {
   z-index: 0;
@@ -2479,6 +2497,7 @@
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_float input, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_view_integer input {
   text-align: right;
+  width: 100%;
 }
 .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_datetime > span, .openerp .oe_list.oe_list_editable.oe_editing .oe_form_field.oe_form_field_date > span {
   width: 100%;
@@ -2638,20 +2657,24 @@
 }
 .openerp .oe_list_content td.oe_list_field_handle {
   width: 1em;
+  padding: 0 !important;
   cursor: ns-resize;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle {
   font-size: 1px;
   letter-spacing: -1px;
   color: transparent;
+  font-weight: normal;
+  margin-right: 7px;
 }
 .openerp .oe_list_content td.oe_list_field_handle .oe_list_handle:before {
-  font: 21px "mnmliconsRegular";
-  content: "ö";
-  color: #404040;
+  font: 18px "entypoRegular";
+  content: "}";
+  color: #e0e0e0;
 }
 .openerp .oe_list_cannot_edit .oe_list_header_handle, .openerp .oe_list_cannot_edit .oe_list_field_handle {
   display: none !important;
+  padding: 0 !important;
 }
 .openerp .oe_list_cannot_delete .oe_list_record_delete {
   display: none !important;
