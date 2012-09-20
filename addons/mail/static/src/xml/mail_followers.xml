@@ -7,11 +7,14 @@
         -->
     <div t-name="mail.followers" class="oe_mail_recthread_aside oe_semantic_html_override">
         <div class="oe_mail_recthread_actions">
-            <button type="button" class="oe_mail_button_invite">Invite</button>
             <button type="button" class="oe_mail_button_follow">Follow</button>
             <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
+            <button type="button" class="oe_mail_button_invite">Invite</button>
+            <div>
+                <h4>Message types to follow</h4>
+                <ul class="oe_mail_recthread_subtypes"></ul>
+            </div>
         </div>
-        <ul class="oe_mail_recthread_subtype"></ul>
         <div class="oe_mail_recthread_followers">
             <t t-if="widget.options.title">
                 <h4><t t-raw="widget.options.title"/></h4>
@@ -30,18 +33,14 @@
     </li>\
     
     <!--
-        record_thread.subtype template
-        Template used to display subtype of record
+        followers.subtype template
+        Template used to display message subtypes of a follower subscription
     -->
-    <li t-name="mail.record_thread.subtype">
+    <li t-name="mail.followers.subtype">
         <table width="50%">
             <tr>
-                <td>
-                    <a t-attf-href="#model=mail.message.subtype&amp;id=#{record.id}"><t t-raw="record.name"/></a>
-                </td>
-                <td width="10%">
-                    <input type="checkbox" t-att-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/>
-                </td>
+                <td><t t-raw="record.name"/></td>
+                <td width="10%"><input type="checkbox" t-att-checked="record.followed" t-att-id="record.id" t-att-name="record.name"  class="oe_msg_subtype_check"/></td>
             </tr>
         </table>
     </li>
