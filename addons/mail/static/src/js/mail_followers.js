@@ -130,11 +130,10 @@ openerp_mail_followers = function(session, mail) {
 
         /** Display subtypes: {'name': default, followed} */
         display_subtypes: function (records) {
+            var subtype_list = this.$('ul.oe_mail_subtypes').empty();
             if (! this.message_is_follower_value_) {
-                this.$('div.oe_mail_recthread_subtypes').remove();
                 return;
             }
-            var subtype_list = this.$el.find('ul.oe_mail_subtypes').empty();
             _(records).each(function (record, record_name) {
                 record.name = record_name;
                 record.followed = record.followed || undefined;
