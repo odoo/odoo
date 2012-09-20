@@ -67,3 +67,4 @@
     assert sale_order.invoice_ids, "Invoice should be created."
     assert sale_order.invoice_exists, "Order is not invoiced."
     assert sale_order.invoiced, "Order is not paid."
+    assert sale_order.state == 'done', 'Order should be Done.'
