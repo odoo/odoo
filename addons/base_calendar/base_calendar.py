@@ -1431,7 +1431,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if r['class']=='private':
                 for f in r.keys():
                     if f not in ('id','date','date_deadline','duration','user_id','state'):
-                        r[f] = False
+                        if isinstance(r[f], list):
+                            r[f] = []
+                        else:    
+                            r[f] = False
                     if f=='name':
                         r[f] = _('Busy')
 
