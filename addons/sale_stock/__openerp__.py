@@ -28,11 +28,7 @@
 Manage sales quotations and orders
 ==================================
 
-This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
-
-It handles the full sales workflow:
-
-* **Quotation** -> **Sales order** -> **Invoice**
+This module makes the link between the sales and warehouses management applications.
 
 Preferences
 -----------
@@ -45,12 +41,6 @@ You can choose flexible invoicing methods:
 * *On Demand*: Invoices are created manually from Sales Orders when needed
 * *On Delivery Order*: Invoices are generated from picking (delivery)
 * *Before Delivery*: A Draft invoice is created and must be paid before delivery
-
-
-The Dashboard for the Sales Manager will include
-------------------------------------------------
-* My Quotations
-* Monthly Turnover (Graph)
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

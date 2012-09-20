@@ -29,18 +29,25 @@
 Manage sales quotations and orders
 ==================================
 
-This application allows you to make a sale order, validate it and encode payment without having to deal with anything related to warehouse management.
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-It handles the sales workflow :
+It handles the full sales workflow:
 
 * **Quotation** -> **Sales order** -> **Invoice**
 
-Preferences
+Preferences (only with Warehouse Management installed)
 -----------
-* Invoicing: choose how invoices will be paid
+If you also installed the Warehouse Management, you can deal with the following preferences:
 
-There is one invoicing methods:
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
+
+You can choose flexible invoicing methods:
+
 * *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
 
 
 The Dashboard for the Sales Manager will include
@@ -53,8 +60,8 @@ The Dashboard for the Sales Manager will include
     'images': ['images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
     'depends': ['account_voucher'],
     'data': [
-        'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice_advance.xml',
+        'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
