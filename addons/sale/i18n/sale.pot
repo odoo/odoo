@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 7.0alpha\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-19 13:20+0000\n"
-"PO-Revision-Date: 2012-09-19 13:20+0000\n"
+"POT-Creation-Date: 2012-09-20 07:29+0000\n"
+"PO-Revision-Date: 2012-09-20 07:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1589,12 +1589,6 @@ msgid "Pricelist for current sales order."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:766
-#, python-format
-msgid "Please define income account for this product: \"%s\" (id:%d)."
-msgstr ""
-
-#. module: sale
 #: model:process.transition,name:sale.process_transition_invoice0
 #: model:process.transition.action,name:sale.process_transition_action_createinvoice0
 #: view:sale.advance.payment.inv:0
@@ -1672,8 +1666,9 @@ msgid "May"
 msgstr ""
 
 #. module: sale
-#: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
-msgid "Auto-email confirmed sale orders"
+#: code:addons/sale/sale.py:766
+#, python-format
+msgid "Please define income account for this product: \"%s\" (id:%d)."
 msgstr ""
 
 #. module: sale
