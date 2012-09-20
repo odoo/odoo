@@ -1,6 +1,6 @@
 from osv import osv, fields
 
-class fleet_vehicle_model(osv.Model):
+class fleet_vehicle_model_type(osv.Model):
     _name = 'fleet.vehicle.type'
     _description = 'Type of the vehicle'
     _columns = {
@@ -9,12 +9,13 @@ class fleet_vehicle_model(osv.Model):
 
 class fleet_vehicle_model(osv.Model):
     _name = 'fleet.vehicle.model'
-    _description = ''
+    _description = 'Model of a vehicle'
 
     _columns = {
+        'name' : fields.char('Name',size=32, required=True),
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True),
         'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
-        'name' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=True),
+        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=True),
         'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=True),
         'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
@@ -47,7 +48,7 @@ class fleet_vehicle(osv.Model):
     _columns = {
         'registration' : fields.char('Registration', size=32, required=False),
         'vin_sn' : fields.char('VIN SN', size=32, required=False),
-        'driver' : fields.many2one('fleet.vehicle', 'employee_id', required=False),
+        'driver' : fields.many2one('hr.employee', 'Driver',required=False),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
         'acquisition_date' : fields.date('Acquisition date', required=False),
