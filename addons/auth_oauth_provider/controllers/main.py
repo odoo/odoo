@@ -25,15 +25,22 @@ try:
 except ImportError:
     import web.common.http as openerpweb    # noqa
 
+import simplejson
+
 
 class AuthOAuthProvider(openerpweb.Controller):
     _cp_path = '/oauth2'
 
     @openerpweb.jsonrequest
     def get_token(self, req, client_id="", scope="", **kw):
-        token = req.session.model('res.users').get_oauth_token(client_id, scope)
+        token = req.session.model('res.users').auth_oauth_provider_get_token(client_id, scope)
         return {
             'access_token': token,
         }
+
+    @openerpweb.httprequest
+    def tokeninfo(self, req, access_token="", **kw):
+        info = req.session.model('res.users').auth_oauth_provider_tokeninfo(access_token)
+        return simplejson.dumps(info)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

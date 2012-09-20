@@ -29,10 +29,23 @@ class res_users(osv.osv):
         'last_oauth_token': fields.char('Last OAuth Token', readonly=True, invisible=True),
     }
 
-    def get_oauth_token(self, cr, uid, client_id="", scope="", context=None):
+    def auth_oauth_provider_get_token(self, cr, uid, client_id="", scope="", context=None):
         chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
         token = ''.join(random.choice(chars) for x in range(random.randrange(16, 24)))
         self.write(cr, uid, [uid], { "last_oauth_token": token }, context=context)
         return token
+
+    def auth_oauth_provider_tokeninfo(self, cr, uid, access_token="", context=None):
+        if access_token == self.browse(cr, uid, [uid], context=context).access_token:
+            return {
+                "user_id": uid,
+                #"audience": "8819981768.apps.googleusercontent.com",
+                #"scope": "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
+                #"expires_in": 436
+            }
+        else:
+            return {
+                "error": "invalid_token"
+            }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
