@@ -46,10 +46,6 @@ class purchase_config_settings(osv.osv_memory):
         'group_purchase_delivery_address': fields.boolean("Allow a different address for incoming products and invoicings",
             implied_group='purchase.group_delivery_invoice_address',
             help="Allows you to specify different delivery and invoice addresses on a purchase order."),
-        'module_purchase_analytic_plans': fields.boolean('Allow using multiple analytic accounts on the same order',
-            help ="""Allows the user to maintain several analysis plans. These let you split
-                lines on a purchase order between several accounts and analytic plans.
-                This installs the module purchase_analytic_plans."""),
         'module_warning': fields.boolean("Alerts by products or supplier",
             help="""Allow to configure warnings on products and trigger them when a user wants to purchase a given product or a given supplier.
             Example: Product: this product is deprecated, do not purchase more than 5.
@@ -62,6 +58,12 @@ class purchase_config_settings(osv.osv_memory):
             help="""Purchase Requisitions are used when you want to request quotations from several suppliers for a given set of products.
             You can configure per product if you directly do a Request for Quotation
             to one supplier or if you want a purchase requisition to negotiate with several suppliers."""),
+        'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on purchase orders',
+            help ="""Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.
+                This installs the module purchase_analytic_plans."""),
+        'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
+            implied_group='purchase.group_analytic_accounting',
+            help="Allows you to specify an analytic account on purchase orders."),
     }
 
     _defaults = {
@@ -75,7 +77,8 @@ class account_config_settings(osv.osv_memory):
     _inherit = 'account.config.settings'
     _columns = {
         'module_purchase_analytic_plans': fields.boolean('Use multiple analytic accounts on orders',
-            help="""This allows install module purchase_analytic_plans."""),
+            help ="""Allows the user to maintain several analysis plans. These let you split lines on a purchase order between several accounts and analytic plans.
+                This installs the module purchase_analytic_plans."""),
         'group_analytic_account_for_purchases': fields.boolean('Analytic accounting for purchases',
             implied_group='purchase.group_analytic_accounting',
             help="Allows you to specify an analytic account on purchase orders."),

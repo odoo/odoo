@@ -130,7 +130,7 @@
                         </page>
                         <page string="Other Info">
                             <group>
-                                <group string="Accounting Data">
+                                <group string="Accounting Data" groups="account.group_account_user">
                                     <field name="journal_id" widget="selection" domain="[('type', '=', 'purchase')]"/>
                                     <field name="voucher_id" context="{'form_view_ref': 'account_voucher.view_purchase_receipt_form'}"/>
                                 </group>
