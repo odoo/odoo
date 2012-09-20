@@ -306,11 +306,10 @@ class test_mail(TestMailMockups):
         # ----------------------------------------
 
         group_pigs.refresh()
-        subtype_data = eval(group_pigs.message_subtype_data)
-        self.assertEqual(set(subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
-        self.assertFalse(subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
-        self.assertTrue(subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
-        self.assertTrue(subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
+        self.assertEqual(set(group_pigs.message_subtype_data.keys()), set(['comment', 'mt_mg_def', 'mt_all_def', 'mt_mg_nodef', 'mt_all_nodef']), 'mail.group available subtypes incorrect')
+        self.assertFalse(group_pigs.message_subtype_data['comment']['followed'], 'Admin should not follow comments in pigs')
+        self.assertTrue(group_pigs.message_subtype_data['mt_mg_nodef']['followed'], 'Admin should follow mt_mg_nodef in pigs')
+        self.assertTrue(group_pigs.message_subtype_data['mt_all_nodef']['followed'], 'Admin should follow mt_all_nodef in pigs')
 
     def test_20_message_post(self):
         """ Tests designed for message_post. """
