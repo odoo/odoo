@@ -40,6 +40,20 @@ class crm_contact_us(osv.TransientModel):
         r = self.pool.get('res.company').search(cr, uid, [], context=context)
         return r
 
+    def _get_current_user_name(self, cr, uid, context=None):
+        """
+        If the user is logged in (i.e. not anonymous), get the user's name to
+        pre-fill the partner_name field.
+
+        @return current user's name if the user isn't "anonymous", None otherwise
+        """
+        user = self.pool.get('res.users').read(cr, uid, uid, ['login'], context)
+
+        if (user['login'] != 'anonymous'):
+            return self.pool.get('res.users').name_get(cr, uid, uid, context)[0][1]
+        else:
+            return None
+
     def _get_current_user_email(self, cr, uid, context=None):
         """
         If the user is logged in (i.e. not anonymous), get the user's email to
@@ -54,9 +68,25 @@ class crm_contact_us(osv.TransientModel):
         else:
             return None
 
+    def _get_current_user_phone(self, cr, uid, context=None):
+        """
+        If the user is logged in (i.e. not anonymous), get the user's phone to
+        pre-fill the phone field.
+
+        @return current user's phone if the user isn't "anonymous", None otherwise
+        """
+        user = self.pool.get('res.users').read(cr, uid, uid, ['login', 'phone'], context)
+
+        if (user['login'] != 'anonymous' and user['phone']):
+            return user['phone']
+        else:
+            return None
+
     _defaults = {
-        'email_from' : _get_current_user_email,
-        'company_ids' : _get_companies,
+        'partner_name': _get_current_user_name,
+        'email_from': _get_current_user_email,
+        'phone': _get_current_user_phone,
+        'company_ids': _get_companies,
     }
 
     def create(self, cr, uid, values, context=None):
