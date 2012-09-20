@@ -36,16 +36,7 @@
     first_invoice_id = invoice_ids[0]
     wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)
 -
-  I check order status in "Invoice Exception" and related invoice is in cancel state.
+  I check order status in "Sale to Invoice" and related invoice is in cancel state.
 -
   !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Invoice Exception state}:
-    - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
--
-  Then I click on the Ignore Exception button.
--
-  !workflow {model: sale.order, action: invoice_corrected, ref: sale_order_8}
--
-  I check state of order is 'Done'.
--
-  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Done state}:
-    - state == 'done'
+    - state == "manual", "Order should be in progress state after cancel Invoice"
