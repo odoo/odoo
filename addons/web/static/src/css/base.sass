@@ -113,6 +113,7 @@ $sheet-max-width: 860px
     @keyframes #{$name}
         @content
 
+
 // Transforms the (readable) text of an inline element into an mmlicons icon,
 // allows for actual readable text in-code (and in readers?) with iconic looks
 @mixin text-to-icon($icon-name, $color: #404040)
@@ -1560,7 +1561,7 @@ $sheet-max-width: 860px
             margin: -16px -16px 0 -16px
             padding: 0
     .oe_form_sheetbg
-        padding: 8px 0
+        padding: 16px 0
     .oe_form_sheet_width
         min-width: 650px
         max-width: $sheet-max-width
@@ -1575,8 +1576,8 @@ $sheet-max-width: 860px
             background: url(/web/static/src/img/form_sheetbg.png)
             border-bottom: 1px solid #ddd
         .oe_form_sheet
-            border: 1px solid $tag-border
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            border: 1px solid #c8c8d3 //$tag-border
+            @include box-shadow(0 4px 20px rgba(0,0,0,0.15))
             .ui-tabs
                 margin: 0 -16px
             .oe_notebook_page
@@ -1868,7 +1869,8 @@ $sheet-max-width: 860px
         li 
             display: inline-block
             list-style-type: none
-            margin: 0 -20px 0 0
+            // It is probably a bad idea to modify this margin
+            margin: 0 -18px 0 0
             padding: 0
             @include vertical-gradient(#fcfcfc, #dedede)
             &:first-child .label
