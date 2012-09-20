@@ -281,6 +281,7 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
+        limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
