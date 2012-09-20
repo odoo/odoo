@@ -17,8 +17,14 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
         var _super = self._super;
         _super.apply(self,[val]);
         if (val === false || val === "") {
-            self.field_manager.dataset.call('pad_generate_url').then(function(r) {
-                _super.apply(self,[r]);
+            self.field_manager.dataset.call('pad_generate_url').then(function(data) {
+
+                _super.apply(self,[data.url]);
+
+                //var message="test value"
+                console.log('get :',data, this);
+                //setText(padID, text)
+
                 self.render_value();
             });
         } else {
@@ -27,7 +33,7 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
         this._dirty_flag = true;
     },
     render_value: function() {
-        console.log("display");
+        console.log("FieldPad.render_value: display");
         var self = this;
         var value = this.get('value');
 

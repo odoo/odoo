@@ -22,7 +22,16 @@ class pad_common(osv.osv_memory):
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
         # contruct the url
         url = '%s/p/%s-%s-%s' % (pad_server, cr.dbname.replace('_','-'), self._name, salt)
-        return url
+
+        key = "4DxmsNIbnQUVQMW9S9tx2oLOSjFdrx1l"
+        
+        return {
+            "url": url,
+            "pad_server": pad_server,
+            "dbname": cr.dbname.replace('_','-'),
+            "name": self._name,
+            "salt": salt,
+        }
 
     def pad_get_content(self, cr, uid, url, context=None):
         content = ''
@@ -57,7 +66,8 @@ class pad_common(osv.osv_memory):
         for k,v in self._all_columns:
             field = v.column
             if hasattr(field,'pad_content_field'):
-                default[k] = self.pad_generate_url(cr, uid, context)
+                pad = self.pad_generate_url(cr, uid, context)
+                default[k] = pad['url']
         return super(pad_common, self).copy(cr, uid, id, default, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
