@@ -44,10 +44,6 @@ Web pages
     'auto_install': False,
     'certificate': '0086363630317',
     'images': [],
-    'js': [
-        'static/src/lib/wiky/wiky.js', 
-        'static/src/js/document_page.js'
-    ],
     'css' : ['static/src/css/document_page.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

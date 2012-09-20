@@ -20,7 +20,7 @@
 ##############################################################################
 
 {
-    'name': 'Memos',
+    'name': 'Notes',
     'version': '1.0',
     'category': 'Tools',
     'description': """
@@ -28,12 +28,12 @@ This module allows users to create their own notes inside OpenERP
 =================================================================
 
 Use notes to write meeting minutes, organize ideas, organize personnal todo
-lists, etc. Each user manages his own personnal memos. Notes are available to
+lists, etc. Each user manages his own personnal Notes. Notes are available to
 their authors only, but they can share notes to others users so that several
 people can work on the same note in real time. It's very efficient to share
 meeting minutes.
 
-Memos can be found in the 'Home' menu.
+Notes can be found in the 'Home' menu.
 """,
     'author': 'OpenERP SA',
     'website': 'http://openerp.com',
