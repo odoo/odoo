@@ -4,17 +4,15 @@
 <templates id="template" xml:space="preserve">
     
     <t t-name="AccountReconciliation">
-        <div>
+        <div class="oe_account_reconciliation">
             <t t-if="widget.current_partner === null">
                 There is no pending reconciliation.
             </t>
             <t t-if="widget.current_partner !== null">
                 <div>
-                    <h3>
-                        <a class="oe_account_recon_previous" href="javascript:void(0)">Previous</a>
-                        <a class="oe_account_recon_next" href="javascript:void(0)">Next</a>
+                        <a class="oe_account_recon_previous" href="javascript:void(0)">&lt;</a>
                         <t t-esc="'' + widget.partners[widget.current_partner][1] + ' (' + (widget.current_partner + 1) + '/' + widget.partners.length + ')'"/>
-                    </h3>
+                        <a class="oe_account_recon_next" href="javascript:void(0)">&gt;</a>
                 </div>
                 <div>
                     <a class="oe_account_recon_reconcile" href="javascript:void(0)">Reconcile</a>
