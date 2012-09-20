@@ -5,6 +5,22 @@ import warnings
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
+REFERENCING_FIELDS = set([None, 'id', '.id'])
+def only_ref_fields(record):
+    return dict((k, v) for k, v in record.iteritems()
+                if k in REFERENCING_FIELDS)
+def exclude_ref_fields(record):
+    return dict((k, v) for k, v in record.iteritems()
+                if k not in REFERENCING_FIELDS)
+
+CREATE = lambda values: (0, False, values)
+UPDATE = lambda id, values: (1, id, values)
+DELETE = lambda id: (2, id, False)
+FORGET = lambda id: (3, id, False)
+LINK_TO = lambda id: (4, id, False)
+DELETE_ALL = lambda: (5, False, False)
+REPLACE_WITH = lambda ids: (6, False, ids)
+
 class ConversionNotFound(ValueError): pass
 
 class ir_fields_converter(orm.Model):
@@ -145,9 +161,8 @@ class ir_fields_converter(orm.Model):
         :rtype: str
         """
         # Can import by name_get, external id or database id
-        allowed_fields = set([None, 'id', '.id'])
         fieldset = set(record.iterkeys())
-        if fieldset - allowed_fields:
+        if fieldset - REFERENCING_FIELDS:
             raise ValueError(
                 _(u"Can not create Many-To-One records indirectly, import the field separately"))
         if len(fieldset) > 1:
@@ -190,4 +205,17 @@ class ir_fields_converter(orm.Model):
 
         return [(6, 0, ids)]
     def _str_to_one2many(self, cr, uid, model, column, value, context=None):
-        return value
+        commands = []
+        for subfield, record in zip((self._referencing_subfield(
+                                            only_ref_fields(record))
+                                        for record in value),
+                                    value):
+            id, subfield_type = self.db_id_for(
+                cr, uid, model, column, subfield, record[subfield], context=context)
+            writable = exclude_ref_fields(record)
+            if id:
+                commands.append(LINK_TO(id))
+                commands.append(UPDATE(id, writable))
+            else:
+                commands.append(CREATE(writable))
+        return commands

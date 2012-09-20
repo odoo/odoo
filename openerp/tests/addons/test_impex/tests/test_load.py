@@ -869,10 +869,13 @@ class test_o2m(ImporterCase):
                 "invalid literal for int() with base 10: '%d,%d'" % (id1, id2))
 
     def test_link(self):
-        id1 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+        """ O2M relating to an existing record (update) force a LINK_TO as well
+        """
+        O2M = self.registry('export.one2many.child')
+        id1 = O2M.create(self.cr, openerp.SUPERUSER_ID, {
             'str': 'Bf', 'value': 109
         })
-        id2 = self.registry('export.one2many.child').create(self.cr, openerp.SUPERUSER_ID, {
+        id2 = O2M.create(self.cr, openerp.SUPERUSER_ID, {
             'str': 'Me', 'value': 262
         })
 
@@ -880,17 +883,14 @@ class test_o2m(ImporterCase):
             ['42', str(id1)],
             ['', str(id2)],
         ])
-        self.assertEqual(len(ids), 2)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
-        # No record values alongside id => o2m resolution skipped altogether,
-        # creates 2 records => remove/don't import columns sideshow columns,
-        # get completely different semantics
-        b, b1 = self.browse()
+        [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(values(b.value), [])
-        self.assertEqual(b1.const, 4)
-        self.assertEqual(values(b1.value), [])
+        # automatically forces link between core record and o2ms
+        self.assertEqual(values(b.value), [109, 262])
+        self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link_2(self):
         O2M_c = self.registry('export.one2many.child')
@@ -905,24 +905,13 @@ class test_o2m(ImporterCase):
             ['42', str(id1), '1'],
             ['', str(id2), '2'],
         ])
-        self.assertEqual(len(ids), 2)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
-        (b,) = self.browse()
-        # if an id (db or xid) is provided, expectations that objects are
-        # *already* linked and emits UPDATE (1, id, {}).
-        # Noid => CREATE (0, ?, {})
-        # TODO: xid ignored aside from getting corresponding db id?
+        [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(values(b.value), [])
-
-        # FIXME: updates somebody else's records?
-        self.assertEqual(
-            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id1),
-            {'id': id1, 'str': 'Bf', 'value': 1, 'parent_id': False})
-        self.assertEqual(
-            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id2),
-            {'id': id2, 'str': 'Me', 'value': 2, 'parent_id': False})
+        self.assertEqual(values(b.value), [1, 2])
+        self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
