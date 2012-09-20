@@ -8,7 +8,8 @@ class fleet_vehicle_model(osv.Model):
         'type' : fields.char('Type', size=32, required=True),
         'brand' : fields.char('Brand', size=32, required=True),
         'name' : fields.char('Name', size=32, required=True),
-        'submodel' : fields.char('Submodel',size=32,required=True),
+        'make' : fields.char('Make',size=32,required=True),
+        'vendors': fields.many2many('fleet.vehicle.model','fleet.vehicle.model.vendors','partner_id','Vendors');
     }
 
 class fleet_vehicle(osv.Model):
@@ -16,7 +17,7 @@ class fleet_vehicle(osv.Model):
     _description = 'Fleet Vehicle'
 
     _columns = {
-        'registration' : fields.char('registration', size=32, required=True),
+        'registration' : fields.char('Registration', size=32, required=True),
         'driver' : fields.many2one('fleet.vehicle', 'employee_id', required=False),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
