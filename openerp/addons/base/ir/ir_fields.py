@@ -206,16 +206,26 @@ class ir_fields_converter(orm.Model):
         return [(6, 0, ids)]
     def _str_to_one2many(self, cr, uid, model, column, value, context=None):
         commands = []
-        for subfield, record in zip((self._referencing_subfield(
-                                            only_ref_fields(record))
-                                        for record in value),
-                                    value):
-            id, subfield_type = self.db_id_for(
-                cr, uid, model, column, subfield, record[subfield], context=context)
+
+        for record in value:
+            id = None
+            refs = only_ref_fields(record)
+            # there are ref fields in the record
+            if refs:
+                subfield = self._referencing_subfield(refs)
+                reference = record[subfield]
+                id, subfield_type = self.db_id_for(
+                    cr, uid, model, column, subfield, reference, context=context)
+                if id is None:
+                    raise ValueError(
+                        _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
+                        % {'field_type': subfield_type, 'value': reference})
+
             writable = exclude_ref_fields(record)
             if id:
                 commands.append(LINK_TO(id))
                 commands.append(UPDATE(id, writable))
             else:
                 commands.append(CREATE(writable))
+
         return commands

@@ -786,20 +786,21 @@ class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 
     def test_name_get(self):
-        # FIXME: bloody hell why can't this just name_create the record?
-        self.assertRaises(
-            IndexError,
-            self.import_,
+        s = u'Java is a DSL for taking large XML files and converting them ' \
+            u'to stack traces'
+        ids, messages = self.import_(
             ['const', 'value'],
-            [['5', u'Java is a DSL for taking large XML files'
-                   u' and converting them to stack traces']])
+            [['5', s]])
+        self.assertEqual(messages, [message(
+            u"No matching record found for name '%s' in field 'value'" % s)])
+        self.assertIs(ids, False)
 
     def test_single(self):
         ids, messages = self.import_(['const', 'value/value'], [
             ['5', '63']
         ])
-        self.assertEqual(len(ids), 1)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
         (b,) = self.browse()
         self.assertEqual(b.const, 5)
@@ -810,8 +811,8 @@ class test_o2m(ImporterCase):
             ['5', '63'],
             ['6', '64'],
         ])
-        self.assertEqual(len(ids), 2)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 2)
 
         b1, b2 = self.browse()
         self.assertEqual(b1.const, 5)
@@ -826,8 +827,8 @@ class test_o2m(ImporterCase):
             ['', '65'],
             ['', '66'],
         ])
-        self.assertEqual(len(ids), 4)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
         (b,) = self.browse()
         self.assertEqual(values(b.value), [63, 64, 65, 66])
@@ -839,8 +840,8 @@ class test_o2m(ImporterCase):
             ['the', '', '65'],
             ['rhythm', '', '66'],
         ])
-        self.assertEqual(len(ids), 4)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
 
         (b,) = self.browse()
         self.assertEqual(values(b.value), [63, 64, 65, 66])
@@ -923,18 +924,12 @@ class test_o2m_multiple(ImporterCase):
             ['', '13', '23'],
             ['', '14', ''],
         ])
-        self.assertEqual(len(ids), 4)
         self.assertFalse(messages)
+        self.assertEqual(len(ids), 1)
         # Oh yeah, that's the stuff
-        (b, b1, b2) = self.browse()
-        self.assertEqual(values(b.child1), [11])
-        self.assertEqual(values(b.child2), [21])
-
-        self.assertEqual(values(b1.child1), [12])
-        self.assertEqual(values(b1.child2), [22])
-
-        self.assertEqual(values(b2.child1), [13, 14])
-        self.assertEqual(values(b2.child2), [23])
+        [b] = self.browse()
+        self.assertEqual(values(b.child1), [11, 12, 13, 14])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi(self):
         ids, messages = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -945,13 +940,12 @@ class test_o2m_multiple(ImporterCase):
             ['', '', '22'],
             ['', '', '23'],
         ])
-        self.assertEqual(len(ids), 6)
         self.assertFalse(messages)
-        # What the actual fuck?
-        (b, b1) = self.browse()
+        self.assertEqual(len(ids), 1)
+
+        [b] = self.browse()
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(values(b.child2), [21])
-        self.assertEqual(values(b1.child2), [22, 23])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi_fullsplit(self):
         ids, messages = self.import_(['const', 'child1/value', 'child2/value'], [
@@ -963,14 +957,13 @@ class test_o2m_multiple(ImporterCase):
             ['', '', '22'],
             ['', '', '23'],
         ])
-        self.assertEqual(len(ids), 7)
         self.assertFalse(messages)
-        # oh wow
-        (b, b1) = self.browse()
+        self.assertEqual(len(ids), 1)
+
+        [b] = self.browse()
         self.assertEqual(b.const, 5)
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(b1.const, 36)
-        self.assertEqual(values(b1.child2), [21, 22, 23])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion
