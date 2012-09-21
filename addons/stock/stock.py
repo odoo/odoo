@@ -761,6 +761,15 @@ class stock_picking(osv.osv):
             self.pool.get('stock.move').force_assign(cr, uid, move_ids)
             wf_service.trg_write(uid, 'stock.picking', pick.id, cr)
         return True
+    
+    def button_cancel(self, cr, uid, ids, *args):
+        """ Changes state of picking to cancel.
+        @return: True
+        """
+        wf_service = netsvc.LocalService("workflow")
+        for pick in self.browse(cr, uid, ids):
+            wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_cancel', cr)
+        return True
 
     def draft_force_assign(self, cr, uid, ids, *args):
         """ Confirms picking directly from draft state.
@@ -1141,7 +1150,7 @@ class stock_picking(osv.osv):
             for move in pick.move_lines:
                 if move.state not in ('cancel','done'):
                     return False
-                if move.state=='done':
+                if move.state=='done' and not move.scrapped:
                     ok = True
         return ok
 
@@ -1160,7 +1169,7 @@ class stock_picking(osv.osv):
             if not pick.move_lines:
                 return True
             for move in pick.move_lines:
-                if move.state == 'done':
+                if move.state == 'done' and not move.scrapped:
                     raise osv.except_osv(_('Error!'), _('You cannot cancel picking because stock move is in done state!'))
         return True
     def unlink(self, cr, uid, ids, context=None):
