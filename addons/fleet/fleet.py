@@ -9,41 +9,13 @@ class fleet_vehicle_model_type(osv.Model):
 #comment to delete
 class fleet_vehicle_model(osv.Model):
 
-    def name_get(self, cr, uid, ids, context=None):
-        if not ids:
-            return []
-        reads = self.read(cr, uid, ids, ['type','brand','modelname','version','year'], context=context)
-        res = []
-        for record in reads:
-            name = ''
-            if record['type']:
-                name = record['type'][1] + " - "
-            if record['brand']:
-                name = name + record['brand'][1]
-            if record['modelname']:
-                name = name+ ' / ' +record['modelname'][1]
-            if record['version']:
-                name = name+ ' / ' +record['version'][1]
-            if record['year']:
-                name = name+ ' / ' +str(record['year'])
-            res.append((record['id'], name))
-        return res
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.name_get(cr, uid, ids, context=context)
-        return dict(res)
-
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
 
     _columns = {
-        'name' : fields.function(_name_get_fnc, type="char", string='Name'),
+        'name' : fields.char('Brand Name',size=32, required=True),
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
-        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True, help='Type of vehicle (car, bike, ...)'),
-        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False, help='Model name of the vehicle'),
-        'version' : fields.one2many('fleet.vehicle.model.version', 'model_version_id', 'Versions'),
-        'year' : fields.integer('Year', required=False, help='Year of fabrication of the vehicle'),
-        'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
+        'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
 
 class fleet_vehicle_model_brand(osv.Model):
@@ -51,28 +23,6 @@ class fleet_vehicle_model_brand(osv.Model):
     _description = 'Brand model of the vehicle'
     _columns = {
         'name' : fields.char('Brand Name',size=32, required=True),
-    }
-
-class fleet_vehicle_model_name(osv.Model):
-    _name = 'fleet.vehicle.model.name'
-    _description = 'Name model of the vehicle'
-    _columns = {
-        'name' : fields.char('Name',size=32, required=True),
-    }
-
-class fleet_vehicle_model_version(osv.Model):
-    _name = 'fleet.vehicle.model.version'
-    _description = 'version model of the vehicle'
-    _columns = {
-        'name' : fields.char('name',size=32, required=True),
-        'model_version_id' : fields.many2one('fleet.vehicle.model', 'Associated model', required=True, help='Model name of the vehicle associated to this version'),
-    
-        'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
-        'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
-        'horsepower' : fields.integer('Horsepower',required=False),
-        'horsepower_tax': fields.float('Horsepower Taxation'),
-        'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
-        'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
     }
 
 class fleet_vehicle(osv.Model):
@@ -90,15 +40,16 @@ class fleet_vehicle(osv.Model):
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'status' : fields.char('Status',size=32, help='Status of the vehicle (in repair, active, ...)'),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
+        'doors' : fields.integer('Number of doors', help='Number of doors of the vehicle'),
 
         'next_repair_km' : fields.integer('Next Repair Km'),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
-        'horses' : fields.integer('Horses',required=False),
+        'horsepower' : fields.integer('Horsepower',required=False),
+        'horsepower_tax': fields.float('Horsepower Taxation'),
         'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
-        
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):

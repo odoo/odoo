@@ -9,22 +9,17 @@
                     <sheet>
                         <group col="2">
                             <group>
-                                <field name="type" />
-                                <field name="brand" />
+                                <field name="name" />
+                                
                             </group>
                             <group>
-                                <field name="modelname" /> 
-                                <field name="year" />      
+                                <field name="brand" />   
                             </group>
                         </group>
                         <notebook>
-                            <page string="versions">
-                                <field name="version" /> 
-                            </page>
                             <page string="Vendors">
-                                <field name="partner_id" />
+                                <field name="vendors" />
                             </page>
-                            
                         </notebook>
                     </sheet>
                 </form>
@@ -35,12 +30,9 @@
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
                 <tree string="Models" version="7.0">
-                    <field name="type" />
+                    <field name="name" />
                     <field name="brand" />
-                    <field name="modelname" />
-                    <field name="version" />
-                    <field name="year" />
-                    <field name="partner_id" />
+                    <field name="vendors" />
                 </tree>
             </field>
         </record>
@@ -51,25 +43,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_type_tree'>
-            <field name="name">fleet.vehicle.type.tree</field>
-            <field name="model">fleet.vehicle.type</field>
-            <field name="arch" type="xml">
-                <tree string="Type" version="7.0" editable="bottom">
-                    <field name="name" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_type_act'>
-            <field name="name">Type of Vehicle</field>
-            <field name="res_model">fleet.vehicle.type</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        
+ 
         <record model='ir.ui.view' id='fleet_vehicle_model_brand_tree'>
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
@@ -87,82 +61,11 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_model_name_tree'>
-            <field name="name">fleet.vehicle.model.name.tree</field>
-            <field name="model">fleet.vehicle.model.name</field>
-            <field name="arch" type="xml">
-                <tree string="Model Name" version="7.0" editable="bottom">
-                    <field name="name" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_model_name_act'>
-            <field name="name">Model name of Vehicle</field>
-            <field name="res_model">fleet.vehicle.model.name</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_model_version_tree'>
-            <field name="name">fleet.vehicle.model.version.tree</field>
-            <field name="model">fleet.vehicle.model.version</field>
-            <field name="arch" type="xml">
-                <tree string="Model version" version="7.0">
-                    <field name="name" />
-                    <field name="model_version_id" />
-                    <field name="transmission" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_model_version_form'>
-            <field name="name">fleet.vehicle.model.version.form</field>
-            <field name="model">fleet.vehicle.model.version</field>
-            <field name="arch" type="xml">
-                <form string="Model" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="name" />
-                            <field name="model_version_id" />
-                        </group>
-                        <notebook>
-                            <page string="Engine">
-                                <group col="2">
-                                    <group>
-                                        <field name="transmission" />
-                                        <field name="fuel_type" />
-                                        <field name="co2" />
-                                    </group>
-                                    <group>
-                                        <field name="horsepower" />
-                                        <field name="horsepower_tax" />
-                                        <field name="power" />
-                                    </group>
-                                </group>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_model_version_act'>
-            <field name="name">Model version of Vehicle</field>
-            <field name="res_model">fleet.vehicle.model.version</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
         <menuitem name="Fleet Management" id="menu_root" />
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
-        <menuitem action="fleet_vehicle_type_act" parent="fleet_configuration" id="fleet_vehicle_type_menu" />
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" />
-        <menuitem action="fleet_vehicle_model_name_act" parent="fleet_configuration" id="fleet_vehicle_model_name_menu" />
-        <menuitem action="fleet_vehicle_model_version_act" parent="fleet_configuration" id="fleet_vehicle_model_version_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
             <field name="name">fleet.vehicle.form</field>
@@ -176,9 +79,10 @@
                                 <field name="vin_sn" />
                                 <field name="model_id" />
                                 <field name="acquisition_date" />
+                                <field name="acquisition_price" />
                             </group>
                             <group>
-                                <field name="acquisition_price" />
+                                <field name="doors" />
                                 <field name="color" />
                                 <field name="location" />
                                 <field name="status" />
@@ -198,6 +102,20 @@
                                         <field name="description" />
                                     </tree>
                                 </field>
+                            </page>
+                            <page string="Engine">
+                                <group col="2">
+                                    <group>
+                                        <field name="transmission" />
+                                        <field name="fuel_type" />
+                                        <field name="co2" />
+                                    </group>
+                                    <group>
+                                        <field name="horsepower" />
+                                        <field name="horsepower_tax" />
+                                        <field name="power" />
+                                    </group>    
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
