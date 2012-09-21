@@ -3045,11 +3045,11 @@ class BaseModel(object):
                                 cr.commit()
                                 if f._type == 'text':
                                     # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
-                                    msg = "Table '%s': Adding (b-tree) index for text column '%s'."\
+                                    msg = "Table '%s': Adding (b-tree) index for %s column '%s'."\
                                         "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
                                         " because there is a length limit for indexable btree values!\n"\
                                         "Use a search view instead if you simply want to make the field searchable."
-                                    _schema.warning(msg, self._table, k, f._type)
+                                    _schema.warning(msg, self._table, f._type, k)
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
@@ -3791,6 +3791,12 @@ class BaseModel(object):
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
+
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        """Send given workflow signal""" 
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            wf_service.trg_validate(uid, self._name, res_id, signal, cr)
 
     def unlink(self, cr, uid, ids, context=None):
         """
