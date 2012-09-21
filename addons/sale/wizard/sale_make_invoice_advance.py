@@ -65,45 +65,18 @@ class sale_advance_payment_inv(osv.osv_memory):
             return {'value': {'amount': product.list_price}}
         return {'value': {'amount': 0}}
 
-    def create_invoices(self, cr, uid, ids, context=None):
-        """ create invoices for the active sale orders """
+    def _prepare_advance_invoice_vals(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
         sale_obj = self.pool.get('sale.order')
-        inv_obj = self.pool.get('account.invoice')
-        inv_line_obj = self.pool.get('account.invoice.line')
         ir_property_obj = self.pool.get('ir.property')
-        act_window = self.pool.get('ir.actions.act_window')
         fiscal_obj = self.pool.get('account.fiscal.position')
+        inv_line_obj = self.pool.get('account.invoice.line')
         wizard = self.browse(cr, uid, ids[0], context)
         sale_ids = context.get('active_ids', [])
 
-        if wizard.advance_payment_method == 'all':
-            # create the final invoices of the active sale orders
-            res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
-            if context.get('open_invoices', False):
-                return res
-            return {'type': 'ir.actions.act_window_close'}
-
-        if wizard.advance_payment_method == 'lines':
-            # open the list view of sale order lines to invoice
-            res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
-            res['context'] = {
-                'search_default_uninvoiced': 1,
-                'search_default_order_id': sale_ids and sale_ids[0] or False,
-            }
-            return res
-        assert wizard.advance_payment_method in ('fixed', 'percentage')
-
-        inv_ids = []
-
+        result = []
         for sale in sale_obj.browse(cr, uid, sale_ids, context=context):
-            if sale.order_policy == 'postpaid':
-                raise osv.except_osv(
-                    _('Error!'),
-                    _("You cannot make an advance on a sales order \
-                         that is defined as 'Automatic Invoice after delivery'."))
-
             val = inv_line_obj.product_id_change(cr, uid, [], wizard.product_id.id,
                     uom=False, partner_id=sale.partner_id.id, fposition_id=sale.fiscal_position.id)
             res = val['value']
@@ -172,12 +145,45 @@ class sale_advance_payment_inv(osv.osv_memory):
                 'payment_term': sale.payment_term.id,
                 'fiscal_position': sale.fiscal_position.id or sale.partner_id.property_account_position.id
             }
-            inv_id = inv_obj.create(cr, uid, inv_values, context=context)
-            inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
-            inv_ids.append(inv_id)
+            result.append((sale.id, inv_values))
+        return result
 
-            # add the invoice to the sale order's invoices
-            sale.write({'invoice_ids': [(4, inv_id)]})
+    def _create_invoices(self, cr, uid, inv_values, sale_id, context=None):
+        inv_obj = self.pool.get('account.invoice')
+        sale_obj = self.pool.get('sale.order')
+        inv_id = inv_obj.create(cr, uid, inv_values, context=context)
+        inv_obj.button_reset_taxes(cr, uid, [inv_id], context=context)
+        # add the invoice to the sale order's invoices
+        sale_obj.write(cr, uid, sale_id, {'invoice_ids': [(4, inv_id)]}, context=context)
+        return inv_id
+
+
+    def create_invoices(self, cr, uid, ids, context=None):
+        """ create invoices for the active sale orders """
+        sale_obj = self.pool.get('sale.order')
+        act_window = self.pool.get('ir.actions.act_window')
+        wizard = self.browse(cr, uid, ids[0], context)
+        sale_ids = context.get('active_ids', [])
+        if wizard.advance_payment_method == 'all':
+            # create the final invoices of the active sale orders
+            res = sale_obj.manual_invoice(cr, uid, sale_ids, context)
+            if context.get('open_invoices', False):
+                return res
+            return {'type': 'ir.actions.act_window_close'}
+
+        if wizard.advance_payment_method == 'lines':
+            # open the list view of sale order lines to invoice
+            res = act_window.for_xml_id(cr, uid, 'sale', 'action_order_line_tree2', context)
+            res['context'] = {
+                'search_default_uninvoiced': 1,
+                'search_default_order_id': sale_ids and sale_ids[0] or False,
+            }
+            return res
+        assert wizard.advance_payment_method in ('fixed', 'percentage')
+
+        inv_ids = []
+        for sale_id, inv_values in self._prepare_advance_invoice_vals(cr, uid, ids, context=context):
+            inv_ids.append(self._create_invoices(cr, uid, inv_values, sale_id, context=context))
 
         if context.get('open_invoices', False):
             return self.open_invoices( cr, uid, ids, inv_ids, context=context)
