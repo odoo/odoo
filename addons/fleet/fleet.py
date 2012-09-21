@@ -12,7 +12,7 @@ class fleet_vehicle_model(osv.Model):
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['type','brand','modelname','make','year'], context=context)
+        reads = self.read(cr, uid, ids, ['type','brand','modelname','version','year'], context=context)
         res = []
         for record in reads:
             name = ''
@@ -22,8 +22,8 @@ class fleet_vehicle_model(osv.Model):
                 name = name + record['brand'][1]
             if record['modelname']:
                 name = name+ ' / ' +record['modelname'][1]
-            if record['make']:
-                name = name+ ' / ' +record['make'][1]
+            if record['version']:
+                name = name+ ' / ' +record['version'][1]
             if record['year']:
                 name = name+ ' / ' +str(record['year'])
             res.append((record['id'], name))
@@ -41,16 +41,9 @@ class fleet_vehicle_model(osv.Model):
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
         'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True, help='Type of vehicle (car, bike, ...)'),
         'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False, help='Model name of the vehicle'),
-        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=False, help='Make of the vehicle'),
+        'version' : fields.one2many('fleet.vehicle.model.version', 'model_version_id', 'Versions'),
         'year' : fields.integer('Year', required=False, help='Year of fabrication of the vehicle'),
         'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
-    
-        'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
-        'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
-        'horsepower' : fields.integer('Horsepower',required=False),
-        'horsepower_tax': fields.float('Horsepower Taxation'),
-        'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
-        'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
     }
 
 class fleet_vehicle_model_brand(osv.Model):
@@ -67,12 +60,19 @@ class fleet_vehicle_model_name(osv.Model):
         'name' : fields.char('Name',size=32, required=True),
     }
 
-class fleet_vehicle_model_make(osv.Model):
-    _name = 'fleet.vehicle.model.make'
-    _description = 'Make model of the vehicle'
+class fleet_vehicle_model_version(osv.Model):
+    _name = 'fleet.vehicle.model.version'
+    _description = 'version model of the vehicle'
     _columns = {
-        'name' : fields.char('Make',size=32, required=True),
-        'country_id': fields.many2one('res.country', 'Country', required=False),
+        'name' : fields.char('name',size=32, required=True),
+        'model_version_id' : fields.many2one('fleet.vehicle.model', 'Associated model', required=True, help='Model name of the vehicle associated to this version'),
+    
+        'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
+        'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
+        'horsepower' : fields.integer('Horsepower',required=False),
+        'horsepower_tax': fields.float('Horsepower Taxation'),
+        'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
+        'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
     }
 
 class fleet_vehicle(osv.Model):
