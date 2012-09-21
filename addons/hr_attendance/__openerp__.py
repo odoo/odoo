@@ -35,11 +35,10 @@ actions(Sign in/Sign out) performed by them.
     'images': ['images/hr_attendances.jpeg'],
     'depends': ['hr'],
     'data': [
+        'security/ir_rule.xml',
         'security/ir.model.access.csv',
         'hr_attendance_view.xml',
         'hr_attendance_report.xml',
-        'security/ir.model.access.csv',
-        'security/ir_rule.xml',
         'wizard/hr_attendance_bymonth_view.xml',
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
