@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1:
--->
+
 <templates id="template" xml:space="preserve">
     
     <t t-name="AccountReconciliation">
@@ -10,9 +9,14 @@
             </t>
             <t t-if="widget.current_partner !== null">
                 <div>
+                    <div>
                         <button class="oe_account_recon_previous oe_button" href="javascript:void(0)">&lt;</button>
                         <t t-esc="'' + widget.partners[widget.current_partner][1] + ' (' + (widget.current_partner + 1) + '/' + widget.partners.length + ')'"/>
                         <button class="oe_account_recon_next oe_button" href="javascript:void(0)">&gt;</button>
+                    </div>
+                    <div>
+                        Last Reconciliation Date: <t t-esc="widget.last_reconciliation_date" />
+                    </div>
                 </div>
                 <div>
                     <button class="oe_account_recon_reconcile oe_button oe_highlight" href="javascript:void(0)"

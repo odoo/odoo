@@ -63,8 +63,15 @@ openerp.account = function (instance) {
             });
         },
         search_by_partner: function() {
-            return this.old_search(new instance.web.CompoundDomain(this.last_domain, [["partner_id", "in", this.current_partner === null ? [] :
-                [this.partners[this.current_partner][0]] ]]), this.last_context, this.last_group_by);
+            var self = this;
+            return new instance.web.Model("res.partner").call("read",
+                [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).pipe(function(res) {
+                self.last_reconciliation_date = 
+                    instance.web.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
+                return self.old_search(new instance.web.CompoundDomain(self.last_domain, 
+                    [["partner_id", "in", self.current_partner === null ? [] :
+                    [self.partners[self.current_partner][0]] ]]), self.last_context, self.last_group_by);
+            });
         },
         reconcile: function() {
             var self = this;
