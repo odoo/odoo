@@ -63,9 +63,83 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record model='ir.ui.view' id='fleet_vehicle_type_tree'>
+            <field name="name">fleet.vehicle.type.tree</field>
+            <field name="model">fleet.vehicle.type</field>
+            <field name="arch" type="xml">
+                <tree string="Type" version="7.0" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_type_act'>
+            <field name="name">Type of Vehicle</field>
+            <field name="res_model">fleet.vehicle.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        
+        <record model='ir.ui.view' id='fleet_vehicle_model_brand_tree'>
+            <field name="name">fleet.vehicle.model.brand.tree</field>
+            <field name="model">fleet.vehicle.model.brand</field>
+            <field name="arch" type="xml">
+                <tree string="Model Brand" version="7.0" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_model_brand_act'>
+            <field name="name">Model brand of Vehicle</field>
+            <field name="res_model">fleet.vehicle.model.brand</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_model_name_tree'>
+            <field name="name">fleet.vehicle.model.name.tree</field>
+            <field name="model">fleet.vehicle.model.name</field>
+            <field name="arch" type="xml">
+                <tree string="Model Name" version="7.0" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_model_name_act'>
+            <field name="name">Model name of Vehicle</field>
+            <field name="res_model">fleet.vehicle.model.name</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_model_make_tree'>
+            <field name="name">fleet.vehicle.model.make.tree</field>
+            <field name="model">fleet.vehicle.model.make</field>
+            <field name="arch" type="xml">
+                <tree string="Model Make" version="7.0" editable="bottom">
+                    <field name="name" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_model_make_act'>
+            <field name="name">Model make of Vehicle</field>
+            <field name="res_model">fleet.vehicle.model.make</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <menuitem name="Fleet Management" id="menu_root" />
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
-        <menuitem action="fleet_vehicle_model_act" parent="fleet_vehicles" id="fleet_vehicle_model_menu" />
+        <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" />
+        <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
+        <menuitem action="fleet_vehicle_type_act" parent="fleet_configuration" id="fleet_vehicle_type_menu" />
+        <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" />
+        <menuitem action="fleet_vehicle_model_name_act" parent="fleet_configuration" id="fleet_vehicle_model_name_menu" />
+        <menuitem action="fleet_vehicle_model_make_act" parent="fleet_configuration" id="fleet_vehicle_model_make_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
             <field name="name">fleet.vehicle.form</field>
