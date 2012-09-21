@@ -1100,6 +1100,12 @@ class sale_order_line(osv.osv):
         except Exception, ex:
             return False
 
+    def _get_order(self, cr, uid, ids, context=None):
+        result = {}
+        for line in self.pool.get('sale.order.line').browse(cr, uid, ids, context=context):
+            result[line.order_id.id] = True
+        return result.keys()
+
     _name = 'sale.order.line'
     _description = 'Sales Order Line'
     _columns = {
@@ -1112,7 +1118,10 @@ class sale_order_line(osv.osv):
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'procurement_id': fields.many2one('procurement.order', 'Procurement'),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account'),
+                    store={
+                           'purchase.order.line': (_get_order, None, 10),
+                           }, multi="sums"),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'type': fields.selection([('make_to_stock', 'from stock'), ('make_to_order', 'on order')], 'Procurement Method', required=True, readonly=True, states={'draft': [('readonly', False)]},
             help="If 'on order', it triggers a procurement when the sale order is confirmed to create a task, purchase order or manufacturing order linked to this sale order line."),
