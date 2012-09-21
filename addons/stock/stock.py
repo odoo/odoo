@@ -1836,8 +1836,8 @@ class stock_move(osv.osv):
         warning = {}
         if (location.usage == 'internal') and (product_qty > (amount_actual or 0.0)):
             warning = {
-                'title': _('Insufficient Stock in Serial Number !'),
-                'message': _('You are moving %.2f %s products but only %.2f %s available in this serial number.') % (product_qty, uom.name, amount_actual, uom.name)
+                'title': _('Insufficient Stock for Serial Number !'),
+                'message': _('You are moving %.2f %s products but only %.2f %s available for this serial number.') % (product_qty, uom.name, amount_actual, uom.name)
             }
         return {'warning': warning}
 
