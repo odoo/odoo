@@ -6,15 +6,34 @@ class fleet_vehicle_model_type(osv.Model):
     _columns = {
         'name' : fields.char('Name', size=32, required=True),
     }
-#comment to delete
+#comment to delete#comment to delete
 class fleet_vehicle_model(osv.Model):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            name = record.modelname
+            if record.brand:
+                name = record.brand.name+' / '+name
+            res.append((record.id, name))
+        return res
+
+    def _model_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
 
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
 
     _columns = {
-        'name' : fields.char('Brand Name',size=32, required=True),
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
+        'name' : fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
+        'modelname' : fields.char('Model name', size=32, required=True), 
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=False, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
 
