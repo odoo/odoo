@@ -836,6 +836,8 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
+        if not ids:
+            return []
         if isinstance(ids, (int, long)):
             ids = [ids]
         result = self.browse(cr, user, ids, context=context)

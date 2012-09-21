@@ -18,28 +18,4 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
-from osv import osv
-
-class res_company(osv.osv):
-    _inherit = "res.company"
-    _description = 'Company'
-
-    def _get_default_ad(self, addresses):
-        name = email = phone = city = post_code = address = country_code = ""
-        for ads in addresses:
-            if ads.type == 'default':
-                city = ads.city or ""
-                post_code = ads.zip or ""
-                if ads.street:
-                    address = ads.street or ""
-                if ads.street2:
-                    address += " " + ads.street2
-                if ads.country_id:
-                    country_code = ads.country_id and ads.country_id.code or ""
-                name = ads.name or ""
-                email = ads.email or ""
-                phone = ads.phone or ""
-        return name, email, phone, city, post_code, address, country_code
-res_company()
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+import sale_report

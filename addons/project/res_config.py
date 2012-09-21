@@ -30,7 +30,7 @@ class project_configuration(osv.osv_memory):
         'module_project_mrp': fields.boolean('Generate tasks from sale orders',
             help ="""This feature automatically creates project tasks from service products in sale orders.
                 More precisely, tasks are created for procurement lines with product of type 'Service',
-                procurement method 'Make to Order', and supply method 'Produce'.
+                procurement method 'Make to Order', and supply method 'Manufacture'.
                 This installs the module project_mrp."""),
         'module_pad': fields.boolean("Use integrated collaborative note pads on task",
             help="""Lets the company customize which Pad installation should be used to link to new pads
@@ -52,7 +52,7 @@ class project_configuration(osv.osv_memory):
         'module_project_issue_sheet': fields.boolean("Invoice working time on issues",
             help="""Provides timesheet support for the issues/bugs management in project.
                 This installs the module project_issue_sheet."""),
-        'group_tasks_work_on_tasks': fields.boolean("Compute work activities on tasks",
+        'group_tasks_work_on_tasks': fields.boolean("Log work activities on tasks",
             implied_group='project.group_tasks_work_on_tasks',
             help="Allows you to compute work on tasks."),
         'group_time_work_estimation_tasks': fields.boolean("Manage time estimation on tasks",
@@ -71,5 +71,10 @@ class project_configuration(osv.osv_memory):
         config = self.browse(cr, uid, ids[0], context)
         user = self.pool.get('res.users').browse(cr, uid, uid, context)
         user.company_id.write({'project_time_mode_id': config.time_unit.id})
+
+    def onchange_time_estimation_project_timesheet(self, cr, uid, ids, group_time_work_estimation_tasks, module_project_timesheet):
+        if group_time_work_estimation_tasks or module_project_timesheet:
+            return {'value': {'group_tasks_work_on_tasks': True}}
+        return {}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
