@@ -456,6 +456,7 @@ def stop_server():
     """
     if httpd:
         httpd.shutdown()
+        openerp.netsvc.close_socket(httpd.socket)
 
 # Master process id, can be used for signaling.
 arbiter_pid = None
