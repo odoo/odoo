@@ -287,7 +287,6 @@ openerp.mail = function(session) {
                 show_dd_reply_by_email:options.show_dd_reply_by_email != undefined ? options.show_dd_reply_by_email: true,
                 show_dd_delete: options.show_dd_delete || false,
                 show_dd_hide: options.show_dd_hide || false,
-                show_more: options.show_more || false,
                 truncate_limit: options.truncate_limit || 250,
             }
             // datasets and internal vars
@@ -325,7 +324,7 @@ openerp.mail = function(session) {
         bind_events: function() {
             var self = this;
             // event: click on 'More' at bottom of thread
-            this.$el.on('click', 'button.oe_mail_button_more', this.do_message_fetch_more);
+            this.$el.on('click', 'a.oe_mail_fetch_more', this.do_message_fetch_more);
             // event: writing in basic textarea of composition form (quick reply)
             this.$el.find('textarea.oe_mail_compose_textarea').keyup(function (event) {
                 var charCode = (event.which) ? event.which : window.event.keyCode;
@@ -400,7 +399,6 @@ openerp.mail = function(session) {
                     'default_parent_id': this.context.default_parent_id,
                     'default_content_subtype': 'plain'} );
             }
-            // return this._super(action, on_close);
         },
 
         /** Instantiate the composition form, with every parameters in context
@@ -438,14 +436,14 @@ openerp.mail = function(session) {
         message_fetch: function (initial_mode, additional_domain, additional_context) {
             var self = this;
             // domain and context: options + additional
-            fetch_domain = _.flatten([this.domain, additional_domain || []], true)
-            fetch_context = _.extend(this.context, additional_context || {})
+            fetch_domain = _.flatten([this.domain, additional_domain || []], true);
+            fetch_context = _.extend({}, this.context, additional_context || {});
             // initial mode: try to use message_data or message_ids
             if (initial_mode && this.options.message_data) {
                 return this.message_display(this.options.message_data);
             }
             message_ids = initial_mode && this.options.message_ids != null && this.options.message_ids || false;
-            return this.ds_message.call('message_read', [message_ids, fetch_domain, this.options.thread_level, undefined, fetch_context]
+            return this.ds_message.call('message_read', [message_ids, fetch_domain, this.options.thread_level, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('message_display'));
         },
 
@@ -455,13 +453,12 @@ openerp.mail = function(session) {
          */
         message_display: function (records) {
             var self = this;
-            var _expendable = false;
             _(records).each(function (record) {
                 if (record.type == 'expandable') {
-                    _expendable = true;
-                    self.update_fetch_more(true);
                     self.fetch_more_domain = record.domain;
                     self.fetch_more_context = record.context;
+                    var rendered = session.web.qweb.render('mail.thread.message.expandable', {'record': record});
+                    $(rendered).appendTo(self.$el.children('div.oe_mail_thread_display:first'));
                 }
                 else {
                     self.display_record(record);
@@ -480,9 +477,6 @@ openerp.mail = function(session) {
                     self.thread.appendTo(self.$el.find('div.oe_mail_thread_subthread:last'));
                 }
             });
-            if (! _expendable) {
-                this.update_fetch_more(false);
-            }
         },
 
         /** Displays a record and performs some formatting on the record :
@@ -537,15 +531,6 @@ openerp.mail = function(session) {
             vote_node.html(vote_element);
         },
 
-        /** Display 'show more' button */
-        update_fetch_more: function (new_value) {
-            if (new_value) {
-                    this.$el.find('div.oe_mail_thread_more:last').show();
-            } else {
-                    this.$el.find('div.oe_mail_thread_more:last').hide();
-            }
-        },
-
         display_user_avatar: function () {
             var avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             return this.$el.find('img.oe_mail_icon').attr('src', avatar);
@@ -560,45 +545,15 @@ openerp.mail = function(session) {
             }
             return this.ds_thread.call('message_post', [
                 [this.context.default_res_id], body, false, 'comment', this.context.default_parent_id, undefined]
-                ).then(self.message_fetch());
+                ).pipe(self.message_clean()).pipe(self.message_fetch(false));
         },
 
         /** Action: 'shows more' to fetch new messages */
-        do_message_fetch_more: function () {
+        do_message_fetch_more: function (event) {
+            event.stopPropagation();
+            $(event.srcElement).parents('li').eq(0).remove();
             return this.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
         },
-
-        // TDE: keep currently because need something similar
-        // /**
-        //  * Create a domain to fetch new comments according to
-        //  * comment already present in comments_structure
-        //  * @param {Object} comments_structure (see chatter utils)
-        //  * @returns {Array} fetch_domain (OpenERP domain style)
-        //  */
-        // get_fetch_domain: function (comments_structure) {
-        //     var domain = [];
-        //     var ids = comments_structure.root_ids.slice();
-        //     var ids2 = [];
-        //     // must be child of current parent
-        //     if (this.options.parent_id) { domain.push(['id', 'child_of', this.options.parent_id]); }
-        //     _(comments_structure.root_ids).each(function (id) { // each record
-        //         ids.push(id);
-        //         ids2.push(id);
-        //     });
-        //     if (this.options.parent_id != false) {
-        //         ids2.push(this.options.parent_id);
-        //     }
-        //     // must not be children of already fetched messages
-        //     if (ids.length > 0) {
-        //         domain.push('&');
-        //         domain.push('!');
-        //         domain.push(['id', 'child_of', ids]);
-        //     }
-        //     if (ids2.length > 0) {
-        //         domain.push(['id', 'not in', ids2]);
-        //     }
-        //     return domain;
-        // },
     });
 
 

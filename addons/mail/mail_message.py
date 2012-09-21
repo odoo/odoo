@@ -173,6 +173,7 @@ class mail_message(osv.Model):
 
     def _message_dict_get(self, cr, uid, msg, context=None):
         """ Return a dict representation of the message browse record. """
+        child_nbr = len(msg.child_ids)
         has_voted = False
         vote_ids = self.pool.get('res.users').name_get(cr, uid, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
@@ -197,11 +198,29 @@ class mail_message(osv.Model):
             'author_user_id': author_user_id,
             'partner_ids': partner_ids,
             'child_ids': [],
+            'child_nbr': child_nbr,
             'vote_user_ids': vote_ids,
             'has_voted': has_voted
         }
 
-    def message_read_tree_flatten(self, cr, uid, messages, current_level, level, context=None):
+    def message_read_tree_get_expandable(self, cr, uid, parent_message, last_message, domain=[], current_level=0, level=0, context=None):
+        """ . """
+        base_domain = [('id', '<', last_message['id'])]
+        if parent_message and current_level < level:
+            base_domain += [('parent_id', '=', parent_message['id'])]
+        elif parent_message:
+            base_domain += [('id', 'child_of', parent_message['id']), ('id', '!=', parent_message['id'])]
+        if domain:
+            base_domain += domain
+        extension = {   'type': 'expandable',
+                        'domain': base_domain,
+                        'thread_level': current_level,
+                        'context': context,
+                        'id': -1,
+                        }
+        return extension
+
+    def message_read_tree_flatten(self, cr, uid, parent_message, messages, domain=[], level=0, current_level=0, context=None, limit=None, add_expandable=True):
         """ Given a tree with several roots of following structure :
             [   {'id': 1, 'child_ids': [
                     {'id': 11, 'child_ids': [...] },],
@@ -220,28 +239,47 @@ class mail_message(osv.Model):
             child_ids = msg_dict.pop('child_ids', [])
             msg_dict['child_ids'] = []
             return [msg_dict] + child_ids
-            # return sorted([msg_dict] + child_ids, key=itemgetter('id'), reverse=True)
+
         context = context or {}
+        limit = limit or self._message_read_limit
+
         # Depth-first flattening
         for message in messages:
             if message.get('type') == 'expandable':
                 continue
-            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message['child_ids'], current_level + 1, level, context=context)
+            message['child_ids'] = self.message_read_tree_flatten(cr, uid, message, message['child_ids'], domain, level, current_level + 1, context=context, limit=limit)
+            for child in message['child_ids']:
+                if child.get('type') == 'expandable':
+                    continue
+                message['child_nbr'] += child['child_nbr']
         # Flatten if above maximum depth
         if current_level < level:
             return_list = messages
         else:
-            return_list = []
-            for message in messages:
-                for flat_message in _flatten(message):
-                    return_list.append(flat_message)
-        return sorted(return_list, key=itemgetter(context.get('sort_key', 'id')), reverse=context.get('sort_reverse', True))
+            return_list = [flat_message for message in messages for flat_message in _flatten(message)]
 
-    def message_read(self, cr, uid, ids=False, domain=[], thread_level=0, limit=None, context=None):
-        """ If IDs are provided, fetch these records. Otherwise use the domain
-            to fetch the matching records.
-            After having fetched the records provided by IDs, it will fetch the
-            parents to have well-formed threads.
+        # Add expandable
+        return_list = sorted(return_list, key=itemgetter(context.get('sort_key', 'id')), reverse=context.get('sort_reverse', True))
+        if return_list and current_level == 0 and add_expandable:
+            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, domain, current_level, level, context=context)
+            return_list.append(expandable)
+        elif return_list and current_level <= level and add_expandable:
+            expandable = self.message_read_tree_get_expandable(cr, uid, parent_message, return_list and return_list[-1] or parent_message, domain, current_level, level, context=context)
+            return_list.append(expandable)
+        return return_list
+
+    def message_read(self, cr, uid, ids=False, domain=[], level=0, context=None, parent_id=False, limit=None):
+        """ Read messages from mail.message, and get back a structured tree
+            of messages to be displayed as discussion threads. If IDs is set,
+            fetch these records. Otherwise use the domain to fetch messages.
+            After having fetch messages, their parents will be added to obtain
+            well formed threads.
+
+            :param domain: optional domain for searching ids
+            :param level: level of threads to display, 0 being flat
+            :param limit: number of messages to fetch
+            :param parent_id: if parent_id reached, stop searching for
+                further parents
             :return list: list of trees of messages
         """
         limit = limit or self._message_read_limit
@@ -249,40 +287,30 @@ class mail_message(osv.Model):
         if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
+        add_expandable = (len(messages) >= limit)
 
+        # key: ID, value: record
+        tree = {}
         result = []
-        tree = {} # key: ID, value: record
         for msg in messages:
-            if len(result) < (limit - 1):
-                record = self._message_dict_get(cr, uid, msg, context=context)
-                if thread_level and msg.parent_id:
-                    while msg.parent_id:
-                        if msg.parent_id.id in tree:
-                            record_parent = tree[msg.parent_id.id]
-                        else:
-                            record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
-                            if msg.parent_id.parent_id:
-                                tree[msg.parent_id.id] = record_parent
-                        if record['id'] not in [x['id'] for x in record_parent['child_ids']]:
-                            record_parent['child_ids'].append(record)
-                        record = record_parent
-                        msg = msg.parent_id
-                if msg.id not in tree:
-                    result.append(record)
-                    tree[msg.id] = record
-            else:
-                result.append({
-                    'type': 'expandable',
-                    'domain': [('id', '<=', msg.id)] + domain,
-                    'context': context,
-                    'thread_level': thread_level,  # should be improve accodting to level of records
-                    'id': -1,
-                })
-                break
+            record = self._message_dict_get(cr, uid, msg, context=context)
+            while msg.parent_id and msg.parent_id.id != parent_id:
+                if msg.parent_id.id in tree:
+                    record_parent = tree[msg.parent_id.id]
+                else:
+                    record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
+                    if msg.parent_id.parent_id:
+                        tree[msg.parent_id.id] = record_parent
+                if record['id'] not in [x['id'] for x in record_parent['child_ids']]:
+                    record_parent['child_ids'].append(record)
+                record = record_parent
+                msg = msg.parent_id
+            if msg.id not in tree:
+                result.append(record)
+                tree[msg.id] = record
 
         # Flatten the result
-        if thread_level > 0:
-            result = self.message_read_tree_flatten(cr, uid, result, 0, thread_level, context=context)
+        result = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context, limit=limit, add_expandable=add_expandable)
         return result
 
     #------------------------------------------------------

@@ -41,5 +41,4 @@ class res_partner_mail(osv.Model):
         'notification_email_send': lambda *args: 'comment'
     }
 
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

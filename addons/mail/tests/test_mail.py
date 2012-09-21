@@ -544,9 +544,11 @@ class test_mail(TestMailMockups):
 
         def _compare_structures(struct1, struct2, n=0):
             # print '%scompare structure' % ('\t' * n)
-            self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
+            # self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
             for x in range(len(struct1)):
-                # print '%s' % ('\t' * n), struct1[x]['id'], struct2[x]['id'], struct1[x].get('subject') or ''
+                if struct1[x].get('type') == 'expandable':
+                    continue
+                # print '%s' % ('\t' * n), struct1[x]['id'], struct1[x]['child_nbr'], struct2[x]['id'], struct2[x].get('child_nbr', 'XX'), struct1[x].get('subject') or ''
                 self.assertEqual(struct1[x]['id'], struct2[x]['id'], 'message_read failure %s' % struct1[x].get('subject'))
                 _compare_structures(struct1[x]['child_ids'], struct2[x]['child_ids'], n + 1)
             # print '%send compare' % ('\t' * n)
@@ -557,24 +559,25 @@ class test_mail(TestMailMockups):
 
         # Create dummy message structure
         import copy
-        tree = [{'id': 2, 'child_ids': [
-                    {'id': 6, 'child_ids': [
-                        {'id': 8, 'child_ids': []},
+        tree = [{'id': 2, 'child_nbr': 1, 'child_ids': [
+                    {'id': 6, 'child_nbr': 1, 'child_ids': [
+                        {'id': 8, 'child_nbr': 0, 'child_ids': []},
                         ]},
                     ]},
-                {'id': 1, 'child_ids':[
-                    {'id': 7, 'child_ids': [
-                        {'id': 9, 'child_ids': []},
+                {'id': 1, 'child_nbr': 3, 'child_ids':[
+                    {'id': 7, 'child_nbr': 1, 'child_ids': [
+                        {'id': 9, 'child_nbr': 0, 'child_ids': []},
                         ]},
-                    {'id': 4, 'child_ids': [
-                        {'id': 10, 'child_ids': []},
-                        {'id': 5, 'child_ids': []},
+                    {'id': 4, 'child_nbr': 2, 'child_ids': [
+                        {'id': 10, 'child_nbr': 0, 'child_ids': []},
+                        {'id': 5, 'child_nbr': 0, 'child_ids': []},
                         ]},
-                    {'id': 3, 'child_ids': []},
+                    {'id': 3, 'child_nbr': 0, 'child_ids': []},
                     ]},
                 ]
         # Test: completely flat
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 0)
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 0, limit=15, add_expandable=False)
+        _compare_structures(new_tree, new_tree)
         self.assertEqual(len(new_tree), 10, 'message_read_tree_flatten wrong in flat')
         # Test: 1 thread level
         tree_test = [{'id': 2, 'child_ids': [
@@ -586,10 +589,10 @@ class test_mail(TestMailMockups):
                         {'id': 4, 'child_ids': []}, {'id': 3, 'child_ids': []},
                     ]},
                     ]
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 1)
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 1, limit=15, add_expandable=False)
         _compare_structures(new_tree, tree_test)
         # Test: 2 thread levels
-        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, copy.deepcopy(tree), 0, 2)
+        new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 2, limit=15, add_expandable=False)
         _compare_structures(new_tree, tree)
 
         # ----------------------------------------
@@ -608,7 +611,7 @@ class test_mail(TestMailMockups):
         tree_test = [{'id': msgid6, 'child_ids': []}, {'id': msgid5, 'child_ids': []},
                         {'id': msgid4, 'child_ids': []}, {'id': msgid3, 'child_ids': []},
                         {'id': msgid2, 'child_ids': []}, {'id': msgid1, 'child_ids': []}]
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=0, limit=10)
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=0, limit=15)
         _compare_structures(tree, tree_test)
         # Test: read with 1 level of thread
         tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
@@ -617,7 +620,7 @@ class test_mail(TestMailMockups):
                         {'id': msgid2, 'child_ids': []},
                     ]},
                     ]
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=1, limit=10)
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=1, limit=15)
         _compare_structures(tree, tree_test)
         # Test: read with 2 levels of thread
         tree_test = [{'id': msgid4, 'child_ids': [{'id': msgid6, 'child_ids': []}, ]},
@@ -626,7 +629,7 @@ class test_mail(TestMailMockups):
                         {'id': msgid2, 'child_ids': [{'id': msgid5, 'child_ids': []}, ]},
                     ]},
                     ]
-        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], thread_level=2, limit=10)
+        tree = self.mail_message.message_read(cr, uid, ids=False, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)], level=2, limit=15)
         _compare_structures(tree, tree_test)
 
         # 2. Test expandables

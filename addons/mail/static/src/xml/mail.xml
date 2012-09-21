@@ -101,9 +101,9 @@
         <div class="oe_mail_thread_display">
             <!-- contains the threads -->
         </div>
-        <div class="oe_mail_thread_more">
+<!--         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
-        </div>
+        </div> -->
     </ul>
 
     <!-- default layout -->
@@ -156,6 +156,21 @@
                         <div class="oe_clear"></div>
                         <t t-call="mail.thread.message.attachments"/>
                     </t>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    <!-- expandable message layout -->
+    <li t-name="mail.thread.message.expandable" class="oe_mail oe_mail_thread_msg">
+        <div t-attf-class="oe_mail_msg_expandable oe_semantic_html_override">
+            <div class="oe_mail_msg_content">
+                <!-- message itself -->
+                <div class="oe_mail_msg">
+                    <div class="oe_mail_msg_body">
+                        <a class="oe_mail_fetch_more">Load more messages ...</a>
+                    </div>
+                    <div class="oe_clear"/>
                 </div>
             </div>
         </div>
