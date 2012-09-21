@@ -55,7 +55,7 @@ class stock_sale_forecast_createlines(osv.osv_memory):
             prod_categ_ids = prod_categ_obj.search(cr, uid, [('parent_id','child_of', categ_ids)])
             products_ids = product_obj.search(cr, uid, [('categ_id','in',prod_categ_ids)])
             if len(products_ids) == 0:
-                raise osv.except_osv(_('Error !'), _('No products in selected category !'))
+                raise osv.except_osv(_('Error!'), _('No products available in selected category !'))
             copy = f.copy_forecast
             for p in product_obj.browse(cr, uid, products_ids,{}):
                 if len(forecast_obj.search(cr, uid, [('product_id','=',p.id) , \

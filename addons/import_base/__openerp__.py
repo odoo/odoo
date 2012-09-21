@@ -24,15 +24,14 @@
     'version': '0.9',
     'category': 'Hidden/Dependency',
     'description': """
-This module provide a class import_framework to help importing complex data from
-other software.
+This module provide a class import_framework to help importing complex data from other software.
+================================================================================================
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base','mail'],
-    'init_xml': [],
-    'update_xml': ["import_base_view.xml"],
-    'demo_xml': [],
+    'data': ['import_base_view.xml'],
+    'demo': [],
     'test': [], #TODO provide test
     'installable': True,
     'auto_install': False,

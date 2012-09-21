@@ -20,28 +20,36 @@
 ##############################################################################
 
 {
-    "name": "Employee Directory",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "category": "Human Resources",
-    "sequence": 12,
-    "website": "http://www.openerp.com",
-    "summary": "All Infos on Employees",
-    "description": """
-Module for Human Resource Management.
-=====================================
+    'name': 'Employee Directory',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Human Resources',
+    'sequence': 12,
+    'website': 'http://www.openerp.com',
+    'summary': 'Jobs, Departments, Employees Details',
+    'description': """
+Human Resources Management
+=========================
+
+This application enables you to manage important aspects of your company's staff and other details such as their skills, contacts, working time...
+
 
 You can manage:
-    * Employees and hierarchies : You can define your employee with User and display hierarchies
-    * HR Departments
-    * HR Jobs
+---------------
+* Employees and hierarchies : You can define your employee with User and display hierarchies
+* HR Departments
+* HR Jobs
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/hr_department.jpeg', 'images/hr_employee.jpeg','images/hr_job_position.jpeg'],
+    'images': [
+        'images/hr_department.jpeg',
+        'images/hr_employee.jpeg',
+        'images/hr_job_position.jpeg',
+        'static/src/img/default_image.png',
+    ],
     'depends': ['base_setup','mail', 'resource', 'board'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/hr_security.xml',
         'security/ir.model.access.csv',
         'board_hr_view.xml',
@@ -52,17 +60,15 @@ You can manage:
         'hr_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': [
-        'hr_demo.xml',
-    ],
+    'demo': ['hr_demo.xml'],
     'test': [
-             'test/open2recruit2close_job.yml',
-             'test/hr_demo.yml',
-             ],
+        'test/open2recruit2close_job.yml',
+        'test/hr_demo.yml',
+    ],
     'installable': True,
     'application': True,
     'auto_install': False,
     'certificate': '0086710558965',
-    "css": [ 'static/src/css/hr.css' ],
+    'css': [ 'static/src/css/hr.css' ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

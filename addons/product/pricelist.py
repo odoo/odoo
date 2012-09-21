@@ -174,7 +174,7 @@ class product_pricelist(osv.osv):
                                                         ('date_end', '>=', date),
                                                     ])
         if len(pricelist_ids) != len(pricelist_version_ids):
-            raise osv.except_osv(_('Warning !'), _("At least one pricelist has no active version !\nPlease create or activate one."))
+            raise osv.except_osv(_('Warning!'), _("At least one pricelist has no active version !\nPlease create or activate one."))
 
         # product.product:
         product_ids = [i[0] for i in products_by_qty_by_partner]
@@ -407,18 +407,18 @@ class product_pricelist_item(osv.osv):
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
-            digits_compute= dp.get_precision('Sale Price')),
+            digits_compute= dp.get_precision('Product Price')),
         'price_discount': fields.float('Price Discount', digits=(16,4)),
         'price_round': fields.float('Price Rounding',
-            digits_compute= dp.get_precision('Sale Price'),
+            digits_compute= dp.get_precision('Product Price'),
             help="Sets the price so that it is a multiple of this value.\n" \
               "Rounding is applied after the discount and before the surcharge.\n" \
               "To have prices that end in 9.99, set rounding 10, surcharge -0.01" \
             ),
         'price_min_margin': fields.float('Min. Price Margin',
-            digits_compute= dp.get_precision('Sale Price')),
+            digits_compute= dp.get_precision('Product Price')),
         'price_max_margin': fields.float('Max. Price Margin',
-            digits_compute= dp.get_precision('Sale Price')),
+            digits_compute= dp.get_precision('Product Price')),
         'company_id': fields.related('price_version_id','company_id',type='many2one',
             readonly=True, relation='res.company', string='Company', store=True)
     }

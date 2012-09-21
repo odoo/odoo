@@ -669,26 +669,26 @@ class hr_payslip(osv.osv):
         if not context.get('contract', False):
             #fill with the first contract of the employee
             contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-            res['value'].update({
-                        'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
-                        'contract_id': contract_ids and contract_ids[0] or False,
-            })
         else:
             if contract_id:
                 #set the list of contract for which the input have to be filled
                 contract_ids = [contract_id]
-                #fill the structure with the one on the selected contract
-                contract_record = contract_obj.browse(cr, uid, contract_id, context=context)
-                res['value'].update({
-                            'struct_id': contract_record.struct_id.id,
-                            'contract_id': contract_id
-                })
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-                if not contract_ids:
-                    return res
 
+        if not contract_ids:
+            return res
+        contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
+        res['value'].update({
+                    'contract_id': contract_record and contract_record.id or False
+        })
+        struct_record = contract_record and contract_record.struct_id or False
+        if not struct_record:
+            return res
+        res['value'].update({
+                    'struct_id': struct_record.id,
+        })
         #computation of the salary input
         worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
         input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
@@ -859,18 +859,18 @@ result = rules.NET > categories.NET * 0.10''',
             try:
                 return rule.amount_fix, eval(rule.quantity, localdict), 100.0
             except:
-                raise osv.except_osv(_('Error'), _('Wrong quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error!'), _('Wrong quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
         elif rule.amount_select == 'percentage':
             try:
                 return eval(rule.amount_percentage_base, localdict), eval(rule.quantity, localdict), rule.amount_percentage
             except:
-                raise osv.except_osv(_('Error'), _('Wrong percentage base or quantity defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error!'), _('Wrong percentage base or quantity defined for salary rule %s (%s).')% (rule.name, rule.code))
         else:
             try:
                 eval(rule.amount_python_compute, localdict, mode='exec', nocopy=True)
                 return localdict['result'], 'result_qty' in localdict and localdict['result_qty'] or 1.0, 'result_rate' in localdict and localdict['result_rate'] or 100.0
             except:
-                raise osv.except_osv(_('Error'), _('Wrong python code defined for salary rule %s (%s) ')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error!'), _('Wrong python code defined for salary rule %s (%s).')% (rule.name, rule.code))
 
     def satisfy_condition(self, cr, uid, rule_id, localdict, context=None):
         """
@@ -887,13 +887,13 @@ result = rules.NET > categories.NET * 0.10''',
                 result = eval(rule.condition_range, localdict)
                 return rule.condition_range_min <=  result and result <= rule.condition_range_max or False
             except:
-                raise osv.except_osv(_('Error'), _('Wrong range condition defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error!'), _('Wrong range condition defined for salary rule %s (%s).')% (rule.name, rule.code))
         else: #python code
             try:
                 eval(rule.condition_python, localdict, mode='exec', nocopy=True)
                 return 'result' in localdict and localdict['result'] or False
             except:
-                raise osv.except_osv(_('Error'), _('Wrong python condition defined for salary rule %s (%s)')% (rule.name, rule.code))
+                raise osv.except_osv(_('Error!'), _('Wrong python condition defined for salary rule %s (%s).')% (rule.name, rule.code))
 
 hr_salary_rule()
 

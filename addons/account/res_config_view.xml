@@ -13,7 +13,6 @@
         <record id="view_account_config_settings" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Configure Accounting" version="7.0" class="oe_form_configuration">
                     <header>
@@ -43,7 +42,7 @@
                             </div>
                         </div>
                     </group>
-                    <separator string="Chart of Account and Fiscal Year" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}"/>
+                    <separator string="Chart of Accounts" attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}"/>
                     <group attrs="{'invisible': ['|', ('expects_chart_of_accounts','=',False), ('has_chart_of_accounts','=',True)]}">
                         <label for="id" string="Chart of Account"/>
                         <div>
@@ -122,6 +121,10 @@
                         </div>
                         <label for="id" string="Features"/>
                         <div>
+                            <div>
+                                <field name="group_multi_currency" class="oe_inline"/>
+                                <label for="group_multi_currency"/>
+                            </div>
                             <div>
                                 <field name="module_account_accountant" class="oe_inline"/>
                                 <label for="module_account_accountant"/>
@@ -220,12 +223,10 @@
                         <label for="id" string="Configuration"/>
                         <div>
                             <div>
-                                <button name="%(action_bank_tree)d"
-                                    string="Configure your bank accounts"
-                                    icon="gtk-go-forward"
-                                    type="action"
-                                    class="oe_inline oe_link"/>
                                 <label for="company_footer"/>
+                                <button name="open_company_form" type="object"
+                                    string="Configure your company bank accounts" icon="gtk-go-forward"
+                                    class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>
                             <div>

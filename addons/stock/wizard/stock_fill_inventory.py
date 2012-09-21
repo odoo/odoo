@@ -25,11 +25,23 @@ from tools.translate import _
 class stock_fill_inventory(osv.osv_memory):
     _name = "stock.fill.inventory"
     _description = "Import Inventory"
+
+    def _default_location(self, cr, uid, ids, context=None):
+        try:
+            loc_model, location_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'stock', 'stock_location_stock')
+        except ValueError, e:
+            return False
+        return location_id or False
+
     _columns = {
         'location_id': fields.many2one('stock.location', 'Location', required=True),
         'recursive': fields.boolean("Include children",help="If checked, products contained in child locations of selected location will be included as well."),
         'set_stock_zero': fields.boolean("Set to zero",help="If checked, all product quantities will be set to zero to help ensure a real physical inventory is done"),
     }
+    _defaults = {
+        'location_id': _default_location,
+    }
+
     def view_init(self, cr, uid, fields_list, context=None):
         """
          Creates view dynamically and adding fields at runtime.
@@ -113,7 +125,7 @@ class stock_fill_inventory(osv.osv_memory):
                 res[location] = datas
 
         if not flag:
-            raise osv.except_osv(_('Warning !'), _('No product in this location.'))
+            raise osv.except_osv(_('Warning!'), _('No product in this location.'))
 
         for stock_move in res.values():
             for stock_move_details in stock_move.values():

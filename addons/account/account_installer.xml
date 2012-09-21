@@ -3,18 +3,23 @@
         <record id="view_account_configuration_installer" model="ir.ui.view">
             <field name="name">account.installer.form</field>
             <field name="model">account.installer</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base.res_config_installer"/>
             <field name="arch" type="xml">
                 <form position="attributes" version="7.0">
                     <attribute name="string">Accounting Application Configuration</attribute>
                 </form>
                 <footer position="replace">
-                    <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    <footer>
+                      <button name="action_next" type="object" string="Continue" class="oe_highlight"/>
+                    </footer>
                 </footer>
                 <separator string="title" position="replace">
+                    <p class="oe_grey">
+                        Select a configuration package to setup automatically your
+                        taxes and chart of accounts.
+                    </p>
                     <group>
-                        <field name="charts"/>
+                        <field name="charts" class="oe_inline"/>
                     </group>
                     <group string="Configure your Fiscal Year" groups="account.group_account_user">
                         <field name="has_default_company" invisible="1" />
@@ -31,7 +36,7 @@
         </record>
 
         <record id="action_account_configuration_installer" model="ir.actions.act_window">
-            <field name="name">Configure your Chart of Accounts</field>
+            <field name="name">Configure Accounting Data</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.installer</field>
             <field name="view_id" ref="view_account_configuration_installer"/>

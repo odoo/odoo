@@ -24,34 +24,39 @@
     'name': 'Point of Sale',
     'version': '1.0.1',
     'category': 'Point Of Sale',
-    "sequence": 6,
-    "summary": "Touchscreen Interface for Shops",
+    'sequence': 6,
+    'summary': 'Touchscreen Interface for Shops',
     'description': """
-This module provides a quick and easy sale process.
-===================================================
+Quick and Easy sale process
+============================
 
-Main features:
---------------
-    * Fast encoding of the sale
-    * Allow to choose one payment mode (the quick way) or to split the payment between several payment mode
-    * Computation of the amount of money to return
-    * Create and confirm picking list automatically
-    * Allow the user to create invoice automatically
-    * Allow to refund former sales
+This module allows you to manage your shop sales very easily with a fully web based touchscreen interface.
+It is compatible with all PC tablets and the iPad, offering multiple payment methods. 
+
+Product selection can be done in several ways: 
+
+* Using a barcode reader
+* Browsing through categories of products or via a text search.
+
+Main Features
+-------------
+* Fast encoding of the sale
+* Choose one payment method (the quick way) or split the payment between several payment methods
+* Computation of the amount of money to return
+* Create and confirm the picking list automatically
+* Allows the user to create an invoice automatically
+* Refund previous sales
     """,
     'author': 'OpenERP SA',
     'images': ['images/cash_registers.jpeg', 'images/pos_analysis.jpeg','images/register_analysis.jpeg','images/sale_order_pos.jpeg','images/product_pos.jpeg'],
-    'depends': ['sale'],
-    'init_xml': [],
-
-    'update_xml': [
+    'depends': ['sale_stock'],
+    'data': [
         'security/point_of_sale_security.xml',
         'security/ir.model.access.csv',
         'wizard/pos_details.xml',
         'wizard/pos_confirm.xml',
         'wizard/pos_discount.xml',
         'wizard/pos_open_statement.xml',
-        'wizard/pos_close_statement.xml',
         'wizard/pos_payment_report_user_view.xml',
         'wizard/pos_sales_user.xml',
         'wizard/pos_receipt_view.xml',
@@ -70,7 +75,7 @@ Main features:
         'account_statement_report.xml',
         'res_users_view.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'point_of_sale_demo.xml',
         'account_statement_demo.xml',
         'test/00_register_open.yml'
@@ -82,24 +87,25 @@ Main features:
     ],
     'installable': True,
     'application': True,
-    # Web client
     'js': [
-            'static/lib/backbone/backbone-0.9.2.js', 
-            'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
-            'static/src/js/pos_models.js',
-            'static/src/js/pos_basewidget.js',
-            'static/src/js/pos_keyboard_widget.js',
-            'static/src/js/pos_scrollbar_widget.js',
-            'static/src/js/pos_widgets.js',
-            'static/src/js/pos_devices.js',
-            'static/src/js/pos_screens.js',
-            'static/src/js/pos_main.js'
+        'static/lib/mousewheel/jquery.mousewheel-3.0.6.js',
+        'static/src/js/db.js',
+        'static/src/js/models.js',
+        'static/src/js/widget_base.js',
+        'static/src/js/widget_keyboard.js',
+        'static/src/js/widget_scrollbar.js',
+        'static/src/js/widgets.js',
+        'static/src/js/devices.js',
+        'static/src/js/screens.js',
+        'static/src/js/main.js',
     ],
     'css': [
-        'static/src/css/pos.css',
+        'static/src/css/pos.css', # this is the default css with hover effects
+        #'static/src/css/pos_nohover.css', # this css has no hover effects (for resistive touchscreens)
         'static/src/css/keyboard.css'
     ],
     'qweb': ['static/src/xml/pos.xml'],
     'auto_install': False,
 }
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

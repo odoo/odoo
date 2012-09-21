@@ -27,13 +27,9 @@
             <field name="user_type" ref="account.data_account_type_payable"/>
         </record>
 
-    <record id="res_partner_bonamy" model="res.partner">
-        <field name="name">Employee: Bonamy</field>
-    </record>
-    <record id="hr_payroll.hr_employee_bonamy0" model="hr.employee">
-        <field name="address_home_id" ref="res_partner_bonamy"/>
-    </record>
-
+        <record id="hr_payroll.hr_employee_payroll" model="hr.employee">
+            <field name="address_home_id" ref="base.res_partner_main2"/>
+        </record>
 
 
     </data>

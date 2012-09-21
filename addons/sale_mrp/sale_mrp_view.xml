@@ -6,7 +6,6 @@
             <field name="name">mrp.production.form</field>
             <field name="model">mrp.production</field>
             <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='company_id']" position="after">
                     <field name="sale_ref"/>

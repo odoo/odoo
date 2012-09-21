@@ -516,7 +516,7 @@ class stock_tracking(osv.osv):
         return res
 
     def unlink(self, cr, uid, ids, context=None):
-        raise osv.except_osv(_('Error'), _('You can not remove a lot line !'))
+        raise osv.except_osv(_('Error!'), _('You cannot remove a lot line.'))
 
     def action_traceability(self, cr, uid, ids, context={}):
         """ It traces the information of a product
@@ -605,7 +605,7 @@ class stock_picking(osv.osv):
             res[pick]['min_date'] = dt1
             res[pick]['max_date'] = dt2
         return res
-    
+
     def create(self, cr, user, vals, context=None):
         if ('name' not in vals) or (vals.get('name')=='/'):
             seq_obj_name =  'stock.picking.' + vals['type']
@@ -673,6 +673,13 @@ class stock_picking(osv.osv):
     ]
 
     def action_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({
+            'active_model': self._name,
+            'active_ids': ids,
+            'active_id': len(ids) and ids[0] or False
+        })
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -740,7 +747,7 @@ class stock_picking(osv.osv):
                 wf_service.trg_validate(uid, 'stock.picking', pick.id, 'button_confirm', cr)
             move_ids = [x.id for x in pick.move_lines if x.state == 'confirmed']
             if not move_ids:
-                raise osv.except_osv(_('Warning !'),_('Not enough stock, unable to reserve the products.'))
+                raise osv.except_osv(_('Warning!'),_('Not enough stock, unable to reserve the products.'))
             self.pool.get('stock.move').action_assign(cr, uid, move_ids)
         return True
 
@@ -762,7 +769,7 @@ class stock_picking(osv.osv):
         wf_service = netsvc.LocalService("workflow")
         for pick in self.browse(cr, uid, ids):
             if not pick.move_lines:
-                raise osv.except_osv(_('Error !'),_('You can not process picking without stock moves'))
+                raise osv.except_osv(_('Error!'),_('You cannot process picking without stock moves.'))
             wf_service.trg_validate(uid, 'stock.picking', pick.id,
                 'button_confirm', cr)
         return True
@@ -1154,7 +1161,7 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error'), _('You cannot cancel picking because stock move is in done state !'))
+                    raise osv.except_osv(_('Error!'), _('You cannot cancel picking because stock move is in done state!'))
         return True
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
@@ -1162,7 +1169,7 @@ class stock_picking(osv.osv):
             context = {}
         for pick in self.browse(cr, uid, ids, context=context):
             if pick.state in ['done','cancel']:
-                raise osv.except_osv(_('Error'), _('You cannot remove the picking which is in %s state !')%(pick.state,))
+                raise osv.except_osv(_('Error!'), _('You cannot remove the picking which is in %s state!')%(pick.state,))
             else:
                 ids2 = [move.id for move in pick.move_lines]
                 ctx = context.copy()
@@ -1322,7 +1329,7 @@ class stock_picking(osv.osv):
 
             delivered_pack = self.browse(cr, uid, delivered_pack_id, context=context)
             res[pick.id] = {'delivered_picking': delivered_pack.id or False}
-            
+
         return res
 
     def log_picking(self, cr, uid, ids, context=None):
@@ -1364,11 +1371,11 @@ class stock_picking(osv.osv):
             context.update({'view_id': res and res[1] or False})
             message += state_list[pick.state]
         return True
-    
+
     # -----------------------------------------
     # OpenChatter methods and notifications
     # -----------------------------------------
-    
+
     def _get_document_type(self, type):
         type_dict = {
                 'out': 'Delivery order',
@@ -1376,17 +1383,17 @@ class stock_picking(osv.osv):
                 'internal': 'Internal picking',
         }
         return type_dict.get(type, 'Stock picking')
-    
+
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
-    
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
-        return self.message_append_note(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
-    
+        return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
+
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
-    
+        return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
+
     def ship_done_send_note(self, cr, uid, ids, context=None):
         type_dict = {
                 'out': 'delivered',
@@ -1394,12 +1401,12 @@ class stock_picking(osv.osv):
                 'internal': 'moved',
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
-    
+            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
+
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
-            
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+
 
 stock_picking()
 
@@ -1577,7 +1584,13 @@ class stock_move(osv.osv):
     def name_get(self, cr, uid, ids, context=None):
         res = []
         for line in self.browse(cr, uid, ids, context=context):
-            res.append((line.id, (line.product_id.code or '/')+': '+line.location_id.name+' > '+line.location_dest_id.name))
+            name = line.location_id.name+' > '+line.location_dest_id.name
+            # optional prefixes
+            if line.product_id.code:
+                name = line.product_id.code + ': ' + name
+            if line.picking_id.origin:
+                name = line.picking_id.origin + '/ ' + name
+            res.append((line.id, name))
         return res
 
     def _check_tracking(self, cr, uid, ids, context=None):
@@ -1653,6 +1666,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
     }
     def _check_location(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
@@ -1665,12 +1679,12 @@ class stock_move(osv.osv):
 
     _constraints = [
         (_check_tracking,
-            'You must assign a serial number for this product',
+            'You must assign a serial number for this product.',
             ['prodlot_id']),
-        (_check_location, 'You can not move products from or to a location of the type view.',
+        (_check_location, 'You cannot move products from or to a location of the type view.',
             ['location_id','location_dest_id']),
         (_check_product_lot,
-            'You try to assign a lot which is not from the same product',
+            'You try to assign a lot which is not from the same product.',
             ['prodlot_id'])]
 
     def _default_location_destination(self, cr, uid, context=None):
@@ -1730,15 +1744,30 @@ class stock_move(osv.osv):
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
-    
+
     def _default_destination_address(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
+
+    def _default_move_type(self, cr, uid, context=None):
+        """ Gets default type of move 
+        @return: type
+        """
+        if context is None:
+            context = {}
+        picking_type = context.get('picking_type')
+        type = 'internal'
+        if picking_type == 'in':
+            type = 'in'
+        elif picking_type == 'out':
+            type = 'out'
+        return type
 
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
+        'type': _default_move_type,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
@@ -1756,8 +1785,8 @@ class stock_move(osv.osv):
             for move in self.browse(cr, uid, ids, context=context):
                 if move.state == 'done':
                     if frozen_fields.intersection(vals):
-                        raise osv.except_osv(_('Operation forbidden'),
-                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator)'))
+                        raise osv.except_osv(_('Operation forbidden !'),
+                                             _('Quantities, Unit of Measures, Products and Locations cannot be modified on stock moves that have already been processed (except by the Administrator).'))
         return  super(stock_move, self).write(cr, uid, ids, vals, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
@@ -1891,6 +1920,32 @@ class stock_move(osv.osv):
         if loc_dest_id:
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
+
+    def onchange_move_type(self, cr, uid, ids, type, context=None):
+        """ On change of move type gives sorce and destination location.
+        @param type: Move Type
+        @return: Dictionary of values
+        """
+        mod_obj = self.pool.get('ir.model.data')
+        location_source_id = False
+        location_dest_id = False
+        if type == 'in':
+            location_source_id = 'stock_location_suppliers'
+            location_dest_id = 'stock_location_stock' 
+        elif type == 'out':
+            location_source_id = 'stock_location_stock' 
+            location_dest_id = 'stock_location_customers'
+        if location_source_id:
+            try:
+                location_model, location_source_id = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+            except ValueError, e:
+                location_source_id = False
+        if location_dest_id:
+            try:
+                location_model, location_dest_id = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+            except ValueError, e:
+                location_dest_id = False
+        return {'value':{'location_id': location_source_id, 'location_dest_id': location_dest_id}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
@@ -2090,11 +2145,12 @@ class stock_move(osv.osv):
                     done.append(move.id)
                     pickings[move.picking_id.id] = 1
                     r = res.pop(0)
-                    cr.execute('update stock_move set location_id=%s, product_qty=%s where id=%s', (r[1], r[0], move.id))
+                    product_uos_qty = self.pool.get('stock.move').onchange_quantity(cr, uid, ids, move.product_id.id, r[0], move.product_id.uom_id.id, move.product_id.uos_id.id)['value']['product_uos_qty']
+                    cr.execute('update stock_move set location_id=%s, product_qty=%s, product_uos_qty=%s where id=%s', (r[1], r[0],product_uos_qty, move.id))
 
                     while res:
                         r = res.pop(0)
-                        move_id = self.copy(cr, uid, move.id, {'product_qty': r[0], 'location_id': r[1]})
+                        move_id = self.copy(cr, uid, move.id, {'product_uos_qty': product_uos_qty, 'product_qty': r[0], 'location_id': r[1]})
                         done.append(move_id)
         if done:
             count += len(done)
@@ -2175,22 +2231,22 @@ class stock_move(osv.osv):
         journal_id = accounts['stock_journal']
 
         if acc_dest == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Output Account defined on this product and Valuation account on category of this product are same.'))
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Output Account of this product and Valuation account on category of this product are same.'))
 
         if acc_src == acc_valuation:
-            raise osv.except_osv(_('Error!'),  _('Can not create Journal Entry, Input Account defined on this product and Valuation account on category of this product are same.'))
+            raise osv.except_osv(_('Error!'),  _('Cannot create Journal Entry, Input Account of this product and Valuation account on category of this product are same.'))
 
         if not acc_src:
-            raise osv.except_osv(_('Error!'),  _('There is no stock input account defined for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Please define stock input account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not acc_dest:
-            raise osv.except_osv(_('Error!'),  _('There is no stock output account defined for this product or its category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'),  _('Please define stock output account for this product or its category: "%s" (id: %d)') % \
                                     (move.product_id.name, move.product_id.id,))
         if not journal_id:
-            raise osv.except_osv(_('Error!'), _('There is no journal defined on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Please define journal on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         if not acc_valuation:
-            raise osv.except_osv(_('Error!'), _('There is no inventory Valuation account defined on the product category: "%s" (id: %d)') % \
+            raise osv.except_osv(_('Error!'), _('Please define inventory valuation account on the product category: "%s" (id: %d)') % \
                                     (move.product_id.categ_id.name, move.product_id.categ_id.id,))
         return journal_id, acc_src, acc_dest, acc_valuation
 
@@ -2370,7 +2426,7 @@ class stock_move(osv.osv):
         ctx = context.copy()
         for move in self.browse(cr, uid, ids, context=context):
             if move.state != 'draft' and not ctx.get('call_unlink',False):
-                raise osv.except_osv(_('UserError'),
+                raise osv.except_osv(_('User Error!'),
                         _('You can only delete draft moves.'))
         return super(stock_move, self).unlink(
             cr, uid, ids, context=ctx)
@@ -2396,7 +2452,7 @@ class stock_move(osv.osv):
         """
         #quantity should in MOVE UOM
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap!'))
+            raise osv.except_osv(_('Warning!'), _('Please provide a positive quantity to scrap.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
@@ -2440,7 +2496,7 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
 
         res = []
 
@@ -2501,12 +2557,12 @@ class stock_move(osv.osv):
         if context is None:
             context = {}
         if quantity <= 0:
-            raise osv.except_osv(_('Warning!'), _('Please provide Proper Quantity !'))
+            raise osv.except_osv(_('Warning!'), _('Please provide proper quantity.'))
         res = []
         for move in self.browse(cr, uid, ids, context=context):
             move_qty = move.product_qty
             if move_qty <= 0:
-                raise osv.except_osv(_('Error!'), _('Can not consume a move with negative or zero quantity !'))
+                raise osv.except_osv(_('Error!'), _('Cannot consume a move with negative or zero quantity.'))
             quantity_rest = move.product_qty
             quantity_rest -= quantity
             uos_qty_rest = quantity_rest / move_qty * move.product_uos_qty
@@ -2540,11 +2596,6 @@ class stock_move(osv.osv):
                         'location_id': location_id or move.location_id.id,
                 }
                 self.write(cr, uid, [move.id], update_val)
-        
-        product_obj = self.pool.get('product.product')
-        for new_move in self.browse(cr, uid, res, context=context):
-            message = _("Product has been consumed with '%s' quantity.") % (new_move.product_qty)
-            product_obj.message_append_note(cr, uid, [new_move.product_id.id], body=message, context=context)
 
         self.action_done(cr, uid, res, context=context)
 
@@ -2574,7 +2625,7 @@ class stock_move(osv.osv):
             if move.state in ('done', 'cancel'):
                 continue
             partial_data = partial_datas.get('move%s'%(move.id), False)
-            assert partial_data, _('Missing partial picking data for move #%s') % (move.id)
+            assert partial_data, _('Missing partial picking data for move #%s.') % (move.id)
             product_qty = partial_data.get('product_qty',0.0)
             move_product_qty[move.id] = product_qty
             product_uom = partial_data.get('product_uom',False)
@@ -2782,7 +2833,7 @@ class stock_inventory(osv.osv):
                      account_move_data_l = account_move_obj.read(cr, uid, account_move_ids, ['state'], context=context)
                      for account_move in account_move_data_l:
                          if account_move['state'] == 'posted':
-                             raise osv.except_osv(_('UserError'),
+                             raise osv.except_osv(_('User Error!'),
                                                   _('In order to cancel this inventory, you must first unpost related journal entries.'))
                          account_move_obj.unlink(cr, uid, [account_move['id']], context=context)
             self.write(cr, uid, [inv.id], {'state': 'cancel'}, context=context)
@@ -2885,6 +2936,11 @@ class stock_picking_in(osv.osv):
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
 
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        #override in order to fire the workflow signal on given stock.picking workflow instance
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+
     _columns = {
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -2892,8 +2948,8 @@ class stock_picking_in(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Receive'),
             ('done', 'Received'),
-            ('cancel', 'Cancelled'),], 
-            'State', readonly=True, select=True, 
+            ('cancel', 'Cancelled'),],
+            'State', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n
@@ -2924,6 +2980,11 @@ class stock_picking_out(osv.osv):
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
 
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        #override in order to fire the workflow signal on given stock.picking workflow instance
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+
     _columns = {
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -2931,8 +2992,8 @@ class stock_picking_out(osv.osv):
             ('confirmed', 'Waiting Availability'),
             ('assigned', 'Ready to Deliver'),
             ('done', 'Delivered'),
-            ('cancel', 'Cancelled'),], 
-            'State', readonly=True, select=True, 
+            ('cancel', 'Cancelled'),],
+            'State', readonly=True, select=True,
             help="""* Draft: not confirmed yet and will not be scheduled until confirmed\n
                  * Waiting Another Operation: waiting for another move to proceed before it becomes automatically available (e.g. in Make-To-Order flows)\n
                  * Waiting Availability: still waiting for the availability of products\n

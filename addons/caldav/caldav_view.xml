@@ -5,7 +5,6 @@
             <field name="name">Calendar Collections : Form</field>
             <field name="model">document.directory</field>
             <field name="priority">40</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Calendar Collections" version="7.0">
                     <group col="4">
@@ -24,7 +23,6 @@
         <record model="ir.ui.view" id="view_calendar_collection_tree">
             <field name="name">Calendar Collections : Tree</field>
             <field name="model">document.directory</field>
-            <field name="type">tree</field>
             <field name="priority">40</field>
             <field name="arch" type="xml">
                 <tree string="Calendar Collections" toolbar="1">
@@ -78,7 +76,6 @@
         <record model="ir.ui.view" id="view_caldav_form">
             <field name="name">Calendar : Form</field>
             <field name="model">basic.calendar</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Calendar" version="7.0">
                     <group col="4">
@@ -138,7 +135,6 @@
         <record model="ir.ui.view" id="view_caldav_tree">
             <field name="name">Calendar : Tree</field>
             <field name="model">basic.calendar</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Calendars" toolbar="1">
                     <field name="name"/>
@@ -155,7 +151,6 @@
         <record model="ir.ui.view" id="view_caldav_search">
             <field name="name">Calendar: Search</field>
             <field name="model">basic.calendar</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Calendars">
                     <field name="name" string="Calendar"/>

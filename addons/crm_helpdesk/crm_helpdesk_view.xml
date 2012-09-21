@@ -26,9 +26,8 @@
         <record model="ir.ui.view" id="crm_case_form_view_helpdesk">
             <field name="name">CRM - Helpdesk Support Form</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Helpdesk Support" version="7.0">
                 <header>
                     <button name="case_open" string="Open" type="object" class="oe_highlight"
                             states="draft,pending"/>
@@ -101,6 +100,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -111,7 +111,6 @@
         <record model="ir.ui.view" id="crm_case_tree_view_helpdesk">
             <field name="name">CRM - Helpdesk Support Tree</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk Support Tree"
                     colors="black:state=='open';blue:state=='pending';gray:state in ('cancel','done')">
@@ -132,7 +131,6 @@
         <record model="ir.ui.view" id="crm_case_helpdesk_calendar_view">
             <field name="name">CRM - Helpdesk Support Calendar</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Helpdesk Supports" date_start="date" color="user_id" date_delay="duration">
@@ -148,7 +146,6 @@
         <record id="view_crm_case_helpdesk_filter" model="ir.ui.view">
             <field name="name">CRM - Helpdesk Search</field>
             <field name="model">crm.helpdesk</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Helpdesk">
                     <field name="name" string="Query"/>

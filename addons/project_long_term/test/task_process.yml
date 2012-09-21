@@ -2,7 +2,7 @@
   I create a record to compute the tasks of project.
 -
   !record {model: project.compute.tasks, id: project_compute_tasks0}:
-    project_id: project.project_integrate_openerp
+    project_id: project.project_project_1
 -
   I compute and shedule the tasks.
 -
@@ -12,7 +12,7 @@
   Check if tasks scheduled, check that either of task's start_date, end_date and user_id is not null
 -
   !python {model: project.project}: |
-    prj = self.browse(cr, uid, [ref("project.project_integrate_openerp")])[0]
+    prj = self.browse(cr, uid, [ref("project.project_project_1")])[0]
     for task in prj.tasks:
         if task.state in ('done','cancelled'):
             continue

@@ -17,64 +17,68 @@
         <record id="view_employee_form" model="ir.ui.view">
             <field name="name">hr.employee.form</field>
             <field name="model">hr.employee</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee" version="7.0">
                     <sheet>
-                        <field name="photo" widget='image' class="oe_right" on_change="onchange_photo(photo)"/>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
-                                <field name="name" class="oe_inline"/>
-                                <label class="oe_inline" string="," attrs="{'invisible': [('job_id', '=', False)]}"/>
-                                <field class="oe_inline" name="job_id" domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
-                                <label class="oe_inline" string="at" attrs="{'invisible': [('company_id', '=', False)]}" groups="base.group_multi_company"/>
-                                <field class="oe_inline" name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                <field name="name"/>
                             </h1>
-                            <label for="department_id" class="oe_edit_only"/>
-                            <h2><field name="department_id" on_change="onchange_department_id(department_id)"/></h2>
                             <label for="category_ids" class="oe_edit_only"/>
-                            <h3><field name="category_ids" widget="many2many_tags"/></h3>
+                            <field name="category_ids" widget="many2many_tags" placeholder="e.g. Part Time"/>
                         </div>
                         <div class="oe_right oe_button_box" name="button_box">
                             <!-- Put here related buttons -->
                         </div>
-                        <group colspan="4" col="4">
-                            <field name="work_email" widget="email"/>
-                            <field name="work_phone"/>
-                            <field name="address_id" on_change="onchange_address_id(address_id)"/>
-                            <field name="mobile_phone"/>
-                        </group>
                         <notebook>
-                            <page string="Information">
+                            <page string="Public Information">
                                 <group>
-                                    <group>
-                                        <field name="user_id" on_change="onchange_user(user_id)"/>
+                                    <group string="Contact Information">
+                                        <field name="work_email" widget="email"/>
+                                        <field name="work_phone"/>
+                                        <field name="mobile_phone"/>
+                                    </group>
+                                    <group string="Position">
+                                        <field name="department_id" on_change="onchange_department_id(department_id)"/>
+                                        <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
-                                        <field name="identification_id" groups="base.group_hr_user"/>
-                                        <field name="passport_id" groups="base.group_hr_user"/>
-                                        <field name="otherid" groups="base.group_hr_user"/>
-                                    </group>
-                                    <group name="active_group">
-                                        <field name="active"/>
+                                        <field name="company_id" groups="base.group_multi_company" on_change="onchange_company(company_id)"/>
+                                        <field name="user_id" on_change="onchange_user(user_id)" string="Related User"/>
+                                        <field name="address_id" on_change="onchange_address_id(address_id)" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
                                     </group>
                                 </group>
                                 <field name="notes" placeholder="Other Information ..." colspan="4"/>
                             </page>
                             <page string="Personal Information" groups="base.group_hr_user">
-                                <group col="4">
-                                    <group>
-                                        <field name="country_id"/>
+                                <group>
+                                    <group string="Citizenship &amp; Other Info">
+                                        <field name="country_id" options='{"no_open": true}'/>
+                                        <field name="identification_id" groups="base.group_hr_user"/>
+                                        <field name="passport_id" groups="base.group_hr_user"/>
                                         <field name="bank_account_id"/>
-                                        <field name="address_home_id"/>
+                                        <field name="otherid" groups="base.group_hr_user"/>
                                     </group>
-                                    <group>
+                                    <group string="Contact Information">
+                                        <field name="address_home_id" context="{'show_address': 1}" options='{"always_reload": true, "highlight_first_line": true}'/>
+                                    </group>
+                                    <group string="Status">
                                         <field name="gender"/>
                                         <field name="marital"/>
+                                    </group>
+                                    <group string="Birth">
                                         <field name="birthday"/>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="HR Settings" groups="base.group_hr_user">
+                                <group>
+                                    <group string="Active" name="active_group">
+                                        <field name="active"/>
                                     </group>
                                 </group>
                             </page>
@@ -87,7 +91,6 @@
         <record id="view_employee_tree" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Employees">
                     <field name="name"/>
@@ -105,7 +108,6 @@
         <record id="view_employee_filter" model="ir.ui.view">
             <field name="name">Employees</field>
             <field name="model">hr.employee</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Employees">
                     <field name="name" string="Employees"/>
@@ -128,7 +130,6 @@
     <record model="ir.ui.view" id="hr_kanban_view_employees">
         <field name="name">HR - Employess Kanban</field>
         <field name="model">hr.employee</field>
-        <field name="type">kanban</field>
         <field name="arch" type="xml">
             <kanban>
                 <field name="last_login"/>
@@ -136,11 +137,11 @@
                     <t t-name="kanban-box">
                         <div class="oe_employee_vignette">
                             <div class="oe_employee_image">
-                                <a type="edit"><img t-att-src="kanban_image('hr.employee', 'photo', record.id.value)" class="oe_employee_picture"/></a>
+                                <a type="open"><img t-att-src="kanban_image('hr.employee', 'image_medium', record.id.value)" class="oe_employee_picture"/></a>
                             </div>
                             <div class="oe_employee_details">
                                 <h4>
-                                    <a type="edit"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
+                                    <a type="open"><field name="name"/><t t-if="record.login.raw_value"> (<field name="login"/>)</t></a>
                                 </h4>
                                 <ul>
                                     <li id="last_login">
@@ -179,7 +180,7 @@
             <field name="name">Employees</field>
             <field name="res_model">hr.employee</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">form,tree</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
         </record>
@@ -236,7 +237,6 @@
         <record id="view_partner_tree2" model="ir.ui.view">
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field eval="20" name="priority"/>
             <field name="arch" type="xml">
@@ -275,7 +275,6 @@
        <record id="view_employee_category_form" model="ir.ui.view">
             <field name="name">hr.employee.category.form</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Employee Category" version="7.0">
                     <group>
@@ -289,7 +288,6 @@
         <record id="view_employee_category_list" model="ir.ui.view">
             <field name="name">hr.employee.category.list</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -301,7 +299,6 @@
         <record id="view_employee_category_tree" model="ir.ui.view">
             <field name="name">hr.employee.category.tree</field>
             <field name="model">hr.employee.category</field>
-            <field name="type">tree</field>
             <field name="field_parent">child_ids</field>
             <field name="arch" type="xml">
                 <tree string="Employees Categories">
@@ -350,7 +347,6 @@
         <record id="view_hr_job_form" model="ir.ui.view">
             <field name="name">hr.job.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
@@ -394,7 +390,6 @@
         <record id="view_hr_job_tree" model="ir.ui.view">
             <field name="name">hr.job.tree</field>
             <field name="model">hr.job</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Job">
                     <field name="name"/>
@@ -411,7 +406,6 @@
         <record id="view_job_filter" model="ir.ui.view">
             <field name="name">Job</field>
             <field name="model">hr.job</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Jobs">
                     <field name="name" string="Job"/>
@@ -430,7 +424,6 @@
         <record id="view_hr_job_employee_form" model="ir.ui.view">
             <field name="name">hr.job.employee.form</field>
             <field name="model">hr.job</field>
-            <field name="type">form</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">

@@ -45,7 +45,6 @@
     <record id="view_crm_meeting_type_tree" model="ir.ui.view">
         <field name="name">Meeting Types Tree</field>
         <field name="model">crm.meeting.type</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Meeting Types" editable="bottom">
                 <field name="name"/>
@@ -68,12 +67,9 @@
     <record model="ir.ui.view" id="view_crm_meeting_form">
         <field name="name">CRM - Meetings Form</field>
         <field name="model">crm.meeting</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
             <form string="Meetings" version="7.0">
-                <header>
-                    <field name="state"/>
-                </header>
+                <field name="state" invisible="True"/>
                 <sheet>
                     <div class="oe_title">
                         <div class="oe_edit_only">
@@ -91,7 +87,7 @@
                     <page string="Meeting Detail">
                         <group>
                             <group>
-                                <field name="user_id" />
+                                <field name="user_id"/>
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>
@@ -117,7 +113,7 @@
                                     <label for="allday" string="All Day?"/>)
                                 </div>
                                     <field name="recurrency"
-                                        attrs="{'readonly': ['|', ('recurrent_uid','!=',False), ('state','=','done')]}"/>
+                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
                             </group>
                             <group>
                                 <field name="alarm_id" widget="selection" />
@@ -172,7 +168,7 @@
                     <page string="Invitation Detail">
                         <button string="Invite People"
                             name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            icon="terp-partner" type="action"
+                            type="action"
                             attrs="{'readonly': [('state', '=', 'done')]}"
                             context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" widget="one2many" mode="tree">
@@ -185,17 +181,16 @@
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
                                     string="Uncertain" type="object"
-                                    icon="terp-crm" />
+                                    />
                                 <button name="do_accept" string="Accept"
                                     states="needs-action,tentative,declined"
-                                    type="object" icon="gtk-apply" />
+                                    type="object" />
                                 <button name="do_decline" string="Decline"
                                     states="needs-action,tentative,accepted"
-                                    type="object" icon="gtk-cancel" />
+                                    type="object" />
                                 <button
                                     name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
                                     string="Delegate" type="action"
-                                    icon="gtk-sort-descending"
                                     states="needs-action,tentative,declined,accepted"
                                     context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
@@ -203,16 +198,16 @@
                                 <header>
                                     <button name="do_tentative" type="object"
                                         states="needs-action,declined,accepted"
-                                        string="Uncertain" icon="terp-crm" />
+                                        string="Uncertain" />
                                     <button name="do_accept" type="object"
                                         states="needs-action,tentative,declined"
-                                        string="Accept" icon="gtk-apply" />
+                                        string="Accept" />
                                     <button name="do_decline" type="object"
                                         states="needs-action,tentative,accepted"
-                                        string="Decline" icon="gtk-cancel" />
+                                        string="Decline" />
                                     <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" type="action"
                                         states="needs-action,tentative,declined,accepted"
-                                        string="Delegate" icon="gtk-sort-descending"
+                                        string="Delegate" 
                                         context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
                                 </header>
@@ -235,6 +230,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
             </form>
         </field>
@@ -245,16 +241,14 @@
     <record model="ir.ui.view" id="view_crm_meeting_tree">
         <field name="name">CRM - Meetings Tree</field>
         <field name="model">crm.meeting</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
-            <tree string="Meetings" fonts="bold:needaction_pending==True"
-                colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+            <tree string="Meetings" fonts="bold:message_unread==True">
                 <field name="name" string="Subject" />
                 <field name="user_id"/>
                 <field name="date"/>
-                <field name="state"/>
+                <field name="state" invisible="True"/>
                 <field name="duration" />
-                <field name="needaction_pending" invisible="1"/>
+                <field name="message_unread" invisible="1"/>
             </tree>
         </field>
     </record>
@@ -264,7 +258,6 @@
     <record model="ir.ui.view" id="view_crm_meeting_calendar">
         <field name="name">CRM - Meetings Calendar</field>
         <field name="model">crm.meeting</field>
-        <field name="type">calendar</field>
         <field name="priority" eval="2"/>
         <field name="arch" type="xml">
             <calendar string="Meetings" date_start="date" color="user_id" date_stop="date_deadline" date_delay="duration">
@@ -279,7 +272,6 @@
     <record id="view_crm_meeting_gantt" model="ir.ui.view">
         <field name="name">CRM - Meetings Gantt</field>
         <field name="model">crm.meeting</field>
-        <field name="type">gantt</field>
         <field name="arch" type="xml">
             <gantt date_delay="duration" date_start="date" string="Meetings"/>
         </field>
@@ -290,13 +282,12 @@
     <record id="view_crm_meeting_search" model="ir.ui.view">
         <field name="name">CRM - Meetings Search</field>
         <field name="model">crm.meeting</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
-                <filter string="Inbox" help="Unread messages" icon="terp-mail-message-new" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                <filter string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
-                <filter string="My Meetings" help="My Meetings" icon="terp-personal" domain="[('user_id','=',uid)]"/>
+                <filter string="My Meetings" help="My Meetings" domain="[('user_id','=',uid)]"/>
                 <field name="user_id"/>
                 <field name="partner_ids"/>
             </search>

@@ -4,7 +4,6 @@
         <record id="view_account_followup_followup_line_tree" model="ir.ui.view">
             <field name="name">account_followup.followup.line.tree</field>
             <field name="model">account_followup.followup.line</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-up Steps">
                     <field name="name"/>
@@ -17,7 +16,6 @@
         <record id="view_account_followup_followup_line_form" model="ir.ui.view">
             <field name="name">account_followup.followup.line.form</field>
             <field name="model">account_followup.followup.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-up Steps" version="7.0">
                     <group col="4">
@@ -41,7 +39,6 @@
         <record id="view_account_followup_followup_form" model="ir.ui.view">
             <field name="name">account_followup.followup.form</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Follow-up" version="7.0">
                     <group col="4">
@@ -56,7 +53,6 @@
         <record id="view_account_followup_followup_tree" model="ir.ui.view">
             <field name="name">account_followup.followup.tree</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Follow-up">
                     <field name="name"/>
@@ -68,7 +64,6 @@
         <record id="view_account_followup_filter" model="ir.ui.view">
             <field name="name">account.followup.select</field>
             <field name="model">account_followup.followup</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Follow-up">
                     <field name="name" string="Follow-up"/>
@@ -101,7 +96,6 @@
         <record id="account_move_line_partner_tree" model="ir.ui.view">
             <field name="name">account.move.line.partner.tree</field>
             <field name="model">account.move.line</field>
-            <field name="type">tree</field>
             <field eval="32" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:state == 'draft';black:state == 'validate'" editable="bottom" string="Partner entries">
@@ -157,7 +151,6 @@
             <field name="name">res.company.followup.form.inherit</field>
             <field name="inherit_id" ref="account.view_company_inherit_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="overdue_msg" nolabel="1" colspan="4" position="after">
                     <separator string="Follow-up Message" colspan="4"/>

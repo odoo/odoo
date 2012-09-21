@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-07 04:54+0000\n"
-"X-Generator: Launchpad (build 15745)\n"
+"X-Launchpad-Export-Date: 2012-09-07 04:56+0000\n"
+"X-Generator: Launchpad (build 15914)\n"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_confirmingpurchaseorder0
@@ -272,12 +272,12 @@ msgstr "Satınalmalar"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Purchase order which are in draft state"
-msgstr "Taslak durumundaki Satınalma emirleri"
+msgstr "Taslak durumundaki Satınalma siparişleri"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Origin"
-msgstr "Menşei"
+msgstr "Kökenİ"
 
 #. module: purchase
 #: view:purchase.order:0 field:purchase.order,notes:0
@@ -294,7 +294,7 @@ msgstr "Eylül"
 #: report:purchase.order:0 field:purchase.order,amount_tax:0
 #: view:purchase.order.line:0 field:purchase.order.line,taxes_id:0
 msgid "Taxes"
-msgstr "Vergi"
+msgstr "Vergiler"
 
 #. module: purchase
 #: model:ir.actions.report.xml,name:purchase.report_purchase_order
@@ -310,7 +310,7 @@ msgstr "Satınalma Siparişi"
 #: field:purchase.order,name:0 view:purchase.order.line:0
 #: field:purchase.order.line,order_id:0
 msgid "Order Reference"
-msgstr "Sipariş Referansı"
+msgstr "Sipariş İlgisi"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -328,7 +328,7 @@ msgstr "Ürünler"
 #: model:ir.actions.act_window,name:purchase.action_purchase_order_report_graph
 #: view:purchase.report:0
 msgid "Total Qty and Amount by month"
-msgstr "Aylık Toplam Miktar ve Tutar"
+msgstr "Aylık Toplam Mik ve Tutar"
 
 #. module: purchase
 #: model:process.transition,note:purchase.process_transition_packinginvoice0
@@ -379,12 +379,12 @@ msgstr "Giden Ürünler"
 #. module: purchase
 #: view:purchase.order:0
 msgid "Manually Corrected"
-msgstr "Manuel Olarak Düzeltildi"
+msgstr "Elle Düzeltildi"
 
 #. module: purchase
 #: view:purchase.order:0
 msgid "Reference"
-msgstr "Referans"
+msgstr "İlgi"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_stock_move
@@ -401,7 +401,7 @@ msgstr ""
 #. module: purchase
 #: field:purchase.report,dest_address_id:0
 msgid "Dest. Address Contact Name"
-msgstr "Varılacak Adres İlgili Kişi"
+msgstr "Varış Adresindeki İlgili Kişi"
 
 #. module: purchase
 #: report:purchase.order:0
@@ -422,7 +422,7 @@ msgstr "Analiz Hesabı"
 #. module: purchase
 #: view:purchase.report:0 field:purchase.report,nbr:0
 msgid "# of Lines"
-msgstr "# / Satır"
+msgstr "Satır sayısı"
 
 #. module: purchase
 #: code:addons/purchase/purchase.py:754 code:addons/purchase/purchase.py:769
@@ -542,6 +542,11 @@ msgid ""
 "supplier invoice, you can generate a draft supplier invoice based on the "
 "lines from this menu."
 msgstr ""
+"Bir satınalma siparişinin Fatura Kontrolünü \"Satınalma Siparişi Öğelerine "
+"Göre\" ayarlarsanız, henüz almadığınız tedarikçi faturalarının satınalma "
+"öğelerinintümünü buradan izleyebilirsiniz. Bir tedarikçi faturası alma "
+"durumuna gelmişseniz, bu menü öğelerine göre bir taslak tedarikçi faturası "
+"oluşturabilirsiniz."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1161,6 +1166,9 @@ msgid ""
 "can import your existing partners by CSV spreadsheet from \"Import Data\" "
 "wizard"
 msgstr ""
+"Bu formdan elle Tedarikçileri ve kişilerini oluşturabilir ya da "
+"içeaktarabilirsiniz veya \"Veri İçeaktarma\" sihirbazından CSV çalışma "
+"sayfası olarak varolan paydaşlarınızı içeaktarabilirsiniz."
 
 #. module: purchase
 #: model:process.transition,name:purchase.process_transition_createpackinglist0
@@ -1261,6 +1269,12 @@ msgid ""
 "Based on generated invoice: create a draft invoice you can validate later.\n"
 "Based on receptions: let you create an invoice when receptions are validated."
 msgstr ""
+"Satınalma Sipariş satırlarına dayalı: seçerek fatura oluşturacağınız 'Fatura "
+"Kontrolü > S.S. satırlarına dayalı'nın içine tek satırları yerleştirin.\n"
+"Oluşturulan faturaya dayalı: daha sonra doğrulayabileceğiniz bir taslak "
+"fatura oluşturun.\n"
+"Kabullere dayanarak: kabuller doğrulandığında fatura oluşturmanıza izin "
+"verir."
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.action_supplier_address_form
@@ -1684,6 +1698,9 @@ msgid ""
 "receptions\", you can track here all the product receptions and create "
 "invoices for those receptions."
 msgstr ""
+"Satınalma siparişlerinin Fatura Kontrolünü \"Kabullere Dayanarak\" "
+"ayarlarsanız, burada tüm ürün kabullerini izleyebilir ve bu kabuller için "
+"faturalar oluşturabilirsiniz."
 
 #. module: purchase
 #: view:purchase.order:0
@@ -1838,7 +1855,7 @@ msgstr ""
 "Lütfen bir ürün seçmeden önce birini belirtin."
 
 #. module: purchase
-#: model:email.template,body_text:purchase.email_template_edi_purchase
+#: model:email.template,body:purchase.email_template_edi_purchase
 msgid ""
 "\n"
 "Hello${object.partner_address_id.name and ' ' or "
