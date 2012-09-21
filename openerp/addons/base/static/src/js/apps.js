@@ -5,19 +5,26 @@ openerp.base = function(instance) {
         template: 'EmptyComponent',
         init: function(parent, options) {
             this._super(parent);
+            this.params = options;
+            this.clean();
             // create a new instance
             this.remote_instance = new openerp.init();
-
         },
 
-        destroy: function() {
+        clean: function() {
             if (this.client) {
                 this.client.destroy();
             }
-            delete this.remote_instance;
         },
-        
+
+        destroy: function() {
+            this.clean();
+            //delete this.remote_instance;
+            this._super();
+        },
+
         _get_options: function() {
+            var self = this;
             //var DEFAULT_SERVER = 'http://apps.openerp.com/loempia';           // PROD
             var DEFAULT_SERVER = 'http://apps.openerp.com:9069/loempia7';     // TEST
             //var DEFAULT_SERVER = 'http://localhost:8080/trunk_loempia7';        // DEV
@@ -47,11 +54,11 @@ openerp.base = function(instance) {
             this.options = options;
 
             var client = this.client = new this.remote_instance.web.EmbeddedClient(null, this.options.url,
-                                                                     this.options.dbname, this.options.login, this.options.password, 
-                                                                     this.options.action_id, this.action_flags);
+                                                                     this.options.dbname, this.options.login, this.options.password,
+                                                                     this.options.action_id);
             client.on('connection_failed', this, this.action_fallback);
-            this.client = client;
-            
+            //this.client = client;
+
             client.replace(this.$el).
                 done(function() {
                     client.$el.removeClass('openerp');
@@ -61,11 +68,11 @@ openerp.base = function(instance) {
                     alert('fail');
                 });
         },
-        
+
         action_fallback: function() {
             // TODO show flash message
             this.do_warn(this.options.url + ' unreachable');
-            this.do_action('base.action_modules');                
+            this.do_action('base.action_modules');
         }
     });
 
