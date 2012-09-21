@@ -8,11 +8,34 @@ class fleet_vehicle_model_type(osv.Model):
     }
 
 class fleet_vehicle_model(osv.Model):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if not ids:
+            return []
+        reads = self.read(cr, uid, ids, ['brand','modelname','make','year'], context=context)
+        res = []
+        for record in reads:
+            name = ''
+            if record['modelname']:
+                name = name+ ' / ' +record['modelname'][1]
+            if record['modelname']:
+                name = name+ ' / ' +record['modelname'][1]
+            if record['make']:
+                name = name+ ' / ' +record['make'][1]
+            if record['year']:
+                name = name+ ' / ' +str(record['year'])
+            res.append((record['id'], name))
+        return res
+
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
 
     _columns = {
-        'name' : fields.char('Name',size=32, required=False),
+        'name' : fields.function(_name_get_fnc, type="char", string='Name'),
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=False),
         'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=False),
         'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False),
