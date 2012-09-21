@@ -14,19 +14,40 @@
         <menuitem id="menu_purchase_config_purchase" name="Configuration"
             groups="group_purchase_manager"
             parent="base.menu_purchase_root" sequence="100"/>
+        <menuitem
+            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
+            parent="menu_purchase_config_purchase" sequence="10" groups="product.group_purchase_pricelist" />
 
+        <record id="purchase_pricelist_version_action" model="ir.actions.act_window">
+            <field name="name">Pricelist Versions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.pricelist.version</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="product.product_pricelist_version_tree_view"/>
+            <field name="domain">[('pricelist_id.type','=','purchase')]</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to add a pricelist version.
+              </p><p>
+                There can be more than one version of a pricelist, each of
+                these must be valid during a certain period of time. Some
+                examples of versions: Main Prices, 2010, 2011, Summer Sales,
+                etc.
+              </p>
+            </field>
+        </record>
         <menuitem
             id="menu_purchase_config_pricelist" name="Pricelists"
             parent="menu_purchase_config_purchase" sequence="50" groups="product.group_purchase_pricelist"/>
 
         <menuitem
-            action="product.product_pricelist_action" id="menu_product_pricelist_action_purhase"
-            parent="menu_purchase_config_pricelist" sequence="20" groups="base.group_no_one"/>
+            action="purchase_pricelist_version_action" id="menu_purchase_pricelist_version_action"
+            parent="menu_purchase_config_pricelist" sequence="2" groups="product.group_purchase_pricelist"/>
 
+        
         <menuitem
-            action="product.product_pricelist_action_for_purchase" id="menu_product_pricelist_action2_purchase"
-            parent="menu_purchase_config_pricelist" sequence="10" />
-
+            action="product.product_price_type_action" id="menu_product_pricelist_action2_purchase_type"
+            parent="menu_purchase_config_pricelist" sequence="60" />
         <menuitem
             id="menu_product_in_config_purchase" name="Products"
             parent="menu_purchase_config_purchase" sequence="30" groups="base.group_no_one"/>
@@ -188,7 +209,7 @@
                     <button name="view_picking" string="Receive Products" type="object" attrs="{'invisible': ['|', ('shipped','=',True), ('state','!=', 'approved')]}" class="oe_highlight"/>
                     <button name="action_cancel_draft" states="cancel,sent,confirmed" string="Set to Draft" type="object" />
                     <button name="purchase_cancel" states="draft,confirmed,sent" string="Cancel"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,approved,done" statusbar_colors='{"except_picking":"red","except_invoice":"red","confirmed":"blue"}' readonly="1"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
@@ -346,7 +367,7 @@
             <field name="name">Quotations</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">purchase.order</field>
-            <field name="context">{'search_default_draft': 1}</field>
+            <field name="context">{}</field>
             <field name="domain">[('state','in',('draft','sent','confirmed'))]</field>
             <field name="view_mode">tree,form,graph,calendar</field>
             <field name="search_view_id" ref="view_purchase_order_filter"/>
