@@ -694,18 +694,18 @@ class test_mail(TestMailMockups):
         msg2 = group_pigs.message_post(body='My Body', subject='2')
         message1 = self.mail_message.browse(cr, uid, msg1)
         message2 = self.mail_message.browse(cr, uid, msg2)
-
+        context= {}
         #Test : Groups contain two messages.
         self.assertEqual(2, len(group_pigs.message_ids), 'group should contain 2 messages')
         #Read message without key. using bert parner
-        msg_data1 = self.mail_message.message_read(cr, user_bert.id, ids=[message1.id], domain=[], thread_level=2, limit=10,context={})
+        msg_data1 = self.mail_message.message_read(cr, user_bert.id, ids=[message1.id], domain=[], thread_level=2, limit=10,context=context)
         #check notification For message readable or unread.
         notif_msg1_ids1 = self.mail_notification.search(cr, uid, [('partner_id', '=', user_bert.partner_id.id),('message_id', '=', message1.id)], context=context)
         notif_data1 = self.mail_notification.read(cr, uid, notif_msg1_ids1, ['read'])[0]['read']
         # Test: Message1 are marked as read.
         self.assertTrue(notif_data1, 'Message1 are set as read for the user Bert that read it')
         #Pass key in context for unread message..
-        context = {'default_model': 'mail.group', 'default_res_id': [self.group_pigs_id], 'mail_keep_unread': True}
+        context.update({'default_model': 'mail.group', 'default_res_id': [self.group_pigs_id], 'mail_keep_unread': True})
         # Test: New created Message2 are set as unread.
         msg_data2 = self.mail_message.message_read(cr, uid, ids=[message2.id], domain=[], thread_level=2, limit=10,context=context)
         #Check Notification For unread message..
