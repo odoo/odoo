@@ -143,8 +143,10 @@ class crm_lead2opportunity_partner(osv.osv_memory):
         lead = self.pool.get('crm.lead')
         lead_ids = context.get('active_ids', [])
         data = self.browse(cr, uid, ids, context=context)[0]
-        self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
-        self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.name, context=context)
+        if data.name == "merge":
+            self._merge_opportunity(cr, uid, ids, data.opportunity_ids, data.name, context=context)
+        else:
+            self._convert_opportunity(cr, uid, ids, {'lead_ids': lead_ids}, context=context)
         return lead.redirect_opportunity_view(cr, uid, lead_ids[0], context=context)
 
 
