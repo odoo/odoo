@@ -43,7 +43,7 @@ class hr_timesheet_report(osv.osv):
         'account_id': fields.many2one('account.analytic.account', 'Analytic Account',readonly=True),
         'company_id': fields.many2one('res.company', 'Company',readonly=True),
         'cost': fields.float('Cost',readonly=True, digits_compute=dp.get_precision('Account')),
-        'quantity': fields.float('Quantity',readonly=True),
+        'quantity': fields.float('Time Quantity',readonly=True),
     }
 
     def init(self, cr):
