@@ -12,17 +12,18 @@ class fleet_vehicle_model(osv.Model):
     _description = 'Model of a vehicle'
 
     _columns = {
-        'name' : fields.char('Name',size=32, required=True),
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True),
-        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
-        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=True),
-        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=True),
+        'name' : fields.char('Name',size=32, required=False),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=False),
+        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=False),
+        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False),
+        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=False),
+        'year' : fields.integer('Year', required=False),
         'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
         'horses' : fields.integer('Horses',required=False),
-        'power' : fields.integer('Power',required=False,help='Power in kW of the vehicle'),
+        'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
     }
 
