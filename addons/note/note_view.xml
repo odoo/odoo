@@ -1,8 +1,6 @@
 <?xml version="1.0"?>
 <openerp>
   <data>
-    <menuitem name="Organizer" id="note_my_stuff" parent="mail.mail_feeds_main"/>
-
     <!-- note Stage Form View -->
     <record model="ir.ui.view" id="view_note_stage_form">
       <field name="name">note.stage.form</field>
@@ -38,8 +36,6 @@
         <field name="domain">[('user_id','=',uid)]</field>
     </record>
 
-    <menuitem name="Categories" id="menu_notes_stage" parent="note_my_stuff" action="action_note_stage" sequence="40" groups="base.group_no_one"/>
-
     <!-- New note Kanban View -->
     <record model="ir.ui.view" id="view_note_note_kanban">
       <field name="name">note.note.kanban</field>
@@ -65,7 +61,7 @@
                 <div class="oe_dropdown_kanban">
                   <span>
                     <a name="onclick_note_is_done" type="object" t-if="record.open.raw_value" class="oe_e">W</a>
-                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">è</a>
+                    <a name="onclick_note_not_done" type="object" t-if="!record.open.raw_value" class="oe_e">W</a>
                   </span>
 
                   <!-- dropdown menu -->
@@ -105,7 +101,7 @@
           <field name="name"/>
           <field name="open"/>
           <field name="stage_id"/>
-          <field name="tag_ids" widget="many2many_tags" groups="note.group_note_tags"/>
+          <field name="tag_ids" widget="many2many_tags"/>
         </tree>
       </field>
     </record>
@@ -117,12 +113,10 @@
       <field name="arch" type="xml">
         <form string="Note" version="7.0">
           <header>
+            <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
             <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
           </header>
           <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
-          <group groups="note.group_note_tags" col="2">
-            <field name="tag_ids" widget="many2many_tags"/>
-          </group>
           <field name="message_follower_ids" widget="mail_followers"/>
           <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
         </form>
@@ -136,7 +130,7 @@
       <field name="arch" type="xml">
         <search string="Notes">
           <field name="memo" string="Note"/>
-          <field name="tag_ids" groups="note.group_note_tags"/>
+          <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By...">
@@ -165,10 +159,6 @@
                       <field name="group_note_fancy" class="oe_inline"/>
                       <label for="group_note_fancy"/>
                   </div>
-                  <div>
-                      <field name="group_note_tags" class="oe_inline"/>
-                      <label for="group_note_tags"/>
-                  </div>
               </div>
           </group>
         </xpath>
@@ -185,7 +175,8 @@
       <field name="context">{'search_default_open_true':True}</field>
     </record>
 
-    <menuitem name="Notes" id="note_notes" parent="note_my_stuff" sequence="20" action="action_note_note"/>
+    <menuitem name="Notes" id="menu_note_notes" parent="mail.mail_my_stuff" sequence="20" action="note.action_note_note"/>
+    <menuitem name="Categories" id="menu_notes_stage" parent="mail.mail_my_stuff" action="note.action_note_stage" sequence="21" groups="base.group_no_one"/>
 
   </data>
 </openerp>

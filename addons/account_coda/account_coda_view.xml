@@ -404,9 +404,9 @@
           <field name="name"/>
           <field name="statement_id" readonly="1"/>
           <field name="ref" readonly="1"/>
-          <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-          <field name="type" on_change="onchange_type(partner_id, type)"/>
-          <field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+          <field name="partner_id" />
+          <field name="type" />
+          <field name="account_id" />
           <field name="amount" readonly="1" sum="Total Amount"/>
           <field name="globalisation_id" string="Glob. Id"/>
           <field name="globalisation_amount" string="Glob. Am."/>
@@ -426,9 +426,9 @@
                 <field name="val_date"/>
                 <field name="name"/>
                 <field name="ref" readonly="0"/>
-                <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                <field name="type" on_change="onchange_type(partner_id, type)"/>
-                <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+                <field name="partner_id"/>
+                <field name="type" />
+                <field domain="[('type', '&lt;&gt;', 'view')]" name="account_id"/>
                 <field name="amount"/>
                 <field name="globalisation_id"/>
                 <field name="sequence" readonly="0"/>
