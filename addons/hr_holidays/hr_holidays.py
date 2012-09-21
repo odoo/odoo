@@ -303,7 +303,8 @@ class hr_holidays(osv.osv):
         self.check_holidays(cr, uid, ids, context=context)
         for record in self.browse(cr, uid, ids, context=context):
             if record.employee_id and record.employee_id.parent_id and record.employee_id.parent_id.user_id:
-                self.message_subscribe(cr, uid, [record.id], user_ids=[record.employee_id.parent_id.user_id.id], context=context)
+                user_ids=[record.employee_id.parent_id.user_id.id]
+                self.message_subscribe(cr, uid, [record.id], user_ids, context=context)
         self.holidays_confirm_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
