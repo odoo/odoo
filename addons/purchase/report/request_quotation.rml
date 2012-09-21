@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
-<document filename="Request for Quotation.pdf">
-  <template title="Request for Quotation" author="OpenERP S.A.(sales@openerp.com)" allowSplitting="20">
+<document filename="test.pdf">
+  <template pageSize="(595.0,842.0)" title="Test" author="Martin Simon" allowSplitting="20">
     <pageTemplate id="first">
       <frame id="first" x1="23.0" y1="43.0" width="530" height="799"/>
     </pageTemplate>
@@ -10,7 +10,11 @@
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
-    <blockTableStyle id="Table_Address_Detail">
+    <blockTableStyle id="Tableau1">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
+    <blockTableStyle id="Tableau2">
       <blockAlignment value="LEFT"/>
       <blockValign value="TOP"/>
     </blockTableStyle>
@@ -30,9 +34,16 @@
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="3,-1" stop="3,-1"/>
       <lineStyle kind="LINEBELOW" colorName="#e6e6e6" start="0,-1" stop="0,-1"/>
     </blockTableStyle>
+    <blockTableStyle id="Table_Outer_Notes">
+      <blockAlignment value="LEFT"/>
+      <blockValign value="TOP"/>
+    </blockTableStyle>
     <initialize>
       <paraStyle name="all" alignment="justify"/>
     </initialize>
+    <paraStyle name="P1" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT"/>
+    <paraStyle name="P2" fontName="Helvetica-Bold" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
+    <paraStyle name="P3" fontName="Helvetica" fontSize="9.0" leading="11" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>
     <paraStyle name="Standard" fontName="Helvetica"/>
     <paraStyle name="Text body" fontName="Helvetica" spaceBefore="0.0" spaceAfter="6.0"/>
     <paraStyle name="Heading" fontName="Helvetica" fontSize="14.0" leading="17" spaceBefore="12.0" spaceAfter="6.0"/>
@@ -69,30 +80,29 @@
     <images/>
   </stylesheet>
   <story>
-  <pto>
-  <pto_header>
-    <blockTable colWidths="371.0,98.0,61.0" repeatRows="1" style="Table_Product_Header_Title">
-      <tr>
-        <td>
-          <para style="terp_tblheader_Details">Description</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Expected Date</para>
-        </td>
-        <td>
-          <para style="terp_tblheader_Details_Centre">Qty</para>
-        </td>
-      </tr>
-    </blockTable>
-  </pto_header>
     <para style="terp_default_9">[[repeatIn(objects,'order')]]</para>
     <para style="terp_default_9">[[ setLang(order.partner_id.lang) ]]</para>
-    <blockTable colWidths="250.0,59.0,221.0" style="Table_Address_Detail">
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <para style="terp_default_9">
+      <font color="white"> </font>
+    </para>
+    <blockTable colWidths="250.0,59.0,221.0" style="Tableau1">
       <tr>
         <td>
-          <para style="terp_default_Bold_9">Expected Delivery address:</para>
-          <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
-          <para style="terp_default_9">[[ order.dest_address_id and display_address(order.dest_address_id) ]] </para>
+          <blockTable colWidths="250.0" style="Tableau2">
+            <tr>
+              <td>
+                <para style="terp_default_Bold_9">Expected Delivery address:</para>
+                <para style="terp_default_9">[[ (order.dest_address_id and order.dest_address_id.name) or (order.warehouse_id and order.warehouse_id.name) or '']]</para>
+                <para style="P3">[[ order.dest_address_id and display_address(order.dest_address_id) ]]</para>
+              </td>
+            </tr>
+          </blockTable>
+          <para style="terp_default_9">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
           <para style="terp_default_9">
@@ -100,18 +110,18 @@
           </para>
         </td>
         <td>
-          <para style="terp_default_9">[[ (order.partner_id.title and order.partner_id.title.name) or '' ]] [[ order.partner_id.name ]]</para>
-          <para style="terp_default_9">[[ display_address(order.partner_id) ]] </para>
+          <para style="terp_default_9">[[ (order .partner_id and order.partner_id.title and order.partner_id.title.name) or '' ]] [[ (order .partner_id and order.partner_id.name) or '' ]] </para>
+          <para style="terp_default_9">[[ order.partner_id and display_address(order .partner_id) ]] </para>
           <para style="terp_default_9">
             <font color="white"> </font>
           </para>
-          <para style="terp_default_9">Tel.: [[ (order.partner_id.phone) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">Fax: [[ (order.partner_id.fax) or removeParentNode('para') ]]</para>
-          <para style="terp_default_9">TVA: [[ (order.partner_id.vat) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Tel.: [[ (order.partner_id and order.partner_id.phone) or removeParentNode('para') ]]</para>
+          <para style="terp_default_9">Fax: [[ (order.partner_id and order.partner_id.fax) or removeParentNode('para') ]]</para>
+          <para style="P3">TVA: [[ (order.partner_id and order.partner_id.vat) or removeParentNode('para') ]]</para>
         </td>
       </tr>
     </blockTable>
-    <para style="terp_default_8">
+    <para style="Standard">
       <font color="white"> </font>
     </para>
     <para style="terp_header">Request for Quotation : [[order.name]]</para>
@@ -132,7 +142,7 @@
       </tr>
     </blockTable>
     <section>
-      <para style="terp_default_2">[[repeatIn(order.order_line,'order_line')]]</para>
+      <para style="terp_default_9">[[ repeatIn(order.order_line,'order_line') ]]</para>
       <blockTable colWidths="370.0,100.0,39.0,20.0" style="Table_Product_Line">
         <tr>
           <td>
@@ -153,7 +163,13 @@
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
-    <para style="terp_default_9">[[ format(order.notes or '') ]]</para>
+    <blockTable colWidths="535.0" style="Table_Outer_Notes">
+      <tr>
+        <td>
+          <para style="terp_default_9">[[ format(order.notes or removeParentNode('blockTable')) ]]</para>
+        </td>
+      </tr>
+    </blockTable>
     <para style="terp_default_9">
       <font color="white"> </font>
     </para>
@@ -165,6 +181,5 @@
       <font color="white"> </font>
     </para>
     <para style="terp_default_9">[[ user.signature or '' ]]</para>
-  </pto>
   </story>
 </document>
