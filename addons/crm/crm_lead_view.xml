@@ -132,8 +132,6 @@
                 <header>
                     <button name="%(crm.action_crm_lead2opportunity_partner)d" string="Convert to Opportunity" type="action"
                             states="draft,open,pending" help="Convert to Opportunity" class="oe_highlight"/>
-                    <button name="case_escalate" string="Escalate" type="object"
-                            states="draft,open,pending"/>
                     <button name="case_reset" string="Reset" type="object"
                             states="cancel"/>
                     <button name="case_cancel" string="Cancel" type="object"
@@ -188,7 +186,11 @@
                         </group>
                         <group>
                             <field name="user_id"/>
-                            <field name="section_id"/>
+                            <label for="section_id"/>
+                            <div>
+                                <field name="section_id"/>
+                                <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending"/>
+                            </div>
                             <field name="type" invisible="1"/>
                         </group>
                         <group>
@@ -402,8 +404,6 @@
                                 states="draft,open,pending" class="oe_highlight"/>
                         <button name="case_mark_lost" string="Mark Lost" type="object"
                                 states="draft,open" class="oe_highlight"/>
-                        <button name="case_escalate" string="Escalate" type="object"
-                                states="open" />
                         <field name="stage_id" widget="statusbar" clickable="True"/>
                     </header>
                     <sheet>
@@ -449,7 +449,11 @@
 
                             <group>
                                 <field name="user_id"/>
-                                <field name="section_id" colspan="1" widget="selection"/>
+                                <label for="section_id"/>
+                                <div>
+                                    <field name="section_id" widget="selection"/>
+                                    <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending" />
+                                </div>
                             </group>
                             <group>
                                 <field name="categ_ids"

@@ -1,7 +1,12 @@
 .oe_pad_head {
+    box-sizing: border-box;
     width: 100%;
     display: block;
     padding: 4px;
+    text-align: right;
+}
+.oe_pad_head .oe_pad_switch {
+    
 }
 
 .oe_pad_readonly {
@@ -13,14 +18,38 @@
     position: fixed;
     top: 0px;
     left: 0px;
-    width: 100%;
-    height: 100%;
+    right: 0px;
+    bottom: 0px;
     background-color: white;
+    margin:0;
+    padding:0;
+    border:none;
     z-index: 1000;
+}
+
+.oe_pad_content {
+    border: solid 1px #c4c4c4;
+    height: 150px;
+    -webkit-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+       -moz-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        -ms-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+         -o-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.oe_pad_content > p {
+    text-align: center;
+    opacity: 0.75;
 }
 
 .oe_pad_fullscreen .oe_pad_content {
     height: 100%;
+    border: none;
+    -webkit-box-shadow: none;
+       -moz-box-shadow: none;
+        -ms-box-shadow: none;
+         -o-box-shadow: none;
+            box-shadow: none;
 }
 
 .etherpad_readonly ul, .etherpad_readonly ol {
