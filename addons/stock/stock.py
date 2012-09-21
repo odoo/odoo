@@ -673,6 +673,13 @@ class stock_picking(osv.osv):
     ]
 
     def action_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({
+            'active_model': self._name,
+            'active_ids': ids,
+            'active_id': len(ids) and ids[0] or False
+        })
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -1659,6 +1666,7 @@ class stock_move(osv.osv):
 
         # used for colors in tree views:
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
+        'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
     }
     def _check_location(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
@@ -1738,10 +1746,25 @@ class stock_move(osv.osv):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         return user.company_id.partner_id.id
 
+    def _default_move_type(self, cr, uid, context=None):
+        """ Gets default type of move 
+        @return: type
+        """
+        if context is None:
+            context = {}
+        picking_type = context.get('picking_type')
+        type = 'internal'
+        if picking_type == 'in':
+            type = 'in'
+        elif picking_type == 'out':
+            type = 'out'
+        return type
+
     _defaults = {
         'location_id': _default_location_source,
         'location_dest_id': _default_location_destination,
         'partner_id': _default_destination_address,
+        'type': _default_move_type,
         'state': 'draft',
         'priority': '1',
         'product_qty': 1.0,
@@ -1894,6 +1917,32 @@ class stock_move(osv.osv):
         if loc_dest_id:
             result['location_dest_id'] = loc_dest_id
         return {'value': result}
+
+    def onchange_move_type(self, cr, uid, ids, type, context=None):
+        """ On change of move type gives sorce and destination location.
+        @param type: Move Type
+        @return: Dictionary of values
+        """
+        mod_obj = self.pool.get('ir.model.data')
+        location_source_id = False
+        location_dest_id = False
+        if type == 'in':
+            location_source_id = 'stock_location_suppliers'
+            location_dest_id = 'stock_location_stock' 
+        elif type == 'out':
+            location_source_id = 'stock_location_stock' 
+            location_dest_id = 'stock_location_customers'
+        if location_source_id:
+            try:
+                location_model, location_source_id = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+            except ValueError, e:
+                location_source_id = False
+        if location_dest_id:
+            try:
+                location_model, location_dest_id = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+            except ValueError, e:
+                location_dest_id = False
+        return {'value':{'location_id': location_source_id, 'location_dest_id': location_dest_id}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
