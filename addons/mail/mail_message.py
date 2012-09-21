@@ -245,13 +245,16 @@ class mail_message(osv.Model):
         """
         limit = limit or self._message_read_limit
         context = context or {}
+        notif_obj = self.pool.get("mail.notification")
         if not ids:
             ids = self.search(cr, uid, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
-
         result = []
         tree = {} # key: ID, value: record
         for msg in messages:
+            if not context.has_key('mail_keep_unread'):
+                notif_ids = notif_obj.search(cr, uid, [('message_id', '=', msg.id)], context=context)
+                notif_obj.write(cr, uid, notif_ids, {'read': True}, context=context)
             if len(result) < (limit - 1):
                 record = self._message_dict_get(cr, uid, msg, context=context)
                 if thread_level and msg.parent_id:

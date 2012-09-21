@@ -91,14 +91,14 @@
             <field name="name">News Feed</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'mail_keep_unread': True} }&quot;"/>
         </record>
 
         <record id="action_mail_my_feeds" model="ir.actions.client">
             <field name="name">My Feeds</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.users', 'default_res_id': uid, 'mail_keep_unread': True} }&quot;"/>
         </record>
     </data>
 </openerp>

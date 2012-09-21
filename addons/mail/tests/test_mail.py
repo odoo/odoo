@@ -677,3 +677,41 @@ class test_mail(TestMailMockups):
         msg1.refresh()
         # Test: msg1 has Bert as voter
         self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')
+
+    def test_70_read_unread(self):
+        """ Test designed for the message read or unread feature. """
+        cr, uid = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        user_admin = self.res_users.browse(cr, uid, uid)
+        
+        # Create user Bert Tartopoils
+        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert', 'login': 'bert'})
+        user_bert = self.res_users.browse(cr, uid, user_bert_id)
+        #subscribe Bert Tartopoils
+        group_pigs.message_subscribe([user_bert.partner_id.id])
+        #Post two new message into pigs group
+        msg1 = group_pigs.message_post(body='My Body', subject='1')
+        msg2 = group_pigs.message_post(body='My Body', subject='2')
+        message1 = self.mail_message.browse(cr, uid, msg1)
+        message2 = self.mail_message.browse(cr, uid, msg2)
+
+        #Test : Groups contain two messages.
+        self.assertEqual(2, len(group_pigs.message_ids), 'group should contain 2 messages')
+        #Read message without key. using bert parner
+        msg_data1 = self.mail_message.message_read(cr, user_bert.id, ids=[message1.id], domain=[], thread_level=2, limit=10,context={})
+        #check notification For message readable or unread.
+        notif_msg1_ids1 = self.mail_notification.search(cr, uid, [('partner_id', '=', user_bert.partner_id.id),('message_id', '=', message1.id)], context=context)
+        notif_data1 = self.mail_notification.read(cr, uid, notif_msg1_ids1, ['read'])[0]['read']
+        # Test: Message1 are marked as read.
+        self.assertTrue(notif_data1, 'Message1 are set as read for the user Bert that read it')
+        #Pass key in context for unread message..
+        context = {'default_model': 'mail.group', 'default_res_id': [self.group_pigs_id], 'mail_keep_unread': True}
+        # Test: New created Message2 are set as unread.
+        msg_data2 = self.mail_message.message_read(cr, uid, ids=[message2.id], domain=[], thread_level=2, limit=10,context=context)
+        #Check Notification For unread message..
+        notif_msg2_ids2 = self.mail_notification.search(cr, uid, [('partner_id', '=', user_admin.partner_id.id),('message_id', '=', message2.id)], context=context)
+        notif_data2 = self.mail_notification.read(cr, uid, notif_msg2_ids2, ['read'])[0]['read']
+        self.assertFalse(notif_data2, 'Newly created  Message2 are set as unread')
+        # Check there are 1 needaction on mail.message with particular domain
+        na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count, 1, 'posted message count does not match needaction count')
