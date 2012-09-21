@@ -189,13 +189,13 @@ class res_partner(osv.osv, format_address):
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
-            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
         'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
+        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this partner is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
@@ -204,9 +204,9 @@ class res_partner(osv.osv, format_address):
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
+        'customer': fields.boolean('Customer', help="Check this box if this partner is a customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box if this partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'employee': fields.boolean('Employee', help="Check this box if this partner is an Employee."),
         'function': fields.char('Job Position', size=128),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
                                    ('delivery', 'Delivery'), ('contact', 'Contact'),
@@ -228,13 +228,13 @@ class res_partner(osv.osv, format_address):
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as avatar for the partner, limited to 1024x1024px"),
+            help="This field holds the image used as avatar for this partner, limited to 1024x1024px"),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the partner. It is automatically "\
+            help="Medium-sized image of this partner. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
@@ -242,7 +242,7 @@ class res_partner(osv.osv, format_address):
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the partner. It is automatically "\
+            help="Small-sized image of this partner. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
