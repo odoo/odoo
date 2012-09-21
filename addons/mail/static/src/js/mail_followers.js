@@ -45,13 +45,13 @@ openerp_mail_followers = function(session, mail) {
         },
 
         reinit: function() {
-            this.$el.find('button.oe_mail_button_follow').hide();
-            this.$el.find('button.oe_mail_button_unfollow').hide();
+            this.message_is_follower == undefined;
+            this.display_buttons();
         },
 
         bind_events: function() {
             var self = this;
-            this.$('button.oe_mail_button_unfollow').on('click', function () { self.do_unfollow(); })
+            this.$el.find('button.oe_mail_button_unfollow').on('click', function () { self.do_unfollow(); })
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$el.on('click', 'button.oe_mail_button_follow', function () { self.do_follow(); });
@@ -104,8 +104,27 @@ openerp_mail_followers = function(session, mail) {
             return this.fetch_followers(value_  || this.get_value());
         },
 
-        fetch_followers: function (value_) {
-            return this.ds_follow.call('read', [value_, ['name']]).pipe(this.proxy('display_followers'));
+        fetch_followers: function (value_, message_is_follower) {
+            this.value = value_;
+            this.message_is_follower = message_is_follower || (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
+            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
+        },
+
+        /* Display generic info about follower, for people not having access to res_partner */
+        display_generic: function (error, event) {
+            event.preventDefault();
+            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
+            // format content: Followers (You and 0 other) // Followers (3)
+            var content = this.options.title;
+            if (this.message_is_follower) {
+                content += ' (You and ' + (this.value.length-1) + ' other)';
+            }
+            else {
+                content += ' (' + this.value.length + ')'
+            }
+            this.$el.find('div.oe_mail_recthread_followers h4').html(content);
+            this.display_buttons();
+            return $.when();
         },
 
         /** Display the followers, evaluate is_follower directly */
@@ -117,6 +136,11 @@ openerp_mail_followers = function(session, mail) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
+            this.display_buttons();
+            return this.display_subtypes(this.message_subtype_data_value_);
+        },
+
+        display_buttons: function () {
             if (this.message_is_follower_value_) {
                 this.$el.find('button.oe_mail_button_follow').hide();
                 this.$el.find('button.oe_mail_button_unfollow').show();
@@ -125,12 +149,16 @@ openerp_mail_followers = function(session, mail) {
                 this.$el.find('button.oe_mail_button_follow').show();
                 this.$el.find('button.oe_mail_button_unfollow').hide();
             }
-            return this.display_subtypes(this.message_subtype_data_value_);
+            
+            if (this.view.is_action_enabled('edit'))
+                this.$el.find('span.oe_mail_invite_wrapper').hide();
+            else
+                this.$el.find('span.oe_mail_invite_wrapper').show();
         },
 
         /** Display subtypes: {'name': default, followed} */
         display_subtypes: function (records) {
-            var subtype_list = this.$('ul.oe_mail_subtypes').empty();
+            var subtype_list = this.$el.find('ul.oe_mail_subtypes').empty();
             if (! this.message_is_follower_value_) {
                 return;
             }

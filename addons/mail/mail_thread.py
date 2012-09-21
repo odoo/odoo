@@ -30,6 +30,7 @@ import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
+from openerp import SUPERUSER_ID
 from osv import osv, fields
 from tools.safe_eval import safe_eval as eval
 
@@ -123,21 +124,23 @@ class mail_thread(osv.AbstractModel):
             - message_summary: html snippet summarizing the Chatter for kanban views """
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
 
+        # search for unread messages, by reading directly mail.notification, as SUPERUSER
         notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
+        notif_ids = notif_obj.search(cr, SUPERUSER_ID, [
             ('partner_id.user_ids', 'in', [uid]),
             ('message_id.res_id', 'in', ids),
             ('message_id.model', '=', self._name),
             ('read', '=', False)
         ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+        for notif in notif_obj.browse(cr, SUPERUSER_ID, notif_ids, context=context):
             res[notif.message_id.res_id]['message_unread'] = True
 
         for thread in self.browse(cr, uid, ids, context=context):
             cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
             res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
-        return res
 
+        return res
+        
     def _get_subscription_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
             - message_is_follower: is uid in the document followers
@@ -166,11 +169,10 @@ class mail_thread(osv.AbstractModel):
             for subtype in fol.subtype_ids:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
-
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         res = {}
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
@@ -233,6 +235,13 @@ class mail_thread(osv.AbstractModel):
         fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         fol_obj.unlink(cr, uid, fol_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['message_ids'] = []
+        default['message_comment_ids'] = []
+        default['message_follower_ids'] = []
+        return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
