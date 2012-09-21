@@ -50,6 +50,7 @@
                     <field name="brand" />
                     <field name="modelname" />
                     <field name="make" />
+                    <field name="year" />
                     <field name="partner_id" />
                 </tree>
             </field>
@@ -76,9 +77,8 @@
                             <group>
                                 <field name="registration" />
                                 <field name="vin_sn" />
-                                <field name="model_id" on_change="on_change_model(model_id)" />
+                                <field name="model_id" />
                                 <field name="acquisition_date" />
-                                <field name="message" />
                             </group>
                             <group>
                                 <field name="acquisition_price" />

@@ -38,11 +38,11 @@ class fleet_vehicle_model(osv.Model):
 
     _columns = {
         'name' : fields.function(_name_get_fnc, type="char", string='Name'),
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True),
-        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
-        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False),
-        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=False),
-        'year' : fields.integer('Year', required=False),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
+        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True, help='Type of vehicle (car, bike, ...)'),
+        'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False, help='Model name of the vehicle'),
+        'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=False, help='Make of the vehicle'),
+        'year' : fields.integer('Year', required=False, help='Year of fabrication of the vehicle'),
         'partner_id': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
@@ -80,19 +80,25 @@ class fleet_vehicle(osv.Model):
     _description = 'Fleet Vehicle'
 
     _columns = {
-        'registration' : fields.char('Registration', size=32, required=False),
-        'vin_sn' : fields.char('VIN SN', size=32, required=False),
-        'driver' : fields.many2one('hr.employee', 'Driver',required=False),
-        'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True),
+        'registration' : fields.char('Registration', size=32, required=False, help='Registration number of the vehicle (ie: plate number for a car)'),
+        'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
+        'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
+        'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
-        'acquisition_date' : fields.date('Acquisition date', required=False),
-        'acquisition_price' : fields.integer('Price'),
-        'color' : fields.char('Color',size=32),
-        'status' : fields.char('Status',size=32),
-        'location' : fields.char('Location',size=32),
+        'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
+        'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
+        'color' : fields.char('Color',size=32, help='Color of the vehicle'),
+        'status' : fields.char('Status',size=32, help='Status of the vehicle (in repair, active, ...)'),
+        'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
 
         'next_repair_km' : fields.integer('Next Repair Km'),
-        'message' : fields.char('Message', size=128, readonly=True),
+
+        'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
+        'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
+        'horses' : fields.integer('Horses',required=False),
+        'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
+        'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
+        
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
