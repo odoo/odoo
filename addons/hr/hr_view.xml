@@ -374,14 +374,14 @@
                                 <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                             </group>
                         </group>
-                        <notebook>
-                            <page string="Description">
-                                <label for="description"/>
-                                <field name="description"/>
-                                <label for="requirements"/>
-                                <field name="requirements"/>
-                            </page>
-                        </notebook>
+                        <div>
+                            <label for="description"/>
+                            <field name="description"/>
+                        </div>
+                        <div>
+                            <label for="requirements"/>
+                            <field name="requirements"/>
+                        </div>
                     </sheet>
                 </form>
             </field>
