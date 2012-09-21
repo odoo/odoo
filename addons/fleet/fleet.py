@@ -6,18 +6,20 @@ class fleet_vehicle_model_type(osv.Model):
     _columns = {
         'name' : fields.char('Name', size=32, required=True),
     }
-
+#comment to delete
 class fleet_vehicle_model(osv.Model):
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
             return []
-        reads = self.read(cr, uid, ids, ['brand','modelname','make','year'], context=context)
+        reads = self.read(cr, uid, ids, ['type','brand','modelname','make','year'], context=context)
         res = []
         for record in reads:
             name = ''
-            if record['modelname']:
-                name = name+ ' / ' +record['modelname'][1]
+            if record['type']:
+                name = record['type'][1] + " - "
+            if record['brand']:
+                name = name + record['brand'][1]
             if record['modelname']:
                 name = name+ ' / ' +record['modelname'][1]
             if record['make']:
@@ -36,8 +38,8 @@ class fleet_vehicle_model(osv.Model):
 
     _columns = {
         'name' : fields.function(_name_get_fnc, type="char", string='Name'),
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=False),
-        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=False),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True),
+        'type' : fields.many2one('fleet.vehicle.type', 'Vehicle Type', required=True),
         'modelname' : fields.many2one('fleet.vehicle.model.name', 'Model name', required=False),
         'make' : fields.many2one('fleet.vehicle.model.make', 'Model make', required=False),
         'year' : fields.integer('Year', required=False),
