@@ -2933,6 +2933,11 @@ class stock_picking_in(osv.osv):
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
 
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        #override in order to fire the workflow signal on given stock.picking workflow instance
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
+
     _columns = {
         'state': fields.selection(
             [('draft', 'Draft'),
@@ -2971,6 +2976,11 @@ class stock_picking_out(osv.osv):
         #override in order to trigger the workflow of stock.picking at the end of create, write and unlink operation
         #instead of it's own workflow (which is not existing)
         return self.pool.get('stock.picking')._workflow_trigger(cr, uid, ids, trigger, context=context)
+
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        #override in order to fire the workflow signal on given stock.picking workflow instance
+        #instead of it's own workflow (which is not existing)
+        return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
 
     _columns = {
         'state': fields.selection(
