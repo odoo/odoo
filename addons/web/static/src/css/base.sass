@@ -791,10 +791,11 @@ $sheet-max-width: 860px
         .oe_topbar, .oe_leftbar
             display: none
     // }}}
-    // WebClient.topbar {{{
+    // Top Menu {{{
     .oe_topbar
         width: 100%
-        height: 31px
+        height: 32px
+        background-color: #414141
         @include vertical-gradient(#646060, #262626)
         .oe_topbar_item
             display: block
@@ -837,87 +838,6 @@ $sheet-max-width: 860px
                     @include vertical-gradient(#292929, #191919)
                     @include box-shadow(none)
 
-    // }}}
-    // Webclient.leftbar {{{
-    .oe_leftbar
-        display: none
-        width: 220px
-        background: #f0eeee
-        border-right: 1px solid $tag-border
-        text-shadow: 0 1px 1px white
-        padding-bottom: 16px
-    a.oe_logo
-        width: 220px
-        display: block
-        text-align: center
-        height: 70px
-        line-height: 70px
-        img
-            height: 40px
-            width: 157px
-            margin: 14px 0
-    .oe_footer
-        position: fixed
-        bottom: 0
-        padding: 4px 0
-        background: #f0eeee
-        width: 220px
-        text-align: center
-        a
-            font-weight: 800
-            font-family: serif
-            font-size: 16px
-            color: black
-            span
-                color: #c81010
-                font-style: italic
-    // }}}
-    // UserMenu {{{
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown_menu
-            right: -1px
-    // }}}
-    // About openerp {{{
-    .oe_about
-        background-color: white
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        @include radius(0 0 2px 2px)
-        a
-            color: $link-color
-            &:hover
-                text-decoration: underline
-            &:focus
-                outline: none
-        .oe_logo
-            margin-left: -6px
-        .oe_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-            color: #eee
-            padding: 0 16px
-            @include radius(0 0 2px 2px)
-            a
-                color: #eee
-    // }}}
-    // Systray {{{
-    .oe_systray > div
-        float: left
-        padding: 0 4px 0 4px
-    .oe_systray
-        float: right
-    // }}}
-    // Menu {{{
     .oe_menu
         float: left
         padding: 0
@@ -1022,6 +942,83 @@ $sheet-max-width: 860px
             border-left: 4px solid transparent
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
+
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown_menu
+            right: -1px
+
+    .oe_systray > div
+        float: left
+        padding: 0 4px 0 4px
+    .oe_systray
+        float: right
+    // }}}
+    // Webclient.leftbar {{{
+    .oe_leftbar
+        display: none
+        width: 220px
+        background: #f0eeee
+        border-right: 1px solid $tag-border
+        text-shadow: 0 1px 1px white
+        padding-bottom: 16px
+    a.oe_logo
+        width: 220px
+        display: block
+        text-align: center
+        height: 70px
+        line-height: 70px
+        img
+            height: 40px
+            width: 157px
+            margin: 14px 0
+    .oe_footer
+        position: fixed
+        bottom: 0
+        padding: 4px 0
+        background: #f0eeee
+        width: 220px
+        text-align: center
+        a
+            font-weight: 800
+            font-family: serif
+            font-size: 16px
+            color: black
+            span
+                color: #c81010
+                font-style: italic
+    // }}}
+    // About openerp {{{
+    .oe_about
+        background-color: white
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        @include radius(0 0 2px 2px)
+        a
+            color: $link-color
+            &:hover
+                text-decoration: underline
+            &:focus
+                outline: none
+        .oe_logo
+            margin-left: -6px
+        .oe_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+            color: #eee
+            padding: 0 16px
+            @include radius(0 0 2px 2px)
+            a
+                color: #eee
     // }}}
     // ActionManager {{{
     .oe_application
