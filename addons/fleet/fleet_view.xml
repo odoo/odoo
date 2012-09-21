@@ -5,13 +5,37 @@
             <field name="name">fleet.vehicle.model.form</field>
             <field name="model">fleet.vehicle.model</field>
             <field name="arch" type="xml">
-                <form string="Model">
-                    <field name="name" />
-                    <field name="type" />
-                    <field name="brand" />
-                    <field name="modelname" />
-                    <field name="make" />
-                    <field name="partner_id" />
+                <form string="Model" version="7.0">
+                    <sheet>
+                        <group col="2">
+                            <group>
+                                <field name="type" />
+                                <field name="brand" />
+                            </group>
+                            <group>
+                                <field name="modelname" />
+                                <field name="make" />       
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Vendors">
+                                <field name="partner_id" />
+                            </page>
+                            <page string="Engine">
+                                <group col="2">
+                                    <group>
+                                        <field name="transmission" />
+                                        <field name="fuel_type" />
+                                    </group>
+                                    <group>
+                                        <field name="horses" />
+                                        <field name="power" />
+                                        <field name="co2" />
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
                 </form>
             </field>
         </record>
