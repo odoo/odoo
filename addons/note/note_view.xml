@@ -102,7 +102,7 @@
           <field name="name"/>
           <field name="open"/>
           <field name="stage_id"/>
-          <field name="tag_ids" widget="many2many_tags" groups="note.group_note_tags"/>
+          <field name="tag_ids" widget="many2many_tags"/>
         </tree>
       </field>
     </record>
@@ -136,7 +136,7 @@
       <field name="arch" type="xml">
         <search string="Notes">
           <field name="memo" string="Note"/>
-          <field name="tag_ids" groups="note.group_note_tags"/>
+          <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="['|',('open', '=', True),('date_done','=',time.strftime('%%Y-%%m-%%d'))]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
           <group expand="0" string="Group By...">
@@ -164,10 +164,6 @@
                   <div>
                       <field name="group_note_fancy" class="oe_inline"/>
                       <label for="group_note_fancy"/>
-                  </div>
-                  <div>
-                      <field name="group_note_tags" class="oe_inline"/>
-                      <label for="group_note_tags"/>
                   </div>
               </div>
           </group>

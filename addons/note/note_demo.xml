@@ -4,27 +4,26 @@
     <record model="note.stage" id="demo_note_stage_01">
       <field name="name">Today</field>
       <field name="sequence">1</field>
-      <field name="user_id" eval="ref('base.user_demo')"/>
+      <field name="user_id" ref="base.user_demo"/>
     </record>
 
     <record model="note.stage" id="demo_note_stage_02">
       <field name="name">Tomorrow</field>
       <field name="sequence">2</field>
-      <field name="user_id" eval="ref('base.user_demo')"/>
+      <field name="user_id" ref="base.user_demo"/>
     </record>
 
     <record model="note.stage" id="demo_note_stage_03">
       <field name="name">Later</field>
       <field name="sequence">3</field>
-      <field name="user_id" eval="ref('base.user_demo')"/>
+      <field name="user_id" ref="base.user_demo"/>
     </record>
 
     <record model="note.stage" id="demo_note_stage_04">
-      <field name="name">Notes</field>
+      <field name="name">Morning</field>
       <field name="sequence">4</field>
-      <field name="user_id" eval="ref('base.user_demo')"/>
+      <field name="user_id" ref="base.user_root"/>
     </record>
-
 
     <record id="note_1" model="note.note">
       <field name="name">Customer report #349872</field>
@@ -35,8 +34,9 @@
     <br/>*  We should use the term Calendar, not Meeting.
      ]]>
       </field>
-      <field name="stage_id" ref="note_stage_01"/>
+      <field name="stage_id" ref="demo_note_stage_01"/>
       <field name="color">2</field>
+      <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="note_2" model="note.note">
@@ -44,14 +44,7 @@
     <br/><br/>* Followed by the telephone conversation and mail about D.544.3
     ]]>
       </field>
-      <field name="stage_id" ref="note_stage_01"/>
-    </record>
-
-    <record id="note_3" model="note.note">
-      <field name="memo"><![CDATA[<b>Call Marc</b>
-    <br/><br/>]]>
-      </field>
-      <field name="stage_id" ref="note_stage_01"/>
+      <field name="stage_id" ref="demo_note_stage_01"/>
     </record>
 
     <record id="note_4" model="note.note">
@@ -67,7 +60,8 @@
     <br/>* wine
     ]]>
       </field>
-      <field name="stage_id" ref="note_stage_02"/>
+      <field name="stage_id" ref="demo_note_stage_02"/>
+      <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="note_6" model="note.note">
@@ -77,15 +71,6 @@
     ]]>
       </field>
       <field name="stage_id" ref="note_stage_02"/>
-    </record>
-
-    <record id="note_7" model="note.note">
-      <field name="memo"><![CDATA[<b>Read some documentation about OpenERP before diving into the code</b>
-      <br/><br/>* Open ERP: a modern approach to integrated business management
-      <br/>* Open ERP for Retail and Industrial Management
-      ]]>
-      </field>
-      <field name="stage_id" ref="note_stage_03"/>
     </record>
 
     <record id="note_8" model="note.note">
@@ -108,6 +93,7 @@
       </field>
       <field name="stage_id" ref="note_stage_03"/>
       <field name="color">3</field>
+      <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="note_9" model="note.note">
@@ -116,16 +102,7 @@
       <br/>* Open ERP for Retail and Industrial Management
       ]]>
       </field>
-      <field name="stage_id" ref="note_stage_02"/>
-    </record>
-
-    <record id="note_10" model="note.note">
-      <field name="memo"><![CDATA[<b>Read some documentation about OpenERP before diving into the code</b>
-      <br/><br/>* Open ERP: a modern approach to integrated business management
-      <br/>* Open ERP for Retail and Industrial Management
-      ]]>
-      </field>
-      <field name="stage_id" ref="note_stage_03"/>
+      <field name="stage_id" ref="demo_note_stage_02"/>
     </record>
 
     <record id="note_12" model="note.note">
@@ -134,8 +111,9 @@
       <br/>* Open ERP for Retail and Industrial Management
       ]]>
       </field>
-      <field name="stage_id" ref="note_stage_03"/>
+      <field name="message_follower_ids" eval="[(4, ref('base.group_user'))]"/>
       <field name="color">7</field>
+      <field name="stage_ids" eval="['note_stage_03','demo_note_stage_04']"/>
     </record>
 
   </data>
