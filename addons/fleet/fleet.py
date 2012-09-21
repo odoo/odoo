@@ -47,7 +47,8 @@ class fleet_vehicle_model(osv.Model):
     
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
-        'horses' : fields.integer('Horses',required=False),
+        'horsepower' : fields.integer('Horsepower',required=False),
+        'horsepower_tax': fields.float('Horsepower Taxation'),
         'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
     }
@@ -71,6 +72,7 @@ class fleet_vehicle_model_make(osv.Model):
     _description = 'Make model of the vehicle'
     _columns = {
         'name' : fields.char('Make',size=32, required=True),
+        'country_id': fields.many2one('res.country', 'Country', required=False),
     }
 
 class fleet_vehicle(osv.Model):
