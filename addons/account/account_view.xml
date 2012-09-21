@@ -1557,10 +1557,24 @@
             <field name="view_id" ref="view_move_line_tree_reconcile"/>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p>
+                    Good job!
+                </p><p>
+                    There is nothing to reconcile. All invoices and payments
+                    have been reconciled, your partner balance is clean.
+                </p>
+            </field>
         </record>
+        <menuitem
+             name="Journal Items to Reconcile"
+             action="action_account_manual_reconcile"
+             id="menu_manual_reconcile_bank"
+             sequence="20"
+             parent="account.menu_finance_bank_and_cash"/>
 
         <menuitem
-             name="Manual Reconciliation" icon="STOCK_EXECUTE"
+             name="Manual Reconciliation"
              action="action_account_manual_reconcile"
              id="menu_manual_reconcile"
              parent="account.periodical_processing_reconciliation"/>
