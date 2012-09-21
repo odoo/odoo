@@ -39,13 +39,13 @@
     period_id: account.period_1
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 150.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -72,13 +72,13 @@
     period_id: account.period_1
     invoice_line:
       - account_id: account.a_sale
-        name: '[PC1] Basic PC'
+        name: '[PCSC234] PC Assemble SC234'
         price_unit: 80.0
         quantity: 1.0
-        product_id: product.product_product_pc1
+        product_id: product.product_product_3
         uos_id: product.product_uom_unit
     journal_id: account.sales_journal
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     reference_type: none
 -
   I Validate invoice by clicking on Validate button
@@ -107,7 +107,7 @@
     amount: 120.0
     company_id: base.main_company
     journal_id: bank_journal_EUR
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-03-01")
     payment_option: 'with_writeoff'
@@ -135,7 +135,7 @@
   I check that writeoff amount computed is 0.00
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0.00"
 -
@@ -143,14 +143,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that the move of my first voucher is valid
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -162,7 +162,7 @@
   I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 20 and 100 respectively
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -197,7 +197,7 @@
     amount: 120.0
     company_id: base.main_company
     journal_id: bank_journal_EUR
-    partner_id: base.res_partner_seagate
+    partner_id: base.res_partner_19
     period_id: account.period_3
     date: !eval time.strftime("%Y-04-01")
     payment_option: 'with_writeoff'
@@ -225,7 +225,7 @@
   I check that writeoff amount computed is 0.00
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'),('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'),('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     assert (voucher_id.writeoff_amount == 0.00), "Writeoff amount is not 0"
 -
@@ -233,14 +233,14 @@
 -
   !python {model: account.voucher}: |
     import netsvc
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
     wf_service = netsvc.LocalService("workflow")
     wf_service.trg_validate(uid, 'account.voucher', voucher[0], 'proforma_voucher', cr)
 -
   I check that the move of my second voucher is valid
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])
@@ -252,7 +252,7 @@
   I check that the debtor account has 2 new lines with 0.00 and 0.00 in amount_currency columns and their credit are 70 and 50
 -
   !python {model: account.voucher}: |
-    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_seagate'))])
+    voucher = self.search(cr, uid, [('name', '=', 'Second payment: Case 3'), ('partner_id', '=', ref('base.res_partner_19'))])
     voucher_id = self.browse(cr, uid, voucher[0])
     move_line_obj = self.pool.get('account.move.line')
     move_lines = move_line_obj.search(cr, uid, [('move_id', '=', voucher_id.move_id.id)])

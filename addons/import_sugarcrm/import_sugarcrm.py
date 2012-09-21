@@ -226,7 +226,7 @@ class sugar_import(import_framework):
                         'model': 'model',
                         'partner_id/.id': 'partner_id/.id',                         
                         'user_id/id': ref(self.TABLE_USER, 'assigned_user_id'),
-                        'body_text': 'description',
+                        'body': 'description',
                         'body_html' : 'description_html',
                         
                 }
@@ -444,11 +444,9 @@ class sugar_import(import_framework):
     import Tasks
     """
     task_state = {
-            'Completed' : 'done',
+            'Completed' : 'open',
             'Not Started':'draft',
-            'In Progress': 'open',
             'Pending Input': 'draft',
-            'deferred': 'cancel'
         }
 
     def import_task(self, val):
@@ -877,7 +875,7 @@ class sugar_import(import_framework):
         else:
             val['password'] = 'sugarcrm' #default password for all user #TODO needed in documentation
             
-        val['context_lang'] = self.context.get('lang','en_US')
+        val['lang'] = self.context.get('lang','en_US')
         return val
     
     def get_users_department(self, val):
@@ -895,10 +893,10 @@ class sugar_import(import_framework):
             'map' : { 
                 'name': concat('first_name', 'last_name'),
                 'login': value('user_name', fallback='last_name'),
-                'context_lang' : 'context_lang',
+                'lang' : 'context_lang',
                 'password' : 'password',
                 '.id' : '.id',
-                'user_email' : 'email1',
+                'email' : 'email1',
             }
         }
 
@@ -964,7 +962,7 @@ class import_sugarcrm(osv.osv):
     }
     
     def _get_email_id(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).user_email
+        return self.pool.get('res.users').browse(cr, uid, uid, context=context).email
     
     def _module_installed(self, cr, uid, model, context=None):
         module_id = self.pool.get('ir.module.module').search(cr, uid, [('name', '=', model), ('state', "=", "installed")], context=context)

@@ -245,7 +245,7 @@ class calendar_attendee(osv.osv):
                     continue
                 else:
                     result[id][name] = self._get_address(attdata.sent_by_uid.name, \
-                                        attdata.sent_by_uid.user_email)
+                                        attdata.sent_by_uid.email)
 
             if name == 'cn':
                 if attdata.user_id:
@@ -289,7 +289,7 @@ class calendar_attendee(osv.osv):
 
             if name == 'language':
                 user_obj = self.pool.get('res.users')
-                lang = user_obj.read(cr, uid, uid, ['context_lang'], context=context)['context_lang']
+                lang = user_obj.read(cr, uid, uid, ['lang'], context=context)['lang']
                 result[id][name] = lang.replace('_', '-')
 
         return result
@@ -434,7 +434,7 @@ property or property parameter."),
             if not organizer:
                 organizer = event_obj.user_id
             event_org.params['CN'] = [organizer.name]
-            event_org.value = 'MAILTO:' + (organizer.user_email or organizer.name)
+            event_org.value = 'MAILTO:' + (organizer.email or organizer.name)
 
         if event_obj.alarm_id:
             # computes alarm data
@@ -471,18 +471,10 @@ property or property parameter."),
     def _send_mail(self, cr, uid, ids, mail_to, email_from=tools.config.get('email_from', False), context=None):
         """
         Send mail for event invitation to event attendees.
-        @param cr: the current row, from the database cursor,
-        @param uid: the current user’s ID for security checks,
-        @param ids: List of attendee’s IDs.
         @param email_from: Email address for user sending the mail
-        @param context: A standard dictionary for contextual values
         @return: True
         """
-        if context is None:
-            context = {}
-
         company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.name
-        mail_message = self.pool.get('mail.message')
         for att in self.browse(cr, uid, ids, context=context):
             sign = att.sent_by_uid and att.sent_by_uid.signature or ''
             sign = '<br>'.join(sign and sign.split('\n') or [])
@@ -508,17 +500,18 @@ property or property parameter."),
                 }
                 body = html_invitation % body_vals
                 if mail_to and email_from:
-                    attach = self.get_ics_file(cr, uid, res_obj, context=context)
-                    mail_message.schedule_with_attach(cr, uid,
-                        email_from,
-                        mail_to,
-                        sub,
-                        body,
-                        attachments=attach and {'invitation.ics': attach} or None,
-                        content_subtype='html',
-                        reply_to=email_from,
-                        context=context
-                    )
+                    ics_file = self.get_ics_file(cr, uid, res_obj, context=context)
+                    vals = {'email_from': email_from,
+                            'email_to': mail_to,
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'auto_delete': True}
+                    if ics_file:
+                        vals['attachment_ids'] = [(0,0,{'name': 'invitation.ics',
+                                                        'datas_fname': 'invitation.ics',
+                                                        'datas': str(ics_file).encode('base64')})]
+                    self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             return True
 
     def onchange_user_id(self, cr, uid, ids, user_id, *args, **argv):
@@ -535,7 +528,7 @@ property or property parameter."),
             return {'value': {'email': ''}}
         usr_obj = self.pool.get('res.users')
         user = usr_obj.browse(cr, uid, user_id, *args)
-        return {'value': {'email': user.user_email, 'availability':user.availability}}
+        return {'value': {'email': user.email, 'availability':user.availability}}
 
     def do_tentative(self, cr, uid, ids, context=None, *args):
         """ Makes event invitation as Tentative
@@ -812,7 +805,6 @@ class calendar_alarm(osv.osv):
         """
         if context is None:
             context = {}
-        mail_message = self.pool.get('mail.message')
         current_datetime = datetime.now()
         alarm_ids = self.search(cr, uid, [('state', '!=', 'done')], context=context)
 
@@ -849,36 +841,10 @@ class calendar_alarm(osv.osv):
             else:
                 re_dates = [alarm.trigger_date]
 
-            for r_date in re_dates:
-                ref = alarm.model_id.model + ',' + str(alarm.res_id)
-
-                # search for alreay sent requests
-                #if request_obj.search(cr, uid, [('trigger_date', '=', r_date), ('ref_doc1', '=', ref)], context=context):
-                    #continue
-
-                # Deactivated because of the removing of res.request
-                # TODO: when cleaning calendar module, re-add this in a new mechanism
-                #if alarm.action == 'display':
-                    #value = {
-                       #'name': alarm.name,
-                       #'act_from': alarm.user_id.id,
-                       #'act_to': alarm.user_id.id,
-                       #'body': alarm.description,
-                       #'trigger_date': r_date,
-                       #'ref_doc1': ref
-                    #}
-                    #request_id = request_obj.create(cr, uid, value)
-                    #request_ids = [request_id]
-                    #for attendee in res_obj.attendee_ids:
-                        #if attendee.user_id:
-                            #value['act_to'] = attendee.user_id.id
-                            #request_id = request_obj.create(cr, uid, value)
-                            #request_ids.append(request_id)
-                    #request_obj.request_send(cr, uid, request_ids)
-
+            if re_dates:
                 if alarm.action == 'email':
-                    sub = '[Openobject Reminder] %s' % (alarm.name)
-                    body = """
+                    sub = '[OpenERP Reminder] %s' % (alarm.name)
+                    body = """<pre>
 Event: %s
 Event Date: %s
 Description: %s
@@ -888,20 +854,21 @@ From:
 
 ----
 %s
-
+</pre>
 """  % (alarm.name, alarm.trigger_date, alarm.description, \
                         alarm.user_id.name, alarm.user_id.signature)
-                    mail_to = [alarm.user_id.user_email]
+                    mail_to = [alarm.user_id.email]
                     for att in alarm.attendee_ids:
-                        mail_to.append(att.user_id.user_email)
+                        mail_to.append(att.user_id.email)
                     if mail_to:
-                        mail_message.schedule_with_attach(cr, uid,
-                            tools.config.get('email_from', False),
-                            mail_to,
-                            sub,
-                            body,
-                            context=context
-                        )
+                        vals = {
+                            'state': 'outgoing',
+                            'subject': sub,
+                            'body_html': body,
+                            'email_to': mail_to,
+                            'email_from': tools.config.get('email_from', mail_to),
+                        }
+                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
             if next_trigger_date:
                 update_vals.update({'trigger_date': next_trigger_date})
             else:
@@ -947,7 +914,7 @@ class calendar_event(osv.osv):
             value['duration'] = duration
             # change start_date's time to 00:00:00 in the user's timezone
             user = self.pool.get('res.users').browse(cr, uid, uid)
-            tz = pytz.timezone(user.context_tz) if user.context_tz else pytz.utc
+            tz = pytz.timezone(user.tz) if user.tz else pytz.utc
             start = pytz.utc.localize(start).astimezone(tz)     # convert start in user's timezone
             start = start.replace(hour=0, minute=0, second=0)   # change start's time to 00:00:00
             start = start.astimezone(pytz.utc)                  # convert start back to utc
@@ -1097,8 +1064,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         user_pool = self.pool.get('res.users')
         user = user_pool.browse(cr, uid, uid, context=context)
         res = user.name
-        if user.user_email:
-            res += " <%s>" %(user.user_email)
+        if user.email:
+            res += " <%s>" %(user.email)
         return res
 
     _defaults = {
@@ -1464,7 +1431,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if r['class']=='private':
                 for f in r.keys():
                     if f not in ('id','date','date_deadline','duration','user_id','state'):
-                        r[f] = False
+                        if isinstance(r[f], list):
+                            r[f] = []
+                        else:    
+                            r[f] = False
                     if f=='name':
                         r[f] = _('Busy')
 
@@ -1616,36 +1586,6 @@ class calendar_todo(osv.osv):
 
 calendar_todo()
 
-class ir_attachment(osv.osv):
-    _name = 'ir.attachment'
-    _inherit = 'ir.attachment'
-
-    def search_count(self, cr, user, args, context=None):
-        new_args = []
-        for domain_item in args:
-            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
-                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
-            else:
-                new_args.append(domain_item)
-        return super(ir_attachment, self).search_count(cr, user, new_args, context)
-
-    def create(self, cr, uid, vals, context=None):
-        if context:
-            id = context.get('default_res_id', False)
-            context.update({'default_res_id' : base_calendar_id2real_id(id)})
-        return super(ir_attachment, self).create(cr, uid, vals, context=context)
-
-    def search(self, cr, uid, args, offset=0, limit=None, order=None,
-            context=None, count=False):
-        new_args = []
-        for domain_item in args:
-            if isinstance(domain_item, (list, tuple)) and len(domain_item) == 3 and domain_item[0] == 'res_id':
-                new_args.append((domain_item[0], domain_item[1], base_calendar_id2real_id(domain_item[2])))
-            else:
-                new_args.append(domain_item)
-        return super(ir_attachment, self).search(cr, uid, new_args, offset=offset,
-                            limit=limit, order=order, context=context, count=False)
-ir_attachment()
 
 class ir_values(osv.osv):
     _inherit = 'ir.values'

@@ -4,22 +4,17 @@
         <record id="stock_picking_inherit_sale" model="ir.ui.view">
             <field name="name">stock.picking.form</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_form"/>
             <field name="arch" type="xml">
                 <field name="move_type" position="before">
                     <field name="sale_id"/>
                 </field>
-                <label for="partner_id" position="replace">
-                    <label for="partner_id" class="oe_edit_only" string="Contact"/>
-                </label>
             </field>
         </record>
 
         <record id="stock_move_sale" model="ir.ui.view">
             <field name="name">stock.move.form</field>
             <field name="model">stock.move</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_move_form"/>
             <field name="arch" type="xml">
                  <xpath expr="//group[@name='origin_grp']"  position="inside">
@@ -57,7 +52,6 @@
         <record id="stock_picking_out_inherit_sale" model="ir.ui.view">
             <field name="name">Outgoing picking Inherited</field>
             <field name="model">stock.picking</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="stock.view_picking_out_form"/>
             <field name="arch" type="xml">
                 <field name="move_type" position="after">

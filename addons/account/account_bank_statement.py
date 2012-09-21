@@ -304,7 +304,7 @@ class account_bank_statement(osv.osv):
             'date': st_line.date,
             'ref': st_line.ref,
             'move_id': move_id,
-            'partner_id': partner_id,
+            'partner_id': par_id,
             'account_id': acc_id,
             'credit': credit,
             'debit': debit,
@@ -430,7 +430,7 @@ class account_bank_statement(osv.osv):
                     'name': st_number,
                     'balance_end_real': st.balance_end
             }, context=context)
-            self.message_append_note(cr, uid, [st.id], body=_('Statement %s is confirmed, journal items are created.') % (st_number,), context=context)
+            self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st_number,), context=context)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):

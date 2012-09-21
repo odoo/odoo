@@ -7,7 +7,6 @@
         <record id="view_subscription_form" model="ir.ui.view">
             <field name="name">subscription.subscription.form</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscriptions" version="7.0">
                 <header>
@@ -51,7 +50,6 @@
         <record id="view_subscription_tree" model="ir.ui.view">
             <field name="name">subscription.subscription.tree</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscriptions">
                     <field name="name"/>
@@ -66,7 +64,6 @@
         <record id="view_subscription_filter" model="ir.ui.view">
             <field name="name">subscription.subscription.filter</field>
             <field name="model">subscription.subscription</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Subscription">
                     <field name="name" string="Subscription"/>
@@ -99,7 +96,6 @@
         <record id="subscription_subscription_history_tree" model="ir.ui.view">
             <field name="name">subscription.subscription.history.tree</field>
             <field name="model">subscription.subscription.history</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription History">
                     <field name="date"/>
@@ -110,7 +106,6 @@
         <record id="subscription_subscription_history_form" model="ir.ui.view">
             <field name="name">subscription.subscription.history.form</field>
             <field name="model">subscription.subscription.history</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription History" version="7.0">
                     <group col="4">
@@ -124,7 +119,6 @@
         <record id="document_form" model="ir.ui.view">
             <field name="name">subscription.document.form</field>
             <field name="model">subscription.document</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription Document" version="7.0">
                     <group col="4">
@@ -140,7 +134,6 @@
         <record id="document_tree" model="ir.ui.view">
             <field name="name">subscription.document.tree</field>
             <field name="model">subscription.document</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription Document">
                     <field name="name"/>
@@ -153,7 +146,6 @@
         <record id="view_subscription_document_filter" model="ir.ui.view">
             <field name="name">subscription.document.filter</field>
             <field name="model">subscription.document</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Subscription Document">
                     <field name="name" string="Subscription Document"/>
@@ -165,7 +157,6 @@
         <record id="document_fields_form" model="ir.ui.view">
             <field name="name">subscription.document.fields.form</field>
             <field name="model">subscription.document.fields</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Subscription Document Fields" version="7.0">
                     <group>
@@ -179,7 +170,6 @@
         <record id="document_fields_tree" model="ir.ui.view">
             <field name="name">subscription.document.fields.tree</field>
             <field name="model">subscription.document.fields</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Subscription Document Fields">
                     <field name="field"/>

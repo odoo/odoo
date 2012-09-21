@@ -8,7 +8,6 @@
         <record id="view_report_mrp_workorder_tree" model="ir.ui.view">
             <field name="name">mrp.workorder.tree</field>
             <field name="model">mrp.workorder</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Work Orders">
                       <field name="date" invisible="1"/>
@@ -31,7 +30,6 @@
         <record id="view_report_mrp_workorder_graph" model="ir.ui.view">
             <field name="name">mrp.workorder.graph</field>
             <field name="model">mrp.workorder</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Work Orders" type="bar">
                     <field name="state"/>
@@ -43,7 +41,6 @@
         <record id="view_report_mrp_workorder_filter" model="ir.ui.view">
             <field name="name">mrp.workorder.select</field>
             <field name="model">mrp.workorder</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <field name="date"/>

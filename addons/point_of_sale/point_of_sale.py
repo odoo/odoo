@@ -22,6 +22,7 @@
 import pdb
 import openerp
 import addons
+import openerp.addons.product.product
 
 import time
 from datetime import datetime
@@ -59,16 +60,9 @@ class pos_config(osv.osv):
              help="Accounting journal used to post sales entries."),
         'iface_self_checkout' : fields.boolean('Self Checkout Mode',
              help="Check this if this point of sale should open by default in a self checkout mode. If unchecked, OpenERP uses the normal cashier mode by default."),
-        'iface_websql' : fields.boolean('WebSQL (Faster but Chrome Only)',
-            help="If have more than 200 products, it's highly suggested to use WebSQL "\
-                "to store the data in the browser, instead of localStore mechanism. "\
-                "It's more efficient but works on the Chrome browser only."
-            ),
-        'iface_led' : fields.boolean('Help Notification'),
         'iface_cashdrawer' : fields.boolean('Cashdrawer Interface'),
         'iface_payment_terminal' : fields.boolean('Payment Terminal Interface'),
         'iface_electronic_scale' : fields.boolean('Electronic Scale Interface'),
-        'iface_barscan' : fields.boolean('BarScan Interface'), 
         'iface_vkeyboard' : fields.boolean('Virtual KeyBoard Interface'),
         'iface_print_via_proxy' : fields.boolean('Print via Proxy'),
 
@@ -77,8 +71,28 @@ class pos_config(osv.osv):
             help="This sequence is automatically created by OpenERP but you can change it "\
                 "to customize the reference numbers of your orders."),
         'session_ids': fields.one2many('pos.session', 'config_id', 'Sessions'),
-        'group_by' : fields.boolean('Group By', help="Check this if you want to group the Journal Items by Product while closing a Session"),
+        'group_by' : fields.boolean('Group Journal Items', help="Check this if you want to group the Journal Items by Product while closing a Session"),
     }
+
+    def _check_cash_control(self, cr, uid, ids, context=None):
+        return all(
+            (sum(int(journal.cash_control) for journal in record.journal_ids) <= 1)
+            for record in self.browse(cr, uid, ids, context=context)
+        )
+
+    _constraints = [
+        (_check_cash_control, "You cannot have two cash controls in one Point Of Sale !", ['journal_ids']),
+    ]
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        d = {
+            'sequence_id' : False,
+        }
+        d.update(default)
+        return super(pos_order, self).copy(cr, uid, id, d, context=context)
+
 
     def name_get(self, cr, uid, ids, context=None):
         result = []
@@ -93,13 +107,8 @@ class pos_config(osv.osv):
                 result.append((record.id, record.name+' ('+_('not used')+')'))
                 continue
             session = record.session_ids[0]
-            result.append((record.id, record.name + ' ('+session.user_id.name+', '+states[session.state]+')'))
+            result.append((record.id, record.name + ' ('+session.user_id.name+')')) #, '+states[session.state]+')'))
         return result
-
-
-    def _default_payment_journal(self, cr, uid, context=None):
-        res = self.pool.get('account.journal').search(cr, uid, [('type', 'in', ('bank','cash'))], limit=2)
-        return res or []
 
     def _default_sale_journal(self, cr, uid, context=None):
         res = self.pool.get('account.journal').search(cr, uid, [('type', '=', 'sale')], limit=1)
@@ -113,7 +122,6 @@ class pos_config(osv.osv):
         'state' : POS_CONFIG_STATE[0][0],
         'shop_id': _default_shop,
         'journal_id': _default_sale_journal,
-        'journal_ids': _default_payment_journal,
         'group_by' : True,
     }
 
@@ -143,8 +151,6 @@ class pos_config(osv.osv):
                 obj.sequence_id.unlink()
         return super(pos_config, self).unlink(cr, uid, ids, context=context)
 
-pos_config()
-
 class pos_session(osv.osv):
     _name = 'pos.session'
     _order = 'id desc'
@@ -156,45 +162,20 @@ class pos_session(osv.osv):
         ('closed', 'Closed & Posted'),
     ]
 
-    def _compute_cash_journal_id(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for st in record.statement_ids:
-                if st.journal_id.type == 'cash':
-                    result[record.id] = st.journal_id.id
-                    break
-        return result
-
-    def _compute_cash_register_id(self, cr, uid, ids, fieldnames, args, context=None):
-        result = dict.fromkeys(ids, False)
-        for record in self.browse(cr, uid, ids, context=context):
-            for st in record.statement_ids:
-                if st.journal_id.type == 'cash':
-                    result[record.id] = st.id
-                    break
-        return result
-
-    def _compute_controls(self, cr, uid, ids, fieldnames, args, context=None):
-        result = {}
+    def _compute_cash_all(self, cr, uid, ids, fieldnames, args, context=None):
+        result = dict()
 
         for record in self.browse(cr, uid, ids, context=context):
-            has_opening_control = False
-            has_closing_control = False
-
-            for journal in record.config_id.journal_ids:
-                if journal.opening_control == True:
-                    has_opening_control = True
-                if journal.closing_control == True:
-                    has_closing_control = True
-
-                if has_opening_control and has_closing_control:
-                    break
-
-            values = {
-                'has_opening_control': has_opening_control,
-                'has_closing_control': has_closing_control,
+            result[record.id] = {
+                'cash_journal_id' : False,
+                'cash_register_id' : False,
+                'cash_control' : False,
             }
-            result[record.id] = values
+            for st in record.statement_ids:
+                if st.journal_id.cash_control == True:
+                    result[record.id]['cash_control'] = True
+                    result[record.id]['cash_journal_id'] = st.journal_id.id
+                    result[record.id]['cash_register_id'] = st.id
 
         return result
 
@@ -220,12 +201,17 @@ class pos_session(osv.osv):
                 required=True, readonly=True,
                 select=1),
 
-        'cash_journal_id' : fields.function(_compute_cash_journal_id, method=True, 
-                type='many2one', relation='account.journal',
-                string='Cash Journal', store=True),
-        'cash_register_id' : fields.function(_compute_cash_register_id, method=True, 
-                type='many2one', relation='account.bank.statement',
-                string='Cash Register', store=True),
+        'cash_control' : fields.function(_compute_cash_all,
+                                         multi='cash',
+                                         type='boolean', string='Has Cash Control'),
+        'cash_journal_id' : fields.function(_compute_cash_all,
+                                            multi='cash',
+                                            type='many2one', relation='account.journal',
+                                            string='Cash Journal', store=True),
+        'cash_register_id' : fields.function(_compute_cash_all,
+                                             multi='cash',
+                                             type='many2one', relation='account.bank.statement',
+                                             string='Cash Register', store=True),
 
         'opening_details_ids' : fields.related('cash_register_id', 'opening_details_ids', 
                 type='one2many', relation='account.cashbox.line',
@@ -269,8 +255,6 @@ class pos_session(osv.osv):
         'order_ids' : fields.one2many('pos.order', 'session_id', 'Orders'),
 
         'statement_ids' : fields.one2many('account.bank.statement', 'pos_session_id', 'Bank Statement', readonly=True),
-        'has_opening_control' : fields.function(_compute_controls, string='Has Opening Control', multi='control', type='boolean'),
-        'has_closing_control' : fields.function(_compute_controls, string='Has Closing Control', multi='control', type='boolean'),
     }
 
     _defaults = {
@@ -330,10 +314,13 @@ class pos_session(osv.osv):
 
             # define some cash journal if no payment method exists
             if not pos_config.journal_ids:
-                cashids = self.pool.get('account.journal').search(cr, uid, [('journal_user','=',True)], context=context)
+                journal_proxy = self.pool.get('account.journal')
+                cashids = journal_proxy.search(cr, uid, [('journal_user', '=', True), ('type','=','cash')], context=context)
                 if not cashids:
-                    cashids = self.pool.get('account.journal').search(cr, uid, [('type','=','cash')], context=context)
-                    self.pool.get('account.journal').write(cr, uid, cashids, {'journal_user': True})
+                    cashids = journal_proxy.search(cr, uid, [('type', '=', 'cash')], context=context)
+                    if not cashids:
+                        cashids = journal_proxy.search(cr, uid, [('journal_user','=',True)], context=context)
+
                 jobj.write(cr, uid, [pos_config.id], {'journal_ids': [(6,0, cashids)]})
 
 
@@ -380,10 +367,8 @@ class pos_session(osv.osv):
     def wkf_action_closing_control(self, cr, uid, ids, context=None):
         for session in self.browse(cr, uid, ids, context=context):
             for statement in session.statement_ids:
-                if statement.id <> session.cash_register_id.id:
-                    if statement.balance_end<>statement.balance_end_real:
-                        self.pool.get('account.bank.statement').write(cr, uid,
-                            [statement.id], {'balance_end_real': statement.balance_end})
+                if statement != session.cash_register_id and statement.balance_end != statement.balance_end_real:
+                    self.pool.get('account.bank.statement').write(cr, uid, [statement.id], {'balance_end_real': statement.balance_end})
         return self.write(cr, uid, ids, {'state' : 'closing_control', 'stop_at' : time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
 
     def wkf_action_close(self, cr, uid, ids, context=None):
@@ -396,7 +381,7 @@ class pos_session(osv.osv):
                     if not self.pool.get('ir.model.access').check_groups(cr, uid, "point_of_sale.group_pos_manager"):
                         raise osv.except_osv( _('Error!'),
                             _("Your ending balance is too different from the theorical cash closing (%.2f), the maximum allowed is: %.2f. You can contact your manager to force it.") % (st.difference, st.journal_id.amount_authorized_diff))
-                if st.difference:
+                if st.difference and st.journal_id.cash_control == True:
                     if st.difference > 0.0:
                         name= _('Point of Sale Profit')
                         account_id = st.journal_id.profit_account_id.id
@@ -413,6 +398,9 @@ class pos_session(osv.osv):
                         'name': name,
                         'account_id': account_id
                     }, context=context)
+
+                if st.journal_id.type == 'bank':
+                    st.write({'balance_end_real' : st.balance_end})
 
                 getattr(st, 'button_confirm_%s' % st.journal_id.type)(context=context)
         self._confirm_orders(cr, uid, ids, context=context)
@@ -437,7 +425,7 @@ class pos_session(osv.osv):
             self.pool.get('pos.order')._create_account_move_line(cr, uid, order_ids, session, move_id, context=context)
 
             for order in session.order_ids:
-                if order.state != 'paid':
+                if order.state not in ('paid', 'invoiced'):
                     raise osv.except_osv(
                         _('Error!'),
                         _("You cannot confirm all orders of this session, because they have not the 'paid' status"))
@@ -458,8 +446,6 @@ class pos_session(osv.osv):
             'tag' : 'pos.ui',
             'context' : context,
         }
-
-pos_session()
 
 class pos_order(osv.osv):
     _name = "pos.order"
@@ -741,7 +727,7 @@ class pos_order(osv.osv):
             'pos_statement_id' : order_id,
             'journal_id' : journal_id,
             'type' : 'customer',
-            'ref' : order.name,
+            'ref' : order.session_id.name,
         })
 
         statement_line_obj.create(cr, uid, args, context=context)
@@ -1079,8 +1065,6 @@ class pos_order(osv.osv):
         self.create_account_move(cr, uid, ids, context=context)
         return True
 
-pos_order()
-
 class account_bank_statement(osv.osv):
     _inherit = 'account.bank.statement'
     _columns= {
@@ -1096,6 +1080,7 @@ class account_bank_statement_line(osv.osv):
     _columns= {
         'pos_statement_id': fields.many2one('pos.order', ondelete='cascade'),
     }
+
 account_bank_statement_line()
 
 class pos_order_line(osv.osv):
@@ -1179,8 +1164,6 @@ class pos_order_line(osv.osv):
         })
         return super(pos_order_line, self).copy_data(cr, uid, id, default, context=context)
 
-pos_order_line()
-
 class pos_category(osv.osv):
     _name = 'pos.category'
     _description = "Point of Sale Category"
@@ -1230,42 +1213,64 @@ class pos_category(osv.osv):
         'parent_id': fields.many2one('pos.category','Parent Category', select=True),
         'child_id': fields.one2many('pos.category', 'parent_id', string='Children Categories'),
         'sequence': fields.integer('Sequence', help="Gives the sequence order when displaying a list of product categories."),
+        
+        # NOTE: there is no 'default image', because by default we don't show thumbnails for categories. However if we have a thumbnail
+        # for at least one category, then we display a default image on the other, so that the buttons have consistent styling.
+        # In this case, the default image is set by the js code.
+        # NOTE2: image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used for the category. "\
-                 "The image is base64 encoded, and PIL-supported. "\
-                 "It is limited to a 1024x1024 px image."),
+            help="This field holds the image used as image for the cateogry, limited to 1024x1024px."),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized image of the category. It is automatically "\
-                 "resized as a 180x180 px image, with aspect ratio preserved. "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized image", type="binary", multi="_get_image",
-            store = {
+            store={
                 'pos.category': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized image of the category. It is automatically "\
-                 "resized as a 50x50 px image, with aspect ratio preserved. "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
     }
 
-    def _get_default_image(self, cr, uid, context=None):
-        image_path = openerp.modules.get_module_resource('point_of_sale', 'images', 'default_category_photo.png')
-        return tools.image_resize_image_big(open(image_path, 'rb').read().encode('base64'))
-
-    _defaults = {
-        'image': _get_default_image,
-    }
-
-pos_category()
-
 import io, StringIO
+
+class ean_wizard(osv.osv_memory):
+    _name = 'pos.ean_wizard'
+    _columns = {
+        'ean13_pattern': fields.char('Reference', size=32, required=True, translate=True),
+    }
+    def sanitize_ean13(self, cr, uid, ids, context):
+        for r in self.browse(cr,uid,ids):
+            ean13 = openerp.addons.product.product.sanitize_ean13(r.ean13_pattern)
+            m = context.get('active_model')
+            m_id =  context.get('active_id')
+            self.pool.get(m).write(cr,uid,[m_id],{'ean13':ean13})
+        return { 'type' : 'ir.actions.act_window_close' }
 
 class product_product(osv.osv):
     _inherit = 'product.product'
+
+
+    #def _get_small_image(self, cr, uid, ids, prop, unknow_none, context=None):
+    #    result = {}
+    #    for obj in self.browse(cr, uid, ids, context=context):
+    #        if not obj.product_image:
+    #            result[obj.id] = False
+    #            continue
+
+    #        image_stream = io.BytesIO(obj.product_image.decode('base64'))
+    #        img = Image.open(image_stream)
+    #        img.thumbnail((120, 100), Image.ANTIALIAS)
+    #        img_stream = StringIO.StringIO()
+    #        img.save(img_stream, "JPEG")
+    #        result[obj.id] = img_stream.getvalue().encode('base64')
+    #    return result
 
     _columns = {
         'income_pdt': fields.boolean('Point of Sale Cash In', help="This is a product you can use to put cash into a statement for the point of sale backend."),
@@ -1274,11 +1279,42 @@ class product_product(osv.osv):
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
         'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
     }
+
+    def _default_pos_categ_id(self, cr, uid, context=None):
+        proxy = self.pool.get('ir.model.data')
+
+        try:
+            category_id = proxy.get_object_reference(cr, uid, 'point_of_sale', 'categ_others')[1]
+        except ValueError:
+            values = {
+                'name' : 'Others',
+            }
+            category_id = self.pool.get('pos.category').create(cr, uid, values, context=context)
+            values = {
+                'name' : 'categ_others',
+                'model' : 'pos.category',
+                'module' : 'point_of_sale',
+                'res_id' : category_id,
+            }
+            proxy.create(cr, uid, values, context=context)
+
+        return category_id
+
     _defaults = {
         'to_weight' : False,
+        'pos_categ_id' : _default_pos_categ_id,
     }
 
-product_product()
-
+    def edit_ean(self, cr, uid, ids, context):
+        return {
+            'name': _("Assign a Custom EAN"),
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'pos.ean_wizard',
+            'target' : 'new',
+            'view_id': False,
+            'context':context,
+        }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -2,26 +2,9 @@
 <openerp>
      <data>
         <!-- CRM dashboard -->
-        <record model="ir.actions.act_window" id="act_my_oppor">
-            <field name="name">My Opportunities</field>
-            <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('user_id','=',uid),('type', '=', 'opportunity'),('state','not in',('cancel','done'))]</field>
-            <field name="view_id" ref="crm.crm_case_tree_view_oppor"/>
-        </record>
-
-        <record model="ir.actions.act_window" id="act_crm_tag_tree_view_leads_all">
-            <field name="name">New Leads</field>
-            <field name="res_model">crm.lead</field>
-            <field name="view_mode">tree</field>
-            <field name="domain">[('user_id','=',uid),('state','=','draft'),('type','=','lead')]</field>
-            <field name="view_id" ref="crm.crm_case_tree_view_leads"/>
-        </record>
-
         <record model="ir.ui.view" id="view_crm_opportunity_stage_graph">
             <field name="name">Opportunities By Stage - Graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities By Stage" type="area">
                     <field name="stage_id"/>
@@ -44,7 +27,6 @@
         <record model="ir.ui.view" id="view_crm_opportunity_user_stage_graph">
             <field name="name">Opportunities By Stage Per User - Graph</field>
             <field name="model">crm.lead.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Opportunities By Stage" type="line">
                     <field name="stage_id"/>
@@ -68,16 +50,13 @@
         <record model="ir.ui.view" id="board_crm_statistical_form">
             <field name="name">CRM - Statistical Dashboard Form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Statistics Dashboard" version="7.0">
                     <board style="1-1">
                         <column>
-                            <action string="New Leads" name="%(act_crm_tag_tree_view_leads_all)d"/>
-                            <action string="My Opportunities" name="%(act_my_oppor)d"/>
+                            <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>
                         </column>
                         <column>
-                            <action string="Planned Revenue by Stage and User" name="%(act_oppor_stage_user)d"/>
                             <action string="Opportunities by Stage" name="%(act_opportunity_stage)d"/>
                         </column>
                     </board>

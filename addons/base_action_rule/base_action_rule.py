@@ -292,7 +292,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             'object_description': hasattr(obj, 'description') and obj.description or False,
             'object_user': hasattr(obj, 'user_id') and (obj.user_id and obj.user_id.name) or '/',
             'object_user_email': hasattr(obj, 'user_id') and (obj.user_id and \
-                                     obj.user_id.user_email) or '/',
+                                     obj.user_id.email) or '/',
             'object_user_phone': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and \
                                      obj.partner_address_id.phone) or '/',
             'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/',
@@ -302,33 +302,27 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return self.format_body(body % data)
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
-        """ send email
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param email: pass the emails
-            @param emailfrom: Pass name the email From else False
-            @param context: A standard dictionary for contextual values """
-
         if not emailfrom:
-            emailfrom = tools.config.get('email_from', False)
-
-        if context is None:
-            context = {}
-
-        mail_message = self.pool.get('mail.message')
+            emailfrom = tools.config.get('email_from')
         body = self.format_mail(obj, body)
-        if not emailfrom:
-            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.user_email:
-                emailfrom = obj.user_id.user_email
-
-        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        if not emailfrom and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+            emailfrom = obj.user_id.email
         emailfrom = tools.ustr(emailfrom)
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No email ID found for your company address."))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+                                 _("Missing default email address or missing email on responsible user"))
+        return self.pool.get('mail.mail').create(cr, uid,
+                {   'email_from': emailfrom,
+                    'email_to': emails.join(','),
+                    'reply_to': reply_to,
+                    'state': 'outgoing',
+                    'subject': '[%d] %s' % (obj.id, tools.ustr(obj.name)),
+                    'body_html': '<pre>%s</pre>' % body,
+                    'res_id': obj.id,
+                    'model': obj._table_name,
+                    'auto_delete': True
+                }, context=context)
 
 
     def do_check(self, cr, uid, action, obj, context=None):
@@ -419,7 +413,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         emails = []
         if hasattr(obj, 'user_id') and action.act_mail_to_user:
             if obj.user_id:
-                emails.append(obj.user_id.user_email)
+                emails.append(obj.user_id.email)
 
         if action.act_mail_to_watchers:
             emails += (action.act_email_cc or '').split(',')
@@ -438,11 +432,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
             email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
-
-            def to_email(text):
-                return re.findall(r'([^ ,<@]+@[^> ,]+)', text or '')
-            emails = to_email(','.join(filter(None, emails)))
-            email_froms = to_email(email_from)
+            emails = tools.email_split(','.join(filter(None, emails)))
+            email_froms = tools.email_split(email_from)
             if email_froms:
                 self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
         return True

@@ -57,7 +57,7 @@ class base_stage(object):
         if not context or not context.get('portal'):
             return False
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        return user.user_email
+        return user.email
 
     def _get_default_user(self, cr, uid, context=None):
         """ Gives current user id
@@ -69,7 +69,7 @@ class base_stage(object):
             return False
         return uid
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False, context=None):
         """ This function returns value of partner email based on Partner Address
             :param add: Id of Partner's address
             :param email: Partner's email ID
@@ -77,10 +77,20 @@ class base_stage(object):
         data = {'value': {'email_from': False, 'phone':False}}
         if add:
             address = self.pool.get('res.partner').browse(cr, uid, add)
-            data['value'] = {'email_from': address and address.email or False ,
-                             'phone':  address and address.phone or False}
-        if 'phone' not in self._columns:
-            del data['value']['phone']
+            data['value'] = {'partner_name': address and address.name or False,
+                             'email_from': address and address.email or False,
+                             'phone':  address and address.phone or False,
+                             'street': address and address.street or False,
+                             'street2': address and address.street2 or False,
+                             'city': address and address.city or False,
+                             'state_id': address.state_id and address.state_id.id or False,
+                             'zip': address and address.zip or False,
+                             'country_id': address.country_id and address.country_id.id or False,
+                             }
+        fields = self.fields_get(cr, uid, context=context or {})
+        for key in data['value'].keys():
+            if key not in fields:
+                del data['value'][key]
         return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -297,55 +307,31 @@ class base_stage(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        mail_message = self.pool.get('mail.message')
-        for case in self.browse(cr, uid, ids, context=context):
-            if not destination and not case.email_from:
-                return False
-            if not case.user_id.user_email:
-                return False
-            if destination and case.section_id.user_id:
-                case_email = case.section_id.user_id.user_email
-            else:
-                case_email = case.user_id.user_email
-
-            src = case_email
-            dest = case.user_id.user_email or ""
-            body = case.description or ""
-            for message in case.message_ids:
-                if message.email_from and message.body_text:
-                    body = message.body_text
-                    break
-
-            if not destination:
-                src, dest = dest, case.email_from
-                if body and case.user_id.signature:
-                    if body:
-                        body += '\n\n%s' % (case.user_id.signature)
-                    else:
-                        body = '\n\n%s' % (case.user_id.signature)
-
-            body = self.format_body(body)
-
-            attach_to_send = {}
-
-            if attach:
-                attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
-                attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                attach_to_send = dict(map(lambda x: (x['datas_fname'], base64.decodestring(x['datas'])), attach_to_send))
-
-            # Send an email
-            subject = "Reminder: [%s] %s" % (str(case.id), case.name, )
-            mail_message.schedule_with_attach(cr, uid,
-                src,
-                [dest],
-                subject,
-                body,
-                model=self._name,
-                reply_to=case.section_id.reply_to,
-                res_id=case.id,
-                attachments=attach_to_send,
-                context=context
-            )
+        if 'message_post' in self:
+            for case in self.browse(cr, uid, ids, context=context):
+                if destination:
+                    recipient_id = case.user_id.partner_id.id
+                else:
+                    if not case.email_from:
+                        return False
+                    recipient_id = self.pool.get('res.partner').find_or_create(cr, uid, case.email_from, context=context)
+                
+                body = case.description or ""
+                for message in case.message_ids:
+                    if message.type == 'email' and message.body:
+                        body = message.body
+                        break
+                body = self.format_body(body)
+                attach_to_send = {}
+                if attach:
+                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
+                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
+                    attach_to_send = dict(map(lambda x: (x['datas_fname'], x['datas'].decode('base64')), attach_to_send))
+ 
+                subject = "Reminder: [%s] %s" % (case.id, case.name)
+                self.message_post(cr, uid, case.id, body=body,
+                    subject=subject, attachments=attach_to_send, 
+                    partner_ids=[recipient_id], context=context)
         return True
 
     def _check(self, cr, uid, ids=False, context=None):
@@ -359,17 +345,6 @@ class base_stage(object):
 
     def format_mail(self, obj, body):
         return self.pool.get('base.action.rule').format_mail(obj, body)
-
-    def message_thread_followers(self, cr, uid, ids, context=None):
-        res = {}
-        for case in self.browse(cr, uid, ids, context=context):
-            l=[]
-            if case.email_cc:
-                l.append(case.email_cc)
-            if case.user_id and case.user_id.user_email:
-                l.append(case.user_id.user_email)
-            res[case.id] = l
-        return res
 
     # ******************************
     # Notifications
@@ -395,31 +370,31 @@ class base_stage(object):
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s is now <b>pending</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_reset_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>renewed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], body=msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_escalate_send_note(self, cr, uid, ids, new_section=None, context=None):
@@ -428,5 +403,5 @@ class base_stage(object):
                 msg = '%s has been <b>escalated</b> to <b>%s</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context), new_section.name)
             else:
                 msg = '%s has been <b>escalated</b>.' % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_append_note(cr, uid, [id], 'System Notification', msg, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True

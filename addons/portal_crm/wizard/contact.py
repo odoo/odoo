@@ -50,7 +50,7 @@ class crm_contact_us(osv.TransientModel):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
 
         if (user.login != 'anonymous'):
-            return user.user_email
+            return user.email
         else:
             return None
 

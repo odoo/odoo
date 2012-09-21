@@ -23,11 +23,13 @@ import logging
 import os
 import tempfile
 import urllib
+from openerp import SUPERUSER_ID
 
 import werkzeug.urls
 import werkzeug.exceptions
 
 from openerp.modules.registry import RegistryManager
+from openerp.addons.web.controllers.main import login_and_redirect, set_cookie_and_redirect
 try:
     import openerp.addons.web.common.http as openerpweb
 except ImportError:
@@ -159,7 +161,7 @@ class OpenIDController(openerpweb.Controller):
     def process(self, req, **kw):
         session = getattr(req.session, 'openid_session', None)
         if not session:
-            return werkzeug.utils.redirect('/')
+            return set_cookie_and_redirect(req, '/')
 
         oidconsumer = consumer.Consumer(session, self._store, consumer_class=GoogleAppsAwareConsumer)
 
@@ -168,15 +170,14 @@ class OpenIDController(openerpweb.Controller):
         display_identifier = info.getDisplayIdentifier()
 
         session['status'] = info.status
-        user_id = None
 
         if info.status == consumer.SUCCESS:
             dbname = session['dbname']
-            with utils.cursor(dbname) as cr:
-                registry = RegistryManager.get(dbname)
+            registry = RegistryManager.get(dbname)
+            with registry.cursor() as cr:
                 Modules = registry.get('ir.module.module')
 
-                installed = Modules.search_count(cr, 1, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
+                installed = Modules.search_count(cr, SUPERUSER_ID, ['&', ('name', '=', 'auth_openid'), ('state', '=', 'installed')]) == 1
                 if installed:
 
                     Users = registry.get('res.users')
@@ -196,20 +197,19 @@ class OpenIDController(openerpweb.Controller):
 
                     domain += [('openid_url', '=', openid_url), ('active', '=', True)]
 
-                    ids = Users.search(cr, 1, domain)
+                    ids = Users.search(cr, SUPERUSER_ID, domain)
                     assert len(ids) < 2
                     if ids:
                         user_id = ids[0]
-                        login = Users.browse(cr, 1, user_id).login
+                        login = Users.browse(cr, SUPERUSER_ID, user_id).login
                         key = randomString(utils.KEY_LENGTH, '0123456789abcdef')
-                        Users.write(cr, 1, [user_id], {'openid_key': key})
+                        Users.write(cr, SUPERUSER_ID, [user_id], {'openid_key': key})
                         # TODO fill empty fields with the ones from sreg/ax
                         cr.commit()
 
-                        req.session.authenticate(dbname, login, key, {})
+                        return login_and_redirect(req, dbname, login, key)
 
-            if not user_id:
-                session['message'] = 'This OpenID identifier is not associated to any active users'
+            session['message'] = 'This OpenID identifier is not associated to any active users'
 
         elif info.status == consumer.SETUP_NEEDED:
             session['message'] = info.setup_url
@@ -223,8 +223,7 @@ class OpenIDController(openerpweb.Controller):
             # information in a log.
             session['message'] = 'Verification failed.'
 
-        fragment = '#loginerror' if not user_id else ''
-        return werkzeug.utils.redirect('/' + fragment)
+        return set_cookie_and_redirect(req, '/#action=login&loginerror=1')
 
     @openerpweb.jsonrequest
     def status(self, req):

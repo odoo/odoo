@@ -35,7 +35,7 @@ class survey_type(osv.osv):
     _name = 'survey.type'
     _description = 'Survey Type'
     _columns = {
-        'name': fields.char("Name", size=128, required=1),
+        'name': fields.char("Name", size=128, required=1, translate=True),
         'code': fields.char("Code", size=64),
     }
 survey_type()
@@ -145,15 +145,33 @@ class survey(osv.osv):
         return report
     
     def fill_survey(self, cr, uid, ids, context=None):
+        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        for sur in sur_obj:
+            name = sur['title']
+            context.update({'active':False,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'survey.question.wiz',
             'type': 'ir.actions.act_window',
             'target': 'new',
-            'context': {'survey_id': ids[0]}
+            'name': name,
+            'context': context
         }
-
+    def test_survey(self, cr, uid, ids, context=None):
+        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        for sur in sur_obj:
+            name = sur['title']
+            context.update({'active':True,'survey_id': ids[0]})
+        return {
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'survey.question.wiz',
+            'type': 'ir.actions.act_window',
+            'target': 'new',
+            'name': name,
+            'context': context
+        }
 survey()
 
 class survey_history(osv.osv):
@@ -740,7 +758,7 @@ class survey_request(osv.osv):
         if user_id:
             user_obj = self.pool.get('res.users')
             user = user_obj.browse(cr, uid, user_id, context=context)
-            return {'value': {'email': user.user_email}}
+            return {'value': {'email': user.email}}
         return {}
 
 survey_request()

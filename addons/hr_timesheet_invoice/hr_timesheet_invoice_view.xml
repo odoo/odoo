@@ -4,7 +4,6 @@
         <record id="account_analytic_account_form_form" model="ir.ui.view">
             <field name="name">account.analytic.account.invoice.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="priority">30</field>
             <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
@@ -34,7 +33,6 @@
         <record id="hr_timesheet_line_form" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@string='Accounting']" position='after'>
@@ -49,7 +47,6 @@
         <record id="hr_timesheet_line_form2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.form2</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
@@ -61,7 +58,6 @@
         <record id="hr_timesheet_line_tree" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="amount" position="after">
@@ -73,7 +69,6 @@
         <record id="hr_timesheet_line_tree2" model="ir.ui.view">
             <field name="name">hr.analytic.timesheet.tree2</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="replace">
@@ -86,7 +81,6 @@
         <record id="view_account_analytic_line_search_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.search.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">search</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//filter[@name='others']" position="after">
@@ -100,7 +94,6 @@
         <record id="view_account_analytic_line_tree_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.tree.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_tree"/>
             <field name="arch" type="xml">
                 <field name="account_id" position="after">
@@ -111,7 +104,6 @@
           <record id="view_account_analytic_line_form_inherit" model="ir.ui.view">
             <field name="name">account.analytic.line.form.to_invoice</field>
             <field name="model">account.analytic.line</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_analytic_line_form"/>
             <field name="arch" type="xml">
                 <field name="amount" position="before">
@@ -149,7 +141,6 @@
         <record id="view_hr_timesheet_invoice_factor_search" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.search</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Type of invoicing">
                     <field name="name" string="Type of invoicing"/>
@@ -159,7 +150,6 @@
         <record id="view_hr_timesheet_invoice_factor_form" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.form</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Type of invoicing" version="7.0">
                     <group col="4">
@@ -173,7 +163,6 @@
         <record id="view_hr_timesheet_invoice_factor_tree" model="ir.ui.view">
             <field name="name">hr_timesheet_invoice.factor.tree</field>
             <field name="model">hr_timesheet_invoice.factor</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Types of invoicing">
                     <field name="name"/>

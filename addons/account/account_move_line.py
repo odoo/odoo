@@ -215,8 +215,10 @@ class account_move_line(osv.osv):
     def _default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+        if not context.get('journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
+        if not context.get('period_id', False):
+            context['period_id'] = context.get('search_default_period_id')
         account_obj = self.pool.get('account.account')
         period_obj = self.pool.get('account.period')
         journal_obj = self.pool.get('account.journal')
@@ -226,6 +228,9 @@ class account_move_line(osv.osv):
         partner_obj = self.pool.get('res.partner')
         currency_obj = self.pool.get('res.currency')
         context = self.convert_to_period(cr, uid, context)
+        #pass the right context when search_defaul_journal_id
+        if context.get('search_default_journal_id',False):
+            context['journal_id'] = context.get('search_default_journal_id')
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
@@ -480,7 +485,7 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
+        'move_id': fields.many2one('account.move', 'Journal Entry', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Internal Note'),
         'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
@@ -926,6 +931,8 @@ class account_move_line(osv.osv):
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
+        if context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')
         cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
         j = cr.fetchone()[0] or ''
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))

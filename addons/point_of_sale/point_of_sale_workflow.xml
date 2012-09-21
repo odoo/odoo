@@ -126,14 +126,14 @@
       <field name="act_from" ref="act_start" />
       <field name="act_to" ref="act_opening_control" />
       <field name="signal" eval="False" /> <!-- >start_to_opening_control</field> -->
-      <field name="condition">has_opening_control == True</field>
+      <field name="condition">cash_control == True</field>
     </record>
 
     <record model="workflow.transition" id="trans_start_to_open">
       <field name="act_from" ref="act_start" />
       <field name="act_to" ref="act_open" />
       <field name="signal" eval="False" />
-      <field name="condition">has_opening_control == False</field>
+      <field name="condition">cash_control == False</field>
     </record>
     <!-- state:opening_control -> signal:open -> state:opened -> signal:cashbox_control -> state:closing_control -> signal:close -> state:close -->
 
@@ -147,14 +147,14 @@
       <field name="act_from" ref="act_open" />
       <field name="act_to" ref="act_closing_control" />
       <field name="signal">cashbox_control</field>
-      <field name="condition">has_closing_control == True</field>
+      <field name="condition">cash_control == True</field>
     </record>
 
     <record model="workflow.transition" id="trans_open_to_close">
       <field name="act_from" ref="act_open" />
       <field name="act_to" ref="act_close" />
       <field name="signal">close</field>
-      <field name="condition">has_closing_control == False</field>
+      <field name="condition">cash_control == False</field>
     </record>
 
     <record model="workflow.transition" id="trans_closing_control_to_close">

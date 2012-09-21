@@ -44,7 +44,6 @@
         <record model="ir.ui.view" id="project_issue_version_search_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Version">
                     <field name="name" string="Issue Version"/>
@@ -55,7 +54,6 @@
         <record model="ir.ui.view" id="project_issue_version_form_view">
             <field name="name">Issue Version</field>
             <field name="model">project.issue.version</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Issue Version" version="7.0">
                     <group col="2">
@@ -94,17 +92,14 @@
         <record model="ir.ui.view" id="project_issue_form_view">
             <field name="name">Project Issue Tracker Form</field>
             <field name="model">project.issue</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Issue" version="7.0">
                 <header>
                     <span groups="base.group_user">
                         <button name="case_close" string="Done" type="object"
                                 states="open"/>
                          <button name="case_close" string="Done" type="object"
                                 states="draft,pending"/>
-                        <button name="case_escalate" string="Escalate" type="object"
-                                states="draft,open,pending"/>
                         <button name="case_cancel" string="Cancel" type="object"
                                 states="draft,open,pending"/>
                     </span>
@@ -121,7 +116,11 @@
                         </group>
                         <group>
                             <field name="priority"/>
-                            <field name="project_id" required="True" on_change="on_change_project(project_id)" context="{'default_use_issues':1}"/>
+                            <label for="project_id"/>
+                            <div>
+                                <field name="project_id" required="True" on_change="on_change_project(project_id)" class="oe_inline" context="{'default_use_issues':1}"/>
+                                <button name="case_escalate" string="Escalate" type="object" states="draft,open,pending" class="oe_inline"/>
+                            </div>
                             <label for="task_id"/>
                             <div>
                                 <field name="task_id" on_change="onchange_task_id(task_id)" class="oe_inline" context="{'default_project_id':project_id}"/>
@@ -154,7 +153,7 @@
                                 <field name="id"/>
                                 <field name="active"/>
                             </group>
-                            <group colspan="4" col="4">
+                            <group colspan="4" col="4" invisible="1">
                                 <separator string="Status" colspan="4"/>
                                 <field name="state" groups="base.group_no_one" string="Status"/>
                             </group>
@@ -163,6 +162,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
                 </form>
             </field>
@@ -171,10 +171,9 @@
         <record model="ir.ui.view" id="project_issue_tree_view">
             <field name="name">Project Issue Tracker Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Issue Tracker Tree" fonts="bold:needaction_pending==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree string="Issue Tracker Tree" fonts="bold:message_unread==True" colors="black:state=='open';blue:state=='pending';grey:state in ('cancel', 'done')">
+                    <field name="message_unread" invisible="1"/>
                     <field name="id"/>
                     <field name="create_date" groups="base.group_no_one"/>
                     <field name="name"/>
@@ -185,7 +184,7 @@
                     <field name="user_id"/>
                     <field name="progress" widget="progressbar" attrs="{'invisible':[('task_id','=',False)]}"/>
                     <field name="stage_id" widget="selection" readonly="1"/>
-                    <field name="state" groups="base.group_no_one"/>
+                    <field name="state" invisible="1"/>
                     <field name="categ_ids" invisible="1"/>
                     <field name="task_id" invisible="1"/>
                 </tree>
@@ -195,12 +194,11 @@
         <record id="view_project_issue_filter" model="ir.ui.view">
             <field name="name">Project Issue Tracker Search</field>
             <field name="model">project.issue</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
@@ -216,7 +214,6 @@
                         <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}"/>
                         <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}"/>
                         <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}"/>
-                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'create_date'}" help="Creation Month"/>
                     </group>
                 </search>
@@ -226,7 +223,6 @@
         <record model="ir.ui.view" id="project_issue_calendar_view">
             <field name="name">Project Issue Tracker Calendar</field>
             <field name="model">project.issue</field>
-            <field name="type">calendar</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Issues" date_start="date" color="user_id" date_delay="duration">
@@ -242,9 +238,9 @@
         <record model="ir.ui.view" id="project_issue_kanban_view">
             <field name="name">Project Issue Kanban</field>
             <field name="model">project.issue</field>
-            <field name="type">kanban</field>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id">
+                    <field name="stage_id"/>
                     <field name="color"/>
                     <field name="priority"/>
                     <field name="user_email"/>
@@ -258,12 +254,12 @@
                            </ul>
                         </t>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
-                                        <li><a type="edit" >Edit...</a></li>
-                                        <li><a type="delete">Delete</a></li>
+                                        <t t-if="widget.view.is_action_enabled('edit')"><li><a type="edit">Edit...</a></li></t>
+                                        <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
                                         <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
                                     </ul>
                                 </div>
@@ -275,9 +271,7 @@
                                     </div>
                                     <div class="oe_kanban_footer_left">
                                         <div class="oe_left oe_tags">
-                                            <t t-foreach="record.categ_ids.raw_value" t-as="categ_id">
-                                                <span class="oe_tag" t-att-data-categ_id="categ_id"></span>
-                                            </t>
+                                            <field name="categ_ids"/>
                                         </div>
                                         <div class="oe_right">
                                             <span class="oe_kanban_highlight">
@@ -315,11 +309,10 @@
         <record model="ir.ui.view" id="project_feature_tree_view">
             <field name="name">Project Issue- Feature Tracker Tree</field>
             <field name="model">project.issue</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Feature Tracker Tree" fonts="bold:needaction_pending==True" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
+                <tree string="Feature Tracker Tree" fonts="bold:message_unread==True" colors="red:state=='open';black:state in ('draft', 'cancel','done','pending')">
                     <field name="id"/>
-                    <field name="needaction_pending" invisible="1"/>
+                    <field name="message_unread" invisible="1"/>
                     <field name="name" string="Feature description"/>
                     <field name="partner_id"/>
                     <field name="priority" string="Priority"/>
@@ -334,7 +327,6 @@
         <record id="view_project_feature_filter" model="ir.ui.view">
             <field name="name">Project Issue - Feature Tracker Search</field>
             <field name="model">project.issue</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Feature Tracker Search">
                     <field name="name" string="Feature description"/>
@@ -360,14 +352,14 @@
         <record id="view_project_form_inherited" model="ir.ui.view">
             <field name="name">project.project.form.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.edit_project"/>
             <field name="arch" type="xml">
-                <xpath expr='//tr[@name="use_tasks_row"]' position='after'>
-                    <tr>
-                        <td><group><field name="use_issues"/></group></td>
-                        <td><button icon="terp-gtk-go-back-rtl" name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/></td>
-                    </tr>
+                <xpath expr='//div[@name="options_active"]' position='inside'>
+                    <field name="use_issues" class="oe_inline"/>
+                    <label for="use_issues"/>
+                </xpath>
+                <xpath expr='//div[@name="buttons"]' position='inside'>
+                    <button name="%(act_project_project_2_project_issue_all)d" string="Issues" type="action" attrs="{'invisible':[('use_issues','=', 0)]}"/>
                 </xpath>
                 <field name="priority" position="before">
                     <field name="project_escalation_id"/>
@@ -381,7 +373,6 @@
         <record id="view_project_kanban_inherited" model="ir.ui.view">
             <field name="name">project.project.kanban.inherited</field>
             <field name="model">project.project</field>
-            <field name="type">kanban</field>
             <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="arch" type="xml">
                 <field name="use_tasks" position="after">
@@ -391,7 +382,7 @@
                 <xpath expr="//div[contains(@class, 'oe_kanban_project_list')]" position="inside">
                     <a t-if="record.use_issues.raw_value"
                         name="%(act_project_project_2_project_issue_all)d" type="action">
-                        Issues(<field name="issue_count"/>)</a>
+                        <field name="issue_count"/> Issues</a>
                 </xpath>
             </field>
         </record>
@@ -399,15 +390,12 @@
         <record id="analytic_account_inherited_issue_form" model="ir.ui.view">
             <field name="name">account.analytic.account.issue.form.inherit</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="project.analytic_account_inherited_form"/>
             <field eval="18" name="priority"/>
             <field name="arch" type="xml">
-                <xpath expr='//separator[@name="project_sep"]' position='replace'>
-                    <separator colspan="4" string="Project Management" name="project_sep"/> <!-- removal of invisible attribute -->
-                </xpath>
-                <xpath expr='//separator[@name="project_sep"]' position='after'>
+                <xpath expr='//div[@name="project"]' position='inside'>
                     <field name="use_issues"/>
+                    <label for="use_issues"/>
                 </xpath>
             </field>
         </record>

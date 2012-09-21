@@ -23,7 +23,7 @@
 {
     'name': 'Timesheets',
     'version': '1.0',
-    "category": "Human Resources",
+    'category': 'Human Resources',
     'description': """
 This module implements a timesheet system.
 ==========================================
@@ -41,8 +41,7 @@ up a management by affair.
     'website': 'http://www.openerp.com',
     'images': ['images/hr_timesheet_lines.jpeg'],
     'depends': ['account', 'hr', 'base', 'hr_attendance', 'process'],
-    'init_xml': ['hr_timesheet_data.xml'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/hr_timesheet_security.xml',
         'hr_timesheet_view.xml',
@@ -53,8 +52,9 @@ up a management by affair.
         'wizard/hr_timesheet_print_users_view.xml',
         'wizard/hr_timesheet_sign_in_out_view.xml',
         'hr_timesheet_installer.xml',
+        'hr_timesheet_data.xml'
     ],
-    'demo_xml': ['hr_timesheet_demo.xml'],
+    'demo': ['hr_timesheet_demo.xml'],
     'test': [
         'test/test_hr_timesheet.yml',
         'test/hr_timesheet_report.yml',

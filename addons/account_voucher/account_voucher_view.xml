@@ -4,7 +4,6 @@
         <record model="ir.ui.view" id="view_voucher_tree">
             <field name="name">account.voucher.tree</field>
             <field name="model">account.voucher</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';gray:state == 'cancel';red:audit" string="Voucher Entries">
                     <field name="date"/>
@@ -23,7 +22,6 @@
         <record model="ir.ui.view" id="view_voucher_line_form">
             <field name="name">account.voucher.line.form</field>
             <field name="model">account.voucher.line</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Voucher Lines" version="7.0">
                     <group col="4">
@@ -39,9 +37,8 @@
         <record model="ir.ui.view" id="view_voucher_form">
             <field name="name">account.voucher.form</field>
             <field name="model">account.voucher</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form version="7.0">
+                <form string="Accounting Voucher" version="7.0">
                   <header>
                       <button name="proforma_voucher" string="Post" states="draft" class="oe_highlight"/>
                       <button name="cancel_voucher" string="Cancel" type="object" states="posted" confirm="Are you sure to unreconcile this record?"/>
@@ -50,16 +47,18 @@
                       <field name="state" widget="statusbar" statusbar_visible="draft,posted" statusbar_colors='{"proforma":"blue"}'/>
                   </header>
                   <sheet string="Accounting Voucher">
-                    <group col="6" colspan="4">
+                    <group col="4" colspan="4">
                         <field name="partner_id" required="1" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
-                        <field name="payment_rate_currency_id" invisible="1"/>
                         <field name="date" on_change="onchange_date(date, currency_id, payment_rate_currency_id, amount, company_id)"/>
                         <field name="journal_id" widget="selection" on_change="onchange_journal_voucher(line_ids, tax_id, amount, partner_id, journal_id, type)"/>
                         <field name="type" required="1"/>
                         <field name="name" colspan="2"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         <field name="reference"/>
+                        <field name="number"/>
+                        <field name="currency_id" groups="base.group_multi_currency"/>
                         <field name="account_id" widget="selection" invisible="True"/>
+                        <field name="payment_rate_currency_id" invisible="1"/>
                     </group>
                     <notebook colspan="4">
                         <page string="Voucher Entry">
@@ -72,20 +71,16 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <group col="3">
-                                <group string="Internal Notes">
-                                    <field name="narration" colspan="2" nolabel="1"/>
-                                </group>
-                                <group string="Other Information">
-                                    <field name="number"/>
-                                    <field name="currency_id"/>
-                                </group>
-                                <group col="4" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
-                                    <separator string="Total" colspan="4"/>
-                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection"/>
+                            <group>
+                                <field name="narration" nolabel="1" placeholder="Internal Notes"/>
+                                <group class="oe_subtotal_footer oe_right" attrs="{'invisible':[('type','in',['payment', 'receipt', False])]}">
+                                    <field name="tax_id" on_change="onchange_price(line_ids, tax_id, partner_id)" widget="selection" nolabel="1"/>
                                     <field name="tax_amount" nolabel="1"/>
-                                    <button type="object" icon="terp-stock_format-scientific" name="compute_tax" string="Compute Tax" attrs="{'invisible': [('state','!=','draft')]}"/>
-                                    <label colspan="1" string=""/><field name="amount" string="Total"/>
+                                    <div class="oe_subtotal_footer_separator">
+                                        <label for="amount"/>
+                                        <button type="object" icon="terp-stock_format-scientific"   name="compute_tax" class="oe_link oe_edit_only" string="(Update)" attrs="{'invisible': [('state','!=','draft')]}"/>
+                                    </div>
+                                    <field name="amount" class="oe_subtotal_footer_separator" nolabel="1"/>
                                 </group>
                             </group>
                         </page>
@@ -114,6 +109,7 @@
                   </sheet>
                   <div class="oe_chatter">
                       <field name="message_ids" widget="mail_thread"/>
+                      <field name="message_follower_ids" widget="mail_followers"/>
                   </div>
                 </form>
             </field>
@@ -122,7 +118,6 @@
         <record id="view_voucher_filter" model="ir.ui.view">
             <field name="name">account.voucher.select</field>
             <field name="model">account.voucher</field>
-            <field name="type">search</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
                 <search string="Search Vouchers">
@@ -148,7 +143,6 @@
         <record id="account_cash_statement_graph" model="ir.ui.view">
             <field name="name">account.voucher.graph</field>
             <field name="model">account.voucher</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Voucher Statistics" type="bar">
                     <field name="date"/>
@@ -201,7 +195,6 @@
         <record id="view_bank_statement_form_invoice" model="ir.ui.view">
             <field name="name">account.bank.statement.invoice.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">
@@ -215,7 +208,6 @@
         <record id="view_bank_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/tree/field[@name='amount']" position="after">
@@ -227,7 +219,6 @@
         <record id="view_bank_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.bank.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='statement_line_ids']/field[@name='line_ids']/form/group/field[@name='sequence']" position="before">
@@ -238,7 +229,6 @@
         <record id="view_cash_statement_tree_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.tree.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/tree/field[@name='amount']" position="after">
@@ -250,7 +240,6 @@
         <record id="view_cash_statement_form_voucher" model="ir.ui.view">
             <field name="name">account.cash.statement.voucher.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form2"/>
             <field name="arch" type="xml">
                 <xpath expr="//page/field[@name='line_ids']/form/group/field[@name='amount']" position="after">
@@ -264,7 +253,6 @@
             <field name="name">res.company.form.inherit</field>
             <field name="inherit_id" ref="base.view_company_form"/>
             <field name="model">res.company</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <field name="currency_id" position="after">
                       <field name="income_currency_exchange_account_id"/>
@@ -282,10 +270,9 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
         </record>
-        <record id="todo_open_invoice_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_invoice_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
         </record>
 
     </data>

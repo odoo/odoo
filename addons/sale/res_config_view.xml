@@ -5,7 +5,6 @@
         <record id="view_sales_config" model="ir.ui.view">
             <field name="name">sale settings</field>
             <field name="model">sale.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
                 <div name="customer feature" position="before">
@@ -96,10 +95,6 @@
                                 <field name="group_discount_per_so_line" class="oe_inline"/>
                                 <label for="group_discount_per_so_line"/>
                             </div>
-                            <div>
-                                <label for="decimal_precision"/>
-                                <field name="decimal_precision" class="oe_inline"/>
-                            </div>
                         </div>
                     </group>
                 </group>
@@ -143,7 +138,6 @@
         <record id="view_account_config" model="ir.ui.view">
             <field name="name">account settings</field>
             <field name="model">account.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_config_settings"/>
             <field name="priority" eval="16"/>
             <field name="arch" type="xml">

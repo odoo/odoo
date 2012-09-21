@@ -143,7 +143,6 @@ class purchase_order(osv.osv):
 
     STATE_SELECTION = [
         ('draft', 'Draft PO'),
-        ('wait', 'Waiting'),
         ('sent', 'RFQ Sent'),
         ('confirmed', 'Waiting Approval'),
         ('approved', 'Purchase Order'),
@@ -190,15 +189,15 @@ class purchase_order(osv.osv):
                 'purchase.order.line': (_get_order, ['date_planned'], 10),
             }
         ),
-        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Untaxed Amount',
+        'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums", help="The amount without tax"),
-        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Taxes',
+        'amount_tax': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Taxes',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums", help="The tax amount"),
-        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Purchase Price'), string='Total',
+        'amount_total': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Total',
             store={
                 'purchase.order.line': (_get_order, None, 10),
             }, multi="sums",help="The total amount"),
@@ -221,7 +220,7 @@ class purchase_order(osv.osv):
         ('name_uniq', 'unique(name, company_id)', 'Order Reference must be unique per Company!'),
     ]
     _name = "purchase.order"
-    _inherit = ['ir.needaction_mixin', 'mail.thread']
+    _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Purchase Order"
     _order = "name desc"
 
@@ -319,21 +318,26 @@ class purchase_order(osv.osv):
         for po in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in po.picking_ids]
 
-        res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
-        res_id = res and res[1] or False
-
-        return {
-            'name': _('Receptions'),
-            'view_type': 'form',
-            'view_mode': 'form',
-            'view_id': [res_id],
-            'res_model': 'stock.picking',
-            'context': "{'contact_display': 'partner'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-            'res_id': pick_ids and pick_ids[0] or False,
-        }
+        action_model, action_id = tuple(mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree4'))
+        action = self.pool.get(action_model).read(cr, uid, action_id, context=context)
+        ctx = eval(action['context'])
+        ctx.update({
+            'search_default_purchase_id': ids[0]
+        })
+        if pick_ids and len(pick_ids) == 1:
+            form_view_ids = [view_id for view_id, view in action['views'] if view == 'form']
+            view_id = form_view_ids and form_view_ids[0] or False
+            action.update({
+                'views': [],
+                'view_mode': 'form',
+                'view_id': view_id,
+                'res_id': pick_ids[0]
+            })
+            
+        action.update({
+            'context': ctx,
+        })
+        return action
 
     def wkf_approve_order(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'approved', 'date_approve': fields.date.context_today(self,cr,uid,context=context)})
@@ -348,13 +352,18 @@ class purchase_order(osv.osv):
         template_id = template and template[1] or False
         res = mod_obj.get_object_reference(cr, uid, 'mail', 'email_compose_message_wizard_form')
         res_id = res and res[1] or False
-        ctx = dict(context, active_model='purchase.order', active_id=ids[0])
-        ctx.update({'mail.compose.template_id': template_id})
+        ctx = dict(context)
+        ctx.update({
+            'default_model': 'purchase.order',
+            'default_res_id': ids[0],
+            'default_use_template': True,
+            'default_template_id': template_id,
+            })
         return {
             'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'mail.compose.message',
-            'views': [(res_id,'form')],
+            'views': [(res_id, 'form')],
             'view_id': res_id,
             'type': 'ir.actions.act_window',
             'target': 'new',
@@ -544,6 +553,7 @@ class purchase_order(osv.osv):
             'partner_id': order.dest_address_id.id or order.partner_id.id,
             'move_dest_id': order_line.move_dest_id.id,
             'state': 'draft',
+            'type':'in',
             'purchase_line_id': order_line.id,
             'company_id': order.company_id.id,
             'price_unit': order_line.price_unit
@@ -732,20 +742,15 @@ class purchase_order(osv.osv):
     # OpenChatter methods and notifications
     # --------------------------------------
 
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        result = super(purchase_order, self).get_needaction_user_ids(cr, uid, ids, context=context)
-        for obj in self.browse(cr, uid, ids, context=context):
-            if obj.state == 'approved':
-                result[obj.id].append(obj.validator.id)
-        return result
+    def needaction_domain_get(self, cr, uid, ids, context=None):
+        return [('state', '=', 'draft')]
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.validator.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Quotation for <em>%s</em> <b>converted</b> to a Purchase Order of %s %s.") % (obj.partner_id.name, obj.amount_total, obj.pricelist_id.currency_id.symbol), context=context)
 
     def shipment_send_note(self, cr, uid, ids, picking_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -754,25 +759,25 @@ class purchase_order(osv.osv):
                 # convert it to the user TZ and re-render it with %Z to add the timezone
                 picking_datetime = fields.DT.datetime.strptime(picking.min_date, DEFAULT_SERVER_DATETIME_FORMAT)
                 picking_date_str = fields.datetime.context_timestamp(cr, uid, picking_datetime, context=context).strftime(DATETIME_FORMATS_MAP['%+'] + " (%Z)")
-                self.message_append_note(cr, uid, [order.id], body=_("Shipment <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
+                self.message_post(cr, uid, [order.id], body=_("Shipment <em>%s</em> <b>scheduled</b> for %s.") % (picking.name, picking_date_str), context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             for invoice in (inv for inv in order.invoice_ids if inv.id == invoice_id):
-                self.message_append_note(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
+                self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
 
     def shipment_done_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
+        self.message_post(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
 
     def invoice_done_send_note(self, cr, uid, ids, context=None):
-        self.message_append_note(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
 
     def draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_append_note(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Purchase Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
 
 purchase_order()
 
@@ -804,8 +809,8 @@ class purchase_order_line(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', domain=[('purchase_ok','=',True)], change_default=True),
         'move_ids': fields.one2many('stock.move', 'purchase_line_id', 'Reservation', readonly=True, ondelete='set null'),
         'move_dest_id': fields.many2one('stock.move', 'Reservation Destination', ondelete='set null'),
-        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Purchase Price')),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Purchase Price')),
+        'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
         'order_id': fields.many2one('purchase.order', 'Order Reference', select=True, required=True, ondelete='cascade'),
         'account_analytic_id':fields.many2one('account.analytic.account', 'Analytic Account',),
         'company_id': fields.related('order_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
@@ -863,6 +868,12 @@ class purchase_order_line(osv.osv):
         supplier_delay = int(supplier_info.delay) if supplier_info else 0
         return datetime.strptime(date_order_str, DEFAULT_SERVER_DATE_FORMAT) + relativedelta(days=supplier_delay)
 
+    def _check_product_uom_group(self, cr, uid, context=None):
+        group_uom = self.pool.get('ir.model.data').get_object(cr, uid, 'product', 'group_uom')
+        res = [user for user in group_uom.users if user.id == uid]
+        return len(res) and True or False
+
+
     def onchange_product_id(self, cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=False, fiscal_position_id=False, date_planned=False,
             name=False, price_unit=False, context=None):
@@ -908,7 +919,8 @@ class purchase_order_line(osv.osv):
             uom_id = product_uom_po_id
 
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
-            res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
+            if self._check_product_uom_group(cr, uid, context=context):
+                res['warning'] = {'title': _('Warning!'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
             uom_id = product_uom_po_id
 
         res['value'].update({'product_uom': uom_id})
@@ -1083,15 +1095,15 @@ class procurement_order(osv.osv):
 
 procurement_order()
 
-class mail_message(osv.osv):
-    _name = 'mail.message'
-    _inherit = 'mail.message'
+class mail_mail(osv.osv):
+    _name = 'mail.mail'
+    _inherit = 'mail.mail'
 
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'purchase.order':
+    def _postprocess_sent_message(self, cr, uid, mail, context=None):
+        if mail.model == 'purchase.order':
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'purchase.order', message.res_id, 'send_rfq', cr)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
+            wf_service.trg_validate(uid, 'purchase.order', mail.res_id, 'send_rfq', cr)
+        return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
-mail_message()
+mail_mail()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

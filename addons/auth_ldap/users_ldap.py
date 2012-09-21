@@ -255,7 +255,7 @@ class users(osv.osv):
                     cr, SUPERUSER_ID, conf, login, entry)
                 if user_id:
                     cr.execute("""UPDATE res_users
-                                    SET date=now() AT TIME ZONE 'UTC'
+                                    SET login_date=now() AT TIME ZONE 'UTC'
                                     WHERE login=%s""",
                                (tools.ustr(login),))
                     cr.commit()
