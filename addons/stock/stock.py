@@ -673,6 +673,13 @@ class stock_picking(osv.osv):
     ]
 
     def action_process(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        context.update({
+            'active_model': self._name,
+            'active_ids': ids,
+            'active_id': len(ids) and ids[0] or False
+        })
         return {
             'view_type': 'form',
             'view_mode': 'form',
