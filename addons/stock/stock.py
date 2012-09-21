@@ -1668,10 +1668,13 @@ class stock_move(osv.osv):
         'scrapped': fields.related('location_dest_id','scrap_location',type='boolean',relation='stock.location',string='Scrapped', readonly=True),
         'type': fields.related('picking_id', 'type', type='selection', selection=[('out', 'Sending Goods'), ('in', 'Getting Goods'), ('internal', 'Internal')], string='Shipping Type'),
     }
+
     def _check_location(self, cr, uid, ids, context=None):
         for record in self.browse(cr, uid, ids, context=context):
-            if (record.state=='done') and (record.location_dest_id.usage == 'view' or record.location_id.usage == 'view'):
-                return False
+            if (record.state=='done') and (record.location_id.usage == 'view'):
+                raise osv.except_osv(_('Error'), _('You cannot move product %s from a location of type view %s.')% (record.product_id.name, record.location_id.name))
+            if (record.state=='done') and (record.location_dest_id.usage == 'view' ):
+                raise osv.except_osv(_('Error'), _('You cannot move product %s to a location of type view %s.')% (record.product_id.name, record.location_dest_id.name))
         return True
 
     _constraints = [
@@ -1747,7 +1750,7 @@ class stock_move(osv.osv):
         return user.company_id.partner_id.id
 
     def _default_move_type(self, cr, uid, context=None):
-        """ Gets default type of move 
+        """ Gets default type of move
         @return: type
         """
         if context is None:
@@ -1928,9 +1931,9 @@ class stock_move(osv.osv):
         location_dest_id = False
         if type == 'in':
             location_source_id = 'stock_location_suppliers'
-            location_dest_id = 'stock_location_stock' 
+            location_dest_id = 'stock_location_stock'
         elif type == 'out':
-            location_source_id = 'stock_location_stock' 
+            location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
         if location_source_id:
             try:
