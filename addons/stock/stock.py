@@ -1160,6 +1160,8 @@ class stock_picking(osv.osv):
         """
         for pick in self.browse(cr, uid, ids, context=context):
             for move in pick.move_lines:
+                if move.state == 'done' and move.scrapped:
+                    return True
                 if move.state not in ('cancel',):
                     return False
         return True
@@ -2205,7 +2207,7 @@ class stock_move(osv.osv):
         self.write(cr, uid, ids, {'state': 'cancel', 'move_dest_id': False})
         if not context.get('call_unlink',False):
             for pick in self.pool.get('stock.picking').browse(cr, uid, list(pickings), context=context):
-                if all(move.state == 'cancel' for move in pick.move_lines):
+                if all(move.state == 'cancel' or move.scrapped for move in pick.move_lines):
                     self.pool.get('stock.picking').write(cr, uid, [pick.id], {'state': 'cancel'})
 
         wf_service = netsvc.LocalService("workflow")
