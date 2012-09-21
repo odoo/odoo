@@ -723,6 +723,8 @@ class stock_picking(osv.osv):
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
         for picking in self.browse(cr, uid, ids, context=context):
+            if picking.state == 'confirmed':
+                self.confirm_send_note(cr, uid, ids, context=context)
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
@@ -1376,6 +1378,12 @@ class stock_picking(osv.osv):
     # OpenChatter methods and notifications
     # -----------------------------------------
 
+    def _get_thread_model(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            if obj.type in ('out', 'in'):
+                context.update({'thread_model': 'stock.picking.' + obj.type})
+        return True
+
     def _get_document_type(self, type):
         type_dict = {
                 'out': 'Delivery order',
@@ -1385,13 +1393,25 @@ class stock_picking(osv.osv):
         return type_dict.get(type, 'Stock picking')
 
     def create_send_note(self, cr, uid, ids, context=None):
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
 
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>confirmed</b>.") % (self._get_document_type(obj.type)), context=context)
+
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
         return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
 
     def back_order_send_note(self, cr, uid, ids, back_name, context=None):
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
         return self.message_post(cr, uid, ids, body=_("Back order <em>%s</em> has been <b>created</b>.") % (back_name), context=context)
 
     def ship_done_send_note(self, cr, uid, ids, context=None):
@@ -1400,10 +1420,14 @@ class stock_picking(osv.osv):
                 'in': 'received',
                 'internal': 'moved',
         }
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
+        context = context or {}
+        self._get_thread_model(cr, uid, ids, context=context)
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
 
