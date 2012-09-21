@@ -5,24 +5,56 @@ import re
 import string
 import urllib2
 from tools.translate import _
+from openerp.tools.misc import html2plaintext
+from py_etherpad import EtherpadLiteClient
 
 class pad_common(osv.osv_memory):
     _name = 'pad.common'
 
     def pad_generate_url(self, cr, uid, context=None):
-        pad_server = self.pool.get('res.users').browse(cr, uid, uid, context).company_id.pad_server
+        company = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id;
+
+        pad = {
+            "server" : company.pad_server,
+            "key" : company.pad_key or "4DxmsNIbnQUVQMW9S9tx2oLOSjFdrx1l",
+        }
+
         # make sure pad server in the form of http://hostname
-        if not pad_server:
+        if not pad["server"]:
             return ''
-        if not pad_server.startswith('http'):
-            pad_server = 'http://' + pad_server
-        pad_server = pad_server.rstrip('/')
+        if not pad["server"].startswith('http'):
+            pad["server"] = 'http://' + pad["server"]
+        pad["server"] = pad["server"].rstrip('/')
         # generate a salt
         s = string.ascii_uppercase + string.digits
         salt = ''.join([s[random.randint(0, len(s) - 1)] for i in range(10)])
+        #path
+        path = '%s-%s-%s' % (cr.dbname.replace('_','-'), self._name, salt)
         # contruct the url
-        url = '%s/p/%s-%s-%s' % (pad_server, cr.dbname.replace('_','-'), self._name, salt)
-        return url
+        url = '%s/p/%s' % (pad["server"], path)
+
+        #if create with content
+        if "field_name" in context and "model" in context and "object_id" in context:
+            myPad = EtherpadLiteClient( pad["key"], pad["server"]+'/api')
+            myPad.createPad(path)
+
+            #get attr on the field model
+            model = self.pool.get(context["model"])
+            field = model._all_columns[context['field_name']]
+            real_field = field.column.pad_content_field
+
+            #get content of the real field
+            for record in model.browse(cr, uid, [context["object_id"]]):
+                if record[real_field]:
+                    myPad.setText(path, html2plaintext(record[real_field]))
+                    #Etherpad for html not functional
+                    #myPad.setHTML(path, record[real_field])
+
+        return {
+            "server": pad["server"],
+            "path": path,
+            "url": url,
+        }
 
     def pad_get_content(self, cr, uid, url, context=None):
         content = ''
@@ -57,7 +89,8 @@ class pad_common(osv.osv_memory):
         for k,v in self._all_columns:
             field = v.column
             if hasattr(field,'pad_content_field'):
-                default[k] = self.pad_generate_url(cr, uid, context)
+                pad = self.pad_generate_url(cr, uid, context)
+                default[k] = pad['url']
         return super(pad_common, self).copy(cr, uid, id, default, context)
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

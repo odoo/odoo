@@ -444,11 +444,9 @@ class sugar_import(import_framework):
     import Tasks
     """
     task_state = {
-            'Completed' : 'done',
+            'Completed' : 'open',
             'Not Started':'draft',
-            'In Progress': 'open',
             'Pending Input': 'draft',
-            'deferred': 'cancel'
         }
 
     def import_task(self, val):
