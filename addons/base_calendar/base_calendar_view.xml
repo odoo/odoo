@@ -418,7 +418,7 @@
                 <field name="type">ir.actions.act_window</field>
                 <field name="res_model">calendar.event</field>
                 <field name="view_type">form</field>
-                <field name="view_mode">tree,form,calendar</field>
+                <field name="view_mode">calendar,tree,form</field>
                 <field name="search_view_id" ref="view_calendar_event_filter"/>
             </record>
 
@@ -428,5 +428,6 @@
                 name="Events" parent="base.menu_calendar_configuration"
                 sequence="15" action="action_view_event"/>
 
+        <menuitem name="Agenda" id="mail_menu_agenda" parent="mail.mail_my_stuff" sequence="10" action="action_view_event"/>
      </data>
  </openerp>

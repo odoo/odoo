@@ -132,8 +132,6 @@
     display: none;
     white-space: normal;
     padding: 8px;
-    background: #eee;
-    border-top: 1px solid #ccc;
 }
 
 .openerp div.oe_mail_thread_action:after {
@@ -201,7 +199,7 @@
 .openerp .oe_mail_msg_email {
     padding: 8px;
     background: white;
-    border-top: 1px solid #ccc;
+    border-top: 1px solid #ebebeb;
 }
 
 .openerp div.oe_mail_thread_subthread .oe_mail_msg_comment {
@@ -259,6 +257,31 @@
 .openerp .oe_mail_invisible {
     display: none;
 }
+
+/*--------------------------------------------------------------*/
+/* mail.vote
+/*--------------------------------------------------------------*/
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote {
+    height:21px;
+    width: 30px;
+    padding: 1px;
+    background: #8A89BA;
+    margin-top: -4px;
+}
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote_true {
+    background:#DC5F59;
+}
+
+.openerp .oe_mail_msg_content button.oe_mail_msg_vote span {
+    color: white;
+}
+
+.openerp .oe_mail_msg_content span.oe_mail_vote_count{
+    color: #807FB4;
+}
+
 
 /* ------------------------------------------------------------ */
 /* mail.compose.message form view & OpenERP hacks

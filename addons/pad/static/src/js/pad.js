@@ -16,11 +16,24 @@ instance.web.form.FieldPad = instance.web.form.AbstractField.extend({
         var self = this;
         var _super = self._super;
         _super.apply(self,[val]);
+
+        if (val === false || val === "") {
+            self.field_manager.dataset.call('pad_generate_url',{context:{
+                    model: self.field_manager.model,
+                    field_name: self.name,
+                    object_id: self.field_manager.datarecord.id
+                }}).then(function(data) {
+                if(data&&data.url){
+                    _super.apply(self,[data.url]);
+                    self.render_value();
+                }
+            });
+        } else {
+            self.render_value();
+        }
         this._dirty_flag = true;
-        self.render_value();
     },
     render_value: function() {
-        console.log("display");
         var self = this;
         var value = this.get('value');
 
