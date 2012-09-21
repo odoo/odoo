@@ -12,7 +12,7 @@
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
-                    <separator string="Mapping"/>
+                    <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
                         <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
@@ -23,6 +23,7 @@
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
+                    <separator string="Accounts Mapping"/>
                     <field name="account_ids" widget="one2many_list">
                         <tree string="Account Mapping" editable="bottom">
                             <field name="account_src_id"/>
@@ -93,8 +94,10 @@
                     </group>
                     <field name="bank_ids">
                         <form string="Bank account" version="7.0">
-                            <field name="state"/>
-                            <field name="acc_number"/>
+                            <group col="4">
+                                <field name="state"/>
+                                <field name="acc_number"/>
+                            </group>
                             <group>
                                 <group name="owner" string="Bank Account Owner">
                                     <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
