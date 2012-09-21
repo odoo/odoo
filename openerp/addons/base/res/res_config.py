@@ -528,17 +528,24 @@ class res_config_settings(osv.osv_memory):
         # module fields: install/uninstall the selected modules
         to_install_names = []
         to_uninstall_ids = []
+        lm = len('module_')
         for name, module in classified['module']:
             if module and module.state in ('installed', 'to upgrade'):
                 to_uninstall_ids.append(module.id)
             else:
-                to_install_names.append(name)
+                to_install_names.append(name[lm:])
 
         if to_uninstall_ids:
             ir_module.button_immediate_uninstall(cr, uid, to_uninstall_ids, context=context)
 
         if to_install_names:
-            return ir_module.install_by_names(cr, uid, to_install_names, context=context)
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'apps',
+                'params': {'modules': to_install_names},
+            }
+
+            #return ir_module.install_by_names(cr, uid, to_install_names, context=context)
 
         # force client-side reload (update user menu and current view)
         return {
