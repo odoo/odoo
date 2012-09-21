@@ -98,6 +98,27 @@ class fleet_vehicle_log(osv.Model):
 
     }
 
+class fleet_vehicle_log_fuel(osv.Model):
+    _inherit = 'fleet.vehicle.log'
+    _name = 'fleet.vehicle.log.fuel'
+    _columns = {
+        'description' : fields.text('Description'),
+    }
+
+class fleet_vehicle_log_insurance(osv.Model):
+    _inherit = 'fleet.vehicle.log'
+    _name = 'fleet.vehicle.log.insurance'
+    _columns = {
+        'description' : fields.text('Description'),
+    }
+
+class fleet_vehicle_log_services(osv.Model):
+    _inherit = 'fleet.vehicle.log'
+    _name = 'fleet.vehicle.log.services'
+    _columns = {
+        'description' : fields.text('Description'),
+    }
+
 class hr_employee(osv.Model):
     _inherit = 'hr.employee'
 
