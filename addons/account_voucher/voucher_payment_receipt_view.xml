@@ -153,7 +153,7 @@
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': [('line_dr_ids','=',False)]}">
+                    <notebook>
                         <page string="Payment Information">
                             <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
@@ -325,7 +325,7 @@
                             <field name="type" invisible="True"/>
                         </group>
                     </group>
-                    <notebook attrs="{'invisible': [('line_cr_ids','=',False)]}">
+                    <notebook>
                         <page string="Payment Information" groups="base.group_user">
                             <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">

@@ -5,21 +5,33 @@
     <menuitem name="Configuration" id="menu_marketing_configuration" parent="base.marketing_menu" sequence="1"/>
 
     <!-- Marketing Campaign -->
-    <act_window name="All Segments"
-        res_model="marketing.campaign.segment"
-        src_model="marketing.campaign"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
+    
+    <record id="act_marketing_campaing_segment_opened" model="ir.actions.act_window">
+        <field name="res_model">marketing.campaign.segment</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
+    
+    <!-- Campaign Follow-ups -->
+        
+    <record id="act_marketing_campaing_followup" model="ir.actions.act_window">
+        <field name="res_model">marketing.campaign.workitem</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
+    
+    <!-- Campaign Statistics -->
+    
+    <record id="act_marketing_campaing_stat" model="ir.actions.act_window" >
+        <field name="res_model">campaign.analysis</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}</field>
+    </record>
 
     <!-- Campaign Followups -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_followup"
-        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
 
     <record model="ir.ui.view" id="view_marketing_campaign_form">
         <field name="name">marketing.campaign.form</field>
@@ -35,12 +47,15 @@
             </header>
             <sheet string="Campaign">
                 <div class="oe_right oe_button_box" name="button_box">
-                        <button type="action"
-                        name="%(act_marketing_campaing_followup)d"
-                        string="Follow-Up"/>
-                        <button type="action"
-                        name="%(act_marketing_campaing_segment_opened)d"
-                        string="Segments"/>
+                    <button type="action"
+                    name="%(act_marketing_campaing_stat)d"
+                    string="Campaign Statistics"/>    
+                    <button type="action"
+                    name="%(act_marketing_campaing_segment_opened)d"
+                    string="Segments"/>  
+                    <button type="action"
+                    name="%(act_marketing_campaing_followup)d"
+                    string="Follow-Up"/>
                 </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
@@ -421,30 +436,6 @@
     </record>
 
     <menuitem id="menu_action_marketing_campaign_workitem" parent="menu_marketing_campaign" action="action_marketing_campaign_workitem" sequence="10"/>
-
-    <act_window name="All Segments"
-        res_model="marketing.campaign.segment"
-        src_model="marketing.campaign"
-        view_type="form"
-        view_mode="tree,form"
-        id="act_marketing_campaing_segment_opened"
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"/>
-
-    <!-- Campaign Follow-ups -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_followup"
-        name="Campaign Follow-up" res_model="marketing.campaign.workitem"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
-
-    <!-- Campaign Statistics -->
-    <act_window
-        context="{'search_default_campaign_id': [active_id], 'default_campaign_id': active_id}"
-        id="act_marketing_campaing_stat"
-        name="Campaign Statistics" res_model="campaign.analysis"
-        src_model="marketing.campaign" view_mode="tree,form"
-        view_type="form"/>
 
     </data>
 </openerp>
