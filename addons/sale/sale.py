@@ -221,7 +221,7 @@ class sale_order(osv.osv):
             },
             multi='sums', help="The total amount."),
 
-        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice). Ordered and delivered quantities may not be the same. You have to choose if you want your invoice based on ordered or shipped quantities. If the product is a service, shipped quantities means hours spent on the associated tasks.", required=True, readonly=True, states={'draft': [('readonly', False)]}),
+        'invoice_quantity': fields.selection([('order', 'Ordered Quantities')], 'Invoice on', help="The sale order will automatically create the invoice proposition (draft invoice).", required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'payment_term': fields.many2one('account.payment.term', 'Payment Term'),
         'fiscal_position': fields.many2one('account.fiscal.position', 'Fiscal Position'),
         'company_id': fields.related('shop_id','company_id',type='many2one',relation='res.company',string='Company',store=True,readonly=True)
@@ -249,7 +249,7 @@ class sale_order(osv.osv):
             if s['state'] in ['draft', 'cancel']:
                 unlink_ids.append(s['id'])
             else:
-                raise osv.except_osv(_('Invalid action !'), _('In order to delete a confirmed sale order, you must cancel it before !'))
+                raise osv.except_osv(_('Invalid Action!'), _('In order to delete a confirmed sale order, you must cancel it before !'))
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
@@ -332,8 +332,7 @@ class sale_order(osv.osv):
             'fiscal_position': order.fiscal_position.id or order.partner_id.property_account_position.id,
             'date_invoice': context.get('date_invoice', False),
             'company_id': order.company_id.id,
-            'user_id': order.user_id and order.user_id.id or False,
-            
+            'user_id': order.user_id and order.user_id.id or False
         }
 
         # Care for deprecated _inv_get() hook - FIXME: to be removed after 6.1
@@ -437,7 +436,7 @@ class sale_order(osv.osv):
             if line.product_id and (line.product_id.type<>'service'):
                 return False
         return True
-        
+
     def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
         res = False
         invoices = {}
@@ -630,7 +629,7 @@ class sale_order(osv.osv):
     def action_done(self, cr, uid, ids, context=None):
         self.done_send_note(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
-    
+
     # ------------------------------------------------
     # OpenChatter methods and notifications
     # ------------------------------------------------
@@ -652,10 +651,10 @@ class sale_order(osv.osv):
             
     def done_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> has been <b>done</b>") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> set to <b>Done</b>") % (obj.partner_id.name), context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice has been <b>paid</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
@@ -707,7 +706,7 @@ class sale_order_line(osv.osv):
         'product_uom': fields.many2one('product.uom', 'Unit of Measure ', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos_qty': fields.float('Quantity (UoS)' ,digits_compute= dp.get_precision('Product UoS'), readonly=True, states={'draft': [('readonly', False)]}),
         'product_uos': fields.many2one('product.uom', 'Product UoS'),
-         'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
+        'discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)]}),
         'th_weight': fields.float('Weight', readonly=True, states={'draft': [('readonly', False)]}),
         'state': fields.selection([('cancel', 'Cancelled'),('draft', 'Draft'),('confirmed', 'Confirmed'),('exception', 'Exception'),('done', 'Done')], 'Status', required=True, readonly=True,
                 help='* The \'Draft\' state is set when the related sales order in draft state. \
@@ -717,8 +716,7 @@ class sale_order_line(osv.osv):
                     \n* The \'Cancelled\' state is set when a user cancel the sales order related.'),
         'order_partner_id': fields.related('order_id', 'partner_id', type='many2one', relation='res.partner', store=True, string='Customer'),
         'salesman_id':fields.related('order_id', 'user_id', type='many2one', relation='res.users', store=True, string='Salesperson'),
-         'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
-        
+        'company_id': fields.related('order_id', 'company_id', type='many2one', relation='res.company', string='Company', store=True, readonly=True),
     }
     _order = 'sequence, id'
     _defaults = {
@@ -732,6 +730,18 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
     }
 
+    def _get_line_qty(self, cr, uid, line):
+        if (line.order_id.invoice_quantity=='order'):
+            if line.product_uos:
+                return line.product_uos_qty or 0.0
+            return line.product_uom_qty
+
+    def _get_line_uom(self, cr, uid, line):
+        if (line.order_id.invoice_quantity=='order'):
+            if line.product_uos:
+                return line.product_uos.id
+            return line.product_uom.id
+
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a
            sale order line. This method may be overridden to implement custom
@@ -744,17 +754,6 @@ class sale_order_line(osv.osv):
            :return: dict of values to create() the invoice line
         """
         res = {}
-        def _get_line_qty(line):
-            if (line.order_id.invoice_quantity=='order'):
-                if line.product_uos:
-                    return line.product_uos_qty or 0.0
-                return line.product_uom_qty
-
-        def _get_line_uom(line):
-            if (line.order_id.invoice_quantity=='order'):
-                if line.product_uos:
-                    return line.product_uos.id
-                return line.product_uom.id
         if not line.invoiced:
             if not account_id:
                 if line.product_id:
@@ -770,8 +769,8 @@ class sale_order_line(osv.osv):
                             'property_account_income_categ', 'product.category',
                             context=context)
                     account_id = prop and prop.id or False
-            uosqty = _get_line_qty(line)
-            uos_id = _get_line_uom(line)
+            uosqty = self._get_line_qty(cr, uid, line)
+            uos_id = self._get_line_uom(cr, uid, line)
             pu = 0.0
             if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
@@ -819,7 +818,7 @@ class sale_order_line(osv.osv):
     def button_cancel(self, cr, uid, ids, context=None):
         for line in self.browse(cr, uid, ids, context=context):
             if line.invoiced:
-                raise osv.except_osv(_('Invalid action !'), _('You cannot cancel a sale order line that has already been invoiced!'))
+                raise osv.except_osv(_('Invalid Action!'), _('You cannot cancel a sale order line that has already been invoiced.'))
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def button_confirm(self, cr, uid, ids, context=None):
