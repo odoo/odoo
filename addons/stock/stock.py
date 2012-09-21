@@ -711,7 +711,7 @@ class stock_picking(osv.osv):
         return res
     
     def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
-        if view_type =='form':
+        if view_type == 'form' and not view_id:
             mod_obj = self.pool.get('ir.model.data')
             if self._name == "stock.picking.in":
                 model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
