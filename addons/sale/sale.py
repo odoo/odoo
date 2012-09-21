@@ -145,6 +145,14 @@ class sale_order(osv.osv):
                 res[sale.id] = 0.0
         return res
 
+    def _invoice_exists(self, cursor, user, ids, name, arg, context=None):
+        res = {}
+        for sale in self.browse(cursor, user, ids, context=context):
+            res[sale.id] = False
+            if sale.invoice_ids:
+                res[sale.id] = True
+        return res
+
     def _invoiced(self, cursor, user, ids, name, arg, context=None):
         res = {}
         for sale in self.browse(cursor, user, ids, context=context):
@@ -156,7 +164,7 @@ class sale_order(osv.osv):
                     if invoice.state != 'paid':
                         res[sale.id] = False
                         break
-            if not invoice_existence:
+            if not invoice_existence or sale.state == 'manual':
                 res[sale.id] = False
         return res
 
@@ -245,6 +253,8 @@ class sale_order(osv.osv):
         'invoiced_rate': fields.function(_invoiced_rate, string='Invoiced', type='float'),
         'invoiced': fields.function(_invoiced, string='Paid',
             fnct_search=_invoiced_search, type='boolean', help="It indicates that an invoice has been paid."),
+        'invoice_exists': fields.function(_invoice_exists, string='Invoiced',
+            fnct_search=_invoiced_search, type='boolean', help="It indicates that sale order has at least one invoice."),
         'note': fields.text('Terms and conditions'),
 
         'amount_untaxed': fields.function(_amount_all, digits_compute= dp.get_precision('Account'), string='Untaxed Amount',
@@ -518,68 +528,45 @@ class sale_order(osv.osv):
         This function returns an action that display existing invoices of given sale order ids. It can either be a in a list or in a form view, if there is only one invoice to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
-        result = {
-            'name': _('Cutomer Invoice'),
-            'view_type': 'form',
-            'res_model': 'account.invoice',
-            'context': "{'type':'out_invoice', 'journal_type': 'sale'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-        }
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'account', 'action_invoice_tree1')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
         #compute the number of invoices to display
         inv_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             inv_ids += [invoice.id for invoice in so.invoice_ids]
         #choose the view_mode accordingly
         if len(inv_ids)>1:
-            res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_tree')
-            result.update({
-                'view_mode': 'tree,form',
-                'res_id': inv_ids or False
-            })
+            result['domain'] = "[('id','in',["+','.join(map(str, inv_ids))+"])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'account', 'invoice_form')
-            result.update({
-                'view_mode': 'form',
-                'res_id': inv_ids and inv_ids[0] or False,
-            })
-        result.update(view_id = res and res[1] or False)
+            result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = inv_ids and inv_ids[0] or False
         return result
-
 
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.
         '''
         mod_obj = self.pool.get('ir.model.data')
-        result = {
-            'name': _('Delivery Order'),
-            'view_type': 'form',
-            'res_model': 'stock.picking',
-            'context': "{'type':'out'}",
-            'type': 'ir.actions.act_window',
-            'nodestroy': True,
-            'target': 'current',
-        }
+        act_obj = self.pool.get('ir.actions.act_window')
+
+        result = mod_obj.get_object_reference(cr, uid, 'stock', 'action_picking_tree')
+        id = result and result[1] or False
+        result = act_obj.read(cr, uid, [id], context=context)[0]
         #compute the number of delivery orders to display
         pick_ids = []
         for so in self.browse(cr, uid, ids, context=context):
             pick_ids += [picking.id for picking in so.picking_ids]
         #choose the view_mode accordingly
         if len(pick_ids) > 1:
-            res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_tree')
-            result.update({
-                'view_mode': 'tree,form',
-                'res_id': pick_ids or False
-            })
+            result['domain'] = "[('id','in',["+','.join(map(str, pick_ids))+"])]"
         else:
             res = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
-            result.update({
-                'view_mode': 'form',
-                'res_id': pick_ids and pick_ids[0] or False,
-            })
-        result.update(view_id = res and res[1] or False)
+            result['views'] = [(res and res[1] or False, 'form')]
+            result['res_id'] = pick_ids and pick_ids[0] or False
         return result
 
     def test_no_product(self, cr, uid, order, context):
@@ -784,7 +771,8 @@ class sale_order(osv.osv):
             'default_res_id': ids[0],
             'default_use_template': True,
             'default_template_id': template_id,
-            })
+            'mark_so_as_sent': True
+        })
         return {
             'view_type': 'form',
             'view_mode': 'form',
@@ -883,6 +871,7 @@ class sale_order(osv.osv):
             'sale_line_id': line.id,
             'tracking_id': False,
             'state': 'draft',
+            'type':'out',
             #'state': 'waiting',
             'note': '\n'.join(line.name.split('\n')[1:]),
             'company_id': order.company_id.id,
@@ -1488,15 +1477,14 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
-class mail_message(osv.osv):
-    _inherit = 'mail.message'
-
-    def _postprocess_sent_message(self, cr, uid, message, context=None):
-        if message.model == 'sale.order':
+class mail_compose_message(osv.osv):
+    _inherit = 'mail.compose.message'
+    def send_mail(self, cr, uid, ids, context=None):
+        context = context or {}
+        if context.get('mark_so_as_sent', False) and context.get('default_res_id', False):
             wf_service = netsvc.LocalService("workflow")
-            wf_service.trg_validate(uid, 'sale.order', message.res_id, 'quotation_sent', cr)
-        return super(mail_message, self)._postprocess_sent_message(cr, uid, message=message, context=context)
-
-mail_message()
+            wf_service.trg_validate(uid, 'sale.order', context.get('default_res_id', False), 'quotation_sent', cr)
+        return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+mail_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
