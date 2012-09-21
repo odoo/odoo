@@ -519,20 +519,20 @@ class sale_order_line(osv.osv):
         'product_packaging': False,
     }
 
-    def _get_line_qty(self, cr, uid, line):
+    def _get_line_qty(self, cr, uid, line, context=None):
         if line.procurement_id and not (line.order_id.invoice_quantity=='order'):
             return self.pool.get('procurement.order').quantity_get(cr, uid,
                    line.procurement_id.id, context=context)
         else:
-            return super(sale_order_line, self)._get_line_qty(cr, uid, line)
+            return super(sale_order_line, self)._get_line_qty(cr, uid, line, context=context)
 
 
-    def _get_line_uom(self, cr, uid, line):
+    def _get_line_uom(self, cr, uid, line, context=None):
         if line.procurement_id and not (line.order_id.invoice_quantity=='order'):
             return self.pool.get('procurement.order').uom_get(cr, uid,
                     line.procurement_id.id, context=context)
         else:
-            return super(sale_order_line, self)._get_line_uom(cr, uid, line)
+            return super(sale_order_line, self)._get_line_uom(cr, uid, line, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
         res = super(sale_order_line, self).button_cancel(cr, uid, ids, context=context)

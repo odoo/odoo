@@ -730,13 +730,13 @@ class sale_order_line(osv.osv):
         'price_unit': 0.0,
     }
 
-    def _get_line_qty(self, cr, uid, line):
+    def _get_line_qty(self, cr, uid, line, context=None):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos_qty or 0.0
             return line.product_uom_qty
 
-    def _get_line_uom(self, cr, uid, line):
+    def _get_line_uom(self, cr, uid, line, context=None):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos.id
@@ -769,8 +769,8 @@ class sale_order_line(osv.osv):
                             'property_account_income_categ', 'product.category',
                             context=context)
                     account_id = prop and prop.id or False
-            uosqty = self._get_line_qty(cr, uid, line)
-            uos_id = self._get_line_uom(cr, uid, line)
+            uosqty = self._get_line_qty(cr, uid, line, context=context)
+            uos_id = self._get_line_uom(cr, uid, line, context=context)
             pu = 0.0
             if uosqty:
                 pu = round(line.price_unit * line.product_uom_qty / uosqty,
