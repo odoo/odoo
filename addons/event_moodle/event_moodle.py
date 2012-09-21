@@ -101,6 +101,8 @@ class event_moodle(osv.osv):
         """
         #connect to moodle
         url = self.browse(cr, uid, id, context=context).url
+        if not url:
+            raise osv.except_osv(('Error!'),("First configure your moodle connection."))
         sock = xmlrpclib.ServerProxy(url)
         return sock.core_course_create_courses(courses)
 
