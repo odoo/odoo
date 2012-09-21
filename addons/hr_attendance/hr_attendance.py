@@ -126,9 +126,20 @@ class hr_employee(osv.osv):
                 result[id] = res[0]
         return result
 
+    def _attendance_access(self, cr, uid, ids, name, args, context=None):
+        res = {}
+        data_obj = self.pool.get('ir.model.data')
+        group = data_obj.get_object(cr, uid,'hr_attendance', 'hr_attendace_group')
+        if uid in [user.id for user in group.user]:
+            res[ids] = True
+        else:
+            res[ids] = False
+        return res
+
     _columns = {
        'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
        'last_sign': fields.function(_last_sign, type='datetime', string='Last Sign'),
+       'attendance_access': fields.function(_attendance_access, type='boolean', string="Access or not"),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):

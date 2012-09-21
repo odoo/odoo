@@ -42,6 +42,7 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_bymonth_view.xml',
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
+        'res_config_view.xml',
     ],
     'demo': ['hr_attendance_demo.xml'],
     'test': [

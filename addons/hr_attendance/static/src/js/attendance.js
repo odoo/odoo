@@ -57,9 +57,12 @@ openerp.hr_attendance = function (instance) {
             var employee = new instance.web.DataSetSearch(self, 'hr.employee', self.session.user_context, [
                 ['user_id', '=', self.session.uid]
             ]);
-            return employee.read_slice(['id', 'name', 'state', 'last_sign']).pipe(function (res) {
-                if (_.isEmpty(res))
+            return employee.read_slice(['id', 'name', 'state', 'last_sign', 'attendance_access']).pipe(function (res) {
+                if (_.isEmpty(res) )
                     return;
+                if (res['attendance_access'] == false){
+                    return;
+                }
                 self.$el.show();
                 self.employee = res[0];
                 self.last_sign = instance.web.str_to_datetime(self.employee.last_sign);
