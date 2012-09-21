@@ -64,14 +64,22 @@ openerp.account = function (instance) {
         },
         search_by_partner: function() {
             var self = this;
-            return new instance.web.Model("res.partner").call("read",
-                [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).pipe(function(res) {
-                self.last_reconciliation_date = 
-                    instance.web.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
+            var fct = function() {
                 return self.old_search(new instance.web.CompoundDomain(self.last_domain, 
                     [["partner_id", "in", self.current_partner === null ? [] :
                     [self.partners[self.current_partner][0]] ]]), self.last_context, self.last_group_by);
-            });
+            };
+            if (self.current_partner === null) {
+                self.last_reconciliation_date = _t("Never");
+                return fct();
+            } else {
+                return new instance.web.Model("res.partner").call("read",
+                    [self.partners[self.current_partner][0], ["last_reconciliation_date"]]).pipe(function(res) {
+                    self.last_reconciliation_date = 
+                        instance.web.format_value(res.last_reconciliation_date, {"type": "datetime"}, _t("Never"));
+                    return fct();
+                });
+            }
         },
         reconcile: function() {
             var self = this;
