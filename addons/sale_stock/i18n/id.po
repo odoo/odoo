@@ -7,35 +7,35 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-05-10 18:27+0000\n"
+"POT-Creation-Date: 2012-09-20 07:32+0000\n"
+"PO-Revision-Date: 2012-09-21 14:16+0000\n"
 "Last-Translator: opix <inur.opix@gmail.com>\n"
 "Language-Team: Indonesian <id@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-07 04:57+0000\n"
-"X-Generator: Launchpad (build 15914)\n"
+"X-Launchpad-Export-Date: 2012-09-22 04:57+0000\n"
+"X-Generator: Launchpad (build 15985)\n"
 
-#. module: sale
-#: field:sale.config.picking_policy,timesheet:0
-msgid "Based on Timesheet"
-msgstr ""
-
-#. module: sale
-#: view:sale.order.line:0
+#. module: sale_stock
+#: help:sale.config.settings,group_invoice_deli_orders:0
 msgid ""
-"Sale Order Lines that are confirmed, done or in exception state and haven't "
-"yet been invoiced"
+"To allow your salesman to make invoices for Delivery Orders using the menu "
+"'Deliveries to Invoice'."
 msgstr ""
 
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-msgid "Sales by Salesman in last 90 days"
-msgstr "Penjualan oleh Salesman dalam 90 hari terakhir"
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:496
+#, python-format
+msgid "Delivery Order <em>%s</em> <b>scheduled</b> for %s."
+msgstr ""
 
-#. module: sale
+#. module: sale_stock
+#: model:process.node,name:sale_stock.process_node_deliveryorder0
+msgid "Delivery Order"
+msgstr "Pengiriman Order"
+
+#. module: sale_stock
 #: help:sale.order,picking_policy:0
 msgid ""
 "If you don't have enough stock available to deliver all at once, do you "
@@ -44,1375 +44,24 @@ msgstr ""
 "Jika anda tidak mempunya cukup stok yang akan dikirim, apakah anda setuju "
 "jika hanya dikirim sebagian?"
 
-#. module: sale
-#: view:sale.order:0
-msgid "UoS"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,partner_shipping_id:0
-msgid "Shipping address for current sales order."
-msgstr "Alamat pengiriman untuk  sales order saat ini."
-
-#. module: sale
-#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
-msgid "Quantity"
-msgstr "Kuantitas"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,day:0
-msgid "Day"
-msgstr "Hari"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelorder0
-#: view:sale.order:0
-msgid "Cancel Order"
-msgstr "Batalkan order"
-
-#. module: sale
-#: code:addons/sale/sale.py:638
-#, python-format
-msgid "The quotation '%s' has been converted to a sales order."
-msgstr "quotation \"%s\" telah dikonversikan pada sales order"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Print Quotation"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:42
-#, python-format
-msgid "Warning !"
-msgstr "Peringatan !"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tax"
-msgstr ""
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr "meningkatkan order pengadaan pada setiap daftar order penjualan"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,analytic_account_id:0
-#: field:sale.shop,project_id:0
-msgid "Analytic Account"
-msgstr "Akun Analisis"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_line_tree2
-msgid ""
-"Here is a list of each sales order line to be invoiced. You can invoice "
-"sales orders partially, by lines of sales order. You do not need this list "
-"if you invoice from the delivery orders or if you invoice sales totally."
-msgstr ""
-"Berikut adalah daftar pesanan penjualan  dikenakan tagihan. Anda dapat  "
-"membuat invoice penjualan secara parsial, oleh baris sales order. Anda tidak "
-"perlu daftar ini jika dari invoice pengiriman pesanan atau jika dari invoice "
-"total penjualan anda"
-
-#. module: sale
-#: code:addons/sale/sale.py:295
-#, python-format
-msgid ""
-"In order to delete a confirmed sale order, you must cancel it before ! To "
-"cancel a sale order, you must first cancel related picking or delivery "
-"orders."
-msgstr ""
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr "Order procurement"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,partner_id:0
-msgid "Partner"
-msgstr "Rekanan"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice based on deliveries"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Line"
-msgstr "Daftar Pesanan"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_form
-msgid ""
-"Sales Orders help you manage quotations and orders from your customers. "
-"OpenERP suggests that you start by creating a quotation. Once it is "
-"confirmed, the quotation will be converted into a Sales Order. OpenERP can "
-"handle several types of products so that a sales order may trigger tasks, "
-"delivery orders, manufacturing orders, purchases and so on. Based on the "
-"configuration of the sales order, a draft invoice will be generated so that "
-"you just have to confirm it when you want to bill your customer."
-msgstr ""
-"Sales Order membantu Anda  mengelola  menentukan harga  dan pesanan dari "
-"pelanggan Anda. ERP menunjukkan  bahwa  Anda mulai dengan membuat quotation. "
-"Setelah dikonfirmasi, quotation akan dikonversi  menjadi  Sales Order. "
-"OpenERP dapat menangani  beberapa jenis produk  sehingga  pesanan  penjualan "
-" dapat  memicu  tugas, perintah pengiriman, manufaktur pesanan, pembelian "
-"dan sebagainya. Berdasarkan konfigurasi dari  pesanan penjualan,  draft "
-"invoice   akan dibuat sehingga Anda hanya perlu konfirmasi bila Anda ingin "
-"tagihan pelanggan Anda."
-
-#. module: sale
-#: help:sale.order,invoice_quantity:0
-msgid ""
-"The sale order will automatically create the invoice proposition (draft "
-"invoice). Ordered and delivered quantities may not be the same. You have to "
-"choose if you want your invoice based on ordered or shipped quantities. If "
-"the product is a service, shipped quantities means hours spent on the "
-"associated tasks."
-msgstr ""
-"Urutan penjualan secara otomatis akan membuat proposisi invoice (draft "
-"invoice). Pesanan dan jumlah yang  dikirimkan mungkin tidak sama. Anda harus "
-"memilih apakah anda ingin  berdasarkan jumlah pesanan  atau jumlah barang "
-"dikirim. Jika produk berupa layanan,kuantitas yang di kirimkan artinya "
-"jumlah  jam yang dihabiskan pada tugas-tugas yang terkait."
-
-#. module: sale
-#: field:sale.shop,payment_default_id:0
-msgid "Default Payment Term"
-msgstr "Default Term Pembayaran"
-
-#. module: sale
-#: field:sale.config.picking_policy,deli_orders:0
-msgid "Based on Delivery Orders"
-msgstr ""
-
-#. module: sale
-#: field:sale.config.picking_policy,time_unit:0
-msgid "Main Working Time Unit"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
-#: view:sale.report:0
-msgid "State"
-msgstr "Status"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Disc.(%)"
-msgstr "Potongan (%)"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,price_total:0
-msgid "Total Price"
-msgstr "Total Harga"
-
-#. module: sale
-#: help:sale.make.invoice,grouped:0
-msgid "Check the box to group the invoices for the same customers"
-msgstr "centang kotak untuk kelompok invoice untuk pelanggan yang sama"
-
-#. module: sale
-#: view:sale.order:0
-msgid "My Sale Orders"
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Ordered Quantities"
-msgstr "Order Kuantitas"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Salesman"
-msgstr "Penjualan berdasarkan Salesman"
-
-#. module: sale
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Perpindahan Barang"
-
-#. module: sale
-#: field:sale.order,name:0 field:sale.order.line,order_id:0
-msgid "Order Reference"
-msgstr "Referensi Order"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Other Information"
-msgstr "Informasi lainnya"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Tanggal"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr ""
-"invoice dibuat secara otomatis jika kebijakan pengiriman adalah 'invoicedari "
-"penjemputan' atau 'invoice setelah pengiriman\""
-
-#. module: sale
-#: field:sale.config.picking_policy,task_work:0
-msgid "Based on Tasks' Work"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-msgid "Quotations and Sales"
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_make_invoice
-msgid "Sales Make Invoice"
-msgstr "Sales membuat invoice"
-
-#. module: sale
-#: code:addons/sale/sale.py:330
-#, python-format
-msgid "Pricelist Warning!"
-msgstr ""
-
-#. module: sale
-#: field:sale.order.line,discount:0
-msgid "Discount (%)"
-msgstr "Potongan (%)"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
-msgid "My Quotations"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Manager Dashboard"
-msgstr "Panel utama sales manager"
-
-#. module: sale
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Kemasan"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleinvoice0
-msgid "From a sales order"
-msgstr "Dari Sales Order"
-
-#. module: sale
-#: field:sale.shop,name:0
-msgid "Shop Name"
-msgstr "Nama toko"
-
-#. module: sale
-#: help:sale.order,order_policy:0
-msgid ""
-"The Invoice Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and "
-"then generate the picking order after the payment of this invoice.\n"
-"  - The 'Deliver & Invoice on demand' will create the picking order directly "
-"and wait for the user to manually click on the 'Invoice' button to generate "
-"the draft invoice based on the sale order or the sale order lines.\n"
-"  - The 'Invoice on order after delivery' choice will generate the draft "
-"invoice based on sales order after all picking lists have been finished.\n"
-"  - The 'Invoice based on deliveries' choice is used to create an invoice "
-"during the picking process."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:1171
-#, python-format
-msgid "No Customer Defined !"
-msgstr "Nama konsumen tidak ditemukan"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
-msgid "Sales in Exception"
-msgstr "Sales dalam Pengecualian"
-
-#. module: sale
-#: code:addons/sale/sale.py:1158 code:addons/sale/sale.py:1277
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
-#, python-format
-msgid "Configuration Error !"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Conditions"
-msgstr "Kondisi"
-
-#. module: sale
-#: code:addons/sale/sale.py:1034
-#, python-format
-msgid ""
-"There is no income category account defined in default Properties for "
-"Product Category or Fiscal Position is not defined !"
-msgstr ""
-"Tidak ada kategori penghasilan akun didefinisikan  dalam  standar  "
-"Properties  untuk  Produk  Kategori  atau Fiskal Posisi tidak ditemukan!"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "August"
-msgstr "Agustus"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr ""
-"Anda mencoba untuk menetapkan banyak yang tidak dari produk yang sama"
-
-#. module: sale
-#: code:addons/sale/sale.py:655
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "mode tidak sah untuk test_state"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "June"
-msgstr "Juni"
-
-#. module: sale
-#: code:addons/sale/sale.py:617
-#, python-format
-msgid "Could not cancel this sales order !"
-msgstr "Order penjualan ini tidak dapat dibatalkan"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Statistik order penjualan"
-
-#. module: sale
-#: help:sale.order,project_id:0
-msgid "The analytic account related to a sales order."
-msgstr "Akun  analitik yang terkait  dengan  order penjualan"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "October"
-msgstr "Oktober"
-
-#. module: sale
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0 view:sale.order:0 view:sale.report:0
-msgid "Quotations"
-msgstr "Penawaran"
-
-#. module: sale
-#: help:sale.order,pricelist_id:0
-msgid "Pricelist for current sales order."
-msgstr "Daftar  harga sales order untuk saat ini"
-
-#. module: sale
-#: report:sale.order:0
-msgid "TVA :"
-msgstr "TVA :"
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
-msgstr ""
-"Jumlah hari antara konfirmasi pemesanan pengiriman produk kepada pelanggan"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation Date"
-msgstr "Tanggal Penawaran"
-
-#. module: sale
-#: field:sale.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "Posisi Fiskal"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
-msgid "UoM"
-msgstr "Satuan"
-
-#. module: sale
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Nomor Kemasan"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "In Progress"
-msgstr "Dalam Proses"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sales order becomes "
-"'In progress' or 'Manual in progress'."
-msgstr ""
-"Salesman ini mengkonfirmasikan penawaran.status  penjualan menjadi 'Dalam "
-"proses \"atau\" Proses manual'."
-
-#. module: sale
-#: code:addons/sale/sale.py:1074
-#, python-format
-msgid "You cannot cancel a sale order line that has already been invoiced!"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:1079
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Anda harus terlebih dahulu membatalkan stock bergerak yang ada  pada daftar "
-"penjualan."
-
-#. module: sale
-#: code:addons/sale/sale.py:1147
-#, python-format
-msgid "(n/a)"
-msgstr "tidak tersedia"
-
-#. module: sale
-#: help:sale.advance.payment.inv,product_id:0
-msgid ""
-"Select a product of type service which is called 'Advance Product'. You may "
-"have to create it and set it as a default value on this field."
-msgstr ""
-"Pilih produk jenis layanan  yang disebut 'Advanced Produk'. Anda mungkin "
-"harus membuat  dan mengaturnya  sebagai  nilai  default  pada bagian ini"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tel. :"
-msgstr "telepon"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:64
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                              "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Anda tidak dapat membuat  pesanan penjualan yang diartikan sebagai  'invoice "
-"Otomatis  setelah pengiriman'."
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
-#: field:sale.order.line,notes:0
-msgid "Notes"
-msgstr "Catatan"
-
-#. module: sale
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,partner_invoice_id:0
-msgid "Invoice address for current sales order."
-msgstr "Faktur alamat untuk order penjualan saat ini."
-
-#. module: sale
-#: view:sale.report:0
-msgid "Month-1"
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered month of the sales order"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:504
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr ""
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Terinvoice"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Pengiriman Order"
-
-#. module: sale
-#: field:sale.order,date_confirm:0
-msgid "Confirmation Date"
-msgstr "Tanggal Konfirmasi"
-
-#. module: sale
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: sale
-#: field:sale.order.line,address_allotment_id:0
-msgid "Allotment Partner"
-msgstr "Peruntukan rekanan"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "March"
-msgstr "Maret"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr ""
-
-#. module: sale
-#: field:sale.config.picking_policy,sale_orders:0
-msgid "Based on Sales Orders"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,amount_total:0
-msgid "The total amount."
-msgstr "Jumlah total"
-
-#. module: sale
-#: field:sale.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Sub Total"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Invoice address :"
-msgstr "Alamat faktur"
-
-#. module: sale
-#: field:sale.order.line,sequence:0
-msgid "Line Sequence"
-msgstr ""
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-"Untuk setiap daftar pemesanan, a order pembelian dibuat untuk  persediaan  "
-"produk yang terjual."
-
-#. module: sale
-#: help:sale.order,incoterm:0
-msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
-msgstr ""
-"Incoterms yang merupakan singkatan dari  'istilah Komersial Internasional' "
-"menyiratkan seri istilah penjualan yang digunakan dalam transaksi komersial."
-
-#. module: sale
-#: field:sale.order,partner_invoice_id:0
-msgid "Invoice Address"
-msgstr "Alamat Faktur"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Search Uninvoiced Lines"
-msgstr "Pencarian daftar yang tidak terfakturkan"
-
-#. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "penawaran/permintaan"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "batas akhir daftar"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_open_invoice
-msgid "Sales Open Invoice"
-msgstr "Buka Faktur Penjualan"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "Daftar order penjualan"
-
-#. module: sale
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Gudang"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Order N°"
-msgstr "No. Order"
-
-#. module: sale
-#: field:sale.order,order_line:0
-msgid "Order Lines"
-msgstr "Baris Order"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Untaxed amount"
-msgstr "Total sebelum pajak"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree2
-#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
-msgid "Lines to Invoice"
-msgstr "Daftar untuk faktur"
-
-#. module: sale
-#: field:sale.order.line,product_uom_qty:0
-msgid "Quantity (UoM)"
-msgstr "Kuantitas"
-
-#. module: sale
-#: field:sale.order,create_date:0
-msgid "Creation Date"
-msgstr "Tanggal Pembuatan"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
-msgid "Miscellaneous"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree3
-msgid "Uninvoiced and Delivered Lines"
-msgstr "Baris Order belum terfakturkan dan belum terkirim"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Total :"
-msgstr "Total :"
-
-#. module: sale
-#: view:sale.report:0
-msgid "My Sales"
-msgstr "Sales Saya"
-
-#. module: sale
-#: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Invalid action !"
-msgstr "Tindakan tidak valid !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Extra Info"
-msgstr "Penjelasan lebih lanjut"
-
-#. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
-msgid "Pricelist"
-msgstr "Harga"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,product_uom_qty:0
-msgid "# of Qty"
-msgstr "# of Qty"
-
-#. module: sale
-#: code:addons/sale/sale.py:1327
-#, python-format
-msgid "Hour"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Date"
-msgstr "Tanggal Order"
-
-#. module: sale
-#: view:sale.order.line:0 view:sale.report:0 field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Dikirimkan"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Semua Penawaran"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Options"
-msgstr ""
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "September"
-msgstr "September"
-
-#. module: sale
-#: code:addons/sale/sale.py:632
-#, python-format
-msgid "You cannot confirm a sale order which has no line."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:1259
-#, python-format
-msgid ""
-"You have to select a pricelist or a customer in the sales form !\n"
-"Please set one before choosing a product."
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,categ_id:0
-msgid "Category of Product"
-msgstr "Produk Kategori"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Taxes :"
-msgstr "Pajak"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Stock Moves"
-msgstr "Stok Bergerak"
-
-#. module: sale
-#: field:sale.order,state:0 field:sale.report,state:0
-msgid "Order State"
-msgstr "Order Negara"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr "Apakah anda benar-benar ingin membuat faktur ?"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales By Month"
-msgstr "Penjualan berdasarkan Bulan"
-
-#. module: sale
-#: code:addons/sale/sale.py:1078
-#, python-format
-msgid "Could not cancel sales order line!"
-msgstr "Daftar penjualan tidak dapat di batalkan !"
-
-#. module: sale
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Keamanan hari"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "Pengadaan material yang dijual"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Create Final Invoice"
-msgstr "Buat Faktur Final"
-
-#. module: sale
-#: field:sale.order,partner_shipping_id:0
-msgid "Shipping Address"
-msgstr "Alamat Pengiriman"
-
-#. module: sale
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
-msgstr ""
-"Ini mengindikasikan bahwa order penjualan telah di kirim. Kolom ini di "
-"update hanya setelah penjadwalan telah di jalankan"
-
-#. module: sale
-#: field:sale.order,date_order:0
-msgid "Date"
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0
-msgid "Extended Filters..."
-msgstr "Filter Tambahan"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Exception"
-msgstr "Pengecualian"
-
-#. module: sale
-#: model:ir.model,name:sale.model_res_company
-msgid "Companies"
-msgstr "Perusahaan"
-
-#. module: sale
-#: help:sale.order,state:0
-msgid ""
-"Gives the state of the quotation or sales order. \n"
-"The exception state is automatically set when a cancel operation occurs in "
-"the invoice validation (Invoice Exception) or in the picking list process "
-"(Shipping Exception). \n"
-"The 'Waiting Schedule' state is set when the invoice is confirmed but "
-"waiting for the scheduler to run on the order date."
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:1272
-#, python-format
-msgid "No valid pricelist line found ! :"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "History"
-msgstr "Riwayat"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice on order after delivery"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,invoice_ids:0
-msgid ""
-"This is the list of invoices that have been generated for this sales order. "
-"The same sales order may have been invoiced in several times (by line for "
-"example)."
-msgstr ""
-"ini adalah daftar invoice yang telah dibuat untuk  ini sales order. Atas "
-"penjualan yang sama mungkin telah ditagihkan beberapa kali"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Your Reference"
-msgstr "Referensi Anda"
-
-#. module: sale
-#: help:sale.order,partner_order_id:0
-msgid ""
-"The name and address of the contact who requested the order or quotation."
-msgstr "Nama dan alamat kontak yang meminta order atau penawaran"
-
-#. module: sale
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-"Dimana anda menjanjikan kepada pelanggan masalah penambahan hari untuk "
-"keperluan keamanan"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Qty"
-msgstr "Qty"
-
-#. module: sale
-#: view:sale.order:0
-msgid "References"
-msgstr "Referensiya"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "My Sales Order Lines"
-msgstr ""
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
-#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
-#: view:sale.order.line:0 view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "Batal"
-
-#. module: sale
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr ""
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0 view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Buat Faktur"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Excluded"
-msgstr "Jumlah total diluar pajak"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order reference"
-msgstr ""
-
-#. module: sale
-#: view:sale.open.invoice:0
-msgid "You invoice has been successfully created!"
-msgstr "Faktur Anda telah berhasil dibuat !"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Partner"
-msgstr "Penjualan bedasarkan Partner"
-
-#. module: sale
-#: field:sale.order,partner_order_id:0
-msgid "Ordering Contact"
-msgstr "Kontak Pemesanan"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
-#: view:sale.open.invoice:0
-msgid "Open Invoice"
-msgstr "Buka Faktur"
-
-#. module: sale
-#: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
-msgid "Auto-email confirmed sale orders"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:413
-#, python-format
-msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
-msgstr "Tidak ditemukan jurnal penjualan untuk perusahaan :\"%s\" (id:%d)"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Penetapan Tugas"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "Dalam pemesanan"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "Berdasarkan pengiriman atau dalam jumlah pemesanan"
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr ""
-
-#. module: sale
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "Penjemputan terkait"
-
-#. module: sale
-#: field:sale.config.picking_policy,name:0
-msgid "Name"
-msgstr "Nama"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Shipping address :"
-msgstr "Alamat pengiriman :"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-msgid "Sales per Customer in last 90 days"
-msgstr "Penjualan per klien dalam 90 hari terakhir"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_quotation0
-msgid "Draft state of sales order"
-msgstr "draft order penjualan"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "Buat pesanan pengiriman"
-
-#. module: sale
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Cannot delete a sales order line which is in state '%s'!"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoS)"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "Jumlah total termasuk pajak"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_packing0
-msgid "Create Pick List"
-msgstr "Buat daftar penjemputan"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered date of the sales order"
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Product Category"
-msgstr "Penjualan berdasarkan Produk Kategori"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_confirmquotation0
-msgid "Confirm Quotation"
-msgstr "Konfirmasi Penawaran"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:63
-#, python-format
-msgid "Error"
-msgstr "Kesalahan"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
-msgid "Group By..."
-msgstr "Dikelompokan berdasarkan ..."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Invoice"
-msgstr "Buat faktur ulang"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Pengiriman pada faktur"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Waiting Schedule"
-msgstr "Jadwal Tunggu"
-
-#. module: sale
+#. module: sale_stock
 #: field:sale.order.line,type:0
 msgid "Procurement Method"
 msgstr "Metode Pengadaan"
 
-#. module: sale
-#: model:process.node,name:sale.process_node_packinglist0
-msgid "Pick List"
-msgstr "Daftar Jemput"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Set to Draft"
-msgstr "Atur ke draft"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "Dokumen pindah ke output atau kepada pelanggan"
-
-#. module: sale
-#: model:email.template,body:sale.email_template_edi_sale
-msgid ""
-"\n"
-"Hello${object.partner_order_id.name and ' ' or "
-"''}${object.partner_order_id.name or ''},\n"
-"\n"
-"Here is your order confirmation for ${object.partner_id.name}:\n"
-"       | Order number: *${object.name}*\n"
-"       | Order total: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       | Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
-"and '<%s>'%(object.user_id.user_email) or ''}\n"
-"\n"
-"You can view the order confirmation, download it and even pay online using "
-"the following link:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"% if object.order_policy in ('prepaid','manual') and "
-"object.company_id.paypal_account:\n"
-"<% \n"
-"comp_name = quote(object.company_id.name)\n"
-"order_name = quote(object.name)\n"
-"paypal_account = quote(object.company_id.paypal_account)\n"
-"order_amount = quote(str(object.amount_total))\n"
-"cur_name = quote(object.pricelist_id.currency_id.name)\n"
-"paypal_url = \"https://www.paypal.com/cgi-"
-"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
-"unt=%s\" \\\n"
-"             "
-"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
-"_%s\" % \\\n"
-"             "
-"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
-"e)\n"
-"%>\n"
-"It is also possible to directly pay with Paypal:\n"
-"    ${paypal_url}\n"
-"% endif\n"
-"\n"
-"If you have any question, do not hesitate to contact us.\n"
-"\n"
-"\n"
-"Thank you for choosing ${object.company_id.name}!\n"
-"\n"
-"\n"
-"--\n"
-"${object.user_id.name} ${object.user_id.user_email and "
-"'<%s>'%(object.user_id.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
-"            "
-msgstr ""
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_validate0
-msgid "Validate"
-msgstr "Validasi"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Confirm Order"
-msgstr "konnfirmasi Order"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "Buat Order Pengadaan"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
-msgid "Taxes"
-msgstr "Pajak"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order ready to be invoiced"
-msgstr ""
-
-#. module: sale
-#: help:sale.order,create_date:0
-msgid "Date on which sales order is created."
-msgstr "Tanggal pesanan penjualan dibuat"
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_move
-msgid "Stock Move"
-msgstr "Perpindahan Stok"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create Invoices"
-msgstr "Buat Faktur"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current month"
-msgstr ""
-
-#. module: sale
-#: report:sale.order:0
-msgid "Fax :"
-msgstr "Fax :"
-
-#. module: sale
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
-msgstr ""
-
-#. module: sale
-#: field:sale.advance.payment.inv,amount:0
-msgid "Advance Amount"
-msgstr "Kenaikan jumlah"
-
-#. module: sale
-#: field:sale.config.picking_policy,charge_delivery:0
-msgid "Do you charge the delivery?"
-msgstr ""
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Kwantitas Terkirim"
-
-#. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Sales Orders"
-msgstr "Tagihan/Invoice berdasakan pada Order Penjualan"
-
-#. module: sale
-#: code:addons/sale/sale.py:331
-#, python-format
-msgid ""
-"If you change the pricelist of this order (and eventually the currency), "
-"prices of existing order lines will not be updated."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_picking
-msgid "Picking List"
-msgstr "Daftar Jemput"
-
-#. module: sale
-#: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
-#: code:addons/sale/sale.py:632 code:addons/sale/sale.py:1016
-#: code:addons/sale/sale.py:1033
-#, python-format
-msgid "Error !"
-msgstr "Ada Kesalahan !!!"
-
-#. module: sale
-#: code:addons/sale/sale.py:603
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Order Penjualan tidak dapat di batalkan !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoM)"
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered Year of the sales order"
-msgstr ""
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "July"
-msgstr "Juli"
-
-#. module: sale
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Pengadaan"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Shipping Exception"
-msgstr "Pengecualian dalam pengiriman"
-
-#. module: sale
-#: code:addons/sale/sale.py:1156
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:599
 #, python-format
 msgid "Picking Information ! : "
 msgstr ""
 
-#. module: sale
-#: field:sale.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "Mengelompokan Faktur"
+#. module: sale_stock
+#: model:process.node,name:sale_stock.process_node_packinglist0
+msgid "Pick List"
+msgstr "Daftar Jemput"
 
-#. module: sale
-#: field:sale.order,order_policy:0
-msgid "Invoice Policy"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_config_picking_policy
-#: view:sale.config.picking_policy:0
-msgid "Setup your Invoicing Method"
-msgstr ""
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoice0
-msgid "To be reviewed by the accountant."
-msgstr "Untuk di review oleh akuntan"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Reference UoM"
-msgstr "Referensi UoM"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid ""
-"This tool will help you to install the right module and configure the system "
-"according to the method you use to invoice your customers."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line_make_invoice
-msgid "Sale OrderLine Make_invoice"
-msgstr "Penjualan Orderline Buat_invoice"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Invoice Exception"
-msgstr "Faktur pengecualian"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorder0
-msgid "Drives procurement and invoicing"
-msgstr "mendrive pengadaan dan faktur"
-
-#. module: sale
-#: field:sale.order,invoiced:0
-msgid "Paid"
-msgstr "Dibayarkan"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
-msgid "Sales Analysis"
-msgstr "Analisa Penjualan"
-
-#. module: sale
-#: code:addons/sale/sale.py:1151
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:594
 #, python-format
 msgid ""
 "You selected a quantity of %d Units.\n"
@@ -1421,394 +70,139 @@ msgid ""
 "EAN: %s Quantity: %s Type of ul: %s"
 msgstr ""
 
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Packing"
-msgstr "Pengemasan ulang"
+#. module: sale_stock
+#: model:process.node,note:sale_stock.process_node_packinglist0
+msgid "Document of the move to the output or to the customer."
+msgstr "Dokumen pindah ke output atau kepada pelanggan"
 
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "Properti"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Quotation"
-msgstr "Quotation"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
-"if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Salesman akan membuat faktur secara manual, jika kebijakan pengiriman "
-"pesanan penjualan  adalah  'Pengiriman dan Manual dalam Penyelesaian'. "
-"Faktur dibuat 'Pembayaran sebelum Pengiriman' secara otomatis  jika "
-"kebijakan pelayaran."
-
-#. module: sale
-#: help:sale.config.picking_policy,order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Dapat menghasilkan tagihan berdasarkan pesanan penjualan atau berdasarkan  "
-"pengiriman."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Confirmed sale order lines, not yet delivered"
+#. module: sale_stock
+#: field:sale.config.settings,group_multiple_shops:0
+msgid "Manage multiple shops"
 msgstr ""
 
-#. module: sale
-#: code:addons/sale/sale.py:473
-#, python-format
-msgid "Customer Invoices"
-msgstr ""
+#. module: sale_stock
+#: model:process.transition.action,name:sale_stock.process_transition_action_validate0
+msgid "Validate"
+msgstr "Validasi"
 
-#. module: sale
-#: model:process.process,name:sale.process_process_salesprocess0
-#: view:sale.order:0 view:sale.report:0
-msgid "Sales"
-msgstr "Sales"
-
-#. module: sale
-#: report:sale.order:0 field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Harga Satuan"
-
-#. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
-#: selection:sale.order.line,state:0 selection:sale.report,state:0
-msgid "Done"
-msgstr "Selesai"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "Invoice"
-
-#. module: sale
-#: code:addons/sale/sale.py:1171
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:679
 #, python-format
 msgid ""
-"You have to select a customer in the sales form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
-"Anda harus memilih pelanggan dalam formulir penjualan!\n"
-"Silakan set satu pelanggan sebelum memilih produk."
-
-#. module: sale
-#: field:sale.order,origin:0
-msgid "Source Document"
-msgstr "Sumber berkas"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "To Do"
-msgstr "Yang harus dilakukan .."
-
-#. module: sale
-#: field:sale.order,picking_policy:0
-msgid "Picking Policy"
-msgstr "Kebijakan pengambilan"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Berkas yang pindah pada rekanan"
-
-#. module: sale
-#: help:sale.order,amount_untaxed:0
-msgid "The amount without tax."
-msgstr "Jumlah tanpa pajak"
-
-#. module: sale
-#: code:addons/sale/sale.py:604
-#, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
-"Anda harus membatalkan terlebih dahulu  semua pengambilan yang ada  pada "
-"order penjualan"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Pembayaran faktur penjualan"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,month:0
-msgid "Month"
-msgstr "Bulan"
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+"You cannot make an advance on a sales order                          that is "
+"defined as 'Automatic Invoice after delivery'."
 msgstr ""
 
-#. module: sale
-#: view:sale.order.line:0 field:sale.order.line,product_id:0
-#: view:sale.report:0 field:sale.report,product_id:0
-msgid "Product"
-msgstr "Produk"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Pembatalan penugasan"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
-msgstr "sale.config.picking_policy"
-
-#. module: sale
-#: view:account.invoice.report:0 view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_turnover_by_month
-msgid "Monthly Turnover"
-msgstr ""
-
-#. module: sale
-#: field:sale.order,invoice_quantity:0
-msgid "Invoice on"
-msgstr "Faktur pada .."
-
-#. module: sale
-#: report:sale.order:0
-msgid "Date Ordered"
-msgstr "Tanggal pemesanan"
-
-#. module: sale
-#: field:sale.order.line,product_uos:0
-msgid "Product UoS"
-msgstr "Produk UoS"
-
-#. module: sale
-#: selection:sale.report,state:0
-msgid "Manual In Progress"
-msgstr "Proses Manual sedang berlangsung"
-
-#. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Product UoM"
-msgstr "Produk UoM"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Logistic"
-msgstr "Logistik"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order"
-msgstr "Pesanan"
-
-#. module: sale
-#: code:addons/sale/sale.py:1017
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
-#, python-format
-msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr ""
-"Disini tidak ditemukan akun pemasukan untuk jenis produk :\"%s\"(id:%d)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "Abaikan pengecualian"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"Depending on the Invoicing control of the sales order, the invoice can be "
-"based on delivered or on ordered quantities. Thus, a sales order can "
-"generates an invoice or a delivery order as soon as it is confirmed by the "
-"salesman."
-msgstr ""
-"Tergantung pada kontrol Faktur dari pesanan penjualan, faktur dapat "
-"didasarkan pada jumlah yang disampaikan  atau memerintahkan. Dengan "
-"demikian, perintah penjualan dapat menghasilkan  faktur  atau delivery order "
-" secepat  itu dikonfirmasi  oleh penjual"
-
-#. module: sale
-#: code:addons/sale/sale.py:1251
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Anda berencana menjual %.2f %s tapi anda hanya mempunyai %.2f %s yang "
-"tersedia !\n"
-"Stok sebenarnya  %.2f %s. (tanpa pemesanan)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "States"
-msgstr "Status"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: sale
-#: field:sale.order,client_order_ref:0
-msgid "Customer Reference"
-msgstr "Referensi Klien"
-
-#. module: sale
-#: field:sale.order,amount_total:0 view:sale.order.line:0
-msgid "Total"
-msgstr "Total"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order.line:0
-msgid "Price"
-msgstr "Harga"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_deliver0
-msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
-msgstr ""
-"Tergantung dari konfigurasi  lokasi output, perpindahan antara daerah output "
-"klien selesai melalui pemesanan pengiriman secara manual ataupun secara "
-"otomatis"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Pay before delivery"
-msgstr ""
-
-#. module: sale
-#: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
-msgid "Sales Dashboard"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
-#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
-msgid "Make Invoices"
-msgstr "Buat Faktur"
-
-#. module: sale
-#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
-msgid "To Invoice"
-msgstr "Pada Faktur"
-
-#. module: sale
-#: help:sale.order,date_confirm:0
-msgid "Date on which sales order is confirmed."
-msgstr "Tanggal dimana order penjualan di konfirmasi"
-
-#. module: sale
-#: field:sale.order,project_id:0
-msgid "Contract/Analytic Account"
-msgstr ""
-
-#. module: sale
-#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
-#: view:sale.report:0 field:sale.report,company_id:0
-#: field:sale.shop,company_id:0
-msgid "Company"
-msgstr "Perusahaan"
-
-#. module: sale
-#: field:sale.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "Tanggal Invoice"
-
-#. module: sale
-#: help:sale.advance.payment.inv,amount:0
-msgid "The amount to be invoiced in advance."
-msgstr "Jumlah harga yang di fakturkan"
-
-#. module: sale
-#: code:addons/sale/sale.py:1269
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product and quantity.\n"
-"You have to change either the product, the quantity or the pricelist."
-msgstr ""
-
-#. module: sale
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of picking that has been generated for this sales order."
-msgstr ""
-"Ini adalah daftar pengambilan yang di hasilkan untuk order penjualan saat ini"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create invoices"
-msgstr "Buat Faktur"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Net Total :"
-msgstr "Total bersih"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr "Dibatalkan"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr ""
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
-#: view:sale.report:0 field:sale.report,shop_id:0
+#. module: sale_stock
+#: model:ir.ui.menu,name:sale_stock.menu_action_shop_form
 msgid "Shop"
 msgstr "Toko"
 
-#. module: sale
-#: field:sale.report,date_confirm:0
-msgid "Date Confirm"
-msgstr "Tanggal konfirmasi"
+#. module: sale_stock
+#: model:process.transition,name:sale_stock.process_transition_saleprocurement0
+msgid "Create Procurement Order"
+msgstr "Buat Order Pengadaan"
 
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
+#. module: sale_stock
+#: field:stock.picking.out,sale_id:0
+msgid "Sale Order"
+msgstr ""
+
+#. module: sale_stock
+#: model:process.transition,note:sale_stock.process_transition_saleorderprocurement0
+msgid ""
+"For every sales order line, a procurement order is created to supply the "
+"sold product."
+msgstr ""
+"Untuk setiap daftar pemesanan, a order pembelian dibuat untuk  persediaan  "
+"produk yang terjual."
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:678
 #, python-format
-msgid "Warning"
-msgstr "Peringatan"
+msgid "Error!"
+msgstr ""
 
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
-msgid "Sales by Month"
-msgstr "Penjualan berdasarkan penjualan"
+#. module: sale_stock
+#: field:sale.order,picking_policy:0
+msgid "Shipping Policy"
+msgstr "Kebijakan dalam pengiriman"
 
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_order0
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
+#. module: sale_stock
+#: help:sale.order,incoterm:0
+msgid ""
+"Incoterm which stands for 'International Commercial terms' implies its a "
+"series of sales terms which are used in the commercial transaction."
+msgstr ""
+"Incoterms yang merupakan singkatan dari  'istilah Komersial Internasional' "
+"menyiratkan seri istilah penjualan yang digunakan dalam transaksi komersial."
+
+#. module: sale_stock
+#: model:process.node,note:sale_stock.process_node_saleorderprocurement0
+msgid "Drives procurement orders for every sales order line."
+msgstr "meningkatkan order pengadaan pada setiap daftar order penjualan"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_move
+msgid "Stock Move"
+msgstr "Perpindahan Stok"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:164
+#, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,module_project_timesheet:0
+msgid "Project Timesheet"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,module_delivery:0
+msgid ""
+"Allows you to add delivery methods in sale orders and delivery orders.\n"
+"                You can define your own carrier and delivery grids for "
+"prices.\n"
+"                This installs the module delivery."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:647
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: sale_stock
+#: model:process.node,name:sale_stock.process_node_saleprocurement0
+msgid "Procurement Order"
+msgstr "Order procurement"
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on deliveries"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
 #: field:stock.picking,sale_id:0
 msgid "Sales Order"
 msgstr "Sales order"
 
-#. module: sale
-#: field:sale.order.line,product_uos_qty:0
-msgid "Quantity (UoS)"
-msgstr "Kwantitas (UoS)"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines that are in 'done' state"
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking_out
+#: view:sale.order:0
+msgid "Delivery Orders"
 msgstr ""
 
-#. module: sale
-#: model:process.transition,note:sale.process_transition_packing0
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order_line
+#: field:stock.move,sale_line_id:0
+msgid "Sales Order Line"
+msgstr "Daftar order penjualan"
+
+#. module: sale_stock
+#: model:process.transition,note:sale_stock.process_transition_packing0
 msgid ""
 "The Pick List form is created as soon as the sales order is confirmed, in "
 "the same time as the procurement order. It represents the assignment of "
@@ -1820,111 +214,129 @@ msgstr ""
 "merupakan  penugasan  bagian  untuk  urutan  penjualan. Ada 1 daftar "
 "pengambikab dengan  daftar sales order dengan ketersediaan  suku cadang."
 
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Confirmed"
-msgstr "Dikonfirmasi"
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Customer"
+msgstr "Customer"
 
-#. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Main Method Based On"
-msgstr ""
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_confirm0
-msgid "Confirm"
-msgstr "Konfirmasi"
-
-#. module: sale
+#. module: sale_stock
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
 msgstr "Error! Anda tidak dapat membuat perusahaan secara berulang ulang"
 
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_product_total_price
-msgid "Sales by Product's Category in last 90 days"
-msgstr "Penjualan berdasarkan produk kategori dalam 90 hari terakhir"
+#. module: sale_stock
+#: field:sale.config.settings,group_invoice_so_lines:0
+msgid "Generate invoices based on the sale order"
+msgstr ""
 
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Detail Invoice"
+#. module: sale_stock
+#: help:res.company,security_lead:0
+msgid ""
+"This is the days added to what you promise to customers for security purpose"
+msgstr ""
+"Dimana anda menjanjikan kepada pelanggan masalah penambahan hari untuk "
+"keperluan keamanan"
 
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Sales Order Lines"
-msgstr "Baris Order Penjualan"
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_stock_picking
+msgid "Picking List"
+msgstr "Daftar Jemput"
 
-#. module: sale
+#. module: sale_stock
+#: field:sale.shop,warehouse_id:0
+msgid "Warehouse"
+msgstr "Gudang"
+
+#. module: sale_stock
+#: model:process.transition.action,name:sale_stock.process_transition_action_forceassignation0
+msgid "Force Assignation"
+msgstr "Penetapan Tugas"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_order_policy:0
+msgid "The default invoicing method is"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:233
+#, python-format
+msgid "Could not cancel sales order !"
+msgstr "Order Penjualan tidak dapat di batalkan !"
+
+#. module: sale_stock
 #: field:sale.order.line,delay:0
 msgid "Delivery Lead Time"
 msgstr "Lama Waktu Pengiriman"
 
-#. module: sale
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Pengaturan"
+#. module: sale_stock
+#: model:process.node,note:sale_stock.process_node_deliveryorder0
+msgid "Document of the move to the customer."
+msgstr "Berkas yang pindah pada rekanan"
 
-#. module: sale
-#: code:addons/sale/edi/sale_order.py:146
-#, python-format
-msgid "EDI Pricelist (%s)"
-msgstr ""
-
-#. module: sale
+#. module: sale_stock
 #: view:sale.order:0
-msgid "Print Order"
+msgid "View Delivery Order"
 msgstr ""
 
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current year"
+#. module: sale_stock
+#: field:sale.order.line,move_ids:0
+msgid "Inventory Moves"
+msgstr "Perpindahan Barang"
+
+#. module: sale_stock
+#: view:sale.config.settings:0
+msgid "Default Options"
 msgstr ""
 
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
-#, python-format
+#. module: sale_stock
+#: field:sale.config.settings,module_project_mrp:0
+msgid "Project MRP"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.order.line,type:0
 msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Faktur tidak dapat dibuat untuk Sales Order Line karena salah satu alasan "
-"berikut:\n"
-"1.The keadaan baris ini pesanan penjualan adalah baik \"draft\" atau "
-"\"cancel\"!\n"
-"2.Aktifitas Line Order Penjualan Faktur!"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale order lines done"
+"If 'on order', it triggers a procurement when the sale order is confirmed to "
+"create a task, purchase order or manufacturing order linked to this sale "
+"order line."
 msgstr ""
 
-#. module: sale
-#: field:sale.order.line,th_weight:0
-msgid "Weight"
-msgstr "Berat"
+#. module: sale_stock
+#: model:process.transition,note:sale_stock.process_transition_invoiceafterdelivery0
+msgid ""
+"The invoice is created automatically if the shipping policy is 'Invoice from "
+"pick' or 'Invoice on order after delivery'."
+msgstr ""
+"invoice dibuat secara otomatis jika kebijakan pengiriman adalah 'invoicedari "
+"penjemputan' atau 'invoice setelah pengiriman\""
 
-#. module: sale
-#: view:sale.open.invoice:0 view:sale.order:0 field:sale.order,invoice_ids:0
-msgid "Invoices"
-msgstr "Invoices"
+#. module: sale_stock
+#: field:sale.order.line,procurement_id:0
+msgid "Procurement"
+msgstr "Pengadaan"
 
-#. module: sale
-#: selection:sale.report,month:0
-msgid "December"
-msgstr "Desember"
+#. module: sale_stock
+#: view:sale.report:0
+#: field:sale.report,shipped:0
+#: field:sale.report,shipped_qty_1:0
+msgid "Shipped"
+msgstr "Dikirimkan"
 
-#. module: sale
-#: field:sale.config.picking_policy,config_logo:0
-msgid "Image"
-msgstr "Gambar"
+#. module: sale_stock
+#: help:sale.config.settings,group_invoice_so_lines:0
+msgid ""
+"To allow your salesman to make invoices for sale order lines using the menu "
+"'Lines to Invoice'."
+msgstr ""
 
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleprocurement0
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:260
+#, python-format
+msgid "invalid mode for test_state"
+msgstr "mode tidak sah untuk test_state"
+
+#. module: sale_stock
+#: model:process.transition,note:sale_stock.process_transition_saleprocurement0
 msgid ""
 "A procurement order is automatically created as soon as a sales order is "
 "confirmed or as the invoice is paid. It drives the purchasing and the "
@@ -1935,159 +347,148 @@ msgstr ""
 "dikonfirmasi atau sebagai faktur dibayar. Ini membuat pembelian dan produksi "
 "produk sehubungan dengan  peraturan  dan parameter urutan's penjualan "
 
-#. module: sale
-#: view:sale.order.line:0
-msgid "Uninvoiced"
-msgstr "Belum Difakturkan"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
-#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
-#: view:sale.report:0 field:sale.report,user_id:0
-msgid "Salesman"
-msgstr "Sales"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree
-msgid "Old Quotations"
-msgstr "Quotations Lama"
-
-#. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Jumlah sebelum kena pajak"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:170
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0 view:sale.order:0
-#, python-format
-msgid "Advance Invoice"
-msgstr "Faktur"
-
-#. module: sale
-#: code:addons/sale/sale.py:624
-#, python-format
-msgid "The sales order '%s' has been cancelled."
-msgstr "Order penjualan '%s' telah dibatalkan"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "Rancangan"
-
-#. module: sale
-#: help:sale.order.line,state:0
-msgid ""
-"* The 'Draft' state is set when the related sales order in draft state.      "
-"               \n"
-"* The 'Confirmed' state is set when the related sales order is confirmed.    "
-"                 \n"
-"* The 'Exception' state is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' state is set when the sales order line has been picked.         "
-"            \n"
-"* The 'Cancelled' state is set when a user cancel the sales order related."
+#. module: sale_stock
+#: field:sale.config.settings,group_invoice_deli_orders:0
+msgid "Generate invoices after and based on delivery orders"
 msgstr ""
-"Kondisi * The 'Draft' diatur ketika sales order terkait di dalam status "
-"draft.\n"
-"Kondisi * The 'Dikonfirmasi' ini diset ketika urutan penjualan tersebut "
-"dikonfirmasi.\n"
-"* Pada Status 'Exception' ini diset ketika urutan penjualan tersebut "
-"ditetapkan sebagai pengecualian.\n"
-"* Pada Status 'Selesai' ini diset ketika baris pesanan penjualan telah "
-"diambil.\n"
-"* Pada Status 'Dibatalkan' diatur ketika user membatalkan pesanan penjualan "
-"yang terkait."
 
-#. module: sale
-#: help:sale.order,amount_tax:0
-msgid "The tax amount."
-msgstr "jumlah pajak"
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:499
+#, python-format
+msgid "Order <b>delivered</b>."
+msgstr ""
 
-#. module: sale
+#. module: sale_stock
+#: field:sale.config.settings,module_delivery:0
+msgid "Allow adding shipping costs"
+msgstr ""
+
+#. module: sale_stock
 #: view:sale.order:0
-msgid "Packings"
-msgstr "kemasan"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines ready to be invoiced"
+msgid "days"
 msgstr ""
 
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in last month"
+#. module: sale_stock
+#: field:sale.order.line,product_packaging:0
+msgid "Packaging"
+msgstr "Kemasan"
+
+#. module: sale_stock
+#: field:sale.config.settings,default_picking_policy:0
+msgid "Deliver all at once when all products are available."
 msgstr ""
 
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_email_templates
-#: model:ir.ui.menu,name:sale.menu_email_templates
-msgid "Email Templates"
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_invoice_deli_orders
+msgid "Enable Invoicing Delivery orders"
 msgstr ""
 
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
-#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
-msgid "Sales Orders"
-msgstr "Order Penjualan"
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:689
+#, python-format
+msgid "Advance of %s %%"
+msgstr ""
 
-#. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:601
+#, python-format
+msgid "Configuration Error !"
+msgstr ""
+
+#. module: sale_stock
+#: field:res.company,security_lead:0
+msgid "Security Days"
+msgstr "Keamanan hari"
+
+#. module: sale_stock
+#: model:process.transition,name:sale_stock.process_transition_saleorderprocurement0
+msgid "Procurement of sold material"
+msgstr "Pengadaan material yang dijual"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_shop
 msgid "Sales Shop"
 msgstr "Toko Penjualan"
 
-#. module: sale
-#: selection:sale.report,month:0
-msgid "November"
-msgstr "November"
+#. module: sale_stock
+#: help:sale.order,shipped:0
+msgid ""
+"It indicates that the sales order has been delivered. This field is updated "
+"only after the scheduler(s) have been launched."
+msgstr ""
+"Ini mengindikasikan bahwa order penjualan telah di kirim. Kolom ini di "
+"update hanya setelah penjadwalan telah di jalankan"
 
-#. module: sale
-#: field:sale.advance.payment.inv,product_id:0
-msgid "Advance Product"
-msgstr "Produk advance"
+#. module: sale_stock
+#: field:sale.order.line,property_ids:0
+msgid "Properties"
+msgstr "Properti"
 
-#. module: sale
+#. module: sale_stock
+#: constraint:stock.move:0
+msgid "You must assign a serial number for this product."
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,group_mrp_properties:0
+msgid "Product properties on order lines"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,default_order_policy:0
+msgid ""
+"You can generate invoices based on sales orders or based on shippings."
+msgstr ""
+"Dapat menghasilkan tagihan berdasarkan pesanan penjualan atau berdasarkan  "
+"pengiriman."
+
+#. module: sale_stock
+#: constraint:stock.move:0
+msgid "You cannot move products from or to a location of the type view."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Statistik order penjualan"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_res_company
+msgid "Companies"
+msgstr "Perusahaan"
+
+#. module: sale_stock
+#: help:sale.config.settings,task_work:0
+msgid ""
+"Lets you transfer the entries under tasks defined for Project Management to\n"
+"                the Timesheet line entries for particular date and "
+"particular user  with the effect of creating, editing and deleting either "
+"ways\n"
+"                and to automatically creates project tasks from procurement "
+"lines.\n"
+"                This installs the modules project_timesheet and project_mrp."
+msgstr ""
+
+#. module: sale_stock
 #: view:sale.order:0
-msgid "Compute"
-msgstr "Hitung"
+msgid "View Invoice"
+msgstr ""
 
-#. module: sale
-#: code:addons/sale/sale.py:618
+#. module: sale_stock
+#: sql_constraint:stock.picking:0
+#: sql_constraint:stock.picking.out:0
+msgid "Reference must be unique per Company!"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:696
+#: code:addons/sale_stock/sale_stock.py:698
 #, python-format
-msgid "You must first cancel all invoices attached to this sales order."
-msgstr ""
-"Anda harus terlebih dahulu membatalkan  semua  faktur  yang dilampirkan "
-"dalam sales order."
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "January"
-msgstr "Januari"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
-msgid "Sales Order in Progress"
-msgstr "Order Penjualan dalam Penyelesaian"
-
-#. module: sale
-#: help:sale.order,origin:0
-msgid "Reference of the document that generated this sales order request."
-msgstr ""
-"Referensi dokumen yang dihasilkan dari permintaan  pesanan  penjualan."
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,delay:0
-msgid "Commitment Delay"
-msgstr "Kesepakatan yang ditunda"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Deliver & invoice on demand"
+msgid "Advance of %s %s"
 msgstr ""
 
-#. module: sale
-#: model:process.node,note:sale.process_node_saleprocurement0
+#. module: sale_stock
+#: model:process.node,note:sale_stock.process_node_saleprocurement0
 msgid ""
 "One Procurement order for each sales order line and for each of the "
 "components."
@@ -2095,574 +496,241 @@ msgstr ""
 "Satu Pengadaan Agar setiap daftar pesanan penjualan dan untuk masing-masing  "
 "komponen."
 
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_assign0
+#. module: sale_stock
+#: model:process.transition.action,name:sale_stock.process_transition_action_assign0
 msgid "Assign"
 msgstr "Menetapkan"
 
-#. module: sale
-#: field:sale.report,date:0
-msgid "Date Order"
-msgstr "Tanggal Pemesanan"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "Confirmed sales order to invoice."
-msgstr "Sales order untuk invoice dikonfirmasi."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order that haven't yet been confirmed"
-msgstr ""
-
-#. module: sale
-#: code:addons/sale/sale.py:322
-#, python-format
-msgid "The sales order '%s' has been set in draft state."
-msgstr "'%s ' sales order telah diatur di  bagian  draf"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "dari stok"
-
-#. module: sale
-#: view:sale.open.invoice:0
-msgid "Close"
-msgstr "Selesai"
-
-#. module: sale
-#: code:addons/sale/sale.py:1261
-#, python-format
-msgid "No Pricelist ! : "
-msgstr ""
-
-#. module: sale
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Sudah Terkirim"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Anda harus menetapkan lot produksi untuk produk  ini"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_shop_form
-msgid ""
-"If you have more than one shop reselling your company products, you can "
-"create and manage that from here. Whenever you will record a new quotation "
-"or sales order, it has to be linked to a shop. The shop also defines the "
-"warehouse from which the products will be delivered for each particular "
-"sales."
-msgstr ""
-"Jika Anda memiliki lebih dari satu toko menjual produk perusahaan Anda,  "
-"Anda dapat  membuat  dan mengelolanya  dari sini. Setiap kali Anda akan "
-"mencatat penawaran baru atau order penjualan, itu harus dikaitkan dengan "
-"toko yang bersangkutan. Toko ini juga mendefinisikan  gudang  dari mana "
-"produk tersebut akan dikirim untuk setiap penjualan tertentu"
-
-#. module: sale
-#: help:sale.order,invoiced:0
-msgid "It indicates that an invoice has been paid."
-msgstr "Ini mengindikasikan bahwa faktur telah di bayar"
-
-#. module: sale
-#: report:sale.order:0 field:sale.order.line,name:0
-msgid "Description"
-msgstr "Gambaran"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "May"
-msgstr "Mei"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
-msgid "Customer"
-msgstr "Customer"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance"
-msgstr "Advance"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "February"
-msgstr "Februari"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "April"
-msgstr "April"
-
-#. module: sale
-#: view:sale.shop:0
-msgid "Accounting"
-msgstr "Akunting"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Search Sales Order"
-msgstr "Pencarian Order Penjualan"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "Permintaan Order Penjualan"
-
-#. module: sale
-#: code:addons/sale/sale.py:1255
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:643
 #, python-format
 msgid "Not enough stock ! : "
 msgstr ""
 
-#. module: sale
-#: report:sale.order:0 field:sale.order,payment_term:0
-msgid "Payment Term"
-msgstr "Termin Pembayaran"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_all
+#. module: sale_stock
+#: help:sale.order.line,delay:0
 msgid ""
-"This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
-"having invoiced yet. If you want to analyse your turnover, you should use "
-"the Invoice Analysis report in the Accounting application."
+"Number of days between the order confirmation the shipping of the products "
+"to the customer"
 msgstr ""
-"Laporan ini melakukan analisis pada penawaran Anda dan pesanan penjualan. "
-"Analisis pendapatan penjualan Anda  memeriksa  dan menyortir itu dengan "
-"kriteria kelompok yang berbeda  (salesman, mitra, produk, dll) Gunakan "
-"laporan ini untuk melakukan analisis penjualan tidak memiliki  tagihan  "
-"belum. Jika Anda ingin menganalisis  omset  Anda, Anda harus menggunakan  "
-"laporan  Analisis  Faktur  dalam  aplikasi  Akuntansi"
+"Jumlah hari antara konfirmasi pemesanan pengiriman produk kepada pelanggan"
 
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation N°"
-msgstr "Quotation N°"
+#. module: sale_stock
+#: selection:sale.order.line,type:0
+msgid "from stock"
+msgstr "dari stok"
 
-#. module: sale
-#: field:sale.order,picked_rate:0 view:sale.report:0
+#. module: sale_stock
+#: help:sale.config.settings,default_picking_policy:0
+msgid ""
+"Sales order by default will be configured to deliver all products at once "
+"instead of delivering each product when it is available. This may have an "
+"impact on the shipping price."
+msgstr ""
+
+#. module: sale_stock
+#: selection:sale.config.settings,default_order_policy:0
+msgid "Invoice based on sales orders"
+msgstr ""
+
+#. module: sale_stock
+#: model:process.node,name:sale_stock.process_node_invoiceafterdelivery0
+msgid "Invoice"
+msgstr "Invoice"
+
+#. module: sale_stock
+#: model:process.transition.action,name:sale_stock.process_transition_action_cancel1
+#: model:process.transition.action,name:sale_stock.process_transition_action_cancel2
+#: view:sale.order:0
+msgid "Cancel"
+msgstr "Batal"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:164
+#, python-format
+msgid ""
+"In order to delete a confirmed sales order, you must cancel it.\n"
+"To do so, you must first cancel related picking for delivery orders."
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order.line,number_packages:0
+msgid "Number Packages"
+msgstr "Nomor Kemasan"
+
+#. module: sale_stock
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order,shipped:0
+msgid "Delivered"
+msgstr "Sudah Terkirim"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:234
+#, python-format
+msgid "You must first cancel all picking attached to this sales order."
+msgstr ""
+"Anda harus membatalkan terlebih dahulu  semua pengambilan yang ada  pada "
+"order penjualan"
+
+#. module: sale_stock
+#: model:process.transition,name:sale_stock.process_transition_invoiceafterdelivery0
+msgid "Create Invoice"
+msgstr "Buat Faktur"
+
+#. module: sale_stock
+#: help:sale.config.settings,group_mrp_properties:0
+msgid "Allows you to tag sale order lines with properties."
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.config.settings,task_work:0
+msgid "Prepare invoices based on task's activities"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Pembayaran faktur penjualan"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:660
+#, python-format
+msgid "You must first cancel stock moves attached to this sales order line."
+msgstr ""
+"Anda harus terlebih dahulu membatalkan stock bergerak yang ada  pada daftar "
+"penjualan."
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:590
+#, python-format
+msgid "(n/a)"
+msgstr "tidak tersedia"
+
+#. module: sale_stock
+#: field:sale.order,incoterm:0
+msgid "Incoterm"
+msgstr "Incoterm"
+
+#. module: sale_stock
+#: constraint:stock.move:0
+msgid "You try to assign a lot which is not from the same product."
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:659
+#, python-format
+msgid "Cannot cancel sales order line!"
+msgstr ""
+
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Deliver"
+msgstr ""
+
+#. module: sale_stock
+#: model:process.transition.action,name:sale_stock.process_transition_action_cancelassignation0
+msgid "Cancel Assignation"
+msgstr "Pembatalan penugasan"
+
+#. module: sale_stock
+#: selection:sale.order.line,type:0
+msgid "on order"
+msgstr "Dalam pemesanan"
+
+#. module: sale_stock
+#: model:process.node,note:sale_stock.process_node_invoiceafterdelivery0
+msgid "Based on the shipped or on the ordered quantities."
+msgstr "Berdasarkan pengiriman atau dalam jumlah pemesanan"
+
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver all products at once"
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order,picking_ids:0
+msgid "Related Picking"
+msgstr "Penjemputan terkait"
+
+#. module: sale_stock
+#: sql_constraint:res.company:0
+msgid "The company name must be unique !"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.order,picking_ids:0
+msgid ""
+"This is a list of delivery orders that has been generated for this sales "
+"order."
+msgstr ""
+
+#. module: sale_stock
+#: model:process.node,name:sale_stock.process_node_saleorderprocurement0
+msgid "Sales Order Requisition"
+msgstr "Permintaan Order Penjualan"
+
+#. module: sale_stock
+#: model:process.transition,name:sale_stock.process_transition_deliver0
+msgid "Create Delivery Order"
+msgstr "Buat pesanan pengiriman"
+
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr "Abaikan pengecualian"
+
+#. module: sale_stock
+#: code:addons/sale_stock/sale_stock.py:639
+#, python-format
+msgid ""
+"You plan to sell %.2f %s but you only have %.2f %s available !\n"
+"The real stock is %.2f %s. (without reservations)"
+msgstr ""
+"Anda berencana menjual %.2f %s tapi anda hanya mempunyai %.2f %s yang "
+"tersedia !\n"
+"Stok sebenarnya  %.2f %s. (tanpa pemesanan)"
+
+#. module: sale_stock
+#: view:sale.order:0
+msgid "Recreate Delivery Order"
+msgstr ""
+
+#. module: sale_stock
+#: help:sale.config.settings,group_multiple_shops:0
+msgid "This allows to configure and use multiple shops."
+msgstr ""
+
+#. module: sale_stock
+#: field:sale.order,picked_rate:0
 msgid "Picked"
 msgstr "Sudah Diambil"
 
-#. module: sale
-#: view:sale.report:0 field:sale.report,year:0
-msgid "Year"
-msgstr "Tahun"
-
-#. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Deliveries"
-msgstr "Invoice berdasarkan pengiriman"
-
-#~ msgid "Recreate Procurement"
-#~ msgstr "Pengadaan kembali"
-
-#~ msgid "You invoice has been successfully created !"
-#~ msgstr "Invoice berhasil dibuat"
-
-#~ msgid "Partial Delivery"
-#~ msgstr "Pengiriman Sebagian"
-
-#~ msgid "Delivery, from the warehouse to the customer."
-#~ msgstr "Pengiriman, dari gudang ke pelanggan"
-
-#~ msgid ""
-#~ "This is the list of picking list that have been generated for this invoice"
-#~ msgstr "Ini adalah daftar pengepakan yang telah dibuat untuk invoice ini"
-
-#~ msgid "Automatic Declaration"
-#~ msgstr "Keterangan Otomatis"
-
-#~ msgid ""
-#~ "This Configuration step use to set default picking policy when make sale "
-#~ "order"
-#~ msgstr ""
-#~ "Langkah konfigurasi ini digunakan untuk membuat standart pengepakan ketika "
-#~ "membuat order penjualan"
-
-#~ msgid "Invoice after delivery"
-#~ msgstr "Ditagihkan setelah pengiriman"
-
-#~ msgid "After confirming order, Create the invoice."
-#~ msgstr "Setelah konfirmasi order, Buat Invoice"
-
-#~ msgid "Origin"
-#~ msgstr "Asal"
-
-#~ msgid "All at Once"
-#~ msgstr "Sekaligus"
-
-#~ msgid "Outgoing Products"
-#~ msgstr "Barang Keluar"
-
-#~ msgid "Procurement is created after confirmation of sale order."
-#~ msgstr "Pengadaan dibuat setelah order penjualan dikonfirmasi"
-
-#~ msgid "Reference"
-#~ msgstr "Referensi"
-
-#~ msgid ""
-#~ "The sale order will automatically create the invoice proposition (draft "
-#~ "invoice). Ordered and delivered quantities may not be the same. You have to "
-#~ "choose if you invoice based on ordered or shipped quantities. If the product "
-#~ "is a service, shipped quantities means hours spent on the associated tasks."
-#~ msgstr ""
-#~ "Order Penjualan sebara otomatis akan membuat konsep invoice. Kwantitas yang "
-#~ "diorder dan yang terkirim mungkin tidak sama. Anda harus memilih, "
-#~ "tagihan/invoice berdasarkan order atau kwantitas barang yang terkirim. Jika "
-#~ "produk adalah jasa, maksud dari kwantitas yang terkirim adalah jumlah jam "
-#~ "yang telah ditempuh dalam suatu pekerjaan"
-
-#~ msgid "Net Price"
-#~ msgstr "Harga Bersih"
-
-#~ msgid "My sales order in progress"
-#~ msgstr "Penjualan saya yang masih dalam proses"
-
-#~ msgid "Procure Method"
-#~ msgstr "Metode Pengadaan"
-
-#, python-format
-#~ msgid ""
-#~ "You have to select a customer in the sale form !\n"
-#~ "Please set one customer before choosing a product."
-#~ msgstr ""
-#~ "Anda harus memilih satu pelanggan pada form penjualan !\n"
-#~ "Mohon memilih satu pelanggan sebelum memilih barang"
-
-#~ msgid "Sale Shop"
-#~ msgstr "Toko"
-
-#, python-format
-#~ msgid "You must first cancel all packing attached to this sale order."
-#~ msgstr ""
-#~ "Pertama anda harus membatalkan semua kemasan sudah terlampir dalam penjualan "
-#~ "ini"
-
-#~ msgid "Make Invoice"
-#~ msgstr "Buat Invoice"
-
-#~ msgid "All Sales Order"
-#~ msgstr "Semua Order Penjualan"
-
-#~ msgid "Manual Description"
-#~ msgstr "Keterangan Manual"
-
-#~ msgid "Packing"
-#~ msgstr "Kemasan"
-
-#~ msgid "Payment Accounts"
-#~ msgstr "Akun Pembayaran"
-
-#~ msgid "Sales orders"
-#~ msgstr "Order Penjualan"
-
-#~ msgid "Payment accounts"
-#~ msgstr "Akun Pembayaran"
-
-#~ msgid "Error: UOS must be in a different category than the UOM"
-#~ msgstr "Salah: UoS dan UoM harus berbeda kategori"
-
-#~ msgid "Invalid XML for View Architecture!"
-#~ msgstr "Salah dalam penyusunan format XML"
-
-#~ msgid "Draft Invoice"
-#~ msgstr "Konsep Invoice"
-
-#~ msgid "Payment Before Delivery"
-#~ msgstr "Pembayaran Sebelum Pengiriman"
-
-#~ msgid "Delivery Order Only"
-#~ msgstr "Hanya Order Pengiriman saja"
-
-#~ msgid "Order Reference must be unique !"
-#~ msgstr "Referensi order harus unik !"
-
-#~ msgid "Enhance your core Sales Application with additional functionalities."
-#~ msgstr ""
-#~ "Meningkatkan Aplikasi Penjualan anda dengan fungsionalitas  tambahan."
-
-#~ msgid "Setup your sales workflow and default values."
-#~ msgstr "Set alur proses penjulan dan nilai dasar"
-
-#~ msgid "Invoice On Order After Delivery"
-#~ msgstr "Faktur Pada Order Setelah Pengiriman"
-
-#~ msgid "Do you really want to create the invoice(s) ?"
-#~ msgstr "Apakah anda benar-benar ingin membuat faktur ?"
-
-#~ msgid "  Year  "
-#~ msgstr "  Tahun  "
-
-#~ msgid "Sales Order Dates"
-#~ msgstr "Tanggal Order Penjualan"
-
-#~ msgid "Picking Default Policy"
-#~ msgstr "Kebijakan dasar penjemputan"
-
-#, python-format
-#~ msgid "You cannot cancel a sales order line that has already been invoiced !"
-#~ msgstr ""
-#~ "Anda tidak dapan membatalkan daftar penjualan yang telah difakturkan !"
-
-#~ msgid "Margins in Sales Orders"
-#~ msgstr "Margin Pesanan Penjualan"
-
-#~ msgid "Sales Application Configuration"
-#~ msgstr "Konfugurasi aplikasi penjualan"
-
-#~ msgid "Delivery Costs"
-#~ msgstr "Biaya Pengiriman"
-
-#~ msgid "Shipping Policy"
-#~ msgstr "Kebijakan dalam pengiriman"
-
-#~ msgid "Invoice From The Picking"
-#~ msgstr "Faktur pengiriman"
-
-#, python-format
-#~ msgid "Picking Information !"
-#~ msgstr "Informasi penjemputan !"
-
-#~ msgid "Shipping & Manual Invoice"
-#~ msgstr "Pengiriman & Faktur manual"
-
-#~ msgid "Sales Management"
-#~ msgstr "Manajemen Penjualan"
-
-#~ msgid ""
-#~ "By default, OpenERP is able to manage complex routing and paths of products "
-#~ "in your warehouse and partner locations. This will configure the most common "
-#~ "and simple methods to deliver products to the customer in one or two "
-#~ "operations by the worker."
-#~ msgstr ""
-#~ "Secara default, OpenERP mampu mengelola jalur routing yang kompleks  dan "
-#~ "produk di gudang anda dan lokasi mitra. Ini akan mengkonfigurasi  metode "
-#~ "yang paling umum dan sederhana untuk memberikan produk kepada pelanggan "
-#~ "dalam operasi salah satu atau dua oleh pekerja."
-
-#~ msgid "Picking List & Delivery Order"
-#~ msgstr "Daftar jemput dan pengiriman pesanan"
-
-#~ msgid "Invoicing"
-#~ msgstr "Faktur"
-
-#, python-format
-#~ msgid "Cannot delete a sales order line which is %s !"
-#~ msgstr "Tidak dapat menghapus daftar pesanan penjualan  yang% s!"
-
-#~ msgid ""
-#~ "Gives the margin of profitability by calculating the difference between Unit "
-#~ "Price and Cost Price."
-#~ msgstr ""
-#~ "Memberikan margin keuntungan berdasaran perhitungan dari perbedaan antara "
-#~ "harga unit dengan ongkos produksi"
-
-#~ msgid "   Month   "
-#~ msgstr "   Bulan   "
-
-#, python-format
-#~ msgid ""
-#~ "You selected a quantity of %d Units.\n"
-#~ "But it's not compatible with the selected packaging.\n"
-#~ "Here is a proposition of quantities according to the packaging:\n"
-#~ "\n"
-#~ "EAN: %s Quantity: %s Type of ul: %s"
-#~ msgstr ""
-#~ "Anda memilih kuantitas %d Units.\n"
-#~ "Tetapi tidak sesuai dengan kemasan\n"
-#~ "Ini adalah proporsi dari kuantitas berdasarkan kemasan:\n"
-#~ "\n"
-#~ "EAN: %s Quantity: %s Type of ul: %s"
-
-#~ msgid ""
-#~ "The Shipping Policy is used to configure per order if you want to deliver as "
-#~ "soon as possible when one product is available or you wait that all products "
-#~ "are available.."
-#~ msgstr ""
-#~ "Kebijakan Pengiriman yang digunakan untuk mengkonfigurasi per pesanan jika "
-#~ "anda ingin menyampaikan sesegera mungkin ketika  satu produk  yang tersedia "
-#~ "atau Anda menunggu bahwa semua  produk  yang tersedia"
-
-#~ msgid "    Month-1    "
-#~ msgstr "    Bulan - 1    "
-
-#~ msgid "Complete Delivery"
-#~ msgstr "Pengiriman Selesai"
-
-#~ msgid "Product sales"
-#~ msgstr "Produk penjualan"
-
-#~ msgid "Ordered Date"
-#~ msgstr "Tanggal pemesanan"
-
-#~ msgid "Configuration Progress"
-#~ msgstr "Konfigurasi yang sedang berlangsung"
-
-#~ msgid "Configure Your Sales Management Application"
-#~ msgstr "Konfigurasi Aplikasi Penjualan  Manajemen  Anda"
-
-#~ msgid "Invoicing journals"
-#~ msgstr "Faktur Jurnal"
-
-#~ msgid "Shipped Qty"
-#~ msgstr "Kuantitas yang dikirim"
-
-#~ msgid "Direct Delivery"
-#~ msgstr "Pengiriman Langsung"
-
-#~ msgid "Sales Order Layout Improvement"
-#~ msgstr "Order Penjualan Layout Peningkatan"
-
-#, python-format
-#~ msgid "Cannot delete Sales Order(s) which are already confirmed !"
-#~ msgstr "Tidak dapat menghapus Order Penjualan  yang sudah dikonfirmasi!"
-
-#~ msgid "Shipping Default Policy"
-#~ msgstr "Kebijakan Dasar Pengiriman"
-
-#, python-format
-#~ msgid "Not enough stock !"
-#~ msgstr "Stok tidak mencukupi"
-
-#~ msgid "Layout Sequence"
-#~ msgstr "Urutan rancangan"
-
-#~ msgid "Adds commitment, requested and effective dates on Sales Orders."
-#~ msgstr ""
-#~ "Menambahkan komitmen, tanggal diminta dan efektif pada Permintaan Penjualan."
-
-#~ msgid ""
-#~ "Allows you to group and invoice your delivery orders according to different "
-#~ "invoicing types: daily, weekly, etc."
-#~ msgstr ""
-#~ "Memungkinkan Anda untuk mengelompokan  dan membuat faktur pengiriman pesanan "
-#~ " Anda sesuai dengan jenis faktur yang berbeda: harian, mingguan, dll"
-
-#~ msgid "Configure Sales Order Logistics"
-#~ msgstr "Konfigurasi Logistik Sales Order"
-
-#~ msgid "Allows you to compute delivery costs on your quotations."
-#~ msgstr ""
-#~ "Memungkinkan Anda untuk menghitung biaya pengiriman pada quotations Anda."
-
-#~ msgid "Configure Picking Policy for Sales Order"
-#~ msgstr "Konfigurasi Pengambil Kebijakan untuk Sales Order"
-
-#~ msgid "Configure"
-#~ msgstr "Pengaturan"
-
-#~ msgid ""
-#~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
-#~ "  - The 'Pay Before delivery' choice will first generate the invoice and "
-#~ "then generate the picking order after the payment of this invoice.\n"
-#~ "  - The 'Shipping & Manual Invoice' will create the picking order directly "
-#~ "and wait for the user to manually click on the 'Invoice' button to generate "
-#~ "the draft invoice.\n"
-#~ "  - The 'Invoice On Order After Delivery' choice will generate the draft "
-#~ "invoice based on sales order after all picking lists have been finished.\n"
-#~ "  - The 'Invoice From The Picking' choice is used to create an invoice "
-#~ "during the picking process."
-#~ msgstr ""
-#~ "Kebijakan Pengiriman digunakan untuk menyinkronkan operasi dan pengiriman "
-#~ "invoice.\n"
-#~ "- The 'Pembayaran Sebelum pengiriman' pilihan pertama akan menghasilkan "
-#~ "invoice dan kemudian menghasilkan urutan pengambilan setelah pembayaran "
-#~ "invoice ini.\n"
-#~ "- The 'Pengiriman & Manual invoice' akan menciptakan urutan pengambilan "
-#~ "langsung dan menunggu pengguna untuk secara manual klik tombol 'invoice' "
-#~ "untuk menghasilkan invoice draft.\n"
-#~ "- The 'invoice On Delivery Order Setelah' pilihan akan menghasilkan invoice "
-#~ "draft berdasarkan pesanan sales setelah semua daftar pengambilan telah "
-#~ "selesai.\n"
-#~ "- 'invoice Dari Picking' Pilihan ini digunakan untuk membuat invoice selama "
-#~ "proses pengambilan."
-
-#~ msgid ""
-#~ "\n"
-#~ "    The base module to manage quotations and sales orders.\n"
-#~ "\n"
-#~ "    * Workflow with validation steps:\n"
-#~ "        - Quotation -> Sales order -> Invoice\n"
-#~ "    * Invoicing methods:\n"
-#~ "        - Invoice on order (before or after shipping)\n"
-#~ "        - Invoice on delivery\n"
-#~ "        - Invoice on timesheets\n"
-#~ "        - Advance invoice\n"
-#~ "    * Partners preferences (shipping, invoicing, incoterm, ...)\n"
-#~ "    * Products stocks and prices\n"
-#~ "    * Delivery methods:\n"
-#~ "        - all at once, multi-parcel\n"
-#~ "        - delivery costs\n"
-#~ "    * Dashboard for salesman that includes:\n"
-#~ "    * Your open quotations\n"
-#~ "    * Top 10 sales of the month\n"
-#~ "    * Cases statistics\n"
-#~ "    * Graph of sales by product\n"
-#~ "    * Graph of cases of the month\n"
-#~ "    "
-#~ msgstr ""
-#~ "\n"
-#~ "    Modul dasar untuk mengelola quotation dan sales order .\n"
-#~ "\n"
-#~ "     * Alur Kerja dengan langkah-langkah validasi:\n"
-#~ "         - Quotation -> Sales order -> invoice\n"
-#~ "     * Metoda Invoicing :\n"
-#~ "         - invoice pada pesanan (sebelum atau sesudah pengiriman)\n"
-#~ "         - invoice pengiriman yang\n"
-#~ "         - invoice pada timesheets\n"
-#~ "         - invoice Advance\n"
-#~ "     * preferensi Mitra (pengiriman, invoicing, INCOTERM, ...)\n"
-#~ "     * Produk dan harga stok\n"
-#~ "     * Pengiriman :\n"
-#~ "         - semua sekaligus, multi-paket\n"
-#~ "         - Biaya pengiriman\n"
-#~ "     * Dashboard untuk salesman yang meliputi:\n"
-#~ "     * quotation terbuka Anda\n"
-#~ "     * Top 10 bulan ini\n"
-#~ "     * Kasus statistik\n"
-#~ "     * Grafik penjualan per produk\n"
-#~ "     * Grafik kasus bulan ini.\n"
-#~ "    "
-
-#~ msgid "title"
-#~ msgstr "Judul:"
-
-#~ msgid "Order date"
-#~ msgstr "Tanggal order"
-
-#~ msgid ""
-#~ "Gives the state of the quotation or sales order. \n"
-#~ "The exception state is automatically set when a cancel operation occurs in "
-#~ "the invoice validation (Invoice Exception) or in the picking list process "
-#~ "(Shipping Exception). \n"
-#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
-#~ "waiting for the scheduler to run on the date 'Ordered Date'."
-#~ msgstr ""
-#~ "Memberikan status quotation atau sales order .\n"
-#~ "Kondisi pengecualian secara otomatis mengatur kapan operasi dibatalkan yang "
-#~ "terjadi pada validasi invoice (invoice Exception) atau dalam proses daftar "
-#~ "memilih (Shipping Exception).\n"
-#~ "Pada Status 'Waiting Schedule' ini mengatur kapan Invoice dikonfirmasi "
-#~ "tetapi menunggu scheduler yang akan dijalankan pada tanggal 'Tanggal Ordered'"
-
-#~ msgid "sale.installer"
-#~ msgstr "sale.installer"
-
-#~ msgid ""
-#~ "Provides some features to improve the layout of the Sales Order reports."
-#~ msgstr ""
-#~ "Menyediakan beberapa fitur untuk meningkatkan  tata letak  laporan  Sales "
-#~ "Order."
-
-#~ msgid "Steps To Deliver a Sales Order"
-#~ msgstr "Langkah-langkah untuk pengiriman sales order."
-
-#~ msgid "VAT"
-#~ msgstr "VAT"
+#. module: sale_stock
+#: selection:sale.order,picking_policy:0
+msgid "Deliver each product when available"
+msgstr ""
+
+#. module: sale_stock
+#: model:process.transition,name:sale_stock.process_transition_packing0
+msgid "Create Pick List"
+msgstr "Buat daftar penjemputan"
+
+#. module: sale_stock
+#: model:process.transition,note:sale_stock.process_transition_deliver0
+msgid ""
+"Depending on the configuration of the location Output, the move between the "
+"output area and the customer is done through the Delivery Order manually or "
+"automatically."
+msgstr ""
+"Tergantung dari konfigurasi  lokasi output, perpindahan antara daerah output "
+"klien selesai melalui pemesanan pengiriman secara manual ataupun secara "
+"otomatis"
