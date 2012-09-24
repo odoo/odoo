@@ -127,20 +127,17 @@ class hr_employee(osv.osv):
         return result
 
     def _attendance_access(self, cr, uid, ids, name, args, context=None):
-        res = {}
-        data_obj = self.pool.get('ir.model.data')
-        group = data_obj.get_object(cr, uid, 'base', 'group_hr_attendance')
-        for id in ids :
-            if uid in [user.id for user in group.users]:
-                res[id] = True
-            else:
-                res[id] = False
-        return res
+        # this function field use to hide attendance button to singin/singout from menu
+        group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_hr_attendance')
+        visible = False
+        if uid in [user.id for user in group.users]:
+            visible = True
+        return dict([(x, visible) for x in ids])
 
     _columns = {
        'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
        'last_sign': fields.function(_last_sign, type='datetime', string='Last Sign'),
-       'attendance_access': fields.function(_attendance_access, type='boolean', string="Access or not"),
+       'attendance_access': fields.function(_attendance_access, type='boolean'),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):
