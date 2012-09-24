@@ -20,8 +20,8 @@
 ##############################################################################
 
 from operator import itemgetter
-
 from osv import fields, osv
+import time
 
 class account_fiscal_position(osv.osv):
     _name = 'account.fiscal.position'
@@ -145,6 +145,29 @@ class res_partner(osv.osv):
     def _debit_search(self, cr, uid, obj, name, args, context=None):
         return self._asset_difference_search(cr, uid, obj, name, 'payable', args, context=context)
 
+    def has_something_to_reconcile(self, cr, uid, partner_id, context=None):
+        '''
+        at least a debit, a credit and a line older than the last reconciliation date of the partner
+        '''
+        cr.execute('''
+            SELECT l.partner_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
+            FROM account_move_line l
+            RIGHT JOIN account_account a ON (a.id = l.account_id)
+            RIGHT JOIN res_partner p ON (l.partner_id = p.id)
+            WHERE a.reconcile IS TRUE
+            AND p.id = %s
+            AND l.reconcile_id IS NULL
+            AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
+            AND l.state <> 'draft'
+            GROUP BY l.partner_id''', (partner_id,))
+        res = cr.dictfetchone()
+        if res:
+            return bool(res['debit'] and res['credit'])
+        return False
+
+    def mark_as_reconciled(self, cr, uid, ids, context=None):
+        return self.write(cr, uid, ids, {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')}, context=context)
+
     _columns = {
         'credit': fields.function(_credit_debit_get,
             fnct_search=_credit_search, string='Total Receivable', multi='dc', help="Total amount this customer owes you."),
@@ -185,7 +208,7 @@ class res_partner(osv.osv):
             help="This payment term will be used instead of the default one for the current partner"),
         'ref_companies': fields.one2many('res.company', 'partner_id',
             'Companies that refers to partner'),
-        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were reconciled last time')
+        'last_reconciliation_date': fields.datetime('Latest Reconciliation Date', help='Date on which the partner accounting entries were fully reconciled last time. It differs from the date of the last reconciliation made for this partner, as here we depict the fact that nothing more was to be reconciled at this date. This can be achieved in 2 ways: either the last debit/credit entry was reconciled, either the user pressed the button "Fully Reconciled" in the manual reconciliation process')
     }
 
 res_partner()
