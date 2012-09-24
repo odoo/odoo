@@ -21,7 +21,7 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         // that should be displayed in the approval confirmation dialog.
 
         if (!this._error) {
-            // params.approval_prompt TODO
+            // params.approval_prompt TODO --> add 'none' (default)
             // TODO: get client_id and scope
             this.$('.oe_oauth_provider_approval').show().on('click', '.oe_oauth_provider_allow', function() {
                 instance.session.rpc('/oauth2/get_token', {

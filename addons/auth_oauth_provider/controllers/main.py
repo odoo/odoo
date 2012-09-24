@@ -37,7 +37,6 @@ class AuthOAuthProvider(openerpweb.Controller):
 
     @openerpweb.httprequest
     def auth(self, req, **kw):
-        # TODO: if logged and approval_prompt == auto then return get_token and redirect
         search = req.params.copy()
         if req.debug:
             search['debug'] = 1
