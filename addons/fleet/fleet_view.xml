@@ -89,8 +89,31 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Repairing">
-                                <field name="next_repair_km" />
+                            <page string="Services">
+                                <field name="log_services">
+                                    <tree string="Services Logs">
+                                        <field name="create_date" />
+                                        <field name="employee_id" />
+                                        <field name="vendor_id" />
+                                        <field name="amount" />
+                                        <field name="reference" />
+                                        <field name="service_ids" />
+                                        <field name="complete_service" />
+                                    </tree>
+                                    <form string="Fuel Logs" version="7.0">
+                                        <sheet>
+                                            <group>
+                                                <field name="create_date" />
+                                                <field name="employee_id" />
+                                                <field name="vendor_id" />
+                                                <field name="amount" />
+                                                <field name="reference" />
+                                                <field name="service_ids" />
+                                                <field name="complete_service" />
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
                             </page>
                             <page string="Fuel Logs">
                                 <field name="log_fuel">
@@ -169,6 +192,7 @@
                 <tree string="Vehicle" version="7.0">
                     <field name="registration" />
                     <field name="model_id" />
+                    <field name="driver" />
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
                 </tree>
@@ -236,7 +260,7 @@
                 <notebook position="inside">
                     <page string="Vehicle">
                         <group>
-                            <field name="vehicle_id" />
+                            <field name="vehicle_id" widget="many2many_tags"/>
                         </group>
                     </page>
                 </notebook>
