@@ -35,8 +35,10 @@ It handles the full sales workflow:
 
 * **Quotation** -> **Sales order** -> **Invoice**
 
-Preferences
+Preferences (only with Warehouse Management installed)
 -----------
+If you also installed the Warehouse Management, you can deal with the following preferences:
+
 * Shipping: Choice of delivery at once or partial delivery
 * Invoicing: choose how invoices will be paid
 * Incoterms: International Commercial terms
@@ -55,15 +57,14 @@ The Dashboard for the Sales Manager will include
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['stock', 'procurement', 'board', 'account_voucher'],
+    'images': ['images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
+    'depends': ['account_voucher'],
     'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'company_view.xml',
         'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_report.xml',
@@ -71,7 +72,6 @@ The Dashboard for the Sales Manager will include
         'sale_view.xml',
         'res_partner_view.xml',
         'report/sale_report_view.xml',
-        'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
         'edi/sale_order_action_data.xml',
@@ -80,9 +80,7 @@ The Dashboard for the Sales Manager will include
     'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
-        'test/picking_order_policy.yml',
         'test/manual_order_policy.yml',
-        'test/prepaid_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',
