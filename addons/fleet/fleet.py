@@ -117,13 +117,6 @@ class fleet_vehicle(osv.Model):
             }
         }
 
-class fleet_vehicle_log_type(osv.Model):
-    _name = 'fleet.vehicle.log.type'
-
-    _columns = {
-        'name' : fields.char('Name', size=32, required=True),
-    }
-
 class fleet_vehicle_log(osv.Model):
     _name = 'fleet.vehicle.log'
 
@@ -131,11 +124,12 @@ class fleet_vehicle_log(osv.Model):
         'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
 
-        'create_date' : fields.datetime('Creation Date'),
+        'create_date' : fields.date('Creation Date'),
 
         'description' : fields.text('Description'),
-        'type' : fields.char('Type', size=32, required=False),
-    }
+        'type' : fields.char('Type',size=32),
+        }
+        
     _defaults = {
             'type' : 'Log',
     }
@@ -147,11 +141,9 @@ class fleet_vehicle_log_fuel(osv.Model):
         'description' : fields.text('Description'),
         'liter' : fields.integer('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
-        'type' : fields.char('Type', size=32, required=False),
+        'type' : fields.char('Type',size=32),
     }
-    _defaults = {
-            'type' : 'Fuel',
-    }
+    _defaults = {'type': 'Refueling',}
 
 class fleet_vehicle_log_insurance(osv.Model):
     _inherit = 'fleet.vehicle.log'
