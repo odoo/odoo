@@ -695,6 +695,9 @@ class test_mail(TestMailMockups):
         message1 = self.mail_message.browse(cr, uid, msg1)
         message2 = self.mail_message.browse(cr, uid, msg2)
         context= {}
+        #Check Before read , number of posted message count are 2.
+        na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count, 2, 'posted message count does not match needaction count')
         #Test : Groups contain two messages.
         self.assertEqual(2, len(group_pigs.message_ids), 'group should contain 2 messages')
         #Read message without key. using bert parner
@@ -712,6 +715,6 @@ class test_mail(TestMailMockups):
         notif_msg2_ids2 = self.mail_notification.search(cr, uid, [('partner_id', '=', user_admin.partner_id.id),('message_id', '=', message2.id)], context=context)
         notif_data2 = self.mail_notification.read(cr, uid, notif_msg2_ids2, ['read'])[0]['read']
         self.assertFalse(notif_data2, 'Newly created  Message2 are set as unread')
-        # Check there are 1 needaction on mail.message with particular domain
+        # Check there are 1 needaction after Reading one posted message on mail.message with particular domain.
         na_count = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
         self.assertEqual(na_count, 1, 'posted message count does not match needaction count')
