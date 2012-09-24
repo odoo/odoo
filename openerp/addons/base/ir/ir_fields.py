@@ -95,11 +95,20 @@ class ir_fields_converter(orm.Model):
         return value or False
 
     def _get_translations(self, cr, uid, types, src, context):
+        types = tuple(types)
+        # Cache translations so they don't have to be reloaded from scratch on
+        # every row of the file
+        tnx_cache = cr.cache.setdefault(self._name, {})
+        if tnx_cache.setdefault(types, {}) and src in tnx_cache[types]:
+            return tnx_cache[types][src]
+
         Translations = self.pool['ir.translation']
         tnx_ids = Translations.search(
             cr, uid, [('type', 'in', types), ('src', '=', src)], context=context)
         tnx = Translations.read(cr, uid, tnx_ids, ['value'], context=context)
-        return map(operator.itemgetter('value'), tnx)
+        result = tnx_cache[types][src] = map(operator.itemgetter('value'), tnx)
+        return result
+
     def _str_to_selection(self, cr, uid, model, column, value, context=None):
 
         selection = column.selection
