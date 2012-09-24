@@ -116,6 +116,8 @@ class configmanager(object):
                          help="specify the TCP port for the XML-RPC protocol", type="int")
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
                          help="disable the XML-RPC protocol")
+        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
+                         help="Enable correct behavior when behind a reverse proxy")
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -394,7 +396,7 @@ class configmanager(object):
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs',
+            'list_db', 'xmlrpcs', 'proxy_mode',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
             'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
             'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request'
