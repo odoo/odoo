@@ -277,6 +277,10 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        section_id = self.browse(cr, uid, obj_id, context=context).section_id
+        if section_id:
+            followers = [follow.id for follow in section_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 

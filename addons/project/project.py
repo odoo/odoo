@@ -1098,17 +1098,13 @@ class task(base_stage, osv.osv):
             }, context=context)
         return True
     
-    def project_message_followers(self, cr, uid, task_id, context=None):
+    def create(self, cr, uid, vals, context=None):
+        task_id = super(task, self).create(cr, uid, vals, context=context)
         project_obj = self.pool.get("project.project")
         project_id = self.browse(cr, uid, task_id, context=context).project_id
         if project_id:
-            followers = [follower.id for follower in project_obj.browse(cr, uid, project_id.id, context=context).message_follower_ids]
-            self.message_subscribe(cr, uid, task_id, followers, context=context)
-        return True
-    
-    def create(self, cr, uid, vals, context=None):
-        task_id = super(task, self).create(cr, uid, vals, context=context)
-        self.project_message_followers(cr, uid, task_id, context=context)
+            followers = [follower.id for follower in project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [task_id], followers, context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
