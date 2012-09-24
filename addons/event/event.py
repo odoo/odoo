@@ -19,10 +19,8 @@
 #
 ##############################################################################
 
-import time
 from osv import fields, osv
 from tools.translate import _
-import decimal_precision as dp
 from openerp import SUPERUSER_ID
 
 class event_type(osv.osv):
@@ -39,8 +37,8 @@ class event_type(osv.osv):
     }
     _defaults = {
         'default_registration_min': 0,
-        'default_registration_max':0,
-        }
+        'default_registration_max': 0,
+    }
 
 event_type()
 
@@ -49,11 +47,15 @@ class event_event(osv.osv):
     _name = 'event.event'
     _description = __doc__
     _order = 'date_begin'
-    _inherit = ['ir.needaction_mixin','mail.thread']
+    _inherit = ['mail.thread','ir.needaction_mixin']
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
-              return []
+            return []
+
+        if isinstance(ids, (long, int)):
+            ids = [ids]
+
         res = []
         for record in self.browse(cr, uid, ids, context=context):
             date = record.date_begin.split(" ")[0]
@@ -99,7 +101,6 @@ class event_event(osv.osv):
         return self.write(cr, uid, ids, {'state': 'done'}, context=context)
 
     def check_registration_limits(self, cr, uid, ids, context=None):
-        register_pool = self.pool.get('event.registration')
         for self.event in self.browse(cr, uid, ids, context=context):
             total_confirmed = self.event.register_current
             if total_confirmed < self.event.register_min or total_confirmed > self.event.register_max and self.event.register_max!=0:
@@ -109,7 +110,7 @@ class event_event(osv.osv):
         for event in self.browse(cr, uid, ids, context=context):
             available_seats = event.register_avail
             if available_seats and no_of_registration > available_seats:
-                 raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
+                raise osv.except_osv(_('Warning!'),_("Only %d Seats are Available!") % (available_seats))
             elif available_seats == 0:
                 raise osv.except_osv(_('Warning!'),_("No Tickets Available!"))
 
@@ -139,7 +140,6 @@ class event_event(osv.osv):
         @param context: A standard dictionary for contextual values
         @return: Dictionary of function fields value.
         """
-        register_pool = self.pool.get('event.registration')
         res = {}
         for event in self.browse(cr, uid, ids, context=context):
             res[event.id] = {}
@@ -207,6 +207,8 @@ class event_event(osv.osv):
         'main_speaker_id': fields.many2one('res.partner','Main Speaker', readonly=False, states={'done': [('readonly', True)]}, help="Speaker who will be giving speech at the event."),
         'address_id': fields.many2one('res.partner','Location Address', readonly=False, states={'done': [('readonly', True)]}),
         'street': fields.related('address_id','street',type='char',string='Street'),
+        'street2': fields.related('address_id','street2',type='char',string='Street2'),
+        'state_id': fields.related('address_id','state_id',type='many2one', relation="res.country.state", string='State'),
         'zip': fields.related('address_id','zip',type='char',string='zip'),
         'city': fields.related('address_id','city',type='char',string='city'),
         'speaker_confirmed': fields.boolean('Speaker Confirmed', readonly=False, states={'done': [('readonly', True)]}),
@@ -262,33 +264,56 @@ class event_event(osv.osv):
             }
             return {'value': dic}
 
+    def on_change_address_id(self, cr, uid, ids, address_id, context=None):
+        values = {
+            'street' : False,
+            'street2' : False,
+            'city' : False,
+            'zip' : False,
+            'country_id' : False,
+            'state_id' : False,
+        }
+        if isinstance(address_id, (long, int)):
+            address = self.pool.get('res.partner').browse(cr, uid, address_id, context=context)
+            values.update({
+                'street' : address.street,
+                'street2' : address.street2,
+                'city' : address.city,
+                'country_id' : address.country_id and address.country_id.id,
+                'state_id' : address.state_id and address.state_id.id,
+                'zip' : address.zip,
+            })
+
+        return {'value' : values}
+
+
     # ----------------------------------------
     # OpenChatter methods and notifications
     # ----------------------------------------
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>created</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>cancelled</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been set to <b>draft</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_done_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>done</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>confirmed</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
 event_event()
@@ -334,7 +359,7 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_append(cr, uid, ids,_('State set to open'),body_text= _('Open'))
+        self.message_post(cr, uid, ids, body=_('State set to open'), context=context)
         return self.write(cr, uid, ids, {'state': 'open'}, context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -364,13 +389,13 @@ class event_registration(osv.osv):
             if today >= registration.event_id.date_begin:
                 values = {'state': 'done', 'date_closed': today}
                 self.write(cr, uid, ids, values)
-                self.message_append(cr, uid, ids, _('State set to Done'), body_text=_('Done'))
+                self.message_post(cr, uid, ids, body=_('State set to Done'), context=context)
             else:
                 raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_append(cr, uid, ids,_('State set to Cancel'),body_text= _('Cancel'))
+        self.message_post(cr, uid, ids, body=_('State set to Cancel'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):
@@ -440,12 +465,12 @@ class event_registration(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Registration has been <b>created</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def do_draft_send_note(self, cr, uid, ids, context=None):
         message = _("Registration has been set as <b>draft</b>.")
-        self.message_append_note(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
 event_registration()

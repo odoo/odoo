@@ -24,27 +24,22 @@
     'name': 'OAuth2 Authentication',
     'version': '1.0',
     'category': 'Tools',
-    'description': """Allow users to login through Google OAuth2.""",
+    'description': """
+Allow users to login through Google OAuth2.
+===========================================
+""",
     'author': 'Victor Tabuenca',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web', 'base_setup'],
     'data': [
         'auth_oauth_data.xml',
-    ],
-    'update_xml': [
         'auth_oauth_view.xml',
-        'res_config.xml',
+        'security/ir.model.access.csv'
     ],
-    'js': [
-        'static/src/js/auth_oauth.js',
-    ],
-    'css': [
-        'static/lib/zocial/css/zocial.css',
-    ],
-    'qweb': [
-        'static/src/xml/auth_oauth.xml',
-    ],
+    'js': ['static/src/js/auth_oauth.js'],
+    'css': ['static/lib/zocial/css/zocial.css'],
+    'qweb': ['static/src/xml/auth_oauth.xml'],
     'installable': True,
     'auto_install': False,
 }

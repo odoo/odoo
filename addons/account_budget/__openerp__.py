@@ -32,23 +32,26 @@ Once the Budgets are defined (in Invoicing/Budgets/Budgets), the Project Manager
 can set the planned amount on each Analytic Account.
 
 The accountant has the possibility to see the total of amount planned for each
-Budget in order to ensure the total planned is not greater/lower than what he planned
-for this Budget. Each list of record can also be switched to a graphical view of it.
+Budget in order to ensure the total planned is not greater/lower than what he 
+planned for this Budget. Each list of record can also be switched to a graphical 
+view of it.
 
 Three reports are available:
+----------------------------
+    1. The first is available from a list of Budgets. It gives the spreading, for 
+       these Budgets, of the Analytic Accounts.
 
-    1. The first is available from a list of Budgets. It gives the spreading, for these Budgets, of the Analytic Accounts.
+    2. The second is a summary of the previous one, it only gives the spreading, 
+       for the selected Budgets, of the Analytic Accounts.
 
-    2. The second is a summary of the previous one, it only gives the spreading, for the selected Budgets, of the Analytic Accounts.
-
-    3. The last one is available from the Analytic Chart of Accounts. It gives the spreading, for the selected Analytic Accounts of Budgets.
+    3. The last one is available from the Analytic Chart of Accounts. It gives 
+       the spreading, for the selected Analytic Accounts of Budgets.
 """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/budget.jpeg','images/budgetary_position.jpeg'],
     'depends': ['account'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'security/account_budget_security.xml',
         'account_budget_view.xml',
@@ -59,11 +62,11 @@ Three reports are available:
         'wizard/account_budget_crossovered_summary_report_view.xml',
         'wizard/account_budget_crossovered_report_view.xml',
     ],
-    'demo_xml': ['account_budget_demo.xml'],
+    'demo': ['account_budget_demo.xml'],
     'test':[
-            'test/account_budget.yml',
-            'test/account_budget_report.yml',
-            ],
+        'test/account_budget.yml',
+        'test/account_budget_report.yml',
+    ],
     'installable': True,
     'auto_install': False,
     'certificate': '0043819694157',

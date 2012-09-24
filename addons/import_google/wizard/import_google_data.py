@@ -110,6 +110,8 @@ class synchronize_google(osv.osv_memory):
 
     _defaults = {
         'group_name': 'all',
+        'customer': True,
+        'supplier': True,
     }
 
     def import_google(self, cr, uid, ids, context=None):

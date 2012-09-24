@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-09 04:44+0000\n"
-"X-Generator: Launchpad (build 15761)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:38+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -227,16 +227,13 @@ msgid "For purchased material"
 msgstr "For innkjøpt materiale"
 
 #. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Revisjon"
-
-#. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
 msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Lag et produktskjema for alt du kjøper eller selger. Angi en leverandør hvis "
+"produktet kan bli kjøpt."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -337,7 +334,7 @@ msgstr "Produkt Produser"
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "Error ! You cannot create recursive BoM."
-msgstr ""
+msgstr "Feil! Du kan ikke lage en uendelig struktur!"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_routing_workcenter
@@ -406,6 +403,11 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the needs."
 msgstr ""
+"Egenskapene i OpenERP benyttes for å velge riktig materialliste for "
+"produksjon av et produkt hvor det finnes ulike måter å bygge opp produktet. "
+"Du kan legge flere egenskaper på hver materialliste. Når en selger lager en "
+"salgsordre kan han knytte den til ulike egenskaper, og OpenERP vil "
+"automatisk velge riktig materialliste i henhold til behovene."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -500,11 +502,6 @@ msgid "For Services."
 msgstr "For Tjenester."
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Dato endret"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -565,11 +562,6 @@ msgid "Force Reservation"
 msgstr "Tving Reservasjon"
 
 #. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Forfatter"
-
-#. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
 msgstr "Lagerverdi"
@@ -595,6 +587,7 @@ msgstr "Leverandør Pris per enhet"
 msgid ""
 "Gives the sequence order when displaying a list of routing Work Centers."
 msgstr ""
+"Gir rekkefølgen av når du viser en liste over ruter av  arbeidsstasjoner."
 
 #. module: mrp
 #: constraint:stock.move:0
@@ -709,7 +702,7 @@ msgstr "Tid i timer for å utføre en syklus."
 #. module: mrp
 #: constraint:mrp.bom:0
 msgid "BoM line product should not be same as BoM product."
-msgstr ""
+msgstr "Bom linje produktet bør ikke være det samme som BOM produkt."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -837,6 +830,10 @@ msgid ""
 "resource leave are not taken into account in the time computation of the "
 "work center."
 msgstr ""
+"Arbeidsstasjoner kan du opprette og administrere produksjonsenheter. De "
+"består av arbeidstakerne og / eller maskiner, som anses som en enhet for "
+"kapasitet og planlegging prognose. Husk at arbeidstiden og ressurs permisjon "
+"ikke er tatt hensyn til i tiden beregning av arbeidet sentrum."
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production
@@ -858,11 +855,6 @@ msgstr "Totalt Sykluser"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Klar for produksjon"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Endring navn"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -912,6 +904,8 @@ msgid ""
 "You must first cancel related internal picking attached to this "
 "manufacturing order."
 msgstr ""
+"Du må først annullere tilhørende intern plukkliste knyttet til "
+"produksjonsordren."
 
 #. module: mrp
 #: model:process.node,name:mrp.process_node_minimumstockrule0
@@ -1100,7 +1094,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.todo.category,name:mrp.category_mrp_config
 msgid "MRP Management"
-msgstr ""
+msgstr "MRP Ledelse"
 
 #. module: mrp
 #: help:mrp.workcenter,costs_hour:0
@@ -1113,6 +1107,8 @@ msgid ""
 "Number of operations this Work Center can do in parallel. If this Work "
 "Center represents a team of 5 workers, the capacity per cycle is 5."
 msgstr ""
+"Antall operasjoner denne Work Center kan gjøre parallelt. Hvis dette Work "
+"Center representerer et lag av 5 arbeidere, er kapasiteten per syklus 5."
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.mrp_production_action3
@@ -1444,11 +1440,6 @@ msgstr "Anskaff Produkter"
 #: view:report.workcenter.load:0
 msgid "Work Center Loads"
 msgstr "Arbeidssenter Belastning"
-
-#. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Stykkliste revisjoner"
 
 #. module: mrp
 #: help:mrp.production,origin:0
@@ -1970,12 +1961,6 @@ msgid "Orange Juice"
 msgstr "Appelsinjuice"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "Materialliste"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -1991,17 +1976,6 @@ msgstr ""
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr ""
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr ""
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "Materialliste revisjon"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2189,19 +2163,6 @@ msgid "Change Product Qty"
 msgstr "Endre produkt mengde"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Beskrivelse"
-
-#. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
 msgstr ""
@@ -2321,6 +2282,9 @@ msgstr "Produkter til forbruk"
 #~ msgid "Raw Material Location"
 #~ msgstr "Råmateriale Lokasjon"
 
+#~ msgid "Revision"
+#~ msgstr "Revisjon"
+
 #~ msgid "title"
 #~ msgstr "tittel"
 
@@ -2363,6 +2327,12 @@ msgstr "Produkter til forbruk"
 #~ "Muliggjør garanti og reparasjons håndtering (og deres påvirkning av lager og "
 #~ "fakturering)."
 
+#~ msgid "Author"
+#~ msgstr "Forfatter"
+
+#~ msgid "Modification Date"
+#~ msgstr "Dato endret"
+
 #~ msgid "March"
 #~ msgstr "Mars"
 
@@ -2404,6 +2374,9 @@ msgstr "Produkter til forbruk"
 
 #~ msgid "Extended Filters..."
 #~ msgstr "Utvidede filter..."
+
+#~ msgid "Modification name"
+#~ msgstr "Endring navn"
 
 #~ msgid "Just In Time Scheduling"
 #~ msgstr "Akkurat i Tide Planlegging"
@@ -2596,6 +2569,12 @@ msgstr "Produkter til forbruk"
 #~ msgid "January"
 #~ msgstr "Januar"
 
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Stykkliste revisjoner"
+
+#~ msgid "Description"
+#~ msgstr "Beskrivelse"
+
 #~ msgid "April"
 #~ msgstr "April"
 
@@ -2607,3 +2586,9 @@ msgstr "Produkter til forbruk"
 
 #~ msgid "Year"
 #~ msgstr "År"
+
+#~ msgid "BoM"
+#~ msgstr "Materialliste"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Materialliste revisjon"

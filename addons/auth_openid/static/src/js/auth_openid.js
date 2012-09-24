@@ -8,7 +8,7 @@ instance.web.Login = instance.web.Login.extend({
         this._super.apply(this, arguments);
         var self = this;
 
-        this._default_error_message = this.$element.find('.oe_login_error_message').text();
+        this._default_error_message = this.$el.find('.oe_login_error_message').text();
 
         this.$openid_selected_button = $();
         this.$openid_selected_input = $();
@@ -32,7 +32,7 @@ instance.web.Login = instance.web.Login.extend({
             this.do_openid_select('a[data-url=""]', 'login,password', true);
         }
 
-        this.$element.find('a[data-url]').click(function (event) {
+        this.$el.find('a[data-url]').click(function (event) {
             event.preventDefault();
             var selected_oidh = $(this).attr('href').substr(1);
             if (selected_oidh != self.$openid_selected_provider) {
@@ -48,10 +48,10 @@ instance.web.Login = instance.web.Login.extend({
         var self = this;
 
             self.$openid_selected_button.add(self.$openid_selected_input).removeClass('selected');
-            self.$openid_selected_button = self.$element.find(button).addClass('selected');
+            self.$openid_selected_button = self.$el.find(button).addClass('selected');
 
             var input = _(provider.split(',')).map(function(p) { return 'li[data-provider="'+p+'"]'; }).join(',');
-            self.$openid_selected_input = self.$element.find(input).addClass('selected');
+            self.$openid_selected_input = self.$el.find(input).addClass('selected');
 
             self.$openid_selected_input.find('input:first').focus();
             self.$openid_selected_provider = (self.$openid_selected_button.attr('href') || '').substr(1);
@@ -61,7 +61,7 @@ instance.web.Login = instance.web.Login.extend({
             }
 
             if (!noautosubmit && self.$openid_selected_input.length == 0) {
-                self.$element.find('form').submit();
+                self.$el.find('form').submit();
             }
 
     },
@@ -96,7 +96,7 @@ instance.web.Login = instance.web.Login.extend({
                 localStorage.setItem('openid-login', id);
             }
 
-            var db = this.$element.find("form [name=db]").val();
+            var db = this.$el.find("form [name=db]").val();
             var openid_url = dataurl.replace('{id}', id);
 
             this.do_openid_login(db, openid_url);
@@ -129,12 +129,12 @@ instance.web.Login = instance.web.Login.extend({
 
     do_warn: function(title, msg) {
         //console.warn(title, msg);
-        this.$element.find('.oe_login_error_message').text(msg).show();
+        this.$el.find('.oe_login_error_message').text(msg).show();
         this._super(title, msg);
     },
 
     reset_error_message: function() {
-        this.$element.find('.oe_login_error_message').text(this._default_error_message);
+        this.$el.find('.oe_login_error_message').text(this._default_error_message);
     }
 
 });

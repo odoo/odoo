@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-09 04:43+0000\n"
-"X-Generator: Launchpad (build 15761)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:38+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -224,11 +224,6 @@ msgstr ""
 #: model:process.node,note:mrp.process_node_purchaseprocure0
 msgid "For purchased material"
 msgstr "Für eingekauftes Material"
-
-#. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Revision"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
@@ -510,11 +505,6 @@ msgid "For Services."
 msgstr "Für Dienstleistungsprodukte."
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Änderung am"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -574,11 +564,6 @@ msgstr "Konfigurieren Sie Ihre Arbeitsplätze"
 #: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "Erzwinge Reservierung"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Mitarbeiter"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -879,11 +864,6 @@ msgstr "Gesamt Zyklen"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Startbereit für Fertigung"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Bezeichnung geändert"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1484,11 +1464,6 @@ msgid "Work Center Loads"
 msgstr "Arbeitsplatz Auslastungen"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Stückliste Revision"
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -2033,12 +2008,6 @@ msgid "Orange Juice"
 msgstr "Orangensaft"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "Stückliste"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -2054,17 +2023,6 @@ msgstr "Zuweisung vom Lager."
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Erwartet Material"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "Letzter Index"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "Stücklisten Revision"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2258,19 +2216,6 @@ msgid "Change Product Qty"
 msgstr "Ändere Produkt Menge"
 
 #. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Beschreibung"
-
-#. module: mrp
 #: view:board.board:0
 msgid "Manufacturing board"
 msgstr "Pinnwand Fertigung"
@@ -2408,6 +2353,9 @@ msgstr "Benötigte Produkte"
 #~ "Triggert einen automatischen Beschaffungsvorschlag für alle Produkte mit "
 #~ "virtuellem Lager unter \"0\". Idealerweise arbeitet man allerdings mit "
 #~ "Lagerbestandsregeln."
+
+#~ msgid "Revision"
+#~ msgstr "Revision"
 
 #~ msgid "Compute Stock Minimum Rules Only"
 #~ msgstr "Regelbasierte Beschaffungsvorschläge"
@@ -2582,6 +2530,9 @@ msgstr "Benötigte Produkte"
 #~ msgid "Make Procurement"
 #~ msgstr "Erzeuge Beschaffung"
 
+#~ msgid "Modification Date"
+#~ msgstr "Änderung am"
+
 #~ msgid "If Procure method is Make to order and supply method is produce"
 #~ msgstr ""
 #~ "Falls Beschaffungsmethode 'aus Auftrag' und Einkaufsmethode 'Produktion'"
@@ -2683,6 +2634,9 @@ msgstr "Benötigte Produkte"
 
 #~ msgid "Security Days"
 #~ msgstr "Sicherheitspuffer (Tage)"
+
+#~ msgid "Modification name"
+#~ msgstr "Bezeichnung geändert"
 
 #~ msgid "Exception"
 #~ msgstr "Fehlerliste"
@@ -3033,6 +2987,9 @@ msgstr "Benötigte Produkte"
 #~ msgid "plus"
 #~ msgstr "Plus"
 
+#~ msgid "BoM"
+#~ msgstr "Stückliste"
+
 #~ msgid "Stockable Product Process"
 #~ msgstr "Lagerfähiges Produkt Prozess"
 
@@ -3041,6 +2998,12 @@ msgstr "Benötigte Produkte"
 
 #~ msgid "A Request for Quotation is created and sent to the supplier."
 #~ msgstr "Eine Angebotsanfrage wurde erzeugt und an den Lieferanten versendet."
+
+#~ msgid "last indice"
+#~ msgstr "Letzter Index"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "Stücklisten Revision"
 
 #~ msgid "Retry"
 #~ msgstr "Wiederhole"
@@ -3099,6 +3062,9 @@ msgstr "Benötigte Produkte"
 
 #~ msgid "Close Move at end"
 #~ msgstr "Beende Warenfluss (Ende)"
+
+#~ msgid "Description"
+#~ msgstr "Beschreibung"
 
 #~ msgid "Running"
 #~ msgstr "In Weiterbearbeitung"
@@ -3238,6 +3204,9 @@ msgstr "Benötigte Produkte"
 #~ msgid "January"
 #~ msgstr "Januar"
 
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Stückliste Revision"
+
 #~ msgid "February"
 #~ msgstr "Februar"
 
@@ -3262,6 +3231,9 @@ msgstr "Benötigte Produkte"
 
 #~ msgid "Advanced Routes"
 #~ msgstr "Lieferketten"
+
+#~ msgid "Author"
+#~ msgstr "Mitarbeiter"
 
 #~ msgid "Workcenter Usage"
 #~ msgstr "Fertigungsstelle Auslastung"

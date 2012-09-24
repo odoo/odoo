@@ -21,18 +21,18 @@
 
 {
     'name' : 'Portal',
-    'version' : '1.0',
-    'depends' : [
+    'version': '1.0',
+    'depends': [
         'base',
         'share',
         'auth_anonymous',
         'auth_signup',
     ],
-    'author' : 'OpenERP SA',
+    'author': 'OpenERP SA',
     'category': 'Portal',
     'description': """
 Customize access to your OpenERP database to external users by creating portals.
-
+================================================================================
 A portal defines a specific user menu and access rights for its members.  This
 menu can ben seen by portal members, anonymous users and any other user that
 have the access to technical features (e.g. the administrator).
@@ -51,9 +51,7 @@ very handy when used in combination with the module 'share'.
         'wizard/portal_wizard_view.xml',
         'wizard/share_wizard_view.xml',
     ],
-    'demo': [
-        'portal_demo.xml',
-    ],
+    'demo': ['portal_demo.xml'],
     'installable': True,
 }
 

@@ -1045,6 +1045,8 @@ class account_voucher(osv.osv):
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
+                if not line.move_line_id.amount_residual:
+                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
                 currency_rate_difference = line.move_line_id.amount_residual - amount
             else:
                 currency_rate_difference = 0.0
@@ -1293,17 +1295,17 @@ class account_voucher(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, context=context)
 
     def post_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, context=context)
 
 account_voucher()
 

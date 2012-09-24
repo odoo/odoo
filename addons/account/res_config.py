@@ -43,18 +43,18 @@ class account_config_settings(osv.osv_memory):
             string='Default company currency', help="Main currency of the company."),
         'paypal_account': fields.related('company_id', 'paypal_account', type='char', size=128,
             string='Paypal account', help="Paypal account (email) for receiving online payments (credit card, etc.) If you set a paypal account, the customer  will be able to pay your invoices or quotations with a button \"Pay with  Paypal\" in automated emails or through the OpenERP portal."),
-        'company_footer': fields.related('company_id', 'rml_footer2', type='char', size=250, readonly=True,
-            string='Bank accounts on reports will display as followed', help="Bank accounts as printed in the footer of each customer  document. This is for information purpose only, you should configure these bank accounts through the above button \"Configure Bank Accounts\"."),
+        'company_footer': fields.related('company_id', 'rml_footer', type='text', readonly=True,
+            string='Bank accounts footer preview', help="Bank accounts as printed in the footer of each printed document"),
 
         'has_chart_of_accounts': fields.boolean('Company has a chart of accounts'),
         'chart_template_id': fields.many2one('account.chart.template', 'Template', domain="[('visible','=', True)]"),
         'code_digits': fields.integer('# of Digits', help="No. of digits to use for account code"),
         'tax_calculation_rounding_method': fields.related('company_id',
             'tax_calculation_rounding_method', type='selection', selection=[
-            ('round_per_line', 'Round per Line'),
-            ('round_globally', 'Round Globally'),
+            ('round_per_line', 'Round per line'),
+            ('round_globally', 'Round globally'),
             ], string='Tax calculation rounding method',
-            help="If you select 'Round per Line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round Globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
+            help="If you select 'Round per line' : for each tax, the tax amount will first be computed and rounded for each PO/SO/invoice line and then these rounded amounts will be summed, leading to the total amount for that tax. If you select 'Round globally': for each tax, the tax amount will be computed for each PO/SO/invoice line, then these amounts will be summed and eventually this total tax amount will be rounded. If you sell with tax included, you should choose 'Round per line' because you certainly want the sum of your tax-included line subtotals to be equal to the total amount with taxes."),
         'sale_tax': fields.many2one("account.tax.template", "Default sale tax"),
         'purchase_tax': fields.many2one("account.tax.template", "Default purchase tax"),
         'sale_tax_rate': fields.float('Sales tax (%)'),
@@ -72,40 +72,40 @@ class account_config_settings(osv.osv_memory):
         'sale_refund_journal_id': fields.many2one('account.journal', 'Sale refund journal'),
         'sale_refund_sequence_prefix': fields.related('sale_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Credit note sequence'),
         'sale_refund_sequence_next': fields.related('sale_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next credit note number'),
-        'purchase_journal_id': fields.many2one('account.journal', 'Purchase Journal'),
+        'purchase_journal_id': fields.many2one('account.journal', 'Purchase journal'),
         'purchase_sequence_prefix': fields.related('purchase_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier invoice sequence'),
         'purchase_sequence_next': fields.related('purchase_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier invoice number'),
         'purchase_refund_journal_id': fields.many2one('account.journal', 'Purchase refund journal'),
         'purchase_refund_sequence_prefix': fields.related('purchase_refund_journal_id', 'sequence_id', 'prefix', type='char', string='Supplier credit note sequence'),
         'purchase_refund_sequence_next': fields.related('purchase_refund_journal_id', 'sequence_id', 'number_next', type='integer', string='Next supplier credit note number'),
 
-        'module_account_check_writing': fields.boolean('pay your suppliers by check',
+        'module_account_check_writing': fields.boolean('Pay your suppliers by check',
             help="""This allows you to check writing and printing.
                 This installs the module account_check_writing."""),
-        'module_account_accountant': fields.boolean('full accounting features: journals, legal statements, chart of accounts, etc.',
+        'module_account_accountant': fields.boolean('Full accounting features: journals, legal statements, chart of accounts, etc.',
             help="""If you do not check this box, you will be able to do invoicing & payments, but not accounting (Journal Items, Chart of  Accounts, ...)"""),
-        'module_account_asset': fields.boolean('assets management',
+        'module_account_asset': fields.boolean('Assets management',
             help="""This allows you to manage the assets owned by a company or a person.
                 It keeps track of the depreciation occurred on those assets, and creates account move for those depreciation lines.
                 This installs the module account_asset. If you do not check this box, you will be able to do invoicing & payments,
                 but not accounting (Journal Items, Chart of Accounts, ...)"""),
-        'module_account_budget': fields.boolean('budget management',
+        'module_account_budget': fields.boolean('Budget management',
             help="""This allows accountants to manage analytic and crossovered budgets.
                 Once the master budgets and the budgets are defined,
                 the project managers can set the planned amount on each analytic account.
                 This installs the module account_budget."""),
-        'module_account_payment': fields.boolean('manage payment orders',
+        'module_account_payment': fields.boolean('Manage payment orders',
             help="""This allows you to create and manage your payment orders, with purposes to
                     * serve as base for an easy plug-in of various automated payment mechanisms, and
                     * provide a more efficient way to manage invoice payments.
                 This installs the module account_payment."""),
-        'module_account_voucher': fields.boolean('manage customer payments',
+        'module_account_voucher': fields.boolean('Manage customer payments',
             help="""This includes all the basic requirements of voucher entries for bank, cash, sales, purchase, expense, contra, etc.
                 This installs the module account_voucher."""),
-        'module_account_followup': fields.boolean('manage customer payment follow-ups',
+        'module_account_followup': fields.boolean('Manage customer payment follow-ups',
             help="""This allows to automate letters for unpaid invoices, with multi-level recalls.
                 This installs the module account_followup."""),
-        'group_proforma_invoices': fields.boolean('allow pro-forma invoices',
+        'group_proforma_invoices': fields.boolean('Allow pro-forma invoices',
             implied_group='account.group_proforma_invoices',
             help="Allows you to put invoices in pro-forma state."),
         'default_sale_tax': fields.many2one('account.tax', 'Default sale tax',
@@ -114,6 +114,9 @@ class account_config_settings(osv.osv_memory):
             help="This purchase tax will be assigned by default on new products."),
         'decimal_precision': fields.integer('Decimal precision on journal entries',
             help="""As an example, a decimal precision of 2 will allow journal entries  like: 9.99 EUR, whereas a decimal precision of 4 will allow journal  entries like: 0.0231 EUR."""),
+        'group_multi_currency': fields.boolean('Allow multi currencies',
+            implied_group='base.group_multi_currency',
+            help="Allows you multi currency environment"),
     }
 
     def _default_company(self, cr, uid, context=None):
@@ -145,42 +148,45 @@ class account_config_settings(osv.osv_memory):
 
     def onchange_company_id(self, cr, uid, ids, company_id):
         # update related fields
-        company = self.pool.get('res.company').browse(cr, uid, company_id)
-        has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
-        fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
-            [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
-             ('company_id', '=', company_id)])
-        values = {
-            'expects_chart_of_accounts': company.expects_chart_of_accounts,
-            'currency_id': company.currency_id.id,
-            'paypal_account': company.paypal_account,
-            'company_footer': company.rml_footer2,
-            'has_chart_of_accounts': has_chart_of_accounts,
-            'has_fiscal_year': bool(fiscalyear_count),
-            'chart_template_id': False,
-            'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
-        }
-        # update journals and sequences
-        for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-            for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
-                values[journal_type + suffix] = False
-        journal_obj = self.pool.get('account.journal')
-        journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
-        for journal in journal_obj.browse(cr, uid, journal_ids):
-            if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
-                values.update({
-                    journal.type + '_journal_id': journal.id,
-                    journal.type + '_sequence_prefix': journal.sequence_id.prefix,
-                    journal.type + '_sequence_next': journal.sequence_id.number_next,
-                })
-        # update taxes
-        ir_values = self.pool.get('ir.values')
-        taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
-        supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
-        values.update({
-            'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
-            'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
-        })
+        values = {}
+        values['currency_id'] = False
+        if company_id:
+            company = self.pool.get('res.company').browse(cr, uid, company_id)
+            has_chart_of_accounts = company_id not in self.pool.get('account.installer').get_unconfigured_cmp(cr, uid)
+            fiscalyear_count = self.pool.get('account.fiscalyear').search_count(cr, uid,
+                [('date_start', '<=', time.strftime('%Y-%m-%d')), ('date_stop', '>=', time.strftime('%Y-%m-%d')),
+                 ('company_id', '=', company_id)])
+            values = {
+                'expects_chart_of_accounts': company.expects_chart_of_accounts,
+                'currency_id': company.currency_id.id,
+                'paypal_account': company.paypal_account,
+                'company_footer': company.rml_footer,
+                'has_chart_of_accounts': has_chart_of_accounts,
+                'has_fiscal_year': bool(fiscalyear_count),
+                'chart_template_id': False,
+                'tax_calculation_rounding_method': company.tax_calculation_rounding_method,
+            }
+            # update journals and sequences
+            for journal_type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                for suffix in ('_journal_id', '_sequence_prefix', '_sequence_next'):
+                    values[journal_type + suffix] = False
+            journal_obj = self.pool.get('account.journal')
+            journal_ids = journal_obj.search(cr, uid, [('company_id', '=', company_id)])
+            for journal in journal_obj.browse(cr, uid, journal_ids):
+                if journal.type in ('sale', 'sale_refund', 'purchase', 'purchase_refund'):
+                    values.update({
+                        journal.type + '_journal_id': journal.id,
+                        journal.type + '_sequence_prefix': journal.sequence_id.prefix,
+                        journal.type + '_sequence_next': journal.sequence_id.number_next,
+                    })
+            # update taxes
+            ir_values = self.pool.get('ir.values')
+            taxes_id = ir_values.get_default(cr, uid, 'product.product', 'taxes_id', company_id=company_id)
+            supplier_taxes_id = ir_values.get_default(cr, uid, 'product.product', 'supplier_taxes_id', company_id=company_id)
+            values.update({
+                'default_sale_tax': isinstance(taxes_id, list) and taxes_id[0] or taxes_id,
+                'default_purchase_tax': isinstance(supplier_taxes_id, list) and supplier_taxes_id[0] or supplier_taxes_id,
+            })
         return {'value': values}
 
     def onchange_chart_template_id(self, cr, uid, ids, chart_template_id, context=None):
@@ -216,6 +222,16 @@ class account_config_settings(osv.osv_memory):
             end_date = (start_date + relativedelta(months=12)) - relativedelta(days=1)
             return {'value': {'date_stop': end_date.strftime('%Y-%m-%d')}}
         return {}
+
+    def open_company_form(self, cr, uid, ids, context=None):
+        config = self.browse(cr, uid, ids[0], context)
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Configure your Company',
+            'res_model': 'res.company',
+            'res_id': config.company_id.id,
+            'view_mode': 'form',
+        }
 
     def set_default_taxes(self, cr, uid, ids, context=None):
         """ set default sale and purchase taxes for products """
