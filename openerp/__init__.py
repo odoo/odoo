@@ -38,11 +38,19 @@ import run_tests
 import service
 import sql_db
 import test
-import tiny_socket
 import tools
 import wizard
 import workflow
-import wsgi
+# backward compatilbility
+# TODO: This is for the web addons, can be removed later.
+wsgi = service
+wsgi.register_wsgi_handler = wsgi.wsgi_server.register_wsgi_handler
+# Is the server running in multi-process mode (e.g. behind Gunicorn).
+# If this is True, the processes have to communicate some events,
+# e.g. database update or cache invalidation. Each process has also
+# its own copy of the data structure and we don't need to care about
+# locks between threads.
+multi_process = True
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
