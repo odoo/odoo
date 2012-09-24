@@ -6,6 +6,7 @@
         'base',
         'hr',
     ],
+    'demo': ['demo.xml'],
     'author' : 'OpenERP S.A.',
     'description' : """
     I'm a good module and I will handle the cars of your company !

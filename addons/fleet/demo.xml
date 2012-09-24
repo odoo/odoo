@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data noupdate="1">
+
+      <record id="brand_opel" model="fleet.vehicle.model.brand">
+          <field name="name">Opel</field>
+      </record>
+
+      <record id="brand_bmw" model="fleet.vehicle.model.brand">
+          <field name="name">BMW</field>
+      </record>
+
+      <record id="brand_audi" model="fleet.vehicle.model.brand">
+          <field name="name">Audi</field>
+      </record>
+
+      <record id="brand_mercedes" model="fleet.vehicle.model.brand">
+          <field name="name">Mercedes</field>
+      </record>
+
+      <record id="model_corsa" model="fleet.vehicle.model">
+          <field name="modelname">Corsa</field>
+          <field name="brand" ref="brand_opel" />
+      </record>
+
+      <record id="model_astra" model="fleet.vehicle.model">
+          <field name="modelname">Astra</field>
+          <field name="brand" ref="brand_opel" />
+      </record>
+
+      <record id="vehicle_1" model="fleet.vehicle">
+          <field name="registration">1-ACK-205</field>
+          <field name="vin_sn">5454541</field>
+          <field name="model_id" ref="model_astra"/>
+          <field name="color">Black</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver" ref="hr.employee_fp" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+      </record>
+
+      <record id="vehicle_2" model="fleet.vehicle">
+          <field name="registration">1-SYN-404</field>
+          <field name="vin_sn">1337</field>
+          <field name="model_id" ref="model_corsa"/>
+          <field name="color">Red</field>
+          <field name="location">Grand-Rosiere</field>
+          <field name="doors">5</field>
+          <field name="driver" ref="hr.employee_fp" />
+          <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+      </record>
+
+      <record id="type_service_oil" model="fleet.service.type">
+          <field name="name">Oil change</field>
+      </record>
+
+      <record id="log_service_1" model="fleet.vehicle.log.services">
+          <field name="employee_id" ref="hr.employee_fp" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="create_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="type">Services</field>
+          <field name="amount">500.0</field>
+          <field name="service_ids" eval="[(6,0,[ref('type_service_oil')])]" />
+      </record>
+
+    </data>
+</openerp>
