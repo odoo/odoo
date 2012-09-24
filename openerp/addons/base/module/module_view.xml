@@ -182,7 +182,7 @@
             </field>
         </record>
         <record id="open_module_tree" model="ir.actions.act_window">
-            <field name="name">Install a Module</field>
+            <field name="name">Modules</field>
             <field name="res_model">ir.module.module</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
@@ -193,8 +193,9 @@
               <p>You should try others search criteria.</p>
             </field>
         </record>
-        <menuitem id="menu_module_tree" parent="base.menu_management" name="Local Modules"
-            sequence="2" action="open_module_tree" groups="group_no_one" />
+        <menuitem id="menu_local_modules" parent="base.menu_management" name="Local Modules" sequence="2" groups="group_no_one"/>
+        <menuitem id="menu_module_tree" parent="menu_local_modules" name="Modules"
+            sequence="1" action="open_module_tree" />
 
     </data>
 </openerp>
