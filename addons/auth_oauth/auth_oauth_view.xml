@@ -4,14 +4,13 @@
         <record model="ir.ui.view" id="view_oauth_provider_form">
             <field name="name">auth.oauth.provider.form</field>
             <field name="model">auth.oauth.provider</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="arch" version="7.0">
                     <sheet>
                         <group>
                             <field name="name" />
                             <field name="client_id" />
-                            <field name="active" />
+                            <field name="enabled" />
                         </group>
                         <group>
                             <field name="auth_endpoint" />
@@ -22,16 +21,15 @@
                     </sheet>
                 </form>
             </field>
-        </record>
+        </record>        
         <record model="ir.ui.view" id="view_oauth_provider_list">
             <field name="name">auth.oauth.provider.list</field>
             <field name="model">auth.oauth.provider</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="arch" version="7.0">
                     <field name="name" />
                     <field name="client_id" />
-                    <field name="active" />
+                    <field name="enabled" />
                 </tree>
             </field>
         </record>

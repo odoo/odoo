@@ -15,8 +15,7 @@ class PosBox(CashBox):
         active_ids = context.get('active_ids', []) or []
 
         if active_model == 'pos.session':
-            records = self.pool.get(active_model).browse(cr, uid, context.get('active_ids', []) or [], context=context)
-
+            records = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)
             bank_statements = [record.cash_register_id for record in records if record.cash_register_id]
 
             if not bank_statements:
@@ -30,6 +29,30 @@ class PosBox(CashBox):
 class PosBoxIn(PosBox):
     _inherit = 'cash.box.in'
 
+    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        values = super(PosBoxIn, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
+
+        active_model = context.get('active_model', False) or False
+        active_ids = context.get('active_ids', []) or []
+
+        if active_model == 'pos.session':
+            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            values['ref'] = session.name
+
+        return values
+
+
 class PosBoxOut(PosBox):
     _inherit = 'cash.box.out'
 
+    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        values = super(PosBoxOut, self)._compute_values_for_statement_line(cr, uid, box, record, context=context)
+
+        active_model = context.get('active_model', False) or False
+        active_ids = context.get('active_ids', []) or []
+
+        if active_model == 'pos.session':
+            session = self.pool.get(active_model).browse(cr, uid, active_ids, context=context)[0]
+            values['ref'] = session.name
+
+        return values

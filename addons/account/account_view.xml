@@ -101,28 +101,29 @@
             <field name="model">account.period</field>
             <field name="arch" type="xml">
                 <form string="Account Period" version="7.0">
-	                <header>
-	                    <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
-	                    <field name="state" widget="statusbar" nolabel="1"/>
-	                </header>
-	                <sheet>
-		                <group>
-		                    <group>
-		                        <field name="name"/>
-		                        <field name="fiscalyear_id" widget="selection"/>
-		                        <label for="date_start" string="Duration"/>
-		                        <div>
-		                            <field name="date_start" class="oe_inline" nolabel="1"/> - 
-		                            <field name="date_stop" nolabel="1" class="oe_inline"/>
-		                        </div>
-		                    </group>
-		                    <group>
-		                        <field name="code"/>
-		                        <field name="special"/>
-		                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-		                    </group>
-		                </group>
-	                </sheet>
+                    <header>
+                        <button string="Close Period" name="%(account.action_account_period_close)d" type="action" class="oe_highlight" states="draft"/>
+                        <button name="action_draft" states="done" string="Set to Draft" type="object" groups="account.group_account_manager"/>
+                        <field name="state" widget="statusbar" nolabel="1"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="fiscalyear_id" widget="selection"/>
+                                <label for="date_start" string="Duration"/>
+                                <div>
+                                    <field name="date_start" class="oe_inline" nolabel="1"/> -
+                                    <field name="date_stop" nolabel="1" class="oe_inline"/>
+                                </div>
+                            </group>
+                            <group>
+                                <field name="code"/>
+                                <field name="special"/>
+                                <field name="company_id" widget="selection" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
@@ -181,7 +182,7 @@
                 <form string="Account" version="7.0">
                     <label for="code" class="oe_edit_only" string="Account Code and Name"/>
                     <h1>
-                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> - 
+                        <field name="code" class="oe_inline" placeholder="Account code" style="width: 6em"/> -
                         <field name="name" class="oe_inline" placeholder="Account name"/>
                     </h1>
                     <group>
@@ -204,7 +205,7 @@
                                 attrs="{'invisible':[('type','!=','consolidation')]}"
                                 widget="many2many_tags"/>
                         </group>
-                        <group>
+                        <group groups="base.group_multi_currency">
                             <field name="currency_id"/>
                             <field name="currency_mode" attrs="{'readonly': [('currency_id','=',False)]}"/>
                         </group>
@@ -252,16 +253,6 @@
                 </tree>
             </field>
         </record>
-        <record id="view_treasory_graph" model="ir.ui.view">
-           <field name="name">account.treasury.graph</field>
-           <field name="model">account.account</field>
-           <field name="arch" type="xml">
-               <graph string="Treasury Analysis" type="bar">
-                  <field name="name"/>
-                  <field name="balance" operator="+"/>
-               </graph>
-         </field>
-      </record>
         <record id="action_account_form" model="ir.actions.act_window">
             <field name="name">Accounts</field>
             <field name="res_model">account.account</field>
@@ -489,7 +480,7 @@
                         <group>
                             <field name="default_debit_account_id" attrs="{'required':[('type','in', ('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
                             <field name="default_credit_account_id" attrs="{'required':[('type','in',('cash', 'bank'))]}" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]"/>
-                            <field name="currency"/>
+                            <field name="currency" groups="base.group_multi_currency"/>
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
@@ -515,7 +506,7 @@
                             <separator colspan="4" string="Accounts Allowed (empty for no control)"/>
                             <field colspan="4" name="account_control_ids" nolabel="1"/>
                         </page>
-                        <page string="Cash Registers" attrs="{'invisible':[('type', '!=', 'cash')]}">
+                        <page string="Cash Registers">
                             <group>
                                 <group string="Accounts">
                                     <field name="profit_account_id"/>
@@ -524,10 +515,11 @@
                                 </group>
                                 <group string="Miscellaneous">
                                     <field name="with_last_closing_balance"/>
+                                    <field name="cash_control"/>
                                 </group>
                             </group>
-                            <separator string="Available Coins" colspan="4" />
-                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4">
+                            <separator string="Available Coins" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)] }"/>
+                            <field name="cashbox_line_ids" nolabel="1" string="Unit Of Currency Definition" colspan="4" attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <tree string="CashBox Lines" editable="bottom">
                                     <field name="pieces" />
                                 </tree>
@@ -1047,7 +1039,26 @@
     Entries lines
     -->
 
-        <record id="view_move_line_tree" model="ir.ui.view">
+        <record id="view_move_line_tree_reconcile" model="ir.ui.view">
+            <field name="name">account.move.line.reconcile.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="24" name="priority"/>
+            <field name="arch" type="xml">
+                <tree colors="red:state == 'draft';black:state == 'valid'" string="Journal Items to Reconcile" create="false">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="reconcile_partial_id"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                </tree>
+            </field>
+        </record>
+
+         <record id="view_move_line_tree" model="ir.ui.view">
             <field name="name">account.move.line.tree</field>
             <field name="model">account.move.line</field>
             <field eval="4" name="priority"/>
@@ -1067,7 +1078,7 @@
                     <field name="account_tax_id"/>
                     <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('parent_id','!=',False)]"/>
                     <field name="amount_currency" attrs="{'readonly':[('state','=','valid')]}"/>
-                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}"/>
+                    <field name="currency_id" attrs="{'readonly':[('state','=','valid')]}" groups="base.group_multi_currency"/>
                     <field name="reconcile_partial_id"/>
                     <field name="reconcile_id"/>
                     <field name="state"/>
@@ -1081,65 +1092,65 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Journal Item" version="7.0">
-                    <sheet> 
-	                    <group>
-	                        <group>
-		                        <field name="name"/>
-		                        <field name="ref"/>
-		                        <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
-	                        </group>
-	                        <group>
-		                        <field name="journal_id"/>
-		                        <field name="period_id"/>
-		                        <field name="company_id" required="1" groups="base.group_multi_company"/>
-	                        </group>
-	                    </group>
-	                    <notebook colspan="4">
-	                        <page string="Information">
-	                            <group>
-	                                <group string="Amount">
-	                                    <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
-	                                    <field name="debit"/>
-	                                    <field name="credit"/>
-	                                    <field name="quantity"/>
-	                                </group>
-	                                <group string="Accounting Documents">
-	                                    <field name="invoice" readonly="True"/>
-	                                    <field name="move_id" required="False"/>
-	                                    <field name="statement_id" readonly="True"/>
-	                                </group>
-	                                <group string="Dates">
-	                                    <field name="date"/>
-	                                    <field name="date_maturity"/>
-	                                    <field name="date_created" readonly="True"/>
-	                                </group>
-	                                <group string="Taxes">
-	                                    <field name="tax_code_id"/>
-	                                    <field name="tax_amount"/>
-	                                    <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
-	                                </group>
-	                                <group attrs="{'readonly':[('state','=','valid')]}" string="Currency">
-	                                    <field name="currency_id"/>
-	                                    <field name="amount_currency"/>
-	                                </group>
-	                                <group string="Reconciliation">
-	                                    <field name="reconcile_id"/>
-	                                    <field name="reconcile_partial_id"/>
-	                                </group>
-	                                <group string="States">
-	                                    <field name="state"/>
-	                                    <field name="blocked"/>
-	                                </group>
-	                                <group groups="analytic.group_analytic_accounting" string="Analytic">
-	                                    <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
-	                                </group>
-	                            </group>
-	                            <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
-	                        </page>
-	                        <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
-	                            <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
-	                        </page>
-	                    </notebook>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="ref"/>
+                                <field name="partner_id" on_change="onchange_partner_id(False,partner_id,account_id,debit,credit,date)"/>
+                            </group>
+                            <group>
+                                <field name="journal_id"/>
+                                <field name="period_id"/>
+                                <field name="company_id" required="1" groups="base.group_multi_company"/>
+                            </group>
+                        </group>
+                        <notebook colspan="4">
+                            <page string="Information">
+                                <group>
+                                    <group string="Amount">
+                                        <field name="account_id" domain="[('company_id', '=', company_id), ('type','&lt;&gt;','view'), ('type','&lt;&gt;','consolidation')]"/>
+                                        <field name="debit"/>
+                                        <field name="credit"/>
+                                        <field name="quantity"/>
+                                    </group>
+                                    <group string="Accounting Documents">
+                                        <field name="invoice" readonly="True"/>
+                                        <field name="move_id" required="False"/>
+                                        <field name="statement_id" readonly="True"/>
+                                    </group>
+                                    <group string="Dates">
+                                        <field name="date"/>
+                                        <field name="date_maturity"/>
+                                        <field name="date_created" readonly="True"/>
+                                    </group>
+                                    <group string="Taxes">
+                                        <field name="tax_code_id"/>
+                                        <field name="tax_amount"/>
+                                        <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
+                                    </group>
+                                    <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
+                                        <field name="currency_id"/>
+                                        <field name="amount_currency"/>
+                                    </group>
+                                    <group string="Reconciliation">
+                                        <field name="reconcile_id"/>
+                                        <field name="reconcile_partial_id"/>
+                                    </group>
+                                    <group string="States">
+                                        <field name="state"/>
+                                        <field name="blocked"/>
+                                    </group>
+                                    <group groups="analytic.group_analytic_accounting" string="Analytic">
+                                        <field name="analytic_account_id" domain="[('parent_id','!=',False)]"/>
+                                    </group>
+                                </group>
+                                <field name="narration" colspan="4" nolabel="1" placeholder="Add an internal note..."/>
+                            </page>
+                            <page string="Analytic Lines" groups="analytic.group_analytic_accounting">
+                                <field name="analytic_lines" context="{'default_general_account_id':account_id, 'default_name': name, 'default_date':date, 'amount': (debit or 0.0)-(credit or 0.0)}"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -1166,8 +1177,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id"/>
-                                <field name="amount_currency"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
+                                <field name="amount_currency" groups="base.group_multi_currency"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -1348,7 +1359,7 @@
                             <field name="date"/>
                             <field name="to_check"/>
                             <field name="amount" invisible="1"/>
-                        </group>	
+                        </group>
                     </group>
                     <notebook>
                         <page string="Journal Items">
@@ -1394,7 +1405,7 @@
                                                     <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                                 </group>
 
-                                                <group string="Currency">
+                                                <group string="Currency" groups="base.group_multi_currency">
                                                     <field name="currency_id"/>
                                                     <field name="amount_currency"/>
                                                 </group>
@@ -1432,7 +1443,7 @@
                                     <field name="credit" sum="Total Credit"/>
                                     <field name="analytic_account_id" domain="[('parent_id','!=',False)]" groups="analytic.group_analytic_accounting"/>
                                     <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                     <field name="tax_code_id"/>
                                     <field name="tax_amount"/>
                                     <field name="state"/>
@@ -1521,7 +1532,6 @@
 
         <record id="action_move_line_search" model="ir.actions.act_window">
             <field name="name">Journal Items</field>
-            <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.move.line</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -1540,15 +1550,31 @@
             <field name="act_window_id" ref="action_move_line_search"/>
         </record>
 
-        <act_window
-            context="{'search_default_next_partner':1,'view_mode':True}"
-            id="action_account_manual_reconcile" name="Journal Items"
-            res_model="account.move.line"
-            view_id="view_move_line_tree"/>
-
+        <record id="action_account_manual_reconcile" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_tree_reconcile"/>
+            <field name="view_type">form</field>
+            <field name="view_mode">account_reconciliation_list</field>
+            <field name="help" type="html">
+                <p>
+                    Good job!
+                </p><p>
+                    There is nothing to reconcile. All invoices and payments
+                    have been reconciled, your partner balance is clean.
+                </p>
+            </field>
+        </record>
+        <menuitem
+             name="Journal Items to Reconcile"
+             action="action_account_manual_reconcile"
+             id="menu_manual_reconcile_bank"
+             sequence="20"
+             parent="account.menu_finance_bank_and_cash"/>
 
         <menuitem
-             name="Manual Reconciliation" icon="STOCK_EXECUTE"
+             name="Manual Reconciliation"
              action="action_account_manual_reconcile"
              id="menu_manual_reconcile"
              parent="account.periodical_processing_reconciliation"/>
@@ -1650,8 +1676,8 @@
                 <form string="Journal Entry Model" version="7.0">
                     <group col="4">
                         <field name="name"/>
-                        <field name="journal_id"/>
-                        <field name="company_id" widget='selection' groups="base.group_multi_company"/>
+                        <field name="journal_id" on_change="onchange_journal_id(journal_id)"/>
+                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
 
                     <field name="lines_id" widget="one2many_list"/>
@@ -1727,8 +1753,10 @@
             <field name="model">account.payment.term.line</field>
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
-                    <field name="name"/>
-                    <field name="sequence"/>
+                    <group>
+                        <field name="name"/>
+                        <field name="sequence"/>
+                    </group>
                     <group>
                         <group string="Amount Computation">
                             <field name="value"/>
@@ -1776,12 +1804,11 @@
             <field name="model">account.payment.term</field>
             <field name="arch" type="xml">
                 <form string="Payment Term" version="7.0">
-                    <group>
+                    <group col="4">
                         <field name="name"/>
                         <field name="active"/>
                     </group>
-                    <separator string="Description on Invoices"/>
-                    <field name="note"/>
+                    <field name="note" placeholder="Note fo the invoice..."/>
                     <separator string="Computation"/>
                     <field name="line_ids"/>
                 </form>
@@ -2075,7 +2102,7 @@
                                 <field name="type"/>
                                 <field name="user_type"/>
 
-                                <field name="currency_id"/>
+                                <field name="currency_id" groups="base.group_multi_currency"/>
                                 <field name="reconcile"/>
                                 <field name="chart_template_id"/>
                             </group>
@@ -2368,20 +2395,15 @@
                 <group string="res_config_contents" position="replace">
                     <field name="only_one_chart_template" invisible="1"/>
                     <field name="complete_tax_set" invisible="1"/>
-                    <div groups="base.group_multi_company">
-                        <label for="company_id"/>
-                        <field name="company_id" widget="selection"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
-                    </div>
-                    <group>
-                        <div attrs="{'invisible': [('only_one_chart_template','=',True)]}">
-                            <label for="chart_template_id"/>
+                    <group col="1">
+                        <group attrs="{'invisible': [('only_one_chart_template','=',True)]}">
                             <field name="chart_template_id" widget="selection" on_change="onchange_chart_template_id(chart_template_id)" domain="[('visible','=', True)]"/>
-                        </div>
-                        <newline/>
-                        <group groups="account.group_account_user">
-                            <field name="code_digits"/>
+                        </group>
+                        <group groups="base.group_multi_company">
+                            <field name="company_id" widget="selection" on_change="onchange_company_id(company_id)"/> <!-- we assume that this wizard will be run only by administrators and as this field may cause problem if hidden (because of the default company of the user removed from the selection because already configured), we simply choosed to remove the group "multi company" of it -->
                         </group>
                         <group>
+                            <field name="currency_id" class="oe_inline"/>
                             <field name="sale_tax" attrs="{'invisible': [('complete_tax_set', '!=', True)]}" domain="[('chart_template_id', '=', chart_template_id),('parent_id','=',False),('type_tax_use','in',('sale','all'))]"/>
                             <label for="sale_tax_rate" string="Sale Tax" attrs="{'invisible': [('complete_tax_set', '=', True)]}"/>
                             <div attrs="{'invisible': [('complete_tax_set', '=', True)]}">
@@ -2393,17 +2415,10 @@
                                 <field name="purchase_tax_rate" class="oe_inline"/> %%
                             </div>
                         </group>
+                        <group groups="account.group_account_user">
+                            <field name="code_digits"/>
+                        </group>
                     </group>
-                    <div groups="account.group_account_user">
-                        <label for="bank_accounts_id" string="Bank Information"/>
-                        <field name="bank_accounts_id">
-                            <tree editable="bottom">
-                                <field name="acc_name"/>
-                                <field name="account_type"/>
-                                <field name="currency_id" widget="selection"/>
-                            </tree>
-                        </field>
-                    </div>
                 </group>
             </field>
         </record>
@@ -2548,7 +2563,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                 <header>
                     <button name="button_confirm_cash" states="open" string="Close CashBox" type="object" class="oe_highlight"/>
                     <button name="button_open" states="draft" string="Open CashBox" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object" groups="base.group_extended"/>
+                    <button name="button_cancel" states="confirm,open" string="Cancel" type="object"/>
                     <field name="state" widget="statusbar" nolabel="1" statusbar_visible="draft,confirm"/>
                 </header>
                 <sheet string="Statement">
@@ -2565,7 +2580,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1"/>
+                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>

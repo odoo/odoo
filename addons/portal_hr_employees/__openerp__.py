@@ -24,10 +24,10 @@
     'name': 'Portal HR employees',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'complexity': 'easy',
     'description': """
-This module adds a list of employees to your portal's contact page if hr and
-portal_crm (which creates the contact page) are installed.
+This module adds a list of employees to your portal's contact page if hr and portal_crm (which creates the contact page) are installed.
+=======================================================================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['hr','portal_crm'],
@@ -36,11 +36,8 @@ portal_crm (which creates the contact page) are installed.
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'auto_install':True,
-    'category':'Hidden',
-    'css': [
-        'static/src/css/portal_hr_employees.css',
-    ],
-
+    'auto_install': True,
+    'category': 'Hidden',
+    'css': ['static/src/css/portal_hr_employees.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

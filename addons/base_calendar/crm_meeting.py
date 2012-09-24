@@ -43,7 +43,7 @@ class crm_meeting(base_state, osv.Model):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event", 'ir.needaction_mixin', "mail.thread"]
+    _inherit = ["calendar.event", "mail.thread", 'ir.needaction_mixin']
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
@@ -53,7 +53,7 @@ class crm_meeting(base_state, osv.Model):
         'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id','partner_id',
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
-                    [('draft', 'Unconfirmed'), ('open', 'Confirmed'), ('cancel', 'Cancelled'), ('done', 'Done')],
+                    [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
                     string='Status', size=16, readonly=True),
         # Meeting fields
         'name': fields.char('Meeting Subject', size=128, required=True, states={'done': [('readonly', True)]}),
@@ -66,17 +66,26 @@ class crm_meeting(base_state, osv.Model):
         'state': 'open',
     }
 
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['attendee_ids'] = False
+        return super(crm_meeting, self).copy(cr, uid, id, default, context)
+
     # ----------------------------------------
     # OpenChatter
     # ----------------------------------------
+
+    # shows events of the day for this user
+    def needaction_domain_get(self, cr, uid, domain=[], context={}):
+        return [('date','<=',time.strftime('%Y-%M-%D 23:59:59')), ('date_deadline','>=', time.strftime('%Y-%M-%D 00:00:00')), ('user_id','=',uid)]
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         return 'Meeting'
 
     def case_open_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>confirmed</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>confirmed</b>."), context=context)
 
     def case_close_send_note(self, cr, uid, ids, context=None):
-        return self.message_append_note(cr, uid, ids, body=_("Meeting has been <b>done</b>."), context=context)
+        return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
 
 

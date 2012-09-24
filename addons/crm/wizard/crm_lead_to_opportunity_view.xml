@@ -7,22 +7,23 @@
             <field name="model">crm.lead2opportunity.partner</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
-                    <field name="action"/>
-                    <group attrs="{'invisible':[('action','!=','exist')]}">
-                        <field name="partner_id" attrs="{'required': [('action', '=', 'exist')]}"/>
+                    <group>
+                        <field name="action" class="oe_inline"/>
+                        <field name="partner_id" 
+                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                            class="oe_inline"/>
                     </group>
-                    <group string="Convert to Opportunity">
-                        <field name="name" colspan="4"/>
+                    <group>
+                        <field name="name" class="oe_inline"/>
+                        <field name="opportunity_ids" attrs="{'invisible': [('name', '=', 'convert')]}">
+                            <tree>
+                                <field name="name"/>
+                                <field name="partner_id"/>
+                                <field name="user_id"/>
+                                <field name="section_id"/>
+                            </tree>
+                        </field>
                     </group>
-                    <separator string="Select Opportunities" attrs="{'invisible': [('name', '=', 'convert')]}"/>
-                    <field name="opportunity_ids" attrs="{'invisible': [('name', '=', 'convert')]}">
-                        <tree>
-                            <field name="name"/>
-                            <field name="partner_id"/>
-                            <field name="user_id"/>
-                            <field name="section_id"/>
-                        </tree>
-                    </field>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
                         or
@@ -37,28 +38,42 @@
             <field name="model">crm.lead2opportunity.partner.mass</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
-                    <field name="action"/>
-                    <field name="name" colspan="4"/>
-                    <group string="Assigned Opportunities to">
-                        <field name="section_id"/>
+                    <group string="Conversion Options">
+                        <field name="action"/>
+                        <field name="partner_id" attrs="{'invisible':[('action','!=','exist')],'required': [('action', '=', 'exist')]}"/>
+                        <field name="name"/>
                     </group>
-                    <separator string="Select Salesman"/>
-                    <field name="user_ids">
+                    <group string="Select Opportunities" attrs="{'invisible': [('name', '=', 'convert')]}">
+                    <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}">
                         <tree>
-                            <field name="name"/>
+                            <field name="name" />
+                            <field name="partner_id" />
+                            <field name="user_id" />
+                            <field name="section_id" />
                         </tree>
                     </field>
+                    </group>
+                    
+                    <group string="Assign opportunities to">
+                        <field name="section_id" />
+                        <field name="user_ids" colspan="4">
+                            <tree>
+                                <field name="name" />
+                            </tree>
+                        </field>
+                    </group>
+                    
                     <footer>
-                        <button name="mass_convert" string="Convert into Opportunities" type="object" class="oe_highlight"/>
+                        <button name="mass_convert" string="Convert to Opportunities" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
-                    </footer>
+                    </footer>                            
                 </form>
-            </field>
+              </field>
         </record>
 
         <record id="action_crm_lead2opportunity_partner" model="ir.actions.act_window">
-            <field name="name">Create a Partner</field>
+            <field name="name">Convert to opportunity</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">crm.lead2opportunity.partner</field>
             <field name="view_type">form</field>

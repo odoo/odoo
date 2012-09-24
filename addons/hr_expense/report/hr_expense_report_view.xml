@@ -6,13 +6,13 @@
         <field name="name">hr.expense.report.tree</field>
         <field name="model">hr.expense.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','invoiced','paid');gray:state == 'cancelled'" string="Expenses Analysis">
+            <tree colors="blue:state == 'draft';black:state in ('confirm','accepted','done');gray:state == 'cancelled'" string="Expenses Analysis">
                 <field name="employee_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
                 <field name="month" invisible="1"/>
                 <field name="day" invisible="1"/>
-                <field name="invoice_id" invisible="1"/>
+                <field name="voucher_id" invisible="1"/>
                 <field name="analytic_account" invisible="1" groups="analytic.group_analytic_accounting"/>
                 <field name="department_id" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -22,7 +22,6 @@
                 <field name="state" invisible="1"/>
                 <field name="nbr" sum="# of Lines"/>
                 <field name="no_of_products" sum="# of Products"/>
-                <field name="invoiced" sum="Total Invoiced Lines"/>
                 <field name="price_average" avg="Average Price"/>
                 <field name="price_total" sum="Total Price"/>
                 <field name="delay_confirm"/>
@@ -50,7 +49,7 @@
             <search string="Expenses Analysis">
                 <filter string="Waiting" icon="terp-gtk-media-pause" domain="[('state', '=' ,'confirm')]" help = "Confirm Expenses"/>
                 <filter string="Approved" icon="terp-check" domain="[('state','=','accepted')]" help = "Approved Expenses"/>
-                <filter string="Invoiced" icon="terp-dolar" domain="[('state','in', ('invoiced', 'paid'))]" help = "Invoiced Expenses"/>
+                <filter string="Done" icon="terp-dolar" domain="[('state','=', 'done')]" help = "Done Expenses"/>
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <group expand="0" string="Extended Filters...">
