@@ -896,11 +896,7 @@
                                 <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
-                            <!-- (&, !, &, ('state', '=', 'opening_control'),('cash_control', '=', True), ('state', '!=', 'closed')) -->
-                            <!--
-                            attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', '=', 'opening_control'), ('cash_control', '=', True), ('state', '!=', 'closed')]  }" >
-                            -->
-                            <group string="Opening Cash Control" attrs="{'invisible' : [('state', 'not in', ('opening_control', 'closing_control', 'closed'))]}">
+                            <group string="Opening Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', 'in', ('opening_control', 'opened', 'closing_control')), ('cash_control', '=', True), ('state', '!=', 'closed')]  }">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
