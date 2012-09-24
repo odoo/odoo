@@ -60,7 +60,7 @@ depending on the product's configuration.
     'demo': ['stock_orderpoint.xml'],
     'test': ['test/procurement.yml'],
     'installable': True,
-    'auto_install': False,
+    'auto_install': True,
     'certificate': '00954248826881074509',
     'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }

@@ -1551,12 +1551,12 @@
         </record>
 
         <record id="action_account_manual_reconcile" model="ir.actions.act_window">
-            <field name="context">{'search_default_next_partner':1,'view_mode':True}</field>
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
             <field name="name">Journal Items to Reconcile</field>
             <field name="res_model">account.move.line</field>
             <field name="view_id" ref="view_move_line_tree_reconcile"/>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">account_reconciliation_list</field>
             <field name="help" type="html">
                 <p>
                     Good job!
