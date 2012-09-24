@@ -104,6 +104,9 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
         if (this.group_field) { fields.push(this.group_field); }
         // transform search result into usable records (convert from OpenERP
         // value shapes to usable atomic types
+        if(self.fields[self.abscissa].type == 'selection'){
+           results = self.sortSelection(results);
+        }
         var records = _(results).map(function (result) {
             var point = {};
             _(result).each(function (value, field) {
@@ -170,9 +173,11 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
 
             if (!r) { graph_data.push(datapoint); }
         });
-        graph_data = _(graph_data).sortBy(function (point) {
-            return point[self.abscissa] + '[[--]]' + point[self.group_field];
-        });
+        if(self.fields[self.abscissa].type != 'selection'){
+           graph_data = _(graph_data).sortBy(function (point) {
+               return point[self.abscissa] + '[[--]]' + point[self.group_field];
+           });
+        }
         if (_.include(['bar','line','area'],this.chart)) {
             return this.schedule_bar_line_area(graph_data);
         } else if (this.chart == "pie") {
@@ -390,6 +395,20 @@ openerp.web_graph.GraphView = openerp.web.View.extend({
             clearTimeout(this.renderer);
         }
         this.renderer = setTimeout(renderer, 0);
+    },
+    sortSelection: function(results){
+       var self = this;
+       var grouped_data = _(results).groupBy(function(result){  
+           return result[self.abscissa];
+       });
+       var options = _(self.fields[self.abscissa].selection).map(function(option){ return option[0]; })
+       var sorted_data = _(options).chain().map(function(option){ 
+            return grouped_data[option];
+       }).filter(function(data){ return data != undefined; }).value();
+       if(sorted_data.length){
+           sorted_data =  _.reduceRight(sorted_data, function(a, b){ return b.concat(a);})
+       }
+       return sorted_data;
     },
     open_list_view : function (id){
         var self = this;
