@@ -185,11 +185,6 @@ class service_type(osv.Model):
     }
 
 class fleet_vehicle_log_services(osv.Model):
-    def _compute_complete_service(self, cr, uid, ids, field, arg, context=None):
-        return dict(
-            (record.id, " ".join(service.name for service in record.service_ids))
-            for record in self.browse(cr, uid, ids, context=context)
-        )
     _inherit = 'fleet.vehicle.log'
     _name = 'fleet.vehicle.log.services'
     _columns = {
@@ -198,7 +193,6 @@ class fleet_vehicle_log_services(osv.Model):
         'amount' :fields.float('Amount', help="Total cost of the service"),
         'reference' :fields.char('Reference',size=128),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
-        'complete_service': fields.function(_compute_complete_service, type="char", string='Services completed'),
     }
 
 class hr_employee(osv.Model):

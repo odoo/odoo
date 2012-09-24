@@ -97,8 +97,7 @@
                                         <field name="vendor_id" />
                                         <field name="amount" />
                                         <field name="reference" />
-                                        <field name="service_ids" />
-                                        <field name="complete_service" />
+                                        <field name="service_ids" widget="many2many_tags"/>
                                     </tree>
                                     <form string="Fuel Logs" version="7.0">
                                         <sheet>
@@ -109,7 +108,6 @@
                                                 <field name="amount" />
                                                 <field name="reference" />
                                                 <field name="service_ids" />
-                                                <field name="complete_service" />
                                             </group>
                                         </sheet>
                                     </form>
