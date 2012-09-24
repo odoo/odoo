@@ -446,10 +446,10 @@ class product_pricelist_item(osv.osv):
             max_margin = 0.0
             if price_min_margin:
                 min_margin = pricelist_rule.price_min_margin
-                res['value'].update({'price_min_margin': min_margin})
+                res['value'] = dict(res['value'], price_min_margin = min_margin)
             if price_max_margin:
                 max_margin = pricelist_rule.price_max_margin
-                res['value'].update({'price_max_margin': max_margin})
+                res['value'] = dict(res['value'], price_max_margin = max_margin)
         return res
 
 product_pricelist_item()
