@@ -118,75 +118,76 @@
                                     </form>
                                 </field>
                             </page>
-                            <page string="Services">
-                                <field name="log_services">
-                                    <tree string="Services Logs">
-                                        <field name="create_date" />
-                                        <field name="employee_id" />
-                                        <field name="vendor_id" />
-                                        <field name="amount" />
-                                        <field name="reference" />
-                                        <field name="service_ids"/>
-                                    </tree>
-                                    <form string="Services Logs" version="7.0">
-                                        <sheet>
-                                            <group>
-                                                <field name="create_date" />
-                                                <field name="employee_id" />
-                                                <field name="vendor_id" />
-                                                <field name="amount" />
-                                                <field name="reference" />
-                                                <field name="service_ids" widget="many2many_tags"/>
-                                            </group>
-                                        </sheet>
-                                    </form>
-                                </field>
-                            </page>
-                            <page string="Fuel Logs">
-                                <field name="log_fuel">
-                                    <tree string="Fuel Logs">
-                                        <field name="create_date" />
-                                        <field name="employee_id" />
-                                        <field name="liter" />
-                                        <field name="price_per_liter" />
-                                        <field name="amount" />
-                                        <field name="description" />
-                                        <field name="inv_ref" />
-                                    </tree>
-                                    <form string="Fuel Logs" version="7.0">
-                                        <sheet>
-                                            <group>
-                                                <field name="create_date" />
-                                                <field name="employee_id" />
-                                                <field name="liter" on_change="on_change_fuel(liter,price_per_liter)"/>
-                                                <field name="price_per_liter" on_change="on_change_fuel(liter,price_per_liter)" />
-                                                <field name="amount" />
-                                                <field name="description" />
-                                                <field name="inv_ref" />
-                                            </group>
-                                        </sheet>
-                                    </form>
-                                </field>
-                            </page>
                             <page string="Logs">
-                                <field name="log_ids">
-                                    <tree string="Logs">
-                                        <field name="create_date" />
-                                        <field name="type" />
-                                        <field name="employee_id" />
-                                        <field name="description" />
-                                    </tree>
-                                    <form string="Logs" version="7.0">
-                                        <sheet>
-                                            <group>
-                                                <field name="type" />
-                                                <field name="create_date" />
-                                                <field name="employee_id" />
-                                                <field name="description" />
-                                            </group>
-                                        </sheet>
-                                    </form>
-                                </field>
+                                <group>
+                                    <field name="log_services">
+                                        <tree string="Completed services">
+                                            <field name="employee_id" />
+                                            <field name="vendor_id" />
+                                            <field name="amount" />
+                                            <field name="reference" />
+                                            <field name="service_ids"/>
+                                            <field name="create_date" />
+                                        </tree>
+                                        <form string="Services Logs" version="7.0">
+                                            <sheet>
+                                                <group>
+                                                    <field name="create_date" />
+                                                    <field name="employee_id" />
+                                                    <field name="vendor_id" />
+                                                    <field name="amount" />
+                                                    <field name="reference" />
+                                                    <field name="service_ids" widget="many2many_tags"/>
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="log_fuel">
+                                        <tree string="Fuel Logs">
+                                            <field name="liter" />
+                                            <field name="price_per_liter" />
+                                            <field name="amount" />
+                                            <field name="employee_id" />
+                                            <field name="inv_ref" />
+                                            <field name="create_date" />
+                                        </tree>
+                                        <form string="Fuel Logs" version="7.0">
+                                            <sheet>
+                                                <group>
+                                                    <field name="create_date" />
+                                                    <field name="employee_id" />
+                                                    <field name="liter" on_change="on_change_fuel(liter,price_per_liter)"/>
+                                                    <field name="price_per_liter" on_change="on_change_fuel(liter,price_per_liter)" />
+                                                    <field name="amount" />
+                                                    <field name="description" />
+                                                    <field name="inv_ref" />
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </group>
+                                <group>
+                                    <field name="log_ids">
+                                        <tree string="Other Logs">
+                                            <field name="type" />
+                                            <field name="employee_id" />
+                                            <field name="description" />
+                                            <field name="create_date" />
+                                        </tree>
+                                        <form string="Other logs" version="7.0">
+                                            <sheet>
+                                                <group>
+                                                    <field name="type" />
+                                                    <field name="create_date" />
+                                                    <field name="employee_id" />
+                                                    <field name="description" />
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </group>
                             </page>
                             <page string="Engine">
                                 <group col="2">

@@ -82,7 +82,7 @@ class fleet_vehicle(osv.Model):
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
-        'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
+        'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Other Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
@@ -171,10 +171,9 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _name = 'fleet.vehicle.log.fuel'
     _columns = {
-        'liter' : fields.integer('Liter'),
+        'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.function(_get_price, type='float', multi='fuel', string='Total Price'),
-        'type' : fields.char('Type', size=32),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
     }
     _defaults = {'type': 'Refueling',}

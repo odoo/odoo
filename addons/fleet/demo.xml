@@ -63,5 +63,14 @@
           <field name="service_ids" eval="[(6,0,[ref('type_service_oil')])]" />
       </record>
 
+      <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
+          <field name="employee_id" ref="hr.employee_fp" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="create_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="type">Fuel</field>
+          <field name="liter">40.0</field>
+          <field name="price_per_liter">1.45</field>
+      </record>
+
     </data>
 </openerp>
