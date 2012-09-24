@@ -85,7 +85,6 @@ openerp_mail_followers = function(session, mail) {
         },
 
         set_value: function(value_) {
-            console.log("set_value", value_);
             this.reinit();
             return this.fetch_followers(value_  || this.get_value());
         },
@@ -209,8 +208,11 @@ openerp_mail_followers = function(session, mail) {
                 if($(record).is(':checked')) {
                     checklist.push(parseInt($(record).data('id')))}
             });
-            
-            return this.ds_model.call('message_subscribe_users',[[self.view.datarecord.id], undefined, checklist, context]).pipe(this.proxy('read_value'));
+
+            if(!checklist.length)
+                return this.do_unfollow();
+            else
+                return this.ds_model.call('message_subscribe_users',[[self.view.datarecord.id], undefined, checklist, context]).pipe(this.proxy('read_value'));
         },
 
     });
