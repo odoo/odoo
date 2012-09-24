@@ -904,7 +904,7 @@ class res_currency(osv.osv):
     def _check_main_currency_rounding(self, cr, uid, ids, context=None):
         cr.execute('SELECT digits FROM decimal_precision WHERE name like %s',('Account',))
         digits = cr.fetchone()
-        if len(digits):
+        if digits and len(digits):
             digits = digits[0]
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for currency_id in ids:
@@ -923,7 +923,7 @@ class decimal_precision(osv.osv):
     def _check_main_currency_rounding(self, cr, uid, ids, context=None):
         cr.execute('SELECT id, digits FROM decimal_precision WHERE name like %s',('Account',))
         res = cr.fetchone()
-        if len(res):
+        if res and len(res):
             account_precision_id, digits = res
             main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
             for decimal_precision in ids:
