@@ -66,7 +66,7 @@
                         <group>
                             <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                             <field name="total_timesheet" widget="float_time"/>
-                            <field name="total_difference" widget="float_time"/>
+                            <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                             <field name="user_id" invisible="1"/>
                         </group>
                     </group>
@@ -84,7 +84,7 @@
                                 </div>
                             </group>
                             <group colspan="4" col="3">
-                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
                                     <tree string="Attendances" editable="bottom">
                                         <field name="name"/>
                                         <field name="action"/>
@@ -136,7 +136,7 @@
                                     <field name="name"/>
                                     <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                                     <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time"/>
+                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                                 </tree>
                             </field>
                         </page>
@@ -320,7 +320,7 @@
                     <field name="department_id"/>
                     <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time"/>
-                    <field name="total_difference" widget="float_time"/>
+                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -334,7 +334,7 @@
                     <field name="name"/>
                     <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
-                    <field name="total_difference" widget="float_time" sum="Total Difference"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="base.group_hr_attendance"/>
                 </tree>
             </field>
         </record>
