@@ -22,11 +22,11 @@
 
 {
     'name': 'OAuth Provider',
-    'version': '1.0',
+    'version': '0.1',
     'category': 'Tools',
     'description': """
-Allow an openerp server to provide OAuth service.
-=================================================
+Allow an openerp server to provide partial OAuth service.
+=========================================================
 """,
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
