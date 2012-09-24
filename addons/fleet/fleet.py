@@ -85,6 +85,7 @@ class fleet_vehicle(osv.Model):
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
+        'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
         'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
@@ -178,12 +179,24 @@ class fleet_vehicle_log_fuel(osv.Model):
     }
     _defaults = {'type': 'Refueling',}
 
+class fleet_insurance_type(osv.Model):
+    _name = 'fleet.insurance.type'
+    _columns = {
+        'name': fields.char('Name', required=True, translate=True),
+    }
+
 class fleet_vehicle_log_insurance(osv.Model):
     _inherit = 'fleet.vehicle.log'
     _name = 'fleet.vehicle.log.insurance'
     _columns = {
+        'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
+        'start_date' : fields.date('Start date', required=False, help='Date when the coverage of the insurance begins'),
+        'expiration_date' : fields.date('Expiration date', required=False, help='Date when the coverage of the insurance expirates'),
+        'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
+        'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'description' : fields.text('Description'),
     }
+    _defaults = {'type': 'Insurance',}
 
 class service_type(osv.Model):
     _name = 'fleet.service.type'

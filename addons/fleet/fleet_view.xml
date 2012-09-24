@@ -89,6 +89,35 @@
                             </group>
                         </group>
                         <notebook>
+                            <page string="Insurances">
+                                <field name="log_insurances">
+                                    <tree string="Insurances">
+                                        <field name="type" />
+                                        <field name="start_date" />
+                                        <field name="expiration_date" />
+                                        <field name="insurer_id" />
+                                        <field name="employee_id" />
+                                        <field name="price" />
+                                    </tree>
+                                    <form string="Insurances" version="7.0">
+                                        <sheet>
+                                            <group col="2">
+                                                <group>
+                                                    <field name="insurance_type" />
+                                                    <field name="insurer_id" />
+                                                    <field name="employee_id" />
+                                                    <field name="price" />
+                                                </group>
+                                                <group>
+                                                    <field name="create_date" />
+                                                    <field name="start_date" />
+                                                    <field name="expiration_date" />
+                                                </group>
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
                             <page string="Services">
                                 <field name="log_services">
                                     <tree string="Services Logs">
@@ -99,7 +128,7 @@
                                         <field name="reference" />
                                         <field name="service_ids"/>
                                     </tree>
-                                    <form string="Fuel Logs" version="7.0">
+                                    <form string="Services Logs" version="7.0">
                                         <sheet>
                                             <group>
                                                 <field name="create_date" />
