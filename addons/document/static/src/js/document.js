@@ -3,7 +3,7 @@ openerp.document = function (instance) {
     instance.web.SidebarAttachement =instance.web.Sidebar.include({
         init : function(){
             this._super.apply(this, arguments);
-            this.sections.unshift({ 'name' : 'files', 'label' : _t('Attachment(s)'), });
+            this.sections. splice(1, 0, { 'name' : 'files', 'label' : _t('Attachment(s)'), });
             this.items['files'] = [];
         }
     });
