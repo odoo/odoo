@@ -1444,6 +1444,40 @@ class BaseModel(object):
 
     def load(self, cr, uid, fields, data, context=None):
         """
+        Attempts to load the data matrix, and returns a list of ids (or
+        ``False`` if there was an error and no id could be generated) and a
+        list of messages.
+
+        Each message is a dictionary with the following keys:
+
+        ``type``
+            the type of message, either ``warning`` or ``error``. Any ``error``
+            message indicates the import failed and was rolled back.
+        ``message``
+            the message's actual text, which should be translated and can be
+            shown to the user directly
+        ``rows``
+            a dict with 2 keys ``from`` and ``to``, indicates the range of rows
+            in ``data`` which generated the message
+        ``record``
+            a single integer, for warnings the index of the record which
+            generated the message (can be obtained from a non-false ``ids``
+            result)
+        ``field``
+            the name of the (logical) OpenERP field for which the error or
+            warning was generated
+        ``moreinfo`` (optional)
+            A string, a list or a dict, leading to more information about the
+            warning.
+
+            * If ``moreinfo`` is a string, it is a supplementary warnings
+              message which should be hidden by default
+            * If ``moreinfo`` is a list, it provides a number of possible or
+              alternative values for the string
+            * If ``moreinfo`` is a dict, it is an OpenERP action descriptor
+              which can be executed to get more information about the issues
+              with the field. If present, the ``help`` key serves as a label
+              for the action (e.g. the text of the link).
 
         :param cr: cursor for the request
         :param int uid: ID of the user attempting the data import
@@ -1598,6 +1632,14 @@ class BaseModel(object):
             (k, Converter.to_field(cr, uid, self, column, context=context))
             for k, column in columns.iteritems())
 
+        def _log(base, field, exception):
+            type = 'warning' if isinstance(exception, Warning) else 'error'
+            record = dict(base, field=field, type=type,
+                          message=unicode(exception.args[0]) % base)
+            if len(exception.args) > 1 and exception.args[1]:
+                record.update(exception.args[1])
+            log(record)
+
         stream = CountingStream(records)
         for record, extras in stream:
             dbid = False
@@ -1630,21 +1672,23 @@ class BaseModel(object):
                 # field name
                 message_base = dict(
                     extras, record=stream.index, field=field_names[field])
-                with warnings.catch_warnings(record=True) as w:
-                    try:
+                try:
+                    with warnings.catch_warnings(record=True) as ws:
                         converted[field] = converters[field](strvalue)
 
-                        # In warning and error returned, use logical field name
-                        # as field so client can reverse
-                        for warning in w:
-                            log(dict(message_base, type='warning', field=field,
-                                     message=unicode(warning.message) % message_base))
-                    except ValueError, e:
-                        log(dict(message_base,
-                            type='error',
-                            field=field,
-                            message=unicode(e) % message_base,
-                        ))
+                    for warning in ws:
+                        # bubble non-import warnings upward
+                        if warning.category != ImportWarning:
+                            warnings.warn(warning.message, warning.category)
+                            continue
+                        w = warning.message
+                        if isinstance(w, basestring):
+                            # wrap warning string in an ImportWarning for
+                            # uniform handling
+                            w = ImportWarning(w)
+                        _log(message_base, field, w)
+                except ValueError, e:
+                    _log(message_base, field, e)
 
             yield dbid, xid, converted, dict(extras, record=stream.index)
 

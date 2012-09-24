@@ -38,6 +38,26 @@ class ir_fields_converter(orm.Model):
         By default, tries to get a method on itself with a name matching the
         pattern ``_$fromtype_$column._type`` and returns it.
 
+        Converter callables can either return a value to their caller or raise
+        ``ValueError``, which will be interpreted as a validation & conversion
+        failure.
+
+        ValueError can have either one or two parameters. The first parameter
+        is mandatory, **must** be a unicode string and will be used as the
+        user-visible message for the error (it should be translatable and
+        translated). It can contain a ``field`` named format placeholder so the
+        caller can inject the field's translated, user-facing name (@string).
+
+        The second parameter is optional and, if provided, must be a mapping.
+        This mapping will be merged into the error dictionary returned to the
+        client.
+
+        If a converter can perform its function but has to make assumptions
+        about the data, it can send a warning to the user through signalling
+        an :class:`~openerp.osv.orm.ImportWarning` (via ``warnings.warn``). The
+        handling of a warning at the upper levels is the same as
+        ``ValueError`` above.
+
         :param cr: openerp cursor
         :param uid: ID of user calling the converter
         :param column: column object to generate a value for
@@ -74,10 +94,9 @@ class ir_fields_converter(orm.Model):
         ))
         if value.lower() in falses: return False
 
-        warnings.warn(
+        warnings.warn(orm.ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
-                % (value, yes),
-            orm.ImportWarning)
+                % (value, yes)))
         return True
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
@@ -124,7 +143,9 @@ class ir_fields_converter(orm.Model):
                 return item
         raise ValueError(
             _(u"Value '%s' not found in selection field '%%(field)s'") % (
-                value))
+                value), {
+                'moreinfo': map(operator.itemgetter(1), selection)
+            })
 
 
     def db_id_for(self, cr, uid, model, column, subfield, value, context=None):
@@ -174,9 +195,9 @@ class ir_fields_converter(orm.Model):
                 cr, uid, name=value, operator='=', context=context)
             if ids:
                 if len(ids) > 1:
-                    warnings.warn(
+                    warnings.warn(orm.ImportWarning(
                         _(u"Found multiple matches for field '%%(field)s' (%d matches)")
-                        % (len(ids)), orm.ImportWarning)
+                        % (len(ids))))
                 id, _name = ids[0]
         else:
             raise Exception(u"Unknown sub-field '%s'" % subfield)

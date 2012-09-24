@@ -5,14 +5,10 @@ import openerp
 from openerp.tests import common
 from openerp.tools.misc import mute_logger
 
-def message(msg, type='error', from_=0, to_=0, record=0, field='value'):
-    return {
-        'type': type,
-        'rows': {'from': from_, 'to': to_},
-        'record': record,
-        'field': field,
-        'message': msg
-    }
+def message(msg, type='error', from_=0, to_=0, record=0, field='value', **kwargs):
+    return dict(kwargs,
+                type=type, rows={'from': from_, 'to': to_}, record=record,
+                field=field, message=msg)
 
 def error(row, message, record=None, **kwargs):
     """ Failed import of the record ``record`` at line ``row``, with the error
@@ -455,23 +451,15 @@ class test_selection(ImporterCase):
     def test_invalid(self):
         ids, messages = self.import_(['value'], [['Baz']])
         self.assertIs(ids, False)
-        self.assertEqual(messages, [{
-            'type': 'error',
-            'rows': {'from': 0, 'to': 0},
-            'record': 0,
-            'field': 'value',
-            'message': "Value 'Baz' not found in selection field 'unknown'",
-        }])
+        self.assertEqual(messages, [message(
+            u"Value 'Baz' not found in selection field 'unknown'",
+            moreinfo="Foo Bar Qux".split())])
 
         ids, messages = self.import_(['value'], [[42]])
         self.assertIs(ids, False)
-        self.assertEqual(messages, [{
-            'type': 'error',
-            'rows': {'from': 0, 'to': 0},
-            'record': 0,
-            'field': 'value',
-            'message': "Value '42' not found in selection field 'unknown'",
-        }])
+        self.assertEqual(messages, [message(
+            u"Value '42' not found in selection field 'unknown'",
+            moreinfo="Foo Bar Qux".split())])
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
