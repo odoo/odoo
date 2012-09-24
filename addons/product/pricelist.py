@@ -436,20 +436,13 @@ class product_pricelist_item(osv.osv):
         return {}
 
     def onchange_margin(self, cr, uid, ids, price_min_margin, price_max_margin, context=None):
-        res = {'value': {}}
+        res = {'value': {'price_min_margin': 0.0, 'price_max_margin': 0.0}}
         if not price_min_margin and not price_max_margin:
             return res
         if price_min_margin > price_max_margin:
             res['warning'] = {'title': _('Warning!'), 'message': _('Minimum Margin must be lower than Maximum Margin !.')}
-            pricelist_rule = self.browse(cr, uid, ids, context=context)[0]
-            min_margin = 0.0
-            max_margin = 0.0
-            if price_min_margin:
-                min_margin = pricelist_rule.price_min_margin
-                res['value'] = dict(res['value'], price_min_margin = min_margin)
-            if price_max_margin:
-                max_margin = pricelist_rule.price_max_margin
-                res['value'] = dict(res['value'], price_max_margin = max_margin)
+        else:
+            res = {'value': {'price_min_margin': price_min_margin, 'price_max_margin': price_max_margin}}
         return res
 
 product_pricelist_item()
