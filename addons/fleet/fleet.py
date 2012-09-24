@@ -135,12 +135,36 @@ class fleet_vehicle_log(osv.Model):
     }
 
 class fleet_vehicle_log_fuel(osv.Model):
+
     _inherit = 'fleet.vehicle.log'
+
+    def _get_price(self, cr, uid, ids, fields, args, context=None):
+        result = {}
+        for record in self.browse(cr, uid, ids, context=None):
+            res = record.liter * record.price_per_liter
+            result[record.id] = {
+                'amount' : res,
+            }
+        return result
+
+    def on_change_fuel(self, cr, uid, ids, liter, price_per_liter, context=None):
+
+        print 'Amount : ' + str(liter * price_per_liter)
+
+        return {
+            'value' : {
+                'amount' : liter * price_per_liter,
+            }
+        }
+
+        
+
     _name = 'fleet.vehicle.log.fuel'
     _columns = {
         'description' : fields.text('Description'),
         'liter' : fields.integer('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
+        'amount': fields.function(_get_price, type='float', multi='fuel', string='Fuel Amount'),
         'type' : fields.char('Type', size=32),
         'invoice' : fields.many2one('account.invoice', 'Invoice', required=False, help='Invoice of the refueling log'),
     }

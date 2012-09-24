@@ -99,6 +99,7 @@
                                         <field name="employee_id" />
                                         <field name="liter" />
                                         <field name="price_per_liter" />
+                                        <field name="amount" />
                                         <field name="description" />
                                         <field name="invoice" />
                                     </tree>
@@ -107,8 +108,9 @@
                                             <group>
                                                 <field name="create_date" />
                                                 <field name="employee_id" />
-                                                <field name="liter" />
-                                                <field name="price_per_liter" />
+                                                <field name="liter" on_change="on_change_fuel(liter,price_per_liter)"/>
+                                                <field name="price_per_liter" on_change="on_change_fuel(liter,price_per_liter)" />
+                                                <field name="amount" />
                                                 <field name="description" />
                                                 <field name="invoice" />
                                             </group>
