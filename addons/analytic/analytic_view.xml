@@ -21,7 +21,7 @@
 
                         <group name="main">
                             <group>
-                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}"/>
+                                <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}" domain="[('customer','=',False)]" context="{'default_customer':False}"/>
                                 <field name="manager_id"/>
                                 <field name="code"/>
                             </group>
