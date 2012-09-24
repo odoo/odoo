@@ -661,6 +661,15 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return self.dataset.parent_view.recursive_save();
         });
     },
+    recursive_reload: function() {
+        var self = this;
+        var pre = $.when();
+        if (self.dataset.parent_view)
+                pre = self.dataset.parent_view.recursive_reload();
+        return pre.pipe(function() {
+            return self.reload();
+        });
+    },
     is_dirty: function() {
         return _.any(this.fields, function (value) {
             return value.is_dirty();
@@ -1325,7 +1334,7 @@ openerp.web.form.WidgetButton = openerp.web.form.Widget.extend({
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
             this.view.dataset, this.view.datarecord.id, function () {
-                self.view.reload();
+                self.view.recursive_reload();
             });
     },
     update_dom: function() {
@@ -2801,11 +2810,6 @@ openerp.web.form.One2ManyListView = openerp.web.ListView.extend({
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.is_readonly()
         });
-        pop.dataset.call_button = function() {
-            var button_result = self.o2m.dataset.call_button.apply(self.o2m.dataset, arguments);
-            self.o2m.reload_current_view();
-            return button_result;
-        };
         pop.on_write.add(function(id, data, options) {
             self.o2m.dataset.write(id, data, options, function(r) {
                 self.o2m.reload_current_view();
