@@ -215,7 +215,10 @@ class email_template(osv.osv):
         if default is None:
             default = {}
         default = default.copy()
-        default.update(name=_("%s (copy)") % (template.name))
+        default.update(
+            name=_("%s (copy)") % (template.name),
+            ref_ir_act_window=False,
+            ref_ir_value=False)
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
