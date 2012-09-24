@@ -140,7 +140,7 @@ class account_analytic_account(osv.osv):
         'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
         'code': fields.char('Reference', size=24, select=True),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
@@ -168,7 +168,7 @@ class account_analytic_account(osv.osv):
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
-    
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
             return {}
@@ -179,7 +179,7 @@ class account_analytic_account(osv.osv):
         res['value']['quantity_max'] = template.quantity_max
         res['value']['description'] = template.description
         return res
-    
+
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
         res={}
         if partner_id:
@@ -222,8 +222,10 @@ class account_analytic_account(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
+        analytic = self.browse(cr, uid, id, context=context)
         default['code'] = False
         default['line_ids'] = []
+        default['name'] = analytic['name'] + ' (' + _('copy') + ')'
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
     def on_change_company(self, cr, uid, id, company_id):
