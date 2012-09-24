@@ -20,15 +20,22 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         // TODO: check if client_id application is authorized to use the service, and get it's name
         // that should be displayed in the approval confirmation dialog.
 
-        // params.approval_prompt TODO
         if (!this._error) {
-            instance.session.rpc('/oauth2/get_token', {
-                client_id: params.client_id || '',
-                scope: params.scope || '',
-            }).then(function(result) {
-                self.redirect(result);
-            }).fail(function() {
-                self.error(_t("An error occured while contacting the OpenERP server."));
+            // params.approval_prompt TODO
+            // TODO: get client_id and scope
+            this.$('.oe_oauth_provider_approval').show().on('click', '.oe_oauth_provider_allow', function() {
+                instance.session.rpc('/oauth2/get_token', {
+                    client_id: params.client_id || '',
+                    scope: params.scope || '',
+                }).then(function(result) {
+                    self.redirect(result);
+                }).fail(function() {
+                    self.error(_t("An error occured while contacting the OpenERP server."));
+                });
+            }).on('click', '.oe_oauth_provider_deny', function() {
+                self.redirect({
+                    error: 'access_denied'
+                });
             });
         }
     },
@@ -36,15 +43,18 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         var params = $.deparam($.param.querystring());
         var a = document.createElement('a');
         a.href = params.redirect_uri;
-        var new_params = {
-            access_token: result.access_token,
-            token_type: 'Bearer',
-        };
+        var new_params = {};
+        if (!result.error) {
+            new_params.access_token = result.access_token;
+            new_params.token_type = 'Bearer';
+            if (result.expires_in) {
+                new_params.expires_in = result.expires_in;
+            }
+        } else {
+            new_params.error = result.error;
+        }
         if (params.state) {
             new_params.state = params.state;
-        }
-        if (result.expires_in) {
-            new_params.expires_in = result.expires_in;
         }
         var redirect = a.protocol + '//' + a.host + a.pathname + '?' + $.param(new_params) + a.hash;
         //window.location = redirect;
