@@ -551,6 +551,8 @@ property or property parameter."),
         @param context: A standard dictionary for contextual values
         @return: True
         """
+        meeting_obj = self.pool.get('crm.meeting')
+
         if context is None:
             context = {}
 
@@ -560,6 +562,18 @@ property or property parameter."),
                 defaults = {'user_id': vals.user_id.id, 'organizer_id': vals.ref.user_id.id}
                 mod_obj.copy(cr, uid, vals.ref.id, default=defaults, context=context)
             self.write(cr, uid, vals.id, {'state': 'accepted'}, context)
+            cr.execute('SELECT event_id '\
+                       'FROM meeting_attendee_rel '\
+                       'WHERE attendee_id = %s', (vals.id,))
+            res = cr.fetchone()
+            if res:
+                partner_ids = [partner.id for partner in meeting_obj.browse(cr, uid, res[0], context=context).partner_ids]
+                if vals.user_id:
+                    partner_ids.append(vals.user_id.partner_id.id)
+                    meeting_obj.write(cr, uid, res[0], {'partner_ids': [(6, 0, partner_ids)]})
+                if vals.partner_id:
+                    partner_ids.append(vals.partner_id.id)
+                    meeting_obj.write(cr, uid, res[0], {'partner_ids': [(6, 0, partner_ids)]})
 
         return True
 
