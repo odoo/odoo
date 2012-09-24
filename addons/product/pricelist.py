@@ -435,15 +435,14 @@ class product_pricelist_item(osv.osv):
             return {'value': {'name': prod[0]['code']}}
         return {}
 
-    def onchange_margin(self, cr, uid, ids, price_min_margin, price_max_margin, context=None):
-        res = {'value': {'price_min_margin': 0.0, 'price_max_margin': 0.0}}
-        if not price_min_margin and not price_max_margin:
-            return res
+    def write(self, cr, uid, ids, vals, context=None):
+        name = self.browse(cr, uid, ids, context=context)[0].name
+        price_min_margin = vals.get('price_min_margin', 0.0)
+        price_max_margin = vals.get('price_max_margin', 0.0)
         if price_min_margin > price_max_margin:
-            res['warning'] = {'title': _('Warning!'), 'message': _('Minimum Margin must be lower than Maximum Margin !.')}
-        else:
-            res = {'value': {'price_min_margin': price_min_margin, 'price_max_margin': price_max_margin}}
-        return res
+            raise osv.except_osv(_('Warning!'), _('In \'%s\' pricelist rule, minimum margin must be lower than maximum margin !.') % (name))
+        return super(product_pricelist_item, self).write(cr, uid, ids, vals, context=context)
+
 
 product_pricelist_item()
 
