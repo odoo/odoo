@@ -536,11 +536,9 @@ class mail_message(osv.osv):
                 if res:
                     message.write({'state':'sent', 'message_id': res})
                     message_sent = True
-                    print "SENT"
                 else:
                     message.write({'state':'exception'})
                     message_sent = False
-                    print "NOT SENT"
 
                 # if auto_delete=True then delete that sent messages as well as attachments
                 if message_sent and message.auto_delete:

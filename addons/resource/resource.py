@@ -28,7 +28,6 @@ from tools.translate import _
 from itertools import groupby
 from operator import itemgetter
 
-import pytz
 
 class resource_calendar(osv.osv):
     _name = "resource.calendar"
@@ -200,7 +199,7 @@ class resource_calendar(osv.osv):
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
-    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False, context=None):
+    def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
         """ Calculates the Total Working hours based on given start_date to 
         end_date, If resource id is supplied that it will consider the source 
         leaves also in calculating the hours.
@@ -217,57 +216,41 @@ class resource_calendar(osv.osv):
             return 0.0
         dt_leave = self._get_leaves(cr, uid, id, resource)
         hours = 0.0
-        
-        orig_dt_from = dt_from
-        
-        users_obj = self.pool.get('res.users')       
-        user = users_obj.browse(cr, uid, uid, context=context)
-        utc = pytz.timezone('UTC')
-        
-        if user.context_tz:
-            context_tz = pytz.timezone(user.context_tz)
-        else:
-            context_tz = utc
-            
-        # gap between UTC ans user timezone
-        tz_gap = (utc.localize(dt_from) - context_tz.localize(dt_from)).seconds / 3600
-            
-        while dt_from <= dt_to:
+
+        current_hour = dt_from.hour
+
+        while (dt_from <= dt_to):
             cr.execute("select hour_from,hour_to from resource_calendar_attendance where dayofweek='%s' and calendar_id=%s order by hour_from", (dt_from.weekday(),id))
-            slots = cr.fetchall()
-            
-            for (hour_from, hour_to) in slots:
+            der =  cr.fetchall()
+            for (hour_from,hour_to) in der:
+                if hours != 0.0:#For first time of the loop only,hours will be 0
+                    current_hour = hour_from
                 leave_flag = False
-                dt_check = dt_from.strftime('%Y-%m-%d')
-                for leave in dt_leave:
-                    if dt_check == leave:
-                        dt_check = datetime.strptime(dt_check, "%Y-%m-%d") + timedelta(days=1)
-                        leave_flag = True
-                    
-                if leave_flag:
-                    break
-                else:
-                    if dt_from.hour >= hour_to:
-                        continue
-                    elif dt_from.hour >= hour_from:
-                        hour_from = dt_from.hour + dt_from.minute/60 + dt_from.second/3600
-                    d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_from)), int((hour_from % 1) * 60))
-                
-                    if dt_from.day == dt_to.day and hour_from <= (dt_to.hour + tz_gap) < hour_to:
-                        
-                        hours += (utc.localize(dt_to) - context_tz.localize(d1)).seconds
+                if (hour_to>=current_hour):
+                    dt_check = dt_from.strftime('%Y-%m-%d')
+                    for leave in dt_leave:
+                        if dt_check == leave:
+                            dt_check = datetime.strptime(dt_check, "%Y-%m-%d") + timedelta(days=1)
+                            leave_flag = True
+
+                    if leave_flag:
                         break
-                    elif dt_from == orig_dt_from:
-                        d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
-                        hours += (context_tz.localize(d2) - utc.localize(d1)).seconds
                     else:
+                        d1 = dt_from
                         d2 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(hour_to)), int((hour_to%1) * 60))
-                        hours += (d2 - d1).seconds
-                        
-            dt_from += timedelta(days=1)
-            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day)
-            
-        return hours / 3600
+
+                        if hours != 0.0:#For first time of the loop only,hours will be 0
+                            d1 = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60))
+
+                        if dt_from.day == dt_to.day:
+                            if hour_from <= dt_to.hour <= hour_to:
+                                d2 = dt_to
+                        dt_from = d2
+                        hours += (d2-d1).seconds
+            dt_from = datetime(dt_from.year, dt_from.month, dt_from.day, int(math.floor(current_hour)), int((current_hour%1) * 60)) + timedelta(days=1)
+            current_hour = 0.0
+
+        return (hours/3600)
 
 resource_calendar()
 
