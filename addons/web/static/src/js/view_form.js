@@ -940,6 +940,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return self.dataset.parent_view.recursive_save();
         });
     },
+    recursive_reload: function() {
+        var self = this;
+        var pre = $.when();
+        if (self.dataset.parent_view)
+                pre = self.dataset.parent_view.recursive_reload();
+        return pre.pipe(function() {
+            return self.reload();
+        });
+    },
     is_dirty: function() {
         return _.any(this.fields, function (value_) {
             return value_._dirty_flag;
@@ -1809,7 +1818,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
             this.view.dataset, this.view.datarecord.id, function () {
-                self.view.reload();
+                self.view.recursive_reload();
             });
     },
     check_disable: function() {
