@@ -23,13 +23,26 @@
 try:
     import openerp.addons.web.common.http as openerpweb
 except ImportError:
-    import web.common.http as openerpweb    # noqa
+    import web.common.http as openerpweb
+
+import openerp.modules.registry
+from openerp import SUPERUSER_ID
 
 import simplejson
-
+import werkzeug
+import urllib
 
 class AuthOAuthProvider(openerpweb.Controller):
     _cp_path = '/oauth2'
+
+    @openerpweb.httprequest
+    def auth(self, req, **kw):
+        # TODO: if logged and approval_prompt == auto then return get_token and redirect
+        search = req.params.copy()
+        if req.debug:
+            search['debug'] = 1
+        redirect_url = '/?' + urllib.urlencode(search) + '#action=oauth2_auth'
+        return werkzeug.utils.redirect(redirect_url, 303)
 
     @openerpweb.jsonrequest
     def get_token(self, req, client_id="", scope="", **kw):
@@ -39,8 +52,16 @@ class AuthOAuthProvider(openerpweb.Controller):
         }
 
     @openerpweb.httprequest
-    def tokeninfo(self, req, access_token="", **kw):
-        info = req.session.model('res.users').auth_oauth_provider_tokeninfo(access_token)
-        return simplejson.dumps(info)
+    def tokeninfo(self, req, dbname=None, access_token=None, **kw):
+        if not dbname or not access_token:
+            return simplejson.dumps({ "error": "No 'dbname' or 'access_token' url parameters specified." })
+        try:
+            registry = openerp.modules.registry.RegistryManager.get(dbname)
+            with registry.cursor() as cr:
+                u = registry.get('res.users')
+                info = u.auth_oauth_provider_tokeninfo(cr, SUPERUSER_ID, access_token, kw)
+                return simplejson.dumps(info)
+        except Exception, e:
+            return simplejson.dumps({ "error": e.message })
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

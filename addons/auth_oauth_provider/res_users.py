@@ -40,14 +40,20 @@ class res_users(osv.osv):
         }, context=context)
         return token
 
-    def auth_oauth_provider_tokeninfo(self, cr, uid, access_token="", context=None):
-        user = self.browse(cr, uid, [uid], context=context)
+    def auth_oauth_provider_tokeninfo(self, cr, uid, access_token, context=None):
+        user_id = self.search(cr, uid, [('last_oauth_token', '=', access_token)], context=context)
+        if len(user_id) != 1:
+            return {
+                "error": "invalid_token"
+            }
+        user = self.browse(cr, uid, user_id[0], context=context)
         if access_token == user.last_oauth_token:
             return {
                 "user_id": uid,
                 "scope": user.last_oauth_token_scope,
+                "email": user.partner_id.email or '', # TODO: should deliver only according to scopes
+                "scope": user.last_oauth_token_scope,
                 #"audience": "8819981768.apps.googleusercontent.com",
-                #"scope": "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email",
                 #"expires_in": 436
             }
         else:
