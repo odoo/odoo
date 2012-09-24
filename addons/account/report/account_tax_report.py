@@ -23,6 +23,7 @@ import time
 
 from common_report_header import common_report_header
 from report import report_sxw
+from tools.translate import _
 
 class tax_report(report_sxw.rml_parse, common_report_header):
     _name = 'report.account.vat.declaration'
@@ -62,7 +63,11 @@ class tax_report(report_sxw.rml_parse, common_report_header):
         })
 
     def _get_basedon(self, form):
-        return form['form']['based_on']
+        based_on = form['form']['based_on']
+        if based_on == 'invoices':
+            return _('Invoices')
+        elif based_on == 'payments':
+            return _('Payments')
 
     def _get_lines(self, based_on, company_id=False, parent=False, level=0, context=None):
         period_list = self.period_ids

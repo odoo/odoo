@@ -46,7 +46,7 @@ class product_pricelist(report_sxw.rml_parse):
 
         for i in range(1,6):
             if form['qty'+str(i)]!=0:
-                vals['qty'+str(qtys)] = str(form['qty'+str(i)]) + ' units'
+                vals['qty'+str(qtys)] = str(form['qty'+str(i)]) + ' ' + _('units')
             qtys += 1
         lst.append(vals)
         return lst

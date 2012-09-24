@@ -142,27 +142,12 @@ class project_issue(crm.crm_case, osv.osv):
                         resource_ids = res_obj.search(cr, uid, [('user_id','=',issue.user_id.id)])
                         if resource_ids and len(resource_ids):
                             resource_id = resource_ids[0]
-                    duration = float(ans.days)
-                    if issue.project_id and issue.project_id.resource_calendar_id:
-                        duration = float(ans.days) * 24
-
-                        new_dates = cal_obj.interval_min_get(cr, uid,
-                                                             issue.project_id.resource_calendar_id.id,
-                                                             date_create,
-                                                             duration, resource=resource_id)
-                        no_days = []
-                        date_until = datetime.strptime(date_until, '%Y-%m-%d %H:%M:%S')
-                        for in_time, out_time in new_dates:
-                            if in_time.date not in no_days:
-                                no_days.append(in_time.date)
-                            if out_time > date_until:
-                                break
-                        duration = len(no_days)
+                    duration = float(ans.days) + float(ans.seconds)/(24*3600)
 
                 if field in ['working_hours_open','working_hours_close']:
                     res[issue.id][field] = hours
                 else:
-                    res[issue.id][field] = abs(float(duration))
+                    res[issue.id][field] = duration
 
         return res
 

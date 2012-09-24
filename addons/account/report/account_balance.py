@@ -41,6 +41,7 @@ class account_balance(report_sxw.rml_parse, common_report_header):
             'sum_credit': self._sum_credit,
             'get_fiscalyear':self._get_fiscalyear,
             'get_filter': self._get_filter,
+            'has_filter': self._has_filter,
             'get_start_period': self.get_start_period,
             'get_end_period': self.get_end_period ,
             'get_account': self._get_account,
