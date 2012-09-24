@@ -20,7 +20,11 @@
                         <field name="date_end"/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
-                    <field name="items_id"/>
+                    <notebook>
+                        <page string="Rules">
+                            <field name="items_id"/>
+                        </page>
+                    </notebook>
                 </form>
             </field>
         </record>
@@ -103,8 +107,8 @@
                         <field name="price_surcharge" nolabel="1"/>
                         <newline/>
                         <field name="price_round" string="Rounding Method"/>
-                        <field name="price_min_margin" string="Min. Margin"/>
-                        <field name="price_max_margin" string="Max. Margin"/>
+                        <field name="price_min_margin" string="Min. Margin" on_change="onchange_margin(price_min_margin, price_max_margin)"/>
+                        <field name="price_max_margin" string="Max. Margin" on_change="onchange_margin(price_min_margin, price_max_margin)"/>
                     </group>
 
                 </form>
