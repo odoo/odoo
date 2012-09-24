@@ -5,7 +5,7 @@ openerp.base = function(instance) {
         template: 'EmptyComponent',
         init: function(parent, options) {
             this._super(parent);
-            this.params = options;
+            this.params = options;      // NOTE read by embeded client action
             this.clean();
             // create a new instance
             this.remote_instance = new openerp.init();
@@ -20,7 +20,7 @@ openerp.base = function(instance) {
         destroy: function() {
             this.clean();
             //delete this.remote_instance;
-            this._super();
+            return this._super();
         },
 
         _get_options: function() {
@@ -51,28 +51,25 @@ openerp.base = function(instance) {
             return this._get_options().then(this.proxy('_connect'));
         },
         _connect: function(options) {
-            this.options = options;
+            var self = this;
+            // before creating the client, check the connectivity...
+            var i = new Image();
+            i.onerror = function() {
+                self.do_warn(_.str.sprintf('Apps Server %s not available.', options.url), 'Showing local modules.', true);
+                self.do_action('base.open_module_tree');
+            };
+            i.onload = function() {
 
-            var client = this.client = new this.remote_instance.web.EmbeddedClient(null, this.options.url,
-                                                                     this.options.dbname, this.options.login, this.options.password,
-                                                                     this.options.action_id);
-            client.on('connection_failed', this, this.action_fallback);
-            //this.client = client;
+                var client = self.client = new self.remote_instance.web.EmbeddedClient(null, options.url,
+                                                                         options.dbname, options.login, options.password,
+                                                                         options.action_id);
 
-            client.replace(this.$el).
-                done(function() {
-                    client.$el.removeClass('openerp');
-                }).
-                fail(function() {
-                    console.log('fail', this);
-                    alert('fail');
-                });
-        },
-
-        action_fallback: function() {
-            // TODO show flash message
-            this.do_warn(this.options.url + ' unreachable');
-            this.do_action('base.action_modules');
+                client.replace(self.$el).
+                    done(function() {
+                        client.$el.removeClass('openerp');
+                    });
+            };
+            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', options.url);
         }
     });
 
