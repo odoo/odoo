@@ -440,7 +440,7 @@ class product_pricelist_item(osv.osv):
         price_min_margin = vals.get('price_min_margin', 0.0)
         price_max_margin = vals.get('price_max_margin', 0.0)
         if price_min_margin > price_max_margin:
-            raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule !.') % (name))
+            raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule!') % (name))
         return super(product_pricelist_item, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -449,7 +449,7 @@ class product_pricelist_item(osv.osv):
         for rule in self.browse(cr, uid, ids, context=context):
             name = rule.name
             if price_min_margin > price_max_margin:
-                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule !.') % (name))
+                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule!') % (name))
         return super(product_pricelist_item, self).write(cr, uid, ids, vals, context=context)
 
 
