@@ -138,7 +138,7 @@ class account_analytic_account(osv.osv):
 
     _columns = {
         'name': fields.char('Account/Contract Name', size=128, required=True),
-        'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
+        'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name',store=True),
         'code': fields.char('Reference', size=24, select=True),
         'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
@@ -151,7 +151,7 @@ class account_analytic_account(osv.osv):
         'child_ids': fields.one2many('account.analytic.account', 'parent_id', 'Child Accounts'),
         'child_complete_ids': fields.function(_child_compute, relation='account.analytic.account', string="Account Hierarchy", type='many2many'),
         'line_ids': fields.one2many('account.analytic.line', 'account_id', 'Analytic Entries'),
-        'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
+        'balance': fields.function(_debit_credit_bal_qtty, type='float', string='Balance', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account'),store=True),
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
