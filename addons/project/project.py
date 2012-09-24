@@ -1100,10 +1100,9 @@ class task(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
-        project_obj = self.pool.get("project.project")
         project_id = self.browse(cr, uid, task_id, context=context).project_id
         if project_id:
-            follower_ids = project_obj.browse(cr, uid, project_id.id, context=context).message_follower_ids
+            follower_ids = self.pool.get("project.project").browse(cr, uid, project_id.id, context=context).message_follower_ids
             followers = [follower.id for follower in follower_ids]
             self.message_subscribe(cr, uid, task_id, followers, context=context)
         self._store_history(cr, uid, [task_id], context=context)

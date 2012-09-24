@@ -381,9 +381,8 @@ class project_issue(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
-        project_obj = self.pool.get("project.project")
         project_id = self.browse(cr, uid, obj_id, context=context).project_id
-        follower_ids = project_obj.browse(cr, uid, project_id.id, context=context).message_follower_ids
+        follower_ids = self.pool.get("project.project").browse(cr, uid, project_id.id, context=context).message_follower_ids
         followers = [follower.id for follower in follower_ids]
         self.message_subscribe(cr, uid, obj_id, followers, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
