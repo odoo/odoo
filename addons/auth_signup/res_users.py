@@ -77,47 +77,60 @@ class res_partner(osv.Model):
             - change the password of a user (with token, and existing user).
             :param values: a dictionary with field values
             :param token: signup token (optional)
-            :return: the uid of the signed up user
+            :return: (dbname, login, password) for the signed up user
         """
-        # signup the user, then log in (for setting properly the login_date)
         assert values.get('login') and values.get('password')
-        uid = self._signup_user(cr, values, token, context)
-        return self.login(cr.dbname, values['login'], values['password'])
-
-    def _signup_user(self, cr, values, token=None, context=None):
-        ir_config_parameter = self.pool.get('ir.config_parameter')
-        values.update({'signup_token': False, 'signup_expiration': False})
+        result = (cr.dbname, values['login'], values['password'])
 
         if token:
             # signup with a token: find the corresponding partner id
-            partner_id = self.signup_retrieve_partner(cr, SUPERUSER_ID, token, context=None)
+            partner_id = self.signup_retrieve_partner(cr, uid, token, context=None)
             if not partner_id:
                 raise Exception('Signup token is not valid')
-            partner = self.browse(cr, SUPERUSER_ID, partner_id, context)
+            partner = self.browse(cr, uid, partner_id, context)
             if partner.signup_expiration and partner.signup_expiration < now():
                 raise Exception('Signup token is no longer valid')
-            assert values['login'] == partner.email
 
-            # if user exists, modify its password
             if partner.user_ids:
-                user = partner.user_ids[0]
-                user.write(values)
-                return user.id
+                # user exists, modify its password and clear token
+                partner.user_ids[0].write({
+                    'password': values['password'],
+                    'signup_token': False,
+                    'signup_expiration': False,
+                })
+            else:
+                # user does not exist: sign up invited user
+                self._signup_create_user(cr, uid, {
+                    'name': partner.name,
+                    'login': values['login'],
+                    'password': values['password'],
+                    'email': values['login'],
+                    'partner_id': partner.id,
+                }, token=token, context=context)
 
-            # user does not exist: connect the new user to the partner
-            values.update({'name': partner.name, 'partner_id': partner.id})
+            return result
 
-        else:
-            # check whether uninvited users may sign up
-            if not ir_config_parameter.get_param(cr, SUPERUSER_ID, 'auth_signup.allow_uninvited', False):
-                raise Exception('Signup is not allowed for uninvited users')
+        # sign up an external user
+        assert values.get('name'), 'Signup: no name given for new user'
+        self._signup_create_user(cr, uid, {
+            'name': values['name'],
+            'login': values['login'],
+            'password': values['password'],
+            'email': values['login'],
+        }, context=context)
+        return result
 
-        # create a new user
-        assert values.get('name')
-        values['email'] = values['login']
-        template_user_id = ir_config_parameter.get_param(cr, SUPERUSER_ID, 'auth_signup.template_user_id')
+    def _signup_create_user(self, cr, uid, values, token=None, context=None):
+        """ create a new user from the template user """
+        # check that uninvited users may sign up
+        ir_config_parameter = self.pool.get('ir.config_parameter')
+        if token and not ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', False):
+            raise Exception('Signup is not allowed for uninvited users')
+
+        template_user_id = ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id')
         assert template_user_id, 'Signup: missing template user'
-        return self.pool.get('res.users').copy(cr, SUPERUSER_ID, template_user_id, data, context=context)
+        values['active'] = True
+        return self.pool.get('res.users').copy(cr, uid, template_user_id, values, context=context)
 
 
 
