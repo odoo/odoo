@@ -216,6 +216,7 @@ class email_template(osv.osv):
             default = {}
         default = default.copy()
         default['name'] = template.name + _('(copy)')
+        default.update(ref_ir_act_window=False, ref_ir_value=False)
         return super(email_template, self).copy(cr, uid, id, default, context)
 
     def build_expression(self, field_name, sub_field_name, null_value):
@@ -335,7 +336,7 @@ class email_template(osv.osv):
            :param bool force_send: if True, the generated mail.message is
                 immediately sent after being created, as if the scheduler
                 was executed for this message only.
-           :returns: id of the mail.message that was created 
+           :returns: id of the mail.message that was created
         """
         if context is None: context = {}
         mail_mail = self.pool.get('mail.mail')
