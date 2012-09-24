@@ -116,8 +116,6 @@ class configmanager(object):
                          help="specify the TCP port for the XML-RPC protocol", type="int")
         group.add_option("--no-xmlrpc", dest="xmlrpc", action="store_false", my_default=True,
                          help="disable the XML-RPC protocol")
-        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
-                         help="Enable correct behavior when behind a reverse proxy")
         parser.add_option_group(group)
 
         # XML-RPC / HTTPS
@@ -253,8 +251,6 @@ class configmanager(object):
 
         # Advanced options
         group = optparse.OptionGroup(parser, "Advanced options")
-        group.add_option("--cache-timeout", dest="cache_timeout", my_default=100000,
-                          help="set the timeout for the cache system", type="int")
         group.add_option('--debug', dest='debug_mode', action='store_true', my_default=False, help='enable debug mode')
         group.add_option("--stop-after-init", action="store_true", dest="stop_after_init", my_default=False,
                           help="stop the server after its initialization")
@@ -272,23 +268,30 @@ class configmanager(object):
         group.add_option("--max-cron-threads", dest="max_cron_threads", my_default=4,
                          help="Maximum number of threads processing concurrently cron jobs.",
                          type="int")
-        # TODO sensible default for the three following limits.
-        group.add_option("--virtual-memory-limit", dest="virtual_memory_limit", my_default=768 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per Gunicorn process. "
-                         "When the limit is reached, any memory allocation will fail.",
-                         type="int")
-        group.add_option("--virtual-memory-reset", dest="virtual_memory_reset", my_default=640 * 1024 * 1024,
-                         help="Maximum allowed virtual memory per Gunicorn process. "
-                         "When the limit is reached, the worker will be reset after "
-                         "the current request.",
-                         type="int")
-        group.add_option("--cpu-time-limit", dest="cpu_time_limit", my_default=60,
-                         help="Maximum allowed CPU time per Gunicorn process. "
-                         "When the limit is reached, an exception is raised.",
-                         type="int")
         group.add_option("--unaccent", dest="unaccent", my_default=False, action="store_true",
                          help="Use the unaccent function provided by the database when available.")
+        parser.add_option_group(group)
 
+        group = optparse.OptionGroup(parser, "Multiprocessing options")
+        # TODO sensible default for the three following limits.
+        group.add_option("--workers", dest="workers", my_default=0,
+                         help="Specify the number of workers, 0 disable prefork mode.",
+                         type="int")
+        group.add_option("--limit-memory-soft", dest="limit_memory_soft", my_default=640 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request.",
+                         type="int")
+        group.add_option("--limit-memory-hard", dest="limit_memory_hard", my_default=768 * 1024 * 1024,
+                         help="Maximum allowed virtual memory per worker, when reached, any memory allocation will fail.",
+                         type="int")
+        group.add_option("--limit-time-cpu", dest="limit_time_cpu", my_default=60,
+                         help="Maximum allowed CPU time per request.",
+                         type="int")
+        group.add_option("--limit-time-real", dest="limit_time_real", my_default=60,
+                         help="Maximum allowed Real time per request. ",
+                         type="int")
+        group.add_option("--limit-request", dest="limit_request", my_default=8192,
+                         help="Maximum number of request to be processed per worker.",
+                         type="int")
         parser.add_option_group(group)
 
         # Copy all optparse options (i.e. MyOption) into self.options.
@@ -369,7 +372,7 @@ class configmanager(object):
 
         # if defined dont take the configfile value even if the defined value is None
         keys = ['xmlrpc_interface', 'xmlrpc_port', 'db_name', 'db_user', 'db_password', 'db_host',
-                'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port', 'cache_timeout',
+                'db_port', 'db_template', 'logfile', 'pidfile', 'smtp_port',
                 'email_from', 'smtp_server', 'smtp_user', 'smtp_password',
                 'netrpc_interface', 'netrpc_port', 'db_maxconn', 'import_partial', 'addons_path',
                 'netrpc', 'xmlrpc', 'syslog', 'without_demo', 'timezone',
@@ -391,10 +394,10 @@ class configmanager(object):
             'language', 'translate_out', 'translate_in', 'overwrite_existing_translations',
             'debug_mode', 'smtp_ssl', 'load_language',
             'stop_after_init', 'logrotate', 'without_demo', 'netrpc', 'xmlrpc', 'syslog',
-            'list_db', 'xmlrpcs', 'proxy_mode',
+            'list_db', 'xmlrpcs',
             'test_file', 'test_enable', 'test_commit', 'test_report_directory',
-            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads',
-            'virtual_memory_limit', 'virtual_memory_reset', 'cpu_time_limit', 'unaccent',
+            'osv_memory_count_limit', 'osv_memory_age_limit', 'max_cron_threads', 'unaccent',
+            'workers', 'limit_memory_hard', 'limit_memory_soft', 'limit_time_cpu', 'limit_time_real', 'limit_request'
         ]
 
         for arg in keys:
