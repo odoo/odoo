@@ -511,7 +511,7 @@ class product_product(osv.osv):
         for obj in self.browse(cr, uid, ids, context=context):
             result[obj.id] = tools.image_get_resized_images(obj.image, avoid_resize_medium=True)
         return result
-    
+
     def _set_image(self, cr, uid, id, name, value, args, context=None):
         return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
 
@@ -727,7 +727,7 @@ class product_product(osv.osv):
         context_wo_lang.pop('lang', None)
         product = self.read(cr, uid, id, ['name'], context=context_wo_lang)
         default = default.copy()
-        default['name'] = product['name'] + ' (copy)'
+        default['name'] = product['name'] + ' (' + _('copy') + ')'
 
         if context.get('variant',False):
             fields = ['product_tmpl_id', 'active', 'variants', 'default_code',
