@@ -16,6 +16,10 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         if (!params.redirect_uri) {
             this.error(_t("No 'redirect_uri' parameter given"));
         }
+        // params.client_id
+        // TODO: check if client_id application is authorized to use the service, and get it's name
+        // that should be displayed in the approval confirmation dialog.
+
         // params.approval_prompt TODO
         if (!this._error) {
             instance.session.rpc('/oauth2/get_token', {
