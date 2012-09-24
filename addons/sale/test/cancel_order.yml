@@ -1,88 +1,79 @@
 -
   In order to test the cancel sale order.
+  I confirm order (with at least 2 lines)
 -
-  Now I cancel Quotation.
--
-  !python {model: sale.order}: |
-    self.action_cancel(cr, uid, [ref("order7")])
--
-  I check state of Quotation after cancelled.
--
-  !assert {model: sale.order, id: order7, string: sale order should be in cancel state}:
-    - state == 'cancel'
--
-  I set cancelled quotation to draft.
--
-  !python {model: sale.order}: |
-    self.action_cancel_draft(cr, uid, [ref("order7")])
--
-  I confirm order.
--
-  !workflow {model: sale.order, action: order_confirm, ref: order7}
--
-  I send delivery in two shipments, so I am doing a partial delivery order.
--
-  !python {model: stock.picking}: |
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
-    first_picking = self.browse(cr, uid, delivery_orders[0], context=context)
-    if first_picking.force_assign(cr, uid, first_picking):
-      first_move = first_picking.move_lines[0]
-      values = {'move%s'%(first_move.id): {'product_qty': 5, 'product_uom':ref('product.product_uom_unit')}}
-      first_picking.do_partial(values, context=context)
--
-  Now I cancel latest shipment.
--
-  !python {model: stock.picking}: |
-    import netsvc
-    delivery_orders = self.search(cr, uid, [('sale_id','=',ref("order7"))])
-    last_delivery_order_id = delivery_orders[0]
-    wf_service = netsvc.LocalService("workflow")
-    wf_service.trg_validate(uid, 'stock.picking', last_delivery_order_id, 'button_cancel', cr)
--
-  I run the scheduler.
--
-  !python {model: procurement.order}: |
+  !workflow {model: sale.order, action: order_confirm, ref: sale_order_8}
 
-     self.run_scheduler(cr, uid)
 -
-  I check order status in "Ship Exception".
+  I check state of order in 'Sale Order'.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be in shipping exception}:
-    - state == "shipping_except"
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be In Progress state}:
+    - state == 'manual'  
 -
-  Now I regenerate shipment.
+  I check that Invoice should not be created.
 -
-  !workflow {model: sale.order, action: ship_recreate, ref: order7}
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_8"))
+    assert len(sale_order.invoice_ids) == False, "Invoice should not be created."
 -
-  I check state of order in 'To Invoice'.
+  I create an invoice for the first line
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be In Progress state}:
-    - state == 'manual'
+   !python {model: sale.order.line.make.invoice}: |
+
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order.line', "active_ids": [ref("sale_order_line_20")], "active_id":ref("sale_order_line_20")})
+    pay_id = self.create(cr, uid, {})
+    self.make_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
 -
-  I make invoice for order.
+  I create an invoice for a fixed price (25% of the second line, thus 5)
 -
-  !workflow {model: sale.order, action: manual_invoice, ref: order7}
+   !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'fixed', 'amount': 5})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+
 -
-  To cancel the sale order from Invoice Exception, I have to cancel the invoice of sale order.
+  I create an invoice for the remaining and check the amount (should be the remaining amount of second line)
+-
+   !python {model: sale.advance.payment.inv}: |
+    ctx = context.copy()
+    ctx.update({"active_model": 'sale.order', "active_ids": [ref("sale_order_8")], "active_id":ref("sale_order_8")})
+    pay_id = self.create(cr, uid, {'advance_payment_method': 'all'})
+    self.create_invoices(cr, uid, [pay_id], context=ctx)
+    invoice_ids = self.pool.get('sale.order').browse(cr, uid, ref("sale_order_8")).invoice_ids
+    assert len(invoice_ids) == 3, "All invoices are not created"
+    for invoice in invoice_ids:
+        assert invoice.amount_total in (7290,5,20), "Invoice total is not correct"
+-
+  I cancel all the invoices.
 -
   !python {model: sale.order}: |
     import netsvc
-    invoice_ids = self.browse(cr, uid, ref("order7")).invoice_ids
+    invoice_ids = self.browse(cr, uid, ref("sale_order_8")).invoice_ids
     wf_service = netsvc.LocalService("workflow")
-    first_invoice_id = invoice_ids[0]
-    wf_service.trg_validate(uid, 'account.invoice', first_invoice_id.id, 'invoice_cancel', cr)
+    for invoice in invoice_ids:
+        wf_service.trg_validate(uid, 'account.invoice', invoice.id, 'invoice_cancel', cr)
 -
   I check order status in "Invoice Exception" and related invoice is in cancel state.
 -
-  !assert {model: sale.order, id: order7, string: Sale order should be in Invoice Exception state}:
+  !assert {model: sale.order, id: sale_order_8, string: Sale order should be in Invoice Exception state}:
     - state == "invoice_except", "Order should be in Invoice Exception state after cancel Invoice"
+- 
+  I click recreate invoice.
 -
-  Then I click on the Ignore Exception button.
+  !workflow {model: sale.order, action: invoice_recreate, ref: sale_order_8}
+- 
+  I check that the invoice is correctly created with all lines.
 -
-  !workflow {model: sale.order, action: invoice_corrected, ref: order7}
+  !python {model: sale.order}: |
+    sale_order = self.browse(cr, uid, ref("sale_order_8"))
+    total_order_line = 0
+    assert len(sale_order.invoice_ids), "Invoice should be created."
+    for invoice in sale_order.invoice_ids:
+        if invoice.state != 'cancel':
+            total_order_line += len(invoice.invoice_line)
+    assert total_order_line == 2, "wrong number of invoice lines"
 
--
-  I check state of order in 'In Progress'.
--
-  !assert {model: sale.order, id: order7, string: Sale order should be In progress state}:
-    - state == 'progress'

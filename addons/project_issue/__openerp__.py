@@ -21,50 +21,48 @@
 ##############################################################################
 
 {
-    'name': 'Issues Tracker',
+    'name': 'Issue Tracker',
     'version': '1.0',
     'category': 'Project Management',
-    "sequence": 22,
-    'complexity': "easy",
+    'sequence': 22,
+    'summary': 'Support, Bug Tracker, Helpdesk',
     'description': """
-This module provides Issues/Bugs Management in Project.
-=======================================================
+Track Issues/Bugs Management for Projects
+=========================================
+This application allows you to manage the issues you might face in a project like bugs in a system, client complaints or material breakdowns. 
 
-OpenERP allows you to manage the issues you might face in a project
-like bugs in a system, client complaints or material breakdowns. A
-list view allows the manager to quickly check the issues, assign them
-and decide on their status as they evolve.
+It allows the manager to quickly check the issues, assign them and decide on their status quickly as they evolve.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/issue_analysis.jpeg','images/project_issue.jpeg'],
     'depends': [
+        'base_status',
         'crm',
         'project',
     ],
-    'init_xml': [
-        'project_issue_data.xml'
-    ],
-    'update_xml': [
+    'data': [
         'project_issue_view.xml',
         'project_issue_menu.xml',
         'report/project_issue_report_view.xml',
         'security/project_issue_security.xml',
         'security/ir.model.access.csv',
-        "board_project_issue_view.xml",
-        "res_config_view.xml",
+        'board_project_issue_view.xml',
+        'res_config_view.xml',
+        'project_issue_data.xml'
      ],
-    'demo_xml': ['project_issue_demo.xml'],
+    'demo': ['project_issue_demo.xml'],
     'test': [
-      'test/subscribe_issue.yml',
-      'test/issue_process.yml',
-      'test/cancel_issue.yml',
-      'test/issue_demo.yml'
+        'test/subscribe_issue.yml',
+        'test/issue_process.yml',
+        'test/cancel_issue.yml',
+        'test/issue_demo.yml'
     ],
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate' : '001236490750848623845',
+    'certificate': '001236490750848623845',
+    'js': ['static/src/js/project_issue.js'],
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

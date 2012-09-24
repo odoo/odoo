@@ -38,19 +38,18 @@ Make your module inheriting from the ``mail.thread`` class.
     # inherit from mail.thread allows the use of OpenChatter
     _inherit = ['mail.thread']
 
-Use the thread viewer widget inside your form view by using the ThreadView widget on the message_ids_social field inherited from mail.thread.
+Use the thread viewer widget inside your form view by using the mail_thread widget on the message_ids field inherited from mail.thread.
 
 ::
 
   <record model="ir.ui.view" id="my_task_form_view">
     <field name="name">My Task</field>
     <field name="model">my.task</field>
-    <field name="type">form</field>
     <field name="priority">1</field>
     <field name="arch" type="xml">
       <form>
       [...]
-      <field name="message_ids_social" colspan="4" widget="ThreadView" nolabel="1"/>
+      <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
       </form>
     </field>
   </record>
@@ -58,7 +57,7 @@ Use the thread viewer widget inside your form view by using the ThreadView widge
 Send notifications
 +++++++++++++++++++
 
-When sending a notification is required in your workflow or business logic, use the ``message_append_note`` method. This method is a shortcut to the ``message_append`` method that takes all ``mail.message`` fields as arguments. This latter method calls ``message_create`` that
+When sending a notification is required in your workflow or business logic, use the ``message_post`` method. This method is a shortcut to the ``message_append`` method that takes all ``mail.message`` fields as arguments. This latter method calls ``message_create`` that
 
  - creates the message
  - parses the body to find users you want to push the message to (finding and parsing ``@login`` in the message body)
@@ -75,7 +74,7 @@ You should therefore not worry about subscriptions or anything else than sending
     return res
 
   def do_something_send_note(self, cr, uid, ids, context=None):
-    self.message_append_note(cr, uid, ids, _('My subject'),
+    self.message_post(cr, uid, ids, _('My subject'),
     _("has received a <b>notification</b> and is happy for it."), context=context)
 
 Notifications guidelines
@@ -131,7 +130,7 @@ The drawback of this method is that it is no longer possible to those subscriber
 Messages display management
 ++++++++++++++++++++++++++++
 
-By default, the ThreadView widget shows all messages related to the current document beside the document, in the History and comments section. However, you may want to display other messages in the widget. For example, the OpenChatter on res.users model shows
+By default, the mail_thread widget shows all messages related to the current document beside the document, in the History and comments section. However, you may want to display other messages in the widget. For example, the OpenChatter on res.users model shows
 
  - messages related to the user, as usual (messages with ``model = res.users, res_id = current_document_id``)
  - messages directly pushed to this user (containing @login)
@@ -148,7 +147,7 @@ The best way to direct the messages that will be displayed in the OpenChatter wi
         # add: search in the current task project messages
         '&', '&', ('res_id', '=', my_task.project_id.id), ('model', '=', 'project.project'),
         # ... containing the task name
-        '|', ('body_text', 'like', '%s' % (my_task.name)), ('body_html', 'like', '%s' % (my_task.name))
+        '|', ('body', 'like', '%s' % (my_task.name)), ('body_html', 'like', '%s' % (my_task.name))
         ] + domain, limit=limit, offset=offset, context=context)
     # if asked: add ancestor ids to have complete threads
     if (ascent): msg_ids = self._message_add_ancestor_ids(cr, uid, ids, msg_ids, root_ids, context=context)

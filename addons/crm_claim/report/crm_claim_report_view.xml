@@ -7,7 +7,6 @@
         <record id="view_report_crm_claim_tree" model="ir.ui.view">
             <field name="name">crm.claim.report.tree</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                <tree string="Claims">
                     <field name="name" invisible="1"/>
@@ -35,7 +34,6 @@
         <record id="view_report_crm_claim_graph" model="ir.ui.view">
             <field name="name">crm.claim.report.graph</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Claims" type="bar">
                     <field name="state"/>
@@ -50,114 +48,45 @@
         <record id="view_report_crm_claim_filter" model="ir.ui.view">
             <field name="name">crm.claim.report.select</field>
             <field name="model">crm.claim.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                  <group>
-                       <filter string="Year" icon="terp-go-year" name="year"
-                               domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                               help="Claims created in current year"/>
-                        <separator orientation="vertical" />
-
-                       <filter string="Month" icon="terp-go-month" name="This Month"
-                           domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                           help="Claims created in current month"/>
-
-                       <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Claims created in last month"/>
-
-                        <separator orientation="vertical" />
-                        <filter icon="terp-document-new"
-                            string="New"
-                            domain="[('state','=','draft')]"/>
-                        <filter icon="terp-camera_test"
-                            string="Open"
-                            domain="[('state','=','open')]"/>
-                        <filter icon="terp-gtk-media-pause"
-                            string="Pending"
-                            domain="[('state','=','pending')]"/>
-
-                        <separator orientation="vertical" />
-                        <field name="section_id" string="Sales Team"
-                            context="{'invisible_section': False}">
-
-                            <filter icon="terp-personal+"
-                                context="{'invisible_section': False}"
-                                domain="[('section_id.user_id','=',uid)]"
-                                help="My Sales Team(s)" />
-
-                        </field>
-                        <field name="company_id" groups="base.group_multi_company">
-                            <filter icon="terp-go-home"
-                                context="{'invisible_section': False}"
-                                domain="[('section_id.user_id.company_id','=',uid)]"
-                                help="My company"/>
-                        </field>
-
-                        <field name="user_id" string="Salesman">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
-                    </group>
-                    <newline/>
+                    <filter icon="terp-document-new" string="New" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Open" domain="[('state','=','open')]"/>
+                    <filter icon="terp-gtk-media-pause" string="Pending" domain="[('state','=','pending')]"/>
+                    <separator/>
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" />
+                    <separator/>
+                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
+                    <separator/>
+                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>
                     <group  expand="0" string="Extended Filters...">
-                        <filter icon="terp-dialog-close"
-                            string="Done"
-                            domain="[('state','=','done')]"/>
-                        <filter icon="gtk-cancel"
-                            string="Cancel"
-                            domain="[('state','=','cancel')]"/>
-                        <separator orientation="vertical"/>
                         <field name="partner_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="stage_id" widget="selection" domain="[('section_ids', '=', 'section_id')]"/>
-                        <field name="categ_id" widget="selection" domain="[('object_id.model', '=', 'crm.claim')]"/>
-                        <separator orientation="vertical"/>
-                        <field name="priority" />
-                        <field name="type_action" />
-                        <newline/>
+                        <field name="stage_id" domain="[('section_ids', '=', 'section_id')]"/>
+                        <field name="categ_id" domain="[('object_id.model', '=', 'crm.claim')]"/>
+                        <field name="priority"/>
+                        <field name="type_action"/>
+                        <field name="create_date" />
                         <field name="date_closed" />
                         <field name="date_deadline" />
+                        <filter icon="terp-dialog-close" string="Done" domain="[('state','=','done')]"/>
+                        <filter icon="gtk-cancel" string="Cancel" domain="[('state','=','cancel')]"/>
                     </group>
-                    <newline/>
                     <group  expand="1" string="Group By...">
-                        <filter string="Salesman" name="Salesman" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}" />
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
-                        <filter string="Partner" name="partner" icon="terp-partner"
-                            domain="[]" context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Stage" icon="terp-stage" domain="[]"
-                            context="{'group_by':'stage_id'}" />
-                        <filter string="Priority" icon="terp-rating-rated" domain="[]"
-                            context="{'group_by':'priority'}" />
-                        <filter string="Category" icon="terp-stock_symbol-selection"
-                            domain="[]" context="{'group_by':'categ_id'}" />
-
-                        <separator orientation="vertical"/>
-                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]"
-                            context="{'group_by':'type_action'}" help="Action Type"/>
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-
-                        <separator orientation="vertical" />
-                        <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}"
-                            help="Date of claim"/>
-
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}"
-                            help="Month of claim"/>
-
-                        <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}"
-                            help="Year of claim"/>
+                        <filter string="Salesperson" name="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}" />
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
+                        <filter string="Partner" name="partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter string="Stage" icon="terp-stage" domain="[]" context="{'group_by':'stage_id'}" />
+                        <filter string="Priority" icon="terp-rating-rated" domain="[]" context="{'group_by':'priority'}" />
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'categ_id'}" />
+                        <filter string="Type" icon="terp-stock_symbol-selection" domain="[]" context="{'group_by':'type_action'}" help="Action Type"/>
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of claim"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of claim"/>
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of claim"/>
                     </group>
                 </search>
             </field>

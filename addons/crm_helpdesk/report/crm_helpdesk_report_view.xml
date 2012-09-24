@@ -7,7 +7,6 @@
         <record id="view_report_crm_helpdesk_tree" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.tree</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk">
                     <field name="name" invisible="1"/>
@@ -35,7 +34,6 @@
         <record id="view_report_crm_helpdesk_graph" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.graph</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Helpdesk" type="bar">
                     <field name="state"/>
@@ -50,80 +48,36 @@
         <record id="view_report_crm_helpdesk_filter" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.select</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
-                    <group>
-                        <filter string="Year" icon="terp-go-year" name="year"
-                            domain="[('create_date','&lt;=', time.strftime('%%Y-%%m-%%d')),('create_date','&gt;=',time.strftime('%%Y-01-01'))]"
-                            help="Helpdesk requests occurred in current year"/>
-                        <separator orientation="vertical" />
-
-                        <filter string="Month" icon="terp-go-month" name="this_month"
-                            domain="[('create_date','&lt;=',(datetime.date.today()+relativedelta(day=31)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today()-relativedelta(day=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Helpdesk requests occurred in current month"/>
-                        <filter icon="terp-go-month" string="Month-1"
-                            domain="[('create_date','&lt;=', (datetime.date.today() - relativedelta(day=31, months=1)).strftime('%%Y-%%m-%%d')),('create_date','&gt;=',(datetime.date.today() - relativedelta(day=1,months=1)).strftime('%%Y-%%m-%%d'))]"
-                            help="Helpdesk requests occurred in last month"/>
-                        <separator orientation="vertical" />
-                        <filter string="New" icon="terp-check"
-                        domain="[('state','=','draft')]" />
-                        <filter string="Open" icon="terp-camera_test"
-                        domain="[('state','=','open')]" />
-                        <filter string="Closed" icon="terp-dialog-close"
-                        domain="[('state','=','cancel')]" />
-                        <separator orientation="vertical" />
-                        <field name="section_id" string="Sales Team"
-                            context="{'invisible_section': False}">
-                            <filter icon="terp-personal+"
-                            context="{'invisible_section': False}"
-                            domain="[('section_id.user_id','=',uid)]"
-                            help="My Sales Team(s)" />
-                        </field>
-                        <field name="company_id" groups="base.group_multi_company">
-                            <filter icon="terp-go-home"
-                            context="{'invisible_section': False}"
-                            domain="[('section_id.user_id.company_id','=',uid)]"
-                            help="My company"/>
-                        </field>
-                        <field name="user_id" string="Salesman">
-                            <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
-                        </field>
-                    </group>
-                    <newline/>
+                    <filter string="New" icon="terp-check" domain="[('state','=','draft')]" />
+                    <filter string="Open" icon="terp-camera_test" domain="[('state','=','open')]" />
+                    <filter string="Closed" icon="terp-dialog-close" domain="[('state','=','cancel')]" />
+                    <separator/>
+                    <filter icon="terp-personal" string="My Case(s)" help="My Case(s)" domain="[('user_id','=',uid)]" />
+                    <separator/>
+                    <filter string="My Sales Team(s)" icon="terp-personal+" context="{'invisible_section': False}" domain="[('section_id.user_id','=',uid)]" help="My Sales Team(s)" />
+                    <separator/>
+                    <filter string="My Company" icon="terp-go-home" context="{'invisible_section': False}" domain="[('section_id.user_id.company_id','=',uid)]" help="My company"/>
+                    <field name="user_id" string="Salesperson"/>
+                    <field name="section_id" string="Sales Team" context="{'invisible_section': False}"/>   
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <group expand="0" string="Extended Filters..."  groups="base.group_no_one">
                         <field name="priority" string="Priority"/>
                         <field name="categ_id"/>
-                        <newline/>
+                        <field name="create_date"/>
                         <field name="date_closed" string="Close Date"/>
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
-                        <filter string="Salesman" icon="terp-personal"
-                            domain="[]" context="{'group_by':'user_id'}"/>
-                        <filter string="Sales Team" icon="terp-personal+"
-                            domain="[]"
-                            context="{'group_by':'section_id'}" />
-                        <filter string="Partner" icon="terp-partner"
-                            domain="[]"
-                            context="{'group_by':'partner_id'}" />
-                        <separator orientation="vertical" />
+                        <filter string="Salesperson" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
+                        <filter string="Sales Team" icon="terp-personal+" domain="[]" context="{'group_by':'section_id'}" />
+                        <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}" />
                         <filter string="Channel" icon="terp-call-start" domain="[]" context="{'group_by':'channel_id'}" />
-                        <separator orientation="vertical" />
-                        <filter string="State" icon="terp-stock_effects-object-colorize"
-                            domain="[]" context="{'group_by':'state'}" />
-                        <separator orientation="vertical" />
-                        <filter string="Company" icon="terp-go-home"
-                            domain="[]"
-                            groups="base.group_multi_company"
-                            context="{'group_by':'company_id'}" />
-                        <separator orientation="vertical" groups="base.group_multi_company"/>
-                        <filter string="Day" icon="terp-go-today"
-                            domain="[]" context="{'group_by':'day'}" help="Date of helpdesk requests"/>
-                        <filter string="Month" icon="terp-go-month"
-                            domain="[]" context="{'group_by':'month'}" help="Month of helpdesk requests"/>
-                        <filter string="Year" icon="terp-go-year"
-                            domain="[]" context="{'group_by':'name'}" help="Year of helpdesk requests" />
+                        <filter string="Status" icon="terp-stock_effects-object-colorize" domain="[]" context="{'group_by':'state'}" />
+                        <filter string="Company" icon="terp-go-home" domain="[]" groups="base.group_multi_company" context="{'group_by':'company_id'}" />
+                        <filter string="Day" icon="terp-go-today" domain="[]" context="{'group_by':'day'}" help="Date of helpdesk requests"/>
+                        <filter string="Month" icon="terp-go-month" domain="[]" context="{'group_by':'month'}" help="Month of helpdesk requests"/>
+                        <filter string="Year" icon="terp-go-year" domain="[]" context="{'group_by':'name'}" help="Year of helpdesk requests" />
                     </group>
                 </search>
             </field>

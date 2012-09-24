@@ -25,7 +25,7 @@ import decimal_precision as dp
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
-    _description = 'Sub Product'
+    _description = 'Byproduct'
     _columns={
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),

@@ -7,7 +7,7 @@
 #    Corrections & modifications by Noviat nv/sa, (http://www.noviat.be):
 #    - VAT listing based upon year in stead of fiscal year
 #    - sql query adapted to select only 'tax-out' move lines
-#    - extra button to print readable PDF report 
+#    - extra button to print readable PDF report
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -61,7 +61,7 @@ class partner_vat(osv.osv_memory):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
         if not period_ids:
-             raise osv.except_osv(_('Data Insufficient!'), _('No data for the selected Year.'))
+             raise osv.except_osv(_('insufficient data!'), _('No data for the selected year.'))
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
@@ -78,7 +78,7 @@ class partner_vat(osv.osv_memory):
                       FROM account_move_line l2
                       LEFT JOIN account_tax_code c2 ON l2.tax_code_id = c2.id
                       WHERE c2.code IN ('54','64')
-                      AND l2.partner_id IN %s 
+                      AND l2.partner_id IN %s
                       AND l2.period_id IN %s
                       GROUP BY l2.partner_id) AS sub2 ON sub1.partner_id = sub2.partner_id
                     """,(tuple(partner_ids),tuple(period_ids),tuple(partner_ids),tuple(period_ids)))
@@ -87,6 +87,9 @@ class partner_vat(osv.osv_memory):
             if record['turnover'] >= data['limit_amount']:
                 id_client = obj_vat_lclient.create(cr, uid, record, context=context)
                 partners.append(id_client)
+        
+        if not partners:
+            raise osv.except_osv(_('insufficient data!'), _('No data found for the selected year.'))
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
         model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
@@ -176,7 +179,7 @@ class partner_vat_list(osv.osv_memory):
         company_vat = obj_cmpny.partner_id.vat
 
         if not company_vat:
-            raise osv.except_osv(_('Data Insufficient'),_('No VAT Number Associated with Main Company!'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No VAT number associated with the company.'))
 
         company_vat = company_vat.replace(' ','').upper()
         SenderId = company_vat[2:]
@@ -190,7 +193,7 @@ class partner_vat_list(osv.osv_memory):
             phone = ads.phone.replace(' ','') or ''
             email = ads.email or ''
             name = ads.name or ''
-            city = obj_partner.get_city(cr, uid, ads.id)
+            city = ads.city or ''
             zip = obj_partner.browse(cr, uid, ads.id, context=context).zip or ''
             if not city:
                 city = ''
@@ -206,9 +209,9 @@ class partner_vat_list(osv.osv_memory):
         comp_name = obj_cmpny.name
 
         if not email:
-            raise osv.except_osv(_('Data Insufficient!'),_('No email address associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No email address associated with the company.'))
         if not phone:
-            raise osv.except_osv(_('Data Insufficient!'),_('No phone associated with the company.'))
+            raise osv.except_osv(_('Insufficient Data!'),_('No phone associated with the company.'))
         annual_listing_data = {
             'issued_by': issued_by,
             'company_vat': company_vat,
@@ -245,11 +248,11 @@ class partner_vat_list(osv.osv_memory):
             <VATNumber>%(SenderId)s</VATNumber>
             <Name>%(comp_name)s</Name>
             <Street>%(street)s</Street>
-            <PostCode>%(zip)s</PostCode> 
-            <City>%(city)s</City> 
-            <CountryCode>%(country)s</CountryCode> 
-            <EmailAddress>%(email)s</EmailAddress> 
-            <Phone>%(phone)s</Phone> 
+            <PostCode>%(zip)s</PostCode>
+            <City>%(city)s</City>
+            <CountryCode>%(country)s</CountryCode>
+            <EmailAddress>%(email)s</EmailAddress>
+            <Phone>%(phone)s</Phone>
         </ns2:Declarant>
         <ns2:Period>%(period)s</ns2:Period>
         """ % annual_listing_data

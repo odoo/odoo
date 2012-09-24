@@ -1,247 +1,239 @@
 <?xml version="1.0"?>
 <openerp>
-<data noupdate="1">
+    <data noupdate="1">
 
-    <record id="crm_case_buginaccountsmodule0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
-        <field eval="&quot;5&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_agrolait"/>
-        <field eval="&quot;open&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="15.0" name="duration"/>
-        <field eval="&quot;Bug in Accounts module&quot;" name="name"/>
-        <field eval="&quot;agr@agrolait.com&quot;" name="email_from"/>
-        <field name="type_id" ref="project.project_tt_specification"/>        
-    </record>
+        <!-- Categories -->
+        <record id="project_issue_category_01" model="project.category">
+            <field name="name">Little problem</field>
+        </record>
+        <record id="project_issue_category_02" model="project.category">
+            <field name="name">PBCK</field>
+        </record>
+        <record id="project_issue_category_03" model="project.category">
+            <field name="name">Deadly bug</field>
+        </record>
 
-    <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-15  12:50:00')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_asus"/>
-        <field eval="&quot;done&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="3.5" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field eval="&quot;Program not giving proper output&quot;" name="name"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field name="type_id" ref="project.project_tt_specification"/>
-    </record>
+        <!-- Issues -->
+        <record id="crm_case_buginaccountsmodule0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-08 10:15:00')" name="date"/>
+            <field name="priority">5</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field name="project_id" ref="project.project_project_1"/>
+            <field eval="15.0" name="duration"/>
+            <field name="name">Bug in Accounts module</field>
+            <field name="email_from">agr@agrolait.com</field>
+            <field name="stage_id" ref="project.project_tt_specification"/>
+            <field name="categ_ids" eval="[(6, 0, [
+                    ref('project_issue_category_01')])]"/>
+        </record>
 
-    <record id="crm_case_outputincorrect0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-18 14:30:00')" name="date"/>
-        <field eval="&quot;4&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_demo"/>
-        <field eval="&quot;cancel&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="2.3" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_23"/>
-        <field eval="&quot;Output incorrect&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-    </record>
+        <record id="crm_case_programnotgivingproperoutput0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-15  12:50:00')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_1"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="3.5" name="duration"/>
+            <field name="name">Program not giving proper output</field>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="stage_id" ref="project.project_tt_specification"/>
+        </record>
 
-    <record id="crm_case_problemloadingpage0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-20  15:25:05')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_14"/>
-        <field eval="&quot;cancel&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="4.0" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Problem loading page&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_outputincorrect0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-18 14:30:00')" name="date"/>
+            <field name="priority">4</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="2.3" name="duration"/>
+            <field name="project_id" ref="project.project_project_5"/>
+            <field name="name">Output incorrect</field>
+            <field name="stage_id" ref="project.project_tt_development"/>
+            <field name="categ_ids" eval="[(6, 0, [
+                    ref('project_issue_category_01'),
+                    ref('project_issue_category_02')])]"/>
+        </record>
 
-    <record id="crm_case_pagenotfound0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-22  18:15:00')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_desertic_hispafuentes"/>
-        <field eval="&quot;draft&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="1.0" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Page not Found&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-    </record>
+        <record id="crm_case_problemloadingpage0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-20  15:25:05')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_14"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="4.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Problem loading page</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+        </record>
 
-    <record id="crm_case_programmingerror0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-24  09:45:00')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_5"/>
-        <field eval="&quot;pending&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="4.0" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Programming Error&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_pagenotfound0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-22  18:15:00')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_13"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="1.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Page not Found</field>
+            <field name="stage_id" ref="project.project_tt_development"/>
+        </record>
 
-    <record id="crm_case_logicalerrorinprogram0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-26  11:10:00')" name="date"/>
-        <field eval="&quot;2&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_6"/>
-        <field eval="&quot;pending&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="2.0" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_9"/>
-        <field eval="&quot;Logical Error in Program&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_programmingerror0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-24  09:45:00')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_5"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="4.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Programming Error</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+            <field name="categ_ids" eval="[(6, 0, [
+                    ref('project_issue_category_02'),
+                    ref('project_issue_category_03')])]"/>
+        </record>
 
-    <record id="crm_case_constrainterror0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-25  13:35:00')" name="date"/>
-        <field eval="&quot;2&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_6"/>
-        <field eval="&quot;pending&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="7.3" name="duration"/>
-        <field name="categ_id" ref="bug_categ"/>
-        <field name="project_id" ref="project.project_project_9"/>
-        <field eval="&quot;Constraint Error&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_logicalerrorinprogram0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-26  11:10:00')" name="date"/>
+            <field name="priority">2</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_6"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="2.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="name">Logical Error in Program</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+        </record>
 
-    <record id="crm_case_errorinprogram0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-28  15:40:00')" name="date"/>
-        <field eval="&quot;2&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="partner_id" ref="base.res_partner_5"/>
-        <field eval="&quot;open&quot;" name="state"/>
-        <field eval="1" name="active"/>
-        <field eval="1.3" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Error in Program&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_constrainterror0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-25  13:35:00')" name="date"/>
+            <field name="priority">2</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_6"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="7.3" name="duration"/>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="name">Constraint Error</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+        </record>
 
-    <record id="crm_case_patcheserrorinprogram0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-28  16:30:00')" name="date"/>
-        <field eval="&quot;2&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_2"/>
-        <field eval="&quot;open&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="13.0" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_9"/>
-        <field eval="&quot;Patches Error in Program&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_testing"/>
-    </record>
+        <record id="crm_case_errorinprogram0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-28  15:40:00')" name="date"/>
+            <field name="priority">2</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.res_partner_5"/>
+            <field eval="1" name="active"/>
+            <field eval="1.3" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Error in Program</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+        </record>
 
-    <record id="crm_case_newfeaturestobeadded0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-01 12:15:10')" name="date"/>
-        <field eval="&quot;4&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_maxtor"/>
-        <field eval="&quot;open&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="3.2" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_21"/>
-        <field eval="&quot;New Features To Be Added&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_merge"/>
-    </record>
+        <record id="crm_case_patcheserrorinprogram0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-28  16:30:00')" name="date"/>
+            <field name="priority">2</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_2"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="13.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="name">Patches Error in Program</field>
+            <field name="stage_id" ref="project.project_tt_testing"/>
+        </record>
 
-    <record id="crm_case_addmenustothemodule0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date"/>
-        <field eval="&quot;1&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="partner_id" ref="base.res_partner_9"/>
-        <field eval="&quot;done&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="3.0" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_21"/>
-        <field eval="&quot;Add menus to the module&quot;" name="name"/>
-        <field eval="&quot;info@opensides.be&quot;" name="email_from"/>
-        <field name="type_id" ref="project.project_tt_development"/> 
-    </record>
+        <record id="crm_case_newfeaturestobeadded0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-01 12:15:10')" name="date"/>
+            <field name="priority">4</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_8"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="3.2" name="duration"/>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">New Features To Be Added</field>
+            <field name="stage_id" ref="project.project_tt_merge"/>
+        </record>
 
-    <record id="crm_case_includeattendancesheetinproject0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-10 17:05:30')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_10"/>
-        <field eval="&quot;cancel&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="2.0" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_9"/>
-        <field eval="&quot;Include Attendance sheet in Project&quot;" name="name"/>
-        <field eval="&quot;contact@tecsas.fr&quot;" name="email_from"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-    </record>
+        <record id="crm_case_addmenustothemodule0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date"/>
+            <field name="priority">1</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.res_partner_9"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="3.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_3"/>
+            <field name="name">Add menus to the module</field>
+            <field name="email_from">info@opensides.be</field>
+            <field name="stage_id" ref="project.project_tt_development"/>
+        </record>
 
-    <record id="crm_case_createnewobject0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-15 10:35:15')" name="date"/>
-        <field eval="&quot;3&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_6"/>
-        <field eval="&quot;draft&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="2.45" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Create new object&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_specification"/>
-    </record>
+        <record id="crm_case_includeattendancesheetinproject0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-10 17:05:30')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_10"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="2.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_2"/>
+            <field name="name">Include Attendance sheet in Project</field>
+            <field name="email_from">contact@tecsas.fr</field>
+            <field name="stage_id" ref="project.project_tt_development"/>
+        </record>
 
-    <record id="crm_case_improvereportsinhrms0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-19 12:15:00')" name="date"/>
-        <field eval="&quot;4&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_root"/>
-        <field name="partner_id" ref="base.res_partner_11"/>
-        <field eval="&quot;pending&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="15.0" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Improve Reports in HRMS&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_development"/>
-    </record>
+        <record id="crm_case_createnewobject0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-15 10:35:15')" name="date"/>
+            <field name="priority">3</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_6"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="2.45" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Create new object</field>
+            <field name="stage_id" ref="project.project_tt_specification"/>
+        </record>
 
-    <record id="crm_case_improvereportsinpms0" model="project.issue">
-        <field eval="time.strftime('%Y-%m-21 14:30:00')" name="date"/>
-        <field eval="&quot;2&quot;" name="priority"/>
-        <field name="user_id" ref="base.user_demo"/>
-        <field name="partner_id" ref="base.res_partner_11"/>
-        <field eval="&quot;pending&quot;" name="state"/>
-        <field name="section_id" ref="crm.section_sales_department"/>
-        <field eval="1" name="active"/>
-        <field eval="06.15" name="duration"/>
-        <field name="categ_id" ref="feature_request_categ"/>
-        <field name="project_id" ref="project.project_project_22"/>
-        <field eval="&quot;Improve Reports in PMS&quot;" name="name"/>
-        <field name="type_id" ref="project.project_tt_specification"/>
-    </record>
+        <record id="crm_case_improvereportsinhrms0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-19 12:15:00')" name="date"/>
+            <field name="priority">4</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="15.0" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Improve Reports in HRMS</field>
+            <field name="stage_id" ref="project.project_tt_development"/>
+        </record>
 
-</data>
+        <record id="crm_case_improvereportsinpms0" model="project.issue">
+            <field eval="time.strftime('%Y-%m-21 14:30:00')" name="date"/>
+            <field name="priority">2</field>
+            <field name="user_id" ref="base.user_demo"/>
+            <field name="partner_id" ref="base.res_partner_11"/>
+            <field name="section_id" ref="crm.section_sales_department"/>
+            <field eval="1" name="active"/>
+            <field eval="06.15" name="duration"/>
+            <field name="project_id" ref="project.project_project_4"/>
+            <field name="name">Improve Reports in PMS</field>
+            <field name="stage_id" ref="project.project_tt_specification"/>
+        </record>
+
+        <!-- Call function to set some issues as 'unread' -->
+        <function model="project.issue" name="message_mark_as_unread"
+            eval="[ ref('crm_case_improvereportsinhrms0'), ref('crm_case_createnewobject0')], {}"/>
+
+    </data>
 </openerp>

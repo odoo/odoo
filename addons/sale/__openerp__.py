@@ -23,76 +23,64 @@
     'name': 'Sales Management',
     'version': '1.0',
     'category': 'Sales Management',
-    "sequence": 14,
-    'complexity': "easy",
+    'sequence': 14,
+    'summary': 'Quotations, Sale Orders, Invoicing',
     'description': """
-The base module to manage quotations and sales orders.
-======================================================
+Manage sales quotations and orders
+==================================
 
-Workflow with validation steps:
--------------------------------
-    * Quotation -> Sales order -> Invoice
+This application allows you to manage your sales goals in an effective and efficient manner by keeping track of all sales orders and history.
 
-Invoicing methods:
-------------------
-    * Invoice on order (before or after shipping)
-    * Invoice on delivery
-    * Invoice on timesheets
-    * Advance invoice
+It handles the full sales workflow:
 
-Partners preferences:
----------------------
-    * shipping
-    * invoicing
-    * incoterm
+* **Quotation** -> **Sales order** -> **Invoice**
 
-Products stocks and prices
---------------------------
+Preferences (only with Warehouse Management installed)
+-----------
+If you also installed the Warehouse Management, you can deal with the following preferences:
 
-Delivery methods:
------------------
-    * all at once
-    * multi-parcel
-    * delivery costs
+* Shipping: Choice of delivery at once or partial delivery
+* Invoicing: choose how invoices will be paid
+* Incoterms: International Commercial terms
 
-Dashboard for Sales Manager that includes:
-------------------------------------------
-    * Quotations
-    * Sales by Month
-    * Graph of Sales by Salesman in last 90 days
-    * Graph of Sales per Customer in last 90 days
-    * Graph of Sales by Product's Category in last 90 days
+You can choose flexible invoicing methods:
+
+* *On Demand*: Invoices are created manually from Sales Orders when needed
+* *On Delivery Order*: Invoices are generated from picking (delivery)
+* *Before Delivery*: A Draft invoice is created and must be paid before delivery
+
+
+The Dashboard for the Sales Manager will include
+------------------------------------------------
+* My Quotations
+* Monthly Turnover (Graph)
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images': ['images/deliveries_to_invoice.jpeg','images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
-    'depends': ['stock', 'procurement', 'board', 'account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'images': ['images/sale_dashboard.jpeg','images/Sale_order_line_to_invoice.jpeg','images/sale_order.jpeg','images/sales_analysis.jpeg'],
+    'depends': ['account_voucher'],
+    'data': [
         'wizard/sale_make_invoice_advance.xml',
         'wizard/sale_line_invoice.xml',
         'wizard/sale_make_invoice.xml',
         'security/sale_security.xml',
         'security/ir.model.access.csv',
-        'company_view.xml',
         'sale_workflow.xml',
         'sale_sequence.xml',
         'sale_report.xml',
         'sale_data.xml',
         'sale_view.xml',
+        'res_partner_view.xml',
         'report/sale_report_view.xml',
-        'stock_view.xml',
         'process/sale_process.xml',
         'board_sale_view.xml',
         'edi/sale_order_action_data.xml',
         'res_config_view.xml',
     ],
-    'demo_xml': ['sale_demo.xml'],
+    'demo': ['sale_demo.xml'],
     'test': [
         'test/sale_order_demo.yml',
-        'test/picking_order_policy.yml',
         'test/manual_order_policy.yml',
-        'test/prepaid_order_policy.yml',
         'test/cancel_order.yml',
         'test/delete_order.yml',
         'test/edi_sale_order.yml',

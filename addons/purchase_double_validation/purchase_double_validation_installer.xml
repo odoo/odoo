@@ -1,15 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <openerp>
     <data>
 
         <record id="view_double_purchase_configuration" model="ir.ui.view">
             <field name="name">Purchase Application</field>
             <field name="model">purchase.config.settings</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="purchase.view_purchase_configuration"/>
             <field name="arch" type="xml">
-                <field name="module_purchase_double_validation" position="after">
-                    <field name="limit_amount" attrs="{'required': [('module_purchase_double_validation','=',True)]}"/>
-                </field>
+                <div name="module_purchase_double_validation" position="inside">
+                    <span attrs="{'invisible': [('module_purchase_double_validation','=',False)]}" class="oe_separate-from-text">
+                        <label for="limit_amount"/>
+                        <field name="limit_amount" attrs="{'required': [('module_purchase_double_validation','=',True)]}" class="oe_inline"/>
+                    </span>
+                </div>
             </field>
         </record>
 

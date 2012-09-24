@@ -55,7 +55,7 @@ class procurement_order(osv.osv):
             for line in proc.product_id.flow_pull_ids:
                 if line.location_id == proc.location_id:
                     break
-            assert line, 'Line can not be False if we are on this state of the workflow'
+            assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
             picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,
@@ -115,7 +115,8 @@ class procurement_order(osv.osv):
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
-            self.write(cr, uid, [proc.id], {'state':'running', 'message':_('Pulled from another location via procurement %d')%proc_id})
+            self.write(cr, uid, [proc.id], {'state':'running', 'message':_('Pulled from another location via procurement %d') % proc_id})
+            self.running_send_note(cr, uid, [proc.id], context=context)
 
             # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)

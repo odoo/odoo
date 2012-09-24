@@ -1,673 +1,673 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="1">
-
-		<!-- l10n_br_account.cst.template -->
-		<record id="l10n_br_cst_template_1" model="l10n_br_account.cst.template">
-			<field name="code">01</field>
-			<field name="name">Operação Tributável com Alíquota Básica</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_2" model="l10n_br_account.cst.template">
-			<field name="code">02</field>
-			<field name="name">Operação Tributável com Alíquota Diferenciada</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_3" model="l10n_br_account.cst.template">
-			<field name="code">03</field>
-			<field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_4" model="l10n_br_account.cst.template">
-			<field name="code">04</field>
-			<field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_5" model="l10n_br_account.cst.template">
-			<field name="code">05</field>
-			<field name="name">Operação Tributável por Substituição Tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_6" model="l10n_br_account.cst.template">
-			<field name="code">06</field>
-			<field name="name">Operação Tributável a Alíquota zero</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_7" model="l10n_br_account.cst.template">
-			<field name="code">07</field>
-			<field name="name">Operação Isenta da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_8" model="l10n_br_account.cst.template">
-			<field name="code">08</field>
-			<field name="name">Operação sem Incidência da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_9" model="l10n_br_account.cst.template">
-			<field name="code">09</field>
-			<field name="name">Operação com Suspensão da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_10" model="l10n_br_account.cst.template">
-			<field name="code">49</field>
-			<field name="name">Outras Operações de Saída</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_11" model="l10n_br_account.cst.template">
-			<field name="code">50</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_12" model="l10n_br_account.cst.template">
-			<field name="code">51</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_13" model="l10n_br_account.cst.template">
-			<field name="code">52</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_14" model="l10n_br_account.cst.template">
-			<field name="code">53</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_15" model="l10n_br_account.cst.template">
-			<field name="code">54</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_16" model="l10n_br_account.cst.template">
-			<field name="code">55</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_17" model="l10n_br_account.cst.template">
-			<field name="code">56</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_18" model="l10n_br_account.cst.template">
-			<field name="code">60</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_19" model="l10n_br_account.cst.template">
-			<field name="code">61</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_20" model="l10n_br_account.cst.template">
-			<field name="code">62</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_21" model="l10n_br_account.cst.template">
-			<field name="code">63</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_22" model="l10n_br_account.cst.template">
-			<field name="code">64</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_23" model="l10n_br_account.cst.template">
-			<field name="code">65</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_24" model="l10n_br_account.cst.template">
-			<field name="code">66</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_25" model="l10n_br_account.cst.template">
-			<field name="code">67</field>
-			<field name="name">Crédito Presumido - Outras Operações</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_26" model="l10n_br_account.cst.template">
-			<field name="code">70</field>
-			<field name="name">Operação de Aquisição sem Direito a Crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_27" model="l10n_br_account.cst.template">
-			<field name="code">71</field>
-			<field name="name">Operação de Aquisição com Isenção</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_28" model="l10n_br_account.cst.template">
-			<field name="code">72</field>
-			<field name="name">Operação de Aquisição com Suspensão</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_29" model="l10n_br_account.cst.template">
-			<field name="code">73</field>
-			<field name="name">Operação de Aquisição a Alíquota Zero</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_30" model="l10n_br_account.cst.template">
-			<field name="code">74</field>
-			<field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_31" model="l10n_br_account.cst.template">
-			<field name="code">75</field>
-			<field name="name">Operação de Aquisição por Substituição Tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_32" model="l10n_br_account.cst.template">
-			<field name="code">98</field>
-			<field name="name">Outras Operações de Entrada</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_33" model="l10n_br_account.cst.template">
-			<field name="code">99</field>
-			<field name="name">Outras Operações</field>
-			<field name="tax_code_template_id" ref="tax_code_5" />
-		</record>
-
-		<record id="l10n_br_cst_template_34" model="l10n_br_account.cst.template">
-			<field name="code">01</field>
-			<field name="name">Operação Tributável com Alíquota Básica</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_35" model="l10n_br_account.cst.template">
-			<field name="code">02</field>
-			<field name="name">Operação Tributável com Alíquota Diferenciada</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_36" model="l10n_br_account.cst.template">
-			<field name="code">03</field>
-			<field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_37" model="l10n_br_account.cst.template">
-			<field name="code">04</field>
-			<field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_38" model="l10n_br_account.cst.template">
-			<field name="code">05</field>
-			<field name="name">Operação Tributável por Substituição Tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_39" model="l10n_br_account.cst.template">
-			<field name="code">06</field>
-			<field name="name">Operação Tributável a Alíquota Zero</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_40" model="l10n_br_account.cst.template">
-			<field name="code">07</field>
-			<field name="name">Operação Isenta da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_41" model="l10n_br_account.cst.template">
-			<field name="code">08</field>
-			<field name="name">Operação sem Incidência da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_42" model="l10n_br_account.cst.template">
-			<field name="code">09</field>
-			<field name="name">Operação com Suspensão da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_43" model="l10n_br_account.cst.template">
-			<field name="code">49</field>
-			<field name="name">Outras Operações de Saída</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_44" model="l10n_br_account.cst.template">
-			<field name="code">50</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_45" model="l10n_br_account.cst.template">
-			<field name="code">51</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_46" model="l10n_br_account.cst.template">
-			<field name="code">52</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_47" model="l10n_br_account.cst.template">
-			<field name="code">53</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_48" model="l10n_br_account.cst.template">
-			<field name="code">54</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_49" model="l10n_br_account.cst.template">
-			<field name="code">55</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_50" model="l10n_br_account.cst.template">
-			<field name="code">56</field>
-			<field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_51" model="l10n_br_account.cst.template">
-			<field name="code">60</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_52" model="l10n_br_account.cst.template">
-			<field name="code">61</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_53" model="l10n_br_account.cst.template">
-			<field name="code">62</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_54" model="l10n_br_account.cst.template">
-			<field name="code">63</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_55" model="l10n_br_account.cst.template">
-			<field name="code">64</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_56" model="l10n_br_account.cst.template">
-			<field name="code">65</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_57" model="l10n_br_account.cst.template">
-			<field name="code">66</field>
-			<field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_58" model="l10n_br_account.cst.template">
-			<field name="code">67</field>
-			<field name="name">Crédito Presumido - Outras Operações</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_59" model="l10n_br_account.cst.template">
-			<field name="code">70</field>
-			<field name="name">Operação de Aquisição sem Direito a Crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_60" model="l10n_br_account.cst.template">
-			<field name="code">71</field>
-			<field name="name">Operação de Aquisição com Isenção</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_61" model="l10n_br_account.cst.template">
-			<field name="code">72</field>
-			<field name="name">Operação de Aquisição com Suspensão</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_62" model="l10n_br_account.cst.template">
-			<field name="code">73</field>
-			<field name="name">Operação de Aquisição a Alíquota Zero</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_63" model="l10n_br_account.cst.template">
-			<field name="code">74</field>
-			<field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_64" model="l10n_br_account.cst.template">
-			<field name="code">75</field>
-			<field name="name">Operação de Aquisição por Substituição Tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_65" model="l10n_br_account.cst.template">
-			<field name="code">98</field>
-			<field name="name">Outras Operações de Entrada</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_66" model="l10n_br_account.cst.template">
-			<field name="code">99</field>
-			<field name="name">Outras Operações</field>
-			<field name="tax_code_template_id" ref="tax_code_4" />
-		</record>
-
-		<record id="l10n_br_cst_template_67" model="l10n_br_account.cst.template">
-			<field name="code">00</field>
-			<field name="name">Entrada com recuperação de crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_68" model="l10n_br_account.cst.template">
-			<field name="code">01</field>
-			<field name="name">Entrada tributada com alíquota zero</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_69" model="l10n_br_account.cst.template">
-			<field name="code">02</field>
-			<field name="name">Entrada isenta</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_70" model="l10n_br_account.cst.template">
-			<field name="code">03</field>
-			<field name="name">Entrada não-tributada</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_71" model="l10n_br_account.cst.template">
-			<field name="code">04</field>
-			<field name="name">Entrada imune</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_72" model="l10n_br_account.cst.template">
-			<field name="code">05</field>
-			<field name="name">Entrada com suspensão</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_73" model="l10n_br_account.cst.template">
-			<field name="code">49</field>
-			<field name="name">Outras entradas</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_74" model="l10n_br_account.cst.template">
-			<field name="code">50</field>
-			<field name="name">Saída tributada</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_75" model="l10n_br_account.cst.template">
-			<field name="code">51</field>
-			<field name="name">Saída tributada com alíquota zero</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_76" model="l10n_br_account.cst.template">
-			<field name="code">52</field>
-			<field name="name">Saída isenta</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_77" model="l10n_br_account.cst.template">
-			<field name="code">53</field>
-			<field name="name">Saída não-tributada</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_78" model="l10n_br_account.cst.template">
-			<field name="code">54</field>
-			<field name="name">Saída imune</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_79" model="l10n_br_account.cst.template">
-			<field name="code">55</field>
-			<field name="name">Saída com suspensão</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_80" model="l10n_br_account.cst.template">
-			<field name="code">99</field>
-			<field name="name">Outras saídas</field>
-			<field name="tax_code_template_id" ref="tax_code_3" />
-		</record>
-
-		<record id="l10n_br_cst_template_92" model="l10n_br_account.cst.template">
-			<field name="code">00</field>
-			<field name="name">Tributada integralmente</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_93" model="l10n_br_account.cst.template">
-			<field name="code">10</field>
-			<field name="name">Tributada e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_94" model="l10n_br_account.cst.template">
-			<field name="code">20</field>
-			<field name="name">Com redução de base de cálculo</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_95" model="l10n_br_account.cst.template">
-			<field name="code">30</field>
-			<field name="name">Isenta ou não tributada e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_96" model="l10n_br_account.cst.template">
-			<field name="code">40</field>
-			<field name="name">Isenta</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_97" model="l10n_br_account.cst.template">
-			<field name="code">41</field>
-			<field name="name">Não tributada</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_98" model="l10n_br_account.cst.template">
-			<field name="code">50</field>
-			<field name="name">Suspensão</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_99" model="l10n_br_account.cst.template">
-			<field name="code">51</field>
-			<field name="name">Diferimento</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_100" model="l10n_br_account.cst.template">
-			<field name="code">60</field>
-			<field name="name">ICMS cobrado anteriormente por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_101" model="l10n_br_account.cst.template">
-			<field name="code">70</field>
-			<field name="name">Com redução de base de cálculo e cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-
-		<record id="l10n_br_cst_template_102" model="l10n_br_account.cst.template">
-			<field name="code">90</field>
-			<field name="name">Outras</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_103" model="l10n_br_account.cst.template">
-			<field name="code">101</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_104" model="l10n_br_account.cst.template">
-			<field name="code">102</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_105" model="l10n_br_account.cst.template">
-			<field name="code">103</field>
-			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_106" model="l10n_br_account.cst.template">
-			<field name="code">201</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_107" model="l10n_br_account.cst.template">
-			<field name="code">202</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_108" model="l10n_br_account.cst.template">
-			<field name="code">203</field>
-			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_109" model="l10n_br_account.cst.template">
-			<field name="code">300</field>
-			<field name="name">Simples Nacional - Imune</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_110" model="l10n_br_account.cst.template">
-			<field name="code">400</field>
-			<field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_111" model="l10n_br_account.cst.template">
-			<field name="code">500</field>
-			<field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_112" model="l10n_br_account.cst.template">
-			<field name="code">900</field>
-			<field name="name">Simples Nacional - Outros</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_103" model="l10n_br_account.cst.template">
-			<field name="code">101</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_104" model="l10n_br_account.cst.template">
-			<field name="code">102</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_105" model="l10n_br_account.cst.template">
-			<field name="code">103</field>
-			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_106" model="l10n_br_account.cst.template">
-			<field name="code">201</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_107" model="l10n_br_account.cst.template">
-			<field name="code">202</field>
-			<field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_108" model="l10n_br_account.cst.template">
-			<field name="code">203</field>
-			<field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_109" model="l10n_br_account.cst.template">
-			<field name="code">300</field>
-			<field name="name">Simples Nacional - Imune</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_110" model="l10n_br_account.cst.template">
-			<field name="code">400</field>
-			<field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_111" model="l10n_br_account.cst.template">
-			<field name="code">500</field>
-			<field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-		<record id="l10n_br_cst_template_112" model="l10n_br_account.cst.template">
-			<field name="code">900</field>
-			<field name="name">Simples Nacional - Outros</field>
-			<field name="tax_code_template_id" ref="tax_code_1" />
-		</record>
-		
-	</data>
+    <data noupdate="1">
+
+        <!-- l10n_br_account.cst.template -->
+        <record id="l10n_br_cst_template_1" model="l10n_br_account.cst.template">
+            <field name="code">01</field>
+            <field name="name">Operação Tributável com Alíquota Básica</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_2" model="l10n_br_account.cst.template">
+            <field name="code">02</field>
+            <field name="name">Operação Tributável com Alíquota Diferenciada</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_3" model="l10n_br_account.cst.template">
+            <field name="code">03</field>
+            <field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_4" model="l10n_br_account.cst.template">
+            <field name="code">04</field>
+            <field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_5" model="l10n_br_account.cst.template">
+            <field name="code">05</field>
+            <field name="name">Operação Tributável por Substituição Tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_6" model="l10n_br_account.cst.template">
+            <field name="code">06</field>
+            <field name="name">Operação Tributável a Alíquota zero</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_7" model="l10n_br_account.cst.template">
+            <field name="code">07</field>
+            <field name="name">Operação Isenta da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_8" model="l10n_br_account.cst.template">
+            <field name="code">08</field>
+            <field name="name">Operação sem Incidência da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_9" model="l10n_br_account.cst.template">
+            <field name="code">09</field>
+            <field name="name">Operação com Suspensão da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_10" model="l10n_br_account.cst.template">
+            <field name="code">49</field>
+            <field name="name">Outras Operações de Saída</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_11" model="l10n_br_account.cst.template">
+            <field name="code">50</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_12" model="l10n_br_account.cst.template">
+            <field name="code">51</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_13" model="l10n_br_account.cst.template">
+            <field name="code">52</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_14" model="l10n_br_account.cst.template">
+            <field name="code">53</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_15" model="l10n_br_account.cst.template">
+            <field name="code">54</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_16" model="l10n_br_account.cst.template">
+            <field name="code">55</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_17" model="l10n_br_account.cst.template">
+            <field name="code">56</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_18" model="l10n_br_account.cst.template">
+            <field name="code">60</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_19" model="l10n_br_account.cst.template">
+            <field name="code">61</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_20" model="l10n_br_account.cst.template">
+            <field name="code">62</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_21" model="l10n_br_account.cst.template">
+            <field name="code">63</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_22" model="l10n_br_account.cst.template">
+            <field name="code">64</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_23" model="l10n_br_account.cst.template">
+            <field name="code">65</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_24" model="l10n_br_account.cst.template">
+            <field name="code">66</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_25" model="l10n_br_account.cst.template">
+            <field name="code">67</field>
+            <field name="name">Crédito Presumido - Outras Operações</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_26" model="l10n_br_account.cst.template">
+            <field name="code">70</field>
+            <field name="name">Operação de Aquisição sem Direito a Crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_27" model="l10n_br_account.cst.template">
+            <field name="code">71</field>
+            <field name="name">Operação de Aquisição com Isenção</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_28" model="l10n_br_account.cst.template">
+            <field name="code">72</field>
+            <field name="name">Operação de Aquisição com Suspensão</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_29" model="l10n_br_account.cst.template">
+            <field name="code">73</field>
+            <field name="name">Operação de Aquisição a Alíquota Zero</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_30" model="l10n_br_account.cst.template">
+            <field name="code">74</field>
+            <field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_31" model="l10n_br_account.cst.template">
+            <field name="code">75</field>
+            <field name="name">Operação de Aquisição por Substituição Tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_32" model="l10n_br_account.cst.template">
+            <field name="code">98</field>
+            <field name="name">Outras Operações de Entrada</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_33" model="l10n_br_account.cst.template">
+            <field name="code">99</field>
+            <field name="name">Outras Operações</field>
+            <field name="tax_code_template_id" ref="tax_code_5" />
+        </record>
+
+        <record id="l10n_br_cst_template_34" model="l10n_br_account.cst.template">
+            <field name="code">01</field>
+            <field name="name">Operação Tributável com Alíquota Básica</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_35" model="l10n_br_account.cst.template">
+            <field name="code">02</field>
+            <field name="name">Operação Tributável com Alíquota Diferenciada</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_36" model="l10n_br_account.cst.template">
+            <field name="code">03</field>
+            <field name="name">Operação Tributável com Alíquota por Unidade de Medida de Produto</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_37" model="l10n_br_account.cst.template">
+            <field name="code">04</field>
+            <field name="name">Operação Tributável Monofásica - Revenda a Alíquota Zero</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_38" model="l10n_br_account.cst.template">
+            <field name="code">05</field>
+            <field name="name">Operação Tributável por Substituição Tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_39" model="l10n_br_account.cst.template">
+            <field name="code">06</field>
+            <field name="name">Operação Tributável a Alíquota Zero</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_40" model="l10n_br_account.cst.template">
+            <field name="code">07</field>
+            <field name="name">Operação Isenta da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_41" model="l10n_br_account.cst.template">
+            <field name="code">08</field>
+            <field name="name">Operação sem Incidência da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_42" model="l10n_br_account.cst.template">
+            <field name="code">09</field>
+            <field name="name">Operação com Suspensão da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_43" model="l10n_br_account.cst.template">
+            <field name="code">49</field>
+            <field name="name">Outras Operações de Saída</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_44" model="l10n_br_account.cst.template">
+            <field name="code">50</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_45" model="l10n_br_account.cst.template">
+            <field name="code">51</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita Não Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_46" model="l10n_br_account.cst.template">
+            <field name="code">52</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada Exclusivamente a Receita de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_47" model="l10n_br_account.cst.template">
+            <field name="code">53</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_48" model="l10n_br_account.cst.template">
+            <field name="code">54</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_49" model="l10n_br_account.cst.template">
+            <field name="code">55</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_50" model="l10n_br_account.cst.template">
+            <field name="code">56</field>
+            <field name="name">Operação com Direito a Crédito - Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_51" model="l10n_br_account.cst.template">
+            <field name="code">60</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_52" model="l10n_br_account.cst.template">
+            <field name="code">61</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita Não-Tributada no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_53" model="l10n_br_account.cst.template">
+            <field name="code">62</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada Exclusivamente a Receita de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_54" model="l10n_br_account.cst.template">
+            <field name="code">63</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_55" model="l10n_br_account.cst.template">
+            <field name="code">64</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_56" model="l10n_br_account.cst.template">
+            <field name="code">65</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Não-Tributadas no Mercado Interno e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_57" model="l10n_br_account.cst.template">
+            <field name="code">66</field>
+            <field name="name">Crédito Presumido - Operação de Aquisição Vinculada a Receitas Tributadas e Não-Tributadas no Mercado Interno, e de Exportação</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_58" model="l10n_br_account.cst.template">
+            <field name="code">67</field>
+            <field name="name">Crédito Presumido - Outras Operações</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_59" model="l10n_br_account.cst.template">
+            <field name="code">70</field>
+            <field name="name">Operação de Aquisição sem Direito a Crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_60" model="l10n_br_account.cst.template">
+            <field name="code">71</field>
+            <field name="name">Operação de Aquisição com Isenção</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_61" model="l10n_br_account.cst.template">
+            <field name="code">72</field>
+            <field name="name">Operação de Aquisição com Suspensão</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_62" model="l10n_br_account.cst.template">
+            <field name="code">73</field>
+            <field name="name">Operação de Aquisição a Alíquota Zero</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_63" model="l10n_br_account.cst.template">
+            <field name="code">74</field>
+            <field name="name">Operação de Aquisição sem Incidência da Contribuição</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_64" model="l10n_br_account.cst.template">
+            <field name="code">75</field>
+            <field name="name">Operação de Aquisição por Substituição Tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_65" model="l10n_br_account.cst.template">
+            <field name="code">98</field>
+            <field name="name">Outras Operações de Entrada</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_66" model="l10n_br_account.cst.template">
+            <field name="code">99</field>
+            <field name="name">Outras Operações</field>
+            <field name="tax_code_template_id" ref="tax_code_4" />
+        </record>
+
+        <record id="l10n_br_cst_template_67" model="l10n_br_account.cst.template">
+            <field name="code">00</field>
+            <field name="name">Entrada com recuperação de crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_68" model="l10n_br_account.cst.template">
+            <field name="code">01</field>
+            <field name="name">Entrada tributada com alíquota zero</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_69" model="l10n_br_account.cst.template">
+            <field name="code">02</field>
+            <field name="name">Entrada isenta</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_70" model="l10n_br_account.cst.template">
+            <field name="code">03</field>
+            <field name="name">Entrada não-tributada</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_71" model="l10n_br_account.cst.template">
+            <field name="code">04</field>
+            <field name="name">Entrada imune</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_72" model="l10n_br_account.cst.template">
+            <field name="code">05</field>
+            <field name="name">Entrada com suspensão</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_73" model="l10n_br_account.cst.template">
+            <field name="code">49</field>
+            <field name="name">Outras entradas</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_74" model="l10n_br_account.cst.template">
+            <field name="code">50</field>
+            <field name="name">Saída tributada</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_75" model="l10n_br_account.cst.template">
+            <field name="code">51</field>
+            <field name="name">Saída tributada com alíquota zero</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_76" model="l10n_br_account.cst.template">
+            <field name="code">52</field>
+            <field name="name">Saída isenta</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_77" model="l10n_br_account.cst.template">
+            <field name="code">53</field>
+            <field name="name">Saída não-tributada</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_78" model="l10n_br_account.cst.template">
+            <field name="code">54</field>
+            <field name="name">Saída imune</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_79" model="l10n_br_account.cst.template">
+            <field name="code">55</field>
+            <field name="name">Saída com suspensão</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_80" model="l10n_br_account.cst.template">
+            <field name="code">99</field>
+            <field name="name">Outras saídas</field>
+            <field name="tax_code_template_id" ref="tax_code_3" />
+        </record>
+
+        <record id="l10n_br_cst_template_92" model="l10n_br_account.cst.template">
+            <field name="code">00</field>
+            <field name="name">Tributada integralmente</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_93" model="l10n_br_account.cst.template">
+            <field name="code">10</field>
+            <field name="name">Tributada e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_94" model="l10n_br_account.cst.template">
+            <field name="code">20</field>
+            <field name="name">Com redução de base de cálculo</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_95" model="l10n_br_account.cst.template">
+            <field name="code">30</field>
+            <field name="name">Isenta ou não tributada e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_96" model="l10n_br_account.cst.template">
+            <field name="code">40</field>
+            <field name="name">Isenta</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_97" model="l10n_br_account.cst.template">
+            <field name="code">41</field>
+            <field name="name">Não tributada</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_98" model="l10n_br_account.cst.template">
+            <field name="code">50</field>
+            <field name="name">Suspensão</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_99" model="l10n_br_account.cst.template">
+            <field name="code">51</field>
+            <field name="name">Diferimento</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_100" model="l10n_br_account.cst.template">
+            <field name="code">60</field>
+            <field name="name">ICMS cobrado anteriormente por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_101" model="l10n_br_account.cst.template">
+            <field name="code">70</field>
+            <field name="name">Com redução de base de cálculo e cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+
+        <record id="l10n_br_cst_template_102" model="l10n_br_account.cst.template">
+            <field name="code">90</field>
+            <field name="name">Outras</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_103" model="l10n_br_account.cst.template">
+            <field name="code">101</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_104" model="l10n_br_account.cst.template">
+            <field name="code">102</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_105" model="l10n_br_account.cst.template">
+            <field name="code">103</field>
+            <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_106" model="l10n_br_account.cst.template">
+            <field name="code">201</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_107" model="l10n_br_account.cst.template">
+            <field name="code">202</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_108" model="l10n_br_account.cst.template">
+            <field name="code">203</field>
+            <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_109" model="l10n_br_account.cst.template">
+            <field name="code">300</field>
+            <field name="name">Simples Nacional - Imune</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_110" model="l10n_br_account.cst.template">
+            <field name="code">400</field>
+            <field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_111" model="l10n_br_account.cst.template">
+            <field name="code">500</field>
+            <field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_112" model="l10n_br_account.cst.template">
+            <field name="code">900</field>
+            <field name="name">Simples Nacional - Outros</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_103" model="l10n_br_account.cst.template">
+            <field name="code">101</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_104" model="l10n_br_account.cst.template">
+            <field name="code">102</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_105" model="l10n_br_account.cst.template">
+            <field name="code">103</field>
+            <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_106" model="l10n_br_account.cst.template">
+            <field name="code">201</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional com permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_107" model="l10n_br_account.cst.template">
+            <field name="code">202</field>
+            <field name="name">Simples Nacional - Tributada pelo Simples Nacional sem permissão de crédito e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_108" model="l10n_br_account.cst.template">
+            <field name="code">203</field>
+            <field name="name">Simples Nacional - Isenção do ICMS no Simples Nacional para faixa de receita bruta e com cobrança do ICMS por substituição tributária</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_109" model="l10n_br_account.cst.template">
+            <field name="code">300</field>
+            <field name="name">Simples Nacional - Imune</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_110" model="l10n_br_account.cst.template">
+            <field name="code">400</field>
+            <field name="name">Simples Nacional - Não tributada pelo Simples Nacional</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_111" model="l10n_br_account.cst.template">
+            <field name="code">500</field>
+            <field name="name">Simples Nacional - ICMS cobrado anteriormente por substituição tributária (substituído) ou por antecipação</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+        <record id="l10n_br_cst_template_112" model="l10n_br_account.cst.template">
+            <field name="code">900</field>
+            <field name="name">Simples Nacional - Outros</field>
+            <field name="tax_code_template_id" ref="tax_code_1" />
+        </record>
+        
+    </data>
 </openerp>

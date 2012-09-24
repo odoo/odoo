@@ -6,18 +6,25 @@
         <record id="view_stock_period_createlines_form" model="ir.ui.view">
             <field name="name">stock.period.createlines.form</field>
             <field name="model">stock.period.createlines</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Stock Periods">
-                    <field name="date_start"/>
-                    <field name="date_stop"/>
-                    <separator colspan="4" string=""/>
-                    <group col="4" colspan="4">
-                        <button string="Cancel" special="cancel" icon="gtk-cancel"/>
-                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Daily Periods" type="object"/>
-                        <button name="create_stock_periods" icon="gtk-dnd"  string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}"/>
-                        <button name="create_stock_periods" icon="gtk-dnd" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}"/>
+                <form string="Stock Periods" version="7.0">
+                    <group col="4">
+                        <label for="date_start" string="Duration"/>
+                        <div>
+                            <field name="date_start"/>
+                            <label string="-"/>
+                            <field name="date_stop"/>
+                        </div>
                     </group>
+                    <footer>
+                        <button name="create_stock_periods" string="Create Daily Periods" type="object" class="oe_highlight"/>
+                        or
+                        <button name="create_stock_periods" string="Create Weekly Periods" type="object" context="{'interval': 6, 'name': 'Weekly'}" class="oe_highlight"/>
+                        or
+                        <button name="create_stock_periods" string="Create Monthly Periods" type="object" context="{'interval': 1, 'name': 'Monthly'}" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -28,14 +35,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="view_id" ref="view_stock_period_createlines_form"/>
-           <field name="help">This wizard helps with the creation of stock planning periods. These periods are independent of financial periods. If you need periods other than day-, week- or month-based, you may also add then manually.</field>
+            <field name="help">This wizard helps with the creation of stock planning periods. These periods are independent of financial periods. If you need periods other than day-, week- or month-based, you may also add then manually.</field>
             <field name="target">new</field>
         </record>
 
         <menuitem id="menu_stock_period_creatlines"
-                  name="Create Stock Periods"
-                  parent="stock.menu_stock_configuration"
-                  action="action_stock_period_createlines_form"
-                  sequence = "20"/>
+            name="Create Stock Periods"
+            parent="stock.menu_stock_configuration"
+            action="action_stock_period_createlines_form"
+            sequence = "20"/>
     </data>
 </openerp>

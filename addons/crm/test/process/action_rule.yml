@@ -2,17 +2,16 @@
   I create a record rule.
 -
   !python {model: base.action.rule}: |
-    modle_id = self.pool.get("ir.model").search(cr, uid, [('name', '=', 'crm.lead')])
+    model_ids = self.pool.get("ir.model").search(cr, uid, [('model', '=', 'crm.lead')])
     from datetime import datetime
-    new_id = self.create(cr, uid, {'name': 'New Rule', 'model_id': modle_id[0],  'trg_user_id': ref('base.user_root'), 'trg_partner_id': ref('base.res_partner_asus'), 'act_user_id': ref('base.user_demo') })
-    lead_obj = self.pool.get("crm.lead")
+    new_id = self.create(cr, uid, {'name': 'New Rule', 'model_id': model_ids[0],  'trg_user_id': ref('base.user_root'), 'trg_partner_id': ref('base.res_partner_1'), 'act_user_id': ref('base.user_demo') })
     self._check(cr, uid)
 -
   I create new lead to check record rule.
 -
   !record {model: crm.lead, id: crm_lead_test_rules_id}:
     name: 'Test lead rules'
-    partner_id: base.res_partner_asus
+    partner_id: base.res_partner_1
 -
   I check record rule is apply and responsible is changed.
 -

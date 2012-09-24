@@ -14,29 +14,29 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:48+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:28+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Sending Goods"
-msgstr ""
+msgstr "Бараануудыг илгээх"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled Paths"
-msgstr ""
+msgstr "Татсан Замууд"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Move"
-msgstr ""
+msgstr "Хөдөлгөөн"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location_path
 msgid "Pushed Flows"
-msgstr ""
+msgstr "Чихэгдсэн Урсгалууд"
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -46,7 +46,7 @@ msgstr "Автомат Алхам нэмэхгүй"
 #. module: stock_location
 #: view:product.product:0
 msgid "Parameters"
-msgstr ""
+msgstr "Параметер"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_src_id:0
@@ -58,28 +58,29 @@ msgstr "Гарах байрлал"
 #: help:product.pulled.flow,cancel_cascade:0
 msgid "Allow you to cancel moves related to the product pull flow"
 msgstr ""
+"Барааны татах урсгалын холбогдох хөдөлгөөнүүдийг цуцлах боломжийг олгодог"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_product_pulled_flow
 #: field:product.product,flow_pull_ids:0
 msgid "Pulled Flows"
-msgstr ""
+msgstr "Татсан урсгалууд"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You must assign a production lot for this product"
-msgstr ""
+msgstr "Бараанд цувралыг оноох ёстой."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_src_id:0
 msgid "Location used by Destination Location to supply"
-msgstr ""
+msgstr "Нийлүүлэхэд хүрэх байрлалаар ашигалагддаг байрлал"
 
 #. module: stock_location
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Internal"
-msgstr ""
+msgstr "Дотоод"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:98
@@ -88,17 +89,19 @@ msgid ""
 "Pulled procurement coming from original location %s, pull rule %s, via "
 "original Procurement %s (#%d)"
 msgstr ""
+"Татах татан авалт нь %s оригинал байрлалаас ирнэ, татах дүрэм %s, оригиналь "
+"татан авалт нь %s (#%d)"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_location
 msgid "Location"
-msgstr ""
+msgstr "Байрлал"
 
 #. module: stock_location
 #: field:product.pulled.flow,invoice_state:0
 #: field:stock.location.path,invoice_state:0
 msgid "Invoice Status"
-msgstr ""
+msgstr "Нэхэмжлэлийн Төлөв"
 
 #. module: stock_location
 #: help:stock.location.path,auto:0
@@ -119,89 +122,91 @@ msgstr ""
 #. module: stock_location
 #: view:product.product:0
 msgid "Conditions"
-msgstr ""
+msgstr "Нөхцлүүд"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_pack_zone
 msgid "Pack Zone"
-msgstr ""
+msgstr "Багцлах Бүс"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_b
 msgid "Gate B"
-msgstr ""
+msgstr "Хаалга Б"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_gate_a
 msgid "Gate A"
-msgstr ""
+msgstr "Хаалга А"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Buy"
-msgstr ""
+msgstr "Худалдаж авах"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pushed flows"
-msgstr ""
+msgstr "Чихэгдсэн урсгалууд"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_dispatch_zone
 msgid "Dispatch Zone"
-msgstr ""
+msgstr "Диспетчерийн бүс"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_stock_move
 msgid "Stock Move"
-msgstr ""
+msgstr "Нөөцийн хөдөлгөөн"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Pulled flows"
-msgstr ""
+msgstr "Татагдсан урсгалууд"
 
 #. module: stock_location
 #: field:product.pulled.flow,company_id:0
 #: field:stock.location.path,company_id:0
 msgid "Company"
-msgstr ""
+msgstr "Компани"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Logistics Flows"
-msgstr ""
+msgstr "Логистикийн Урсгалууд"
 
 #. module: stock_location
 #: help:stock.move,cancel_cascade:0
 msgid "If checked, when this move is cancelled, cancel the linked move too"
 msgstr ""
+"Хэрэв тэмдэглэгдсэн бол энэ хөдөлгөөний цуцлахад холбогдсон хөдөлгөөнүүд мөн "
+"цуцлагдана"
 
 #. module: stock_location
 #: selection:product.pulled.flow,type_proc:0
 msgid "Produce"
-msgstr ""
+msgstr "Үйлдвэрлэх"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Order"
-msgstr ""
+msgstr "Захиалуулах"
 
 #. module: stock_location
 #: selection:product.pulled.flow,procure_method:0
 msgid "Make to Stock"
-msgstr ""
+msgstr "Нөөцлүүлэх"
 
 #. module: stock_location
 #: field:product.pulled.flow,partner_address_id:0
 msgid "Partner Address"
-msgstr ""
+msgstr "Харилцагчийн Хаяг"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "To Be Invoiced"
-msgstr ""
+msgstr "Ирээдүйд Нэхэмжлэх"
 
 #. module: stock_location
 #: help:stock.location.path,delay:0
@@ -212,21 +217,24 @@ msgstr "Энэ шилжилтийг хийхэд шаардлагатай хон
 #: help:product.pulled.flow,name:0
 msgid "This field will fill the packing Origin and the name of its moves"
 msgstr ""
+"Энэ талбар нь багцлалтын эх байх бөгөөд үүний хөдөлгөөнүүдийн нэр байна"
 
 #. module: stock_location
 #: field:product.pulled.flow,type_proc:0
 msgid "Type of Procurement"
-msgstr ""
+msgstr "Татан авалтын төрөл"
 
 #. module: stock_location
 #: help:product.pulled.flow,company_id:0
 msgid "Is used to know to which company belong packings and moves"
 msgstr ""
+"багцлалт болон хөдөлгөөн аль компанид харъяалагдаж байгааг мэдэхэд "
+"хэрэглэгдэнэ"
 
 #. module: stock_location
 #: field:product.pulled.flow,name:0
 msgid "Name"
-msgstr ""
+msgstr "Нэр"
 
 #. module: stock_location
 #: help:product.product,path_ids:0
@@ -238,7 +246,7 @@ msgstr ""
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You can not move products from or to a location of the type view."
-msgstr ""
+msgstr "Харагдац төрөлтэй байрлалаас/байрлалруу шилжүүлж болохгүй."
 
 #. module: stock_location
 #: selection:stock.location.path,auto:0
@@ -249,18 +257,18 @@ msgstr "Гар ажиллагаа"
 #: model:ir.model,name:stock_location.model_product_product
 #: field:product.pulled.flow,product_id:0
 msgid "Product"
-msgstr ""
+msgstr "Бараа"
 
 #. module: stock_location
 #: field:product.pulled.flow,procure_method:0
 msgid "Procure Method"
-msgstr ""
+msgstr "Татан авах арга"
 
 #. module: stock_location
 #: field:product.pulled.flow,picking_type:0
 #: field:stock.location.path,picking_type:0
 msgid "Shipping Type"
-msgstr ""
+msgstr "Хүргэх Төрөл"
 
 #. module: stock_location
 #: help:product.pulled.flow,procure_method:0
@@ -269,11 +277,14 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
+"'Нөөцлүүлэх': хэрэгтэй үед агуулахаас авдаг эсвэл агуулахад ирэхийг "
+"хүлээдэг. 'Захиалуулах': хэрэгтэй үед худалдан авах эсвэл үйлдвэрлэх "
+"захиалга өгдөг."
 
 #. module: stock_location
 #: help:product.pulled.flow,location_id:0
 msgid "Is the destination location that needs supplying"
-msgstr ""
+msgstr "Нийлүүлэлт шаардлагатай хүрэх байрлал"
 
 #. module: stock_location
 #: field:stock.location.path,product_id:0
@@ -284,18 +295,18 @@ msgstr "Бараанууд"
 #: code:addons/stock_location/procurement_pull.py:118
 #, python-format
 msgid "Pulled from another location via procurement %d"
-msgstr ""
+msgstr "%d татан авалтаар ондоо байрлалаас татагдсан"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.stock_location_qualitytest0
 msgid "Quality Control"
-msgstr ""
+msgstr "Чанарын Хяналт"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Not Applicable"
-msgstr ""
+msgstr "Хэрэглэх боломжгүй"
 
 #. module: stock_location
 #: field:stock.location.path,delay:0
@@ -309,11 +320,13 @@ msgid ""
 "Picking for pulled procurement coming from original location %s, pull rule "
 "%s, via original Procurement %s (#%d)"
 msgstr ""
+"%s гэсэн оригиналь байрлалаас татагдсан татан авалтын бэлтгэл, татах дүрэм "
+"нь %s, оригиналь татан авалт нь %s (#%d)"
 
 #. module: stock_location
 #: field:product.product,path_ids:0
 msgid "Pushed Flow"
-msgstr ""
+msgstr "Чихэгдсэн Урсгал"
 
 #. module: stock_location
 #: code:addons/stock_location/procurement_pull.py:89
@@ -322,16 +335,18 @@ msgid ""
 "Move for pulled procurement coming from original location %s, pull rule %s, "
 "via original Procurement %s (#%d)"
 msgstr ""
+"%s гэсэн оригиналь байрлалаас татагдсан татан авалтын хөдөлгөөн, татах дүрэм "
+"нь %s, оригиналь татан авалт нь %s (#%d)"
 
 #. module: stock_location
 #: constraint:stock.move:0
 msgid "You try to assign a lot which is not from the same product"
-msgstr ""
+msgstr "Ижил биш барааны цувралыг олгох гэж байна"
 
 #. module: stock_location
 #: model:ir.model,name:stock_location.model_procurement_order
 msgid "Procurement"
-msgstr ""
+msgstr "Татан авалт"
 
 #. module: stock_location
 #: field:product.pulled.flow,location_id:0
@@ -349,17 +364,17 @@ msgstr "Автомат хөдөлгөөн"
 #: selection:product.pulled.flow,picking_type:0
 #: selection:stock.location.path,picking_type:0
 msgid "Getting Goods"
-msgstr ""
+msgstr "Барааг авах"
 
 #. module: stock_location
 #: view:product.product:0
 msgid "Action Type"
-msgstr ""
+msgstr "Үйлдлийн төрөл"
 
 #. module: stock_location
 #: constraint:product.product:0
 msgid "Error: Invalid ean code"
-msgstr ""
+msgstr "Алдаа: EAN код буруу"
 
 #. module: stock_location
 #: help:product.pulled.flow,picking_type:0
@@ -368,11 +383,13 @@ msgid ""
 "Depending on the company, choose whatever you want to receive or send "
 "products"
 msgstr ""
+"Компаниас хамаарна, хүлээс авах эсвэл илгээх бараанууд болох дуртайгаа "
+"сонгоно"
 
 #. module: stock_location
 #: model:stock.location,name:stock_location.location_order
 msgid "Order Processing"
-msgstr ""
+msgstr "Захиалга боловсруулагдаж байна"
 
 #. module: stock_location
 #: field:stock.location.path,name:0
@@ -388,19 +405,19 @@ msgstr "Байршлын замууд"
 #: field:product.pulled.flow,journal_id:0
 #: field:stock.location.path,journal_id:0
 msgid "Journal"
-msgstr ""
+msgstr "Журнал"
 
 #. module: stock_location
 #: field:product.pulled.flow,cancel_cascade:0
 #: field:stock.move,cancel_cascade:0
 msgid "Cancel Cascade"
-msgstr ""
+msgstr "Шатлалыг цуцлах"
 
 #. module: stock_location
 #: selection:product.pulled.flow,invoice_state:0
 #: selection:stock.location.path,invoice_state:0
 msgid "Invoiced"
-msgstr ""
+msgstr "Нэхэмжилсэн"
 
 #~ msgid "Invalid XML for View Architecture!"
 #~ msgstr "Дэлгэцийн XML алдаатай!"

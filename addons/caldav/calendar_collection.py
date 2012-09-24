@@ -23,6 +23,7 @@ from osv import osv, fields
 from tools.translate import _
 import caldav_node
 import logging
+_logger = logging.getLogger(__name__)
 
 class calendar_collection(osv.osv):
     _inherit = 'document.directory' 
@@ -44,8 +45,7 @@ class calendar_collection(osv.osv):
             root_cal_dir = self.browse(cr,uid, root_id, context=context) 
             return root_cal_dir.name
         except Exception:
-            logger = logging.getLogger('document')
-            logger.warning('Cannot set root directory for Calendars:', exc_info=True)
+            _logger.warning('Cannot set root directory for Calendars:', exc_info=True)
             return False
         return False
 

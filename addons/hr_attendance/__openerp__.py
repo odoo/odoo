@@ -24,7 +24,6 @@
     'name': 'Attendances',
     'version': '1.1',
     'category': 'Human Resources',
-    'complexity': "easy",
     'description': """
 This module aims to manage employee's attendances.
 ==================================================
@@ -35,7 +34,7 @@ actions(Sign in/Sign out) performed by them.
     'author': 'OpenERP SA',
     'images': ['images/hr_attendances.jpeg'],
     'depends': ['hr'],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'hr_attendance_view.xml',
         'hr_attendance_report.xml',
@@ -44,9 +43,8 @@ actions(Sign in/Sign out) performed by them.
         'wizard/hr_attendance_bymonth_view.xml',
         'wizard/hr_attendance_byweek_view.xml',
         'wizard/hr_attendance_error_view.xml',
-        'wizard/hr_attendance_sign_in_out_view.xml',
     ],
-    'demo_xml': ['hr_attendance_demo.xml'],
+    'demo': ['hr_attendance_demo.xml'],
     'test': [
         'test/attendance_process.yml',
         'test/hr_attendance_report.yml',
@@ -54,5 +52,10 @@ actions(Sign in/Sign out) performed by them.
     'installable': True,
     'auto_install': False,
     'certificate': '0063495605613',
+    
+    #web
+    "js": ["static/src/js/attendance.js"],
+    'qweb' : ["static/src/xml/attendance.xml"],
+    'css' : ["static/src/css/slider.css"],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

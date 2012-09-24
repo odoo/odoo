@@ -5,16 +5,17 @@
             <field name="name">Calendar Collections : Form</field>
             <field name="model">document.directory</field>
             <field name="priority">40</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Calendar Collections">
-                    <field name="name" select="1" colspan="4"/>
-                    <field name="user_id"/>
-                    <field name="parent_id"/>
-                    <field name="type"/>
-                    <field name="calendar_collection"/>
-                    <field name="storage_id"/>
-                    <field name="calendar_ids" colspan="4" nolabel="1"/>
+                <form string="Calendar Collections" version="7.0">
+                    <group col="4">
+                        <field name="name" colspan="4"/>
+                        <field name="user_id"/>
+                        <field name="parent_id"/>
+                        <field name="type"/>
+                        <field name="calendar_collection"/>
+                        <field name="storage_id"/>
+                        <field name="calendar_ids" colspan="4" nolabel="1"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -22,7 +23,6 @@
         <record model="ir.ui.view" id="view_calendar_collection_tree">
             <field name="name">Calendar Collections : Tree</field>
             <field name="model">document.directory</field>
-            <field name="type">tree</field>
             <field name="priority">40</field>
             <field name="arch" type="xml">
                 <tree string="Calendar Collections" toolbar="1">
@@ -76,50 +76,55 @@
         <record model="ir.ui.view" id="view_caldav_form">
             <field name="name">Calendar : Form</field>
             <field name="model">basic.calendar</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Calendar">
-                    <field name="name"/>
-                    <field name="type"/>
-                    <field name="user_id"/>
-                    <field name="collection_id" required="1"/>
-                    <field name="has_webcal" groups="base.group_no_one" />
-                    <field name="calendar_color" groups="base.group_no_one" />
-                    <field name="calendar_order" groups="base.group_no_one" />
-                    <notebook colspan="4">
+                <form string="Calendar" version="7.0">
+                    <group col="4">
+                        <field name="name"/>
+                        <field name="type"/>
+                        <field name="user_id"/>
+                        <field name="collection_id" required="1"/>
+                        <field name="has_webcal" groups="base.group_no_one" />
+                        <field name="calendar_color" groups="base.group_no_one" />
+                        <field name="calendar_order" groups="base.group_no_one" />
+                    </group>
+                    <notebook>
                         <page string="Calendar Lines">
                             <field name="line_ids" mode="form,tree" colspan="4" nolabel="1">
-                                <form string="Calendar Lines">
-                                    <field name="name" required="1" select="1" />
-                                    <field name="object_id" required="1" select="1" />
-                                    <field name="domain" select="1" />
-                                    <field name="mapping_ids" select="1" colspan="4" nolabel="1">
+                                <form string="Calendar Lines" version="7.0">
+                                    <group col="4">
+                                        <field name="name" required="1"/>
+                                        <field name="object_id" required="1"/>
+                                        <field name="domain"/>
+                                    </group>
+                                    <field name="mapping_ids">
                                         <tree string="Attributes Mapping" editable="bottom">
                                             <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
-                                            <field name="fn" select="1" />
-                                            <field name="field_id" select="1" required="1" domain="[('model_id', '=', parent.object_id)]" />
+                                            <field name="fn" />
+                                            <field name="field_id" required="1" domain="[('model_id', '=', parent.object_id)]" />
                                             <field name="expr" />
                                         </tree>
-                                        <form string="Attributes Mapping">
-                                            <field name="name" select="1" required="1" domain="[('type', '=', parent.name)]"/>
-                                            <field name="field_id" select="1" domain="[('model_id', '=', parent.object_id)]"
-                                                required="1" />
-                                            <field name="fn" select="1" required="1" />
-                                            <field name="expr" />
-                                            <separator string="Value Mapping" colspan="4" />
-                                            <field name="mapping" select="1" colspan="4" nolabel="1" />
+                                        <form string="Attributes Mapping" version="7.0">
+                                            <group col="4">
+                                                <field name="name" required="1" domain="[('type', '=', parent.name)]"/>
+                                                <field name="field_id" domain="[('model_id', '=', parent.object_id)]"
+                                                    required="1" />
+                                                <field name="fn" required="1" />
+                                                <field name="expr" />
+                                            </group>
+                                            <separator string="Value Mapping"/>
+                                            <field name="mapping"/>
                                         </form>
                                     </field>
                                 </form>
                                 <tree string="Calendar Lines" editable="bottom">
-                                    <field name="name" select="1" />
-                                    <field name="object_id" select="1" />
+                                    <field name="name" />
+                                    <field name="object_id" />
                                 </tree>
                             </field>
                         </page>
                         <page string="Other Info">
-                            <separator string="Description" colspan="4" />
-                            <field name="description" colspan="4" nolabel="1" />
+                            <separator string="Description"/>
+                            <field name="description"/>
                         </page>
                     </notebook>
                 </form>
@@ -130,7 +135,6 @@
         <record model="ir.ui.view" id="view_caldav_tree">
             <field name="name">Calendar : Tree</field>
             <field name="model">basic.calendar</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Calendars" toolbar="1">
                     <field name="name"/>
@@ -147,18 +151,17 @@
         <record model="ir.ui.view" id="view_caldav_search">
             <field name="name">Calendar: Search</field>
             <field name="model">basic.calendar</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Calendars">
+                    <field name="name" string="Calendar"/>
                     <filter string="WebCal" icon="terp-calendar" domain="[('has_webcal', '=', True)]" help="Webcal Calendar"/>
+                    <separator/>
                     <filter string="Event" icon="terp-calendar" domain="[('type', '=', 'vevent')]"/>
                     <filter string="Todo" icon="terp-calendar" domain="[('type', '=', 'vtodo')]"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <separator/>
+                    <filter string="My Calendar(s)" icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)"/>
                     <field name="type"/>
-                    <field name="user_id" widget="selection">
-                        <filter icon="terp-personal" domain="[('user_id', '=', uid)]" help="My Calendar(s)" string="MY"/>
-                    </field>
+                    <field name="user_id"/>
                     <field name="collection_id"/>
                 </search>
             </field>
@@ -170,7 +173,6 @@
             <field name="res_model">basic.calendar</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
-            <field name="help">"Calendars" allow you to Customize calendar event and todo attribute with any of OpenERP model.Caledars provide iCal Import/Export functionality.Webdav server that provides remote access to calendar.Help You to synchronize Meeting with Calendars client.You can access Calendars using CalDAV clients, like sunbird, Calendar Evaluation, Mobile.</field>
         </record>
 
         <record id="action_caldav_view1" model="ir.actions.act_window.view">

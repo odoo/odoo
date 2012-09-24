@@ -22,37 +22,25 @@
     'name': 'Electronic Data Interchange (EDI)',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
-Provides a common EDI platform that other Applications can use
-==============================================================
+Provides a common EDI platform that other Applications can use.
+===============================================================
 
-OpenERP specifies a generic EDI format for exchanging business
-documents between different systems, and provides generic
-mechanisms to import and export them.
+OpenERP specifies a generic EDI format for exchanging business documents between 
+different systems, and provides generic mechanisms to import and export them.
 
-More details about OpenERP's EDI format may be found in the
-technical OpenERP documentation at http://doc.openerp.com
+More details about OpenERP's EDI format may be found in the technical OpenERP 
+documentation at http://doc.openerp.com.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'email_template'],
     'icon': '/edi/static/src/img/knowledge.png',
-    'data': [
-        'security/ir.model.access.csv',
-    ],
-    'test': [
-        'test/edi_partner_test.yml',
-    ],
-    'js': [
-        'static/src/js/edi.js',
-    ],
-    "css": [
-        "static/src/css/edi.css"
-    ],
-    'qweb': [
-        "static/src/xml/*.xml",
-    ],
+    'data': ['security/ir.model.access.csv'],
+    'test': ['test/edi_partner_test.yml'],
+    'js': ['static/src/js/edi.js'],
+    'css': ['static/src/css/edi.css'],
+    'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
     'certificate': '002046536359186',

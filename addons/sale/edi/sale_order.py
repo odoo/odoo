@@ -24,6 +24,7 @@ from dateutil.relativedelta import relativedelta
 
 from osv import fields, osv, orm
 from edi import EDIMixin
+from edi.models import edi
 from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
@@ -35,7 +36,6 @@ SALE_ORDER_LINE_EDI_STRUCT = {
     'price_unit': True,
     #custom: 'product_qty'
     'discount': True,
-    'notes': True,
 
     # fields used for web preview only - discarded on import
     'price_subtotal': True,
@@ -59,10 +59,20 @@ SALE_ORDER_EDI_STRUCT = {
     'payment_term': True,
     'order_policy': True,
     'user_id': True,
+    'state': True,
 }
 
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
+
+    def action_quotation_send(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        sale_objs = self.browse(cr, uid, ids, context=context) 
+        edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
+        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
+        return super(sale_order, self).action_quotation_send(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""
@@ -175,16 +185,9 @@ class sale_order(osv.osv, EDIMixin):
 
         order_lines = edi_document['order_line']
         for order_line in order_lines:
-            self._edi_requires_attributes(('date_planned', 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
+            self._edi_requires_attributes(( 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
             order_line['product_uom_qty'] = order_line['product_qty']
             del order_line['product_qty']
-            date_planned = order_line.pop('date_planned')
-            delay = 0
-            if date_order and date_planned:
-                # no security_days buffer, this is the promised date given by supplier
-                delay = (datetime.strptime(date_planned, DEFAULT_SERVER_DATE_FORMAT) - \
-                         datetime.strptime(date_order, DEFAULT_SERVER_DATE_FORMAT)).days
-            order_line['delay'] = delay
 
             # discard web preview fields, if present
             order_line.pop('price_subtotal', None)
@@ -206,11 +209,6 @@ class sale_order_line(osv.osv, EDIMixin):
                 edi_doc.update(product_uom=line.product_uos,
                                product_qty=line.product_uos_qty)
 
-            # company.security_days is for internal use, so customer should only
-            # see the expected date_planned based on line.delay
-            date_planned = datetime.strptime(line.order_id.date_order, DEFAULT_SERVER_DATE_FORMAT) + \
-                            relativedelta(days=line.delay or 0.0)
-            edi_doc['date_planned'] = date_planned.strftime(DEFAULT_SERVER_DATE_FORMAT)
             edi_doc_list.append(edi_doc)
         return edi_doc_list
 

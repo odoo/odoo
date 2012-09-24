@@ -20,27 +20,31 @@
 ##############################################################################
 
 {
-    "name": "Suppliers Payment Management",
-    "version": "1.1",
-    "author": "OpenERP SA",
-    "category": "Accounting & Finance",
-    'complexity': "easy",
-    "description": """
+    'name': 'Suppliers Payment Management',
+    'version': '1.1',
+    'author': 'OpenERP SA',
+    'category': 'Accounting & Finance',
+    'description': """
 Module to manage the payment of your supplier invoices.
 =======================================================
 
-This module allows you to create and manage your payment orders, with purposes to 
-* serve as base for an easy plug-in of various automated payment mechanisms.
-* provide a more efficient way to manage invoice payment.
+This module allows you to create and manage your payment orders, with purposes to
+--------------------------------------------------------------------------------- 
+    * serve as base for an easy plug-in of various automated payment mechanisms.
+    * provide a more efficient way to manage invoice payment.
 
 Warning:
---------
-The confirmation of a payment order does _not_ create accounting entries, it just records the fact that you gave your payment order to your bank. The booking of your order must be encoded as usual through a bank statement. Indeed, it's only when you get the confirmation from your bank that your order has been accepted that you can book it in your accounting. To help you with that operation, you have a new option to import payment orders as bank statement lines.
+~~~~~~~~
+The confirmation of a payment order does _not_ create accounting entries, it just 
+records the fact that you gave your payment order to your bank. The booking of 
+your order must be encoded as usual through a bank statement. Indeed, it's only 
+when you get the confirmation from your bank that your order has been accepted 
+that you can book it in your accounting. To help you with that operation, you 
+have a new option to import payment orders as bank statement lines.
     """,
     'images': ['images/payment_mode.jpeg','images/payment_order.jpeg'],
     'depends': ['account','account_voucher'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/account_payment_security.xml',
         'security/ir.model.access.csv',
         'wizard/account_payment_pay_view.xml',
@@ -52,7 +56,7 @@ The confirmation of a payment order does _not_ create accounting entries, it jus
         'account_invoice_view.xml',
         'account_payment_report.xml',
     ],
-    'demo_xml': ['account_payment_demo.xml'],
+    'demo': ['account_payment_demo.xml'],
     'test': [
         'test/account_payment_demo.yml',
         'test/cancel_payment_order.yml',

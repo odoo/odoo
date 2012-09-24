@@ -5,18 +5,15 @@
         <record id="view_payslip_lines_contribution_register" model="ir.ui.view">
             <field name="name">payslip.lines.contribution.register</field>
             <field name="model">payslip.lines.contribution.register</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Contribution Register's Payslip Lines">
+            <form string="Contribution Register's Payslip Lines" version="7.0">
+                <header>
+                    <button name="print_report" string="Print" type="object" icon="gtk-print" class="oe_highlight"/>
+                </header>
                 <group col="4" colspan="6">
                     <field name="date_from"/>
                     <newline/>
                     <field name="date_to"/>
-                </group>
-                <separator colspan="4"/>
-                <group col="2" colspan="4">
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
                 </group>
             </form>
             </field>

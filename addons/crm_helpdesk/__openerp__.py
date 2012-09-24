@@ -21,10 +21,9 @@
 
 
 {
-    'category': 'Customer Relationship Management', 
     'name': 'Helpdesk',
+    'category': 'Customer Relationship Management', 
     'version': '1.0',
-    'complexity': "easy",
     'description': """
 Helpdesk Management.
 ====================
@@ -37,18 +36,14 @@ and categorize your interventions with a channel and a priority level.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['crm'],
-    'init_xml': [
-         'crm_helpdesk_data.xml',
-    ],
-    'update_xml': [
+    'data': [
         'crm_helpdesk_view.xml',
         'crm_helpdesk_menu.xml',
         'security/ir.model.access.csv',
         'report/crm_helpdesk_report_view.xml',
+        'crm_helpdesk_data.xml',
     ],
-    'demo_xml': [
-        'crm_helpdesk_demo.xml',
-    ],
+    'demo': ['crm_helpdesk_demo.xml'],
     'test': ['test/process/help-desk.yml'],
     'installable': True,
     'auto_install': False,

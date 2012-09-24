@@ -54,7 +54,7 @@ from DAV.propfind import PROPFIND
 # from DAV.constants import DAV_VERSION_1, DAV_VERSION_2
 from xml.dom import minidom
 from redirect import RedirectHTTPHandler
-
+_logger = logging.getLogger(__name__)
 khtml_re = re.compile(r' KHTML/([0-9\.]+) ')
 
 def OpenDAVConfig(**kw):
@@ -73,7 +73,7 @@ def OpenDAVConfig(**kw):
 
 class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
     verbose = False
-    _logger = logging.getLogger('webdav')
+
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
                     'Allow' : [ 'GET', 'HEAD', 'COPY', 'MOVE', 'POST', 'PUT',
@@ -119,7 +119,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         if up.path.startswith(self.davpath):
             self.headers['Destination'] = up.path[len(self.davpath):]
         else:
-            raise DAV_Forbidden("Not allowed to copy/move outside webdav path")
+            raise DAV_Forbidden("Not allowed to copy/move outside webdav path.")
         # TODO: locks
         DAVRequestHandler.copymove(self, CLASS)
 
@@ -127,10 +127,10 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
         return self.davpath
 
     def log_message(self, format, *args):
-        self._logger.debug(format % args)
+        _logger.debug(format % args)
 
     def log_error(self, format, *args):
-        self._logger.warning(format % args)
+        _logger.warning(format % args)
 
     def _prep_OPTIONS(self, opts):
         ret = opts
@@ -304,7 +304,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             res = dc.unlock(uri, token)
         except DAV_Error, (ec, dd):
             return self.send_status(ec, dd)
-        
+
         if res == True:
             self.send_body(None, '204', 'OK', 'Resource unlocked.')
         else:
@@ -338,7 +338,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             if isinstance(ldif, list):
                 if len(ldif) !=1 or (not isinstance(ldif[0], TagList)) \
                         or len(ldif[0].list) != 1:
-                    raise DAV_Error(400, "Cannot accept multiple tokens")
+                    raise DAV_Error(400, "Cannot accept multiple tokens.")
                 ldif = ldif[0].list[0]
                 if ldif[0] == '<' and ldif[-1] == '>':
                     ldif = ldif[1:-1]
@@ -352,7 +352,7 @@ class DAVHandler(HttpOptions, FixSendError, DAVRequestHandler):
             lock_data.update(self._lock_unlock_parse(body))
 
         if lock_data['refresh'] and not lock_data.get('token', False):
-            raise DAV_Error(400, 'Lock refresh must specify token')
+            raise DAV_Error(400, 'Lock refresh must specify token.')
 
         lock_data['depth'] = depth
 
@@ -477,7 +477,7 @@ class dummy_dav_interface(object):
         uri2 = uri.split('/')
         if len(uri2) < 3:
             return True
-        logging.getLogger('webdav').debug("Requested uri: %s", uri)
+        _logger.debug("Requested uri: %s", uri)
         return None # no
 
     def is_collection(self, uri):
@@ -487,6 +487,7 @@ class dummy_dav_interface(object):
 class DAVStaticHandler(http_server.StaticHTTPHandler):
     """ A variant of the Static handler, which will serve dummy DAV requests
     """
+
     verbose = False
     protocol_version = 'HTTP/1.1'
     _HTTP_OPTIONS= { 'DAV' : ['1', '2'],
@@ -502,13 +503,13 @@ class DAVStaticHandler(http_server.StaticHTTPHandler):
         self.end_headers()
         if hasattr(self, '_flush'):
             self._flush()
-        
+
         if self.command != 'HEAD':
             self.wfile.write(content)
 
     def do_PROPFIND(self):
         """Answer to PROPFIND with generic data.
-        
+
         A rough copy of python-webdav's do_PROPFIND, but hacked to work
         statically.
         """
@@ -573,8 +574,8 @@ try:
         conf = OpenDAVConfig(**_dc)
         handler._config = conf
         reg_http_service(directory, DAVHandler, DAVAuthProvider)
-        logging.getLogger('webdav').info("WebDAV service registered at path: %s/ "% directory)
-        
+        _logger.info("WebDAV service registered at path: %s/ "% directory)
+
         if not (config.get_misc('webdav', 'no_root_hack', False)):
             # Now, replace the static http handler with the dav-enabled one.
             # If a static-http service has been specified for our server, then
@@ -591,11 +592,11 @@ try:
                 # an _ugly_ hack: we put that dir back in tools.config.misc, so that
                 # the StaticHttpHandler can find its dir_path.
                 config.misc.setdefault('static-http',{})['dir_path'] = dir_path
-    
+
             reg_http_service('/', DAVStaticHandler)
 
 except Exception, e:
-    logging.getLogger('webdav').error('Cannot launch webdav: %s' % e)
+    _logger.error('Cannot launch webdav: %s' % e)
 
 
 def init_well_known():
@@ -616,8 +617,10 @@ def init_well_known():
 init_well_known()
 
 class PrincipalsRedirect(RedirectHTTPHandler):
+
+
     redirect_paths = {}
-    
+
     def _find_redirect(self):
         for b, r in self.redirect_paths.items():
             if self.path.startswith(b):
@@ -625,7 +628,7 @@ class PrincipalsRedirect(RedirectHTTPHandler):
         return False
 
 def init_principals_redirect():
-    """ Some devices like the iPhone will look under /principals/users/xxx for 
+    """ Some devices like the iPhone will look under /principals/users/xxx for
     the user's properties. In OpenERP we _cannot_ have a stray /principals/...
     working path, since we have a database path and the /webdav/ component. So,
     the best solution is to redirect the url with 301. Luckily, it does work in
@@ -639,7 +642,7 @@ def init_principals_redirect():
     if dbname:
         PrincipalsRedirect.redirect_paths[''] = '/webdav/%s/principals' % dbname
         reg_http_service('/principals', PrincipalsRedirect)
-        logging.getLogger("web-services").info(
+        _logger.info(
                 "Registered HTTP redirect handler for /principals to the %s db.",
                 dbname)
 

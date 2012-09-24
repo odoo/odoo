@@ -33,7 +33,7 @@ class asset_asset_report(osv.osv):
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
         'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', readonly=True),
         'depreciation_value': fields.float('Amount of Depreciation Lines', readonly=True),
         'move_check': fields.boolean('Posted', readonly=True),
         'nbr': fields.integer('# of Depreciation Lines', readonly=True),

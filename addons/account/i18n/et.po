@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:48+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:09+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -91,7 +91,7 @@ msgstr "Aegunud nõuded kuni tänaseni"
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr ""
+msgstr "Impordi arvetest või maksetest"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -178,11 +178,6 @@ msgstr "Konto allikas"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Kõik analüütilised kirjed"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Viimase 15 päeva jooksul loodud arved"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -666,18 +661,6 @@ msgstr ""
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Nõuete kontod"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1639,11 +1622,6 @@ msgstr "Eraldatud päeviku järjekorrad"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Vastutav"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Müügid konto järgi"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2691,13 +2669,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr ""
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr ""
@@ -3079,8 +3050,8 @@ msgstr "Kontoplaani mallid"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Tekita kontoplaan kasutades plaani malli"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -3525,7 +3496,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Account Tax"
-msgstr ""
+msgstr "Konto maks"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting_budgets
@@ -4460,7 +4431,7 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_configuration
 msgid "Configuration"
-msgstr "Seadistused"
+msgstr "Seadistus"
 
 #. module: account
 #: field:account.automatic.reconcile,date1:0
@@ -5765,7 +5736,7 @@ msgstr ""
 #. module: account
 #: field:account.journal.period,name:0
 msgid "Journal-Period Name"
-msgstr ""
+msgstr "Päevik-perioodi nimetus"
 
 #. module: account
 #: field:account.invoice.tax,factor_base:0
@@ -5979,7 +5950,7 @@ msgstr ""
 #. module: account
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Information addendum"
-msgstr ""
+msgstr "Lisainfo"
 
 #. module: account
 #: field:account.chart,fiscalyear:0
@@ -6089,7 +6060,7 @@ msgstr ""
 #. module: account
 #: field:account.automatic.reconcile,power:0
 msgid "Power"
-msgstr ""
+msgstr "Aste"
 
 #. module: account
 #: code:addons/account/account.py:3368
@@ -6210,11 +6181,6 @@ msgstr ""
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
 msgstr "Tarnija hüvitis"
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr ""
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -6756,11 +6722,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr ""
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr ""
@@ -6974,7 +6935,7 @@ msgstr "Ülemkonto mall"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -9842,7 +9803,7 @@ msgstr ""
 #: view:account.automatic.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Write-Off Move"
-msgstr ""
+msgstr "Mahakandmine"
 
 #. module: account
 #: model:process.node,note:account.process_node_paidinvoice0
@@ -10611,6 +10572,9 @@ msgstr ""
 #~ msgid "Positive"
 #~ msgstr "Postiivne"
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Tekita kontoplaan kasutades plaani malli"
+
 #~ msgid "Gives the sequence order when displaying a list of account types."
 #~ msgstr "Annab järjekorra kui näidatakse konto nimelirja tüüpe."
 
@@ -10949,6 +10913,10 @@ msgstr ""
 #~ msgid "Delta Credit"
 #~ msgstr "Delta kreedit"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Nõuete kontod"
+
 #~ msgid "Generic Reports"
 #~ msgstr "Üldised aruanded"
 
@@ -11179,6 +11147,9 @@ msgstr ""
 #~ msgid "Create subscription entries"
 #~ msgstr "Koosta tellimus sissekanded"
 
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Viimase 15 päeva jooksul loodud arved"
+
 #~ msgid "Accounts by type"
 #~ msgstr "Kontod tüübi järgi"
 
@@ -11270,6 +11241,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Vale krediidi või deebeti arv mudelis ( Krediit + Deebet Peab olema suurem "
 #~ "kui \"0\" ) !"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "Müügid konto järgi"
 
 #, python-format
 #~ msgid "You cannot deactivate an account that contains account moves."

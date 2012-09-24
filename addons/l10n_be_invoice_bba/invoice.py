@@ -23,8 +23,8 @@
 import re, time, random
 from osv import fields, osv
 from tools.translate import _
-import netsvc
-logger=netsvc.Logger()
+import logging
+_logger = logging.getLogger(__name__)
 
 """
 account.invoice object:
@@ -41,7 +41,7 @@ class account_invoice(osv.osv):
                 context=context)
         res[[i for i,x in enumerate(res) if x[0] == 'none'][0]] = ('none', 'Free Communication')
         res.append(('bba', 'BBA Structured Communication'))
-        #logger.notifyChannel('addons.'+self._name, netsvc.LOG_WARNING, 'reference_type =  %s' %res ) 
+        #l_logger.warning('reference_type =  %s' %res ) 
         return res
 
     def check_bbacomm(self, val):
@@ -68,17 +68,14 @@ class account_invoice(osv.osv):
         result = super(account_invoice, self).onchange_partner_id(cr, uid, ids, type, partner_id,
             date_invoice, payment_term, partner_bank_id, company_id)
 #        reference_type = self.default_get(cr, uid, ['reference_type'])['reference_type']
-#        logger.notifyChannel('addons.'+self._name, netsvc.LOG_WARNING, 'partner_id %s' % partner_id)
+#        _logger.warning('partner_id %s' % partner_id)
         reference = False
         reference_type = 'none'
         if partner_id:        
             if (type == 'out_invoice'):
                 reference_type = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_type
                 if reference_type:
-                    algorithm = self.pool.get('res.partner').browse(cr, uid, partner_id).out_inv_comm_algorithm
-                    if not algorithm:
-                        algorithm = 'random' 
-                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, algorithm, partner_id, '')['value']['reference']
+                    reference = self.generate_bbacomm(cr, uid, ids, type, reference_type, partner_id, '', context={})['value']['reference']
         res_update = {       
             'reference_type': reference_type or 'none',
             'reference': reference,
@@ -86,17 +83,15 @@ class account_invoice(osv.osv):
         result['value'].update(res_update)
         return result                    
 
-    def generate_bbacomm(self, cr, uid, ids, type, reference_type, algorithm, partner_id, reference):
+    def generate_bbacomm(self, cr, uid, ids, type, reference_type, partner_id, reference, context=None):
         partner_obj =  self.pool.get('res.partner')
-        reference = reference or ''  
+        reference = reference or ''
+        algorithm = False
+        if partner_id:
+            algorithm = partner_obj.browse(cr, uid, partner_id, context=context).out_inv_comm_algorithm
+        algorithm = algorithm or 'random'
         if (type == 'out_invoice'):
             if reference_type == 'bba':
-                if not algorithm:
-                    if partner_id:
-                        algorithm = partner_obj.browse(cr, uid, partner_id).out_inv_comm_algorithm
-                    if not algorithm:
-                        if not algorithm:   
-                            algorithm = 'random'
                 if algorithm == 'date':
                     if not self.check_bbacomm(reference):
                         doy = time.strftime('%j')

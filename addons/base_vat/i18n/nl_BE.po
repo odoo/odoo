@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:15+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:07+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base_vat
 #: code:addons/base_vat/base_vat.py:141
@@ -23,11 +23,13 @@ msgid ""
 "This VAT number does not seem to be valid.\n"
 "Note: the expected format is %s"
 msgstr ""
+"Het btw-nummer is niet juist.\n"
+"Opmerking: het verwachte formaat is %s"
 
 #. module: base_vat
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "De naam van de firma moet uniek zijn"
 
 #. module: base_vat
 #: constraint:res.partner:0
@@ -37,17 +39,17 @@ msgstr ""
 #. module: base_vat
 #: field:res.company,vat_check_vies:0
 msgid "VIES VAT Check"
-msgstr ""
+msgstr "Btw-controle VIES"
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bedrijven"
 
 #. module: base_vat
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "U kunt niet dezelfde bedrijven maken."
 
 #. module: base_vat
 #: help:res.partner,vat_subjected:0
@@ -55,11 +57,13 @@ msgid ""
 "Check this box if the partner is subjected to the VAT. It will be used for "
 "the VAT legal statement."
 msgstr ""
+"Schakel dit vakje in als de relatie btw-plichtig is. Het wordt gebruikt voor "
+"de btw-aangifte."
 
 #. module: base_vat
 #: model:ir.model,name:base_vat.model_res_partner
 msgid "Partner"
-msgstr ""
+msgstr "Relatie"
 
 #. module: base_vat
 #: help:res.company,vat_check_vies:0
@@ -67,8 +71,47 @@ msgid ""
 "If checked, Partners VAT numbers will be fully validated against EU's VIES "
 "service rather than via a simple format validation (checksum)."
 msgstr ""
+"Indien aangevinkt worden de btw-nummers van relaties gecontroleerd via de "
+"VIES-service van de EU, en niet via eenvoudige validering van de controlesom."
 
 #. module: base_vat
 #: field:res.partner,vat_subjected:0
 msgid "VAT Legal Statement"
-msgstr ""
+msgstr "Btw-plichtig"
+
+#, python-format
+#~ msgid ""
+#~ "The Vat does not seems to be correct. You should have entered something like "
+#~ "this %s"
+#~ msgstr ""
+#~ "Het btw-nummer lijkt niet correct te zijn. Het moet er als volgt uitzien %s"
+
+#~ msgid "Base VAT - To check VAT number validity"
+#~ msgstr "Base VAT - geldigheid van btw-nummer controleren"
+
+#~ msgid "Error ! You can not create recursive associated members."
+#~ msgstr "U kunt niet dezelfde leden maken."
+
+#~ msgid ""
+#~ "\n"
+#~ "    Enable the VAT Number for the partner. Check the validity of that VAT "
+#~ "Number.\n"
+#~ "\n"
+#~ "    This module follows the methods stated at http://sima-pc.com/nif.php "
+#~ "for\n"
+#~ "    checking the validity of VAT Number assigned to partners in European "
+#~ "countries.\n"
+#~ "    "
+#~ msgstr ""
+#~ "\n"
+#~ "    Voegt het btw-nummer toe aan de relatie en controleert de geldigheid "
+#~ "ervan.\n"
+#~ "\n"
+#~ "    Deze module volgt de methode zoals beschreven op http://sima-"
+#~ "pc.com/nif.php voor\n"
+#~ "    controle van de geldigheid van btw-nummers binnen de Europese landen.\n"
+#~ "    "
+
+#, python-format
+#~ msgid "The VAT is invalid, It should begin with the country code"
+#~ msgstr "Het btw-nummer is ongeldig; het moet beginnen met de landcode"

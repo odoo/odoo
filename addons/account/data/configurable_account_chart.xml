@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="1">
         <!-- Types -->
@@ -44,7 +45,6 @@
         <record id="conf_chart0" model="account.account.template">
             <field name="code">0</field>
             <field name="name">Configurable Account Chart</field>
-            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
@@ -548,9 +548,8 @@
         </record>
 
         <record id="action_wizard_multi_chart_todo" model="ir.actions.todo">
-            <field name="name">Generate Chart of Accounts from a Chart Template</field>
+            <field name="name">Set Your Accounting Options</field>
             <field name="action_id" ref="account.action_wizard_multi_chart"/>
-            <field name="category_id" ref="account.category_accounting_configuration"/>
             <field name="type">automatic</field>
         </record>
 

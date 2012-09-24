@@ -30,8 +30,6 @@ class sale_report(osv.osv):
     _columns = {
         'date': fields.date('Date Order', readonly=True),
         'date_confirm': fields.date('Date Confirm', readonly=True),
-        'shipped': fields.boolean('Shipped', readonly=True),
-        'shipped_qty_1': fields.integer('Shipped', readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
         'month': fields.selection([('01', 'January'), ('02', 'February'), ('03', 'March'), ('04', 'April'),
             ('05', 'May'), ('06', 'June'), ('07', 'July'), ('08', 'August'), ('09', 'September'),
@@ -44,7 +42,7 @@ class sale_report(osv.osv):
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
         'shop_id': fields.many2one('sale.shop', 'Shop', readonly=True),
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
-        'user_id': fields.many2one('res.users', 'Salesman', readonly=True),
+        'user_id': fields.many2one('res.users', 'Salesperson', readonly=True),
         'price_total': fields.float('Total Price', readonly=True),
         'delay': fields.float('Commitment Delay', digits=(16,2), readonly=True),
         'categ_id': fields.many2one('product.category','Category of Product', readonly=True),
@@ -54,7 +52,6 @@ class sale_report(osv.osv):
             ('waiting_date', 'Waiting Schedule'),
             ('manual', 'Manual In Progress'),
             ('progress', 'In Progress'),
-            ('shipping_except', 'Shipping Exception'),
             ('invoice_except', 'Invoice Exception'),
             ('done', 'Done'),
             ('cancel', 'Cancelled')
@@ -63,6 +60,7 @@ class sale_report(osv.osv):
         'analytic_account_id': fields.many2one('account.analytic.account', 'Analytic Account', readonly=True),
     }
     _order = 'date desc'
+
     def init(self, cr):
         tools.drop_view_if_exists(cr, 'sale_report')
         cr.execute("""
@@ -86,8 +84,6 @@ class sale_report(osv.osv):
                     extract(epoch from avg(date_trunc('day',s.date_confirm)-date_trunc('day',s.create_date)))/(24*60*60)::decimal(16,2) as delay,
                     s.state,
                     t.categ_id as categ_id,
-                    s.shipped,
-                    s.shipped::integer as shipped_qty_1,
                     s.pricelist_id as pricelist_id,
                     s.project_id as analytic_account_id
                 from
@@ -110,7 +106,6 @@ class sale_report(osv.osv):
                     s.shop_id,
                     s.company_id,
                     s.state,
-                    s.shipped,
                     s.pricelist_id,
                     s.project_id
             )

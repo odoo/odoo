@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-05-11 04:48+0000\n"
-"X-Generator: Launchpad (build 15225)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:09+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -180,11 +180,6 @@ msgstr "Origen compte"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Tots els assentaments analítics"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Factures creades en els últims 15 dies"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -697,18 +692,6 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr ""
 "Per conciliar els seients, la companyia hauria de ser la mateixa per a tots "
 "els assentaments"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Comptes a cobrar"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1694,11 +1677,6 @@ msgstr "Seqüències de diaris separades"
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Responsable"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Vendes per tipus de compte"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2804,13 +2782,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Vendes per compte"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Aquest assistent crearà assentaments comptables recursius"
@@ -3212,8 +3183,8 @@ msgstr "Plantilles pel pla comptable"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Genera pla comptable a partir d'una plantilla de pla comptable"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -6449,11 +6420,6 @@ msgid "Supplier Refund"
 msgstr "Factura rectificativa (abonament) de proveïdor"
 
 #. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Taulell"
-
-#. module: account
 #: field:account.bank.statement,move_line_ids:0
 msgid "Entry lines"
 msgstr "Línies d'assentament"
@@ -7035,11 +7001,6 @@ msgstr ""
 "Exemple: El meu model a %(date)s"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Comptes d'ingressos"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Referència del document que ha generat aquest informe de factura."
@@ -7273,7 +7234,7 @@ msgstr "Plantilla compte pare"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -11207,6 +11168,9 @@ msgstr ""
 #~ msgid "Invoice Movement"
 #~ msgstr "Assent. factura"
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Genera pla comptable a partir d'una plantilla de pla comptable"
+
 #~ msgid "Legal Statements"
 #~ msgstr "Declaracions oficials"
 
@@ -11802,6 +11766,10 @@ msgstr ""
 
 #~ msgid "Account cost and revenue by journal (This Month)"
 #~ msgstr "Cost i retorn del compte per diari (aquest mes)"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Comptes a cobrar"
 
 #~ msgid "Open for unreconciliation"
 #~ msgstr "Obre per trencar conciliació"
@@ -12505,6 +12473,12 @@ msgstr ""
 #~ msgid "You cannot remove an account which has account entries!. "
 #~ msgstr "No podeu eliminar un compte que conté assentaments comptables. "
 
+#~ msgid "Income Accounts"
+#~ msgstr "Comptes d'ingressos"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Factures creades en els últims 15 dies"
+
 #~ msgid "Accounts by type"
 #~ msgstr "Comptes per tipus"
 
@@ -12571,6 +12545,9 @@ msgstr ""
 #~ "Valors deure o haver incorrectes en el model (deure + haver ha de ser major "
 #~ "que \"0\")!"
 
+#~ msgid "Sales by Account Type"
+#~ msgstr "Vendes per tipus de compte"
+
 #~ msgid "Error! You cannot define overlapping fiscal years"
 #~ msgstr "Error! No podeu definir exercicis fiscals que es superposin"
 
@@ -12602,6 +12579,9 @@ msgstr ""
 
 #~ msgid "Tax Code Test"
 #~ msgstr "Test codi impost"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Vendes per compte"
 
 #~ msgid ""
 #~ "It adds initial balance row on report which display previous sum amount of "
@@ -12719,6 +12699,9 @@ msgstr ""
 #~ msgstr ""
 #~ "No s'ha trobat un pla comptable per a aquesta companyia. Creeu un pla "
 #~ "comptable."
+
+#~ msgid "Dashboard"
+#~ msgstr "Taulell"
 
 #~ msgid "  valuation: percent"
 #~ msgstr "  valoració: percentatge"

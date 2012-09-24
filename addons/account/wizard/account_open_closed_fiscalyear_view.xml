@@ -4,18 +4,16 @@
         <record id="view_account_open_closed_fiscalyear" model="ir.ui.view">
             <field name="name">account.open.closed.fiscalyear.form</field>
             <field name="model">account.open.closed.fiscalyear</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Choose Fiscal Year ">
-                    <group colspan="4" >
-                        <field name="fyear_id"  domain = "[('state','=','draft')]"/>
+                <form string="Choose Fiscal Year " version="7.0">
+                    <group>
+                        <field name="fyear_id" domain="[('state','=','draft')]"/>
                     </group>
-                    <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <label string ="" colspan="2"/>
-                        <button icon="gtk-cancel" special="cancel" string="Cancel"/>
-                        <button icon="terp-gtk-go-back-rtl" string="Open" name="remove_entries" type="object"/>
-                    </group>
+                    <footer>
+                        <button string="Open" name="remove_entries" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>

@@ -1,8 +1,23 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Employee Appraisals application installed!</field>
+            <field name="body">Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels.
+Evaluations filled by employees may be exported as pdf files.</field>
+        </record>
+
         <record id="survey_2" model="survey">
-            <field name="title">Employee Appraisal</field>
+            <field name="title">Self Appraisal</field>
             <field name="max_response_limit">20</field>
             <field eval="[(6,0,[])]" name="users"/>
             <field name="type" ref="survey.survey_type1"/>
@@ -376,12 +391,6 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_2"/>
             <field name="type">char</field>
             <field eval="5" name="sequence"/>
-        </record>
-        <record id="survey_answer_98" model="survey.answer">
-            <field name="answer">Title</field>
-            <field name="question_id" ref="survey_question_2"/>
-            <field name="type">char</field>
-            <field eval="6" name="sequence"/>
         </record>
         <record id="survey_question_column_heading_4" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>
@@ -1157,37 +1166,11 @@ Once the form had been filled, the employee send it to his supervisor.
     </data>
 
     <data noupdate="1">
-        <record id="hr_evaluation_plan_phase_sendtosubordinates0" model="hr_evaluation.plan.phase">
-            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-            <field name="name">Send to Subordinates</field>
-            <field eval="0" name="send_anonymous_manager"/>
-            <field eval="1" name="sequence"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="action">bottom-up</field>
-            <field eval="0" name="send_anonymous_employee"/>
-            <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="hr_evaluation.survey_2"/>
-            <field eval="0" name="send_answer_manager"/>
-            <field eval="0" name="wait"/>
-        </record>
-        <record id="hr_evaluation_plan_phase_sendtomanagers0" model="hr_evaluation.plan.phase">
-            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-            <field name="name">Send to Managers</field>
-            <field eval="0" name="send_anonymous_manager"/>
-            <field eval="2" name="sequence"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="action">top-down</field>
-            <field eval="0" name="send_anonymous_employee"/>
-            <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="hr_evaluation.survey_2"/>
-            <field eval="0" name="send_answer_manager"/>
-            <field eval="0" name="wait"/>
-        </record>
         <record id="hr_evaluation_plan_phase_sendtoemployee0" model="hr_evaluation.plan.phase">
             <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
             <field name="name">Send to Employee</field>
             <field eval="0" name="send_anonymous_manager"/>
-            <field eval="3" name="sequence"/>
+            <field eval="1" name="sequence"/>
             <field name="company_id" ref="base.main_company"/>
             <field name="action">self</field>
             <field eval="0" name="send_anonymous_employee"/>
@@ -1195,19 +1178,6 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="survey_id" ref="hr_evaluation.survey_2"/>
             <field eval="0" name="send_answer_manager"/>
             <field eval="0" name="wait"/>
-        </record>
-        <record id="hr_evaluation_plan_phase_finalinterviewwithmanager0" model="hr_evaluation.plan.phase">
-            <field name="plan_id" ref="hr_evaluation_plan_managersevaluationplan0"/>
-            <field name="name">Final Interview With Manager</field>
-            <field eval="0" name="send_anonymous_manager"/>
-            <field eval="4" name="sequence"/>
-            <field name="company_id" ref="base.main_company"/>
-            <field name="action">final</field>
-            <field eval="0" name="send_anonymous_employee"/>
-            <field eval="0" name="send_answer_employee"/>
-            <field name="survey_id" ref="hr_evaluation.survey_2"/>
-            <field eval="0" name="send_answer_manager"/>
-            <field eval="1" name="wait"/>
         </record>
     </data>
 

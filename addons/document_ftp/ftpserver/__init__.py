@@ -23,9 +23,9 @@ import threading
 import ftpserver
 import authorizer
 import abstracted_fs
-import netsvc
+import logging
 from tools import config
-
+_logger = logging.getLogger(__name__)
 def start_server():
     HOST = config.get('ftp_server_host', '127.0.0.1')
     PORT = int(config.get('ftp_server_port', '8021'))
@@ -35,10 +35,7 @@ def start_server():
         PASSIVE_PORTS = int(pps[0]), int(pps[1])
 
     class ftp_server(threading.Thread):
-        def log(self, level, message):
-            logger = netsvc.Logger()
-            logger.notifyChannel('FTP', level, message)
-
+        
         def run(self):
             autho = authorizer.authorizer()
             ftpserver.FTPHandler.authorizer = autho
@@ -48,17 +45,17 @@ def start_server():
             if PASSIVE_PORTS:
                 ftpserver.FTPHandler.passive_ports = PASSIVE_PORTS
 
-            ftpserver.log = lambda msg: self.log(netsvc.LOG_INFO, msg)
+            ftpserver.log = lambda msg: _logger.info(msg)
             ftpserver.logline = lambda msg: None
-            ftpserver.logerror = lambda msg: self.log(netsvc.LOG_ERROR, msg)
+            ftpserver.logerror = lambda msg: _logger.error(msg)
 
             ftpd = ftpserver.FTPServer((HOST, PORT), ftpserver.FTPHandler)
             ftpd.serve_forever()
 
     if HOST.lower() == 'none':
-        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Server FTP Not Started\n")
+        _logger.info("\n Server FTP Not Started\n")
     else:
-        netsvc.Logger().notifyChannel("FTP", netsvc.LOG_INFO, "\n Serving FTP on %s:%s\n" % (HOST, PORT))
+        _logger.info("\n Serving FTP on %s:%s\n" % (HOST, PORT))
         ds = ftp_server()
         ds.daemon = True
         ds.start()

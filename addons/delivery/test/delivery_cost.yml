@@ -3,43 +3,37 @@
 -
   I add delivery cost in Sale order.
 -
-  !python {model: delivery.sale.order}: |
-    context.update({'active_ids': [ref("sale.order")]})
--
-  !record {model: delivery.sale.order, id: sale_delivery_carrier}:
-    {}
--
-  !python {model: delivery.sale.order}: |
-    self.delivery_set(cr, uid, [ref('sale_delivery_carrier')], context=context)
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale.sale_order_6")], context=context)
 -
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
-    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.order')), ('product_id','=', ref('delivery_product'))])
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_6')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
     assert line_data.price_subtotal == 10, "Delivey cost is not correspond."
 -
   I confirm the sale order.
 -
-  !workflow {model: sale.order, action: order_confirm, ref: sale.order}
+  !workflow {model: sale.order, action: order_confirm, ref: sale.sale_order_6}
 -
   I create Invoice from shipment.
 -
   !python {model: stock.invoice.onshipping}: |
     sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("sale.order"))
+    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]
     wiz_id = self.create(cr, uid, {'journal_id': ref('account.sales_journal')},
       {'active_ids': ship_ids, 'active_model': 'stock.picking'})
     self.create_invoice(cr, uid, [wiz_id], {"active_ids": ship_ids, "active_id": ship_ids[0]})
 -
   I print a Delivery Order report.
-- 
+-
   !python {model: stock.picking}: |
     import netsvc, tools, os
     sale = self.pool.get('sale.order')
-    sale_order = sale.browse(cr, uid, ref("sale.order"))
+    sale_order = sale.browse(cr, uid, ref("sale.sale_order_6"))
     ship_ids = [x.id for x in sale_order.picking_ids]
     (data, format) = netsvc.LocalService('report.sale.shipping').create(cr, uid, ship_ids, {}, {})
     if tools.config['test_report_directory']:
@@ -47,19 +41,13 @@
 -
   I add free delivery cost in Sale order.
 -
-  !python {model: delivery.sale.order}: |
-    context.update({'active_ids': [ref("sale.order2")]})
--
-  !record {model: delivery.sale.order, id: sale_delivery_carrier}:
-    {}
--
-  !python {model: delivery.sale.order}: |
-    self.delivery_set(cr, uid, [ref('sale_delivery_carrier')], context=context)
+  !python {model: sale.order}: |
+    self.delivery_set(cr, uid, [ref("sale.sale_order_2")], context=context)
 -
   I check sale order after added delivery cost.
 -
   !python {model: sale.order.line}: |
-    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.order2')), ('product_id','=', ref('delivery_product'))])
+    line_ids = self.search(cr, uid, [('order_id','=', ref('sale.sale_order_2')), ('product_id','=', ref('product_product_delivery'))])
     assert len(line_ids), "Delivery cost is not Added"
     line_data = self.browse(cr ,uid ,line_ids[0] ,context)
     assert line_data.price_subtotal == 0, "Delivey cost is not correspond."

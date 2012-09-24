@@ -20,57 +20,53 @@
 ##############################################################################
 
 {
-    'name': 'Emails Management',
+    'name': 'Social Network',
     'version': '1.0',
-    'category': 'Hidden/Dependency',
-    'complexity': "easy",
+    'category': 'Social Network',
+    'sequence': 2,
+    'summary': 'Discussions, Mailing Lists, News',
     'description': """
-A generic email subsystem with message storage and queuing
-==========================================================
+Business oriented Social Networking
+===================================
+The Social Networking module provides a unified social network abstraction layer allowing applications to display a complete 
+communication history on documents with a fully-integrated email and message management system.
 
-This email subsystem is not intended to be used as as standalone
-application, but to provide a unified email abstraction that all
-other applications can use.
+It enables the users to read and send messages as well as emails. It also provides a feeds page combined to a subscription mechanism that allows to follow documents and to be constantly updated about recent news.
 
-The main features are:
-
-    * Relies on the global Outgoing Mail Servers configured in the 
-      Administration menu for delivering outgoing mail
-    * Provides an API for sending messages and archiving them,
-      grouped by conversation
-    * Any OpenERP document can act as a conversation topic, provided
-      it includes the necessary support for handling incoming emails
-      (see the ``mail.thread`` class for more details). 
-    * Includes queuing mechanism with automated configurable
-      scheduler-based processing
-    * Includes a generic email composition assistant, that can turn
-      into a mass-mailing assistant, and is capable of interpreting
-      simple *placeholder expressions* that will be replaced with
-      dynamic data when each email is actually sent.
-      This generic assistant is easily extensible to provide advanced
-      features (see ``email_template`` for example, which adds email
-      templating features to this assistant)
-
+Main Features
+-------------
+* Clean and renewed communication history for any OpenERP document that can act as a discussion topic
+* Subscription mechanism to be updated about new messages on interesting documents
+* Unified feeds page to see recent messages and activity on followed documents
+* User communication through the feeds page
+* Threaded discussion design on documents
+* Relies on the global outgoing mail server - an integrated email management system - allowing to send emails with a configurable scheduler-based processing engine
+* Includes an extensible generic email composition assistant, that can turn into a mass-mailing assistant and is capable of interpreting simple *placeholder expressions* that will be replaced with dynamic data when each email is actually sent.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools'],
+    'depends': ['base', 'base_tools', 'base_setup'],
     'data': [
+        'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'res_config_view.xml',
         'mail_message_view.xml',
-        'mail_subscription_view.xml',
+        'mail_mail_view.xml',
+        'mail_followers_view.xml',
         'mail_thread_view.xml',
         'mail_group_view.xml',
         'res_partner_view.xml',
-        'report/mail_message_report_view.xml',
+        'data/mail_data.xml',
+        'data/mail_group_data.xml',
         'security/mail_security.xml',
         'security/ir.model.access.csv',
-        'mail_data.xml',
-        'mail_group_data.xml',
+        'mail_alias_view.xml',
         'res_users_view.xml',
     ],
+    'demo': ['data/mail_demo.xml'],
     'installable': True,
     'auto_install': False,
+    'application': True,
     'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
@@ -79,19 +75,24 @@ The main features are:
         'static/src/img/email_icong.png',
         'static/src/img/_al.png',
         'static/src/img/_pincky.png',
-        'static/src/img/feeds.png',
-        'static/src/img/feeds-hover.png',
         'static/src/img/groupdefault.png',
+        'static/src/img/attachment.png',
+        'static/src/img/checklist.png',
+        'static/src/img/formatting.png',
     ],
     'css': [
         'static/src/css/mail.css',
         'static/src/css/mail_group.css',
+        'static/src/css/mail_compose_message.css',
     ],
     'js': [
+        'static/lib/jquery.expander/jquery.expander.js',
         'static/src/js/mail.js',
+        'static/src/js/mail_followers.js',
     ],
     'qweb': [
         'static/src/xml/mail.xml',
+        'static/src/xml/mail_followers.xml',
     ],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

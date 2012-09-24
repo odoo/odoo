@@ -53,7 +53,7 @@ def _find_fieldname(model, field):
     for fn in all_columns:
         if all_columns[fn] is field:
             return fn
-    raise ValueError('field not found: %r' % (field,))
+    raise ValueError('Field not found: %r' % (field,))
 
 class selection_converter(object):
     """Format the selection in the browse record objects"""
@@ -115,12 +115,12 @@ With Manual Confirmation - the campaigns runs normally, but the user has to vali
 Normal - the campaign runs normally and automatically sends all emails and reports (be very careful with this mode, you're live!)"""),
         'state': fields.selection([('draft', 'New'),
                                    ('running', 'Running'),
-                                   ('done', 'Done'),
-                                   ('cancelled', 'Cancelled'),],
-                                   'State',),
+                                   ('cancelled', 'Cancelled'),
+                                   ('done', 'Done')],
+                                   'Status',),
         'activity_ids': fields.one2many('marketing.campaign.activity',
                                        'campaign_id', 'Activities'),
-        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Purchase Price')),
+        'fixed_cost': fields.float('Fixed Cost', help="Fixed cost for running this campaign. You may also specify variable cost and revenue on each campaign activity. Cost and Revenue statistics are included in Campaign Reporting.", digits_compute=dp.get_precision('Product Price')),
     }
 
     _defaults = {
@@ -133,7 +133,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
         campaign = self.browse(cr, uid, ids[0])
 
         if not campaign.activity_ids:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: there are no activities in it."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started. There are no activities in it."))
 
         has_start = False
         has_signal_without_from = False
@@ -145,7 +145,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
                 has_signal_without_from = True
 
         if not has_start and not has_signal_without_from:
-            raise osv.except_osv(_("Error"), _("The campaign cannot be started: it doesn't have any starting activity. Modify campaign's activities to mark one as the starting point."))
+            raise osv.except_osv(_("Error"), _("The campaign cannot be started. It does not have any starting activity. Modify campaign's activities to mark one as the starting point."))
 
         return self.write(cr, uid, ids, {'state': 'running'})
 
@@ -172,7 +172,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
     #dead code
     def _signal(self, cr, uid, record, signal, run_existing=True, context=None):
         if not signal:
-            raise ValueError('signal cannot be False')
+            raise ValueError('Signal cannot be False.')
 
         Workitems = self.pool.get('marketing.campaign.workitem')
         domain = [('object_id.model', '=', record._table._name),
@@ -211,7 +211,7 @@ Normal - the campaign runs normally and automatically sends all emails and repor
 
     # prevent duplication until the server properly duplicates several levels of nested o2m
     def copy(self, cr, uid, id, default=None, context=None):
-        raise osv.except_osv(_("Operation not supported"), _("You can not duplicate a campaign, it's not supported yet."))
+        raise osv.except_osv(_("Operation not supported"), _("You cannot duplicate a campaign, Not supported yet."))
 
     def _find_duplicate_workitems(self, cr, uid, record, campaign_rec, context=None):
         """Finds possible duplicates workitems for a record in this campaign, based on a uniqueness
@@ -269,10 +269,10 @@ class marketing_campaign_segment(osv.osv):
                                            'If the campaign has a "unique field" set, "no duplicates" will also prevent selecting records which have '\
                                            'the same value for the unique field as other records that already entered the campaign.'),
         'state': fields.selection([('draft', 'New'),
+                                   ('cancelled', 'Cancelled'),
                                    ('running', 'Running'),
-                                   ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')],
-                                   'State',),
+                                   ('done', 'Done')],
+                                   'Status',),
         'date_run': fields.datetime('Launch Date', help="Initial start date of this segment."),
         'date_done': fields.datetime('End Date', help="Date this segment was last closed or cancelled."),
         'date_next_sync': fields.function(_get_next_sync, string='Next Synchronization', type='datetime', help="Next time the synchronization job is scheduled to run automatically"),
@@ -392,7 +392,7 @@ class marketing_campaign_activity(osv.osv):
     _description = "Campaign Activity"
 
     _action_types = [
-        ('email', 'E-mail'),
+        ('email', 'Email'),
         ('report', 'Report'),
         ('action', 'Custom Action'),
         # TODO implement the subcampaigns.
@@ -423,7 +423,7 @@ class marketing_campaign_activity(osv.osv):
    - Report: print an existing Report defined on the resource item and save it into a specific directory
    - Custom Action: execute a predefined action, e.g. to modify the fields of the resource record
   """),
-        'email_template_id': fields.many2one('email.template', "Email Template", help='The e-mail to send when this activity is activated'),
+        'email_template_id': fields.many2one('email.template', "Email Template", help='The email to send when this activity is activated'),
         'report_id': fields.many2one('ir.actions.report.xml', "Report", help='The report to generate when this activity is activated', ),
         'report_directory_id': fields.many2one('document.directory','Directory',
                                 help="This folder is used to store the generated reports"),
@@ -435,11 +435,11 @@ class marketing_campaign_activity(osv.osv):
         'from_ids': fields.one2many('marketing.campaign.transition',
                                             'activity_to_id',
                                             'Previous Activities'),
-        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Purchase Price')),
-        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Sale Price')),
+        'variable_cost': fields.float('Variable Cost', help="Set a variable cost if you consider that every campaign item that has reached this point has entailed a certain cost. You can get cost statistics in the Reporting section", digits_compute=dp.get_precision('Product Price')),
+        'revenue': fields.float('Revenue', help="Set an expected revenue if you consider that every campaign item that has reached this point has generated a certain revenue. You can get revenue statistics in the Reporting section", digits_compute=dp.get_precision('Account')),
         'signal': fields.char('Signal', size=128,
                               help='An activity with a signal can be called programmatically. Be careful, the workitem is always created when a signal is sent'),
-        'keep_if_condition_not_met': fields.boolean("Don't delete workitems",
+        'keep_if_condition_not_met': fields.boolean("Don't Delete Workitems",
                                                     help="By activating this option, workitems that aren't executed because the condition is not met are marked as cancelled instead of being deleted.")
     }
 
@@ -505,7 +505,7 @@ class marketing_campaign_activity(osv.osv):
         method = '_process_wi_%s' % (activity.type,)
         action = getattr(self, method, None)
         if not action:
-            raise NotImplementedError('method %r in not implemented on %r object' % (method, self))
+            raise NotImplementedError('Method %r is not implemented on %r object.' % (method, self))
 
         workitem_obj = self.pool.get('marketing.campaign.workitem')
         workitem = workitem_obj.browse(cr, uid, wi_id, context=context)
@@ -539,7 +539,7 @@ class marketing_campaign_transition(osv.osv):
         assert len(ids) == 1
         transition = self.browse(cr, uid, ids[0], context=context)
         if transition.trigger != 'time':
-            raise ValueError('Delta is only relevant for timed transiton')
+            raise ValueError('Delta is only relevant for timed transition.')
         return relativedelta(**{str(transition.interval_type): transition.interval_nbr})
 
 
@@ -648,10 +648,11 @@ class marketing_campaign_workitem(osv.osv):
         'res_name': fields.function(_res_name_get, string='Resource Name', fnct_search=_resource_search, type="char", size=64),
         'date': fields.datetime('Execution Date', help='If date is not set, this workitem has to be run manually', readonly=True),
         'partner_id': fields.many2one('res.partner', 'Partner', select=1, readonly=True),
-        'state': fields.selection([('todo', 'To Do'),
-                                   ('exception', 'Exception'), ('done', 'Done'),
-                                   ('cancelled', 'Cancelled')], 'State', readonly=True),
-
+        'state': fields.selection([ ('todo', 'To Do'),
+                                    ('cancelled', 'Cancelled'),
+                                    ('exception', 'Exception'),
+                                    ('done', 'Done'),
+                                   ], 'Status', readonly=True),
         'error_msg' : fields.text('Error Message', readonly=True)
     }
     _defaults = {

@@ -29,7 +29,6 @@
         <record id="stock_return_memory_tree_in" model="ir.ui.view">
             <field name="name">stock.return.picking.memory.tree</field>
             <field name="model">stock.return.picking.memory</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" string="Product Moves">
                     <field name="product_id" />
@@ -42,11 +41,12 @@
         <record id="stock_return_memory_form_in" model="ir.ui.view">
             <field name="name">stock.return.picking.memory.from</field>
             <field name="model">stock.return.picking.memory</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form>
-                    <field name="product_id" />
-                    <field name="quantity" />
+                <form string="Return Picking Memory" version="7.0">
+                    <group col="4">
+                        <field name="product_id" />
+                        <field name="quantity" />
+                    </group>
                  </form>
             </field>
         </record>   
@@ -54,18 +54,18 @@
         <record id="view_stock_return_picking_form" model="ir.ui.view">
             <field name="name">Return lines</field>
             <field name="model">stock.return.picking</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Return lines">
-                    <label string="Provide the quantities of the returned products." colspan="4"/>
-                    <separator string="" colspan="4"/>
-                    <field name="product_return_moves"  nolabel="1" colspan="6"/>
-                    <field name="invoice_state" />
-                    <separator string="" colspan="4" />
-                    <group col="2" colspan="4">
-                        <button special="cancel" string="_Cancel" icon="gtk-cancel"/>
-                        <button name="create_returns" string="Return" colspan="1" type="object" icon="gtk-apply" />
+                <form string="Return lines" version="7.0">
+                    <label string="Provide the quantities of the returned products."/>
+                    <group>
+                        <field name="product_return_moves"/>
+                        <field name="invoice_state" />
                     </group>
+                    <footer>
+                        <button name="create_returns" string="Return" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                    </footer>
                 </form>
             </field>
         </record>
