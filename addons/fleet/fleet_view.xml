@@ -240,7 +240,6 @@
                            
                         </tree>
                     </field>
-            
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_log_act'>
@@ -252,6 +251,96 @@
 
         <menuitem action="fleet_vehicle_log_act" parent="fleet_vehicles" id="fleet_vehicle_log_menu" />
 
+        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
+            <field name="name">fleet.vehicle.log.fuel.form</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="arch" type="xml">
+                <form string="Fuel Logs" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="create_date" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="liter" />
+                            <field name="price_per_liter" />
+                            <field name="inv_ref" />
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_fuel_tree'>
+            
+                    <field name="name">fleet.vehicle.log.fuel.tree</field>
+                    <field name="model">fleet.vehicle.log.fuel</field>
+                    <field name="arch" type="xml">
+                        <tree string="Fuel Logs">
+                                        <field name="create_date" />
+                                        <field name="vehicle_id" />
+                                        <field name="employee_id" />
+                                        <field name="liter" />
+                                        <field name="amount" />
+                                        <field name="inv_ref" />
+                           
+                        </tree>
+                    </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_fuel_act'>
+            <field name="name">Vehicle Fuel Logs</field>
+            <field name="res_model">fleet.vehicle.log.fuel</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
+            <field name="name">fleet.vehicle.log.services.form</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="arch" type="xml">
+                <form string="Services Logs" version="7.0">
+                    <sheet>
+                        <group>
+                                        <field name="create_date" />
+                                        <field name="vehicle_id" />
+                                        <field name="employee_id" />
+                                        <field name="vendor_id" />
+                                        <field name="amount" />
+                                        <field name="reference" />
+                                        <field name="service_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_services_tree'>
+            
+                    <field name="name">fleet.vehicle.log.services.tree</field>
+                    <field name="model">fleet.vehicle.log.services</field>
+                    <field name="arch" type="xml">
+                        <tree string="Services Logs">
+                                        <field name="create_date" />
+                                        <field name="vehicle_id" />
+                                        <field name="employee_id" />
+                                        <field name="amount" />
+                                        <field name="reference" />
+                                        <field name="service_ids"/>
+                        </tree>
+                    </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_services_act'>
+            <field name="name">Vehicle Services Logs</field>
+            <field name="res_model">fleet.vehicle.log.services</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
 
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>

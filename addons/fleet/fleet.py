@@ -170,10 +170,9 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _name = 'fleet.vehicle.log.fuel'
     _columns = {
-        'description' : fields.text('Description'),
         'liter' : fields.integer('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
-        'amount': fields.function(_get_price, type='float', multi='fuel', string='Fuel Amount'),
+        'amount': fields.function(_get_price, type='float', multi='fuel', string='Total Price'),
         'type' : fields.char('Type', size=32),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
     }
@@ -198,7 +197,7 @@ class fleet_vehicle_log_services(osv.Model):
     _name = 'fleet.vehicle.log.services'
     _columns = {
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'amount' :fields.float('Amount', help="Total cost of the service"),
+        'amount' :fields.float('Cost', help="Total cost of the service"),
         'reference' :fields.char('Reference',size=128),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
     }
