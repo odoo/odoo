@@ -205,9 +205,9 @@
           <para style="terp_default_Centre_8">[[get_account_name(o.mode.bank_id.id)]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ o.date_prefered == 'now' and 'Now' or removeParentNode('para') ]]</para>
-          <para style="terp_default_Centre_8">[[ o.date_prefered == 'due' and 'Due date' or removeParentNode('para') ]]</para>
-          <para style="terp_default_Centre_8">[[ o.date_prefered == 'fixed' and 'Fixed date' or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">[[ o.date_prefered == 'now' and translate('Now') or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">[[ o.date_prefered == 'due' and translate('Due date') or removeParentNode('para') ]]</para>
+          <para style="terp_default_Centre_8">[[ o.date_prefered == 'fixed' and translate('Fixed date') or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ o.user_id and o.user_id.company_id and o.user_id.company_id.currency_id and o.user_id.company_id.currency_id.name or '' ]]</para>

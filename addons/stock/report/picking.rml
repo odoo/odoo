@@ -262,7 +262,7 @@
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move_lines.state ]]</para>
+            <para style="terp_default_9">[[ move_lines.state == 'confirmed' and translate('Waiting Availability') or move_lines.state == 'done' and translate('Done') or move_lines.state == 'assigned' and translate('Available')]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>
@@ -273,7 +273,7 @@
         </tr>
       </blockTable>
     </section>
-    <para style="terp_default_Bold_9">[[ ([line for line in picking.move_lines if (line.state == 'draft' or line.state=='waiting' )]) and 'Non Assigned Products:' or removeParentNode('para') ]]</para>
+    <para style="terp_default_Bold_9">[[ ([line for line in picking.move_lines if (line.state == 'draft' or line.state=='waiting' )]) and translate('Non Assigned Products:') or removeParentNode('para') ]]</para>
     <para style="terp_default_2"/>
     <section>
       <para style="terp_default_2">[[ repeatIn([line for line in picking.move_lines if (line.state == 'draft' or line.state=='waiting')],'move_lines') ]]</para>
@@ -287,7 +287,7 @@
             <para style="terp_default_Centre_9">[[ (move_lines.prodlot_id and move_lines.prodlot_id.name) or '' ]]</para>
           </td>
           <td>
-            <para style="terp_default_9">[[ move_lines.state ]]</para>
+            <para style="terp_default_9">[[ move_lines.state == 'draft' and translate('New') or move_lines.state == 'waiting' and translate('Waiting Another Move') ]]</para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ (move_lines.location_id and move_lines.location_id.name) or '' ]] </para>
