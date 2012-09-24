@@ -1585,8 +1585,15 @@ class BaseModel(object):
         :returns: a list of triplets of (id, xid, record)
         :rtype: list((int|None, str|None, dict))
         """
+        if context is None: context = {}
         Converter = self.pool['ir.fields.converter']
         columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
+        Translation = self.pool['ir.translation']
+        field_names = dict(
+            (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
+                                         context.get('lang', False) or 'en_US')
+                 or column.string or f))
+            for f, column in columns.iteritems())
         converters = dict(
             (k, Converter.to_field(cr, uid, self, column, context=context))
             for k, column in columns.iteritems())
@@ -1619,18 +1626,24 @@ class BaseModel(object):
             for field, strvalue in record.iteritems():
                 if field in (None, 'id', '.id'): continue
 
-                message_base = dict(extras, record=stream.index, field=field)
+                # In warnings and error messages, use translated string as
+                # field name
+                message_base = dict(
+                    extras, record=stream.index, field=field_names[field])
                 with warnings.catch_warnings(record=True) as w:
                     try:
                         converted[field] = converters[field](strvalue)
 
+                        # In warning and error returned, use logical field name
+                        # as field so client can reverse
                         for warning in w:
-                            log(dict(message_base, type='warning',
+                            log(dict(message_base, type='warning', field=field,
                                      message=unicode(warning.message) % message_base))
                     except ValueError, e:
                         log(dict(message_base,
                             type='error',
-                            message=unicode(e) % message_base
+                            field=field,
+                            message=unicode(e) % message_base,
                         ))
 
             yield dbid, xid, converted, dict(extras, record=stream.index)

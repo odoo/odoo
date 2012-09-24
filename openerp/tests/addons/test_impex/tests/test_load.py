@@ -186,7 +186,7 @@ class test_boolean_field(ImporterCase):
         ids, messages = self.import_(['value'], trues)
         self.assertEqual(len(ids), 10)
         self.assertEqual(messages, [
-            message(u"Unknown value '%s' for boolean field 'value', assuming 'yes'" % v[0],
+            message(u"Unknown value '%s' for boolean field 'unknown', assuming 'yes'" % v[0],
                     type='warning', from_=i, to_=i, record=i)
             for i, v in enumerate(trues)
             if v[0] != 'true' if v[0] != 'yes' if v[0] != '1'
@@ -460,7 +460,7 @@ class test_selection(ImporterCase):
             'rows': {'from': 0, 'to': 0},
             'record': 0,
             'field': 'value',
-            'message': "Value 'Baz' not found in selection field 'value'",
+            'message': "Value 'Baz' not found in selection field 'unknown'",
         }])
 
         ids, messages = self.import_(['value'], [[42]])
@@ -470,7 +470,7 @@ class test_selection(ImporterCase):
             'rows': {'from': 0, 'to': 0},
             'record': 0,
             'field': 'value',
-            'message': "Value '42' not found in selection field 'value'",
+            'message': "Value '42' not found in selection field 'unknown'",
         }])
 
 class test_selection_function(ImporterCase):
@@ -583,7 +583,7 @@ class test_m2o(ImporterCase):
         ids, messages = self.import_(['value'], [[name2]])
         self.assertEqual(
             messages,
-            [message(u"Found multiple matches for field 'value' (2 matches)",
+            [message(u"Found multiple matches for field 'unknown' (2 matches)",
                      type='warning')])
         self.assertEqual(len(ids), 1)
         self.assertEqual([
@@ -607,7 +607,7 @@ class test_m2o(ImporterCase):
                 [integer_id1],
         ])
         self.assertEqual(messages, [
-            message(u"No matching record found for name '%s' in field 'value'" % id,
+            message(u"No matching record found for name '%s' in field 'unknown'" % id,
                     from_=index, to_=index, record=index)
             for index, id in enumerate([integer_id1, integer_id2, integer_id1])])
         self.assertIs(ids, False)
@@ -626,19 +626,19 @@ class test_m2o(ImporterCase):
         ids, messages = self.import_(['value'], [['nameisnoexist:3']])
         self.assertEqual(messages, [message(
             u"No matching record found for name 'nameisnoexist:3' "
-            u"in field 'value'")])
+            u"in field 'unknown'")])
         self.assertIs(ids, False)
 
         ids, messages = self.import_(['value/id'], [['noxidhere']])
         self.assertEqual(messages, [message(
             u"No matching record found for external id 'noxidhere' "
-            u"in field 'value'")])
+            u"in field 'unknown'")])
         self.assertIs(ids, False)
 
         ids, messages = self.import_(['value/.id'], [['66']])
         self.assertEqual(messages, [message(
             u"No matching record found for database id '66' "
-            u"in field 'value'")])
+            u"in field 'unknown'")])
         self.assertIs(ids, False)
 
     def test_fail_multiple(self):
@@ -646,7 +646,7 @@ class test_m2o(ImporterCase):
             ['value', 'value/id'],
             [['somename', 'somexid']])
         self.assertEqual(messages, [message(
-            u"Ambiguous specification for field 'value', only provide one of "
+            u"Ambiguous specification for field 'unknown', only provide one of "
             u"name, external id or database id")])
         self.assertIs(ids, False)
 
@@ -690,7 +690,7 @@ class test_m2m(ImporterCase):
         ids, messages = self.import_(['value/.id'], [['42']])
         self.assertEqual(messages, [message(
             u"No matching record found for database id '42' in field "
-            u"'value'")])
+            u"'unknown'")])
         self.assertIs(ids, False)
 
     def test_xids(self):
@@ -716,7 +716,7 @@ class test_m2m(ImporterCase):
         ids, messages = self.import_(['value/id'], [['noxidforthat']])
         self.assertEqual(messages, [message(
             u"No matching record found for external id 'noxidforthat' "
-            u"in field 'value'")])
+            u"in field 'unknown'")])
         self.assertIs(ids, False)
 
     def test_names(self):
@@ -745,7 +745,7 @@ class test_m2m(ImporterCase):
         ids, messages = self.import_(['value'], [['wherethem2mhavenonames']])
         self.assertEqual(messages, [message(
             u"No matching record found for name 'wherethem2mhavenonames' in "
-            u"field 'value'")])
+            u"field 'unknown'")])
         self.assertIs(ids, False)
 
     def test_import_to_existing(self):
@@ -778,7 +778,7 @@ class test_o2m(ImporterCase):
             ['const', 'value'],
             [['5', s]])
         self.assertEqual(messages, [message(
-            u"No matching record found for name '%s' in field 'value'" % s)])
+            u"No matching record found for name '%s' in field 'unknown'" % s)])
         self.assertIs(ids, False)
 
     def test_single(self):
