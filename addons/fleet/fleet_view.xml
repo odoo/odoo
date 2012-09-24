@@ -92,6 +92,28 @@
                             <page string="Repairing">
                                 <field name="next_repair_km" />
                             </page>
+                            <page string="Fuel Logs">
+                                <field name="log_fuel">
+                                    <tree string="Fuel Logs">
+                                        <field name="create_date" />
+                                        <field name="type"/>
+                                        <field name="employee_id" />
+                                        <field name="description" />
+                                    </tree>
+                                    <form string="Fuel Logs" version="7.0">
+                                        <sheet>
+                                            <group>
+                                                <field name="type" default="Fuel"/>
+                                                <field name="create_date" />
+                                                <field name="employee_id" />
+                                                <field name="liter" />
+                                                <field name="price_per_liter" />
+                                                <field name="description" />
+                                            </group>
+                                        </sheet>
+                                    </form>
+                                </field>
+                            </page>
                             <page string="Logs">
                                 <field name="log_ids">
                                     <tree string="Logs">

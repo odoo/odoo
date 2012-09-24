@@ -54,6 +54,7 @@ class fleet_vehicle(osv.Model):
         'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Logs'),
+        'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
@@ -109,7 +110,7 @@ class fleet_vehicle_log(osv.Model):
         'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
 
-        'create_date' : fields.datetime('Creation Date', readonly=True),
+        'create_date' : fields.datetime('Creation Date'),
 
         'description' : fields.text('Description'),
         'type' : fields.many2one('fleet.vehicle.log.type', 'Type', required=True),
@@ -122,6 +123,8 @@ class fleet_vehicle_log_fuel(osv.Model):
     _name = 'fleet.vehicle.log.fuel'
     _columns = {
         'description' : fields.text('Description'),
+        'liter' : fields.integer('Liter'),
+        'price_per_liter' : fields.float('Price per liter'),
     }
 
 class fleet_vehicle_log_insurance(osv.Model):
