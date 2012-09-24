@@ -46,6 +46,8 @@ class fleet_vehicle_model_brand(osv.Model):
 
 class fleet_vehicle(osv.Model):
 
+    _inherit = 'mail.thread'
+
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -166,7 +168,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.function(_get_price, type='float', multi='fuel', string='Fuel Amount'),
         'type' : fields.char('Type', size=32),
-        'invoice' : fields.many2one('account.invoice', 'Invoice', required=False, help='Invoice of the refueling log'),
+        'inv_ref' : fields.char('Invoice Ref.', size=32),
     }
     _defaults = {'type': 'Refueling',}
 

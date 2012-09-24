@@ -5,7 +5,6 @@
     'depends' : [
         'base',
         'hr',
-        'account',
     ],
     'author' : 'OpenERP S.A.',
     'description' : """
