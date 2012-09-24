@@ -1102,7 +1102,6 @@ class task(base_stage, osv.osv):
         task_id = super(task, self).create(cr, uid, vals, context=context)
         project_obj = self.pool.get("project.project")
         project_id = self.browse(cr, uid, task_id, context=context).project_id
-        print "project_id"
         if project_id:
             follower_ids = project_obj.browse(cr, uid, project_id.id, context=context).message_follower_ids
             followers = [follower.id for follower in follower_ids]
