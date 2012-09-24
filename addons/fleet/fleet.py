@@ -45,10 +45,31 @@ class fleet_vehicle_model_brand(osv.Model):
     }
 
 class fleet_vehicle(osv.Model):
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            if record.registration:
+                name = record.registration
+            if record.model_id:
+                name = record.model_id.brand.name+' / '+record.model_id.modelname + ' / ' + name
+            res.append((record.id, name))
+        return res
+
+    def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
 
     _columns = {
+        'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'registration' : fields.char('Registration', size=32, required=False, help='Registration number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
@@ -113,9 +134,10 @@ class fleet_vehicle_log(osv.Model):
         'create_date' : fields.datetime('Creation Date'),
 
         'description' : fields.text('Description'),
-        'type' : fields.many2one('fleet.vehicle.log.type', 'Type', required=True),
-
-
+        'type' : fields.char('Type', size=32, required=False),
+    }
+    _defaults = {
+            'type' : 'Log',
     }
 
 class fleet_vehicle_log_fuel(osv.Model):
@@ -125,6 +147,10 @@ class fleet_vehicle_log_fuel(osv.Model):
         'description' : fields.text('Description'),
         'liter' : fields.integer('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
+        'type' : fields.char('Type', size=32, required=False),
+    }
+    _defaults = {
+            'type' : 'Fuel',
     }
 
 class fleet_vehicle_log_insurance(osv.Model):
