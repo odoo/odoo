@@ -6,20 +6,168 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-09-20 07:29+0000\n"
 "PO-Revision-Date: 2012-05-10 17:46+0000\n"
 "Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-07 04:58+0000\n"
-"X-Generator: Launchpad (build 15914)\n"
+"X-Launchpad-Export-Date: 2012-09-22 04:56+0000\n"
+"X-Generator: Launchpad (build 15985)\n"
 
 #. module: sale
-#: field:sale.config.picking_policy,timesheet:0
-msgid "Based on Timesheet"
-msgstr "Zaman Çizelgesine Bağlı"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:215
+#, python-format
+msgid "Advance Invoice"
+msgstr "Fatura Peşinatı"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_confirmquotation0
+msgid "Confirm Quotation"
+msgstr "Teklifi Onayla"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales Dashboard"
+msgstr "Satış Kontrol Paneli"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"    </p>\n"
+"\n"
+"    <p>\n"
+"    You can view the ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} document, download it and pay online using the "
+"following link:\n"
+"    </p>\n"
+"            <a style=\"display:block; width: 150px; height:20px; margin-"
+"left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, "
+"sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-"
+"decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
+"background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat "
+"no-repeat;\"\n"
+"               href=\"${ctx.get('edi_web_url_view') or ''}\">View Order</a>\n"
+"\n"
+"    % if object.order_policy in ('prepaid','manual') and "
+"object.company_id.paypal_account and object.state not in ('draft', 'sent'):\n"
+"    <%\n"
+"    comp_name = quote(object.company_id.name)\n"
+"    order_name = quote(object.name)\n"
+"    paypal_account = quote(object.company_id.paypal_account)\n"
+"    order_amount = quote(str(object.amount_total))\n"
+"    cur_name = quote(object.pricelist_id.currency_id.name)\n"
+"    paypal_url = \"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20Order%%20%s\" \\\n"
+"       "
+"\"&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=servi"
+"ces&amp;no_note=1\" \\\n"
+"       \"&amp;bn=OpenERP_Order_PayNow_%s\" % \\\n"
+"       "
+"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+"e)\n"
+"    %>\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
+msgid "Order Lines to Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Onaylama Tarihi"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: view:sale.report:0
+msgid "Group By..."
+msgstr "Gruplandır..."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -31,62 +179,345 @@ msgstr ""
 "Satış Siparişi Satırı"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-msgid "Sales by Salesman in last 90 days"
-msgstr "Satış elemanına göre son 90 gündeki satışlar"
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Tahsisli Paydaş"
 
 #. module: sale
-#: help:sale.order,picking_policy:0
-msgid ""
-"If you don't have enough stock available to deliver all at once, do you "
-"accept partial shipments or not?"
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+msgid "Invoice Order"
 msgstr ""
-"Tek seferde teslimat için yeterli stok yoksa parçalı teslimat yapılmasını "
-"kabul eder misiniz ?"
+
+#. module: sale
+#: help:sale.config.settings,group_sale_delivery_address:0
+msgid ""
+"Allows you to specify different delivery and invoice addresses on a sale "
+"order."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:160
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:162
+#, python-format
+msgid "Advance of %s %s"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Contract Feature"
+msgstr ""
+
+#. module: sale
+#: field:sale.report,state:0
+msgid "Order State"
+msgstr "Sipariş Durumu"
+
+#. module: sale
+#: help:sale.config.settings,module_account_analytic_analysis:0
+msgid ""
+"Allows to define your customer contracts conditions: invoicing\n"
+"            method (fixed price, on timesheet, advance invoice), the exact "
+"pricing\n"
+"            (650€/day for a developer), the duration (one year support "
+"contract).\n"
+"            You will be able to follow the progress of the contract and "
+"invoice automatically.\n"
+"            It installs the account_analytic_analysis module."
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "UoS"
-msgstr "Servis Birimi"
+#: view:sale.order.line:0
+msgid "To Invoice"
+msgstr "Faturalandırılacak"
 
 #. module: sale
-#: help:sale.order,partner_shipping_id:0
-msgid "Shipping address for current sales order."
-msgstr "Seçili satış siparişi için teslimat adresi"
+#: view:sale.order.line:0
+#: field:sale.report,product_uom:0
+msgid "Unit of Measure"
+msgstr ""
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
-msgid "Quantity"
-msgstr "Miktar"
+#: help:sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr "Satış siparişinin onaylandığı tarih."
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,day:0
-msgid "Day"
-msgstr "Gün"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:sale.order:0
+#: view:sale.report:0
+msgid "Quotations"
+msgstr "Teklifler"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "March"
+msgstr "Mart"
+
+#. module: sale
+#: code:addons/sale/sale.py:558
+#, python-format
+msgid "First cancel all invoices attached to this sales order."
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoice the whole sale order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,project_id:0
+msgid "Contract/Analytic Account"
+msgstr "Sözleşme/Analiz Hesabı"
+
+#. module: sale
+#: field:sale.order,company_id:0
+#: field:sale.order.line,company_id:0
+#: view:sale.report:0
+#: field:sale.report,company_id:0
+#: field:sale.shop,company_id:0
+msgid "Company"
+msgstr "Firma"
+
+#. module: sale
+#: field:sale.make.invoice,invoice_date:0
+msgid "Invoice Date"
+msgstr "Fatura Tarihi"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "Faturalanmamış ve Teslim edilmiş Öğeler"
+
+#. module: sale
+#: help:sale.advance.payment.inv,amount:0
+msgid "The amount to be invoiced in advance."
+msgstr "Önceden faturalanacak miktar."
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Invoice Exception"
+msgstr "Fatura İstisnası"
+
+#. module: sale
+#: view:account.config.settings:0
+msgid "0"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Draft Quotation"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
+#, python-format
+msgid ""
+"You cannot make an advance on a sales order                          that is "
+"defined as 'Automatic Invoice after delivery'."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,amount_total:0
+msgid "The total amount."
+msgstr "Toplam Miktar."
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,analytic_account_id:0
+#: field:sale.shop,project_id:0
+msgid "Analytic Account"
+msgstr "Analiz Hesabı"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_journal:0
+msgid "Allow batch invoicing of delivery orders through journals"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Ara Toplam"
+
+#. module: sale
+#: field:sale.config.settings,group_discount_per_so_line:0
+msgid "Allow setting a discount on the sale order lines"
+msgstr ""
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
-#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Siparişi İptal Et"
 
 #. module: sale
-#: code:addons/sale/sale.py:638
-#, python-format
-msgid "The quotation '%s' has been converted to a sales order."
-msgstr "'%s' Teklifi satış siparişine çevrildi."
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Ağırlık"
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Warehouse Features"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "Print Quotation"
-msgstr "Teklifi Yazdır"
+msgid "Quotation "
+msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:148
 #, python-format
-msgid "Warning !"
-msgstr "Uyarı"
+msgid "Incorrect Data"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr ""
+
+#. module: sale
+#: help:sale.advance.payment.inv,advance_payment_method:0
+msgid ""
+"Use All to create the final invoice.\n"
+"                Use Percentage to invoice a percentage of the total amount.\n"
+"                Use Fixed Price to invoice a specific amound in advance.\n"
+"                Use Some Order Lines to invoice a selection of the sale "
+"order lines."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale Order"
+msgstr "Satış Siparişi"
+
+#. module: sale
+#: field:sale.order,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "September"
+msgstr "Eylül"
+
+#. module: sale
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr "Vergiler"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Vergilendirilmemiş Tutar"
+
+#. module: sale
+#: field:sale.config.settings,module_project:0
+msgid "Project"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:319
+#: code:addons/sale/sale.py:459
+#: code:addons/sale/sale.py:591
+#: code:addons/sale/sale.py:765
+#: code:addons/sale/sale.py:782
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:123
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Net Total :"
+msgstr "Net Toplam :"
+
+#. module: sale
+#: help:sale.config.settings,module_analytic_user_function:0
+msgid ""
+"Allows you to define what is the default function of a specific user on a "
+"given account.\n"
+"                This is mostly used when a user encodes his timesheet. The "
+"values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still "
+"available.\n"
+"                This installs the module analytic_user_function."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "İptal edildi"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sales Order Lines related to a Sales Order of mine"
+msgstr "Benim Satış Siparişlerimle ilişkili Satış Siparişi Öğeleri"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Quotation Sent"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_total:0
+#: view:sale.order.line:0
+msgid "Total"
+msgstr "Toplam"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: field:sale.order,shop_id:0
+#: view:sale.report:0
+#: field:sale.report,shop_id:0
+msgid "Shop"
+msgstr "Mağaza"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree2
+msgid "Sales in Exception"
+msgstr "İstisnai Satışlar"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Fatura Adresi"
+
+#. module: sale
+#: help:sale.order,create_date:0
+msgid "Date on which sales order is created."
+msgstr "Satış siparişinin oluşturulduğu tarih"
+
+#. module: sale
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Invoice"
+msgstr "Faturayı Yeniden Oluştur"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create Invoices"
+msgstr "Faturaları Oluştur"
 
 #. module: sale
 #: report:sale.order:0
@@ -94,76 +525,647 @@ msgid "Tax"
 msgstr ""
 
 #. module: sale
-#: model:process.node,note:sale.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr "Her Satış siparişi kalemi için üretim emirlerini sürer."
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,analytic_account_id:0
-#: field:sale.shop,project_id:0
-msgid "Analytic Account"
-msgstr "Analiz Hesabı"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_line_tree2
-msgid ""
-"Here is a list of each sales order line to be invoiced. You can invoice "
-"sales orders partially, by lines of sales order. You do not need this list "
-"if you invoice from the delivery orders or if you invoice sales totally."
-msgstr ""
-"Bu listede faturalacak satış sipariş kalemleri bulunuyor. Sipariş "
-"kalemlerinin bir kısmını  faturalayabilirsiniz. Teslimatalara bağlı "
-"faturalama ya da tüm siparişi topluca faturalama yöntemlerini "
-"kullanıyorsanız bu listeye gereksiniminiz bulunmuyor."
-
-#. module: sale
-#: code:addons/sale/sale.py:295
+#: code:addons/sale/sale.py:986
 #, python-format
-msgid ""
-"In order to delete a confirmed sale order, you must cancel it before ! To "
-"cancel a sale order, you must first cancel related picking or delivery "
-"orders."
+msgid "Invalid Action!"
 msgstr ""
-"Onaylanmış bir satış siparişini silmek için önce onu iptal etmelisiniz! Bir "
-"satış siparişini iptal etmek için önce ilgili toplama ve telimat emirlerini "
-"iptal etmelisiniz."
 
 #. module: sale
-#: model:process.node,name:sale.process_node_saleprocurement0
-msgid "Procurement Order"
-msgstr "Satınalma Siparişi"
+#: view:sale.report:0
+msgid "Reference Unit of Measure"
+msgstr ""
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,partner_id:0
-msgid "Partner"
-msgstr "İş ortağı"
+#: field:sale.report,date_confirm:0
+msgid "Date Confirm"
+msgstr "Onay Tarihi"
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Teslimatlara bağlı fatura"
+#: view:sale.report:0
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "Öğe #"
+
+#. module: sale
+#: help:sale.order,message_summary:0
+msgid ""
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr "Miktar #"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Fax :"
+msgstr "Faks:"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Order Line"
-msgstr "Sipariş Kalemi"
+msgid "(update)"
+msgstr ""
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_form
-msgid ""
-"Sales Orders help you manage quotations and orders from your customers. "
-"OpenERP suggests that you start by creating a quotation. Once it is "
-"confirmed, the quotation will be converted into a Sales Order. OpenERP can "
-"handle several types of products so that a sales order may trigger tasks, "
-"delivery orders, manufacturing orders, purchases and so on. Based on the "
-"configuration of the sales order, a draft invoice will be generated so that "
-"you just have to confirm it when you want to bill your customer."
+#: help:sale.config.settings,group_discount_per_so_line:0
+msgid "Allows you to apply some discount per sale order line."
 msgstr ""
-"Satış siparişleri müşterilerinizin fiyat teklifleri ve siparişlerini "
-"yönetmenize yardımcı olur. OpenERP öncelikle fiyat teklifi oluşturarak "
-"başlamanızı öneriyor. Fiyat teklifi onaylandıktan sonra satış siparişine "
-"çevrilecektir. Satış siparişi sonrasında bir taslak fatura oluşturulacak ve "
-"müşteriye fatura edilmeden önce onaylanması gerekecektir."
+
+#. module: sale
+#: code:addons/sale/sale.py:578
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_order0
+#: model:process.node,name:sale.process_node_saleorder0
+#: field:res.partner,sale_order_ids:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#, python-format
+msgid "Sales Order"
+msgstr "Satış Siparişi"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "Miktar (Satış Birimi)"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale Order Lines that are in 'done' state"
+msgstr "'Yapıldı' durumundaki Satış Sipariş Öğeleri"
+
+#. module: sale
+#: field:sale.advance.payment.inv,amount:0
+msgid "Advance Amount"
+msgstr "Peşinat Tutarı"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Onaylı"
+
+#. module: sale
+#: field:sale.config.settings,module_analytic_user_function:0
+msgid "One employee can have different roles per contract"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,note:0
+msgid "Terms and conditions"
+msgstr ""
+
+#. module: sale
+#: field:sale.shop,payment_default_id:0
+msgid "Default Payment Term"
+msgstr "Varsayılan Ödeme Şartı"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_confirm0
+#: view:sale.order:0
+msgid "Confirm"
+msgstr "Onayla"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Unread messages"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr "Sevkiyat Adresi"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale Order Lines ready to be invoiced"
+msgstr "Faturalandırılmaya hazır Satış Siparişi Satırları"
+
+#. module: sale
+#: view:account.invoice.report:0
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_turnover_by_month
+msgid "Monthly Turnover"
+msgstr "Aylık Gelir"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,year:0
+msgid "Year"
+msgstr "Yıl"
+
+#. module: sale
+#: field:sale.config.settings,group_uom:0
+msgid "Allow using different units of measures"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order that haven't yet been confirmed"
+msgstr "Henüz onaylanmamış Satış Siparişi"
+
+#. module: sale
+#: field:sale.order,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Print"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Order N°"
+msgstr "Sipariş N°"
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "Sipariş Öğeleri"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Disc.(%)"
+msgstr "İnd.(%)"
+
+#. module: sale
+#: field:sale.order,name:0
+#: field:sale.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Sipariş Referansı"
+
+#. module: sale
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Fatura Öğeleri"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,price_total:0
+msgid "Total Price"
+msgstr "Toplam Fiyat"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+msgid "Old Quotations"
+msgstr "Eski Teklifleri"
+
+#. module: sale
+#: help:sale.config.settings,module_sale_journal:0
+msgid ""
+"Allows you to categorize your sales and deliveries (picking lists) between "
+"different journals,\n"
+"                and perform batch operations on journals.\n"
+"                This installs the module sale_journal."
+msgstr ""
+
+#. module: sale
+#: help:sale.make.invoice,grouped:0
+msgid "Check the box to group the invoices for the same customers"
+msgstr "Aynı müşteriye ait faturaları gruplamak için işaretleyin"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
+#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+msgid "Make Invoices"
+msgstr "Faturaları Yap"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.actions_server_sale_order_read
+msgid "Mark read"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/res_config.py:89
+#, python-format
+msgid "Hour"
+msgstr "Saat"
+
+#. module: sale
+#: field:res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,timesheet:0
+msgid ""
+"For modifying account analytic view to show important data to project "
+"manager of services companies.\n"
+"                You can also view the report of account analytic summary "
+"user-wise as well as month wise.\n"
+"                This installs the module account_analytic_analysis."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,create_date:0
+msgid "Creation Date"
+msgstr "Oluşturma Tarihi"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr "Bekleyen Planlama"
+
+#. module: sale
+#: help:sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr "Şu anki sipariş için fatura adresi."
+
+#. module: sale
+#: selection:sale.order,invoice_quantity:0
+msgid "Ordered Quantities"
+msgstr "Sipariş edilen Miktarlar"
+
+#. module: sale
+#: view:sale.report:0
+msgid "Ordered Year of the sales order"
+msgstr "Satış siparişlerinin Veriliş Yılı"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_stock:0
+msgid "Sale and Warehouse Management"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_config_settings
+msgid "sale.config.settings"
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,qtty:0
+#: report:sale.order:0
+#: field:sale.order.line,product_uom_qty:0
+msgid "Quantity"
+msgstr "Miktar"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Total :"
+msgstr "Toplam :"
+
+#. module: sale
+#: view:sale.report:0
+msgid "My Sales"
+msgstr "Satışlarım"
+
+#. module: sale
+#: code:addons/sale/sale.py:253
+#: code:addons/sale/sale.py:822
+#, python-format
+msgid "Invalid action !"
+msgstr "Geçersiz İşlem !"
+
+#. module: sale
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Mali Durum"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "July"
+msgstr "Temmuz"
+
+#. module: sale
+#: field:account.config.settings,module_sale_analytic_plans:0
+msgid "Several analytic accounts on sales"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Default Options"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:963
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:138
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
+#, python-format
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: sale
+#: field:account.config.settings,group_analytic_account_for_sales:0
+msgid "Analytic accounting for sales"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "UoS"
+msgstr "Satış Birimi"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid ""
+"After clicking 'Show Lines to Invoice', select lines to invoice and create "
+"the invoice from the 'More' dropdown menu."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/edi/sale_order.py:151
+#, python-format
+msgid "EDI Pricelist (%s)"
+msgstr "EDI Fiyat Listesi (%s)"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation or sale order for this "
+"customer.\n"
+"              </p><p>\n"
+"                OpenERP will help you efficiently handle the complete sale "
+"flow:\n"
+"                quotation, sale order, delivery, invoicing and\n"
+"                payment.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each "
+"sale\n"
+"                order, and allow your customer to keep track of the "
+"evolution\n"
+"                of the sale order.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Invoicing Process"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Quotation Date"
+msgstr "Teklif Tarihi"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Order Date"
+msgstr "Sipariş Tarihi"
+
+#. module: sale
+#: help:sale.order,order_policy:0
+msgid ""
+"This field controls how invoice and delivery operations are synchronized.\n"
+"  - With 'Before Delivery', a draft invoice is created, and it must be paid "
+"before delivery."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order done"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:320
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: view:res.partner:0
+msgid "Quotations and Sales"
+msgstr "Teklifler ve Satışlar"
+
+#. module: sale
+#: help:sale.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_partner
+#: view:sale.report:0
+#: field:sale.report,partner_id:0
+msgid "Partner"
+msgstr "Paydaş"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid "Create and View Invoice"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:655
+#, python-format
+msgid "Sale Order for <em>%s</em> has been <b>done</b>"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new sale shop.\n"
+"              </p><p>\n"
+"                Each quotation or sale order must be linked to a shop. The\n"
+"                shop also defines the warehouse from which the products will "
+"be\n"
+"                delivered for each particular sales.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr "Satış Fatura oluşturur"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_tree5
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation, the first step of a new sale.\n"
+"              </p><p>\n"
+"                OpenERP will help you handle efficiently the complete sale "
+"flow:\n"
+"                from the quotation to the sale order, the\n"
+"                delivery, the invoicing and the payment collection.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each "
+"sale\n"
+"                order, and allow your customers to keep track of the "
+"evolution\n"
+"                of the sale order.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "İndirim (%)"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:111
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sales Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sales Order Line is Invoiced!"
+msgstr ""
+"Aşağıdaki nedenlerden dolayı bu satış sipariş öğesi için fatura "
+"oluşturulamamaktadır:\n"
+"1.Satış sipariş öğesinin durumu \"taslak\" ya da \"iptal\" olarak "
+"belirlenmiştir.\n"
+"2.Satış sipariş öğesi zaten faturalanmıştır."
+
+#. module: sale
+#: code:addons/sale/sale.py:783
+#, python-format
+msgid ""
+"There is no Fiscal Position defined or Income category account defined for "
+"default properties of Product categories."
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale order lines done"
+msgstr "Yapılan satış siparişi öğeleri"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
+msgid "My Quotations"
+msgstr "Tekliflerim"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid "Invoice Sale Order"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "December"
+msgstr "Aralık"
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Contracts Management"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Shipped"
+msgstr "Gönderildi"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,month:0
+msgid "Month"
+msgstr "Ay"
+
+#. module: sale
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr "${object.company_id.name} Satınalma (Ref ${object.name or 'n/a' })"
+
+#. module: sale
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "Sıra No"
+
+#. module: sale
+#: code:addons/sale/sale.py:591
+#, python-format
+msgid "You cannot confirm a sale order which has no line."
+msgstr "Hiç öğesi olmayan bir satış siparişini onaylayamazsınız."
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Uninvoiced"
+msgstr "Faturalanmamış"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,categ_id:0
+msgid "Category of Product"
+msgstr "Ürün Kategorisi"
+
+#. module: sale
+#: code:addons/sale/sale.py:557
+#, python-format
+msgid "Cannot cancel this sales order!"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,invoice_exists:0
+msgid "It indicates that sale order has at least one invoice."
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_warning:0
+msgid "Allow configuring alerts by customer or products"
+msgstr ""
+
+#. module: sale
+#: field:sale.shop,name:0
+msgid "Shop Name"
+msgstr "Mağaza Adı"
+
+#. module: sale
+#: code:addons/sale/sale.py:253
+#, python-format
+msgid ""
+"In order to delete a confirmed sale order, you must cancel it before !"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Taxes :"
+msgstr "Vergiler :"
+
+#. module: sale
+#: code:addons/sale/sale.py:658
+#, python-format
+msgid "Invoice has been <b>paid</b>."
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_analytic_accounting
+msgid "Analytic Accounting for Sales"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Peşin Ödemeli Satış Faturası"
+
+#. module: sale
+#: model:ir.actions.client,name:sale.action_client_sale_menu
+msgid "Open Sale Menu"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "In Progress"
+msgstr "İşlemde"
+
+#. module: sale
+#: code:addons/sale/sale.py:867
+#, python-format
+msgid "No Customer Defined !"
+msgstr "Tanımlı müşteri yok!"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create invoices"
+msgstr "Faturaları Oluştur"
 
 #. module: sale
 #: help:sale.order,invoice_quantity:0
@@ -181,1905 +1183,30 @@ msgstr ""
 "görev için geçirilen saat miktarı baz alınmalıdır."
 
 #. module: sale
-#: field:sale.shop,payment_default_id:0
-msgid "Default Payment Term"
-msgstr "Öntanımlı Ödeme Şartı"
-
-#. module: sale
-#: field:sale.config.picking_policy,deli_orders:0
-msgid "Based on Delivery Orders"
-msgstr "Teslimat Emirlerine Bağlı"
-
-#. module: sale
-#: field:sale.config.picking_policy,time_unit:0
-msgid "Main Working Time Unit"
-msgstr "Ana Çalışma Süresi Birimi"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
-#: view:sale.report:0
-msgid "State"
-msgstr "Durum"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Disc.(%)"
-msgstr "İnd.(%)"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,price_total:0
-msgid "Total Price"
-msgstr "Toplam Fiyat"
-
-#. module: sale
-#: help:sale.make.invoice,grouped:0
-msgid "Check the box to group the invoices for the same customers"
-msgstr "Aynı müşteriye ait faturaları gruplamak için işaretleyin"
-
-#. module: sale
-#: view:sale.order:0
-msgid "My Sale Orders"
-msgstr "Satış Siparişlerim"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Ordered Quantities"
-msgstr "Sipariş alınan miktar"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Salesman"
-msgstr "Satış elemanına göre satışlar"
-
-#. module: sale
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Stok Hareketleri"
-
-#. module: sale
-#: field:sale.order,name:0 field:sale.order.line,order_id:0
-msgid "Order Reference"
-msgstr "Sipariş Referansı"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Other Information"
-msgstr "Diğer Bilgiler"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Tarihler"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
+#, python-format
+msgid "Advance of %s %%"
 msgstr ""
-"Teslimat politikası 'Paketlemeye göre faturalama' ya da 'Teslimat sonrası "
-"siparişten faturalama' ise faturalar otomatikman yaratılacak."
-
-#. module: sale
-#: field:sale.config.picking_policy,task_work:0
-msgid "Based on Tasks' Work"
-msgstr "Görevlerin İşine Bağlı"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-msgid "Quotations and Sales"
-msgstr "Teklifler ve Satışlar"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_make_invoice
-msgid "Sales Make Invoice"
-msgstr "Satış faturalarını oluştur"
-
-#. module: sale
-#: code:addons/sale/sale.py:330
-#, python-format
-msgid "Pricelist Warning!"
-msgstr "Fiyat Listesi Uyarısı!"
-
-#. module: sale
-#: field:sale.order.line,discount:0
-msgid "Discount (%)"
-msgstr "İndirim (%)"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
-msgid "My Quotations"
-msgstr "Tekliflerim (Bana Ait)"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Manager Dashboard"
-msgstr "Satış Müdürü Kontrol Paneli"
-
-#. module: sale
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Paketleme"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleinvoice0
-msgid "From a sales order"
-msgstr "Bir Satış siparişinden"
-
-#. module: sale
-#: field:sale.shop,name:0
-msgid "Shop Name"
-msgstr "Mağaza Adı"
-
-#. module: sale
-#: help:sale.order,order_policy:0
-msgid ""
-"The Invoice Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and "
-"then generate the picking order after the payment of this invoice.\n"
-"  - The 'Deliver & Invoice on demand' will create the picking order directly "
-"and wait for the user to manually click on the 'Invoice' button to generate "
-"the draft invoice based on the sale order or the sale order lines.\n"
-"  - The 'Invoice on order after delivery' choice will generate the draft "
-"invoice based on sales order after all picking lists have been finished.\n"
-"  - The 'Invoice based on deliveries' choice is used to create an invoice "
-"during the picking process."
-msgstr ""
-"Fatura Politikası fatura ve teslimat işlemlerini senkronize etmek için "
-"kullanılır.\n"
-"  - 'Teslimattan önce öde' seçimi önce faturayı oluşturur ve sonra faturanın "
-"ödenmesi üzerine toplama emrini oluşturur.\n"
-"  - 'Teslim et & istenirse Fatura kes' toplama emrini doğrudan oluşturacak "
-"ve kullanıcının elle 'Fatura' düğmesini tıklayarak satış siparişine ve satış "
-"siparişi satırlarına göre fatura oluşturmasını bekleyecek.\n"
-"  - 'Sipariş tesliminde sonra Fatura' seçimi bütün toplama listeleri "
-"tamamlandıktan sonra satış siparişine göre taslak fatura oluşturacaktır.\n"
-"  - 'Teslimata dayalı fatura' seçimi toplama işlemi sırasında fatura "
-"oluşturmak için kullanılır."
-
-#. module: sale
-#: code:addons/sale/sale.py:1171
-#, python-format
-msgid "No Customer Defined !"
-msgstr "Herhangi bir müşteri tanımlanmadı !"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
-msgid "Sales in Exception"
-msgstr "İstisnai Satışlar"
-
-#. module: sale
-#: code:addons/sale/sale.py:1158 code:addons/sale/sale.py:1277
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
-#, python-format
-msgid "Configuration Error !"
-msgstr "Yapılandırma Hatası!"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Conditions"
-msgstr "Koşullar"
-
-#. module: sale
-#: code:addons/sale/sale.py:1034
-#, python-format
-msgid ""
-"There is no income category account defined in default Properties for "
-"Product Category or Fiscal Position is not defined !"
-msgstr ""
-"Varsayılan Ürün Kategori Özelliklerinde kategori gelir hesabı yok ya da Mali "
-"Konum  tanımlanmamış !"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "August"
-msgstr "Ağustos"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Aynı üründen olmayan bir parti atamaya çalışıyorsunuz"
-
-#. module: sale
-#: code:addons/sale/sale.py:655
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "test_durumu için geçersiz mod"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "June"
-msgstr "Haziran"
-
-#. module: sale
-#: code:addons/sale/sale.py:617
-#, python-format
-msgid "Could not cancel this sales order !"
-msgstr "Bu sipariş iptal edilemiyor!"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Satış Siparişi İstatistikleri"
-
-#. module: sale
-#: help:sale.order,project_id:0
-msgid "The analytic account related to a sales order."
-msgstr "Sipariş ile ilişkili döküm"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "October"
-msgstr "Ekim"
-
-#. module: sale
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "Referans her şirket için benzersiz olmalı!"
-
-#. module: sale
-#: view:board.board:0 view:sale.order:0 view:sale.report:0
-msgid "Quotations"
-msgstr "Teklifler"
-
-#. module: sale
-#: help:sale.order,pricelist_id:0
-msgid "Pricelist for current sales order."
-msgstr "Şu andaki sipariş için geçerli olan fiyat listesi"
-
-#. module: sale
-#: report:sale.order:0
-msgid "TVA :"
-msgstr "TVA :"
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
-msgstr ""
-"Siparişin onaylanması ile ürünlerin müşteriye gönderilmesi arasında geçen "
-"gün sayısı"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation Date"
-msgstr "Fiyat teklifinin verildiği gün"
-
-#. module: sale
-#: field:sale.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "Mali Durum"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
-msgid "UoM"
-msgstr "Ölçü Birimi"
-
-#. module: sale
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Paketleri numarala"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "In Progress"
-msgstr "İşlemde"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sales order becomes "
-"'In progress' or 'Manual in progress'."
-msgstr ""
-"Satıcı fiyat teklifini kabul etti. Siparişin durumu \"işlem devam ediyor\" "
-"olarak değiştirildi."
-
-#. module: sale
-#: code:addons/sale/sale.py:1074
-#, python-format
-msgid "You cannot cancel a sale order line that has already been invoiced!"
-msgstr ""
-"Halihazırda faturalandırılmış bir satış siparişi satırını iptal edemezsiniz!"
-
-#. module: sale
-#: code:addons/sale/sale.py:1079
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Öncelikle bu satış sipariş kalemine bağlı olan stok hareketlerini iptal "
-"etmelisiniz."
-
-#. module: sale
-#: code:addons/sale/sale.py:1147
-#, python-format
-msgid "(n/a)"
-msgstr "Uygulanabilir değil"
-
-#. module: sale
-#: help:sale.advance.payment.inv,product_id:0
-msgid ""
-"Select a product of type service which is called 'Advance Product'. You may "
-"have to create it and set it as a default value on this field."
-msgstr ""
-"'Ön Ürün' olarak adlandırılmış servis türüne bir ürün seçin. Bir tane "
-"oluştun ve bu alan için varsayılan olarak ayarlayın."
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tel. :"
-msgstr "Tel :"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:64
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                              "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"\"Teslimat sonrası otomatik fatura\" olarak belirlenmiş sipariş ile ilgili "
-"bir değişiklik yapamazsınız."
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
-#: field:sale.order.line,notes:0
-msgid "Notes"
-msgstr "Notlar"
-
-#. module: sale
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Şirket adı benzersiz olmalı !"
-
-#. module: sale
-#: help:sale.order,partner_invoice_id:0
-msgid "Invoice address for current sales order."
-msgstr "Şu anki sipariş için fatura adresi."
-
-#. module: sale
-#: view:sale.report:0
-msgid "Month-1"
-msgstr "Ay-1"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered month of the sales order"
-msgstr "Satış siparişlerinin verildiği ay"
-
-#. module: sale
-#: code:addons/sale/sale.py:504
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr ""
-"Aynı paydaş için farklı para birimlerindeki satışları gruplandıramazsınız."
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Her ürün hazır olduğunda teslim et"
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Faturalandı"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Teslimat Emri"
-
-#. module: sale
-#: field:sale.order,date_confirm:0
-msgid "Confirmation Date"
-msgstr "Onaylanma Tarihi"
-
-#. module: sale
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Teslim Sekli"
-
-#. module: sale
-#: field:sale.order.line,address_allotment_id:0
-msgid "Allotment Partner"
-msgstr "Tahsisli Paydaş"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "March"
-msgstr "Mart"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "Görünüm tipinde bir konuma ürün giriş çıkışı yapamazsınız."
-
-#. module: sale
-#: field:sale.config.picking_policy,sale_orders:0
-msgid "Based on Sales Orders"
-msgstr "Satış Siparişlerine bağlı"
-
-#. module: sale
-#: help:sale.order,amount_total:0
-msgid "The total amount."
-msgstr "Toplam Miktar"
-
-#. module: sale
-#: field:sale.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Ara Toplam"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Invoice address :"
-msgstr "Fatura Adresi:"
-
-#. module: sale
-#: field:sale.order.line,sequence:0
-msgid "Line Sequence"
-msgstr "Satır sırası"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-"Her satış siparişi sonrası, satılan ürünü temin edebilmek için "
-"tedarik/satınalma siparişi hazırlanır."
-
-#. module: sale
-#: help:sale.order,incoterm:0
-msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
-msgstr ""
-"Incoterm \"Uluslararası Ticari Terimler\"in kısaltması olup, teslim "
-"şekilleri ile ilgili terimleri içerir."
-
-#. module: sale
-#: field:sale.order,partner_invoice_id:0
-msgid "Invoice Address"
-msgstr "Fatura Adresi"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Search Uninvoiced Lines"
-msgstr "Faturalanmamış kalemlerde ara"
-
-#. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "Teklif / Sipariş"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "Kalem Sayısı"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_open_invoice
-msgid "Sales Open Invoice"
-msgstr "Açık Faturalı Satışlar"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "Satış Siparişi Kalemi"
-
-#. module: sale
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Depo"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Order N°"
-msgstr "Sipariş N°"
-
-#. module: sale
-#: field:sale.order,order_line:0
-msgid "Order Lines"
-msgstr "Sipariş Kalemleri"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Untaxed amount"
-msgstr "Vergilendirilmemiş Miktar"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree2
-#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
-msgid "Lines to Invoice"
-msgstr "Faturalanacak Kalemler"
-
-#. module: sale
-#: field:sale.order.line,product_uom_qty:0
-msgid "Quantity (UoM)"
-msgstr "Miktar (Ölçü Birimi)"
-
-#. module: sale
-#: field:sale.order,create_date:0
-msgid "Creation Date"
-msgstr "Oluşturulma Tarihi"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
-msgid "Miscellaneous"
-msgstr "Çeşitli"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree3
-msgid "Uninvoiced and Delivered Lines"
-msgstr "Teslim edilmiş ve Faturalanmamış Kalemler"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Total :"
-msgstr "Toplam :"
-
-#. module: sale
-#: view:sale.report:0
-msgid "My Sales"
-msgstr "Satışlarım"
-
-#. module: sale
-#: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Invalid action !"
-msgstr "Geçersiz İşlem !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Extra Info"
-msgstr "İlave Bilgi"
-
-#. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
-msgid "Pricelist"
-msgstr "Fiyat Listesi"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,product_uom_qty:0
-msgid "# of Qty"
-msgstr "Adet"
-
-#. module: sale
-#: code:addons/sale/sale.py:1327
-#, python-format
-msgid "Hour"
-msgstr "Saat"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Order Date"
-msgstr "Sipariş Tarihi"
-
-#. module: sale
-#: view:sale.order.line:0 view:sale.report:0 field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
-msgid "Shipped"
-msgstr "Gönderildi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Tüm Teklifler"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Options"
-msgstr "Seçenekler"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "September"
-msgstr "Eylül"
-
-#. module: sale
-#: code:addons/sale/sale.py:632
-#, python-format
-msgid "You cannot confirm a sale order which has no line."
-msgstr "Hiç satırı olmayan bir satış siparişini onaylayamazsınız."
-
-#. module: sale
-#: code:addons/sale/sale.py:1259
-#, python-format
-msgid ""
-"You have to select a pricelist or a customer in the sales form !\n"
-"Please set one before choosing a product."
-msgstr ""
-"Satış formunda bir fiyat listesi ya da müşteri seçmelisiniz!\n"
-"Ürünü seçmeden lütfen bir tanesini ayarlayın."
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,categ_id:0
-msgid "Category of Product"
-msgstr "Ürün Kategorisi"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Taxes :"
-msgstr "Vergi :"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Stock Moves"
-msgstr "Stok Hareketi"
-
-#. module: sale
-#: field:sale.order,state:0 field:sale.report,state:0
-msgid "Order State"
-msgstr "Sipariş Durumu"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr "Gerçekten fatura(ları) oluşturmak istiyor musunuz?"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales By Month"
-msgstr "Aylık Satışlar"
-
-#. module: sale
-#: code:addons/sale/sale.py:1078
-#, python-format
-msgid "Could not cancel sales order line!"
-msgstr "Satış sipariş kalemleri iptal edilemiyor!"
-
-#. module: sale
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Emniyet Günleri"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "Satılan malzemenin tedarik edilmesi"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Create Final Invoice"
-msgstr "Faturanın son halini oluştur"
-
-#. module: sale
-#: field:sale.order,partner_shipping_id:0
-msgid "Shipping Address"
-msgstr "Teslimat Adresi"
-
-#. module: sale
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
-msgstr ""
-"Satış siparişinin teslim edildiğini gösterir. Bu alan sadece iş düzenleyici "
-"başlatıldığı zaman güncellenir."
-
-#. module: sale
-#: field:sale.order,date_order:0
-msgid "Date"
-msgstr "Tarih"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Extended Filters..."
-msgstr "Genişletilmiş Filtreler"
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Exception"
-msgstr "İstisna"
-
-#. module: sale
-#: model:ir.model,name:sale.model_res_company
-msgid "Companies"
-msgstr "Şirketler"
-
-#. module: sale
-#: help:sale.order,state:0
-msgid ""
-"Gives the state of the quotation or sales order. \n"
-"The exception state is automatically set when a cancel operation occurs in "
-"the invoice validation (Invoice Exception) or in the picking list process "
-"(Shipping Exception). \n"
-"The 'Waiting Schedule' state is set when the invoice is confirmed but "
-"waiting for the scheduler to run on the order date."
-msgstr ""
-"Teklifin ya da satış siparişinin durumunu verir. \n"
-"İstisna durumu fatura doğrulamasında (Fatura İstisnası) iptal işlemi "
-"oluşursa otomatikman ayarlanır ya da toplama listesi işleminde (Naklie "
-"İstisnası). \n"
-"'Bekleyen Program) durumu fatura onaylandığında ama programcının sipariş "
-"tarihini çalıştırmasının beklendiğinde ayarlanır."
-
-#. module: sale
-#: code:addons/sale/sale.py:1272
-#, python-format
-msgid "No valid pricelist line found ! :"
-msgstr "Hiçbir fiyat listesi satırı bulunamadı!:"
-
-#. module: sale
-#: view:sale.order:0
-msgid "History"
-msgstr "Geçmiş"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice on order after delivery"
-msgstr "Teslimattan sonra sipariş faturası"
-
-#. module: sale
-#: help:sale.order,invoice_ids:0
-msgid ""
-"This is the list of invoices that have been generated for this sales order. "
-"The same sales order may have been invoiced in several times (by line for "
-"example)."
-msgstr ""
-"Bu liste satış siparişi için oluşturulmuş faturaların listesidir. Aynı satış "
-"siparişi birkaç kere faturalanmış olabilir (örneğin kaleme göre)"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Your Reference"
-msgstr "Referansınız"
-
-#. module: sale
-#: help:sale.order,partner_order_id:0
-msgid ""
-"The name and address of the contact who requested the order or quotation."
-msgstr "Sipariş ya da fiyat teklifini isteyen kişinin isim ve adresi."
-
-#. module: sale
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
-msgstr ""
-"Bu bölüm, güvenli olması için müşterilere söz verilecek teslimat süresine "
-"eklenecek gün sayısı."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Qty"
-msgstr "Mik."
-
-#. module: sale
-#: view:sale.order:0
-msgid "References"
-msgstr "Referanslar"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "My Sales Order Lines"
-msgstr "Satış Siparişlerimin Satırları"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
-#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
-#: view:sale.order.line:0 view:sale.order.line.make.invoice:0
-msgid "Cancel"
-msgstr "İptal"
-
-#. module: sale
-#: sql_constraint:sale.order:0
-msgid "Order Reference must be unique per Company!"
-msgstr "Sipariş Kaynağı Her Şirket İçin Eşsiz Olmalı!"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0 view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Fatura Oluştur"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Excluded"
-msgstr "KDV'siz Toplam"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order reference"
-msgstr "Sipariş Kaynağı"
-
-#. module: sale
-#: view:sale.open.invoice:0
-msgid "You invoice has been successfully created!"
-msgstr "Faturanız başarıyla oluşturuldu!"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Partner"
-msgstr "Paydaşa göre Satış"
-
-#. module: sale
-#: field:sale.order,partner_order_id:0
-msgid "Ordering Contact"
-msgstr "Sipariş veren Kişi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
-#: view:sale.open.invoice:0
-msgid "Open Invoice"
-msgstr "Açık Fatura"
-
-#. module: sale
-#: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
-msgid "Auto-email confirmed sale orders"
-msgstr "Oto*eposta onaylı satış siparişleri"
-
-#. module: sale
-#: code:addons/sale/sale.py:413
-#, python-format
-msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
-msgstr "Bu şirket için satış belgesi bulunmuyor: \"%s\" (id:%d)"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Güç Tahsisi"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "Sipariş"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "Gönderilen ya da sipariş edilen miktar esas alındı."
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Tüm ürünleri tek seferde teslim et"
-
-#. module: sale
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "İlgili paketleme"
-
-#. module: sale
-#: field:sale.config.picking_policy,name:0
-msgid "Name"
-msgstr "Ad"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Shipping address :"
-msgstr "Sevk Adresi :"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-msgid "Sales per Customer in last 90 days"
-msgstr "Son 90 gün için müşteri başına satış miktarı"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_quotation0
-msgid "Draft state of sales order"
-msgstr "Satış Siparişinin taslak hali"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "Nakliye Siparişi oluştur"
-
-#. module: sale
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Cannot delete a sales order line which is in state '%s'!"
-msgstr "'%s' durumundaki bir satış siparişi satırı silinemiyor!"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoS)"
-msgstr "Mik(Hizmet Birimi)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "KDV Dahil Toplam"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_packing0
-msgid "Create Pick List"
-msgstr "Paketleme listesi oluştur"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered date of the sales order"
-msgstr "Satış siparişinin veriliş tarihi"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Product Category"
-msgstr "Ürün Kategorisine göre satışlar"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_confirmquotation0
-msgid "Confirm Quotation"
-msgstr "Teklifi Onayla"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:63
-#, python-format
-msgid "Error"
-msgstr "Hata"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
-msgid "Group By..."
-msgstr "Grupla..."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Invoice"
-msgstr "Faturayı Yeniden Oluştur"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Faturalanacak Gönderiler"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Waiting Schedule"
-msgstr "Bekleme Takvimi"
-
-#. module: sale
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "Satınalma Yöntemi"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_packinglist0
-msgid "Pick List"
-msgstr "Seçim Listesi"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Set to Draft"
-msgstr "Taslağa  Ayarla"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "Çıkışa ya da müşteriyeyapılan hareket belgesi."
-
-#. module: sale
-#: model:email.template,body:sale.email_template_edi_sale
-msgid ""
-"\n"
-"Hello${object.partner_order_id.name and ' ' or "
-"''}${object.partner_order_id.name or ''},\n"
-"\n"
-"Here is your order confirmation for ${object.partner_id.name}:\n"
-"       | Order number: *${object.name}*\n"
-"       | Order total: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       | Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
-"and '<%s>'%(object.user_id.user_email) or ''}\n"
-"\n"
-"You can view the order confirmation, download it and even pay online using "
-"the following link:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"% if object.order_policy in ('prepaid','manual') and "
-"object.company_id.paypal_account:\n"
-"<% \n"
-"comp_name = quote(object.company_id.name)\n"
-"order_name = quote(object.name)\n"
-"paypal_account = quote(object.company_id.paypal_account)\n"
-"order_amount = quote(str(object.amount_total))\n"
-"cur_name = quote(object.pricelist_id.currency_id.name)\n"
-"paypal_url = \"https://www.paypal.com/cgi-"
-"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
-"unt=%s\" \\\n"
-"             "
-"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
-"_%s\" % \\\n"
-"             "
-"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
-"e)\n"
-"%>\n"
-"It is also possible to directly pay with Paypal:\n"
-"    ${paypal_url}\n"
-"% endif\n"
-"\n"
-"If you have any question, do not hesitate to contact us.\n"
-"\n"
-"\n"
-"Thank you for choosing ${object.company_id.name}!\n"
-"\n"
-"\n"
-"--\n"
-"${object.user_id.name} ${object.user_id.user_email and "
-"'<%s>'%(object.user_id.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
-"            "
-msgstr ""
-"\n"
-"Merhaba${object.partner_order_id.name and ' ' or "
-"''}${object.partner_order_id.name or ''},\n"
-"\n"
-"Bu siparişiniz için onay ${object.partner_id.name}:\n"
-"       | Sipariş numarası: *${object.name}*\n"
-"       | Sipariş toplamı: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Sipariş tarihi: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Sipariş referansı: ${object.origin}\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       | Referansınız: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       | İlgili Kişiniz: ${object.user_id.name} ${object.user_id.user_email "
-"and '<%s>'%(object.user_id.user_email) or ''}\n"
-"\n"
-"Aşağıdaki linkten sipariş onayınızı izleyebilir, indirebilir ve hatta "
-"çevrimiçi ödeme yapabilirsiniz:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"% if object.order_policy in ('prepaid','manual') and "
-"object.company_id.paypal_account:\n"
-"<% \n"
-"comp_name = quote(object.company_id.name)\n"
-"order_name = quote(object.name)\n"
-"paypal_account = quote(object.company_id.paypal_account)\n"
-"order_amount = quote(str(object.amount_total))\n"
-"cur_name = quote(object.pricelist_id.currency_id.name)\n"
-"paypal_url = \"https://www.paypal.com/cgi-"
-"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
-"unt=%s\" \\\n"
-"             "
-"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
-"_%s\" % \\\n"
-"             "
-"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
-"e)\n"
-"%>\n"
-"Paypal ile doğrudan ödemeniz de olasıdır:\n"
-"    ${paypal_url}\n"
-"% endif\n"
-"\n"
-"Eğer bir sorunuz olursa bize danışmakta tereddüt etmeyin.\n"
-"\n"
-"\n"
-"Firmamız ${object.company_id.name} seçtiğiniz için teşekkür ederiz!\n"
-"\n"
-"\n"
-"--\n"
-"${object.user_id.name} ${object.user_id.user_email and "
-"'<%s>'%(object.user_id.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Telefon: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
-"            "
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_validate0
-msgid "Validate"
-msgstr "Doğrula"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Confirm Order"
-msgstr "Siparişi Onayla"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "Satınalma Siparişi Oluştur"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
-msgid "Taxes"
-msgstr "Vergiler"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order ready to be invoiced"
-msgstr "Faturalandırılmak üzere hazır Satış Siparişleri"
-
-#. module: sale
-#: help:sale.order,create_date:0
-msgid "Date on which sales order is created."
-msgstr "Satış siparişinin oluşturulduğu gün"
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_move
-msgid "Stock Move"
-msgstr "Stok Hareketi"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create Invoices"
-msgstr "Faturaları Oluştur"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current month"
-msgstr "Geçerli ayda oluşturulan satış siparişleri"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Fax :"
-msgstr "Faks:"
-
-#. module: sale
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
-msgstr ""
-"Eğer 'siparişte' ise, satış siparişi bir görev oluşturmak üzere onaylanırsa "
-"bir satınalmayı başlatır, satınalma siparişi ya da üretim emri bu satış "
-"siparişi öğesine bağlantılıdır."
-
-#. module: sale
-#: field:sale.advance.payment.inv,amount:0
-msgid "Advance Amount"
-msgstr "Peşin Miktar"
-
-#. module: sale
-#: field:sale.config.picking_policy,charge_delivery:0
-msgid "Do you charge the delivery?"
-msgstr "Teslimatı ücretlendiriyor musunuz?"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Gönderilen Miktar"
-
-#. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Sales Orders"
-msgstr "Satış Siparişleri Bağlı Fatura"
-
-#. module: sale
-#: code:addons/sale/sale.py:331
-#, python-format
-msgid ""
-"If you change the pricelist of this order (and eventually the currency), "
-"prices of existing order lines will not be updated."
-msgstr ""
-"Bu siparişin fiyat listesini değiştirirseniz (ve sonunda para birimini), "
-"varolan sipariş satırları fiyatı güncellenmeyecektir."
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_picking
-msgid "Picking List"
-msgstr "Paketleme Listesi"
-
-#. module: sale
-#: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
-#: code:addons/sale/sale.py:632 code:addons/sale/sale.py:1016
-#: code:addons/sale/sale.py:1033
-#, python-format
-msgid "Error !"
-msgstr "Hata !"
-
-#. module: sale
-#: code:addons/sale/sale.py:603
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Satış siparişini iptal edemiyor !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoM)"
-msgstr "Mik(ÖB)"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered Year of the sales order"
-msgstr "Satış siparişlerinin Veriliş Yıl"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "July"
-msgstr "Temmuz"
-
-#. module: sale
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Satınalma"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Shipping Exception"
-msgstr "Hatalı Gönderim"
-
-#. module: sale
-#: code:addons/sale/sale.py:1156
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Toplama Bilgisi ! : "
-
-#. module: sale
-#: field:sale.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "Faturaları Gruplandır"
-
-#. module: sale
-#: field:sale.order,order_policy:0
-msgid "Invoice Policy"
-msgstr "Fatura Politikası"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_config_picking_policy
-#: view:sale.config.picking_policy:0
-msgid "Setup your Invoicing Method"
-msgstr "Fatura Yönteminizi ayarlayın"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoice0
-msgid "To be reviewed by the accountant."
-msgstr "Muhasebeci tarafından görülecek."
-
-#. module: sale
-#: view:sale.report:0
-msgid "Reference UoM"
-msgstr "Kullanılan ölçü birimi"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid ""
-"This tool will help you to install the right module and configure the system "
-"according to the method you use to invoice your customers."
-msgstr ""
-"Bu araç, doğru modülü kurmanıza ve sistemi müşterilerinizi faturalandırmada "
-"kullandığınız yönteme göre yapılandırmanıza yardım edecektir."
 
 #. module: sale
 #: model:ir.model,name:sale.model_sale_order_line_make_invoice
 msgid "Sale OrderLine Make_invoice"
-msgstr "Satış SiparişSatırı Fatura_Kes"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Invoice Exception"
-msgstr "Kuraldışı Fatura"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorder0
-msgid "Drives procurement and invoicing"
-msgstr "Tedarik ve faturalamayı yönetir"
-
-#. module: sale
-#: field:sale.order,invoiced:0
-msgid "Paid"
-msgstr "Ödendi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
-msgid "Sales Analysis"
-msgstr "Satış Analizi"
-
-#. module: sale
-#: code:addons/sale/sale.py:1151
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-"%d Biriminde miktar seçtiniz.\n"
-"Ancak bu seçilen paketlemeyle uyumlu değil.\n"
-"Burada paketlemeye uygun olarak önerilen miktarlar var:\n"
-"EAN: %s Miktar: %s ul Türü: %s"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Packing"
-msgstr "Paketlemeyi yeniden oluştur"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "Özellikler"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Quotation"
-msgstr "Fiyat Teklifi"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
-"if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Gönderi politikası \"Gönderi ve manüel fatura hazırlanıyor\" olarak "
-"seçilmişse, satış temsilcisi faturayı eliyle hazırlar. Eğer gönderi "
-"politikası \"Gönderimden önce Ödeme\" olarak seçilmişse, fatura otomatik "
-"olarak hazırlanır."
-
-#. module: sale
-#: help:sale.config.picking_policy,order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr ""
-"Faturaları satış siparişlerine ya da gönderilenlere dayanarak "
-"oluşturabilirsiniz."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Confirmed sale order lines, not yet delivered"
-msgstr "Onaylı satış siparişi satırları, ancak henüz teslim edilmemiş"
-
-#. module: sale
-#: code:addons/sale/sale.py:473
-#, python-format
-msgid "Customer Invoices"
-msgstr "Müşteri Faturaları"
-
-#. module: sale
-#: model:process.process,name:sale.process_process_salesprocess0
-#: view:sale.order:0 view:sale.report:0
-msgid "Sales"
-msgstr "Satışlar"
-
-#. module: sale
-#: report:sale.order:0 field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Birim Fiyat"
-
-#. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
-#: selection:sale.order.line,state:0 selection:sale.report,state:0
-msgid "Done"
-msgstr "Bitti"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "Fatura"
-
-#. module: sale
-#: code:addons/sale/sale.py:1171
-#, python-format
-msgid ""
-"You have to select a customer in the sales form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
-"Satış formunda bir müşteri seçmelisiniz !\n"
-"Lütfen ürün seçmeden önce bir müşteri seçiniz."
-
-#. module: sale
-#: field:sale.order,origin:0
-msgid "Source Document"
-msgstr "Kaynak Belge"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "To Do"
-msgstr "Yapılacaklar"
-
-#. module: sale
-#: field:sale.order,picking_policy:0
-msgid "Picking Policy"
-msgstr "Paketleme Kuralı"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Müşteriye işlenen hareket belgesi"
-
-#. module: sale
-#: help:sale.order,amount_untaxed:0
-msgid "The amount without tax."
-msgstr "KDV'siz tutar"
-
-#. module: sale
-#: code:addons/sale/sale.py:604
-#, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
-"Önce bu satış siparişine ait bütün paketleme işlemlerini iptal etmelisiniz."
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Peşin Ödemeli Satış Faturası"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,month:0
-msgid "Month"
-msgstr "Ay"
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
-msgstr "${object.company_id.name} Satınalma (Ref ${object.name or 'n/a' })"
-
-#. module: sale
-#: view:sale.order.line:0 field:sale.order.line,product_id:0
-#: view:sale.report:0 field:sale.report,product_id:0
-msgid "Product"
-msgstr "Ürün"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Atamayı iptal et"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
-msgstr "satış.kurulum.paketleme_politikası"
-
-#. module: sale
-#: view:account.invoice.report:0 view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_turnover_by_month
-msgid "Monthly Turnover"
-msgstr "Aylık Gelir"
-
-#. module: sale
-#: field:sale.order,invoice_quantity:0
-msgid "Invoice on"
-msgstr "Fatura Şekli"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Date Ordered"
-msgstr "Sipariş Tarihi"
-
-#. module: sale
-#: field:sale.order.line,product_uos:0
-msgid "Product UoS"
-msgstr "Stok 2.Birim"
-
-#. module: sale
-#: selection:sale.report,state:0
-msgid "Manual In Progress"
-msgstr "Manuel İşlem Devam Ediyor"
-
-#. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Product UoM"
-msgstr "Ürün Ölçü Birimi"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Logistic"
-msgstr "Lojistik"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order"
-msgstr "Sipariş"
-
-#. module: sale
-#: code:addons/sale/sale.py:1017
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
-#, python-format
-msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr "Bu ürün için tanımlanmış gelir hesabı bulunmuyor: \"%s\" (id:%d)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Ignore Exception"
-msgstr "İstisnayı görmezden gel"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleinvoice0
-msgid ""
-"Depending on the Invoicing control of the sales order, the invoice can be "
-"based on delivered or on ordered quantities. Thus, a sales order can "
-"generates an invoice or a delivery order as soon as it is confirmed by the "
-"salesman."
-msgstr ""
-"Satış siparişinin faturalama kontrolüne bağlı olarak, fatura teslim edilen "
-"ya da sipariş edilen miktar esas alarak hazırlanmış olabilir. Böylelikle, "
-"bir satış siparişi satış temsilcisi onayladığı anda fatura ya da teslim fişi "
-"olarak hazırlanır."
-
-#. module: sale
-#: code:addons/sale/sale.py:1251
-#, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"%2f%s satmayı hedefliyorsunuz ama sadece %.2f%s var ! \n"
-"Asıl Stok %.2f%s. (rezervasyonlar hariç)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "States"
-msgstr "Durumlar"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: sale
-#: field:sale.order,client_order_ref:0
-msgid "Customer Reference"
-msgstr "Müşteri Sipariş Kodu"
-
-#. module: sale
-#: field:sale.order,amount_total:0 view:sale.order.line:0
-msgid "Total"
-msgstr "Başlık:"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order.line:0
-msgid "Price"
-msgstr "Fiyat"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_deliver0
-msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
-msgstr ""
-"Çıkış konumunun yapılandırmasına bağlı olarak, müşteri ile çıkış konumu "
-"arasındaki hareket Teslimat Emri yoluyla elle ya da otomatik olarak yapılır."
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Pay before delivery"
-msgstr "Teslimattan önce ödeme"
-
-#. module: sale
-#: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
-msgid "Sales Dashboard"
-msgstr "Satış Kontrol Panosu"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
-#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
-msgid "Make Invoices"
-msgstr "Faturaları hazırla"
-
-#. module: sale
-#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
-msgid "To Invoice"
-msgstr "Faturalama"
-
-#. module: sale
-#: help:sale.order,date_confirm:0
-msgid "Date on which sales order is confirmed."
-msgstr "Satış siparişinin onaylandığı tarih."
-
-#. module: sale
-#: field:sale.order,project_id:0
-msgid "Contract/Analytic Account"
-msgstr "Sözleşme/Analis Hesabı"
-
-#. module: sale
-#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
-#: view:sale.report:0 field:sale.report,company_id:0
-#: field:sale.shop,company_id:0
-msgid "Company"
-msgstr "Şirket"
-
-#. module: sale
-#: field:sale.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "Fatura Tarihi"
-
-#. module: sale
-#: help:sale.advance.payment.inv,amount:0
-msgid "The amount to be invoiced in advance."
-msgstr "Önceden faturalanacak miktar."
-
-#. module: sale
-#: code:addons/sale/sale.py:1269
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product and quantity.\n"
-"You have to change either the product, the quantity or the pricelist."
-msgstr ""
-"Bu ürün ve miktarla eşleşen bir fiyat listesi bulunamadı.\n"
-"Hem ürünü hem de miktarı ya da fiyat listesini değiştirmelisiniz."
-
-#. module: sale
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of picking that has been generated for this sales order."
-msgstr ""
-"Bu liste, bu satış siparişi listesi için oluşturulan paketleme listesidir."
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create invoices"
-msgstr "Faturaları Oluştur"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Net Total :"
-msgstr "Net Toplam :"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr "İptal edildi"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "Benim Satış Siparişlerimle ilişkili Satış Siparişi Satırları"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
-#: view:sale.report:0 field:sale.report,shop_id:0
-msgid "Shop"
-msgstr "İş Yeri"
-
-#. module: sale
-#: field:sale.report,date_confirm:0
-msgid "Date Confirm"
-msgstr "Tarih Onay"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
-#, python-format
-msgid "Warning"
-msgstr "Uyarı"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
-msgid "Sales by Month"
-msgstr "Aylık Satışlar"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_order0
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr "Satış Siparişi"
-
-#. module: sale
-#: field:sale.order.line,product_uos_qty:0
-msgid "Quantity (UoS)"
-msgstr "Miktar (2.Br.)"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines that are in 'done' state"
-msgstr "'Yapıldı' durumundaki Satış Siparişş Satırlar"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-"Satış siparişi onaylanır onaylanmaz, tedarik siparişi ile eş zamanlı olarak "
-"paketleme listesi oluşturulur. Bu parçaların satış siparişine atanmasını "
-"temsil etmektedir. Satış sipariş kalemi içinde parçaların stokta "
-"bulunabilirliği ile bağlantılı olarak bir paketleme listesi vardır."
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Confirmed"
-msgstr "Onaylandı"
-
-#. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Main Method Based On"
-msgstr "Ana Yöntemin dayanağı"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_confirm0
-msgid "Confirm"
-msgstr "Onayla"
-
-#. module: sale
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Hata! Yinelemeli şirketler oluşturamazsınız."
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_product_total_price
-msgid "Sales by Product's Category in last 90 days"
-msgstr "Ürün kategorisine göre son 90 gündeki satışlar"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Fatura Kalemleri"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Sales Order Lines"
-msgstr "Satış Sipariş Kalemleri"
-
-#. module: sale
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr "Teslimat Süresi"
-
-#. module: sale
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Kurulum"
-
-#. module: sale
-#: code:addons/sale/edi/sale_order.py:146
-#, python-format
-msgid "EDI Pricelist (%s)"
-msgstr "EDI Fiyat Listesi (%s)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Print Order"
-msgstr "Sipariş Yazdır"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current year"
-msgstr "Geçerli yldaki satış siparişleri"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Aşağıdaki nedenlerden dolayı bu satış sipariş kalemi için fatura "
-"oluşturulamamaktadır:\n"
-"1.Satış sipariş kaleminin durumu \"taslak\" ya da \"iptal\" olarak "
-"belirlenmiştir.\n"
-"2.Satış sipariş kalemi zaten faturalanmıştır."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale order lines done"
-msgstr "Yapılan satış siparişi satırları"
-
-#. module: sale
-#: field:sale.order.line,th_weight:0
-msgid "Weight"
-msgstr "Ağırlık"
-
-#. module: sale
-#: view:sale.open.invoice:0 view:sale.order:0 field:sale.order,invoice_ids:0
-msgid "Invoices"
-msgstr "Faturalar"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "December"
-msgstr "Aralık"
-
-#. module: sale
-#: field:sale.config.picking_policy,config_logo:0
-msgid "Image"
-msgstr "Resim"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-"Satış siparişi onaylandığı ya da fatura ödendiği anda tedarik siparişi "
-"otomatik olarak oluşturulur. Bu satış siparişi parametrelerini ve kuralları "
-"göz önünde bulundurarak satın alma ve ürünlerin üretimini yönetir. "
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Uninvoiced"
-msgstr "Faturalanmamış"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
-#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
-#: view:sale.report:0 field:sale.report,user_id:0
-msgid "Salesman"
-msgstr "Satış Temsilcisi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree
-msgid "Old Quotations"
-msgstr "Eski fiyat teklifleri"
-
-#. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Tutar"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:170
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0 view:sale.order:0
-#, python-format
-msgid "Advance Invoice"
-msgstr "Fatura Peşinatı"
-
-#. module: sale
-#: code:addons/sale/sale.py:624
-#, python-format
-msgid "The sales order '%s' has been cancelled."
-msgstr "'%s' satış siparişi iptal edilmiştir."
+msgstr "Satış SiparişÖğesi Fatura_Kes"
 
 #. module: sale
 #: selection:sale.order.line,state:0
 msgid "Draft"
 msgstr "Taslak"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Ödenmiş"
+
+#. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
 
 #. module: sale
 #: help:sale.order.line,state:0
@@ -2106,41 +1233,123 @@ msgstr ""
 "ayarlanır."
 
 #. module: sale
-#: help:sale.order,amount_tax:0
-msgid "The tax amount."
-msgstr "Vergi miktarı."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Packings"
-msgstr "Paketleme"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines ready to be invoiced"
-msgstr "Faturalandırılmaya hazır Satış Siparişi Satırları"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in last month"
-msgstr "Son ayda oluşturulan satış siparişi"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_email_templates
-#: model:ir.ui.menu,name:sale.menu_email_templates
-msgid "Email Templates"
-msgstr "Eposta Şablonları"
-
-#. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_form
-#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: view:sale.order:0
 msgid "Sales Orders"
 msgstr "Satış Siparişleri"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
+#: field:sale.make.invoice,grouped:0
+msgid "Group the invoices"
+msgstr "Faturaları Gruplandır"
+
+#. module: sale
+#: help:sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr "Vergi tutarı."
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,state:0
+#: view:sale.order.line:0
+#: field:sale.order.line,state:0
+#: view:sale.report:0
+msgid "Status"
+msgstr "Durum"
+
+#. module: sale
+#: selection:sale.order,order_policy:0
+msgid "On Demand"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "August"
+msgstr "Ağustos"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sale Order "
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Drives procurement and invoicing"
+msgstr "Satınalma ve faturalamayı yürütür"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sale\n"
+"                order.\n"
+"              </p><p>\n"
+"                OpenERP will help you efficiently handle the complete sales "
+"flow:\n"
+"                quotation, sale order, delivery, invoicing and payment.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "June"
+msgstr "Haziran"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_email_templates
+msgid "Email Templates"
+msgstr "Eposta Şablonları"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Order"
+msgstr "Sipariş"
+
+#. module: sale
+#: code:addons/sale/sale.py:647
+#, python-format
+msgid "Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "we should put a config wizard for these two fields"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:261
+#, python-format
+msgid "Pricelist Warning!"
+msgstr "Fiyat Listesi Uyarısı!"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
 msgid "Sales Shop"
 msgstr "Satış Mağazası"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Satış Siparişi İstatistikleri"
+
+#. module: sale
+#: field:sale.order,date_order:0
+msgid "Date"
+msgstr "Tarih"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Satış Siparişi Öğesi"
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2148,21 +1357,65 @@ msgid "November"
 msgstr "Kasım"
 
 #. module: sale
+#: view:sale.report:0
+msgid "Extended Filters..."
+msgstr "Genişletilmiş Süzgeçler..."
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,message_comment_ids:0
+#: help:sale.order,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: sale
 #: field:sale.advance.payment.inv,product_id:0
 msgid "Advance Product"
 msgstr "Gelişmiş Ürün"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Compute"
-msgstr "Hesapla"
+#: selection:sale.order.line,state:0
+msgid "Exception"
+msgstr "İstisna"
 
 #. module: sale
-#: code:addons/sale/sale.py:618
-#, python-format
-msgid "You must first cancel all invoices attached to this sales order."
+#: selection:sale.report,month:0
+msgid "October"
+msgstr "Ekim"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_invoice0
+msgid ""
+"The Salesman creates an invoice manually, if the sales order shipping policy "
+"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"if the shipping policy is 'Payment before Delivery'."
 msgstr ""
-"Önce bu satış siparişine bağlı olan bütün faturaları iptal etmelisiniz."
+"Gönderi politikası \"Gönderi ve manüel fatura hazırlanıyor\" olarak "
+"seçilmişse, satış temsilcisi faturayı eliyle hazırlar. Eğer gönderi "
+"politikası \"Gönderimden önce Ödeme\" olarak seçilmişse, fatura otomatik "
+"olarak hazırlanır."
+
+#. module: sale
+#: help:sale.config.settings,module_sale_stock:0
+msgid ""
+"Allows you to Make Quotation, Sale Order using different Order policy and "
+"Manage Related Stock.\n"
+"                    This installs the module sale_stock."
+msgstr ""
+
+#. module: sale
+#: help:sale.advance.payment.inv,product_id:0
+msgid ""
+"Select a product of type service which is called 'Advance Product'.\n"
+"                You may have to create it and set it as a default value on "
+"this field."
+msgstr ""
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2175,31 +1428,101 @@ msgid "Sales Order in Progress"
 msgstr "İşlemdeki Satış Siparişleri"
 
 #. module: sale
+#: field:sale.order,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,timesheet:0
+msgid "Prepare invoices based on timesheets"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:651
+#, python-format
+msgid "Sale Order for <em>%s</em> <b>cancelled</b>."
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,advance_payment_method:0
+msgid "What do you want to invoice?"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_sale_pricelist:0
+msgid "Use pricelists to adapt your price per customers"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sales order becomes "
+"'In progress' or 'Manual in progress'."
+msgstr ""
+"Satış temsilcisi teklifi onaylıyor. Satış Siparişinin durumu \"İşlemde\" ya "
+"da \"Manuel ilemde\"olur."
+
+#. module: sale
 #: help:sale.order,origin:0
 msgid "Reference of the document that generated this sales order request."
 msgstr "Bu satış siparişi isteğini oluşturan belgenin referans numarası"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,delay:0
-msgid "Commitment Delay"
-msgstr "Teslimatta gecikme"
+#: code:addons/sale/sale.py:958
+#, python-format
+msgid "No valid pricelist line found ! :"
+msgstr "Geçerli fiyat listesi öğesi bulunamadı!:"
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Deliver & invoice on demand"
-msgstr "İstek üzerine teslimat & fatura"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleprocurement0
+#: help:sale.config.settings,module_warning:0
 msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr "Her satış siparişi öğesi ve her bileşen için bir Satınalma İşlemi."
+"Allow to configure warnings on products and trigger them when a user wants "
+"to sale a given product or a given customer.\n"
+"            Example: Product: this product is deprecated, do not purchase "
+"more than 5.\n"
+"            Supplier: don't forget to ask for an express delivery."
+msgstr ""
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_assign0
-msgid "Assign"
-msgstr "Ata"
+#: view:sale.report:0
+#: field:sale.report,delay:0
+msgid "Commitment Delay"
+msgstr "Taahhüt Gecikmesi"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Confirmed sale order lines, not yet delivered"
+msgstr "Onaylı satış siparişi öğeleri, ancak henüz teslim edilmemiş"
+
+#. module: sale
+#: view:sale.order:0
+msgid "History"
+msgstr "Geçmiş"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_margin:0
+msgid "Display margins on sales orders"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,invoice_ids:0
+msgid ""
+"This is the list of invoices that have been generated for this sales order. "
+"The same sales order may have been invoiced in several times (by line for "
+"example)."
+msgstr ""
+"Bu liste satış siparişi için oluşturulmuş faturaların listesidir. Aynı satış "
+"siparişi birkaç kere faturalanmış olabilir (örneğin öğeye göre)"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Your Reference"
+msgstr "Referansınız"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid "Show Lines to Invoice"
+msgstr ""
 
 #. module: sale
 #: field:sale.report,date:0
@@ -2207,58 +1530,228 @@ msgid "Date Order"
 msgstr "Sipariş Tarihi"
 
 #. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.report,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
+msgid "Pricelist"
+msgstr "Fiyat Listesi"
+
+#. module: sale
+#: report:sale.order:0
+msgid "TVA :"
+msgstr "TVA :"
+
+#. module: sale
+#: code:addons/sale/sale.py:401
+#, python-format
+msgid "Customer Invoices"
+msgstr "Müşteri Faturaları"
+
+#. module: sale
 #: model:process.node,note:sale.process_node_order0
 msgid "Confirmed sales order to invoice."
-msgstr "Faturalanacak onaylanmış satış siparişi"
+msgstr "Faturalanacak onaylı satış siparişi"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Sales Order Lines"
+msgstr "Satış Siparişi Öğeleri"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales
+#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:process.process,name:sale.process_process_salesprocess0
+#: view:res.partner:0
+#: view:sale.order:0
+#: view:sale.report:0
+msgid "Sales"
+msgstr "Satışlar"
+
+#. module: sale
+#: code:addons/sale/sale.py:262
+#, python-format
+msgid ""
+"If you change the pricelist of this order (and eventually the currency), "
+"prices of existing order lines will not be updated."
+msgstr ""
+"Bu siparişin fiyat listesini değiştirirseniz (ve sonunda para birimini de), "
+"varolan sipariş öğeleri fiyatları güncellenmeyecektir."
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,day:0
+msgid "Day"
+msgstr "Gün"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Sales Order that haven't yet been confirmed"
-msgstr "Henüz onaylanmamış Satış Siparişi"
+#: field:sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr "Faturalar"
 
 #. module: sale
-#: code:addons/sale/sale.py:322
-#, python-format
-msgid "The sales order '%s' has been set in draft state."
-msgstr "'%s' satış siparişi taslak durumuna ayarlanmıştır."
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Birim Fiyat"
 
 #. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "Stoktan"
+#: view:sale.order:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Done"
+msgstr "Yapıldı"
 
 #. module: sale
-#: view:sale.open.invoice:0
-msgid "Close"
-msgstr "Kapat"
+#: report:sale.order:0
+msgid "Invoice address :"
+msgstr "Fatura adresi:"
 
 #. module: sale
-#: code:addons/sale/sale.py:1261
+#: model:process.node,name:sale.process_node_invoice0
+#: view:sale.order:0
+msgid "Invoice"
+msgstr "Fatura"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "My Sales Order Lines"
+msgstr "Satış Siparişlerimin Öğeleri"
+
+#. module: sale
+#: model:process.transition.action,name:sale.process_transition_action_cancel0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: view:sale.order.line.make.invoice:0
+msgid "Cancel"
+msgstr "İptal"
+
+#. module: sale
+#: field:sale.order,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:947
 #, python-format
 msgid "No Pricelist ! : "
 msgstr "Fiyat Listesi yok ! : "
 
 #. module: sale
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Sevk edildi"
+#: model:process.node,name:sale.process_node_quotation0
+#: selection:sale.report,state:0
+msgid "Quotation"
+msgstr "Teklif"
 
 #. module: sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Bu ürün için üretim planı yapmalısınız"
+#: view:sale.order.line:0
+msgid "Search Uninvoiced Lines"
+msgstr "Faturalanmamış Öğelerde Ara"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_shop_form
-msgid ""
-"If you have more than one shop reselling your company products, you can "
-"create and manage that from here. Whenever you will record a new quotation "
-"or sales order, it has to be linked to a shop. The shop also defines the "
-"warehouse from which the products will be delivered for each particular "
-"sales."
+#: model:ir.model,name:sale.model_account_config_settings
+msgid "account.config.settings"
 msgstr ""
-"Eğer ürünlerinizi sattığınız birden fazla ofisiniz varsa, bunu buradan "
-"oluşturabilir ve yönetebilirsiniz."
+
+#. module: sale
+#: sql_constraint:sale.order:0
+msgid "Order Reference must be unique per Company!"
+msgstr "Sipariş Referansı her Firma için benzersiz olmalı!"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
+msgid ""
+"<p>\n"
+"                Here is a list of each sales order line to be invoiced. You "
+"can\n"
+"                invoice sales orders partially, by lines of sales order. You "
+"do\n"
+"                not need this list if you invoice from the delivery orders "
+"or\n"
+"                if you invoice sales totally.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Product Features"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "To Do"
+msgstr "Yapılacaklar"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Shipping address :"
+msgstr "Sevk Adresi :"
+
+#. module: sale
+#: code:addons/sale/sale.py:460
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr ""
+"Aynı paydaş için farklı para birimlerindeki satışları gruplandıramazsınız."
+
+#. module: sale
+#: code:addons/sale/sale.py:663
+#, python-format
+msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_account_analytic_analysis:0
+msgid "Use contracts management"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:955
+#, python-format
+msgid ""
+"Cannot find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_all
+#: model:ir.ui.menu,name:sale.menu_report_product_all
+#: view:sale.report:0
+msgid "Sales Analysis"
+msgstr "Satış Analizi"
+
+#. module: sale
+#: help:sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr "Geçerli satış siparişi için Fiyat listesi"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#: field:sale.order,order_policy:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Fatura Oluştur"
+
+#. module: sale
+#: help:sale.order,amount_untaxed:0
+msgid "The amount without tax."
+msgstr "KDV hariç tutar"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Order reference"
+msgstr "Sipariş kaynağı"
 
 #. module: sale
 #: help:sale.order,invoiced:0
@@ -2266,9 +1759,52 @@ msgid "It indicates that an invoice has been paid."
 msgstr "Faturanın ödendiğini gösterir."
 
 #. module: sale
-#: report:sale.order:0 field:sale.order.line,name:0
+#: code:addons/sale/sale.py:822
+#, python-format
+msgid "You cannot cancel a sale order line that has already been invoiced!"
+msgstr ""
+"Halihazırda faturalandırılmış bir satış siparişi öğesini iptal edemezsiniz!"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Percentage"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+#: view:sale.order:0
+#: field:sale.order,user_id:0
+#: view:sale.order.line:0
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:0
+#: field:sale.report,user_id:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+#: field:sale.order.line,product_id:0
+#: view:sale.report:0
+#: field:sale.report,product_id:0
+msgid "Product"
+msgstr "Ürün"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+msgid "%"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
 msgid "Description"
 msgstr "Açıklama"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:143
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)."
+msgstr ""
 
 #. module: sale
 #: selection:sale.report,month:0
@@ -2276,51 +1812,15 @@ msgid "May"
 msgstr "Mayıs"
 
 #. module: sale
-#: view:sale.order:0 field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
-msgid "Customer"
-msgstr "Müşteri"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance"
-msgstr "Gelişmiş"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "February"
-msgstr "Şubat"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "April"
-msgstr "Nisan"
-
-#. module: sale
-#: view:sale.shop:0
-msgid "Accounting"
-msgstr "Muhasebe"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Search Sales Order"
-msgstr "Satış siparişlerini ara"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "Satış Siparişi İsteği"
-
-#. module: sale
-#: code:addons/sale/sale.py:1255
+#: code:addons/sale/sale.py:766
 #, python-format
-msgid "Not enough stock ! : "
-msgstr "Yeterli stok yok !: "
+msgid "Please define income account for this product: \"%s\" (id:%d)."
+msgstr ""
 
 #. module: sale
-#: report:sale.order:0 field:sale.order,payment_term:0
-msgid "Payment Term"
-msgstr "Ödeme Vadesi"
+#: report:sale.order:0
+msgid "Price"
+msgstr "Fiyat"
 
 #. module: sale
 #: model:ir.actions.act_window,help:sale.action_order_report_all
@@ -2339,30 +1839,361 @@ msgstr ""
 "kullanmalısınız."
 
 #. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the state of the quotation or sales order. \n"
+"The exception state is automatically set when a cancel operation occurs in "
+"the invoice validation (Invoice Exception). \n"
+"The 'Waiting Schedule' state is set when the invoice is confirmed but "
+"waiting for the scheduler to run on the order date."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Tel. :"
+msgstr "Tel :"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Gerçekten fatura(ları) oluşturmak istiyor musunuz?"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Other Information"
+msgstr "Diğer Bilgiler"
+
+#. module: sale
+#: view:res.partner:0
+msgid "sale.group_delivery_invoice_address"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr "Mik"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoice0
+msgid "To be reviewed by the accountant."
+msgstr "Muhasebeci tarafından incelenecek."
+
+#. module: sale
+#: view:sale.order:0
+msgid "Send by Mail"
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_mrp_properties
+msgid "Properties on lines"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,partner_shipping_id:0
+msgid "Shipping address for current sales order."
+msgstr "Geçerli satış siparişi için teslimat adresi"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale to Invoice"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Teklif / Sipariş"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Inbox"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr "Müşteri"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance"
+msgstr "Gelişmiş"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "February"
+msgstr "Şubat"
+
+#. module: sale
+#: field:sale.order,invoice_quantity:0
+msgid "Invoice on"
+msgstr "Fatura üzerine"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Fixed price (deposit)"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:139
+#, python-format
+msgid "There is no income account defined as global property."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Date Ordered"
+msgstr "Sipariş Tarihi"
+
+#. module: sale
+#: field:sale.order.line,product_uos:0
+msgid "Product UoS"
+msgstr "Ürün Sipariş Birimi"
+
+#. module: sale
+#: help:account.config.settings,group_analytic_account_for_sales:0
+msgid "Allows you to specify an analytic account on sale orders."
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_quotation0
+msgid "Draft state of sales order"
+msgstr "Satış Siparişinin Taslak durumu"
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Source Document"
+msgstr "Kaynak Belge"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "April"
+msgstr "Nisan"
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "Manual In Progress"
+msgstr "Manuel İşlem Devam Ediyor"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.actions_server_sale_order_unread
+msgid "Mark unread"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:643
+#, python-format
+msgid "Quotation for <em>%s</em> <b>created</b>."
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_delivery_invoice_address
+msgid "Addresses in Sale Orders"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,time_unit:0
+msgid "The default working time unit for services is"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "My Sale Orders"
+msgstr "Satış Siparişlerim"
+
+#. module: sale
+#: model:res.groups,name:sale.group_invoice_so_lines
+msgid "Enable Invoicing Sale order lines"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+msgid "Search Sales Order"
+msgstr "Satış siparişlerini ara"
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid ""
+"Use contract to be able to manage your services with\n"
+"                        multiple invoicing as part of the same contract "
+"with\n"
+"                        your customer."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Ordered month of the sales order"
+msgstr "Satış siparişlerinin verildiği ay"
+
+#. module: sale
+#: code:addons/sale/sale.py:945
+#, python-format
+msgid ""
+"You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr ""
+"Satış formunda bir fiyat listesi ya da müşteri seçmelisiniz!\n"
+"Ürünü seçmeden lütfen bir tane ayarlayın."
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleinvoice0
+msgid "From a sales order"
+msgstr "Bir Satış siparişinden"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Ignore Exception"
+msgstr "İstisnayı Görmezden gel"
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_saleinvoice0
+msgid ""
+"Depending on the Invoicing control of the sales order, the invoice can be "
+"based on delivered or on ordered quantities. Thus, a sales order can "
+"generates an invoice or a delivery order as soon as it is confirmed by the "
+"salesman."
+msgstr ""
+"Satış siparişinin faturalama kontrolüne bağlı olarak, fatura teslim edilen "
+"ya da sipariş edilen miktar esas alarak hazırlanmış olabilir. Böylelikle, "
+"bir satış siparişi satış temsilcisi onayladığı anda fatura ya da teslim fişi "
+"olarak hazırlanır."
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Some order lines"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:986
+#, python-format
+msgid "Cannot delete a sales order line which is in state '%s'."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr "Satış Siparişi ile ilişkili analiz hesabı"
+
+#. module: sale
+#: report:sale.order:0
+#: field:sale.order,payment_term:0
+msgid "Payment Term"
+msgstr "Ödeme Şekli"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order ready to be invoiced"
+msgstr "Faturalandırılmaya hazır Satış Siparişleri"
+
+#. module: sale
+#: help:account.config.settings,module_sale_analytic_plans:0
+msgid "This allows install module sale_analytic_plans."
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "or"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,name:0
+msgid "Product Description"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_sale_pricelist:0
+msgid ""
+"Allows to manage different prices based on rules per category of customers.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
+msgstr ""
+
+#. module: sale
 #: report:sale.order:0
 msgid "Quotation N°"
-msgstr "Teklif No:"
+msgstr "Teklif N°"
 
 #. module: sale
-#: field:sale.order,picked_rate:0 view:sale.report:0
+#: model:res.groups,name:sale.group_discount_per_so_line
+msgid "Discount on lines"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Customer Reference"
+msgstr "Müşteri Referansı"
+
+#. module: sale
+#: view:sale.report:0
 msgid "Picked"
-msgstr "Toplanma"
+msgstr "Toplanmış"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,year:0
-msgid "Year"
-msgstr "Yıl"
+#: help:sale.config.settings,module_sale_margin:0
+msgid ""
+"This adds the 'Margin' on sales order.\n"
+"                This gives the profitability by calculating the difference "
+"between the Unit Price and Cost Price.\n"
+"                This installs the module sale_margin."
+msgstr ""
 
 #. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Deliveries"
-msgstr "Teslimatlara Bağlı Fatura"
+#: code:addons/sale/sale.py:867
+#, python-format
+msgid ""
+"Before choosing a product,\n"
+" select a customer in the sales form."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total Tax Included"
+msgstr "KDV Dahil Toplam"
+
+#. module: sale
+#: field:sale.order,invoice_exists:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Faturalandı"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid ""
+"Select how you want to invoice this order. This\n"
+"                        will create a draft invoice that can be modified\n"
+"                        before validation."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Ordered date of the sales order"
+msgstr "Satış siparişinin veriliş tarihi"
 
 #~ msgid "Partial Delivery"
 #~ msgstr "Kısmi Teslimat"
 
+#~ msgid "Delivery Order"
+#~ msgstr "Teslimat Emri"
+
 #~ msgid "You invoice has been successfully created !"
 #~ msgstr "Fatura başarıyla oluşturuldu !"
+
+#~ msgid "Notes"
+#~ msgstr "Notlar"
+
+#~ msgid "Inventory Moves"
+#~ msgstr "Stok Hareketleri"
 
 #~ msgid "Reference"
 #~ msgstr "Referans"
@@ -2382,11 +2213,21 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "All Sales Order"
 #~ msgstr "Tüm Satış Emirleri"
 
+#~ msgid "Warehouse"
+#~ msgstr "Depo"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Hata !"
+
 #~ msgid "Manual Description"
 #~ msgstr "Manuel Açıklama"
 
 #~ msgid "Total amount"
 #~ msgstr "Toplam Tutar"
+
+#~ msgid "Configuration"
+#~ msgstr "Yapılandırma"
 
 #~ msgid "Payment accounts"
 #~ msgstr "Ödeme Hesapları"
@@ -2400,6 +2241,12 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Automatic Declaration"
 #~ msgstr "Otomatik Bildiri"
 
+#~ msgid "Stock Moves"
+#~ msgstr "Stok Hareketleri"
+
+#~ msgid "Procurement"
+#~ msgstr "Satınalma"
+
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "İşlem tanımlamasında geçersiz model adı."
 
@@ -2409,6 +2256,9 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Recreate Procurement"
 #~ msgstr "Yeniden Satınalma Oluştur"
 
+#~ msgid "Validate"
+#~ msgstr "Doğrula"
+
 #~ msgid "Manual Designation"
 #~ msgstr "Elle Adlandırma"
 
@@ -2417,6 +2267,9 @@ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "Outgoing Products"
 #~ msgstr "Gönderilecek Ürünler"
+
+#~ msgid "Shipped Quantities"
+#~ msgstr "Gönderilen Miktar"
 
 #~ msgid "Sale Shop"
 #~ msgstr "Satış Mağazası"
@@ -2442,6 +2295,9 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Packing"
 #~ msgstr "Sevkiyat Paketlemesi"
 
+#~ msgid "Confirm Order"
+#~ msgstr "Siparişi Onayla"
+
 #~ msgid "Invoice on Order After Delivery"
 #~ msgstr "Sipariş Teslimatı Sonrası Fatura Çıkar"
 
@@ -2456,6 +2312,12 @@ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "Sales orders"
 #~ msgstr "Satış Siparişleri"
+
+#~ msgid "Close"
+#~ msgstr "Kapat"
+
+#~ msgid "All Quotations"
+#~ msgstr "Tüm Teklifler"
 
 #~ msgid "Draft customer invoice, to be reviewed by accountant."
 #~ msgstr "Taslak Müşteri Faturası - Muhasebeci inceleyecek"
@@ -2477,6 +2339,9 @@ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "Order Ref"
 #~ msgstr "Sipariş Ref."
+
+#~ msgid "Salesman"
+#~ msgstr "Satış Temsilcisi"
 
 #~ msgid "Uninvoiced Lines"
 #~ msgstr "Faturalanmamış Kalemler"
@@ -2502,9 +2367,6 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Configure Sale Order Logistic"
 #~ msgstr "Satış Sipariş Lojistiğini Ayarla"
 
-#~ msgid "Status"
-#~ msgstr "Durum"
-
 #~ msgid "Packing Policy"
 #~ msgstr "Sevkiyat Paketleme Politikası"
 
@@ -2526,11 +2388,14 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Direct Delivery"
 #~ msgstr "Direk Teslimat"
 
+#~ msgid "Properties"
+#~ msgstr "Özellikler"
+
+#~ msgid "Compute"
+#~ msgstr "Hesapla"
+
 #~ msgid "Sales order lines"
 #~ msgstr "Satış Sipariş Kalemleri"
-
-#~ msgid "Sequence"
-#~ msgstr "Sıra No"
 
 #~ msgid "Other data"
 #~ msgstr "Diğer Bilgiler"
@@ -2577,8 +2442,8 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Purchase Pricelists"
 #~ msgstr "Alış Fiyat Listeleri"
 
-#~ msgid "Sale Order"
-#~ msgstr "Satış Siparişi"
+#~ msgid "Name"
+#~ msgstr "Adı"
 
 #~ msgid "New Quotation"
 #~ msgstr "Yeni Teklif"
@@ -2588,6 +2453,15 @@ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "Related invoices"
 #~ msgstr "Bağlı Faturalar"
+
+#~ msgid "States"
+#~ msgstr "Durumlar"
+
+#~ msgid "Accounting"
+#~ msgstr "Muhasebe"
+
+#~ msgid "Invoice Based on Deliveries"
+#~ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "My Sales Order"
 #~ msgstr "Satış Siparişlerim (Bana Ait)"
@@ -2611,11 +2485,34 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "The Object name must start with x_ and not contain any special character !"
 #~ msgstr "Nesne adı x_ ile başlamalı ve özel karakterler içermemelidir!"
 
+#~ msgid "Sales by Salesman in last 90 days"
+#~ msgstr "Satış elemanına göre son 90 gündeki satışlar"
+
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Uyarı !"
+
+#~ msgid "State"
+#~ msgstr "Durum"
+
 #~ msgid "Configure Picking Policy for Sales Order"
 #~ msgstr "Satış Siparişleri için Paketleme Politikasını Yapılandır"
 
+#~ msgid "Dates"
+#~ msgstr "Tarihler"
+
 #~ msgid "Configure"
 #~ msgstr "Yapılandır"
+
+#~ msgid "Conditions"
+#~ msgstr "Koşullar"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr ""
+#~ "Siparişin onaylanması ile ürünlerin müşteriye gönderilmesi arasında geçen "
+#~ "gün sayısı"
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Sipariş numarasının referans no'su kendine özgü olmalı!"
@@ -2623,11 +2520,34 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Enhance your core Sales Application with additional functionalities."
 #~ msgstr "Temel Satış Uygulamasını ek işlevlerle geliştirin."
 
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sales order                              "
+#~ "that is defined as 'Automatic Invoice after delivery'."
+#~ msgstr ""
+#~ "\"Teslimat sonrası otomatik fatura\" olarak belirlenmiş sipariş ile ilgili "
+#~ "bir değişiklik yapamazsınız."
+
+#~ msgid "Sales Open Invoice"
+#~ msgstr "Açık Faturalı Satışlar"
+
 #~ msgid "Do you really want to create the invoice(s) ?"
 #~ msgstr "Gerçekten fatura(ları) oluşturmak istiyor musunuz?"
 
 #~ msgid "  Year  "
 #~ msgstr "  Yıl  "
+
+#~ msgid "Sales By Month"
+#~ msgstr "Aylık Satışlar"
+
+#~ msgid "Security Days"
+#~ msgstr "Emniyet Günleri"
+
+#~ msgid "Procurement of sold material"
+#~ msgstr "Satılan malzemenin tedarik edilmesi"
+
+#~ msgid "References"
+#~ msgstr "Referanslar"
 
 #~ msgid "Margins in Sales Orders"
 #~ msgstr "Satış sipariş sınırları"
@@ -2638,11 +2558,33 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "title"
 #~ msgstr "başlık"
 
+#~ msgid "Create Procurement Order"
+#~ msgstr "Satınalma Siparişi Oluştur"
+
 #~ msgid "Order date"
 #~ msgstr "Sipariş Tarihi"
 
+#~ msgid "Procurement Method"
+#~ msgstr "Satınalma Yöntemi"
+
+#~ msgid "Stock Move"
+#~ msgstr "Stok Hareketi"
+
 #~ msgid "Delivery Order Only"
 #~ msgstr "Sadece Teslim Belgesi"
+
+#~ msgid "UoM"
+#~ msgstr "Ölçü Birimi"
+
+#~ msgid ""
+#~ "For every sales order line, a procurement order is created to supply the "
+#~ "sold product."
+#~ msgstr ""
+#~ "Her satış siparişi sonrası, satılan ürünü temin edebilmek için "
+#~ "tedarik/satınalma siparişi hazırlanır."
+
+#~ msgid "Quantity (UoM)"
+#~ msgstr "Miktar (Ölçü Birimi)"
 
 #~ msgid "Picking Default Policy"
 #~ msgstr "Öntanımlı Paketleme Politikası"
@@ -2650,6 +2592,9 @@ msgstr "Teslimatlara Bağlı Fatura"
 #, python-format
 #~ msgid "You cannot cancel a sales order line that has already been invoiced !"
 #~ msgstr "Faturalanmış olan satış sipariş kalemini iptal edemezsiniz !"
+
+#~ msgid "Number Packages"
+#~ msgstr "Paketleri numarala"
 
 #~ msgid "Invoice On Order After Delivery"
 #~ msgstr "Teslimat sonrası fatura"
@@ -2702,11 +2647,21 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "    "
 
 #, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Satış siparişini iptal edemiyor !"
+
+#, python-format
 #~ msgid "Picking Information !"
 #~ msgstr "Paketleme Bilgisi !"
 
 #~ msgid "Invoice From The Picking"
 #~ msgstr "Paketlenenden fatura"
+
+#~ msgid ""
+#~ "You can generate invoices based on sales orders or based on shippings."
+#~ msgstr ""
+#~ "Faturaları satış siparişlerine ya da gönderilenlere dayanarak "
+#~ "oluşturabilirsiniz."
 
 #~ msgid ""
 #~ "By default, OpenERP is able to manage complex routing and paths of products "
@@ -2718,11 +2673,43 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "karmaşık konuları yönetebilmektedir. Bu da çalışanların ürünleri bir iki "
 #~ "basit işlem ve yöntemle müşteriye ulaştırabilmesine imkan sağlar."
 
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sales form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "Satış formunda bir müşteri seçmelisiniz !\n"
+#~ "Lütfen ürün seçmeden önce bir müşteri seçiniz."
+
+#~ msgid "sale.config.picking_policy"
+#~ msgstr "satış.kurulum.paketleme_politikası"
+
 #~ msgid "Invoicing"
 #~ msgstr "Faturalama"
 
+#~ msgid "Logistic"
+#~ msgstr "Lojistik"
+
+#~ msgid "Product UoM"
+#~ msgstr "Ürün Ölçü Birimi"
+
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
+#, python-format
+#~ msgid ""
+#~ "You plan to sell %.2f %s but you only have %.2f %s available !\n"
+#~ "The real stock is %.2f %s. (without reservations)"
+#~ msgstr ""
+#~ "%2f%s satmayı hedefliyorsunuz ama sadece %.2f%s var ! \n"
+#~ "Asıl Stok %.2f%s. (rezervasyonlar hariç)"
+
 #~ msgid "   Month   "
 #~ msgstr "   Ay   "
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Uyarı"
 
 #~ msgid ""
 #~ "The Shipping Policy is used to configure per order if you want to deliver as "
@@ -2733,11 +2720,44 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "ürünlerinin gönderimini bir an önce gerçekleştirmek istiyorsanız ya da bütün "
 #~ "ürünlerin hazır olmasını bekleyecekseniz.."
 
+#~ msgid "Sales by Product's Category in last 90 days"
+#~ msgstr "Ürün kategorisine göre son 90 gündeki satışlar"
+
 #~ msgid "    Month-1    "
 #~ msgstr "    Ay-1    "
 
+#~ msgid "Delivery Lead Time"
+#~ msgstr "Teslimat Süresi"
+
 #~ msgid "Payment Before Delivery"
 #~ msgstr "Teslimat Öncesi Ödeme"
+
+#~ msgid ""
+#~ "Sales Orders help you manage quotations and orders from your customers. "
+#~ "OpenERP suggests that you start by creating a quotation. Once it is "
+#~ "confirmed, the quotation will be converted into a Sales Order. OpenERP can "
+#~ "handle several types of products so that a sales order may trigger tasks, "
+#~ "delivery orders, manufacturing orders, purchases and so on. Based on the "
+#~ "configuration of the sales order, a draft invoice will be generated so that "
+#~ "you just have to confirm it when you want to bill your customer."
+#~ msgstr ""
+#~ "Satış siparişleri müşterilerinizin fiyat teklifleri ve siparişlerini "
+#~ "yönetmenize yardımcı olur. OpenERP öncelikle fiyat teklifi oluşturarak "
+#~ "başlamanızı öneriyor. Fiyat teklifi onaylandıktan sonra satış siparişine "
+#~ "çevrilecektir. Satış siparişi sonrasında bir taslak fatura oluşturulacak ve "
+#~ "müşteriye fatura edilmeden önce onaylanması gerekecektir."
+
+#~ msgid "Recreate Packing"
+#~ msgstr "Paketlemeyi yeniden oluştur"
+
+#~ msgid "Sales Manager Dashboard"
+#~ msgstr "Satış Müdürü Kontrol Paneli"
+
+#~ msgid "Packaging"
+#~ msgstr "Paketleme"
+
+#~ msgid "Set to Draft"
+#~ msgstr "Taslağa  Ayarla"
 
 #~ msgid ""
 #~ "The Shipping Policy is used to synchronise invoice and delivery operations.\n"
@@ -2786,6 +2806,13 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "Birim satış fiyatı ve maliyeti arasındaki farkı hesaplayarak kar marjını "
 #~ "verir."
 
+#~ msgid "Sales by Month"
+#~ msgstr "Aylık Satışlar"
+
+#, python-format
+#~ msgid "The sales order '%s' has been cancelled."
+#~ msgstr "'%s' satış siparişi iptal edilmiştir."
+
 #~ msgid "Ordered Date"
 #~ msgstr "Sipariş Edilen Tarih"
 
@@ -2798,6 +2825,21 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgid "Configure Your Sales Management Application"
 #~ msgstr "Satış Yönetimi Uygulamasını Kurun"
 
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Hata"
+
+#, python-format
+#~ msgid "You must first cancel all invoices attached to this sales order."
+#~ msgstr ""
+#~ "Önce bu satış siparişine bağlı olan bütün faturaları iptal etmelisiniz."
+
+#~ msgid "You invoice has been successfully created!"
+#~ msgstr "Faturanız başarıyla oluşturuldu!"
+
+#~ msgid "Assign"
+#~ msgstr "Ata"
+
 #~ msgid "Sales Order Layout Improvement"
 #~ msgstr "Satış Sipariş Planlama Geliştirme"
 
@@ -2806,8 +2848,30 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ msgstr "Yeterli stok yok !"
 
 #, python-format
+#~ msgid "The sales order '%s' has been set in draft state."
+#~ msgstr "'%s' satış siparişi taslak durumuna ayarlanmıştır."
+
+#, python-format
 #~ msgid "Cannot delete Sales Order(s) which are already confirmed !"
 #~ msgstr "Onaylanmış satış sipariş(ler)ini silemezsiniz!"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "test_durumu için geçersiz mod"
+
+#, python-format
+#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "Bu ürün için tanımlanmış gelir hesabı bulunmuyor: \"%s\" (id:%d)"
+
+#~ msgid ""
+#~ "A procurement order is automatically created as soon as a sales order is "
+#~ "confirmed or as the invoice is paid. It drives the purchasing and the "
+#~ "production of products regarding to the rules and to the sales order's "
+#~ "parameters. "
+#~ msgstr ""
+#~ "Satış siparişi onaylandığı ya da fatura ödendiği anda tedarik siparişi "
+#~ "otomatik olarak oluşturulur. Bu satış siparişi parametrelerini ve kuralları "
+#~ "göz önünde bulundurarak satın alma ve ürünlerin üretimini yönetir. "
 
 #~ msgid ""
 #~ "Allows you to group and invoice your delivery orders according to different "
@@ -2825,17 +2889,40 @@ msgstr "Teslimatlara Bağlı Fatura"
 #~ "Satış siparişi raporlarının düzenlemesini geliştirmek için bazı özelikler "
 #~ "sağlar."
 
+#~ msgid "Sales Order Requisition"
+#~ msgstr "Satış Siparişi İsteği"
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Aynı üründen olmayan bir parti atamaya çalışıyorsunuz"
+
+#~ msgid ""
+#~ "Select a product of type service which is called 'Advance Product'. You may "
+#~ "have to create it and set it as a default value on this field."
+#~ msgstr ""
+#~ "'Ön Ürün' olarak adlandırılmış servis türüne bir ürün seçin. Bir tane "
+#~ "oluştun ve bu alan için varsayılan olarak ayarlayın."
+
 #~ msgid "Invoicing journals"
 #~ msgstr "Faturalama Yevmiyeleri"
 
 #~ msgid "Layout Sequence"
 #~ msgstr "Yerleşim Sırası"
 
+#~ msgid "Document of the move to the customer."
+#~ msgstr "Müşteriye işlenen hareket belgesi"
+
 #~ msgid "Configure Sales Order Logistics"
 #~ msgstr "Satış Siparişi Lojistiğini Yapılandır"
 
 #~ msgid "Allows you to compute delivery costs on your quotations."
 #~ msgstr "Teklifinizdeki teslimat maliyetlerini hesaplamanızı sağlar."
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Tek seferde teslimat için yeterli stok yoksa parçalı teslimat yapılmasını "
+#~ "kabul eder misiniz ?"
 
 #~ msgid "Adds commitment, requested and effective dates on Sales Orders."
 #~ msgstr "Satış Siparişlerine taahhüt, istenen ve yürürlük tarihlerini ekler."
@@ -2851,3 +2938,578 @@ msgstr "Teslimatlara Bağlı Fatura"
 
 #~ msgid "Setup your sales workflow and default values."
 #~ msgstr "Satış iş akışı ve varsayılan değerleri ayarla"
+
+#~ msgid "Based on Tasks' Work"
+#~ msgstr "Görevlerin İşine Bağlı"
+
+#~ msgid "Print Quotation"
+#~ msgstr "Teklifi Yazdır"
+
+#~ msgid "Main Working Time Unit"
+#~ msgstr "Ana Çalışma Süresi Birimi"
+
+#~ msgid "Based on Timesheet"
+#~ msgstr "Zaman Çizelgesine Bağlı"
+
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "Teslimatlara bağlı fatura"
+
+#~ msgid "Based on Delivery Orders"
+#~ msgstr "Teslimat Emirlerine Bağlı"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Şirket adı benzersiz olmalı !"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Referans her şirket için benzersiz olmalı!"
+
+#~ msgid "Month-1"
+#~ msgstr "Ay-1"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "Yapılandırma Hatası!"
+
+#~ msgid "Based on Sales Orders"
+#~ msgstr "Satış Siparişlerine bağlı"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Çeşitli"
+
+#~ msgid "Options"
+#~ msgstr "Seçenekler"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "Her ürün hazır olduğunda teslim et"
+
+#, python-format
+#~ msgid ""
+#~ "In order to delete a confirmed sale order, you must cancel it before ! To "
+#~ "cancel a sale order, you must first cancel related picking or delivery "
+#~ "orders."
+#~ msgstr ""
+#~ "Onaylanmış bir satış siparişini silmek için önce onu iptal etmelisiniz! Bir "
+#~ "satış siparişini iptal etmek için önce ilgili toplama ve telimat emirlerini "
+#~ "iptal etmelisiniz."
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "Tüm ürünleri tek seferde teslim et"
+
+#~ msgid "Sales order created in current month"
+#~ msgstr "Geçerli ayda oluşturulan satış siparişleri"
+
+#~ msgid "Pay before delivery"
+#~ msgstr "Teslimattan önce ödeme"
+
+#, python-format
+#~ msgid "Picking Information ! : "
+#~ msgstr "Toplama Bilgisi ! : "
+
+#, python-format
+#~ msgid ""
+#~ "You selected a quantity of %d Units.\n"
+#~ "But it's not compatible with the selected packaging.\n"
+#~ "Here is a proposition of quantities according to the packaging:\n"
+#~ "EAN: %s Quantity: %s Type of ul: %s"
+#~ msgstr ""
+#~ "%d Biriminde miktar seçtiniz.\n"
+#~ "Ancak bu seçilen paketlemeyle uyumlu değil.\n"
+#~ "Burada paketlemeye uygun olarak önerilen miktarlar var:\n"
+#~ "EAN: %s Miktar: %s ul Türü: %s"
+
+#~ msgid ""
+#~ "This tool will help you to install the right module and configure the system "
+#~ "according to the method you use to invoice your customers."
+#~ msgstr ""
+#~ "Bu araç, doğru modülü kurmanıza ve sistemi müşterilerinizi faturalandırmada "
+#~ "kullandığınız yönteme göre yapılandırmanıza yardım edecektir."
+
+#~ msgid "Print Order"
+#~ msgstr "Sipariş Yazdır"
+
+#~ msgid "Deliver & invoice on demand"
+#~ msgstr "İstek üzerine teslimat & fatura"
+
+#~ msgid ""
+#~ "The Invoice Policy is used to synchronise invoice and delivery operations.\n"
+#~ "  - The 'Pay before delivery' choice will first generate the invoice and "
+#~ "then generate the picking order after the payment of this invoice.\n"
+#~ "  - The 'Deliver & Invoice on demand' will create the picking order directly "
+#~ "and wait for the user to manually click on the 'Invoice' button to generate "
+#~ "the draft invoice based on the sale order or the sale order lines.\n"
+#~ "  - The 'Invoice on order after delivery' choice will generate the draft "
+#~ "invoice based on sales order after all picking lists have been finished.\n"
+#~ "  - The 'Invoice based on deliveries' choice is used to create an invoice "
+#~ "during the picking process."
+#~ msgstr ""
+#~ "Fatura Politikası fatura ve teslimat işlemlerini senkronize etmek için "
+#~ "kullanılır.\n"
+#~ "  - 'Teslimattan önce öde' seçimi önce faturayı oluşturur ve sonra faturanın "
+#~ "ödenmesi üzerine toplama emrini oluşturur.\n"
+#~ "  - 'Teslim et & istenirse Fatura kes' toplama emrini doğrudan oluşturacak "
+#~ "ve kullanıcının elle 'Fatura' düğmesini tıklayarak satış siparişine ve satış "
+#~ "siparişi satırlarına göre fatura oluşturmasını bekleyecek.\n"
+#~ "  - 'Sipariş tesliminde sonra Fatura' seçimi bütün toplama listeleri "
+#~ "tamamlandıktan sonra satış siparişine göre taslak fatura oluşturacaktır.\n"
+#~ "  - 'Teslimata dayalı fatura' seçimi toplama işlemi sırasında fatura "
+#~ "oluşturmak için kullanılır."
+
+#~ msgid ""
+#~ "Gives the state of the quotation or sales order. \n"
+#~ "The exception state is automatically set when a cancel operation occurs in "
+#~ "the invoice validation (Invoice Exception) or in the picking list process "
+#~ "(Shipping Exception). \n"
+#~ "The 'Waiting Schedule' state is set when the invoice is confirmed but "
+#~ "waiting for the scheduler to run on the order date."
+#~ msgstr ""
+#~ "Teklifin ya da satış siparişinin durumunu verir. \n"
+#~ "İstisna durumu fatura doğrulamasında (Fatura İstisnası) iptal işlemi "
+#~ "oluşursa otomatikman ayarlanır ya da toplama listesi işleminde (Naklie "
+#~ "İstisnası). \n"
+#~ "'Bekleyen Program) durumu fatura onaylandığında ama programcının sipariş "
+#~ "tarihini çalıştırmasının beklendiğinde ayarlanır."
+
+#, python-format
+#~ msgid "Not enough stock ! : "
+#~ msgstr "Yeterli stok yok !: "
+
+#~ msgid ""
+#~ "\n"
+#~ "Hello${object.partner_order_id.name and ' ' or "
+#~ "''}${object.partner_order_id.name or ''},\n"
+#~ "\n"
+#~ "Here is your order confirmation for ${object.partner_id.name}:\n"
+#~ "       | Order number: *${object.name}*\n"
+#~ "       | Order total: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Order date: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Order reference: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       | Your reference: ${object.client_order_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
+#~ "and '<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "You can view the order confirmation, download it and even pay online using "
+#~ "the following link:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.order_policy in ('prepaid','manual') and "
+#~ "object.company_id.paypal_account:\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "order_name = quote(object.name)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "order_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.pricelist_id.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+#~ "unt=%s\" \\\n"
+#~ "             "
+#~ "\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+#~ "_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+#~ "e)\n"
+#~ "%>\n"
+#~ "It is also possible to directly pay with Paypal:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "If you have any question, do not hesitate to contact us.\n"
+#~ "\n"
+#~ "\n"
+#~ "Thank you for choosing ${object.company_id.name}!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Phone: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+#~ msgstr ""
+#~ "\n"
+#~ "Merhaba${object.partner_order_id.name and ' ' or "
+#~ "''}${object.partner_order_id.name or ''},\n"
+#~ "\n"
+#~ "Bu siparişiniz için onay ${object.partner_id.name}:\n"
+#~ "       | Sipariş numarası: *${object.name}*\n"
+#~ "       | Sipariş toplamı: *${object.amount_total} "
+#~ "${object.pricelist_id.currency_id.name}*\n"
+#~ "       | Sipariş tarihi: ${object.date_order}\n"
+#~ "       % if object.origin:\n"
+#~ "       | Sipariş referansı: ${object.origin}\n"
+#~ "       % endif\n"
+#~ "       % if object.client_order_ref:\n"
+#~ "       | Referansınız: ${object.client_order_ref}<br />\n"
+#~ "       % endif\n"
+#~ "       | İlgili Kişiniz: ${object.user_id.name} ${object.user_id.user_email "
+#~ "and '<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "\n"
+#~ "Aşağıdaki linkten sipariş onayınızı izleyebilir, indirebilir ve hatta "
+#~ "çevrimiçi ödeme yapabilirsiniz:\n"
+#~ "    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
+#~ "\n"
+#~ "% if object.order_policy in ('prepaid','manual') and "
+#~ "object.company_id.paypal_account:\n"
+#~ "<% \n"
+#~ "comp_name = quote(object.company_id.name)\n"
+#~ "order_name = quote(object.name)\n"
+#~ "paypal_account = quote(object.company_id.paypal_account)\n"
+#~ "order_amount = quote(str(object.amount_total))\n"
+#~ "cur_name = quote(object.pricelist_id.currency_id.name)\n"
+#~ "paypal_url = \"https://www.paypal.com/cgi-"
+#~ "bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
+#~ "unt=%s\" \\\n"
+#~ "             "
+#~ "\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
+#~ "_%s\" % \\\n"
+#~ "             "
+#~ "(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+#~ "e)\n"
+#~ "%>\n"
+#~ "Paypal ile doğrudan ödemeniz de olasıdır:\n"
+#~ "    ${paypal_url}\n"
+#~ "% endif\n"
+#~ "\n"
+#~ "Eğer bir sorunuz olursa bize danışmakta tereddüt etmeyin.\n"
+#~ "\n"
+#~ "\n"
+#~ "Firmamız ${object.company_id.name} seçtiğiniz için teşekkür ederiz!\n"
+#~ "\n"
+#~ "\n"
+#~ "--\n"
+#~ "${object.user_id.name} ${object.user_id.user_email and "
+#~ "'<%s>'%(object.user_id.user_email) or ''}\n"
+#~ "${object.company_id.name}\n"
+#~ "% if object.company_id.street:\n"
+#~ "${object.company_id.street or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.street2:\n"
+#~ "${object.company_id.street2}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.city or object.company_id.zip:\n"
+#~ "${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.country_id:\n"
+#~ "${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
+#~ "or ''} ${object.company_id.country_id.name or ''}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.phone:\n"
+#~ "Telefon: ${object.company_id.phone}\n"
+#~ "% endif\n"
+#~ "% if object.company_id.website:\n"
+#~ "${object.company_id.website or ''}\n"
+#~ "% endif\n"
+#~ "            "
+
+#~ msgid ""
+#~ "Depending on the configuration of the location Output, the move between the "
+#~ "output area and the customer is done through the Delivery Order manually or "
+#~ "automatically."
+#~ msgstr ""
+#~ "Çıkış konumunun yapılandırmasına bağlı olarak, müşteri ile çıkış konumu "
+#~ "arasındaki hareket Teslimat Emri yoluyla elle ya da otomatik olarak yapılır."
+
+#~ msgid ""
+#~ "If 'on order', it triggers a procurement when the sale order is confirmed to "
+#~ "create a task, purchase order or manufacturing order linked to this sale "
+#~ "order line."
+#~ msgstr ""
+#~ "Eğer 'siparişte' ise, satış siparişi bir görev oluşturmak üzere onaylanırsa "
+#~ "bir satınalmayı başlatır, satınalma siparişi ya da üretim emri bu satış "
+#~ "siparişi öğesine bağlantılıdır."
+
+#, python-format
+#~ msgid ""
+#~ "Couldn't find a pricelist line matching this product and quantity.\n"
+#~ "You have to change either the product, the quantity or the pricelist."
+#~ msgstr ""
+#~ "Bu ürün ve miktarla eşleşen bir fiyat listesi bulunamadı.\n"
+#~ "Hem ürünü hem de miktarı ya da fiyat listesini değiştirmelisiniz."
+
+#~ msgid ""
+#~ "One Procurement order for each sales order line and for each of the "
+#~ "components."
+#~ msgstr "Her satış siparişi öğesi ve her bileşen için bir Satınalma İşlemi."
+
+#, python-format
+#~ msgid "The quotation '%s' has been converted to a sales order."
+#~ msgstr "'%s' Teklifi satış siparişine dönüştürüldü."
+
+#~ msgid "Procurement Order"
+#~ msgstr "Satınalma Emri"
+
+#~ msgid ""
+#~ "Here is a list of each sales order line to be invoiced. You can invoice "
+#~ "sales orders partially, by lines of sales order. You do not need this list "
+#~ "if you invoice from the delivery orders or if you invoice sales totally."
+#~ msgstr ""
+#~ "Bu listede faturalanacak satış siparişi öğeleri bulunuyor. Sipariş "
+#~ "öğelerinin bir kısmını  faturalayabilirsiniz. Teslimatalara bağlı faturalama "
+#~ "ya da tüm siparişi topluca faturalama yöntemlerini kullanıyorsanız bu "
+#~ "listeye gereksiniminiz bulunmuyor."
+
+#~ msgid "Drives procurement orders for every sales order line."
+#~ msgstr "Her Satış öğesi satırı için satınalma emirlerini yürütür."
+
+#~ msgid "Order Line"
+#~ msgstr "Sipariş Öğesi"
+
+#~ msgid "Sales by Salesman"
+#~ msgstr "Satış temsilcisine göre satışlar"
+
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr ""
+#~ "Teslimat politikası 'Toplamaya göre faturalama' ya da 'Teslimat sonrası "
+#~ "siparişe göre faturalama' ise faturalar otomatikman yaratılacak."
+
+#, python-format
+#~ msgid ""
+#~ "There is no income category account defined in default Properties for "
+#~ "Product Category or Fiscal Position is not defined !"
+#~ msgstr ""
+#~ "Varsayılan Ürün Kategorisi Özelliklerinde kategori gelir hesabı yok ya da "
+#~ "Mali Durum tanımlanmamış !"
+
+#, python-format
+#~ msgid "Could not cancel this sales order !"
+#~ msgstr "Bu satış siparişi iptal edilemiyor!"
+
+#, python-format
+#~ msgid "(n/a)"
+#~ msgstr "Uygulanamaz"
+
+#, python-format
+#~ msgid "You must first cancel stock moves attached to this sales order line."
+#~ msgstr ""
+#~ "Öncelikle bu satış siparişi öğesine bağlı olan stok hareketlerini iptal "
+#~ "etmelisiniz."
+
+#~ msgid "Incoterm"
+#~ msgstr "Uluslararası Teslim Biçimleri"
+
+#~ msgid "Line Sequence"
+#~ msgstr "Satır Sırası"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "Görünüm türündeki bir konuma ürün giriş çıkışı yapamazsınız."
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Vergisiz Tutar"
+
+#~ msgid "Lines to Invoice"
+#~ msgstr "Faturalanacak Öğeler"
+
+#~ msgid "Extra Info"
+#~ msgstr "Ek Bilgi"
+
+#, python-format
+#~ msgid "Could not cancel sales order line!"
+#~ msgstr "Satış sipariş öğeleri iptal edilemiyor!"
+
+#~ msgid "Create Final Invoice"
+#~ msgstr "Son Faturayı Oluştur"
+
+#~ msgid "Companies"
+#~ msgstr "Firmalar"
+
+#~ msgid "Invoice on order after delivery"
+#~ msgstr "Siparişin tesliminden sonra Faturala"
+
+#~ msgid ""
+#~ "It indicates that the sales order has been delivered. This field is updated "
+#~ "only after the scheduler(s) have been launched."
+#~ msgstr ""
+#~ "Satış siparişinin teslim edildiğini gösterir. Bu alan sadece planlayıcı(lar) "
+#~ "başlatıldığı zaman güncellenir."
+
+#~ msgid ""
+#~ "The name and address of the contact who requested the order or quotation."
+#~ msgstr "Sipariş ya da teklif isteyen kişinin adı ve adresi."
+
+#~ msgid "Total Tax Excluded"
+#~ msgstr "KDV hariç Toplam"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr ""
+#~ "Bu, emniyet açısından müşterilere söz verilen teslimat süresine eklenecek "
+#~ "gün sayısıdır."
+
+#~ msgid "on order"
+#~ msgstr "sipariş üzerine"
+
+#~ msgid "Auto-email confirmed sale orders"
+#~ msgstr "Oto-eposta onaylı satış siparişleri"
+
+#, python-format
+#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr "Bu şirket için satış günlüğü bulunmuyor: \"%s\" (id:%d)"
+
+#~ msgid "Sales by Partner"
+#~ msgstr "Paydaşa göre Satışlar"
+
+#~ msgid "Open Invoice"
+#~ msgstr "Fatura Aç"
+
+#~ msgid "Ordering Contact"
+#~ msgstr "Sipariş İlgilisi"
+
+#~ msgid "Force Assignation"
+#~ msgstr "Tahsise Zorla"
+
+#~ msgid "Based on the shipped or on the ordered quantities."
+#~ msgstr "Gönderilen ya da sipariş edilen miktarlara bağlı."
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is in state '%s'!"
+#~ msgstr "'%s' durumundaki bir satış siparişi öğesi silinemiyor!"
+
+#~ msgid "Sales per Customer in last 90 days"
+#~ msgstr "Son 90 gündeki Müşteri başına Satışlar"
+
+#~ msgid "Related Picking"
+#~ msgstr "İlgili Toplama"
+
+#~ msgid "Qty(UoS)"
+#~ msgstr "Mik (Satış Birimi)"
+
+#~ msgid "Create Delivery Order"
+#~ msgstr "Teslimat Emri Oluştur"
+
+#~ msgid "Deliveries to Invoice"
+#~ msgstr "Faturalanacak Teslimatlar"
+
+#~ msgid "Sales by Product Category"
+#~ msgstr "Ürün Kategorisine göre Satışlar"
+
+#~ msgid "Create Pick List"
+#~ msgstr "Toplama Listesi Oluştur"
+
+#~ msgid "Document of the move to the output or to the customer."
+#~ msgstr "Çıkışa ya da müşteriye yapılan hareketin belgesi."
+
+#~ msgid "Pick List"
+#~ msgstr "Toplama Listesi"
+
+#~ msgid "Invoice Based on Sales Orders"
+#~ msgstr "Satış Siparişlerine Bağlı Fatura"
+
+#~ msgid "Do you charge the delivery?"
+#~ msgstr "Teslimatı hesaba ekliyor musunuz?"
+
+#~ msgid "Picking List"
+#~ msgstr "Toplama Listesi"
+
+#~ msgid "Qty(UoM)"
+#~ msgstr "Mik(Ölçü Birimi)"
+
+#~ msgid "Shipping Exception"
+#~ msgstr "Gönderim İstisnası"
+
+#~ msgid "Setup your Invoicing Method"
+#~ msgstr "Fatura Yönteminizi Ayarlayın"
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr ""
+#~ "Incoterm, 'Uluslararası Ticaret Terimleri' için kullanılır, ticari "
+#~ "işlemlerde kullanılan bir dizi satış terimlerini kapsar."
+
+#~ msgid ""
+#~ "If you have more than one shop reselling your company products, you can "
+#~ "create and manage that from here. Whenever you will record a new quotation "
+#~ "or sales order, it has to be linked to a shop. The shop also defines the "
+#~ "warehouse from which the products will be delivered for each particular "
+#~ "sales."
+#~ msgstr ""
+#~ "Eğer ürünlerinizi sattığınız birden fazla mağazanız varsa, bunu buradan "
+#~ "oluşturabilir ve yönetebilirsiniz. Ne zaman yenş bir teklif ve satış "
+#~ "siparişi kaydedecek olsanız, bu mağazaya bağlı olunmalıdır. Mağaza aynı "
+#~ "zamanda her belirli satış için ürünlerin hanfi depodan teslim edileceğini "
+#~ "tanımlar."
+
+#~ msgid "Delivered"
+#~ msgstr "Teslim edildi"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Bu ürün için bir üretim partisi girmeniz gerekir"
+
+#~ msgid "from stock"
+#~ msgstr "stoktan"
+
+#~ msgid "Packings"
+#~ msgstr "Paketlemeler"
+
+#~ msgid "Sales order created in last month"
+#~ msgstr "Son ayda oluşturulan satış siparişleri"
+
+#~ msgid "Image"
+#~ msgstr "Görüntü"
+
+#~ msgid "Sales order created in current year"
+#~ msgstr "Geçerli yıldaki satış siparişleri"
+
+#~ msgid ""
+#~ "The Pick List form is created as soon as the sales order is confirmed, in "
+#~ "the same time as the procurement order. It represents the assignment of "
+#~ "parts to the sales order. There is 1 pick list by sales order line which "
+#~ "evolves with the availability of parts."
+#~ msgstr ""
+#~ "Satış siparişi onaylanır onaylanmaz, tedarik siparişi ile eş zamanlı olarak "
+#~ "paketleme listesi oluşturulur. Bu parçaların satış siparişine atanmasını "
+#~ "temsil etmektedir. Satış sipariş öğesi içinde parçaların stokta "
+#~ "bulunabilirliği ile bağlantılı olarak bir paketleme listesi vardır."
+
+#~ msgid "Main Method Based On"
+#~ msgstr "Ana Yöntemin Dayanağı"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Hata! Özyinelemeli şirketler oluşturamazsınız."
+
+#~ msgid ""
+#~ "This is a list of picking that has been generated for this sales order."
+#~ msgstr ""
+#~ "Bu liste, bu satış siparişi listesi için oluşturulan toplama listesidir."
+
+#~ msgid "Cancel Assignation"
+#~ msgstr "Atamayı İptal et"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr ""
+#~ "Önce bu satış siparişine ait bütün toplama işlemlerini iptal etmelisiniz."
+
+#~ msgid "Picking Policy"
+#~ msgstr "Toplama Kuralı"
+
+#~ msgid "Reference UoM"
+#~ msgstr "Referans Ölçü Birimi"
+
+#~ msgid "Invoice Policy"
+#~ msgstr "Fatura Kuralı"
