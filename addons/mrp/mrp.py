@@ -462,7 +462,7 @@ class mrp_production(osv.osv):
         'date_finished': fields.datetime('End Date', select=True, readonly=True),
 
         'bom_id': fields.many2one('mrp.bom', 'Bill of Material', domain=[('bom_id','=',False)], readonly=True, states={'draft':[('readonly',False)]},
-            help="Bills of Materials allow you to define the list of required raw materials required to make a finished product."),
+            help="Bill of Materials allow you to define the list of required raw materials to make a finished product."),
         'routing_id': fields.many2one('mrp.routing', string='Routing', on_delete='set null', readonly=True, states={'draft':[('readonly',False)]},
             help="The list of operations (list of work centers) to produce the finished product. The routing is mainly used to compute work center costs during operations and to plan future loads on work centers based on production plannification."),
         'picking_id': fields.many2one('stock.picking', 'Picking List', readonly=True, ondelete="restrict",

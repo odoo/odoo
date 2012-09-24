@@ -513,7 +513,16 @@
               </p>
             </field>
         </record>
-
+        
+        <record id="product_supply_method_produce" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context" eval="{'search_default_supply_method': 'produce'}"/>
+            <field name="view_id" ref="product.product_kanban_view"/>
+        </record>
         <!-- BOM menus -->
 
         <menuitem
@@ -523,7 +532,7 @@
             sequence="10"/>
        <menuitem name="Products" 
             id="menu_mrp_product_form" 
-            action="product.product_normal_action_puchased"
+            action="product_supply_method_produce"
             parent="menu_mrp_bom"/>
         <menuitem
             action="mrp_bom_form_action2"
