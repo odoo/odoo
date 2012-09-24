@@ -38,7 +38,7 @@ when you confirm your sale order it will automatically create a registration for
 this event.
 """,
     'author': 'OpenERP SA',
-    'depends': ['event','sale','sale_crm'],
+    'depends': ['event', 'sale_crm'],
     'data': ['event_sale_view.xml'],
     'demo': ['event_demo.xml'],
     'test': ['test/confirm.yml'],

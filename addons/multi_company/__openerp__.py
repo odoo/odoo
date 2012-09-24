@@ -34,7 +34,7 @@ This module is the base module for other multi-company modules.
     'website': 'http://www.openerp.com/',
     'depends': [
         'base',
-        'sale',
+        'sale_stock',
         'project',
     ],
     'data': ['res_company_view.xml'],
