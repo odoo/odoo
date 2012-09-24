@@ -1486,7 +1486,7 @@ class BaseModel(object):
         :param data: row-major matrix of data to import
         :type data: list(list(str))
         :param dict context:
-        :returns:
+        :returns: {ids: list(int)|False, messages: [Message]}
         """
         cr.execute('SAVEPOINT model_load')
         messages = []
@@ -1516,8 +1516,8 @@ class BaseModel(object):
                 messages.append(dict(info, type="error", message=str(e)))
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
-            return False, messages
-        return ids, messages
+            ids = False
+        return {'ids': ids, 'messages': messages}
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
         """ Generates record dicts from the data iterable.

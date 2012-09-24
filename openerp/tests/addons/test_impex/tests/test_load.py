@@ -100,9 +100,9 @@ class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
     def test_create_with_id(self):
-        ids, messages = self.import_(['.id', 'value'], [['42', '36']])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
+        result = self.import_(['.id', 'value'], [['42', '36']])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [{
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
@@ -110,9 +110,9 @@ class test_ids_stuff(ImporterCase):
             'message': u"Unknown database identifier '42'",
         }])
     def test_create_with_xid(self):
-        ids, messages = self.import_(['id', 'value'], [['somexmlid', '42']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['id', 'value'], [['somexmlid', '42']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual(
             'somexmlid',
             self.xid(self.browse()[0]))
@@ -123,9 +123,9 @@ class test_ids_stuff(ImporterCase):
             36,
             self.model.browse(self.cr, openerp.SUPERUSER_ID, id).value)
 
-        ids, messages = self.import_(['.id', 'value'], [[str(id), '42']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['.id', 'value'], [[str(id), '42']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual(
             [42], # updated value to imported
             values(self.read()))
@@ -143,12 +143,12 @@ class test_boolean_field(ImporterCase):
     def test_empty(self):
         self.assertEqual(
             self.import_(['value'], []),
-            ([], []))
+            {'ids': [], 'messages': []})
 
     def test_exported(self):
-        ids, messages = self.import_(['value'], [['False'], ['True'], ])
-        self.assertEqual(len(ids), 2)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['False'], ['True'], ])
+        self.assertEqual(len(result['ids']), 2)
+        self.assertFalse(result['messages'])
         records = self.read()
         self.assertEqual([
             False,
@@ -170,18 +170,18 @@ class test_boolean_field(ImporterCase):
                   [u'klaidingas'], # false, lt,
         ]
 
-        ids, messages = self.import_(['value'], falses)
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), len(falses))
+        result = self.import_(['value'], falses)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), len(falses))
         self.assertEqual([False] * len(falses), values(self.read()))
 
     def test_trues(self):
         trues = [['None'], ['nil'], ['()'], ['f'], ['#f'],
                   # Problem: OpenOffice (and probably excel) output localized booleans
                   ['VRAI'], ['ok'], ['true'], ['yes'], ['1'], ]
-        ids, messages = self.import_(['value'], trues)
-        self.assertEqual(len(ids), 10)
-        self.assertEqual(messages, [
+        result = self.import_(['value'], trues)
+        self.assertEqual(len(result['ids']), 10)
+        self.assertEqual(result['messages'], [
             message(u"Unknown value '%s' for boolean field 'unknown', assuming 'yes'" % v[0],
                     type='warning', from_=i, to_=i, record=i)
             for i, v in enumerate(trues)
@@ -197,69 +197,69 @@ class test_integer_field(ImporterCase):
     def test_none(self):
         self.assertEqual(
             self.import_(['value'], []),
-            ([], []))
+            {'ids': [], 'messages': []})
 
     def test_empty(self):
-        ids, messages = self.import_(['value'], [['']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual(
             [False],
             values(self.read()))
 
     def test_zero(self):
-        ids, messages = self.import_(['value'], [['0']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['0']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
 
-        ids, messages = self.import_(['value'], [['-0']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['-0']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
 
         self.assertEqual([False, False], values(self.read()))
 
     def test_positives(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['1'],
             ['42'],
             [str(2**31-1)],
             ['12345678']
         ])
-        self.assertEqual(len(ids), 4)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 4)
+        self.assertFalse(result['messages'])
 
         self.assertEqual([
             1, 42, 2**31-1, 12345678
         ], values(self.read()))
 
     def test_negatives(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['-1'],
             ['-42'],
             [str(-(2**31 - 1))],
             [str(-(2**31))],
             ['-12345678']
         ])
-        self.assertEqual(len(ids), 5)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 5)
+        self.assertFalse(result['messages'])
         self.assertEqual([
             -1, -42, -(2**31 - 1), -(2**31), -12345678
         ], values(self.read()))
 
     @mute_logger('openerp.sql_db')
     def test_out_of_range(self):
-        ids, messages = self.import_(['value'], [[str(2**31)]])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
+        result = self.import_(['value'], [[str(2**31)]])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [{
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
             'message': "integer out of range\n"
         }])
 
-        ids, messages = self.import_(['value'], [[str(-2**32)]])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
+        result = self.import_(['value'], [[str(-2**32)]])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [{
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
@@ -267,9 +267,9 @@ class test_integer_field(ImporterCase):
         }])
 
     def test_nonsense(self):
-        ids, messages = self.import_(['value'], [['zorglub']])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
+        result = self.import_(['value'], [['zorglub']])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [{
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
@@ -282,29 +282,29 @@ class test_float_field(ImporterCase):
     def test_none(self):
         self.assertEqual(
             self.import_(['value'], []),
-            ([], []))
+            {'ids': [], 'messages': []})
 
     def test_empty(self):
-        ids, messages = self.import_(['value'], [['']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual(
             [False],
             values(self.read()))
 
     def test_zero(self):
-        ids, messages = self.import_(['value'], [['0']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['0']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
 
-        ids, messages = self.import_(['value'], [['-0']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['-0']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
 
         self.assertEqual([False, False], values(self.read()))
 
     def test_positives(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['1'],
             ['42'],
             [str(2**31-1)],
@@ -312,15 +312,15 @@ class test_float_field(ImporterCase):
             [str(2**33)],
             ['0.000001'],
         ])
-        self.assertEqual(len(ids), 6)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 6)
+        self.assertFalse(result['messages'])
 
         self.assertEqual([
             1, 42, 2**31-1, 12345678, 2.0**33, .000001
         ], values(self.read()))
 
     def test_negatives(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['-1'],
             ['-42'],
             [str(-2**31 + 1)],
@@ -329,16 +329,16 @@ class test_float_field(ImporterCase):
             [str(-2**33)],
             ['-0.000001'],
         ])
-        self.assertEqual(len(ids), 7)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 7)
+        self.assertFalse(result['messages'])
         self.assertEqual([
             -1, -42, -(2**31 - 1), -(2**31), -12345678, -2.0**33, -.000001
         ], values(self.read()))
 
     def test_nonsense(self):
-        ids, messages = self.import_(['value'], [['foobar']])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [{
+        result = self.import_(['value'], [['foobar']])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [{
             'type': 'error',
             'rows': {'from': 0, 'to': 0},
             'record': 0,
@@ -350,13 +350,13 @@ class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
 
     def test_empty(self):
-        ids, messages = self.import_(['value'], [['']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual([False], values(self.read()))
 
     def test_imported(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             [u'foobar'],
             [u'foobarbaz'],
             [u'Með suð í eyrum við spilum endalaust'],
@@ -364,8 +364,8 @@ class test_string_field(ImporterCase):
              u"someone he can't pound a nail with a banana doesn't much "
              u"surprise him."]
         ])
-        self.assertEqual(len(ids), 4)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 4)
+        self.assertFalse(result['messages'])
         self.assertEqual([
             u"foobar",
             u"foobarbaz",
@@ -377,14 +377,14 @@ class test_unbound_string_field(ImporterCase):
     model_name = 'export.string'
 
     def test_imported(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             [u'í dag viðrar vel til loftárása'],
             # ackbar.jpg
             [u"If they ask you about fun, you tell them – fun is a filthy"
              u" parasite"]
         ])
-        self.assertEqual(len(ids), 2)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 2)
+        self.assertFalse(result['messages'])
         self.assertEqual([
             u"í dag viðrar vel til loftárása",
             u"If they ask you about fun, you tell them – fun is a filthy parasite"
@@ -394,9 +394,9 @@ class test_text(ImporterCase):
     model_name = 'export.text'
 
     def test_empty(self):
-        ids, messages = self.import_(['value'], [['']])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['']])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual([False], values(self.read()))
 
     def test_imported(self):
@@ -406,9 +406,9 @@ class test_text(ImporterCase):
              u"snúninga 12 tommu vínylplötur (sem geta verið allt að 30 mín "
              u"hvor hlið).\n\nBreiðskífur eru stundum tvöfaldar og eru þær þá"
              u" gefnar út á tveimur geisladiskum eða tveimur vínylplötum.")
-        ids, messages = self.import_(['value'], [[s]])
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [[s]])
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
         self.assertEqual([s], values(self.read()))
 
 class test_selection(ImporterCase):
@@ -420,44 +420,44 @@ class test_selection(ImporterCase):
     ]
 
     def test_imported(self):
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['Qux'],
             ['Bar'],
             ['Foo'],
             ['2'],
         ])
-        self.assertEqual(len(ids), 4)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 4)
+        self.assertFalse(result['messages'])
         self.assertEqual([3, 2, 1, 2], values(self.read()))
 
     def test_imported_translated(self):
         self.add_translations(
             'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
 
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['toto'],
             ['tete'],
             ['titi'],
         ], context={'lang': 'fr_FR'})
-        self.assertEqual(len(ids), 3)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 3)
+        self.assertFalse(result['messages'])
 
         self.assertEqual([3, 1, 2], values(self.read()))
 
-        ids, messages = self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'})
-        self.assertEqual(len(ids), 1)
-        self.assertFalse(messages)
+        result = self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'})
+        self.assertEqual(len(result['ids']), 1)
+        self.assertFalse(result['messages'])
 
     def test_invalid(self):
-        ids, messages = self.import_(['value'], [['Baz']])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [message(
+        result = self.import_(['value'], [['Baz']])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [message(
             u"Value 'Baz' not found in selection field 'unknown'",
             moreinfo="Foo Bar Qux".split())])
 
-        ids, messages = self.import_(['value'], [[42]])
-        self.assertIs(ids, False)
-        self.assertEqual(messages, [message(
+        result = self.import_(['value'], [[42]])
+        self.assertIs(result['ids'], False)
+        self.assertEqual(result['messages'], [message(
             u"Value '42' not found in selection field 'unknown'",
             moreinfo="Foo Bar Qux".split())])
 
@@ -476,12 +476,12 @@ class test_selection_function(ImporterCase):
         import does not actually know that the selection field uses a function
         """
         # NOTE: conflict between a value and a label => pick first
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['3'],
             ["Grault"],
         ])
-        self.assertEqual(len(ids), 2)
-        self.assertFalse(messages)
+        self.assertEqual(len(result['ids']), 2)
+        self.assertFalse(result['messages'])
         self.assertEqual(
             ['3', '1'],
             values(self.read()))
@@ -492,17 +492,17 @@ class test_selection_function(ImporterCase):
         self.add_translations(
             'export.selection,value', 'selection', 'fr_FR', *self.translations_fr)
 
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['titi'],
             ['tete'],
         ], context={'lang': 'fr_FR'})
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 2)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 2)
         self.assertEqual(values(self.read()), ['1', '2'])
 
-        ids, messages = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        result = self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'})
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
 class test_m2o(ImporterCase):
     model_name = 'export.many2one'
@@ -519,14 +519,14 @@ class test_m2o(ImporterCase):
         name2 = dict(self.registry('export.integer').name_get(
             self.cr, openerp.SUPERUSER_ID,[integer_id2]))[integer_id2]
 
-        ids , messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             # import by name_get
             [name1],
             [name1],
             [name2],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 3)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 3)
         # correct ids assigned to corresponding records
         self.assertEqual([
             (integer_id1, name1),
@@ -541,18 +541,18 @@ class test_m2o(ImporterCase):
         xid = self.xid(ExportInteger.browse(
             self.cr, openerp.SUPERUSER_ID, [integer_id])[0])
 
-        ids, messages = self.import_(['value/id'], [[xid]])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        result = self.import_(['value/id'], [[xid]])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
         b = self.browse()
         self.assertEqual(42, b[0].value.value)
 
     def test_by_id(self):
         integer_id = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 42})
-        ids, messages = self.import_(['value/.id'], [[integer_id]])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        result = self.import_(['value/.id'], [[integer_id]])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
         b = self.browse()
         self.assertEqual(42, b[0].value.value)
 
@@ -568,12 +568,12 @@ class test_m2o(ImporterCase):
         # names should be the same
         self.assertEqual(name1, name2)
 
-        ids, messages = self.import_(['value'], [[name2]])
+        result = self.import_(['value'], [[name2]])
         self.assertEqual(
-            messages,
+            result['messages'],
             [message(u"Found multiple matches for field 'unknown' (2 matches)",
                      type='warning')])
-        self.assertEqual(len(ids), 1)
+        self.assertEqual(len(result['ids']), 1)
         self.assertEqual([
             (integer_id1, name1)
         ], values(self.read()))
@@ -588,55 +588,55 @@ class test_m2o(ImporterCase):
             self.cr, openerp.SUPERUSER_ID, {'value': 36})
 
         # Because name_search all the things. Fallback schmallback
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
                 # import by id, without specifying it
                 [integer_id1],
                 [integer_id2],
                 [integer_id1],
         ])
-        self.assertEqual(messages, [
+        self.assertEqual(result['messages'], [
             message(u"No matching record found for name '%s' in field 'unknown'" % id,
                     from_=index, to_=index, record=index)
             for index, id in enumerate([integer_id1, integer_id2, integer_id1])])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_sub_field(self):
         """ Does not implicitly create the record, does not warn that you can't
         import m2o subfields (at all)...
         """
-        ids, messages = self.import_(['value/value'], [['42']])
-        self.assertEqual(messages, [
+        result = self.import_(['value/value'], [['42']])
+        self.assertEqual(result['messages'], [
             message(u"Can not create Many-To-One records indirectly, import "
                     u"the field separately")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_fail_noids(self):
-        ids, messages = self.import_(['value'], [['nameisnoexist:3']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value'], [['nameisnoexist:3']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for name 'nameisnoexist:3' "
             u"in field 'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
-        ids, messages = self.import_(['value/id'], [['noxidhere']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value/id'], [['noxidhere']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidhere' "
             u"in field 'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
-        ids, messages = self.import_(['value/.id'], [['66']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value/.id'], [['66']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '66' "
             u"in field 'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_fail_multiple(self):
-        ids, messages = self.import_(
+        result = self.import_(
             ['value', 'value/id'],
             [['somename', 'somexid']])
-        self.assertEqual(messages, [message(
+        self.assertEqual(result['messages'], [message(
             u"Ambiguous specification for field 'unknown', only provide one of "
             u"name, external id or database id")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
@@ -656,14 +656,14 @@ class test_m2m(ImporterCase):
         id5 = self.registry('export.many2many.other').create(
                 self.cr, openerp.SUPERUSER_ID, {'value': 99, 'str': 'record4'})
 
-        ids, messages = self.import_(['value/.id'], [
+        result = self.import_(['value/.id'], [
             ['%d,%d' % (id1, id2)],
             ['%d,%d,%d' % (id1, id3, id4)],
             ['%d,%d,%d' % (id1, id2, id3)],
             ['%d' % id5]
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 4)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 4)
 
         ids = lambda records: [record.id for record in records]
 
@@ -675,11 +675,11 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[2].value), [3, 44, 84])
 
     def test_noids(self):
-        ids, messages = self.import_(['value/.id'], [['42']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value/.id'], [['42']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '42' in field "
             u"'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_xids(self):
         M2O_o = self.registry('export.many2many.other')
@@ -689,23 +689,23 @@ class test_m2m(ImporterCase):
         id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
         records = M2O_o.browse(self.cr, openerp.SUPERUSER_ID, [id1, id2, id3, id4])
 
-        ids, messages = self.import_(['value/id'], [
+        result = self.import_(['value/id'], [
             ['%s,%s' % (self.xid(records[0]), self.xid(records[1]))],
             ['%s' % self.xid(records[3])],
             ['%s,%s' % (self.xid(records[2]), self.xid(records[1]))],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 3)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 3)
 
         b = self.browse()
         self.assertEqual(values(b[0].value), [3, 44])
         self.assertEqual(values(b[2].value), [44, 84])
     def test_noxids(self):
-        ids, messages = self.import_(['value/id'], [['noxidforthat']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value/id'], [['noxidforthat']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidforthat' "
             u"in field 'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_names(self):
         M2O_o = self.registry('export.many2many.other')
@@ -717,24 +717,24 @@ class test_m2m(ImporterCase):
 
         name = lambda record: dict(record.name_get())[record.id]
 
-        ids, messages = self.import_(['value'], [
+        result = self.import_(['value'], [
             ['%s,%s' % (name(records[1]), name(records[2]))],
             ['%s,%s,%s' % (name(records[0]), name(records[1]), name(records[2]))],
             ['%s,%s' % (name(records[0]), name(records[3]))],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 3)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 3)
 
         b = self.browse()
         self.assertEqual(values(b[1].value), [3, 44, 84])
         self.assertEqual(values(b[2].value), [3, 9])
 
     def test_nonames(self):
-        ids, messages = self.import_(['value'], [['wherethem2mhavenonames']])
-        self.assertEqual(messages, [message(
+        result = self.import_(['value'], [['wherethem2mhavenonames']])
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for name 'wherethem2mhavenonames' in "
             u"field 'unknown'")])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_import_to_existing(self):
         M2O_o = self.registry('export.many2many.other')
@@ -744,12 +744,12 @@ class test_m2m(ImporterCase):
         id4 = M2O_o.create(self.cr, openerp.SUPERUSER_ID, {'value': 9, 'str': 'record3'})
 
         xid = 'myxid'
-        ids, messages = self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id1, id2)]])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
-        ids, messages = self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id3, id4)]])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        result = self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id1, id2)]])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+        result = self.import_(['id', 'value/.id'], [[xid, '%d,%d' % (id3, id4)]])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         b = self.browse()
         self.assertEqual(len(b), 1)
@@ -762,31 +762,31 @@ class test_o2m(ImporterCase):
     def test_name_get(self):
         s = u'Java is a DSL for taking large XML files and converting them ' \
             u'to stack traces'
-        ids, messages = self.import_(
+        result = self.import_(
             ['const', 'value'],
             [['5', s]])
-        self.assertEqual(messages, [message(
+        self.assertEqual(result['messages'], [message(
             u"No matching record found for name '%s' in field 'unknown'" % s)])
-        self.assertIs(ids, False)
+        self.assertIs(result['ids'], False)
 
     def test_single(self):
-        ids, messages = self.import_(['const', 'value/value'], [
+        result = self.import_(['const', 'value/value'], [
             ['5', '63']
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
         self.assertEqual(b.const, 5)
         self.assertEqual(values(b.value), [63])
 
     def test_multicore(self):
-        ids, messages = self.import_(['const', 'value/value'], [
+        result = self.import_(['const', 'value/value'], [
             ['5', '63'],
             ['6', '64'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 2)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 2)
 
         b1, b2 = self.browse()
         self.assertEqual(b1.const, 5)
@@ -795,27 +795,27 @@ class test_o2m(ImporterCase):
         self.assertEqual(values(b2.value), [64])
 
     def test_multisub(self):
-        ids, messages = self.import_(['const', 'value/value'], [
+        result = self.import_(['const', 'value/value'], [
             ['5', '63'],
             ['', '64'],
             ['', '65'],
             ['', '66'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
         self.assertEqual(values(b.value), [63, 64, 65, 66])
 
     def test_multi_subfields(self):
-        ids, messages = self.import_(['value/str', 'const', 'value/value'], [
+        result = self.import_(['value/str', 'const', 'value/value'], [
             ['this', '5', '63'],
             ['is', '', '64'],
             ['the', '', '65'],
             ['rhythm', '', '66'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         (b,) = self.browse()
         self.assertEqual(values(b.value), [63, 64, 65, 66])
@@ -833,11 +833,11 @@ class test_o2m(ImporterCase):
             'str': 'Me', 'value': 262
         })
 
-        ids, messages = self.import_(['const', 'value/.id'], [
+        result = self.import_(['const', 'value/.id'], [
             ['42', '%d,%d' % (id1, id2)]
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
         self.assertEqual(b.const, 42)
@@ -856,12 +856,12 @@ class test_o2m(ImporterCase):
             'str': 'Me', 'value': 262
         })
 
-        ids, messages = self.import_(['const', 'value/.id'], [
+        result = self.import_(['const', 'value/.id'], [
             ['42', str(id1)],
             ['', str(id2)],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
         self.assertEqual(b.const, 42)
@@ -878,12 +878,12 @@ class test_o2m(ImporterCase):
             'str': 'Me', 'value': 262
         })
 
-        ids, messages = self.import_(['const', 'value/.id', 'value/value'], [
+        result = self.import_(['const', 'value/.id', 'value/value'], [
             ['42', str(id1), '1'],
             ['', str(id2), '2'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
         self.assertEqual(b.const, 42)
@@ -894,21 +894,21 @@ class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
 
     def test_multi_mixed(self):
-        ids, messages = self.import_(['const', 'child1/value', 'child2/value'], [
+        result = self.import_(['const', 'child1/value', 'child2/value'], [
             ['5', '11', '21'],
             ['', '12', '22'],
             ['', '13', '23'],
             ['', '14', ''],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
         # Oh yeah, that's the stuff
         [b] = self.browse()
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
         self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi(self):
-        ids, messages = self.import_(['const', 'child1/value', 'child2/value'], [
+        result = self.import_(['const', 'child1/value', 'child2/value'], [
             ['5', '11', '21'],
             ['', '12', ''],
             ['', '13', ''],
@@ -916,15 +916,15 @@ class test_o2m_multiple(ImporterCase):
             ['', '', '22'],
             ['', '', '23'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
         self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi_fullsplit(self):
-        ids, messages = self.import_(['const', 'child1/value', 'child2/value'], [
+        result = self.import_(['const', 'child1/value', 'child2/value'], [
             ['5', '11', ''],
             ['', '12', ''],
             ['', '13', ''],
@@ -933,8 +933,8 @@ class test_o2m_multiple(ImporterCase):
             ['', '', '22'],
             ['', '', '23'],
         ])
-        self.assertFalse(messages)
-        self.assertEqual(len(ids), 1)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
 
         [b] = self.browse()
         self.assertEqual(b.const, 5)
