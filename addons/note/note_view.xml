@@ -50,7 +50,6 @@
           <field name="memo"/>
           <field name="date_done"/>
           <field name="current_partner_id"/>
-          <field name="message_is_follower"/>
           <field name="message_follower_ids"/>
           <field name="tag_ids"/>
           <templates>
@@ -119,9 +118,6 @@
                 </header>
                 <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
                 <div class="oe_chatter">
-                    <!-- Invisible fields used in chatter widgets -->
-                    <field name="message_subtype_data" invisible="True"/>
-                    <field name="message_is_follower" invisible="True"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                     <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
                 </div>

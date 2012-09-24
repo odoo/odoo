@@ -169,6 +169,7 @@ class mail_thread(osv.AbstractModel):
             for subtype in fol.subtype_ids:
                 thread_subtype_dict[subtype.name]['followed'] = True
             res[fol.res_id]['message_subtype_data'] = thread_subtype_dict
+        
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
@@ -678,6 +679,11 @@ class mail_thread(osv.AbstractModel):
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
+
+    def get_message_subtypes(self, cr, uid, ids, context=None):
+        """ message_subtype_data: data about document subtypes: which are
+                available, which are followed if any """
+        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """

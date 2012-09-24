@@ -14,7 +14,6 @@
     margin: 0;
 }
 
-
 /* ------------------------------------------------------------ */
 /* Wall
 /* ------------------------------------------------------------ */
@@ -35,6 +34,29 @@
     width: 560px;
     margin: 8px;
     list-style-type: none;
+}
+
+/* ------------------------------------------------------------ */
+/* Followers
+/* ------------------------------------------------------------ */
+
+.openerp div.oe_mail_recthread_aside h4 {
+    display: inline-block;
+}
+.openerp div.oe_mail_recthread_aside button {
+    position: relative;
+}
+.openerp div.oe_mail_recthread_aside label,
+.openerp div.oe_mail_recthread_aside input {
+    cursor:pointer;
+}
+.openerp div.oe_mail_recthread_subtypes {
+    display:none;
+}
+.openerp div.oe_mail_recthread_aside button span {
+    position: absolute;
+    top:-7px;
+    right:5px;
 }
 
 /* Specific display of threads in the wall */
@@ -111,15 +133,6 @@
 
 .openerp div.oe_mail_recthread_followers {
     margin-bottom: 8px;
-}
-
-
-/* ------------------------------------------------------------ */
-/* Followers
-/* ------------------------------------------------------------ */
-
-.openerp div.oe_mail_recthread_aside h4 {
-    display: inline-block;
 }
 
 /* ------------------------------------------------------------ */
