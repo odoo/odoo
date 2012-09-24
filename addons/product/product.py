@@ -897,4 +897,43 @@ class pricelist_partnerinfo(osv.osv):
     }
     _order = 'min_quantity asc'
 pricelist_partnerinfo()
+
+class res_currency(osv.osv):
+    _inherit = 'res.currency'
+
+    def _check_main_currency_rounding(self, cr, uid, ids, context=None):
+        cr.execute('SELECT digits FROM decimal_precision WHERE name like %s',('Account',))
+        digits = cr.fetchone()
+        if len(digits):
+            digits = digits[0]
+            main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+            for currency_id in ids:
+                if currency_id == main_currency.id:
+                    if main_currency.rounding < 10 ** -digits:
+                        return False
+        return True
+
+    _constraints = [
+        (_check_main_currency_rounding, 'Error! You cannot define a rounding factor for the company\'s main currency that is smaller than the decimal precision of \'Account\'.', ['rounding']),
+    ]
+
+class decimal_precision(osv.osv):
+    _inherit = 'decimal.precision'
+
+    def _check_main_currency_rounding(self, cr, uid, ids, context=None):
+        cr.execute('SELECT id, digits FROM decimal_precision WHERE name like %s',('Account',))
+        res = cr.fetchone()
+        if len(res):
+            account_precision_id, digits = res
+            main_currency = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.currency_id
+            for decimal_precision in ids:
+                if decimal_precision == account_precision_id:
+                    if main_currency.rounding < 10 ** -digits:
+                        return False
+        return True
+
+    _constraints = [
+        (_check_main_currency_rounding, 'Error! You cannot define the decimal precision of \'Account\' as greater than the rounding factor of the company\'s main currency', ['digits']),
+    ]
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
