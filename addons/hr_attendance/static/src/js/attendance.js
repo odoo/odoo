@@ -60,7 +60,7 @@ openerp.hr_attendance = function (instance) {
             return employee.read_slice(['id', 'name', 'state', 'last_sign', 'attendance_access']).pipe(function (res) {
                 if (_.isEmpty(res) )
                     return;
-                if (res['attendance_access'] == false){
+                if (res[0].attendance_access == false){
                     return;
                 }
                 self.$el.show();

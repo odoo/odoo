@@ -129,11 +129,12 @@ class hr_employee(osv.osv):
     def _attendance_access(self, cr, uid, ids, name, args, context=None):
         res = {}
         data_obj = self.pool.get('ir.model.data')
-        group = data_obj.get_object(cr, uid,'hr_attendance', 'hr_attendace_group')
-        if uid in [user.id for user in group.user]:
-            res[ids] = True
-        else:
-            res[ids] = False
+        group = data_obj.get_object(cr, uid, 'base', 'group_hr_attendance')
+        for id in ids :
+            if uid in [user.id for user in group.users]:
+                res[id] = True
+            else:
+                res[id] = False
         return res
 
     _columns = {
