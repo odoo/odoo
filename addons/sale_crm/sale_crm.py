@@ -30,6 +30,16 @@ class sale_order(osv.osv):
             domain="['|',('section_id','=',section_id),('section_id','=',False), ('object_id.model', '=', 'crm.lead')]")
     }
 
+def create(self, cr, uid, vals, context=None):
+        order =  super(sale_order, self).create(cr, uid, vals, context=context)
+        record = self.browse(cr, uid, order, context=context)
+        if record.section_id:
+            followers = [follow.id for follow in record.section_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [record.id],followers, context=context)
+        if order:
+            self.create_send_note(cr, uid, [order], context=context)
+        return order
+
 sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

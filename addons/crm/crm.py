@@ -102,6 +102,7 @@ class crm_case_section(osv.osv):
     """ Model for sales teams. """
     _name = "crm.case.section"
     _inherits = {'mail.alias': 'alias_id'}
+    _inherit = 'mail.thread'
     _description = "Sales Teams"
     _order = "complete_name"
 
