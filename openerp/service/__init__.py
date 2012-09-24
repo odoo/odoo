@@ -78,8 +78,6 @@ def start_internal():
 
 def start_services():
     """ Start all services including http, netrpc and cron """
-    openerp.multi_process = False # Nah!
-
     start_internal()
 
     # Initialize the HTTP stack.
@@ -120,6 +118,8 @@ def stop_services():
     openerp.modules.registry.RegistryManager.delete_all()
 
 def start_services_workers():
+    openerp.multi_process = True # Nah!
+
     openerp.service.workers.Multicorn(openerp.service.wsgi_server.application).run()
 
 
