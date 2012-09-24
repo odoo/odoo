@@ -228,17 +228,21 @@
         </record>
 
         <record model='ir.ui.view' id='fleet_vehicle_log_tree'>
-            <field name="name">fleet.vehicle.log.tree</field>
-            <field name="model">fleet.vehicle.log</field>
-            <field name="arch" type="xml">
-                <tree string="Logs">
-                    <field name="type" />
-                    <field name="create_date" />
-                    <field name="vehicle_id" />
-                    <field name="employee_id" />
-                    <field name="description" />
-                </tree>
-            </field>
+            
+                    <field name="name">fleet.vehicle.log.tree</field>
+                    <field name="model">fleet.vehicle.log</field>
+                    <field name="arch" type="xml">
+                        <tree string="Logs">
+                            
+                                        <field name="type" />
+                                        <field name="create_date" />
+                                        <field name="vehicle_id" />
+                                        <field name="employee_id" />
+                                        <field name="description" />
+                           
+                        </tree>
+                    </field>
+            
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_log_act'>
