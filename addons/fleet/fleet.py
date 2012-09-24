@@ -141,7 +141,8 @@ class fleet_vehicle_log_fuel(osv.Model):
         'description' : fields.text('Description'),
         'liter' : fields.integer('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
-        'type' : fields.char('Type',size=32),
+        'type' : fields.char('Type', size=32),
+        'invoice' : fields.many2one('account.invoice', 'Invoice', required=False, help='Invoice of the refueling log'),
     }
     _defaults = {'type': 'Refueling',}
 
