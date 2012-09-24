@@ -32,15 +32,17 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         var params = $.deparam($.param.querystring());
         var a = document.createElement('a');
         a.href = params.redirect_uri;
-        var search = (a.search ? '&' : '?') + 'access_token=' + result.access_token;
+        var new_params = {
+            access_token: result.access_token,
+            token_type: 'Bearer',
+        };
         if (params.state) {
-            search += "&state=" + params.state;
+            new_params.state = params.state;
         }
-        if (params.expires_in) {
-            search += "&expires_in=" + expires_in;
+        if (result.expires_in) {
+            new_params.expires_in = result.expires_in;
         }
-        search += '&token_type=Bearer';
-        var redirect = a.protocol + '//' + a.host + a.pathname + search + a.hash;
+        var redirect = a.protocol + '//' + a.host + a.pathname + '?' + $.param(new_params) + a.hash;
         //window.location = redirect;
         console.log("redirect to", redirect);
     },
