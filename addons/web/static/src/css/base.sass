@@ -113,14 +113,26 @@ $sheet-max-width: 860px
     @keyframes #{$name}
         @content
 
+
 // Transforms the (readable) text of an inline element into an mmlicons icon,
 // allows for actual readable text in-code (and in readers?) with iconic looks
 @mixin text-to-icon($icon-name, $color: #404040)
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    font-weight: normal 
     &:before
         font: 21px "mnmliconsRegular"
+        content: $icon-name
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    font-weight: normal 
+    &:before
+        font: $size "entypoRegular"
         content: $icon-name
         color: $color
 
@@ -133,6 +145,11 @@ $sheet-max-width: 860px
 .openerp.openerp_webclient_container
     height: 100%
     position: relative
+
+// jQueryUI css bug fixing
+.text-tag .text-button
+    height: auto !important
+    min-height: 16px
 
 .openerp
     // Global style {{{
@@ -155,6 +172,7 @@ $sheet-max-width: 860px
     // Tag reset {{{
     a
         text-decoration: none
+        cursor: pointer !important
     table
         padding: 0
         border-collapse: collapse
@@ -191,7 +209,7 @@ $sheet-max-width: 860px
     // Button style {{{
     a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
         display: inline-block
-        border: 1px solid #ababab
+        border: 1px solid rgba(0,0,0,0.4)
         color: #4c4c4c
         margin: 0
         padding: 3px 12px
@@ -362,7 +380,6 @@ $sheet-max-width: 860px
         color: white
         background: #DC5F59
     button.oe_highlight
-        border: 1px solid #795151
         @include vertical-gradient(#df3f3f, #a21a1a)
         @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
     button.oe_highlight:hover
@@ -459,6 +476,12 @@ $sheet-max-width: 860px
             text-decoration: none
         margin-bottom: 1px
     // }}}
+    .oe_form
+        header
+            .oe_tags
+                margin: 5px 0 0 5px
+                width: 400px
+                padding-bottom: 0
     // Tooltips {{{
     &.oe_tooltip
         font-size: 12px
@@ -538,7 +561,7 @@ $sheet-max-width: 860px
         position: relative
         cursor: pointer
     .oe_dropdown_toggle
-        color: #404040
+        color: rgba(0,0,0,0.5)
         font-weight: normal
     .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
         display: block
@@ -547,7 +570,7 @@ $sheet-max-width: 860px
         position: absolute
         top: 26px
         left: 0
-        z-index: 1
+        z-index: 3
         margin: 0
         padding: 0
         border: 1px solid $tag-border
@@ -865,6 +888,33 @@ $sheet-max-width: 860px
             float: left
         .oe_dropdown_menu
             right: -1px
+    // }}}
+    // About openerp {{{
+    .oe_about
+        background-color: white
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        @include radius(0 0 2px 2px)
+        a
+            color: $link-color
+            &:hover
+                text-decoration: underline
+            &:focus
+                outline: none
+        .oe_logo
+            margin-left: -6px
+        .oe_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+            color: #eee
+            padding: 0 16px
+            @include radius(0 0 2px 2px)
+            a
+                color: #eee
     // }}}
     // Systray {{{
     .oe_systray > div
@@ -1509,9 +1559,9 @@ $sheet-max-width: 860px
         margin: 16px
         > header
             margin: -16px -16px 0 -16px
-            padding: 8px
+            padding: 0
     .oe_form_sheetbg
-        padding: 8px 0
+        padding: 16px 0
     .oe_form_sheet_width
         min-width: 650px
         max-width: $sheet-max-width
@@ -1526,8 +1576,8 @@ $sheet-max-width: 860px
             background: url(/web/static/src/img/form_sheetbg.png)
             border-bottom: 1px solid #ddd
         .oe_form_sheet
-            border: 1px solid $tag-border
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            border: 1px solid #c8c8d3 //$tag-border
+            @include box-shadow(0 4px 20px rgba(0,0,0,0.15))
             .ui-tabs
                 margin: 0 -16px
             .oe_notebook_page
@@ -1540,6 +1590,8 @@ $sheet-max-width: 860px
             border-bottom: 1px solid #cacaca
             padding-left: 2px
             @include vertical-gradient(#fcfcfc, #dedede)
+            > span
+                margin-left: 4px
             ul
                 display: inline-block
                 float: right
@@ -1574,6 +1626,8 @@ $sheet-max-width: 860px
             .oe_subtotal_footer_separator
                 width: 108px
                 border-top: 1px solid #cacaca
+                margin-top: 4px
+                padding-top: 4px
                 font-weight: bold
                 font-size: 18px
             label:after
@@ -1735,6 +1789,14 @@ $sheet-max-width: 860px
             > div
                 position: relative
                 overflow: hidden
+        .oe_form_field_html
+            position: relative
+            width: 600px
+            margin-left: 130px
+            margin-top: 32px 
+            margin-bottom: 32px
+            text-align: justify
+            
     .oe_form_editable
         .oe_form
             .oe_form_field_integer
@@ -1751,6 +1813,9 @@ $sheet-max-width: 860px
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
     .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
         input.oe_form_binary_file
             z-index: 0
             line-height: 0
@@ -1812,7 +1877,8 @@ $sheet-max-width: 860px
         li 
             display: inline-block
             list-style-type: none
-            margin: 0 -20px 0 0
+            // It is probably a bad idea to modify this margin
+            margin: 0 -18px 0 0
             padding: 0
             @include vertical-gradient(#fcfcfc, #dedede)
             &:first-child .label
@@ -1946,6 +2012,7 @@ $sheet-max-width: 860px
             &.oe_form_field_float,&.oe_form_view_integer
                 input
                     text-align: right
+                    width: 100%
             &.oe_form_field_datetime,&.oe_form_field_date
                 > span
                     width: 100%
@@ -2068,13 +2135,16 @@ $sheet-max-width: 860px
             text-indent: -9001px
         td.oe_list_field_handle
             width: 1em
+            padding: 0 !important
             cursor: ns-resize
             .oe_list_handle
-                @include text-to-icon("ö")
+                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                margin-right: 7px
 
     .oe_list_cannot_edit
         .oe_list_header_handle, .oe_list_field_handle
             display: none !important
+            padding: 0 !important
     .oe_list_cannot_delete
         .oe_list_record_delete
             display: none !important
@@ -2122,10 +2192,6 @@ $sheet-max-width: 860px
             background-image: url(/web/static/src/img/collapse.gif)
         .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
             margin-left: 16px
-    // }}}
-    // Translation {{{
-    .oe_trad_field.touched
-        border: 1px solid green !important
     // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
