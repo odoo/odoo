@@ -44,7 +44,7 @@
                                         <field name="department_id" on_change="onchange_department_id(department_id)"/>
                                         <field name="job_id" options='{"no_open": true}' domain="[('state','!=','old')]" context="{'form_view_ref': 'hr.view_hr_job_employee_form'}"/>
                                         <field name="parent_id"/>
-                                        <span style='color: gray' colspan="2">As Manager of this employee, you will automatically follow all human resource request of this employee</span>
+                                        <span class="oe_grey" colspan="2">As Manager of this employee, you will automatically follow all human resource request of this employee</span>
                                         <field name="coach_id"/>
                                     </group>
                                     <group>
