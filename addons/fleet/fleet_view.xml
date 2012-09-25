@@ -120,6 +120,30 @@
                             </page>
                             <page string="Logs">
                                 <group>
+                                    <field name="log_odometer">
+                                        <tree string="Odometer Logs">
+                                            <field name="value" />
+                                            <field name="date_creation" />
+                                            <field name="employee_id" />
+                                            <field name="description" />
+                                        </tree>
+                                        <form string="Odometer Logs" version="7.0">
+                                            <sheet>
+                                                <group col = "2">
+                                                    <group>
+                                                        <field name="value" />
+                                                        <field name="date_creation" />
+                                                        <field name="employee_id" />
+                                                    </group>
+                                                    <group>
+                                                        <field name="description" />
+                                                    </group>
+                                                </group>
+                                            </sheet>
+                                        </form>
+                                    </field>
+                                </group>
+                                <group>
                                     <field name="log_services">
                                         <tree string="Completed services">
                                             <field name="employee_id" />
@@ -153,6 +177,7 @@
                                             <field name="vendor_id" />
                                             <field name="inv_ref" />
                                             <field name="date_creation" />
+                                            <field name="log_odometer_id" />
                                         </tree>
                                         <form string="Fuel Logs" version="7.0">
                                             <sheet>
@@ -161,6 +186,7 @@
                                                         <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
                                                         <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
                                                         <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
+                                                        <field name="log_odometer_id" />
                                                     </group>
                                                     <group>
                                                         <field name="date_creation" />
@@ -315,13 +341,12 @@
                     <field name="model">fleet.vehicle.log.fuel</field>
                     <field name="arch" type="xml">
                         <tree string="Fuel Logs">
-                                        <field name="date_creation" />
-                                        <field name="vehicle_id" />
-                                        <field name="employee_id" />
-                                        <field name="liter" />
-                                        <field name="amount" />
-                                        <field name="inv_ref" />
-                           
+                            <field name="date_creation" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="liter" />
+                            <field name="amount" />
+                            <field name="inv_ref" />
                         </tree>
                     </field>
         </record>
@@ -342,13 +367,13 @@
                 <form string="Services Logs" version="7.0">
                     <sheet>
                         <group>
-                                        <field name="date_creation" />
-                                        <field name="vehicle_id" />
-                                        <field name="employee_id" />
-                                        <field name="vendor_id" />
-                                        <field name="amount" />
-                                        <field name="reference" />
-                                        <field name="service_ids" widget="many2many_tags"/>
+                            <field name="date_creation" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="vendor_id" />
+                            <field name="amount" />
+                            <field name="reference" />
+                            <field name="service_ids" widget="many2many_tags"/>
                         </group>
                     </sheet>
                 </form>

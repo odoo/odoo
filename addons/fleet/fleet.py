@@ -88,6 +88,7 @@ class fleet_vehicle(osv.Model):
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
+        'log_odometer' : fields.one2many('fleet.vehicle.log.odometer','vehicle_id', 'Odometer'),
         'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
@@ -195,6 +196,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'log_odometer_id' :fields.many2one('fleet.vehicle.log.odometer', 'Odometer Log'),
     }
     _defaults = {
         'name': 'Fuel log',
@@ -222,7 +224,7 @@ class fleet_vehicle_log_insurance(osv.Model):
         'name': 'Insurance log',
         'type': 'Insurance',}
 
-class service_type(osv.Model):
+class fleet_service_type(osv.Model):
     _name = 'fleet.service.type'
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
@@ -241,6 +243,31 @@ class fleet_vehicle_log_services(osv.Model):
     _defaults = {
         'name': 'Service log',
         'type': 'Services'}
+
+class fleet_vehicle_log_services(osv.Model):
+    _inherit = ['fleet.vehicle.log']
+
+    _name = 'fleet.vehicle.log.services'
+    _columns = {
+        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'amount' :fields.float('Cost', help="Total cost of the service"),
+        'reference' :fields.char('Reference',size=128),
+        'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
+    }
+    _defaults = {
+        'name': 'Service log',
+        'type': 'Services'}
+
+class fleet_vehicle_log_odometer(osv.Model):
+    _inherit = ['fleet.vehicle.log']
+
+    _name = 'fleet.vehicle.log.odometer'
+    _columns = {
+        'value' : fields.float('Value', required=True, help="Meter reading at service, fuel up and others"),
+    }
+    _defaults = {
+        'name': 'Odometer Log',
+        'type': 'Odometer'}
 
 class hr_employee(osv.Model):
     _inherit = 'hr.employee'
