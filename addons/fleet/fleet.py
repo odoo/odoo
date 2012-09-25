@@ -131,16 +131,18 @@ class fleet_vehicle_log(osv.Model):
     _name = 'fleet.vehicle.log'
 
     _columns = {
+        'name' : fields.char('Log',size=32),
         'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
 
-        'create_date' : fields.date('Creation Date'),
+        'date_creation' : fields.date('Creation Date'),
 
         'description' : fields.text('Description'),
         'type' : fields.char('Type',size=32),
         }
         
     _defaults = {
+            'name' : 'Log',
             'type' : 'Log',
     }
 
@@ -178,7 +180,10 @@ class fleet_vehicle_log_fuel(osv.Model):
         'amount': fields.function(_get_price, type='float', multi='fuel', string='Total Price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
     }
-    _defaults = {'type': 'Refueling',}
+    _defaults = {
+        'name': 'Fuel log',
+        'type': 'Refueling',
+        }
 
 class fleet_insurance_type(osv.Model):
     _name = 'fleet.insurance.type'
@@ -197,7 +202,9 @@ class fleet_vehicle_log_insurance(osv.Model):
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'description' : fields.text('Description'),
     }
-    _defaults = {'type': 'Insurance',}
+    _defaults = {
+        'name': 'Insurance log',
+        'type': 'Insurance',}
 
 class service_type(osv.Model):
     _name = 'fleet.service.type'
@@ -215,7 +222,9 @@ class fleet_vehicle_log_services(osv.Model):
         'reference' :fields.char('Reference',size=128),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
     }
-    _defaults = {'type': 'Services'}
+    _defaults = {
+        'name': 'Service log',
+        'type': 'Services'}
 
 class hr_employee(osv.Model):
     _inherit = 'hr.employee'

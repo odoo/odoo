@@ -109,7 +109,7 @@
                                                     <field name="price" />
                                                 </group>
                                                 <group>
-                                                    <field name="create_date" />
+                                                    <field name="date_creation" />
                                                     <field name="start_date" />
                                                     <field name="expiration_date" />
                                                 </group>
@@ -127,12 +127,12 @@
                                             <field name="amount" />
                                             <field name="reference" />
                                             <field name="service_ids"/>
-                                            <field name="create_date" />
+                                            <field name="date_creation" />
                                         </tree>
                                         <form string="Services Logs" version="7.0">
                                             <sheet>
                                                 <group>
-                                                    <field name="create_date" />
+                                                    <field name="date_creation" />
                                                     <field name="employee_id" />
                                                     <field name="vendor_id" />
                                                     <field name="amount" />
@@ -151,12 +151,12 @@
                                             <field name="amount" />
                                             <field name="employee_id" />
                                             <field name="inv_ref" />
-                                            <field name="create_date" />
+                                            <field name="date_creation" />
                                         </tree>
                                         <form string="Fuel Logs" version="7.0">
                                             <sheet>
                                                 <group>
-                                                    <field name="create_date" />
+                                                    <field name="date_creation" />
                                                     <field name="employee_id" />
                                                     <field name="liter" on_change="on_change_fuel(liter,price_per_liter)"/>
                                                     <field name="price_per_liter" on_change="on_change_fuel(liter,price_per_liter)" />
@@ -174,13 +174,13 @@
                                             <field name="type" />
                                             <field name="employee_id" />
                                             <field name="description" />
-                                            <field name="create_date" />
+                                            <field name="date_creation" />
                                         </tree>
                                         <form string="Other logs" version="7.0">
                                             <sheet>
                                                 <group>
                                                     <field name="type" />
-                                                    <field name="create_date" />
+                                                    <field name="date_creation" />
                                                     <field name="employee_id" />
                                                     <field name="description" />
                                                 </group>
@@ -245,7 +245,7 @@
                     <sheet>
                         <group>
                             <field name="type" />
-                            <field name="create_date" />
+                            <field name="date_creation" />
                             <field name="vehicle_id" />
                             <field name="employee_id" />
                             <field name="description" />
@@ -263,7 +263,7 @@
                         <tree string="Logs">
                             
                                         <field name="type" />
-                                        <field name="create_date" />
+                                        <field name="date_creation" />
                                         <field name="vehicle_id" />
                                         <field name="employee_id" />
                                         <field name="description" />
@@ -288,7 +288,7 @@
                 <form string="Fuel Logs" version="7.0">
                     <sheet>
                         <group>
-                            <field name="create_date" />
+                            <field name="date_creation" />
                             <field name="vehicle_id" />
                             <field name="employee_id" />
                             <field name="liter" />
@@ -307,7 +307,7 @@
                     <field name="model">fleet.vehicle.log.fuel</field>
                     <field name="arch" type="xml">
                         <tree string="Fuel Logs">
-                                        <field name="create_date" />
+                                        <field name="date_creation" />
                                         <field name="vehicle_id" />
                                         <field name="employee_id" />
                                         <field name="liter" />
@@ -334,7 +334,7 @@
                 <form string="Services Logs" version="7.0">
                     <sheet>
                         <group>
-                                        <field name="create_date" />
+                                        <field name="date_creation" />
                                         <field name="vehicle_id" />
                                         <field name="employee_id" />
                                         <field name="vendor_id" />
@@ -353,7 +353,7 @@
                     <field name="model">fleet.vehicle.log.services</field>
                     <field name="arch" type="xml">
                         <tree string="Services Logs">
-                                        <field name="create_date" />
+                                        <field name="date_creation" />
                                         <field name="vehicle_id" />
                                         <field name="employee_id" />
                                         <field name="amount" />
