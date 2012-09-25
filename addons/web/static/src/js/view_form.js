@@ -39,6 +39,14 @@ instance.web.form.FieldManagerMixin = {
      * method in FieldInterface for further information.
      */
     get_field_value: function(field_name) {},
+    /**
+    Gives new values for the fields contained in the view. The new values could not be setted
+    right after the call to this method. Setting new values can trigger on_changes.
+
+    @param (dict) values A dictonnary with key = field name and value = new value.
+    @return (Deferred) Is resolved after all the values are setted.
+    */
+    set_values: function(values) {},
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
@@ -596,24 +604,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_processed_onchange: function(result, processed) {
         try {
         if (result.value) {
-            for (var f in result.value) {
-                if (!result.value.hasOwnProperty(f)) { continue; }
-                var field = this.fields[f];
-                // If field is not defined in the view, just ignore it
-                if (field) {
-                    var value_ = result.value[f];
-                    if (field.get_value() != value_) {
-                        field._inhibit_on_change_flag = true;
-                        field.set_value(value_);
-                        field._inhibit_on_change_flag = false;
-                        field._dirty_flag = true;
-                        if (!_.contains(processed, field.name)) {
-                            this.do_onchange(field, processed);
-                        }
-                    }
-                }
-            }
-            this.on_form_changed();
+            this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
             instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
@@ -643,6 +634,33 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             instance.webclient.crashmanager.on_javascript_exception(e);
             return $.Deferred().reject();
         }
+    },
+    _internal_set_values: function(values, exclude) {
+        exclude = exclude || [];
+        for (var f in values) {
+            if (!values.hasOwnProperty(f)) { continue; }
+            var field = this.fields[f];
+            // If field is not defined in the view, just ignore it
+            if (field) {
+                var value_ = values[f];
+                if (field.get_value() != value_) {
+                    field._inhibit_on_change_flag = true;
+                    field.set_value(value_);
+                    field._inhibit_on_change_flag = false;
+                    field._dirty_flag = true;
+                    if (!_.contains(exclude, field.name)) {
+                        this.do_onchange(field, exclude);
+                    }
+                }
+            }
+        }
+        this.on_form_changed();
+    },
+    set_values: function(values) {
+        var self = this;
+        return this.on_change_mutex.exec(function() {
+            self._internal_set_values(values);
+        });
     },
     /**
      * Ask the view to switch to view mode if possible. The view may not do it
