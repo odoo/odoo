@@ -69,7 +69,7 @@ class ir_fields_converter(orm.Model):
         """
         # FIXME: return None
         converter = getattr(
-            self, '_%s_to_%s' % (fromtype.__name__, column._type))
+            self, '_%s_to_%s' % (fromtype.__name__, column._type), None)
         if not converter: return None
 
         return functools.partial(
@@ -111,6 +111,9 @@ class ir_fields_converter(orm.Model):
         return value or False
 
     def _str_to_text(self, cr, uid, model, column, value, context=None):
+        return value or False
+
+    def _str_to_binary(self, cr, uid, model, column, value, context=None):
         return value or False
 
     def _get_translations(self, cr, uid, types, src, context):

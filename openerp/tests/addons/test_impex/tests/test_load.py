@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import json
+import pkgutil
+
 import openerp.modules.registry
 import openerp
 
@@ -955,6 +958,16 @@ class test_o2m_multiple(ImporterCase):
         self.assertEqual(b.const, 5)
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
         self.assertEqual(values(b.child2), [21, 22, 23])
+
+class test_realworld(common.TransactionCase):
+    def test_bigfile(self):
+        data = json.loads(pkgutil.get_data(self.__module__, 'contacts_big.json'))
+        result = self.registry('res.partner').load(
+            self.cr, openerp.SUPERUSER_ID,
+            ['name', 'mobile', 'email', 'image'],
+            data)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), len(data))
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion

@@ -1527,7 +1527,7 @@ class BaseModel(object):
         return {'ids': ids, 'messages': messages}
     def _extract_records(self, cr, uid, fields_, data,
                          context=None, log=lambda a: None):
-        """ Generates record dicts from the data iterable.
+        """ Generates record dicts from the data sequence.
 
         The result is a generator of dicts mapping field names to raw
         (unconverted, unvalidated) values.
@@ -1562,12 +1562,11 @@ class BaseModel(object):
         def only_o2m_values(row, f=get_nono2m_values, g=get_o2m_values):
             return any(g(row)) and not any(f(row))
 
-        rows = CountingStream(data)
+        index = 0
         while True:
-            row = next(rows, None)
-            if row is None: return
-            record_row_index = rows.index
+            if index >= len(data): return
 
+            row = data[index]
             # copy non-relational fields to record dict
             record = dict((field[0], value)
                 for field, value in itertools.izip(fields_, row)
@@ -1575,10 +1574,10 @@ class BaseModel(object):
 
             # Get all following rows which have relational values attached to
             # the current record (no non-relational values)
-            # WARNING: replaces existing ``rows``
-            record_span, _rows = span(only_o2m_values, rows)
+            record_span = itertools.takewhile(
+                only_o2m_values, itertools.islice(data, index + 1, None))
             # stitch record row back on for relational fields
-            record_span = itertools.chain([row], record_span)
+            record_span = list(itertools.chain([row], record_span))
             for relfield in set(
                     field[0] for field in fields_
                              if is_relational(field[0])):
@@ -1586,8 +1585,6 @@ class BaseModel(object):
                 # FIXME: how to not use _obj without relying on fields_get?
                 Model = self.pool[column._obj]
 
-                # copy stream to reuse for next relational field
-                fieldrows, record_span = itertools.tee(record_span)
                 # get only cells for this sub-field, should be strictly
                 # non-empty, field path [None] is for name_get column
                 indices, subfields = zip(*((index, field[1:] or [None])
@@ -1596,26 +1593,17 @@ class BaseModel(object):
 
                 # return all rows which have at least one value for the
                 # subfields of relfield
-                relfield_data = filter(any, map(itemgetter_tuple(indices), fieldrows))
+                relfield_data = filter(any, map(itemgetter_tuple(indices), record_span))
                 record[relfield] = [subrecord
                     for subrecord, _subinfo in Model._extract_records(
                         cr, uid, subfields, relfield_data,
                         context=context, log=log)]
-            # Ensure full consumption of the span (and therefore advancement of
-            # ``rows``) even if there are no relational fields. Needs two as
-            # the code above stiched the row back on (so first call may only
-            # get the stiched row without advancing the underlying operator row
-            # itself)
-            next(record_span, None)
-            next(record_span, None)
 
-            # old rows consumption (by iterating the span) should be done here,
-            # at this point the old ``rows`` is 1 past `span` (either on the
-            # next record row or past ``StopIteration``, so wrap new ``rows``
-            # (``_rows``) in a counting stream indexed 1-before the old
-            # ``rows``
-            rows = CountingStream(_rows, rows.index - 1)
-            yield record, {'rows': {'from': record_row_index,'to': rows.index}}
+            yield record, {'rows': {
+                'from': index,
+                'to': index + len(record_span) - 1
+            }}
+            index += len(record_span)
     def _convert_records(self, cr, uid, records,
                          context=None, log=lambda a: None):
         """ Converts records from the source iterable (recursive dicts of
@@ -5369,21 +5357,6 @@ class AbstractModel(BaseModel):
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
 
-def span(predicate, iterable):
-    """ Splits the iterable between the longest prefix of ``iterable`` whose
-    elements satisfy ``predicate`` and the rest.
-
-    If called with a list, equivalent to::
-
-        takewhile(predicate, lst), dropwhile(predicate, lst)
-
-    :param callable predicate:
-    :param iterable:
-    :rtype: (iterable, iterable)
-    """
-    it1, it2 = itertools.tee(iterable)
-    return (itertools.takewhile(predicate, it1),
-            itertools.dropwhile(predicate, it2))
 def itemgetter_tuple(items):
     """ Fixes itemgetter inconsistency (useful in some cases) of not returning
     a tuple if len(items) == 1: always returns an n-tuple where n = len(items)
