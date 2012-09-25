@@ -74,17 +74,22 @@ class fleet_vehicle(osv.Model):
         """ This opens log view to view and add new log for this vehicle
             @return: 
         """
-        print 'HELLO YOU--------------------------------------------'
+        #print 'HELLO YOU--------------------------------------------'
+        #print ids[0]
+
+        #vehicle = self.browse(cr, uid, ids[0], context)
+        #logids = self.browse(cr,uid,log_ids,context)
+        #print vehicle
+        #print vehicle.name
+        #print vehicle.registration
+        #print logids
+        #print logids.type
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_act', context)
-        return res
-        #res['context'] = {
-        #    'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
-        #    'default_user_id': uid,
-        #    'default_state': 'open',
-        #    'default_name': applicant.name,
-        #    'default_categ_ids': category and [category.id] or False,
-        #}
         #return res
+        #res['context'] = {
+        #    'default_type': 'log',
+        #}
+        return res
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
