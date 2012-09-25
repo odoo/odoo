@@ -40,6 +40,10 @@ class CashBox(osv.osv_memory):
 
         return {}
 
+    def _create_bank_statement_line(self, cr, uid, box, record, context=None):
+        values = self._compute_values_for_statement_line(cr, uid, box, record, context=context)
+        return self.pool.get('account.bank.statement.line').create(cr, uid, values, context=context)
+
 
 class CashBoxIn(CashBox):
     _name = 'cash.box.in'
@@ -49,37 +53,29 @@ class CashBoxIn(CashBox):
         'ref' : fields.char('Reference', size=32),
     })
 
-    def _create_bank_statement_line(self, cr, uid, box, record, context=None):
-        absl_proxy = self.pool.get('account.bank.statement.line')
-
-        values = {
+    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
+        return {
             'statement_id' : record.id,
             'journal_id' : record.journal_id.id,
             'account_id' : record.journal_id.internal_account_id.id,
             'amount' : box.amount or 0.0,
-            'ref' : "%s" % (box.ref or ''),
+            'ref' : '%s' % (box.ref or ''),
             'name' : box.name,
         }
-
-        return absl_proxy.create(cr, uid, values, context=context)
 
 CashBoxIn()
 
 class CashBoxOut(CashBox):
     _name = 'cash.box.out'
 
-    def _create_bank_statement_line(self, cr, uid, box, record, context=None):
-        absl_proxy = self.pool.get('account.bank.statement.line')
-
+    def _compute_values_for_statement_line(self, cr, uid, box, record, context=None):
         amount = box.amount or 0.0
-        values = {
+        return {
             'statement_id' : record.id,
             'journal_id' : record.journal_id.id,
             'account_id' : record.journal_id.internal_account_id.id,
             'amount' : -amount if amount > 0.0 else amount,
             'name' : box.name,
         }
-
-        return absl_proxy.create(cr, uid, values, context=context)
 
 CashBoxOut()

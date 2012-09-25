@@ -128,14 +128,12 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <page string="Personal Information" position="after">
-                    <page string="Appraisal" groups="base.group_hr_user">
-                        <group col="4">
-                            <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
-                            <field name="evaluation_date"/>
-                        </group>
-                    </page>
-                </page>
+            <xpath expr="//group[@name='active_group']" position="before">
+                <group string="Appraisals">
+                    <field name="evaluation_plan_id" on_change="onchange_evaluation_plan_id(evaluation_plan_id, evaluation_date)"/>
+                    <field name="evaluation_date"/>
+                </group>
+            </xpath>
             </field>
         </record>
 
@@ -241,7 +239,7 @@
             <field name="name">Appraisal</field>
             <field name="res_model">hr_evaluation.evaluation</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="hr_evaluation.evaluation_search"/>
              <field name="context">{"search_default_next_month":1}</field>
             <field name="help" type="html">
@@ -267,16 +265,27 @@
             <field name="arch" type="xml">
                 <form string="Interview Appraisal" version="7.0">
                     <header>
-                        <button string="Send Request" name="survey_req_waiting_answer" states="draft" type="object" icon="gtk-yes" class="oe_highlight"/>
-                        <button string="Done" name="survey_req_done" states="waiting_answer" type="object" icon="gtk-jump-to"/>
-                        <button string="Cancel" name="survey_req_cancel" states="draft,waiting_answer" type="object" icon="gtk-cancel"/>
-                        <button name="%(survey.action_view_survey_question_message)d" string="Answer Survey" type="action" states="waiting_answer,cancel" icon="gtk-execute" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
-                        <button name="action_print_survey" string="Print Survey" type="object" states="draft" icon="gtk-print" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}" attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
+                        <button string="Cancel" name="survey_req_cancel" type="object"
+                            states="draft,waiting_answer"/>
+                        <button string="Print Survey" name="action_print_survey"  type="object"
+                            states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"
+                            attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
+                        <button string="Send Request" name="survey_req_waiting_answer" type="object"
+                            states="draft" class="oe_highlight"/>
+                        <button string="Answer Survey" name="%(survey.action_view_survey_question_message)d" type="action"
+                            states="waiting_answer"
+                            context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0, 'active' : response,'request' : True, 'object' : 'hr.evaluation.interview', 'cur_id' : active_id}"
+                            attrs="{'readonly':[('survey_id','=',False)]}"/>
+                        <button string="Done" name="survey_req_done" type="object"
+                            states="waiting_answer"/>
                         <field name="state" widget="statusbar" statusbar_visible="waiting_answer,done"/>
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box" name="button_box">
-                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" icon="terp-mail-message-new" type="action" states="waiting_answer" class="oe_link"/>
+                            <button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"
+                                states="waiting_answer"
+                                context="{'default_body_text': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',
+                                            'default_subject': 'Reminder to fill up Survey' }"/>
                         </div>
                         <group>
                             <group col="3" colspan="1">
@@ -389,21 +398,23 @@
 
       <!-- Email Compose message Action-->
       <act_window
-      id="evaluation_reminders" name="Appraisal Reminders"
-      res_model="mail.compose.message"
-      src_model="hr.evaluation.interview"
-      view_type="form" view_mode="form"
-      target="new" multi="True"
-      key2="client_action_multi"
-      context="{'mail.compose.message.mode':'mass_mail'}"/>
+        id="evaluation_reminders" name="Appraisal Reminders"
+        res_model="mail.compose.message"
+        src_model="hr.evaluation.interview"
+        view_type="form" view_mode="form"
+        target="new" multi="True"
+        key2="client_action_multi"
+        context="{'default_composition_mode': 'mass_mail',
+                    'default_body_text': 'Hello,\n\nKindly post your response for the survey interview.\n\nThanks',
+                    'default_subject': 'Reminder to fill up Survey'}"/>
 
       <!-- Appraisal Interviews Button on Employee Form -->
       <act_window
-      context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
-      id="act_hr_employee_2_hr__evaluation_interview"
-      name="Appraisal Interviews"
-      res_model="hr.evaluation.interview"
-      src_model="hr.employee"/>
+        context="{'search_default_user_to_review_id': [active_id], 'default_user_to_review_id': active_id}"
+        id="act_hr_employee_2_hr__evaluation_interview"
+        name="Appraisal Interviews"
+        res_model="hr.evaluation.interview"
+        src_model="hr.employee"/>
 
     </data>
 </openerp>

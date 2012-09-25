@@ -55,7 +55,7 @@
                     </div>
                     <field name="content" placeholder="e.g. Once upon a time..." class="oe_edit_only"/>
                     <div class="oe_document_page">
-                        <field name="display_content" widget="text_wiki" class="oe_view_only"/>
+                        <field name="display_content" widget="html" class="oe_view_only" options='{"safe": true}'/>
                     </div>
                 </form>
             </field>
@@ -78,17 +78,6 @@
             </field>
         </record>
         <!-- page action -->
-        <record id="action_category" model="ir.actions.act_window">
-            <field name="name">Category</field>
-            <field name="res_model">document.page</field>
-            <field name="domain">[('type','=','category')]</field>
-            <field name="context">{'default_type': 'category'}</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <field name="view_id" ref="view_wiki_tree"/>
-            <field name="search_view_id" ref="view_wiki_filter"/>
-        </record>
-        <menuitem id="menu_category" parent="menu_wiki" name="Categories" action="action_category" sequence="10"/>
         <record id="action_page" model="ir.actions.act_window">
             <field name="name">Pages</field>
             <field name="res_model">document.page</field>
@@ -100,7 +89,18 @@
             <field name="search_view_id" ref="view_wiki_filter"/>
             <field name="help">Create web pages</field>
         </record>
-        <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="20"/>
+        <menuitem id="menu_page" parent="menu_wiki" name="Pages" action="action_page" sequence="10"/>
+        <record id="action_category" model="ir.actions.act_window">
+            <field name="name">Category</field>
+            <field name="res_model">document.page</field>
+            <field name="domain">[('type','=','category')]</field>
+            <field name="context">{'default_type': 'category'}</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_wiki_tree"/>
+            <field name="search_view_id" ref="view_wiki_filter"/>
+        </record>
+        <menuitem id="menu_category" parent="menu_wiki" name="Categories" action="action_category" sequence="20"/>
 
         <!-- History Tree view -->
         <record model="ir.ui.view" id="view_wiki_history_tree">

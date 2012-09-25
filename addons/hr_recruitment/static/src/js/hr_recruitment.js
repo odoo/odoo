@@ -10,7 +10,7 @@ openerp.hr_recruitment = function(openerp) {
             var categ_ids = [];
 
             // Collect categories ids
-            self.$element.find('span[data-categ_id]').each(function() {
+            self.$el.find('span[data-categ_id]').each(function() {
                 categ_ids.push($(this).data('categ_id'));
             });
 
@@ -19,7 +19,7 @@ openerp.hr_recruitment = function(openerp) {
             dataset.read_slice(['id', 'name']).then(function(result) {
                 _.each(result, function(v, k) {
                     // Set the proper value in the DOM and display the element
-                    self.$element.find('span[data-categ_id=' + v.id + ']').text(v.name);
+                    self.$el.find('span[data-categ_id=' + v.id + ']').text(v.name);
                 });
             });
         },
