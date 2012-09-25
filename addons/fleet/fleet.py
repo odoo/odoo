@@ -151,33 +151,51 @@ class fleet_vehicle_log_fuel(osv.Model):
     
     _inherit = ['fleet.vehicle.log','mail.thread']
 
+    def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
-    def _get_price(self, cr, uid, ids, fields, args, context=None):
-        result = {}
-        for record in self.browse(cr, uid, ids, context=None):
-            res = record.liter * record.price_per_liter
-            result[record.id] = {
-                'amount' : res,
-            }
-        return result
+        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
 
-    def on_change_fuel(self, cr, uid, ids, liter, price_per_liter, context=None):
+        if liter > 0 and price_per_liter > 0:
+            return {'value' : {'liter': liter,'price_per_liter': price_per_liter, 'amount' : liter * price_per_liter,}}
+        elif liter > 0 and amount > 0:
+            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+        elif price_per_liter > 0 and amount > 0:
+            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+        else :
+            return {}
 
-        print 'Amount : ' + str(liter * price_per_liter)
+    def on_change_price_per_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
-        return {
-            'value' : {
-                'amount' : liter * price_per_liter,
-            }
-        }
+        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
 
+        if price_per_liter > 0 and liter > 0:
+            return {'value' : {'liter' : liter, 'price_per_liter' : price_per_liter, 'amount' : liter * price_per_liter,}}
+        elif price_per_liter > 0 and amount > 0:
+            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+        elif liter > 0 and amount > 0:
+            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+        else :
+            return {}
+
+    def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
+
+        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
+
+        if amount > 0 and liter > 0:
+            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+        elif amount > 0 and price_per_liter > 0:
+            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+        elif liter > 0 and price_per_liter > 0:
+            return {'value' : {'liter' : liter, 'price_per_liter' : price_per_liter, 'amount' : liter * price_per_liter,}}
+        else :
+            return {}
         
 
     _name = 'fleet.vehicle.log.fuel'
     _columns = {
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
-        'amount': fields.function(_get_price, type='float', multi='fuel', string='Total Price'),
+        'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
     }
     _defaults = {

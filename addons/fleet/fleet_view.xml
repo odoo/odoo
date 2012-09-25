@@ -155,14 +155,20 @@
                                         </tree>
                                         <form string="Fuel Logs" version="7.0">
                                             <sheet>
+                                                <group col = "2">
+                                                    <group>
+                                                        <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
+                                                        <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
+                                                        <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
+                                                    </group>
+                                                    <group>
+                                                        <field name="date_creation" />
+                                                        <field name="employee_id" />
+                                                        <field name="inv_ref" />
+                                                    </group>
+                                                </group>
                                                 <group>
-                                                    <field name="date_creation" />
-                                                    <field name="employee_id" />
-                                                    <field name="liter" on_change="on_change_fuel(liter,price_per_liter)"/>
-                                                    <field name="price_per_liter" on_change="on_change_fuel(liter,price_per_liter)" />
-                                                    <field name="amount" />
                                                     <field name="description" />
-                                                    <field name="inv_ref" />
                                                 </group>
                                             </sheet>
                                         </form>
