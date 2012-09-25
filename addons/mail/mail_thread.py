@@ -625,10 +625,17 @@ class mail_thread(osv.AbstractModel):
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
+        # message_post
+        # [26] False notification mt_crm_stage False
+
+        # message_post
+        # [26] False notification mt_crm_won False
+
         context = context or {}
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
             (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id"
+
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
@@ -652,9 +659,19 @@ class mail_thread(osv.AbstractModel):
         else:
             subtype_id = False
 
+
+        #auto link messages for same id and object
+        messages = self.pool.get('mail.message')
+        model = context.get('thread_model', self._name) if thread_id else False
+        if model != 'res.partner':
+            message_ids = messages.search(cr, uid, ['&',('res_id', '=', thread_id),('model','=',model)], context=context)
+            if len(message_ids):
+                parent_id = min(message_ids)
+
+
         values = kwargs
         values.update({
-            'model': context.get('thread_model', self._name) if thread_id else False,
+            'model': model,
             'res_id': thread_id or False,
             'body': body,
             'subject': subject,
@@ -666,11 +683,21 @@ class mail_thread(osv.AbstractModel):
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
-        return self.pool.get('mail.message').create(cr, uid, values, context=context)
+
+        print "------------------------------------------"
+        print values, "mail_thread 688"
+        print "--------≃============----------------------------------"
+        
+        return messages.create(cr, uid, values, context=context)
 
     #------------------------------------------------------
     # Followers API
     #------------------------------------------------------
+
+    def get_message_subtypes(self, cr, uid, ids, context=None):
+        """ message_subtype_data: data about document subtypes: which are
+                available, which are followed if any """
+        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
 
     def message_subscribe_users(self, cr, uid, ids, user_ids=None, subtype_ids=None, context=None):
         """ Wrapper on message_subscribe, using users. If user_ids is not
@@ -679,11 +706,6 @@ class mail_thread(osv.AbstractModel):
             user_ids = [uid]
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
-
-    def get_message_subtypes(self, cr, uid, ids, context=None):
-        """ message_subtype_data: data about document subtypes: which are
-                available, which are followed if any """
-        return self._get_subscription_data(cr, uid, ids, None, None, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, subtype_ids=None, context=None):
         """ Add partners to the records followers. """
