@@ -736,7 +736,7 @@ class account_move_line(osv.osv):
                 WHERE debit > 0 AND credit > 0
                 ORDER BY last_reconciliation_date""")
         ids = cr.fetchall()
-        ids = len(ids) and list(ids[0]) or []
+        ids = len(ids) and [x[0] for x in ids] or []
         return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
