@@ -388,6 +388,21 @@ class test_unbound_string_field(ImporterCase):
             u"If they ask you about fun, you tell them – fun is a filthy parasite"
         ], values(self.read()))
 
+class test_required_string_field(ImporterCase):
+    model_name = 'export.string.required'
+
+    def test_empty(self):
+        result = self.import_(['value'], [[]])
+        self.assertEqual(result['messages'], [message(
+            u"Missing required value for the field 'unknown'")])
+        self.assertIs(result['ids'], False)
+
+    def test_not_provided(self):
+        result = self.import_(['const'], [['12']])
+        self.assertEqual(result['messages'], [message(
+            u"Missing required value for the field 'unknown'")])
+        self.assertIs(result['ids'], False)
+
 class test_text(ImporterCase):
     model_name = 'export.text'
 

@@ -42,6 +42,7 @@
 """
 
 import calendar
+import collections
 import copy
 import datetime
 import itertools
@@ -1493,6 +1494,7 @@ class BaseModel(object):
 
         fields = map(fix_import_export_id_paths, fields)
         ModelData = self.pool['ir.model.data']
+        fg = self.fields_get(cr, uid, context=context)
 
         mode = 'init'
         current_module = ''
@@ -1509,11 +1511,16 @@ class BaseModel(object):
                      current_module, record, mode=mode, xml_id=xid,
                      noupdate=noupdate, res_id=id, context=context))
                 cr.execute('RELEASE SAVEPOINT model_load_save')
+            except psycopg2.Warning, e:
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                messages.append(dict(info, type='warning', message=str(e)))
             except psycopg2.Error, e:
                 # Failed to write, log to messages, rollback savepoint (to
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
-                messages.append(dict(info, type="error", message=str(e)))
+                messages.append(dict(
+                    info, type="error",
+                    **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')
             ids = False
@@ -5390,4 +5397,26 @@ class ImportWarning(Warning):
     """ Used to send warnings upwards the stack during the import process
     """
     pass
+
+
+def convert_pgerror_23502(model, fields, info, e):
+    m = re.match(r'^null value in column "(?P<field>\w+)" violates '
+                 r'not-null constraint\n$',
+                 str(e))
+    if not m or m.group('field') not in fields:
+        return {'message': unicode(e)}
+    field = fields[m.group('field')]
+    return {
+        'message': _(u"Missing required value for the field '%(field)s'") % {
+            'field': field['string']
+        },
+        'field': m.group('field'),
+    }
+
+PGERROR_TO_OE = collections.defaultdict(
+    # shape of mapped converters
+    lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
+    # not_null_violation
+    '23502': convert_pgerror_23502,
+})
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

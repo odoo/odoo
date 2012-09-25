@@ -17,6 +17,7 @@ models = [
     ('float', fields.float()),
     ('decimal', fields.float(digits=(16, 3))),
     ('string.bounded', fields.char('unknown', size=16)),
+    ('string.required', fields.char('unknown', size=None, required=True)),
     ('string', fields.char('unknown', size=None)),
     ('date', fields.date()),
     ('datetime', fields.datetime()),
