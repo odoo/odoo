@@ -201,6 +201,21 @@ class ir_fields_converter(orm.Model):
                 id, _name = ids[0]
         else:
             raise Exception(u"Unknown sub-field '%s'" % subfield)
+
+        if id is None:
+            raise ValueError(
+                _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
+                % {'field_type': field_type, 'value': value}, {
+                    'moreinfo': {
+                        'type': 'ir.actions.act_window',
+                        'target': 'new',
+                        'res_model': column._obj,
+                        'view_mode': 'tree,form',
+                        'view_type': 'form',
+                        'views': [(False, 'tree', (False, 'form'))],
+                        'help': _(u"See all possible values")
+                    }
+                })
         return id, field_type
 
     def _referencing_subfield(self, record):
@@ -235,12 +250,8 @@ class ir_fields_converter(orm.Model):
         reference = record[subfield]
         id, subfield_type = self.db_id_for(
             cr, uid, model, column, subfield, reference, context=context)
-
-        if id is None:
-            raise ValueError(
-                _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-                % {'field_type': subfield_type, 'value': reference})
         return id
+
     def _str_to_many2many(self, cr, uid, model, column, value, context=None):
         [record] = value
 
@@ -250,13 +261,9 @@ class ir_fields_converter(orm.Model):
         for reference in record[subfield].split(','):
             id, subfield_type = self.db_id_for(
                 cr, uid, model, column, subfield, reference, context=context)
-            if id is None:
-                raise ValueError(
-                    _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-                    % {'field_type': subfield_type, 'value': reference})
             ids.append(id)
-
         return [(6, 0, ids)]
+
     def _str_to_one2many(self, cr, uid, model, column, records, context=None):
         commands = []
 
@@ -278,10 +285,6 @@ class ir_fields_converter(orm.Model):
                 reference = record[subfield]
                 id, subfield_type = self.db_id_for(
                     cr, uid, model, column, subfield, reference, context=context)
-                if id is None:
-                    raise ValueError(
-                        _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-                        % {'field_type': subfield_type, 'value': reference})
 
             writable = exclude_ref_fields(record)
             if id:
