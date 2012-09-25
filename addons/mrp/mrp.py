@@ -356,7 +356,7 @@ class mrp_bom(osv.osv):
         if default is None:
             default = {}
         bom_data = self.read(cr, uid, id, [], context=context)
-        default.update({'name': bom_data['name'] + ' ' + _('Copy'), 'bom_id':False})
+        default.update(name=_("%s (copy)") % (bom_data['name']), bom_id=False)
         return super(mrp_bom, self).copy_data(cr, uid, id, default, context=context)
 
     def create(self, cr, uid, vals, context=None):
