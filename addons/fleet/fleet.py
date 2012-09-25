@@ -69,12 +69,29 @@ class fleet_vehicle(osv.Model):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+
+    def action_showLog(self, cr, uid, ids, context=None):
+        """ This opens log view to view and add new log for this vehicle
+            @return: 
+        """
+        print 'HELLO YOU--------------------------------------------'
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_act', context)
+        return res
+        #res['context'] = {
+        #    'default_partner_ids': applicant.partner_id and [applicant.partner_id.id] or False,
+        #    'default_user_id': uid,
+        #    'default_state': 'open',
+        #    'default_name': applicant.name,
+        #    'default_categ_ids': category and [category.id] or False,
+        #}
+        #return res
+
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
 
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
-        'registration' : fields.char('Registration', size=32, required=False, help='Registration number of the vehicle (ie: plate number for a car)'),
+        'registration' : fields.char('Registration', size=32, required=True, help='Registration number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
