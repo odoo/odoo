@@ -56,7 +56,7 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         if (params.state) {
             new_params.state = params.state;
         }
-        var redirect = a.protocol + '//' + a.host + a.pathname + '?' + $.param(new_params) + a.hash;
+        var redirect = params.redirect_uri + (a.hash ? '&' : '#') + $.param(new_params);
         window.location = redirect;
     },
     error: function(msg) {
