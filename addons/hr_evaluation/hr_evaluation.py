@@ -245,7 +245,7 @@ class hr_evaluation(osv.osv):
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
         for evaluation in self.browse(cr, uid, ids, context=context):
             if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
-                self.message_subscribe(cr, uid, [evaluation.id], [evaluation.employee_id.parent_id.user_id.id], context=context)
+                self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
             if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True

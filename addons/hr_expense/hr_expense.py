@@ -119,8 +119,8 @@ class hr_expense_expense(osv.osv):
 
     def expense_confirm(self, cr, uid, ids, *args):
         for expense in self.browse(cr, uid, ids):
-            if expense.employee_id and expense.employee_id.parent_id and expense.employee_id.parent_id.user_id:
-                self.message_subscribe(cr, uid, [expense.id], [expense.employee_id.parent_id.user_id.id])
+            if expense.employee_id and expense.employee_id.parent_id.user_id:
+                self.message_subscribe_users(cr, uid, [expense.id], user_ids=[expense.employee_id.parent_id.user_id.id])
         self.write(cr, uid, ids, {
             'state':'confirm',
             'date_confirm': time.strftime('%Y-%m-%d')
