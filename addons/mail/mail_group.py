@@ -116,7 +116,8 @@ class mail_group(osv.Model):
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
-        mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
+        self.check_access_rights(cr, uid, 'create')
+        mail_group_id = super(mail_group, self).create(cr, 1, vals, context)
 
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
@@ -130,8 +131,8 @@ class mail_group(osv.Model):
                 'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
-            newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            self.write(cr, uid, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
+            newref = cobj.copy(cr, 1, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
+            self.write(cr, 1, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
 
