@@ -48,12 +48,6 @@ class fleet_vehicle(osv.Model):
 
     _inherit = 'mail.thread'
 
-    def create_send_note(self, cr, uid, ids, context=None):
-        for id in ids:
-            message = _("%s has been <b>created</b>.")% (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            self.message_post(cr, uid, [id], body=message, context=context)
-        return True
-
     def name_get(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
@@ -127,6 +121,14 @@ class fleet_vehicle(osv.Model):
                 'message' : "You have selected this %s model" % (model.name,),
             }
         }
+    def create(self, cr, uid, data, context=None):
+        vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
+        try:
+            vehicle = self.browse(cr, uid, vehicle_id, context=context)
+            self.message_post(cr, uid, [vehicle_id], body='Vehicle %s has been added to the fleet!' % (vehicle.name), context=context)
+        except:
+            pass # group deleted: do not push a message
+        return vehicle_id
 
 class fleet_vehicle_log(osv.Model):
     _name = 'fleet.vehicle.log'
@@ -229,20 +231,6 @@ class fleet_service_type(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-class fleet_vehicle_log_services(osv.Model):
-    _inherit = ['fleet.vehicle.log']
-
-    _name = 'fleet.vehicle.log.services'
-    _columns = {
-        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'amount' :fields.float('Cost', help="Total cost of the service"),
-        'reference' :fields.char('Reference',size=128),
-        'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
-    }
-    _defaults = {
-        'name': 'Service log',
-        'type': 'Services'}
 
 class fleet_vehicle_log_services(osv.Model):
     _inherit = ['fleet.vehicle.log']
