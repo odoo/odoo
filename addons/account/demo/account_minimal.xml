@@ -431,9 +431,9 @@
             <field name="code">TUBK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field model="account.account" name="usd_debit_account_id" ref="usd_bnk"/>
-            <field model="account.account" name="usd_credit_account_id" ref="usd_bnk"/>
-            <field name="currency_id" ref="base.USD"/>
+            <field model="account.account" name="default_debit_account_id" ref="usd_bnk"/>
+            <field model="account.account" name="default_credit_account_id" ref="usd_bnk"/>
+            <field name="currency" ref="base.USD"/>
         </record>
         <!--
         Product income and expense accounts, default parameters
