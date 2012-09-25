@@ -15,5 +15,6 @@
     'application' : True,
     'data' : [
         'fleet_view.xml',
-    ]
+    ],
+    'update_xml' : ['security/ir.model.access.csv'],
 }
