@@ -36,5 +36,6 @@ Allow users to sign up.
         'res_config.xml',
     ],
     'js': ['static/src/js/auth_signup.js'],
+    'css' : ['static/src/css/base.css'],
     'qweb': ['static/src/xml/auth_signup.xml'],
 }
