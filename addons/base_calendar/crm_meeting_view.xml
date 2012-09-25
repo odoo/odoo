@@ -339,7 +339,11 @@
     </record>
 
     <menuitem id="menu_crm_meeting" parent="base.menu_sales" sequence="8"
-        name="Meetings" action="action_crm_meeting"/>
+        name="Agenda" action="action_crm_meeting"/>
+
+    <menuitem name="Agenda"
+        id="mail_menu_agenda" parent="mail.mail_my_stuff"
+        sequence="10" action="action_crm_meeting"/>
 
     </data>
 </openerp>
