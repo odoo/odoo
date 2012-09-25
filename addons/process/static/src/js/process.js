@@ -143,7 +143,7 @@ instance.web.ViewManager.include({
             var image_node = nodes.kind == "subflow" ? "node-subflow" : "node";
             image_node = nodes.gray ? image_node + "-gray" : image_node;
             image_node = nodes.active ? 'node-current': image_node;
-            var img_src = '/web_process/static/src/img/'+ image_node + '.png';
+            var img_src = '/process/static/src/img/'+ image_node + '.png';
             var image = r['image'](img_src, nodes.x-25, nodes.y,150, 100).attr({"cursor": "default"}) .mousedown(function() { return false; });
             //For Node
             var process_node = r['rect'](nodes.x, nodes.y, 150, 150).attr({stroke: "none"});

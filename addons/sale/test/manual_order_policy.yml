@@ -67,13 +67,4 @@
     assert sale_order.invoice_ids, "Invoice should be created."
     assert sale_order.invoice_exists, "Order is not invoiced."
     assert sale_order.invoiced, "Order is not paid."
-    assert sale_order.state == 'progress', 'Order should be in Progress.'
-    
--
-  I set order policy "Deliver & invoice on demand" as default policy.
--
-  !record {model: sale.config.settings, id: sale_configuration_0}:
-    default_order_policy: 'manual'
--
-  !python {model: sale.config.settings}: |
-    self.execute(cr, uid, [ref("sale_configuration_0")], context=context)
+    assert sale_order.state == 'done', 'Order should be Done.'
