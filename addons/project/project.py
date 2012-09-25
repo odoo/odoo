@@ -323,7 +323,7 @@ class project(osv.osv):
         default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
-            default['name'] = proj.name + _(' (copy)')
+            default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
@@ -344,7 +344,7 @@ class project(osv.osv):
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             context.update({'copy':True})
             new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name': proj.name +_(' (copy)'),
+                                    'name':_("%s (copy)") % (proj.name),
                                     'state':'open',
                                     'date_start':new_date_start,
                                     'date':new_date_end,
@@ -694,7 +694,7 @@ class task(base_stage, osv.osv):
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                new_name = _("%s (copy)")%default.get('name','')
+                new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 

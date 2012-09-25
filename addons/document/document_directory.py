@@ -231,7 +231,7 @@ class document_directory(osv.osv):
         if not default:
             default ={}
         name = self.read(cr, uid, [id])[0]['name']
-        default.update({'name': name+ " (copy)"})
+        default.update(name=_("%s (copy)") % (name))
         return super(document_directory,self).copy(cr, uid, id, default, context=context)
 
     def _check_duplication(self, cr, uid, vals, ids=[], op='create'):

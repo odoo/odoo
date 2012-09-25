@@ -107,11 +107,12 @@ class coda_bank_account(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default.update({'journal_id': None})
-        default['description1'] = cba['description1'] or ''
-        default['description2'] = cba['description2'] or ''
-        default['name'] = (cba['name'] or '') + ' (copy)'
-        default['state'] = cba['state']
+        default.update(
+            journal_id=None,
+            description1=cba['description1'] or '',
+            description2=cba['description2'] or '',
+            name=_("%s (copy)") % (cba['name'] or ''),
+            state=cba['state'])
         return super(coda_bank_account, self).copy(cr, uid, id, default, context)
 
     def onchange_state(self, cr, uid, ids, state):
