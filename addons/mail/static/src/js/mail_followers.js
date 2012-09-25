@@ -104,7 +104,8 @@ openerp_mail_followers = function(session, mail) {
         fetch_followers: function (value_) {
             this.value = value_ || {};
             this.message_is_follower = (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
-            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
+            if(value_)
+                return this.ds_follow.call('read', [this.value, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
         },
 
         /* Display generic info about follower, for people not having access to res_partner */
