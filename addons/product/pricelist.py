@@ -394,6 +394,15 @@ class product_pricelist_item(osv.osv):
                     return False
         return True
 
+    def _check_margin(self, cr, uid, ids, context=None):
+        for item in self.browse(cr, uid, ids, context=context):
+            if item.price_min_margin > item.price_max_margin:
+                if item.name:
+                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule: \'%s\'(sequence: %s).') % (item.name, item.sequence))
+                else:
+                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule having sequence %s.') % (item.sequence))
+        return True
+
     _columns = {
         'name': fields.char('Rule Name', size=64, help="Explicit rule name for this pricelist line."),
         'price_version_id': fields.many2one('product.pricelist.version', 'Price List Version', required=True, select=True, ondelete='cascade'),
@@ -424,7 +433,8 @@ class product_pricelist_item(osv.osv):
     }
 
     _constraints = [
-        (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id'])
+        (_check_recursion, 'Error ! You cannot assign the Main Pricelist as Other Pricelist in PriceList Item!', ['base_pricelist_id']),
+        (_check_margin, '', ['price_min_margin', 'price_max_margin'])
     ]
 
     def product_id_change(self, cr, uid, ids, product_id, context=None):
@@ -434,42 +444,6 @@ class product_pricelist_item(osv.osv):
         if prod[0]['code']:
             return {'value': {'name': prod[0]['code']}}
         return {}
-    
-    def create(self, cr, uid, vals, context=None):
-        name = vals.get('name', False)
-        sequence = vals.get('sequence', False)
-        price_min_margin = vals.get('price_min_margin', 0.0)
-        price_max_margin = vals.get('price_max_margin', 0.0)
-        if price_min_margin > price_max_margin:
-            if name:
-                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule: \'%s\'(sequence: %s).') % (name, sequence))
-            else:
-                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule having sequence %s.') % (sequence))
-        return super(product_pricelist_item, self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        name = None
-        if vals.has_key('name'):
-            name = vals['name']
-        sequence = vals.get('sequence', False)
-        price_min_margin = vals.get('price_min_margin', 0.0)
-        price_max_margin = vals.get('price_max_margin', 0.0)
-        for rule in self.browse(cr, uid, ids, context=context):
-            if name is None:
-                name = rule.name
-            if not sequence:
-                sequence = rule.sequence
-            if not price_min_margin:
-                price_min_margin = rule.price_min_margin
-            if not price_max_margin:
-                price_max_margin = rule.price_max_margin
-            if price_min_margin > price_max_margin:
-                if name:
-                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule: \'%s\'(sequence: %s).') % (name, sequence))
-                else:
-                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule having sequence %s.') % (sequence))
-        return super(product_pricelist_item, self).write(cr, uid, ids, vals, context=context)
-
 product_pricelist_item()
 
 
