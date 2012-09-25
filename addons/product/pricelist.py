@@ -436,22 +436,41 @@ class product_pricelist_item(osv.osv):
         return {}
     
     def create(self, cr, uid, vals, context=None):
-        name = vals.get('name', '')
+        name = vals.get('name', False)
+        sequence = vals.get('sequence', False)
         price_min_margin = vals.get('price_min_margin', 0.0)
         price_max_margin = vals.get('price_max_margin', 0.0)
         if price_min_margin > price_max_margin:
-            raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule!') % (name))
+            if name:
+                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule: \'%s\'(sequence: %s).') % (name, sequence))
+            else:
+                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule having sequence %s.') % (sequence))
         return super(product_pricelist_item, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        price_min_margin = vals.get('price_min_margin', 0.0)
-        price_max_margin = vals.get('price_max_margin', 0.0)
         for rule in self.browse(cr, uid, ids, context=context):
-            name = rule.name
+            if vals.get('name', False):
+                name = vals['name']
+            else:
+                name = rule.name
+            if vals.get('sequence', False):
+                sequence = vals['sequence']
+            else:
+                sequence = rule.sequence
+            if vals.get('price_min_margin', False):
+                price_min_margin = vals['price_min_margin']
+            else:
+                price_min_margin = rule.price_min_margin
+            if vals.get('price_max_margin', False):
+                price_max_margin = vals['price_max_margin']
+            else:
+                price_max_margin = rule.price_max_margin
             if price_min_margin > price_max_margin:
-                raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin in \'%s\' pricelist rule!') % (name))
+                if name:
+                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule: \'%s\'(sequence: %s).') % (name, sequence))
+                else:
+                    raise osv.except_osv(_('Warning!'), _('Minimum margin must be lower than maximum margin for pricelist rule having sequence %s.') % (sequence))
         return super(product_pricelist_item, self).write(cr, uid, ids, vals, context=context)
-
 
 product_pricelist_item()
 
