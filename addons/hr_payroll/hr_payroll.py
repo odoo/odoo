@@ -81,10 +81,9 @@ class hr_payroll_structure(osv.osv):
         """
         if not default:
             default = {}
-        default.update({
-            'code': self.browse(cr, uid, id, context=context).code + "(copy)",
-            'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        })
+        default.update(
+            code=_("%s (copy)") % (self.browse(cr, uid, id, context=context).code),
+            company_id=self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
     def get_all_rules(self, cr, uid, structure_ids, context=None):
@@ -305,7 +304,7 @@ class hr_payslip(osv.osv):
                 return False
         return True
 
-    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -851,7 +850,7 @@ result = rules.NET > categories.NET * 0.10''',
         """
         :param rule_id: id of rule to compute
         :param localdict: dictionary containing the environement in which to compute the rule
-        :return: returns a tuple build as the base/amount computed, the quantity and the rate 
+        :return: returns a tuple build as the base/amount computed, the quantity and the rate
         :rtype: (float, float, float)
         """
         rule = self.browse(cr, uid, rule_id, context=context)
