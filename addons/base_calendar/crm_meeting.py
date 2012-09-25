@@ -88,4 +88,50 @@ class crm_meeting(base_state, osv.Model):
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
 
+#override following methods to avoid recurrency meeting view problem
+class mail_message(osv.Model):
+    _inherit = 'mail.message'
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+        for arg in args:
+            if arg[0] == "res_id":
+                if isinstance(arg[2], (str)):
+                    args[1][2] = self.pool.get('calendar.event').remove_virtual_id(arg[2])
+        res = super(mail_message, self).search(cr, uid, args, offset, limit, order, context, count=False)
+        if count:
+            return len(res)
+        elif limit:
+            return res[offset:offset+limit]
+        else:
+            return res
+mail_message()
+
+class mail_compose_message(osv.Model):
+    _inherit = 'mail.compose.message'
+    # if not web warning message
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res_id = context.get('default_res_id', context.get('active_id'))
+        if isinstance(res_id, (str)):
+           res_id = self.pool.get('calendar.event').remove_virtual_id(res_id)
+           context.update({'default_res_id':res_id})
+        result = super(mail_compose_message, self).default_get(cr, uid, fields, context=context)
+        return result
+mail_compose_message()
+
+class ir_attachment(osv.Model):
+    _inherit = 'ir.attachment'
+    def search(self, cr, uid, args, offset=0, limit=0, order=None, context=None, count=False):
+        for arg in args:
+            if arg[0] == "res_id":
+                if isinstance(arg[2], (str)):
+                    args[1][2] = self.pool.get('calendar.event').remove_virtual_id(arg[2])
+        res = super(ir_attachment, self).search(cr, uid, args, offset, limit, order, context, count=False)
+        if count:
+            return len(res)
+        elif limit:
+            return res[offset:offset+limit]
+        else:
+            return res
+ir_attachment()
 
