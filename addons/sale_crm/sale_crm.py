@@ -35,7 +35,7 @@ class sale_order(osv.osv):
         section_id = self.browse(cr, uid, order, context=context).section_id
         if section_id:
             followers = [follow.id for follow in section_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [order.id], followers, context=context)
+            self.message_subscribe(cr, uid, [order], followers, context=context)
         return order
 
 sale_order()
