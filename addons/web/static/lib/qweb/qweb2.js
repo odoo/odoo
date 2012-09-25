@@ -4,7 +4,7 @@
 // TODO: t-set + t-value + children node == scoped variable ?
 var QWeb2 = {
     expressions_cache: {},
-    RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
+    RESERVED_WORDS: 'true,false,NaN,null,undefined,debugger,console,window,in,instanceof,new,function,return,this,typeof,eval,void,Math,RegExp,Array,Object,Date'.split(','),
     ACTIONS_PRECEDENCE: 'foreach,if,call,set,esc,escf,raw,rawf,js,debug,log'.split(','),
     WORD_REPLACEMENT: {
         'and': '&&',
