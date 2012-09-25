@@ -180,7 +180,7 @@
                                             <field name="vendor_id" />
                                             <field name="inv_ref" />
                                             <field name="date_creation" />
-                                            <field name="log_odometer_id" />
+                                            <field name="log_odometer" />
                                         </tree>
                                         <form string="Fuel Logs" version="7.0">
                                             <sheet>
@@ -189,7 +189,7 @@
                                                         <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
                                                         <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
                                                         <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
-                                                        <field name="log_odometer_id" />
+                                                        <field name="log_odometer" />
                                                     </group>
                                                     <group>
                                                         <field name="date_creation" />
@@ -298,13 +298,11 @@
                     <field name="model">fleet.vehicle.log</field>
                     <field name="arch" type="xml">
                         <tree string="Logs">
-                            
-                                        <field name="type" />
-                                        <field name="date_creation" />
-                                        <field name="vehicle_id" />
-                                        <field name="employee_id" />
-                                        <field name="description" />
-                           
+                            <field name="type" />
+                            <field name="date_creation" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="description" />
                         </tree>
                     </field>
         </record>
@@ -324,13 +322,22 @@
             <field name="arch" type="xml">
                 <form string="Fuel Logs" version="7.0">
                     <sheet>
+                        <group col = "2">
+                            <group>
+                                <field name="vehicle_id"/>
+                                <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
+                                <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
+                                <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
+                                <field name="log_odometer" />
+                            </group>
+                            <group>
+                                <field name="date_creation" />
+                                <field name="employee_id" />
+                                <field name="inv_ref" />
+                                <field name="vendor_id" />
+                            </group>
+                        </group>
                         <group>
-                            <field name="date_creation" />
-                            <field name="vehicle_id" />
-                            <field name="employee_id" />
-                            <field name="liter" />
-                            <field name="price_per_liter" />
-                            <field name="inv_ref" />
                             <field name="description" />
                         </group>
                     </sheet>
@@ -339,19 +346,18 @@
         </record>
 
         <record model='ir.ui.view' id='fleet_vehicle_log_fuel_tree'>
-            
-                    <field name="name">fleet.vehicle.log.fuel.tree</field>
-                    <field name="model">fleet.vehicle.log.fuel</field>
-                    <field name="arch" type="xml">
-                        <tree string="Fuel Logs">
-                            <field name="date_creation" />
-                            <field name="vehicle_id" />
-                            <field name="employee_id" />
-                            <field name="liter" />
-                            <field name="amount" />
-                            <field name="inv_ref" />
-                        </tree>
-                    </field>
+            <field name="name">fleet.vehicle.log.fuel.tree</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+            <field name="arch" type="xml">
+                <tree string="Fuel Logs">
+                    <field name="date_creation" />
+                    <field name="vehicle_id" />
+                    <field name="employee_id" />
+                    <field name="liter" />
+                    <field name="amount" />
+                    <field name="inv_ref" />
+                </tree>
+            </field>
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_log_fuel_act'>
@@ -362,6 +368,53 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_odometer_form'>
+            <field name="name">fleet.vehicle.log.odometer.form</field>
+            <field name="model">fleet.vehicle.log.odometer</field>
+            <field name="arch" type="xml">
+                <form string="Fuel Logs" version="7.0">
+                    <sheet>
+                        <group col = "2">
+                            <group>
+                                <field name="vehicle_id" />
+                                <field name="value" />
+                                <field name="date_creation" />
+                            </group>
+                            <group>
+                                <field name="employee_id" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="description" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_odometer_tree'>
+            <field name="name">fleet.vehicle.log.odometer.tree</field>
+            <field name="model">fleet.vehicle.log.odometer</field>
+            <field name="arch" type="xml">
+                <tree string="Fuel Logs">
+                    <field name="vehicle_id" />
+                    <field name="value" />
+                    <field name="date_creation" />
+                    <field name="employee_id" />
+                    <field name="description" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_odometer_act'>
+            <field name="name">Vehicle Odometer Logs</field>
+            <field name="res_model">fleet.vehicle.log.odometer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_log_odometer_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
             <field name="name">fleet.vehicle.log.services.form</field>

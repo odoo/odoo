@@ -142,9 +142,17 @@ class fleet_vehicle(osv.Model):
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         try:
             vehicle = self.browse(cr, uid, vehicle_id, context=context)
-            self.message_post(cr, uid, [vehicle_id], body='Vehicle %s has been added to the fleet!' % (vehicle.name), context=context)
+            self.message_post(cr, uid, [vehicle_id], body='Vehicle %s has been added to the fleet!' % (vehicle.registration), context=context)
         except:
             pass # group deleted: do not push a message
+        return vehicle_id
+
+    def write(self, cr, uid, ids, vals, context=None):
+        vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
+        try:
+            self.message_post(cr, uid, [vehicle_id], body='Vehicle edited', context=context)
+        except:
+            pass
         return vehicle_id
 
 class fleet_vehicle_log(osv.Model):
@@ -215,7 +223,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'log_odometer_id' :fields.many2one('fleet.vehicle.log.odometer', 'Odometer Log'),
+        'log_odometer' :fields.many2one('fleet.vehicle.log.odometer', 'Odometer Log'),
     }
     _defaults = {
         'name': 'Fuel log',
