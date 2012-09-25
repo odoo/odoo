@@ -568,11 +568,13 @@ property or property parameter."),
             res = cr.fetchone()
             if res:
                 partner_ids = [partner.id for partner in meeting_obj.browse(cr, uid, res[0], context=context).partner_ids]
-                if vals.user_id:
-                    partner_ids.append(vals.user_id.partner_id.id)
+                if vals.user_id and vals.user_id.partner_id:
+                    if vals.user_id.partner_id.id not in partner_ids:
+                        partner_ids.append(vals.user_id.partner_id.id)
                     meeting_obj.write(cr, uid, res[0], {'partner_ids': [(6, 0, partner_ids)]})
                 if vals.partner_id:
-                    partner_ids.append(vals.partner_id.id)
+                    if vals.partner_id.id not in partner_ids:
+                        partner_ids.append(vals.partner_id.id)
                     meeting_obj.write(cr, uid, res[0], {'partner_ids': [(6, 0, partner_ids)]})
 
         return True
