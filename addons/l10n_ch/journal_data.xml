@@ -19,6 +19,7 @@
             <field name="user_id" ref="base.user_root"/>
             <field name="update_posted" eval="True" />
             <field name="entry_posted" eval="True" />
+            <field name="currency" model="res.currency" ref="base.CHF" />
         </record>
         
         <record id="bank_euro_journal" model="account.journal">
