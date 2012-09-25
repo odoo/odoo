@@ -102,7 +102,7 @@ class report_stock(report_int):
         qty = 0
 
         io = StringIO.StringIO()
-        gt = stock_graph.stock_graph(io, context['lang'], cr)
+        gt = stock_graph.stock_graph(io, context.get('lang', 'en_US'), cr)
         for prod_id in products:
             gt.add(prod_id, names.get(prod_id, 'Unknown'), products[prod_id])
         gt.draw()
