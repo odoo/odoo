@@ -23,6 +23,7 @@ import openerp
 from openerp.osv import osv, fields
 from openerp import SUPERUSER_ID
 from openerp.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.safe_eval import safe_eval
 
 import time
 import random
@@ -152,10 +153,11 @@ class res_users(osv.Model):
         """ create a new user from the template user """
         # check that uninvited users may sign up
         ir_config_parameter = self.pool.get('ir.config_parameter')
-        if token and not ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', False):
-            raise Exception('Signup is not allowed for uninvited users')
+        if not token:
+            if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
+                raise Exception('Signup is not allowed for uninvited users')
 
-        template_user_id = ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id')
+        template_user_id = safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
         assert template_user_id, 'Signup: missing template user'
         values.update({'active': True, 'signup_token': False, 'signup_expiration': False})
         return self.copy(cr, uid, template_user_id, values, context=context)

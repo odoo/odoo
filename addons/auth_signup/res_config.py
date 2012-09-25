@@ -20,6 +20,7 @@
 ##############################################################################
 
 from openerp.osv import osv, fields
+from openerp.tools.safe_eval import safe_eval
 
 class base_config_settings(osv.TransientModel):
     _inherit = 'base.config.settings'
@@ -31,13 +32,15 @@ class base_config_settings(osv.TransientModel):
 
     def get_default_auth_signup_template_user_id(self, cr, uid, fields, context=None):
         icp = self.pool.get('ir.config_parameter')
+        # we use safe_eval on the result, since the value of the parameter is a nonempty string
         return {
-            'auth_signup_uninvited': icp.get_param(cr, uid, 'auth_signup.allow_uninvited', False),
-            'auth_signup_template_user_id': icp.get_param(cr, uid, 'auth_signup.template_user_id', False),
+            'auth_signup_uninvited': safe_eval(icp.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')),
+            'auth_signup_template_user_id': safe_eval(icp.get_param(cr, uid, 'auth_signup.template_user_id', 'False')),
         }
 
     def set_auth_signup_template_user_id(self, cr, uid, ids, context=None):
         config = self.browse(cr, uid, ids[0], context=context)
         icp = self.pool.get('ir.config_parameter')
-        icp.set_param(cr, uid, 'auth_signup.allow_uninvited', config.auth_signup_uninvited)
-        icp.set_param(cr, uid, 'auth_signup.template_user_id', config.auth_signup_template_user_id.id)
+        # we store the repr of the values, since the value of the parameter is a required string
+        icp.set_param(cr, uid, 'auth_signup.allow_uninvited', repr(config.auth_signup_uninvited))
+        icp.set_param(cr, uid, 'auth_signup.template_user_id', repr(config.auth_signup_template_user_id.id))
