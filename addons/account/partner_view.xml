@@ -92,7 +92,8 @@
                             <field name="debit"/>
                         </group>
                     </group>
-                    <field name="bank_ids">
+                    <label for="bank_ids" string="Bank Details"/>
+                    <field name="bank_ids" context="{'default_partner_id': active_id}">
                         <form string="Bank account" version="7.0">
                             <group col="4">
                                 <field name="state"/>
