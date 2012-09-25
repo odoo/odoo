@@ -41,7 +41,7 @@
                     <newline/>
                     <separator colspan="4" string="Account Infos"/>
                     <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
-                        <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
+                        <field name="acc_number" placeholder="Account Number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
                         <field name="dta_code"/>
                         <newline/>
                     </group>
@@ -72,7 +72,7 @@
                     <separator colspan="4" string="Account Infos"/>
                         <newline/>
                     <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
-                            <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
+                            <field name="acc_number" placeholder="Account Number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
                             <field name="dta_code"/>
                         <newline/>
                     </group>
