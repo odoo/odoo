@@ -1,28 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- vim:fdl=1:
--->
+<!-- vim:fdl=1: -->
 <templates id="template" xml:space="preserve">
 
-<t t-extend="Login">
-    <t t-jquery="form ul:first li:last" t-operation="after">
-        <li>
-            <a class="oe_signup" href="#">Sign Up</a>
-        </li>
+    <t t-extend="Login">
+        <t t-jquery="form ul:first li:first" t-operation="before">
+            <li class="oe_signup">
+                <input name="signup" type="checkbox" value="check_signup"/>
+                Create a new account
+            </li>
+            <li class="oe_signup">Name</li>
+            <li class="oe_signup">
+                <input name="name" type="text"/>
+            </li>
+        </t>
+        <t t-jquery="form ul:first li:contains('Username')" t-operation="replace">
+            <li>Username <span class="oe_signup">(Email)</span></li>
+        </t>
+        <t t-jquery="form ul:first li:last" t-operation="before">
+            <li class="oe_signup">Confirm Password</li>
+            <li class="oe_signup">
+                <input name="confirm_password" type="password"/>
+            </li>
+        </t>
     </t>
-</t>
-
-<t t-name="auth_signup.signup">
-  <div>
-    <form>
-        Name = <input type="text" name="name"/><br/>
-        Email = <input type="email" name="email"/><br/>
-        Password = <input type="password" name="password"/><br/>
-        Confirmation = <input type="password" name="password_confirmation"/><br/>
-        <button type="submit" disabled="disabled">Signup</button>
-    </form>
-  </div>
-</t>
-
-
 
 </templates>
