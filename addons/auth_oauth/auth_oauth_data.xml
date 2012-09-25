@@ -2,6 +2,15 @@
 <openerp>
     <data>
 
+        <record id="provider_openerp" model="auth.oauth.provider">
+            <field name="name">OpenERP</field>
+            <field name="auth_endpoint">https://openerp.my.openerp.com/oauth2/auth</field>
+            <field name="scope">userinfo</field>
+            <field name="validation_endpoint">https://openerp.my.openerp.com/oauth2/tokeninfo</field>
+            <field name="data_endpoint"></field>
+            <field name="css_class">zocial openerp</field>
+            <field name="body">Sign in with OpenERP Online</field>
+        </record>
         <record id="provider_facebook" model="auth.oauth.provider">
             <field name="name">Facebook Graph</field>
             <field name="auth_endpoint">https://www.facebook.com/dialog/oauth</field>
