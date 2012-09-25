@@ -153,40 +153,37 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
-        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
-
         if liter > 0 and price_per_liter > 0:
-            return {'value' : {'liter': liter,'price_per_liter': price_per_liter, 'amount' : liter * price_per_liter,}}
+            return {'value' : {'amount' : float(liter) * float(price_per_liter),}}
         elif liter > 0 and amount > 0:
-            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+            return {'value' : {'price_per_liter' : float(amount) / float(liter),}}
         elif price_per_liter > 0 and amount > 0:
-            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+            return {'value' : {'liter' : float(amount) / float(price_per_liter),}}
         else :
             return {}
 
     def on_change_price_per_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
-        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
-
+        liter = float(liter);
+        price_per_liter = float(price_per_liter);
         if price_per_liter > 0 and liter > 0:
-            return {'value' : {'liter' : liter, 'price_per_liter' : price_per_liter, 'amount' : liter * price_per_liter,}}
+            print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
+            return {'value' : {'amount' : float(liter) * float(price_per_liter),}}
         elif price_per_liter > 0 and amount > 0:
-            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+            return {'value' : {'liter' : float(amount) / float(price_per_liter),}}
         elif liter > 0 and amount > 0:
-            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+            return {'value' : {'price_per_liter' : float(amount) / float(liter),}}
         else :
             return {}
 
     def on_change_amount(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
-        print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
-
         if amount > 0 and liter > 0:
-            return {'value' : {'liter' : liter, 'amount' : amount, 'price_per_liter' : float(amount / liter),}}
+            return {'value' : {'price_per_liter' : float(amount) / float(liter),}}
         elif amount > 0 and price_per_liter > 0:
-            return {'value' : {'price_per_liter' : price_per_liter, 'amount' : amount, 'liter' : float(amount / price_per_liter),}}
+            return {'value' : {'liter' : float(amount) / float(price_per_liter),}}
         elif liter > 0 and price_per_liter > 0:
-            return {'value' : {'liter' : liter, 'price_per_liter' : price_per_liter, 'amount' : liter * price_per_liter,}}
+            return {'value' : {'amount' : float(liter) * float(price_per_liter),}}
         else :
             return {}
         
@@ -197,6 +194,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
+        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
     }
     _defaults = {
         'name': 'Fuel log',
