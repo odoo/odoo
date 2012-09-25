@@ -16,6 +16,7 @@
                    <filter string="Can be Sold" name="filter_to_sell" icon="terp-accessories-archiver-minus" domain="[('sale_ok','=',1)]"/>
                    <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
                    <field name="categ_id" operator="child_of"/>
+                   <filter name="filter_supply_method_produce" string="Can be Produced" icon="terp-accessories-archiver+" domain="[('supply_method', '=', 'produce')]"/>
                    <group expand="0" string="Context...">
                        <field name="pricelist_id" context="{'pricelist': self}" groups="product.group_sale_pricelist"/>
                        <field name="company_id" groups="base.group_multi_company"/>
