@@ -23,7 +23,7 @@ import openerp
 import openerp.tools as tools
 from osv import osv
 from osv import fields
-
+from openerp import SUPERUSER_ID
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -116,8 +116,10 @@ class mail_group(osv.Model):
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
+        #check access rights for the current user, then create as SUPERUSER because the object inherits
+        #ir.ui.menu (for which normal users do not have creation rights)
         self.check_access_rights(cr, uid, 'create')
-        mail_group_id = super(mail_group, self).create(cr, 1, vals, context)
+        mail_group_id = super(mail_group, self).create(cr, SUPERUSER_ID, vals, context=context)
 
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
@@ -131,8 +133,8 @@ class mail_group(osv.Model):
                 'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
-            newref = cobj.copy(cr, 1, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            self.write(cr, 1, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
+            newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
+            self.write(cr, SUPERUSER_ID, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
 
