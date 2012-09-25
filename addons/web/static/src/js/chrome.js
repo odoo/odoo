@@ -532,7 +532,9 @@ instance.web.Login =  instance.web.Widget.extend({
         });
         var d;
         if (self.params.db) {
-            d = self.do_login(self.params.db, self.params.login, self.params.password);
+            if (self.params.login && self.params.password) {
+                d = self.do_login(self.params.db, self.params.login, self.params.password);
+            }
         } else {
             d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
         }
