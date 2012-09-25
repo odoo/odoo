@@ -28,6 +28,48 @@ from tools.translate import _
 import logging
 import pooler
 import pytz
+from lxml import etree
+
+class format_address(object):
+    def fields_view_get_address(self, cr, uid, arch, context={}):
+        user_obj = self.pool.get('res.users')
+        fmt = user_obj.browse(cr, uid, uid,context).company_id.country_id
+        fmt = fmt and fmt.address_format
+        layouts = {
+            '%(city)s %(state_code)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City" style="width: 50%%"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+                    <br/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """,
+            '%(zip)s %(city)s': """
+                <div class="address_format">
+                    <field name="zip" placeholder="ZIP" style="width: 40%%"/>
+                    <field name="city" placeholder="City" style="width: 57%%"/>
+                    <br/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                </div>
+            """,
+            '%(city)s\n%(state_name)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """
+        }
+        for k,v in layouts.items():
+            if fmt and (k in fmt):
+                doc = etree.fromstring(arch)
+                for node in doc.xpath("//div[@class='address_format']"):
+                    tree = etree.fromstring(v)
+                    node.getparent().replace(node, tree)
+                arch = etree.tostring(doc)
+                break
+        return arch
+
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
@@ -119,7 +161,7 @@ def _lang_get(self, cr, uid, context=None):
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
-class res_partner(osv.osv):
+class res_partner(osv.osv, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
@@ -226,9 +268,10 @@ class res_partner(osv.osv):
     def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
             view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
-
-        return super(res_partner, self).fields_view_get(cr, user, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
-
+        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _defaults = {
         'active': True,
