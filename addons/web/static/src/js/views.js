@@ -318,8 +318,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
         return this.ir_actions_common(action, on_close, clear_breadcrumbs);
     },
-    ir_actions_client: function (action, on_close) {
-        return this.ir_actions_common(action, on_close);
+    ir_actions_client: function (action, on_close, clear_breadcrumbs) {
+        return this.ir_actions_common(action, on_close, clear_breadcrumbs);
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {
