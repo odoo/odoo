@@ -68,7 +68,6 @@ from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -1662,6 +1661,9 @@ class BaseModel(object):
 
             for field, strvalue in record.iteritems():
                 if field in (None, 'id', '.id'): continue
+                if not strvalue:
+                    converted[field] = False
+                    continue
 
                 # In warnings and error messages, use translated string as
                 # field name

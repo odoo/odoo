@@ -100,21 +100,19 @@ class ir_fields_converter(orm.Model):
         return True
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
-        if not value: return False
         return int(value)
 
     def _str_to_float(self, cr, uid, model, column, value, context=None):
-        if not value: return False
         return float(value)
 
     def _str_to_char(self, cr, uid, model, column, value, context=None):
-        return value or False
+        return value
 
     def _str_to_text(self, cr, uid, model, column, value, context=None):
-        return value or False
+        return value
 
     def _str_to_binary(self, cr, uid, model, column, value, context=None):
-        return value or False
+        return value
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)
