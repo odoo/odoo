@@ -223,9 +223,10 @@ class account_analytic_account(osv.osv):
         if not default:
             default = {}
         analytic = self.browse(cr, uid, id, context=context)
-        default['code'] = False
-        default['line_ids'] = []
-        default['name'] = analytic['name'] + ' (' + _('copy') + ')'
+        default.update(
+            code=False,
+            line_ids=[],
+            name=_("%s (copy)") % (analytic['name']))
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
     def on_change_company(self, cr, uid, id, company_id):

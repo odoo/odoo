@@ -601,7 +601,7 @@ class account_account(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['code'] = (account['code'] or '') + '(copy)'
+        default.update(code=_("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
         if account.id in done_list:
@@ -782,9 +782,10 @@ class account_journal(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['code'] = (journal['code'] or '') + '(copy)'
-        default['name'] = (journal['name'] or '') + '(copy)'
-        default['sequence_id'] = False
+        default.update(
+            code=_("%s (copy)") % (journal['code'] or ''),
+            name=_("%s (copy)") % (journal['name'] or ''),
+            sequence_id=False)
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
