@@ -449,7 +449,7 @@ class product_pricelist_item(osv.osv):
 
     def write(self, cr, uid, ids, vals, context=None):
         for rule in self.browse(cr, uid, ids, context=context):
-            if vals.get('name', False):
+            if vals.has_key('name'):
                 name = vals['name']
             else:
                 name = rule.name
