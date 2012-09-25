@@ -33,7 +33,6 @@ Accounting chart and localization for Ecuador.
         'base_vat',
         'base_iban',
         'account_chart',
-        'account_coda',
     ],
     'data': [
         'account_tax_code.xml',
