@@ -209,7 +209,7 @@ class document_file(osv.osv):
             default = {}
         if 'name' not in default:
             name = self.read(cr, uid, [id], ['name'])[0]['name']
-            default.update({'name': name + " " + _("(copy)")})
+            default.update(name=_("%s (copy)") % (name))
         return super(document_file, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
