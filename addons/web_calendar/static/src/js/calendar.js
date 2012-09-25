@@ -403,9 +403,7 @@ openerp.web_calendar.CalendarView = openerp.web.View.extend({
         }
     },
     get_event_data: function(event_obj) {
-        var data = {
-            name: event_obj.text
-        };
+        var data = {};
         data[this.date_start] = openerp.web.datetime_to_str(event_obj.start_date);
         if (this.date_stop) {
             data[this.date_stop] = openerp.web.datetime_to_str(event_obj.end_date);
