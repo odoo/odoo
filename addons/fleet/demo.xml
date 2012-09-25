@@ -71,6 +71,15 @@
           <field name="liter">40.0</field>
           <field name="price_per_liter">1.45</field>
       </record>
+      
+      <record id="log_odo_1" model="fleet.vehicle.log.odometer">
+          <field name="employee_id" ref="hr.employee_fp" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date_creation" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="type">Odometer</field>
+          <field name="value">1579.5</field>
+          <field name="description">Odometer value when vehicle retrieved from partner</field>
+      </record>
 
     </data>
 </openerp>
