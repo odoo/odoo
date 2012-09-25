@@ -87,36 +87,38 @@
                     <page string="Meeting Detail">
                         <group>
                             <group>
-                                <field name="user_id"/>
+                                <field name="date" string="Starting at"/>
+                                <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
+                                <div attrs="{'invisible': [('allday','=',True)]}">
+                                    <field name="duration" widget="float_time"
+                                        on_change="onchange_dates(date,duration,False,allday)"
+                                        class="oe_inline"/> hours
+                                    (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
+                                    <label for="allday" string="All Day?"/>)
+                                </div>
+                                <field name="date_deadline" groups="base.group_no_one"
+                                    attrs="{'invisible': [('allday','=',True)]}"
+                                    on_change="onchange_dates(date,False,date_deadline)"/>
+                            </group>
+                            <group>
+                                <field name="user_id" groups="base.group_no_one"/>
                                 <field name="categ_ids" widget="many2many_tags"/>
                                 <field name="location"/>
                                 <field name="organizer" groups="base.group_no_one"/>
                             </group>
+
+                        </group>
+                        <label for="description"/>
+                        <field name="description"/>
+                    </page>
+                    <page string="Options">
+                        <group>
                             <group>
-                                <label for="date" string="Starting at"/>
-                                <div>
-                                    <field name="date"/>
-                                    <span attrs="{'invisible': [('allday','=',True)]}">
-				        (<field name="duration" widget="float_time"
-                                        on_change="onchange_dates(date,duration,False,allday)"
-                                        class="oe_inline"/> hours)
-			            </span>
-
-                                </div>
-
-                                <label for="date_deadline" />
-                                <div>
-                                    <field name="date_deadline" 
-                                        string="End Date" attrs="{'invisible': [('allday','=',True)]}"
-                                        on_change="onchange_dates(date,False,date_deadline)"/>
-                                    (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
-                                    <label for="allday" string="All Day?"/>)
-                                </div>
-                                    <field name="recurrency"
-                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
+                                <field name="recurrency"
+                                    attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
                             </group>
                             <group>
-                                <field name="alarm_id" widget="selection" />
+                                <field name="alarm_id" widget="selection" groups="base.group_no_one"/>
                                 <field name="class"/>
                                 <field name="show_as"/>
                                 <field name="rrule" invisible="1" readonly="1"/>
@@ -136,7 +138,7 @@
                                     <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
                                 </div>
                                 <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                <group col="4" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
                                     <field name="mo" />
                                     <field name="tu" />
                                     <field name="we" />
@@ -162,8 +164,6 @@
 
                             </group>
                         </group>
-                        <label for="description"/>
-                        <field name="description"/>
                     </page>
                     <page string="Invitation Detail">
                         <button string="Invite People"
