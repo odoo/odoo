@@ -19,21 +19,19 @@
 #
 ##############################################################################
 from openerp.osv import osv, fields
-import random
-import string
+import uuid
 
 class res_users(osv.osv):
     _inherit = 'res.users'
 
     _columns = {
         # TODO: partial implementation supporting only one client_id for the moment.
-        'last_oauth_token': fields.char('Last OAuth Token', readonly=True, invisible=True),
+        'last_oauth_token': fields.char('Last OAuth Token', size=32, readonly=True, invisible=True),
         'last_oauth_token_scope': fields.char('Last OAuth Token Scope', readonly=True, invisible=True),
     }
 
     def auth_oauth_provider_get_token(self, cr, uid, client_id="", scope="", context=None):
-        chars = string.ascii_uppercase + string.ascii_lowercase + string.digits
-        token = ''.join(random.choice(chars) for x in range(random.randrange(16, 24)))
+        token = str(uuid.uuid4()).replace('-', '')
         self.write(cr, uid, [uid], {
             "last_oauth_token": token,
             "last_oauth_token_scope": scope,
