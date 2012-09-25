@@ -187,7 +187,7 @@
         </record>
 
         <menuitem action="act_hr_timesheet_sheet_form" id="menu_act_hr_timesheet_sheet_form" parent="hr_attendance.menu_hr_time_tracking"
-             sequence="2" groups="base.group_hr_user,base.group_hr_manager"/>
+             sequence="2" groups="base.group_hr_user"/>
 
         <!--
             Company inheritancy
@@ -350,7 +350,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_employee_extd_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_2_hr_timesheet)d" string="Timesheets" type="action"/>
+                    <button name="%(act_hr_employee_2_hr_timesheet)d" string="Timesheets" type="action" groups="base.group_hr_manager"/>
                 </xpath>
             </field>
         </record>

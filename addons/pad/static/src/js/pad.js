@@ -8,8 +8,22 @@ openerp.pad = function(instance) {
             var self = this;
             var _super = self._super;
             _super.apply(self,[val]);
+
+            if (val === false || val === "") {
+                self.field_manager.dataset.call('pad_generate_url',{context:{
+                        model: self.field_manager.model,
+                        field_name: self.name,
+                        object_id: self.field_manager.datarecord.id
+                    }}).then(function(data) {
+                    if(data&&data.url){
+                        _super.apply(self,[data.url]);
+                        self.renderElement();
+                    }
+                });
+            } else {
+                self.renderElement();
+            }
             this._dirty_flag = true;
-            self.renderElement();
         },
         renderElement: function(){
             var self  = this;
