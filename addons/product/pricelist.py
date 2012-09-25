@@ -448,22 +448,20 @@ class product_pricelist_item(osv.osv):
         return super(product_pricelist_item, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
+        name = None
+        if vals.has_key('name'):
+            name = vals['name']
+        sequence = vals.get('sequence', False)
+        price_min_margin = vals.get('price_min_margin', 0.0)
+        price_max_margin = vals.get('price_max_margin', 0.0)
         for rule in self.browse(cr, uid, ids, context=context):
-            if vals.has_key('name'):
-                name = vals['name']
-            else:
+            if name is None:
                 name = rule.name
-            if vals.get('sequence', False):
-                sequence = vals['sequence']
-            else:
+            if not sequence:
                 sequence = rule.sequence
-            if vals.get('price_min_margin', False):
-                price_min_margin = vals['price_min_margin']
-            else:
+            if not price_min_margin:
                 price_min_margin = rule.price_min_margin
-            if vals.get('price_max_margin', False):
-                price_max_margin = vals['price_max_margin']
-            else:
+            if not price_max_margin:
                 price_max_margin = rule.price_max_margin
             if price_min_margin > price_max_margin:
                 if name:
