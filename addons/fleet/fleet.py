@@ -228,7 +228,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'log_odometer' :fields.many2one('fleet.vehicle.log.odometer', 'Odometer Log'),
+        
     }
     _defaults = {
         'name': 'Fuel log',
