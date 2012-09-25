@@ -56,7 +56,7 @@
     </record>
 
     <menuitem name="Phone Calls" id="menu_crm_case_phone"
-        groups="base.group_sale_salesman"
+        groups="base.group_sale_salesman_all_leads"
         parent="base.menu_base_partner" sequence="4" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_incoming0">
@@ -105,6 +105,7 @@
 
     <menuitem name="Logged Calls" id="menu_crm_case_phone_inbound"
         parent="crm.menu_crm_case_phone"
+        groups="base.group_sale_salesman_all_leads"
         action="crm_case_categ_phone_incoming0" />
 
     <record model="ir.actions.act_window" id="crm_case_categ_phone_outgoing0">
