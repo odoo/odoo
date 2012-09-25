@@ -155,7 +155,7 @@
                     </group>
                     <notebook>
                         <page string="Payment Information">
-                            <field name="line_dr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
+                            <field name="line_dr_ids" attrs="{'invisible': [('line_dr_ids','=',False)]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}">
                                 <tree string="Supplier Invoices and Outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
@@ -328,7 +328,7 @@
 
                     <notebook>
                         <page string="Payment Information" groups="base.group_user">
-                            <field name="line_cr_ids" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
+                            <field name="line_cr_ids" attrs="{'invisible': [('line_cr_ids','=',False)]}" context="{'journal_id':journal_id, 'type':type, 'partner_id':partner_id}" on_change="onchange_line_ids(line_dr_ids, line_cr_ids, amount, currency_id, type, context)">
                                 <tree string="Invoices and outstanding transactions" editable="bottom" colors="gray:amount==0">
                                     <field name="move_line_id" context="{'journal_id':parent.journal_id, 'partner_id':parent.partner_id}"
                                         on_change="onchange_move_line_id(move_line_id)"
