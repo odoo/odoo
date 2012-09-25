@@ -55,14 +55,10 @@ class Controller(openerpweb.Controller):
                 credentials = res_users.signup(cr, SUPERUSER_ID, values, token)
                 cr.commit()
                 return login_and_redirect(req, *credentials)
-            except AttributeError:
-                # auth_signup is not installed
-                _logger.exception('attribute error when signup')
-                url = "/#action=auth_signup&error=NA"   # Not Available
-            except Exception:
+            except Exception as e:
                 # signup error
                 _logger.exception('error when signup')
-                url = "/#action=auth_signup&error=UE"   # Unexcpected Error
+                url = "/#action=login&error_message=%s" % werkzeug.urls.url_quote(e.message)
         return werkzeug.utils.redirect(url)
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
