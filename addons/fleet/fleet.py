@@ -18,7 +18,7 @@ class fleet_vehicle_model(osv.Model):
         res = []
         for record in reads:
             name = record.modelname
-            if record.brand:
+            if record.brand.name:
                 name = record.brand.name+' / '+name
             res.append((record.id, name))
         return res
@@ -64,8 +64,10 @@ class fleet_vehicle(osv.Model):
         for record in reads:
             if record.registration:
                 name = record.registration
-            if record.model_id:
-                name = record.model_id.brand.name+' / '+record.model_id.modelname + ' / ' + name
+            if record.model_id.modelname:
+                name = record.model_id.modelname + ' / ' + name
+            if record.model_id.brand.name:
+                name = record.model_id.brand.name+' / '+ name
             res.append((record.id, name))
         return res
 
