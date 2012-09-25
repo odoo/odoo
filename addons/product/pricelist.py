@@ -407,7 +407,7 @@ class product_pricelist_item(osv.osv):
         'base_pricelist_id': fields.many2one('product.pricelist', 'If Other Pricelist'),
 
         'price_surcharge': fields.float('Price Surcharge',
-            digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add(or substract, if negative) to the amount calculated with the discount.'),
+            digits_compute= dp.get_precision('Product Price'), help='Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.'),
         'price_discount': fields.float('Price Discount', digits=(16,4)),
         'price_round': fields.float('Price Rounding',
             digits_compute= dp.get_precision('Product Price'),
