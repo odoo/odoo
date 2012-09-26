@@ -660,7 +660,6 @@ class stock_picking(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}),
     }
     _defaults = {
-        'name': lambda self, cr, uid, context: '/',
         'state': 'draft',
         'move_type': 'direct',
         'type': 'internal',
