@@ -1,10 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
-        <!-- 
-            Demo Leads
-            -->
 
+        <!--  Demo Leads -->
         <record id="crm_case_1" model="crm.lead">
             <field name="type">lead</field>
             <field name="name">Plan to Attend a Training</field>
@@ -110,7 +108,7 @@ Can you send details,</field>
             <field name="section_id" ref="section_sales_department"/>
             <field name="user_id" ref="base.user_root"/>
             <field name="stage_id" ref="stage_lead1"/>
-            <field name="description">Hi, Can you send a quotation for 20 Computers with speakers? 
+            <field name="description">Hi, Can you send a quotation for 20 Computers with speakers?
 Regards,
 Carrie Helle,
 Purchase Manager
@@ -260,25 +258,20 @@ Andrew</field>
             <field eval="1" name="active"/>
         </record>
 
-
-        <!--        Call Function to Cancel the leads (set as Dead) -->
+        <!-- Call Function to Cancel the leads (set as Dead) -->
         <function model="crm.lead" name="case_cancel"
             eval="[ ref('crm_case_12'), ref('crm_case_7'),
                     ref('crm_case_3'), ref('crm_case_8')],
                   {'install_mode': True}"
         />
-        <!--        Call Function to set the leads as Unread -->
+
+        <!-- Call Function to set the leads as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
             eval="[ ref('crm_case_1'), ref('crm_case_2'),
                     ref('crm_case_5'), ref('crm_case_11')], {}"
         />
 
-
-        <!-- 
-            Demo Opportunities
-            -->
-
-
+        <!-- Demo Opportunities -->
         <record id="crm_case_13" model="crm.lead">
             <field name="type">opportunity</field>
             <field name="name">Plan to buy 60 keyboards and mouses</field>
@@ -613,7 +606,7 @@ Can you send details,</field>
             <field name="type">comment</field>
         </record>
 
-        <!--        Call Function to set the opportunities as Unread -->
+        <!-- Call Function to set the opportunities as Unread -->
         <function model="crm.lead" name="message_mark_as_unread"
             eval="[ ref('crm_case_15'), ref('crm_case_16'),
                     ref('crm_case_23'), ref('crm_case_19')], {}"

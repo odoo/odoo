@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
-    <!-- 
-        ((((((((((( Demo Cases ))))))))))) 
-    -->
+
+        <!--  Demo Cases  -->
         <record id="crm_phonecall_1" model="crm.phonecall">
             <field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
             <field name="partner_id" ref="base.res_partner_11"/>
@@ -79,6 +78,7 @@
             <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
             <field name="categ_id" ref="crm.categ_phone2"/>
             <field eval="8.56" name="duration"/>
-        </record>    
+        </record>
+
     </data>
 </openerp>
