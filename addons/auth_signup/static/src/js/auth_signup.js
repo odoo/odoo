@@ -7,9 +7,14 @@ openerp.auth_signup = function(instance) {
             var self = this;
             var d = this._super();
 
-            // hide the signup fields in the case of a regular login
-            self.on_change_mode()
-            self.$("form input[name=signup]").click(self.on_change_mode);
+            // to switch between the signup and regular login form
+            this.$('a.oe_signup_signup').click(function() {
+                self.$el.addClass("oe_login_signup");
+            });
+            this.$('a.oe_signup_back').click(function() {
+                self.$el.removeClass("oe_login_signup");
+                delete self.params.token;
+            });
 
             // if there is an error message in params, show it then forget it
             if (self.params.error_message) {
@@ -26,15 +31,20 @@ openerp.auth_signup = function(instance) {
             return d;
         },
         on_token_loaded: function(result) {
-            // set the name and login of user
+            // switch to signup mode
+            this.$el.addClass("oe_login_signup");
+            // select the right the database
             this.selected_db = result.db;
             this.on_db_loaded({db_list: [result.db]});
-            this.$("form input[name=signup]").val(result.login ? [] : ["check_signup"]);
-            this.$("form input[name=name]").val(result.name);
-            this.$("form input[name=login]").val(result.login || result.email);
+            // set the name and login of user
+            this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
+            if (result.login) {
+                this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
+            } else {
+                this.$("form input[name=login]").val(result.email);
+            }
             this.$("form input[name=password]").val("");
             this.$("form input[name=confirm_password]").val("");
-            this.on_change_mode();
         },
         on_token_failed: function(result, ev) {
             if (ev) {
@@ -43,12 +53,6 @@ openerp.auth_signup = function(instance) {
             this.show_error("Invalid signup token");
             delete this.params.db;
             delete this.params.token;
-        },
-        on_change_mode: function() {
-            // 'mode' has changed: regular login, sign up, reset password
-            var is_signup = this.$("input[name=signup]:checked").val();
-            this.$(".oe_signup").toggleClass('oe_form_invisible', false && !is_signup);
-            return true;            
         },
         on_submit: function(ev) {
             if (ev) {

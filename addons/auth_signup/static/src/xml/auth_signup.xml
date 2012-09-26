@@ -3,24 +3,25 @@
 <templates id="template" xml:space="preserve">
 
     <t t-extend="Login">
-        <t t-jquery="form ul:first li:first" t-operation="before">
-            <li class="oe_signup">
-                <input name="signup" type="checkbox" value="check_signup"/>
-                Create a new account
-            </li>
-            <li class="oe_signup">Name</li>
-            <li class="oe_signup">
-                <input name="name" type="text"/>
-            </li>
+        <t t-jquery="form ul:first li:contains('Username')" t-operation="before">
+            <li class="oe_signup_show">Name</li>
+            <li class="oe_signup_show"><input name="name" type="text"/></li>
         </t>
         <t t-jquery="form ul:first li:contains('Username')" t-operation="replace">
-            <li>Username <span class="oe_signup">(Email)</span></li>
+            <li class="oe_signup_hide">Username</li>
+            <li class="oe_signup_show">Username (Email)</li>
         </t>
-        <t t-jquery="form ul:first li:last" t-operation="before">
-            <li class="oe_signup">Confirm Password</li>
-            <li class="oe_signup">
-                <input name="confirm_password" type="password"/>
-            </li>
+        <t t-jquery="form ul:first li:has(input[name=password])" t-operation="after">
+            <li class="oe_signup_show">Confirm Password</li>
+            <li class="oe_signup_show"><input name="confirm_password" type="password"/></li>
+        </t>
+        <t t-jquery="form ul:first li:has(button[name=submit])" t-operation="replace">
+            <li class="oe_signup_hide"><button name="submit">Log in</button></li>
+            <li class="oe_signup_show"><button name="submit">Sign in</button></li>
+        </t>
+        <t t-jquery="form ul:first li:last" t-operation="after">
+            <li><a class="oe_signup_hide oe_signup_signup" href="#">Sign Up</a></li>
+            <li><a class="oe_signup_show oe_signup_back" href="#">Back to Login</a></li>
         </t>
     </t>
 

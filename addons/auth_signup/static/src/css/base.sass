@@ -1,7 +1,13 @@
 @charset "utf-8"
 
 .openerp
-    // Login form
+    // Regular login form
     .oe_login
-        input[type="checkbox"]
-            width: 21px !important
+        .oe_signup_show
+            display: none
+    // Signup form
+    .oe_login_signup
+        .oe_signup_show
+            display: block !important
+        .oe_signup_hide
+            display: none
