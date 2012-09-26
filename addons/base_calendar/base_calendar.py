@@ -996,7 +996,7 @@ class calendar_event(osv.osv):
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True,),
-        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}, required=True,),
+        'date_deadline': fields.datetime('End Date', states={'done': [('readonly', True)]}, required=True,),
         'create_date': fields.datetime('Created', readonly=True),
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
