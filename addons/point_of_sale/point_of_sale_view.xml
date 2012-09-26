@@ -897,8 +897,7 @@
                                 <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
-                            <group string="Opening Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', '=', 'opening_control'), ('cash_control', '=', True), ('state', '!=',
-                                'closed')]  }" >
+                            <group string="Opening Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', 'in', ('opening_control', 'opened', 'closing_control')), ('cash_control', '=', True), ('state', '!=', 'closed')]  }">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -918,7 +917,7 @@
                                 </field>
                             </group>
 
-                            <div attrs="{'invisible' : [('state', '!=', 'closed')]}">
+                            <div attrs="{'invisible' : [('state', 'not in', ('opening_control', 'closing_control', 'closed'))]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
