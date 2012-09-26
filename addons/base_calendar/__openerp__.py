@@ -23,7 +23,7 @@
     'name': 'Calendar',
     'version': '1.0',
     'depends': ['base', 'base_status', 'mail', 'base_action_rule'],
-    'summary': 'Personnal & Shared Agenda',
+    'summary': 'Personal & Shared Calendar',
     'description': """
 This is a full-featured calendar system.
 ========================================
