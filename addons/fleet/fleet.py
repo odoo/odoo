@@ -1,5 +1,7 @@
 from itertools import chain
 from osv import osv, fields
+import time
+
 
 class fleet_vehicle_model_type(osv.Model):
     _name = 'fleet.vehicle.type'
@@ -172,6 +174,23 @@ class fleet_vehicle(osv.Model):
             pass
         return vehicle_id
 
+class fleet_vehicle_odometer(osv.Model):
+    _name='fleet.vehicle.odometer'
+    _description='Odometer log for a vehicle'
+
+    _columns = {
+        'name' : fields.char('Name',size=64),
+
+        'date' : fields.date('Date'),
+        'value' : fields.float('Odometer Value'),
+        'unit' : fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the measurement',required=False),
+        'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
+        'notes' : fields.text('Notes'),
+    }
+    _defaults = {
+        'date' : time.strftime('%Y-%m-%d')
+    }
+
 class fleet_vehicle_log(osv.Model):
     _name = 'fleet.vehicle.log'
 
@@ -212,8 +231,7 @@ class fleet_vehicle_log(osv.Model):
 
 class fleet_vehicle_log_fuel(osv.Model):
 
-    
-    _inherit = ['fleet.vehicle.log','mail.thread']
+    _inherits = {'fleet.vehicle.odometer': 'request_id'}
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
@@ -253,18 +271,17 @@ class fleet_vehicle_log_fuel(osv.Model):
         
 
     _name = 'fleet.vehicle.log.fuel'
+
     _columns = {
+        'name' : fields.char('Name',size=64),
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.float('Total price'),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
         'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
+        #'odometer_id': fields.many2one('fleet.vehicle.odometer','Odometer', ondelete='cascade', required=False),
     }
-    _defaults = {
-       # 'name': 'Fuel log',
-        'type': 'Refueling',
-        }
 
 class fleet_insurance_type(osv.Model):
     _name = 'fleet.insurance.type'
