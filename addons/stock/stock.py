@@ -1950,6 +1950,9 @@ class stock_move(osv.osv):
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
+        elif type == 'internal':
+            location_source_id = 'stock_location_stock'
+            location_dest_id = 'stock_location_stock'
         if location_source_id:
             try:
                 location_model, location_source_id = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
