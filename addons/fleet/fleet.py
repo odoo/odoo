@@ -1,3 +1,4 @@
+from itertools import chain
 from osv import osv, fields
 
 class fleet_vehicle_model_type(osv.Model):
@@ -155,8 +156,15 @@ class fleet_vehicle(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
         try:
-            self.message_post(cr, uid, [vehicle_id], body='Vehicle edited', context=context)
-        except:
+            changes = {}
+            for key,value in vals.items():
+                if key == 'registration' or key == 'driver':
+                    changes[key] = value
+            if len(changes) > 0:
+                self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ str(changes), context=context)
+                #self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ ','.join(chain(*str(changes.items()))), context=context)
+        except Exception as e:
+            print e
             pass
         return vehicle_id
 
