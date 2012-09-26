@@ -588,16 +588,6 @@ class crm_lead(base_stage, format_address, osv.osv):
         else:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
         stage_id = stage_ids and stage_ids[0] or False
-        email = False
-        phone = False
-        if customer and customer.email:
-            email = customer.email
-        else:
-            email = lead.email_from
-        if customer and customer.phone:
-            phone = customer.phone
-        else:
-            phone = lead.phone
         return {
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
@@ -608,8 +598,8 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
-                'email_from': email,
-                'phone': phone,
+                'email_from': customer.email if customer else lead.email_from,
+                'phone': customer.phone if customer else lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
