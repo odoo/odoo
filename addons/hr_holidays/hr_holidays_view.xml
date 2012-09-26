@@ -353,6 +353,32 @@
 
         <menuitem name="My Allocation Requests" parent="menu_open_ask_holidays" id="menu_open_allocation_holidays" action="open_allocation_holidays"/>
 
+        <record model="ir.actions.act_window" id="request_approve_allocation">
+            <field name="name">Allocation Requests Approve</field>
+            <field name="res_model">hr.holidays</field>
+            <field name="view_type">form</field>
+            <field name="context">{'default_type': 'add', 'search_default_approve':1}</field>
+            <field name="domain">[('type','=','add')]</field>
+            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="search_view_id" ref="view_hr_holidays_filter"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_request_approve_allocation_tree">
+            <field name="sequence" eval="1"/>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="view_holiday_allocation_tree"/>
+            <field name="act_window_id" ref="request_approve_allocation"/>
+        </record>
+
+        <record model="ir.actions.act_window.view" id="action_request_approve_allocation_form">
+            <field name="sequence" eval="2"/>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="allocation_leave_new"/>
+            <field name="act_window_id" ref="request_approve_allocation"/>
+        </record>
+
+        <menuitem name="Allocation Req. to Approve" parent="menu_open_ask_holidays" id="menu_request_approve_allocation" action="request_approve_allocation" groups="base.group_hr_manager"/>
+
         <record model="ir.actions.act_window" id="open_company_allocation">
             <field name="name">Leaves Summary</field>
             <field name="res_model">hr.holidays</field>
