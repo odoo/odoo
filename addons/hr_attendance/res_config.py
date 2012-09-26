@@ -25,9 +25,9 @@ class hr_attendance_config_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'
 
     _columns = {
-        'group_hr_attendance': fields.boolean('Allow to show Attendance details.',
+        'group_hr_attendance': fields.boolean('Show menus related to attendance',
             implied_group='base.group_hr_attendance',
-            help="To allow to show Attendance details."),
+            help="Allocates attendance group to all users."),
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
