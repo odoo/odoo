@@ -86,12 +86,30 @@
         <pre><t t-esc="preview"/></pre>
     </t>
     <ul t-name="ImportView.error">
-        <li t-foreach="errors" t-as="error" t-attf-class="oe_import_report_#{error.type}">
-            <!-- can also have error.record, but may be *huge* if
-                 e.g. has image fields -->
-            <t t-esc="error.message"/>
+        <li t-foreach="errors" t-as="error"
+            t-attf-class="oe_import_report oe_import_report_#{error_value[0].type}">
+            <t t-call="ImportView.error.each">
+                <t t-set="error" t-value="error_value[0]"/>
+            </t>
+
+            <a href="#" class="oe_import_report_count" t-if="error_value.length gt 1">
+                <t t-esc="more(error_value.length - 1)"/>
+            </a>
+            <ul class="oe_import_report_more" t-if="error_value.length gt 1">
+                <li t-foreach="error_value.length - 1" t-as="index">
+                    <t t-call="ImportView.error.each">
+                        <t t-set="error" t-value="error_value[index + 1]"/>
+                    </t>
+                </li>
+            </ul>
         </li>
     </ul>
+    <t t-name="ImportView.error.each">
+        <span class="oe_import_report_message">
+            <t t-esc="error.message"/>
+        </span>
+        <t t-if="error.rows"><t t-esc="at(error.rows)"/></t>
+    </t>
     <t t-extend="ListView.buttons">
         <t t-jquery="span.oe_alternative">
             this.attr('t-if', 'widget.options.import_enabled');

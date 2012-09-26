@@ -79,6 +79,10 @@ openerp.base_import = function (instance) {
                         ? $el.next()
                         : $el.parent().next())
                     .toggle();
+            },
+            'click .oe_import_report a.oe_import_report_count': function (e) {
+                e.preventDefault();
+                $(e.target).parent().toggleClass('oe_import_report_showmore');
             }
         },
         init: function (parent, dataset) {
@@ -262,31 +266,50 @@ openerp.base_import = function (instance) {
         },
         import_dryrun: function () {
             return this.call_import({ dryrun: true })
-                .then(this.proxy('render_import_errors'));
+                .then(this.proxy('render_import_result'));
         },
         do_import: function () {
             var self = this;
-            return this.call_import({ dryrun: false }).then(function (errors) {
-                if (_.isEmpty(errors)) {
+            return this.call_import({ dryrun: false }).then(function (message) {
+                if (!_.any(message, function (message) {
+                        return message.type === 'error' })) {
                     if (self.getParent().reload_content) {
                         self.getParent().reload_content();
                     }
                     self.close();
                     return;
                 }
-                self.render_import_errors(errors);
+                self.render_import_result(message);
             });
         },
-        render_import_errors: function (errors) {
-            if (_.isEmpty(errors)) {
+        render_import_result: function (message) {
+            if (_.isEmpty(message)) {
                 this.$el.removeClass('oe_import_error');
                 return;
             }
-            // import failed (or maybe just warnings, if we ever get
-            // warnings?)
+            // row indexes come back 0-indexed, spreadsheets
+            // display 1-indexed.
+            var offset = 1;
+            // offset more if header
+            if (this.import_options().header) { offset += 1; }
+
             this.$el.addClass('oe_import_error');
             this.$('.oe_import_error_report').html(
-                QWeb.render('ImportView.error', {errors: errors}));
+                QWeb.render('ImportView.error', {
+                    errors: _(message).groupBy('message'),
+                    at: function (rows) {
+                        var from = rows.from + offset;
+                        var to = rows.to + offset;
+                        if (from === to) {
+                            return _.str.sprintf(_t("at row %d"), from);
+                        }
+                        return _.str.sprintf(_t("between rows %d and %d"),
+                                             from, to);
+                    },
+                    more: function (n) {
+                        return _.str.sprintf(_t("(%d times more)"), n);
+                    },
+                }));
         },
     });
 };
