@@ -46,7 +46,6 @@ Canadian accounting charts and localizations.
     ],
     'demo': [],
     'installable': True,
-    'certificate': '00941680933773696173',
     'images': ['images/config_chart_l10n_ca.jpeg','images/l10n_ca_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

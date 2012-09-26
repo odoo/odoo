@@ -93,19 +93,18 @@ If required, you can manually adjust the descriptions via the CODA configuration
     'depends': ['account_voucher','base_iban', 'l10n_be_invoice_bba', 'account_bank_statement_extensions'],
     'demo': [],
     'data': [
-        'account_coda_trans_type.xml',
-        'account_coda_trans_code.xml',
-        'account_coda_trans_category.xml',
-        'account_coda_comm_type.xml',
+        'l10n_be_coda_trans_type.xml',
+        'l10n_be_coda_trans_code.xml',
+        'l10n_be_coda_trans_category.xml',
+        'l10n_be_coda_comm_type.xml',
         'security/ir.model.access.csv',
         'security/account_security.xml',
-        'account_coda_wizard.xml',
-        'account_coda_view.xml',
+        'l10n_be_coda_wizard.xml',
+        'l10n_be_coda_view.xml',
     ],
     'auto_install': False,
     'installable': True,
     'license': 'AGPL-3',
-    'certificate' : '001237207321716002029',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
