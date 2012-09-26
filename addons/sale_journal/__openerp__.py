@@ -61,6 +61,5 @@ Some statistics by journals are provided.
     'test': [ ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0077661619085',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

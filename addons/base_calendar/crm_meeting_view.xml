@@ -165,12 +165,12 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Invitation Detail">
-                        <button string="Invite People"
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            type="action"
-                            attrs="{'readonly': [('state', '=', 'done')]}"
-                            context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                    <!--
+                        Temporarily removing invitation feature as the implementation
+                        was not clean. Invitation should be trigerred automatically
+                        based on partner_ids.
+                    -->
+                    <page string="Invitation Detail" groups="base.group_no_one">
                         <field name="attendee_ids" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
                                 <field name="sent_by_uid" string="From"/>
@@ -188,11 +188,6 @@
                                 <button name="do_decline" string="Decline"
                                     states="needs-action,tentative,accepted"
                                     type="object" />
-                                <button
-                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                    string="Delegate" type="action"
-                                    states="needs-action,tentative,declined,accepted"
-                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                             </tree>
                             <form string="Invitation details" version="7.0">
                                 <header>
@@ -205,10 +200,6 @@
                                     <button name="do_decline" type="object"
                                         states="needs-action,tentative,accepted"
                                         string="Decline" />
-                                    <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" type="action"
-                                        states="needs-action,tentative,declined,accepted"
-                                        string="Delegate" 
-                                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
                                 </header>
                                 <group>
