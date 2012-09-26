@@ -320,7 +320,7 @@ class test_mail(TestMailMockups):
         for sent_email in sent_emails:
             self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
             self.assertEqual(sent_email['body'], _mail_body1 + '\n<pre>Bert Tartopoils</pre>\n', 'sent_email body incorrect')
-            self.assertEqual(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils', 'sent_email body_alternative is incorrect')
+            self.assertEqual(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
         # Test: mail_message: partner_ids = group followers
         message_pids = set([partner.id for partner in message.partner_ids])
         test_pids = set([p_a_id, p_b_id, p_c_id])
