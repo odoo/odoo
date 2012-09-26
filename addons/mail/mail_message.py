@@ -201,6 +201,7 @@ class mail_message(osv.Model):
             partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
+        
         return {
             'id': msg.id,
             'type': msg.type,
@@ -216,6 +217,7 @@ class mail_message(osv.Model):
             'partner_ids': partner_ids,
             'child_ids': [],
             'child_nbr': child_nbr,
+            'parent_id': msg.parent_id and msg.parent_id.id or False,
             'vote_user_ids': vote_ids,
             'has_voted': has_voted
         }

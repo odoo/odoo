@@ -625,11 +625,6 @@ class mail_thread(osv.AbstractModel):
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
-        # message_post
-        # [26] False notification mt_crm_stage False
-
-        # message_post
-        # [26] False notification mt_crm_won False
 
         context = context or {}
         attachments = attachments or []
@@ -653,6 +648,7 @@ class mail_thread(osv.AbstractModel):
             }
             attachment_ids.append((0, 0, data_attach))
 
+        # get subtype
         if subtype:
             ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype)
             subtype_id = ref and ref[1] or False
@@ -684,11 +680,10 @@ class mail_thread(osv.AbstractModel):
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
 
-        print "------------------------------------------"
-        print values, "mail_thread 688"
-        print "--------≃============----------------------------------"
-        
-        return messages.create(cr, uid, values, context=context)
+        added_message_id = messages.create(cr, uid, values, context=context)
+        added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
+
+        return added_message
 
     #------------------------------------------------------
     # Followers API

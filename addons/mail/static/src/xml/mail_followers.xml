@@ -7,15 +7,19 @@
         -->
     <div t-name="mail.followers" class="oe_mail_recthread_aside oe_semantic_html_override">
         <div class="oe_mail_recthread_actions">
-            <button type="button" class="oe_mail_button_follow"><p>Follow</p><span class="oe_e">S</span></button>
-            <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout"><p>Following</p><span class="oe_e">S</span></button>
-            <button type="button" class="oe_mail_button_invite"><p>Invite</p></button>
-            <div class="oe_mail_recthread_subtypes">
-                <h4>Message types to follow</h4>
-                <ul class="oe_mail_subtypes"></ul>
+            <div class="oe_mouse_subtypes">
+                <button type="button" class="oe_follower oe_notfollow">
+                    <span class="oe_follow">Follow</span>
+                    <span class="oe_unfollow">Unfollow</span>
+                    <span class="oe_following">Following</span>
+                </button>
+                <div class="oe_recthread_subtypes">
+                    <ul class="oe_subtypes"></ul>
+                </div>
             </div>
         </div>
         <div class="oe_mail_recthread_followers">
+            <button type="button" class="oe_invite"><span>Invite</span></button>
             <t t-if="widget.options.title">
                 <h4><t t-raw="widget.options.title"/></h4>
             </t>
