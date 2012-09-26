@@ -171,8 +171,27 @@ class fleet_vehicle(osv.Model):
 class fleet_vehicle_log(osv.Model):
     _name = 'fleet.vehicle.log'
 
+    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return {}
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            name = record.type
+            if record.employee_id.name:
+                name = name+ ' / '+ record.employee_id.name
+            if record.vehicle_id.name:
+                name = name+ ' / '+ record.vehicle_id.name
+            if record.date_creation:
+                name = name+ ' / '+record.date_creation
+            res.append((record.id, name))
+
+        return dict(res)
+
     _columns = {
-        'name' : fields.char('Log',size=32),
+        'name' : fields.function(_name_get_fnc, type="text", string='Log', store=True),
         'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
 
@@ -183,7 +202,7 @@ class fleet_vehicle_log(osv.Model):
         }
         
     _defaults = {
-            'name' : 'Log',
+            #'name' : 'Log',
             'type' : 'Log',
     }
 
@@ -239,7 +258,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
     }
     _defaults = {
-        'name': 'Fuel log',
+       # 'name': 'Fuel log',
         'type': 'Refueling',
         }
 
@@ -261,7 +280,7 @@ class fleet_vehicle_log_insurance(osv.Model):
         'description' : fields.text('Description'),
     }
     _defaults = {
-        'name': 'Insurance log',
+        #'name': 'Insurance log',
         'type': 'Insurance',}
 
 class fleet_service_type(osv.Model):
@@ -282,7 +301,7 @@ class fleet_vehicle_log_services(osv.Model):
         'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
     }
     _defaults = {
-        'name': 'Service log',
+       # 'name': 'Service log',
         'type': 'Services'}
 
 class fleet_vehicle_log_odometer(osv.Model):
@@ -295,7 +314,7 @@ class fleet_vehicle_log_odometer(osv.Model):
         'service_log' :fields.many2one('fleet.vehicle.log.services', 'Services log'),
     }
     _defaults = {
-        'name': 'Odometer Log',
+      #  'name': 'Odometer Log',
         'type': 'Odometer'}
 
 class hr_employee(osv.Model):
