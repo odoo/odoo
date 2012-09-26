@@ -165,7 +165,25 @@
                                                     <field name="amount" />
                                                     <field name="reference" />
                                                     <field name="service_ids" widget="many2many_tags"/>
-                                                    <field name="odometer_log" />
+                                                    <field name="odometer_log" >
+                                                        <tree string="Odometer">
+                                                            <field name="date_creation" />
+                                                            <field name="value" />
+                                                            <field name="description" />
+                                                        </tree>
+                                                        <form string="Odometer" version="7.0" >
+                                                            <sheet>
+                                                                <group>
+                                                                    <field name="date_creation" />
+                                                                    <field name="value" />
+                                                                    <field name="vehicle_id"/>
+                                                                </group>
+                                                                <group>
+                                                                    <field name="description" />
+                                                                </group>
+                                                            </sheet>
+                                                        </form>
+                                                    </field>
                                                 </group>
                                             </sheet>
                                         </form>
@@ -199,7 +217,25 @@
                                                 </group>
                                                 <group>
                                                     <field name="description" />
-                                                    <field name="odometer_log" />
+                                                    <field name="odometer_log" >
+                                                        <tree string="Odometer">
+                                                            <field name="date_creation" />
+                                                            <field name="value" />
+                                                            <field name="description" />
+                                                        </tree>
+                                                        <form string="Odometer" version="7.0" >
+                                                            <sheet>
+                                                                <group>
+                                                                    <field name="date_creation" />
+                                                                    <field name="value" />
+                                                                    <field name="vehicle_id"/>
+                                                                </group>
+                                                                <group>
+                                                                    <field name="description" />
+                                                                </group>
+                                                            </sheet>
+                                                        </form>
+                                                    </field>
                                                 </group>
                                             </sheet>
                                         </form>
@@ -338,7 +374,25 @@
                         </group>
                         <group>
                             <field name="description" />
-                            <field name="odometer_log" />
+                            <field name="odometer_log">
+                                <tree string="Odometer">
+                                    <field name="date_creation" />
+                                    <field name="value" />
+                                    <field name="description" />
+                                </tree>
+                                <form string="Odometer" version="7.0" >
+                                    <sheet>
+                                        <group>
+                                            <field name="date_creation" />
+                                            <field name="value" />
+                                            <field name="vehicle_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="description" />
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
                         </group>
                     </sheet>
                 </form>
@@ -432,7 +486,25 @@
                             <field name="amount" />
                             <field name="reference" />
                             <field name="service_ids" widget="many2many_tags"/>
-                            <field name="odometer_log" />
+                            <field name="odometer_log" >
+                                <tree string="Odometer">
+                                    <field name="date_creation" />
+                                    <field name="value" />
+                                    <field name="description" />
+                                </tree>
+                                <form string="Odometer" version="7.0" >
+                                    <sheet>
+                                        <group>
+                                            <field name="date_creation" />
+                                            <field name="value" />
+                                            <field name="vehicle_id"/>
+                                        </group>
+                                        <group>
+                                            <field name="description" />
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
                         </group>
                     </sheet>
                 </form>
@@ -445,13 +517,13 @@
                     <field name="model">fleet.vehicle.log.services</field>
                     <field name="arch" type="xml">
                         <tree string="Services Logs">
-                                        <field name="date_creation" />
-                                        <field name="vehicle_id" />
-                                        <field name="employee_id" />
-                                        <field name="amount" />
-                                        <field name="reference" />
-                                        <field name="service_ids"/>
-                                        <field name="odometer_log" />
+                            <field name="date_creation" />
+                            <field name="vehicle_id" />
+                            <field name="employee_id" />
+                            <field name="amount" />
+                            <field name="reference" />
+                            <field name="service_ids"/>
+                            <field name="odometer_log" />
                         </tree>
                     </field>
         </record>
