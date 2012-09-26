@@ -114,9 +114,6 @@
             </field>
         </record>
 
-        <menuitem groups="analytic.group_analytic_accounting" id="next_id_40"
-            name="Analytic" parent="account.menu_finance_generic_reporting"
-            sequence="4"/>
 
         <record id="view_account_analytic_line_form" model="ir.ui.view">
             <field name="name">account.analytic.line.form</field>
@@ -351,15 +348,6 @@
         # Reporting
         #
 
-        <record id="action_account_analytic_journal_tree" model="ir.actions.act_window">
-            <field name="name">Print Analytic Journals</field>
-            <field name="res_model">account.analytic.journal</field>
-            <field name="view_type">tree</field>
-            <field name="help">To print an analytics (or costs) journal for a given period. The report give code, move name, account number, general amount and analytic amount.</field>
-        </record>
-        <menuitem groups="analytic.group_analytic_accounting"
-            action="action_account_analytic_journal_tree"
-            id="account_analytic_journal_print" parent="account.next_id_40"/>
 
         <record id="view_account_journal_1" model="ir.ui.view">
             <field name="name">account.journal.form.1</field>
@@ -377,7 +365,7 @@
             <field name="model">account.analytic.account</field>
             <field name="arch" type="xml">
                 <graph string="Analytic Account Statistics" type="bar">
-                    <field name="complete_name"/>
+                    <field name="name"/>
                     <field name="balance" operator="+"/>
                 </graph>
             </field>
