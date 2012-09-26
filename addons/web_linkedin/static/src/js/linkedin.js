@@ -88,7 +88,7 @@ openerp.web_linkedin = function(instance) {
         selected_entity: function(entity) {
             var self = this;
             this.create_on_change(entity).then(function(to_change) {
-                self.view.on_processed_onchange({value:to_change});
+                self.view.set_values(to_change);
             });
         },
         create_on_change: function(entity) {
