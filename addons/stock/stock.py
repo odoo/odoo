@@ -709,6 +709,15 @@ class stock_picking(osv.osv):
             for move in picking_obj.move_lines:
                 move_obj.write(cr, uid, [move.id], {'tracking_id': False,'prodlot_id':False, 'move_history_ids2': [(6, 0, [])], 'move_history_ids': [(6, 0, [])]})
         return res
+    
+    def fields_view_get(self, cr, uid, view_id=None, view_type=False, context=None, toolbar=False, submenu=False):
+        if view_type == 'form' and not view_id:
+            mod_obj = self.pool.get('ir.model.data')
+            if self._name == "stock.picking.in":
+                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_in_form')
+            if self._name == "stock.picking.out":
+                model,view_id = mod_obj.get_object_reference(cr, uid, 'stock', 'view_picking_out_form')
+        return super(stock_picking,self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=submenu)
 
     def onchange_partner_in(self, cr, uid, context=None, partner_id=None):
         return {}
@@ -2950,6 +2959,7 @@ class stock_picking_in(osv.osv):
         return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
 
     _columns = {
+        'backorder_id': fields.many2one('stock.picking.in', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),
@@ -2994,6 +3004,7 @@ class stock_picking_out(osv.osv):
         return self.pool.get('stock.picking')._workflow_signal(cr, uid, ids, signal, context=context)
 
     _columns = {
+        'backorder_id': fields.many2one('stock.picking.out', 'Back Order of', states={'done':[('readonly', True)], 'cancel':[('readonly',True)]}, help="If this shipment was split, then this field links to the shipment which contains the already processed part.", select=True),
         'state': fields.selection(
             [('draft', 'Draft'),
             ('auto', 'Waiting Another Operation'),

@@ -23,6 +23,7 @@
     'name': 'Calendar',
     'version': '1.0',
     'depends': ['base', 'base_status', 'mail', 'base_action_rule'],
+    'summary': 'Personnal & Shared Agenda',
     'description': """
 This is a full-featured calendar system.
 ========================================
@@ -30,7 +31,6 @@ This is a full-featured calendar system.
 It supports:
 ------------
     - Calendar of events
-    - Alerts (create requests)
     - Recurring events
     - Invitations to people
 
