@@ -481,7 +481,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
-        merge_message = _('Merged opportunities ')
+        merge_message = _('Merged opportunities')
         subject = [merge_message]
         fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
                   'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
@@ -491,7 +491,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             title = "%s : %s" % (merge_message, opportunity.name)
             details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
-        subject = subject[0] + ", ".join(subject[1:])
+        # Chatter message's subject
+        subject = subject[0] + ": " + ", ".join(subject[1:])
         details = "\n\n".join(details)
         return self.message_post(cr, uid, [opportunity_id], body=details, subject=subject, context=context)
 
