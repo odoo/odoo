@@ -1116,7 +1116,7 @@ class task(base_stage, osv.osv):
             ids = [ids]
         for t in self.browse(cr, uid, ids, context=context):
             if t.project_id:
-                vals.update({'message_follower_ids': [(4, follower.id) for follower in t.project_id.message_follower_ids]})
+                vals['message_follower_ids'] = [(4, follower.id) for follower in t.project_id.message_follower_ids]
             
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')

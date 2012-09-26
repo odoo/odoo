@@ -266,6 +266,9 @@ class hr_evaluation(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
+        for evalutation in self.browse(cr, uid, ids, context=context):
+            if evalutation.employee_id and evalutation.employee_id.parent_id and evalutation.employee_id.parent_id.user_id:
+                vals['message_follower_ids'] = [(4, evalutation.employee_id.parent_id.user_id.partner_id.id)]
         if 'date' in vals:
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')

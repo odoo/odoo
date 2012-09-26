@@ -252,6 +252,9 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
+        for timesheet in self.browse(cr, uid, ids):
+            if timesheet.employee_id and timesheet.employee_id.parent_id.user_id: 
+                vals['message_follower_ids'] = [(4, timesheet.employee_id.parent_id.user_id.partner_id.id)]
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:

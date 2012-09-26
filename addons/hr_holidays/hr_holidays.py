@@ -307,6 +307,14 @@ class hr_holidays(osv.osv):
         self.holidays_confirm_notificate(cr, uid, ids, context=context)
         return self.write(cr, uid, ids, {'state':'confirm'})
 
+    def write(self, cr, uid, ids, vals, context=None):
+        for holiday in self.browse(cr, uid, ids):
+            if holiday.employee_id and holiday.employee_id.parent_id.user_id: 
+                vals['message_follower_ids'] = [(4, holiday.employee_id.parent_id.user_id.partner_id.id)]
+        return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
+
+
+
     def holidays_refuse(self, cr, uid, ids, context=None):
         obj_emp = self.pool.get('hr.employee')
         ids2 = obj_emp.search(cr, uid, [('user_id', '=', uid)])

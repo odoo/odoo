@@ -790,7 +790,7 @@ class crm_lead(base_stage, format_address, osv.osv):
                 vals['probability'] = stage.probability
         for lead in self.browse(cr, uid, ids, context=context):
             if lead.section_id:
-                vals.update({'message_follower_ids': [(4, follower.id) for follower in lead.section_id.message_follower_ids]})
+                vals['message_follower_ids'] = [(4, follower.id) for follower in lead.section_id.message_follower_ids]
         return super(crm_lead,self).write(cr, uid, ids, vals, context) 
 
     # ----------------------------------------

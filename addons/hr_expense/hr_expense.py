@@ -100,6 +100,12 @@ class hr_expense_expense(osv.osv):
         'currency_id': _get_currency,
     }
 
+    def write(self, cr, uid, ids, vals, context=None):
+        for expense in self.browse(cr, uid, ids):
+            if expense.employee_id and expense.employee_id.parent_id.user_id: 
+                vals['message_follower_ids'] = [(4, expense.employee_id.parent_id.user_id.partner_id.id)]
+        return super(hr_expense_expense, self).write(cr, uid, ids, vals, context=context)
+
     def onchange_currency_id(self, cr, uid, ids, currency_id=False, company_id=False, context=None):
         res =  {'value': {'journal_id': False}}
         journal_ids = self.pool.get('account.journal').search(cr, uid, [('type','=','purchase'), ('currency','=',currency_id), ('company_id', '=', company_id)], context=context)
