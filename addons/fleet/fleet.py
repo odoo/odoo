@@ -222,8 +222,8 @@ class fleet_vehicle_log_fuel(osv.Model):
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.float('Total price'),
         'inv_ref' : fields.char('Invoice Ref.', size=32),
-        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        
+        'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
     }
     _defaults = {
         'name': 'Fuel log',
@@ -266,6 +266,7 @@ class fleet_vehicle_log_services(osv.Model):
         'amount' :fields.float('Cost', help="Total cost of the service"),
         'reference' :fields.char('Reference',size=128),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
+        'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
     }
     _defaults = {
         'name': 'Service log',
@@ -277,6 +278,8 @@ class fleet_vehicle_log_odometer(osv.Model):
     _name = 'fleet.vehicle.log.odometer'
     _columns = {
         'value' : fields.float('Value', required=True, help="Meter reading at service, fuel up and others"),
+        'fuel_log' :fields.many2one('fleet.vehicle.log.fuel', 'Fuel log'),
+        'service_log' :fields.many2one('fleet.vehicle.log.services', 'Services log'),
     }
     _defaults = {
         'name': 'Odometer Log',
