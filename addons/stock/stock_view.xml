@@ -272,7 +272,7 @@
             </field>
         </record>
         <menuitem id="menu_traceability" name="Traceability" parent="menu_stock_root" 
-            sequence="3" groups="stock.group_tracking_lot,stock.group_production_lot"/>
+            sequence="3"/>
         <menuitem action="action_tracking_form" id="menu_action_tracking_form"
             groups="product.group_stock_packaging"
             sequence="6"
@@ -1419,7 +1419,7 @@
         <field name="act_window_id" ref="action_move_form2"/>
         </record>
 
-        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3"/>
+        <menuitem action="action_move_form2" id="menu_action_move_form2" parent="menu_traceability" sequence="3" groups="stock.group_locations"/>
 
         <!--
             Reception Picking (By Stock Move)
