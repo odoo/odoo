@@ -266,7 +266,7 @@
                 <form string="Interview Appraisal" version="7.0">
                     <header>
                         <button string="Cancel" name="survey_req_cancel" type="object"
-                            states="draft,waiting_answer"/>
+                            states="draft,waiting_answer" class="oe_left"/>
                         <button string="Print Survey" name="action_print_survey"  type="object"
                             states="draft" context="{'survey_id': survey_id, 'response_id': [response], 'response_no':0}"
                             attrs="{'readonly':[('survey_id','=',False)]}" class="oe_highlight"/>
