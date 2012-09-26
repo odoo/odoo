@@ -100,26 +100,34 @@
                             <page string="Insurances">
                                 <field name="log_insurances">
                                     <tree string="Insurances">
-                                        <field name="type" />
+                                        <field name="insurance_type" />
                                         <field name="start_date" />
                                         <field name="expiration_date" />
                                         <field name="insurer_id" />
-                                        <field name="employee_id" />
                                         <field name="price" />
+                                        <field name="value" />
+                                        <field name="unit" />
                                     </tree>
                                     <form string="Insurances" version="7.0">
                                         <sheet>
                                             <group col="2">
-                                                <group>
+                                                <group string="Insurance details">
                                                     <field name="insurance_type" />
-                                                    <field name="insurer_id" />
-                                                    <field name="employee_id" />
-                                                    <field name="price" />
-                                                </group>
-                                                <group>
-                                                    <field name="date_creation" />
                                                     <field name="start_date" />
                                                     <field name="expiration_date" />
+                                                    <field name="price" />
+                                                </group>
+                                                <group></group>
+                                            </group>
+                                            <group col="2">
+                                                <group string="Odometer details">
+                                                    <field name="value" />
+                                                    <field name="unit" />
+                                                </group>
+                                                <group string="Additional details">
+                                                    <field name="date" />
+                                                    <field name="insurer_id" />
+                                                    <field name="ins_ref" />
                                                 </group>
                                             </group>
                                         </sheet>
@@ -127,30 +135,6 @@
                                 </field>
                             </page>
                             <page string="Logs">
-                                <group>
-                                    <field name="log_odometer">
-                                        <tree string="Odometer Logs">
-                                            <field name="value" />
-                                            <field name="date_creation" />
-                                            <field name="employee_id" />
-                                            <field name="description" />
-                                        </tree>
-                                        <form string="Odometer Logs" version="7.0">
-                                            <sheet>
-                                                <group col = "2">
-                                                    <group>
-                                                        <field name="value" />
-                                                        <field name="date_creation" />
-                                                        <field name="employee_id" />
-                                                    </group>
-                                                    <group>
-                                                        <field name="description" />
-                                                    </group>
-                                                </group>
-                                            </sheet>
-                                        </form>
-                                    </field>
-                                </group>
                                 <group>
                                     <field name="log_services">
                                         <tree string="Completed services">
@@ -214,26 +198,6 @@
                                         </form>
                                     </field>
                                 </group>
-                                <group>
-                                    <field name="log_ids">
-                                        <tree string="Other Logs">
-                                            <field name="type" />
-                                            <field name="employee_id" />
-                                            <field name="description" />
-                                            <field name="date_creation" />
-                                        </tree>
-                                        <form string="Other logs" version="7.0">
-                                            <sheet>
-                                                <group>
-                                                    <field name="type" />
-                                                    <field name="date_creation" />
-                                                    <field name="employee_id" />
-                                                    <field name="description" />
-                                                </group>
-                                            </sheet>
-                                        </form>
-                                    </field>
-                                </group>
                             </page>
                             <page string="Engine">
                                 <group col="2">
@@ -282,48 +246,6 @@
 
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
-
-        <record model='ir.ui.view' id='fleet_vehicle_log_form'>
-            <field name="name">fleet.vehicle.log.form</field>
-            <field name="model">fleet.vehicle.log</field>
-            <field name="arch" type="xml">
-                <form string="Logs" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="type" />
-                            <field name="date_creation" />
-                            <field name="vehicle_id" />
-                            <field name="employee_id" />
-                            <field name="description" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_log_tree'>
-            
-                    <field name="name">fleet.vehicle.log.tree</field>
-                    <field name="model">fleet.vehicle.log</field>
-                    <field name="arch" type="xml">
-                        <tree string="Logs">
-                            <field name="type" />
-                            <field name="date_creation" />
-                            <field name="vehicle_id" />
-                            <field name="employee_id" />
-                            <field name="description" />
-                        </tree>
-                    </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_act'>
-            <field name="name">Vehicle Logs</field>
-            <field name="res_model">fleet.vehicle.log</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem action="fleet_vehicle_log_act" parent="fleet_vehicles" id="fleet_vehicle_log_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
             <field name="name">fleet.vehicle.log.fuel.form</field>
@@ -388,53 +310,6 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
-
-        <record model='ir.ui.view' id='fleet_vehicle_log_odometer_form'>
-            <field name="name">fleet.vehicle.log.odometer.form</field>
-            <field name="model">fleet.vehicle.log.odometer</field>
-            <field name="arch" type="xml">
-                <form string="Fuel Logs" version="7.0">
-                    <sheet>
-                        <group col = "2">
-                            <group>
-                                <field name="vehicle_id" />
-                                <field name="value" />
-                                <field name="date_creation" />
-                            </group>
-                            <group>
-                                <field name="employee_id" />
-                            </group>
-                        </group>
-                        <group>
-                            <field name="description" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_log_odometer_tree'>
-            <field name="name">fleet.vehicle.log.odometer.tree</field>
-            <field name="model">fleet.vehicle.log.odometer</field>
-            <field name="arch" type="xml">
-                <tree string="Fuel Logs">
-                    <field name="vehicle_id" />
-                    <field name="value" />
-                    <field name="date_creation" />
-                    <field name="employee_id" />
-                    <field name="description" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_odometer_act'>
-            <field name="name">Vehicle Odometer Logs</field>
-            <field name="res_model">fleet.vehicle.log.odometer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem action="fleet_vehicle_log_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_log_odometer_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
             <field name="name">fleet.vehicle.log.services.form</field>

@@ -191,44 +191,6 @@ class fleet_vehicle_odometer(osv.Model):
         'date' : time.strftime('%Y-%m-%d')
     }
 
-class fleet_vehicle_log(osv.Model):
-    _name = 'fleet.vehicle.log'
-
-    def _name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        if context is None:
-            context = {}
-        if not ids:
-            return {}
-        reads = self.browse(cr, uid, ids, context=context)
-        res = []
-        for record in reads:
-            name = record.type
-            if record.employee_id.name:
-                name = name+ ' / '+ record.employee_id.name
-            if record.vehicle_id.name:
-                name = name+ ' / '+ record.vehicle_id.name
-            if record.date_creation:
-                name = name+ ' / '+record.date_creation
-            res.append((record.id, name))
-
-        return dict(res)
-
-    _columns = {
-        'name' : fields.function(_name_get_fnc, type="text", string='Log', store=True),
-        'employee_id' : fields.many2one('hr.employee', 'Employee'),
-        'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-
-        'date_creation' : fields.date('Creation Date'),
-
-        'description' : fields.text('Description'),
-        'type' : fields.char('Type',size=32),
-        }
-        
-    _defaults = {
-            #'name' : 'Log',
-            'type' : 'Log',
-    }
-
 class fleet_vehicle_log_fuel(osv.Model):
 
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
@@ -292,7 +254,6 @@ class fleet_vehicle_log_services(osv.Model):
         'name' : fields.char('Name',size=64),
         
         'amount' :fields.float('Cost', help="Total cost of the service"),
-        
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
@@ -306,38 +267,26 @@ class fleet_insurance_type(osv.Model):
     }
 
 class fleet_vehicle_log_insurance(osv.Model):
-    _inherit = 'fleet.vehicle.log'
+    _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
+
     _name = 'fleet.vehicle.log.insurance'
     _columns = {
+
+        'name' : fields.char('Name',size=64),
+
         'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
         'start_date' : fields.date('Start date', required=False, help='Date when the coverage of the insurance begins'),
         'expiration_date' : fields.date('Expiration date', required=False, help='Date when the coverage of the insurance expirates'),
         'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
-        'description' : fields.text('Description'),
+        'ins_ref' : fields.char('Insurance Reference', size=64),
     }
-    _defaults = {
-        #'name': 'Insurance log',
-        'type': 'Insurance',}
 
 class fleet_service_type(osv.Model):
     _name = 'fleet.service.type'
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-class fleet_vehicle_log_odometer(osv.Model):
-    _inherit = ['fleet.vehicle.log']
-
-    _name = 'fleet.vehicle.log.odometer'
-    _columns = {
-        'value' : fields.float('Value', required=True, help="Meter reading at service, fuel up and others"),
-        'fuel_log' :fields.many2one('fleet.vehicle.log.fuel', 'Fuel log'),
-        'service_log' :fields.many2one('fleet.vehicle.log.services', 'Services log'),
-    }
-    _defaults = {
-      #  'name': 'Odometer Log',
-        'type': 'Odometer'}
 
 class hr_employee(osv.Model):
     _inherit = 'hr.employee'
