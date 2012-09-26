@@ -57,7 +57,7 @@ Wizards provided by this module:
         'base_vat',
         'base_iban',
         'account_chart',
-        'account_coda',
+        'l10n_be_coda',
     ],
     'data': [
         'account_financial_report.xml',
