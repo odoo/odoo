@@ -8,14 +8,8 @@
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
                     <group>
-                        <field name="action" class="oe_inline"/>
-                        <field name="partner_id"
-                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
-                            class="oe_inline"/>
-                    </group>
-                    <group>
                         <field name="name" class="oe_inline"/>
-                        <field name="opportunity_ids" attrs="{'invisible': [('name', '=', 'convert')]}">
+                        <field name="opportunity_ids" attrs="{'invisible': [('name', '!=', 'merge')]}">
                             <tree>
                                 <field name="name"/>
                                 <field name="partner_id"/>
@@ -23,6 +17,12 @@
                                 <field name="section_id"/>
                             </tree>
                         </field>
+                    </group>
+                    <group attrs="{'invisible': [('name', '!=', 'convert')]}">
+                        <field name="action" class="oe_inline"/>
+                        <field name="partner_id"
+                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                            class="oe_inline"/>
                     </group>
                     <footer>
                         <button name="action_apply" string="Create Opportunity" type="object" class="oe_highlight"/>
@@ -38,12 +38,17 @@
             <field name="model">crm.lead2opportunity.partner.mass</field>
             <field name="arch" type="xml">
                 <form string="Convert to Opportunity" version="7.0">
-                    <group string="Conversion Options">
-                        <field name="action"/>
-                        <field name="partner_id" attrs="{'invisible':[('action','!=','exist')],'required': [('action', '=', 'exist')]}"/>
-                        <field name="name"/>
+                    <separator string="Conversion Options"/>
+                    <group>
+                        <field name="name" class="oe_inline"/>
                     </group>
-                    <group string="Select Opportunities" attrs="{'invisible': [('name', '=', 'convert')]}">
+                    <group attrs="{'invisible': [('name', '!=', 'convert')]}">
+                        <field name="action" class="oe_inline"/>
+                        <field name="partner_id"
+                            attrs="{'required': [('action', '=', 'exist')], 'invisible':[('action','!=','exist')]}"
+                            class="oe_inline"/>
+                    </group>
+                    <group string="Select Opportunities" attrs="{'invisible': [('name', '!=', 'merge')]}">
                         <field name="opportunity_ids" colspan="4" nolabel="1" attrs="{'invisible': [('name', '=', 'convert')]}">
                             <tree>
                                 <field name="name" />
@@ -54,7 +59,7 @@
                         </field>
                     </group>
 
-                    <group string="Assign opportunities to">
+                    <group string="Assign opportunities to" attrs="{'invisible': [('name', '=', '')]}">
                         <field name="section_id" />
                         <field name="user_ids" colspan="4">
                             <tree>
