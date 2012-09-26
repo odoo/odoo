@@ -45,10 +45,8 @@ class AuthOAuthProvider(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def get_token(self, req, client_id="", scope="", **kw):
-        token = req.session.model('res.users').auth_oauth_provider_get_token(client_id, scope)
-        return {
-            'access_token': token,
-        }
+        r = req.session.model('auth.oauth2.token').get_token(client_id, scope)
+        return r
 
     @openerpweb.httprequest
     def tokeninfo(self, req, dbname=None, access_token=None, **kw):
@@ -57,10 +55,10 @@ class AuthOAuthProvider(openerpweb.Controller):
         try:
             registry = openerp.modules.registry.RegistryManager.get(dbname)
             with registry.cursor() as cr:
-                u = registry.get('res.users')
-                info = u.auth_oauth_provider_tokeninfo(cr, SUPERUSER_ID, access_token, kw)
+                u = registry.get('auth.oauth2.token')
+                info = u.tokeninfo(cr, SUPERUSER_ID, access_token, kw)
                 return simplejson.dumps(info)
         except Exception, e:
-            return simplejson.dumps({ "error": e.message })
+            return simplejson.dumps({ "error": str(e) })
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

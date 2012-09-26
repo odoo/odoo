@@ -1,11 +1,11 @@
-openerp.auth_oauth_provider = function(instance) {
+openerp.auth_oauth2_provider = function(instance) {
 
 var QWeb = instance.web.qweb;
 var _t = instance.web._t;
 
-instance.web.client_actions.add('oauth2_auth', 'instance.auth_oauth_provider.ProviderAction');
-instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
-    template: "auth_oauth_provider",
+instance.web.client_actions.add('oauth2_auth', 'instance.auth_oauth2_provider.ProviderAction');
+instance.auth_oauth2_provider.ProviderAction = instance.web.Widget.extend({
+    template: "auth_oauth2_provider",
     start: function (parent) {
         var self = this;
         this._super.apply(this, arguments);
@@ -23,7 +23,7 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
         if (!this._error) {
             // params.approval_prompt TODO --> add 'none' (default)
             // TODO: get client_id and scope
-            this.$('.oe_oauth_provider_approval').show().on('click', '.oe_oauth_provider_allow', function() {
+            this.$('.oe_oauth2_provider_approval').show().on('click', '.oe_oauth2_provider_allow', function() {
                 instance.session.rpc('/oauth2/get_token', {
                     client_id: params.client_id || '',
                     scope: params.scope || '',
@@ -32,7 +32,7 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
                 }).fail(function() {
                     self.error(_t("An error occured while contacting the OpenERP server."));
                 });
-            }).on('click', '.oe_oauth_provider_deny', function() {
+            }).on('click', '.oe_oauth2_provider_deny', function() {
                 self.redirect({
                     error: 'access_denied'
                 });
@@ -61,8 +61,8 @@ instance.auth_oauth_provider.ProviderAction = instance.web.Widget.extend({
     },
     error: function(msg) {
         this._error = true;
-        var $msg = $('<li/>').addClass('oe_oauth_provider_error_text').text(msg);
-        $msg.appendTo(this.$('.oe_oauth_provider_error').show().find('ul'));
+        var $msg = $('<li/>').addClass('oe_oauth2_provider_error_text').text(msg);
+        $msg.appendTo(this.$('.oe_oauth2_provider_error').show().find('ul'));
         return false;
     },
 });
