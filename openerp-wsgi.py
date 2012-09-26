@@ -7,26 +7,27 @@
 #
 # For generic wsgi handlers a global application is defined.
 # For uwsgi this should work:
-#   $ uwsgi --http :9090 --pythonpath . --wsgi-file openerp-wsgi.py
+#   $ uwsgi_python --http :9090 --pythonpath . --wsgi-file openerp-wsgi.py
 #
 # For gunicorn additional globals need to be defined in the Gunicorn section.
 # Then the following command should run:
-#   $ gunicorn openerp:application -c openerp-wsgi.py
+#   $ gunicorn openerp:service.wsgi_server.application -c openerp-wsgi.py
 
 import openerp
 
 #----------------------------------------------------------
 # Common
 #----------------------------------------------------------
+openerp.multi_process = True # Nah!
+
 # Equivalent of --load command-line option
 openerp.conf.server_wide_modules = ['web']
 conf = openerp.tools.config
 
 # Path to the OpenERP Addons repository (comma-separated for
 # multiple locations)
-conf['addons_path'] = '/home/openerp/addons/trunk,/home/openerp/web/trunk/addons'
-conf['addons_path'] = '/home/wis/stuff/version/openerp/source/addons/6.1,/home/wis/stuff/version/openerp/source/web/6.1/addons'
 
+conf['addons_path'] = '../../addons/trunk,../../web/trunk/addons'
 
 # Optional database config if not using local socket
 #conf['db_name'] = 'mycompany'
