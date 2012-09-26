@@ -1050,12 +1050,14 @@ session.web.TranslateDialog = session.web.Dialog.extend({
         var trads = {},
             self = this,
             trads_mutex = new $.Mutex();
-        self.$fields_form.find('.oe_trad_field.touched').each(function() {
-            var field = $(this).attr('name').split('-');
-            if (!trads[field[0]]) {
-                trads[field[0]] = {};
-            }
-            trads[field[0]][field[1]] = $(this).val();
+        self.$fields_form.find('.oe_trad_field.touched').parents('tr').each(function() {
+            $(this).find('.oe_trad_field').each(function() {
+                var field = $(this).attr('name').split('-');
+                if (!trads[field[0]]) {
+                    trads[field[0]] = {};
+                }
+                trads[field[0]][field[1]] = $(this).val();
+            });
         });
         _.each(trads, function(data, code) {
             if (code === self.view_language) {
