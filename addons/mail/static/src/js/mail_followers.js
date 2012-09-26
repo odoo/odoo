@@ -28,6 +28,7 @@ openerp_mail_followers = function(session, mail) {
             this.options.image = this.node.attrs.image || 'image_small';
             this.options.title = this.node.attrs.title || 'Followers';
             this.options.context = this.node.attrs.context;
+            this.options.comment = this.node.attrs.help || false;
             this.ds_model = new session.web.DataSetSearch(this, this.view.model);
             this.ds_follow = new session.web.DataSetSearch(this, this.field.relation);
         },

@@ -12,8 +12,8 @@
             <button type="button" class="oe_mail_button_unfollow oe_mail_button_mouseout">Following</button>
         </div>
         <div class="oe_grey">
-            <t t-if='widget.options.context'>
-                <h5><t t-raw="widget.options.context['followers_help']"/></h5>
+            <t t-if="widget.options.comment">
+                <h5><t t-raw="widget.options.comment"/></h5>
             </t>
         </div>
         <div class="oe_mail_recthread_followers">
