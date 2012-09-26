@@ -20,7 +20,7 @@
 ##############################################################################
 
 import controllers
-import res_users
+import auth_oauth2_provider
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -21,21 +21,20 @@
 
 
 {
-    'name': 'OAuth Provider',
+    'name': 'OAuth2 Provider',
     'version': '0.1',
     'category': 'Tools',
     'description': """
-Allow an openerp server to provide partial OAuth service.
-=========================================================
+Allow an openerp server to provide OAuth2 authentication service.
+=================================================================
 """,
     'author': 'OpenERP s.a.',
     'maintainer': 'OpenERP s.a.',
     'website': 'http://www.openerp.com',
     'depends': ['base', 'web'],
-    #'data': ['res_users.xml'],
-    'js': ['static/src/js/oauth_provider.js'],
-    'css': ['static/src/css/oauth_provider.css'],
-    'qweb': ['static/src/xml/oauth_provider.xml'],
+    'js': ['static/src/js/auth_oauth2_provider.js'],
+    'css': ['static/src/css/auth_oauth2_provider.css'],
+    'qweb': ['static/src/xml/auth_oauth2_provider.xml'],
     'installable': True,
     'auto_install': False,
 }
