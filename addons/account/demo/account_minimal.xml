@@ -392,7 +392,12 @@
             <field name="loss_account_id" model="account.account" ref="rsa" />
             <field name="internal_account_id" model="account.account" ref="rsa" />
             <field name="with_last_closing_balance" eval="True" />
-            <field name="cash_control" eval="True" />
+            <!--
+                 Usually, cash payment methods requires a control at opening and closing.
+                 Bot for demo data, it's better to avoid the control step so that people
+                 that test OpenERP arrive directly in the touchscreen UI.
+            -->
+            <field name="cash_control" eval="False"/>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
@@ -426,9 +431,9 @@
             <field name="code">TUBK</field>
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
-            <field model="account.account" name="usd_debit_account_id" ref="usd_bnk"/>
-            <field model="account.account" name="usd_credit_account_id" ref="usd_bnk"/>
-            <field name="currency_id" ref="base.USD"/>
+            <field model="account.account" name="default_debit_account_id" ref="usd_bnk"/>
+            <field model="account.account" name="default_credit_account_id" ref="usd_bnk"/>
+            <field name="currency" ref="base.USD"/>
         </record>
         <!--
         Product income and expense accounts, default parameters
