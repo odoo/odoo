@@ -83,6 +83,10 @@ class ir_import(orm.TransientModel):
         }]
         fields_got = self.pool[model].fields_get(cr, uid, context=context)
         for name, field in fields_got.iteritems():
+            # an empty string means the field is deprecated, @deprecated must
+            # be absent or False to mean not-deprecated
+            if field.get('deprecated', False) is not False:
+                continue
             if field.get('readonly'):
                 states = field.get('states')
                 if not states:
@@ -97,7 +101,7 @@ class ir_import(orm.TransientModel):
                 'id': name,
                 'name': name,
                 'string': field['string'],
-                # Y U NO ALWAYS HAVE REQUIRED
+                # Y U NO ALWAYS HAS REQUIRED
                 'required': bool(field.get('required')),
                 'fields': [],
             }
