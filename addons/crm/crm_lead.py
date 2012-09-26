@@ -607,7 +607,6 @@ class crm_lead(base_stage, format_address, osv.osv):
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
-        mail_message = self.pool.get('mail.message')
         customer = False
         if partner_id:
             customer = partner.browse(cr, uid, partner_id, context=context)
