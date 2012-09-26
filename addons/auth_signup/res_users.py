@@ -97,7 +97,7 @@ class res_partner(osv.Model):
         if partner.user_ids:
             return {'name': partner.name, 'login': partner.user_ids[0].login}
         else:
-            return {'name': partner.name, 'email': partner.email}
+            return {'name': partner.name, 'email': partner.email or ''}
 
 
 
@@ -120,23 +120,19 @@ class res_users(osv.Model):
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
             partner = res_partner._signup_retrieve_partner(cr, uid, token, raise_exception=True, context=None)
+            # invalidate signup token
+            partner.write({'signup_token': False, 'signup_expiration': False})
             if partner.user_ids:
-                # user exists, modify its password and clear token
-                partner.user_ids[0].write({
-                    'password': values['password'],
-                    'signup_token': False,
-                    'signup_expiration': False,
-                })
+                # user exists, modify its password
+                partner.user_ids[0].write({'password': values['password']})
             else:
                 # user does not exist: sign up invited user
                 self._signup_create_user(cr, uid, {
-                    'name': partner.name,
                     'login': values['login'],
                     'password': values['password'],
                     'email': values['login'],
                     'partner_id': partner.id,
-                }, token=token, context=context)
-
+                }, context=context)
             return result
 
         # sign up an external user
@@ -149,16 +145,28 @@ class res_users(osv.Model):
         }, context=context)
         return result
 
-    def _signup_create_user(self, cr, uid, values, token=None, context=None):
+    def _signup_create_user(self, cr, uid, values, context=None):
         """ create a new user from the template user """
-        # check that uninvited users may sign up
         ir_config_parameter = self.pool.get('ir.config_parameter')
-        if not token:
+        template_user_id = safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
+        assert template_user_id and self.exists(cr, uid, template_user_id, context=context), 'Signup: invalid template user'
+
+        values['active'] = True
+        if values.get('partner_id'):
+            # create a copy of the template user attached to values['partner_id']
+            # note: we do not include 'partner_id' here, as copy() does not handle it correctly
+            safe_values = {'login': values['login'], 'password': values['password']}
+            user_id = self.copy(cr, uid, template_user_id, safe_values, context=context)
+            # problem: the res.partner part of the template user has been duplicated
+            # solution: unlink it, and replace it by values['partner_id']
+            user = self.browse(cr, uid, user_id, context=context)
+            partner = user.partner_id
+            user.write(values)
+            partner.unlink()
+        else:
+            # check that uninvited users may sign up
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
                 raise Exception('Signup is not allowed for uninvited users')
+            user_id = self.copy(cr, uid, template_user_id, values, context=context)
 
-        template_user_id = safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
-        assert template_user_id, 'Signup: missing template user'
-        values.update({'active': True, 'signup_token': False, 'signup_expiration': False})
-        return self.copy(cr, uid, template_user_id, values, context=context)
-
+        return user_id
