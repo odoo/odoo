@@ -34,7 +34,7 @@ class fleet_vehicle_model(osv.Model):
     _columns = {
         'name' : fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
         'modelname' : fields.char('Model name', size=32, required=True), 
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=False, help='Brand of the vehicle'),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
     }
 
@@ -192,7 +192,7 @@ class fleet_vehicle_log(osv.Model):
 
     _columns = {
         'name' : fields.function(_name_get_fnc, type="text", string='Log', store=True),
-        'employee_id' : fields.many2one('hr.employee', 'Employee', required=True),
+        'employee_id' : fields.many2one('hr.employee', 'Employee'),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
 
         'date_creation' : fields.date('Creation Date'),
