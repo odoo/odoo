@@ -729,14 +729,16 @@ class stock_picking(osv.osv):
         """ Confirms picking.
         @return: True
         """
+        pickings = self.browse(cr, uid, ids, context=context)
+        for picking in pickings:
+            if picking.state <> 'confirmed':
+                self.confirm_send_note(cr, uid, [picking.id], context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
-        for picking in self.browse(cr, uid, ids, context=context):
+        for picking in pickings:
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
-
-
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
@@ -1386,17 +1388,21 @@ class stock_picking(osv.osv):
     # OpenChatter methods and notifications
     # -----------------------------------------
 
-    def _get_document_type(self, type):
+    def _get_document_type(self, cr, uid, obj, context=None):
         type_dict = {
-                'out': 'Delivery order',
-                'in': 'Shipment',
-                'internal': 'Internal picking',
+                'out': _('Delivery order'),
+                'in': _('Shipment'),
+                'internal': _('Internal picking'),
         }
-        return type_dict.get(type, 'Stock picking')
+        return type_dict.get(obj.type, _('Picking'))
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>confirmed</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
 
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
         return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
@@ -1406,16 +1412,16 @@ class stock_picking(osv.osv):
 
     def ship_done_send_note(self, cr, uid, ids, context=None):
         type_dict = {
-                'out': 'delivered',
-                'in': 'received',
-                'internal': 'moved',
+                'out': _("Products have been <b>delivered</b>."),
+                'in': _("Products have been <b>received</b>."),
+                'internal': _("Products have been <b>moved</b>."),
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
+            self.message_post(cr, uid, [obj.id], body=type_dict.get(obj.type, _('Products have been moved.')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
 
 
 stock_picking()
