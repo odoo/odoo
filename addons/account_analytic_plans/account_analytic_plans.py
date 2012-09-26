@@ -235,28 +235,6 @@ class account_analytic_plan_instance(osv.osv):
 
         return super(account_analytic_plan_instance, self).create(cr, uid, vals, context=context)
 
-    def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
-        if context is None:
-            context = {}
-        this = self.browse(cr, uid, ids[0], context=context)
-        invoice_line_obj = self.pool.get('account.invoice.line')
-        if this.plan_id and not vals.has_key('plan_id'):
-            #this instance is a model, so we have to create a new plan instance instead of modifying it
-            #copy the existing model
-            temp_id = self.copy(cr, uid, this.id, None, context=context)
-            #get the list of the invoice line that were linked to the model
-            lists = invoice_line_obj.search(cr, uid, [('analytics_id','=',this.id)], context=context)
-            #make them link to the copy
-            invoice_line_obj.write(cr, uid, lists, {'analytics_id':temp_id}, context=context)
-
-            #and finally modify the old model to be not a model anymore
-            vals['plan_id'] = False
-            if not vals.has_key('name'):
-                vals['name'] = this.name and (str(this.name)+'*') or "*"
-            if not vals.has_key('code'):
-                vals['code'] = this.code and (str(this.code)+'*') or "*"
-        return super(account_analytic_plan_instance, self).write(cr, uid, ids, vals, context=context)
-
 account_analytic_plan_instance()
 
 class account_analytic_plan_instance_line(osv.osv):
