@@ -46,14 +46,15 @@ class res_users(osv.osv):
             }
         user = self.browse(cr, uid, user_id[0], context=context)
         if access_token == user.last_oauth_token:
-            return {
+            r  = {
                 "user_id": user.id,
-                "scope": user.last_oauth_token_scope,
-                "email": user.partner_id.email or '', # TODO: should deliver only according to scopes
                 "scope": user.last_oauth_token_scope,
                 #"audience": "8819981768.apps.googleusercontent.com",
                 #"expires_in": 436
             }
+            if user.partner_id.email: # TODO: should deliver only according to scopes
+                r['email'] = user.partner_id.email
+            return r
         else:
             return {
                 "error": "invalid_token"
