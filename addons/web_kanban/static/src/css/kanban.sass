@@ -42,11 +42,11 @@
     &.oe_kanban_grouped .oe_kanban_dummy_cell
         background: url(/web/static/src/img/form_sheetbg.png)
     .ui-sortable-placeholder
-        border: 1px dotted black
+        border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
         height: 60px !important
     .ui-sortable-helper
-        @include box-shadow(0 1px 20px rgba(0, 0, 0, 0.9))
+        @include box-shadow(0 1px 10px rgba(0, 0, 0, 0.3))
         @include transform(rotate(3deg))
     .oe_kanban_left
         float: left
@@ -146,7 +146,8 @@
         white-space: nowrap
         display: none
         position: relative
-        top: 5px
+        opacity: 0.75
+        top: 20px
     // }}}
     // KanbanQuickCreate {{{
     .oe_kanban_add, .oe_kanban_header .oe_dropdown_toggle
@@ -154,6 +155,9 @@
         cursor: pointer
         position: relative
         top: -8px
+    .oe_kanban_card, .oe_dropdown_toggle
+        cursor: pointer
+        display: inline-block
     .oe_kanban_add
         float: right
 
@@ -199,7 +203,7 @@
     .oe_kanban_record
         position: relative
         display: block
-        min-height: 50px
+        min-height: 20px
         margin: 0
         @include radius(4px)
         &:last-child
@@ -311,8 +315,8 @@
         position: relative
         display: block
         background: white
-        border: 1px solid #d8d8d8
-        border-bottom-color: #b9b9b9
+        border: 1px solid rgba(0,0,0,0.16)
+        border-bottom-color: rgba(0,0,0,0.3)
         padding: 8px
         display: block
         @include radius(4px)
@@ -430,33 +434,34 @@
     // KanbanColors {{{
     .oe_kanban_color_0
         background-color: #FFFFFF
-
+        color: #5a5a5a
     .oe_kanban_color_1
         background-color: #CCCCCC
-
+        color: #424242
     .oe_kanban_color_2
         background-color: #FFC7C7
-
+        color: #7a3737
     .oe_kanban_color_3
         background-color: #FFF1C7
-
+        color: #756832
     .oe_kanban_color_4
         background-color: #E3FFC7
-
+        color: #5d6937
     .oe_kanban_color_5
         background-color: #C7FFD5
-
+        color: #1a7759
     .oe_kanban_color_6
         background-color: #C7FFFF
-
+        color: #1a5d83
     .oe_kanban_color_7
         background-color: #C7D5FF
-
+        color: #3b3e75
     .oe_kanban_color_8
         background-color: #E3C7FF
-
+        color: #4c3668
     .oe_kanban_color_9
         background-color: #FFC7F1
+        color: #6d2c70
 
 .openerp .oe_form .oe_kanban_view
     .oe_kanban_column, .oe_kanban_group_header
