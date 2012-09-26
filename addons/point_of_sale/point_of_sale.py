@@ -1277,7 +1277,7 @@ class product_product(osv.osv):
         'expense_pdt': fields.boolean('Point of Sale Cash Out', help="This is a product you can use to take cash from a statement for the point of sale backend, exemple: money lost, transfer to bank, etc."),
         'pos_categ_id': fields.many2one('pos.category','Point of Sale Category',
             help="If you want to sell this product through the point of sale, select the category it belongs to."),
-        'to_weight' : fields.boolean('To Weight', help="This category contains products that should be weighted, mainly used for the self-checkout interface"),
+        'to_weight' : fields.boolean('To Weigh', help="This category contains products that should to be weighed, mainly used for the self-checkout interface"),
     }
 
     def _default_pos_categ_id(self, cr, uid, context=None):
