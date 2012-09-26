@@ -41,7 +41,7 @@ class sale_order(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         for order in self.browse(cr, uid, ids, context=context):
             if order.section_id:
-                vals.update({'message_follower_ids': [(4, follow.id) for follow in order.section_id.message_follower_ids]})
+                vals.update({'message_follower_ids': [(4, follower.id) for follower in order.section_id.message_follower_ids]})
         return super(sale_order, self).write(cr, uid, ids, vals, context=context)
 
 sale_order()

@@ -364,6 +364,9 @@ class project_issue(base_stage, osv.osv):
         logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        for issue in self.browse(cr, uid, ids, context=context):
+            if issue.project_id:
+                vals.update({'message_follower_ids': [(4, follower.id) for follower in issue.project_id.message_follower_ids]})
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
