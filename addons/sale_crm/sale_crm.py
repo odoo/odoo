@@ -38,6 +38,12 @@ class sale_order(osv.osv):
             self.message_subscribe(cr, uid, [order], followers, context=context)
         return order
 
+    def write(self, cr, uid, ids, vals, context=None):
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.section_id:
+                vals.update({'message_follower_ids': [(4, follow.id) for follow in order.section_id.message_follower_ids]})
+        return super(sale_order, self).write(cr, uid, ids, vals, context=context)
+
 sale_order()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

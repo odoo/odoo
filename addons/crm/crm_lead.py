@@ -788,7 +788,10 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+        for lead in self.browse(cr, uid, ids, context=context):
+            if lead.section_id:
+                vals.update({'message_follower_ids': [(4, follow.id) for follow in lead.section_id.message_follower_ids]})
+        return super(crm_lead,self).write(cr, uid, ids, vals, context) 
 
     # ----------------------------------------
     # Mail Gateway
