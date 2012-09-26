@@ -36,6 +36,7 @@ class fleet_vehicle_model(osv.Model):
         'modelname' : fields.char('Model name', size=32, required=True), 
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
+        'image': fields.related('brand','image',type="binary",string="Logo",store=False)
     }
 
 class fleet_vehicle_model_brand(osv.Model):
@@ -43,6 +44,7 @@ class fleet_vehicle_model_brand(osv.Model):
     _description = 'Brand model of the vehicle'
     _columns = {
         'name' : fields.char('Brand Name',size=32, required=True),
+        'image': fields.binary("Logo",help="This field holds the image used as logo for the brand, limited to 128x128px."),
     }
 
 class fleet_vehicle(osv.Model):
@@ -119,6 +121,8 @@ class fleet_vehicle(osv.Model):
         'horsepower_tax': fields.float('Horsepower Taxation'),
         'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
+
+        'image': fields.related('model_id','image',type="binary",string="Logo",store=False)
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):

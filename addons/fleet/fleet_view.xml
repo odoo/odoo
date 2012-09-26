@@ -7,6 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Model" version="7.0">
                     <sheet>
+                        <field name="image" widget='image' class="oe_left oe_avatar"/>
                         <group col="2">
                             <group>
                                 <field name="brand" />
@@ -49,6 +50,7 @@
             <field name="arch" type="xml">
                 <tree string="Model Brand" version="7.0" editable="bottom">
                     <field name="name" />
+                    <field name="image" />
                 </tree>
             </field>
         </record>
@@ -75,11 +77,14 @@
                         <div class="oe_right oe_button_box">
                         <button name="action_showLog" type="object" string="show logs" help="show different logs for this vehicle" domain="['name','=','name']"/>
                         </div>
+                        <field name="image" widget='image' class="oe_left oe_avatar"/>
+                        <group>
+                            <field name="model_id" />
+                            <field name="registration" />
+                        </group>
                         <group col="2">
                             <group>
-                                <field name="registration" />
                                 <field name="vin_sn" />
-                                <field name="model_id" />
                                 <field name="acquisition_date" />
                                 <field name="acquisition_price" />
                             </group>
