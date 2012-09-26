@@ -581,13 +581,16 @@ class crm_lead(base_stage, format_address, osv.osv):
         contact_id = False
         if customer:
             contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
+
         if section_id:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
         else:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
         stage_id = stage_ids and stage_ids[0] or False
+
         return {
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
