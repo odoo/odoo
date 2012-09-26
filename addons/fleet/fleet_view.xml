@@ -154,41 +154,22 @@
                                 <group>
                                     <field name="log_services">
                                         <tree string="Completed services">
-                                            <field name="employee_id" />
-                                            <field name="vendor_id" />
+                                            <field name="service_ids" widget="many2many_tags"/>
                                             <field name="amount" />
-                                            <field name="reference" />
-                                            <field name="service_ids"/>
-                                            <field name="date_creation" />
+                                            <field name="date" />
+                                            <field name="purchaser_id" />
+                                            <field name="vendor_id" />
+                                            <field name="inv_ref" />
                                         </tree>
                                         <form string="Services Logs" version="7.0">
                                             <sheet>
                                                 <group>
-                                                    <field name="date_creation" />
-                                                    <field name="employee_id" />
-                                                    <field name="vendor_id" />
-                                                    <field name="amount" />
-                                                    <field name="reference" />
-                                                    <field name="service_ids" widget="many2many_tags"/>
-                                                    <field name="odometer_log" >
-                                                        <tree string="Odometer">
-                                                            <field name="date_creation" />
-                                                            <field name="value" />
-                                                            <field name="description" />
-                                                        </tree>
-                                                        <form string="Odometer" version="7.0" >
-                                                            <sheet>
-                                                                <group>
-                                                                    <field name="date_creation" />
-                                                                    <field name="value" />
-                                                                    <field name="vehicle_id"/>
-                                                                </group>
-                                                                <group>
-                                                                    <field name="description" />
-                                                                </group>
-                                                            </sheet>
-                                                        </form>
-                                                    </field>
+                                                        <field name="service_ids" widget="many2many_tags"/>
+                                                        <field name="amount" />
+                                                        <field name="date" />
+                                                        <field name="purchaser_id" />
+                                                        <field name="vendor_id" />
+                                                        <field name="inv_ref" />
                                                 </group>
                                             </sheet>
                                         </form>
@@ -394,6 +375,7 @@
                     <field name="value" />
                     <field name="unit" />         
                     <field name="inv_ref" />
+                    <field name="vendor_id" />
                 </tree>
             </field>
         </record>
@@ -460,33 +442,18 @@
             <field name="arch" type="xml">
                 <form string="Services Logs" version="7.0">
                     <sheet>
-                        <group>
-                            <field name="date_creation" />
-                            <field name="vehicle_id" />
-                            <field name="employee_id" />
-                            <field name="vendor_id" />
-                            <field name="amount" />
-                            <field name="reference" />
-                            <field name="service_ids" widget="many2many_tags"/>
-                            <field name="odometer_log" >
-                                <tree string="Odometer">
-                                    <field name="date_creation" />
-                                    <field name="value" />
-                                    <field name="description" />
-                                </tree>
-                                <form string="Odometer" version="7.0" >
-                                    <sheet>
-                                        <group>
-                                            <field name="date_creation" />
-                                            <field name="value" />
-                                            <field name="vehicle_id"/>
-                                        </group>
-                                        <group>
-                                            <field name="description" />
-                                        </group>
-                                    </sheet>
-                                </form>
-                            </field>
+                        <group col="2">
+                            <group string="Services details">
+                                <field name="vehicle_id" />
+                                <field name="service_ids" widget="many2many_tags"/>
+                                <field name="amount" />
+                            </group>
+                            <group string="Additional details">
+                                <field name="date" />
+                                <field name="purchaser_id" />
+                                <field name="vendor_id" />
+                                <field name="inv_ref" />
+                            </group>
                         </group>
                     </sheet>
                 </form>
@@ -499,13 +466,13 @@
                     <field name="model">fleet.vehicle.log.services</field>
                     <field name="arch" type="xml">
                         <tree string="Services Logs">
-                            <field name="date_creation" />
                             <field name="vehicle_id" />
-                            <field name="employee_id" />
+                            <field name="service_ids" widget="many2many_tags"/>
                             <field name="amount" />
-                            <field name="reference" />
-                            <field name="service_ids"/>
-                            <field name="odometer_log" />
+                            <field name="date" />
+                            <field name="purchaser_id" />
+                            <field name="vendor_id" />
+                            <field name="inv_ref" />
                         </tree>
                     </field>
         </record>

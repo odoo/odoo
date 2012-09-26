@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
 
       <record id="brand_opel" model="fleet.vehicle.model.brand">
           <field name="name">Opel</field>
@@ -56,17 +56,26 @@
       </record>
 
       <record id="log_service_1" model="fleet.vehicle.log.services">
-          <field name="employee_id" ref="hr.employee_fp" />
           <field name="vehicle_id" ref="vehicle_1" />
-          <field name="date_creation" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="type">Services</field>
+          <field name="purchaser_id" ref="hr.employee_fp" />
+          <field name="vendor_id">5</field>
+          <field name="date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
           <field name="amount">500.0</field>
           <field name="service_ids" eval="[(6,0,[ref('type_service_oil')])]" />
+          <field name="inv_ref">4574.2321</field>
       </record>
 
-
-      
-      
+       <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="hr.employee_fp" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="liter">20</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">28</field>
+          <field name="service_ids" eval="[(6,0,[ref('type_service_oil')])]" />
+          <field name="inv_ref">67458</field>
+      </record>
 
     </data>
 </openerp>

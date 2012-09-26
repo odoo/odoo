@@ -231,7 +231,7 @@ class fleet_vehicle_log(osv.Model):
 
 class fleet_vehicle_log_fuel(osv.Model):
 
-    _inherits = {'fleet.vehicle.odometer': 'request_id'}
+    _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
@@ -249,7 +249,6 @@ class fleet_vehicle_log_fuel(osv.Model):
         liter = float(liter);
         price_per_liter = float(price_per_liter);
         if price_per_liter > 0 and liter > 0:
-            print 'Debug :' + str(liter) + ' | ' + str(price_per_liter) + ' | ' + str(amount)
             return {'value' : {'amount' : float(liter) * float(price_per_liter),}}
         elif price_per_liter > 0 and amount > 0:
             return {'value' : {'liter' : float(amount) / float(price_per_liter),}}
@@ -274,13 +273,30 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _columns = {
         'name' : fields.char('Name',size=64),
+
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
         'amount': fields.float('Total price'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
-        'inv_ref' : fields.char('Invoice Ref.', size=32),
+        'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        #'odometer_id': fields.many2one('fleet.vehicle.odometer','Odometer', ondelete='cascade', required=False),
+    }
+
+class fleet_vehicle_log_services(osv.Model):
+
+    _inherits = {'fleet.vehicle.odometer': 'odometer_id'}    
+
+    _name = 'fleet.vehicle.log.services'
+    _columns = {
+
+        'name' : fields.char('Name',size=64),
+        
+        'amount' :fields.float('Cost', help="Total cost of the service"),
+        
+        'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
+        'inv_ref' : fields.char('Invoice Reference', size=64),
+        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
     }
 
 class fleet_insurance_type(osv.Model):
@@ -309,21 +325,6 @@ class fleet_service_type(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-class fleet_vehicle_log_services(osv.Model):
-    _inherit = ['fleet.vehicle.log']
-
-    _name = 'fleet.vehicle.log.services'
-    _columns = {
-        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
-        'amount' :fields.float('Cost', help="Total cost of the service"),
-        'reference' :fields.char('Reference',size=128),
-        'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
-        'odometer_log' : fields.one2many('fleet.vehicle.log.odometer','fuel_log', 'Odometer',type="char"),
-    }
-    _defaults = {
-       # 'name': 'Service log',
-        'type': 'Services'}
 
 class fleet_vehicle_log_odometer(osv.Model):
     _inherit = ['fleet.vehicle.log']
