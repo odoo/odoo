@@ -11,14 +11,10 @@ openerp.auth_signup = function(instance) {
             self.on_change_mode()
             self.$("form input[name=signup]").click(self.on_change_mode);
 
-            // if there is an error message, show it then forget it
+            // if there is an error message in params, show it then forget it
             if (self.params.error_message) {
-                this.$el.addClass('oe_login_invalid');
-                this.$(".oe_login_error_message").text(self.params.error_message);
+                this.show_error(self.params.error_message);
                 delete self.params.error_message;
-            } else {
-                this.$el.removeClass('oe_login_invalid');
-                this.$(".oe_login_error_message").text("Invalid username or password");
             }
 
             // in case of a signup, retrieve the user information from the token
@@ -44,8 +40,7 @@ openerp.auth_signup = function(instance) {
             if (ev) {
                 ev.preventDefault();
             }
-            this.$el.addClass('oe_login_invalid');
-            this.$(".oe_login_error_message").text("Invalid signup token");
+            this.show_error("Invalid signup token");
             delete this.params.db;
             delete this.params.token;
         },
