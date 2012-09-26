@@ -124,7 +124,7 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
             <notebook position="inside">
-                <page string="Profiling">
+                <page string="Profiling" groups="base.group_sale_salesman">
                   <button string="Use a questionnaire"
                       name="%(action_open_questionnaire)d" type="action" colspan="1"
                       icon="gtk-justify-fill" />
