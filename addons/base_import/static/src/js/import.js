@@ -63,7 +63,7 @@ openerp.base_import = function (instance) {
             {name: 'quoting', label: _lt("Quoting:"), value: '"'}
         ],
         events: {
-            'change .oe_import_grid input': 'import_dryrun',
+            // 'change .oe_import_grid input': 'import_dryrun',
             'change input.oe_import_file': 'file_update',
             'change input.oe_import_has_header, .oe_import_options input': 'settings_updated',
             'click a.oe_import_csv': function (e) {
@@ -85,9 +85,10 @@ openerp.base_import = function (instance) {
             var self = this;
             this._super(parent, {
                 buttons: [
-                    {text: _t("Import File"), click: function () {
-                        self.do_import();
-                    }, 'class': 'oe_import_dialog_button'}
+                    {text: _t("Import"), click: self.proxy('do_import'),
+                     'class': 'oe_import_dialog_button'},
+                    {text: _t("Validate"), click: self.proxy('import_dryrun'),
+                     'class': 'oe_import_dialog_button'}
                 ]
             });
             this.res_model = parent.model;
@@ -134,11 +135,12 @@ openerp.base_import = function (instance) {
                 .then(this.proxy('preview'));
         },
         preview: function (result) {
+            this.$el.removeClass('oe_import_preview_error oe_import_error');
             this.$el.toggleClass(
                 'oe_import_noheaders',
                 !this.$('input.oe_import_has_header').prop('checked'));
             if (result.error) {
-                this.$el.addClass('oe_import_error');
+                this.$el.addClass('oe_import_preview_error oe_import_error');
                 this.$('.oe_import_error_report').html(
                     QWeb.render('ImportView.preview.error', result));
                 return;
@@ -180,7 +182,7 @@ openerp.base_import = function (instance) {
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             });
-            this.import_dryrun();
+            //this.import_dryrun();
         },
         generate_fields_completion: function (root) {
             var basic = [];
@@ -252,7 +254,6 @@ openerp.base_import = function (instance) {
 
         //- import itself
         call_import: function (options) {
-            var self = this;
             var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
                 return $(el).select2('val') || false;
             }).get();
@@ -260,12 +261,12 @@ openerp.base_import = function (instance) {
                 'do', [this.id, fields, this.import_options()], options);
         },
         import_dryrun: function () {
-//            this.call_import({ dryrun: true })
-//                .then(this.proxy('render_import_errors'));
+            return this.call_import({ dryrun: true })
+                .then(this.proxy('render_import_errors'));
         },
         do_import: function () {
             var self = this;
-            this.call_import({ dryrun: false }).then(function (errors) {
+            return this.call_import({ dryrun: false }).then(function (errors) {
                 if (_.isEmpty(errors)) {
                     if (self.getParent().reload_content) {
                         self.getParent().reload_content();
