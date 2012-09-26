@@ -2035,6 +2035,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         this.$input = this.$element.find("input");
         this.$drop_down = this.$element.find(".oe-m2o-drop-down-button");
         this.$menu_btn = this.$element.find(".oe-m2o-cm-button");
+        var $self = $(self), ignore_blur = false;
 
         // context menu
         var init_context_menu_def = $.Deferred().then(function(e) {
@@ -2084,6 +2085,7 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 var cmenu = self.$menu_btn.contextMenu(self.cm_id, {'noRightClick': true,
                     bindings: bindings, itemStyle: {"color": ""},
                     onContextMenu: function() {
+                        ignore_blur = true;
                         if(self.value) {
                             $("#" + self.cm_id + " .oe_m2o_menu_item_mandatory").removeClass("oe-m2o-disabled-cm");
                         } else {
@@ -2102,7 +2104,13 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
         });
         var ctx_callback = function(e) {init_context_menu_def.resolve(e); e.preventDefault()};
         this.$menu_btn.click(ctx_callback);
-
+        this.$menu_btn.bind({
+            focus: function () { $self.trigger('widget-focus'); },
+            blur: function () {
+                if(ignore_blur){ return; }
+                $self.trigger('widget-blur');
+            }
+        });
         // some behavior for input
         this.$input.keyup(function() {
             if (self.$input.val() === "") {
@@ -2142,7 +2150,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
                 }
             }
         };
-        var $self = $(self), ignore_blur = false;
         this.$input.bind({
             focusout: anyoneLoosesFocus,
             focus: function () { $self.trigger('widget-focus'); },
@@ -2193,7 +2200,6 @@ openerp.web.form.FieldMany2One = openerp.web.form.Field.extend({
             }
         });
 
-        this.setupFocus(this.$menu_btn);
     },
     // autocomplete component content handling
     get_search_result: function(request, response) {
