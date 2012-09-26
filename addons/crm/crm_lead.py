@@ -294,7 +294,7 @@ class crm_lead(base_stage, format_address, osv.osv):
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name' : partner.name, 
+                'partner_name' : partner.name,
                 'street' : partner.street,
                 'street2' : partner.street2,
                 'city' : partner.city,
@@ -477,7 +477,7 @@ class crm_lead(base_stage, format_address, osv.osv):
     def _merge_notification(self, cr, uid, opportunity_id, opportunities, context=None):
         #TOFIX: mail template should be used instead of fix body, subject text
         details = []
-        merge_message = _('Merged opportunities ')
+        merge_message = _('Merged opportunities')
         subject = [merge_message]
         fields = ['name', 'partner_id', 'stage_id', 'section_id', 'user_id', 'categ_ids', 'channel_id', 'company_id', 'contact_name',
                   'email_from', 'phone', 'fax', 'mobile', 'state_id', 'description', 'probability', 'planned_revenue',
@@ -556,19 +556,18 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
 
-
-        #copy message and attachements into the first opportunity
+        # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
 
-        #Notification about loss of information
+        # Merge notifications about loss of information
         self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
-        # merge data into first opportunity
+        # Write merged data into first opportunity
         self.write(cr, uid, [first_opportunity.id], data, context=context)
-        #delete tail opportunities
+        # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
-        #open first opportunity
+        # Open first opportunity
         self.case_open(cr, uid, [first_opportunity.id])
         return first_opportunity.id
 
