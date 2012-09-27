@@ -260,6 +260,9 @@ class fleet_vehicle_log_fuel(osv.Model):
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
     }
+    _defaults = {
+        'purchaser_id': lambda self, cr, uid, ctx: uid,
+    }
 
 class fleet_vehicle_log_services(osv.Model):
 
@@ -275,6 +278,9 @@ class fleet_vehicle_log_services(osv.Model):
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+    }
+    _defaults = {
+        'purchaser_id': lambda self, cr, uid, ctx: uid,
     }
 
 class fleet_insurance_type(osv.Model):
@@ -296,7 +302,11 @@ class fleet_vehicle_log_insurance(osv.Model):
         'expiration_date' : fields.date('Expiration date', required=False, help='Date when the coverage of the insurance expirates'),
         'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'ins_ref' : fields.char('Insurance Reference', size=64),
+    }
+    _defaults = {
+        'purchaser_id': lambda self, cr, uid, ctx: uid,
     }
 
 class fleet_service_type(osv.Model):

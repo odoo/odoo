@@ -333,6 +333,49 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
+            <field name="name">fleet.vehicle.odometer.form</field>
+            <field name="model">fleet.vehicle.odometer</field>
+            <field name="arch" type="xml">
+                <form string="Odometer logs" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="vehicle_id" />
+                            <field name="value" />
+                            <field name="unit" />
+                            <field name="date" />
+                        </group>
+                        <group>
+                            <field name="notes" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_odometer_tree'>
+            <field name="name">fleet.vehicle.odometer.tree</field>
+            <field name="model">fleet.vehicle.odometer</field>
+            <field name="arch" type="xml">
+                <tree string="Odometer logs" version="7.0" editable="bottom">
+                    <field name="vehicle_id" />
+                    <field name="value" />
+                    <field name="unit" />
+                    <field name="date" />
+                    <field name="notes" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
+            <field name="name">Vehicle Odometer</field>
+            <field name="res_model">fleet.vehicle.odometer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
 <!--    
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>
