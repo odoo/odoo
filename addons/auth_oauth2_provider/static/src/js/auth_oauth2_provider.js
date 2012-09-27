@@ -9,35 +9,41 @@ instance.auth_oauth2_provider.ProviderAction = instance.web.Widget.extend({
     start: function (parent) {
         var self = this;
         this._super.apply(this, arguments);
-        var params = $.deparam($.param.querystring());
-        if (params.response_type !== 'token') {
+        this.params = $.deparam($.param.querystring());
+        if (this.params.response_type !== 'token') {
             this.error(_t("Unsupported 'response_type' parameter"));
         }
-        if (!params.redirect_uri) {
+        if (!this.params.redirect_uri) {
             this.error(_t("No 'redirect_uri' parameter given"));
         }
-        // params.client_id
-        // TODO: check if client_id application is authorized to use the service, and get it's name
-        // that should be displayed in the approval confirmation dialog.
 
         if (!this._error) {
-            // params.approval_prompt TODO --> add 'none' (default)
-            // TODO: get client_id and scope
-            this.$('.oe_oauth2_provider_approval').show().on('click', '.oe_oauth2_provider_allow', function() {
-                instance.session.rpc('/oauth2/get_token', {
-                    client_id: params.client_id || '',
-                    scope: params.scope || '',
-                }).then(function(result) {
-                    self.redirect(result);
-                }).fail(function() {
-                    self.error(_t("An error occured while contacting the OpenERP server."));
-                });
-            }).on('click', '.oe_oauth2_provider_deny', function() {
-                self.redirect({
-                    error: 'access_denied'
-                });
-            });
+            var confirmation = this.params.approval_prompt || 'none';
+            var was_already_logged = true; // TODO: how can I know this ?
+            if (confirmation === 'force' || (confirmation === 'auto' && !was_already_logged)) {
+                this.$('.oe_oauth2_provider_approval').show()
+                    .on('click', '.oe_oauth2_provider_allow', this.on_confirm)
+                    .on('click', '.oe_oauth2_provider_deny', this.on_reject);
+            } else {
+                this.on_confirm();
+            }
         }
+    },
+    on_confirm: function() {
+        var self = this;
+        instance.session.rpc('/oauth2/get_token', {
+            client_id: this.params.client_id || '',
+            scope: this.params.scope || '',
+        }).then(function(result) {
+            self.redirect(result);
+        }).fail(function() {
+            self.error(_t("An error occured while contacting the OpenERP server."));
+        });
+    },
+    on_reject: function() {
+        this.redirect({
+            error: 'access_denied'
+        });
     },
     redirect: function(result) {
         var params = $.deparam($.param.querystring());
