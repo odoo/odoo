@@ -25,12 +25,11 @@
     'version': '1.0',
     'category': 'Customer Relationship Management',
     'description': """
-Manage Customer Claim Management
-================================================================================
-This modules allows you to track your customers/suppliers claims and grievances.
 
-It is fully integrated with the email gateway so that you can create
-automatically new claims based on incoming emails.
+Manage Customer/Suppliers Claims.
+================================================================================
+This application allows you to track your customers/suppliers claims and grievances.
+
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',

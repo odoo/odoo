@@ -8,18 +8,20 @@
             <field name="inherit_id" ref="base_setup.view_sale_config_settings"/>
             <field name="arch" type="xml">
             <div name="config_sale" position="before">
-                <separator string=" After-Sale Services "/>
+                <separator string="After-Sale Services"/>
                     <group>
-                        <label for="id" string="Service Feature"/>
-                        <div>
-                            <field name="module_crm_claim"/>
-                        </div>
-                            <label for="id" string="Manage helpdesk and support"/>
+                        <label for="id" string="After sales services feature"/>
                          <div>
-                           <field name="module_crm_claim"/>
-                         </div>  
-                   </group>
-            </div>
+                             <field name="module_crm_claim" class="oe_inline"/>
+                             <label for="module_crm_claim"/>
+                         </div>
+                             <label for="id" string="Manage helpdesk and support" class="oe_inline"/>
+                         <div>
+                             <field name="module_crm_helpdesk" class="oe_inline"/>
+                             <label for="module_crm_helpdesk"/>
+                         </div>
+                    </group>
+           </div>
 
                 <group name="On Mail Client" version="7.0" position="after">
                     <group>
