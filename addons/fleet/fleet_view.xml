@@ -97,8 +97,8 @@
                     </header>
                     <sheet>
                        <div class="oe_right oe_button_box">
-                        <button name="act_show_log_services" type="object" string="show services logs" help="show the services logs for this vehicle" />
-                        <button name="act_show_log_fuel" type="object" string="show fuel logs" help="show the fuel logs for this vehicle" />
+                        <button name="act_show_log_services" type="object" string="services logs" help="show the services logs for this vehicle" />
+                        <button name="act_show_log_fuel" type="object" string="fuel logs" help="show the fuel logs for this vehicle" />
                         </div>
                         <field name="image" widget='image'/>
                         <group col ="2">
@@ -191,6 +191,40 @@
             </field>
         </record>
 
+        <record model='ir.ui.view' id='fleet_vehicle_kanban'>
+            <field name="name">fleet.vehicle.kanban</field>
+            <field name="model">fleet.vehicle</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="license_plate" />
+                    <field name="model_id" />
+                    <field name="driver" />
+                    <field name="location" />
+                    <field name="image" />
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_vehicle_vignette">
+                                <a type="open" class="oe_vehicle_icon">
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image', record.id.value)" class="oe_vehicle_picture"/>
+                                </a>
+                                <div class="oe_vehicle_desc">
+                                    <h4><a type="open"><field name="license_plate"/></a></h4>
+                                    <p>
+                                        <field name="model_id"/><br/>
+                                        <t t-if="record.driver.raw_value"><field name="driver"/><br/></t>
+                                        <t t-if="record.location.raw_value"><field name="location"/><br/></t>
+                                    </p>
+                                </div>
+                            </div>
+                            <script>
+                            $('.oe_vehicle_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_vehicle_picture_wide') } });
+                        </script>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
         <act_window
             context="{'default_vehicle_id': active_id}"
             id="act_show_log_services"
@@ -214,7 +248,7 @@
             <field name="name">Vehicles</field>
             <field name="res_model">fleet.vehicle</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
         </record>
 
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />

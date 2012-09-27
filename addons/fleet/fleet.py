@@ -195,8 +195,28 @@ class fleet_vehicle_odometer(osv.Model):
     _name='fleet.vehicle.odometer'
     _description='Odometer log for a vehicle'
 
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            if record.vehicle_id.name:
+                name = str(record.vehicle_id.name)
+            if record.date:
+                name = name+ ' / '+ str(record.date)
+            print record.date
+            res.append((record.id, name))
+        return res
+
+    def _vehicle_log_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
-        'name' : fields.char('Name',size=64),
+        'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
         'date' : fields.date('Date'),
         'value' : fields.float('Odometer Value'),
@@ -250,7 +270,7 @@ class fleet_vehicle_log_fuel(osv.Model):
     _name = 'fleet.vehicle.log.fuel'
 
     _columns = {
-        'name' : fields.char('Name',size=64),
+        #'name' : fields.char('Name',size=64),
 
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price per liter'),
@@ -271,7 +291,7 @@ class fleet_vehicle_log_services(osv.Model):
     _name = 'fleet.vehicle.log.services'
     _columns = {
 
-        'name' : fields.char('Name',size=64),
+        #'name' : fields.char('Name',size=64),
         
         'amount' :fields.float('Cost', help="Total cost of the service"),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
@@ -296,7 +316,7 @@ class fleet_vehicle_log_insurance(osv.Model):
     _name = 'fleet.vehicle.log.insurance'
     _columns = {
 
-        'name' : fields.char('Name',size=64),
+        #'name' : fields.char('Name',size=64),
 
         'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
         'start_date' : fields.date('Start date', required=False, help='Date when the coverage of the insurance begins'),
