@@ -44,6 +44,11 @@ class crm_configuration(osv.osv_memory):
         'group_fund_raising': fields.boolean("Manage Fund Raising",
             implied_group='crm.group_fund_raising',
             help="""Allows you to trace and manage your activities for fund raising."""),
+        'module_crm_claim':fields.boolean("Manage customers claims",
+            help="""Allows you to configure your crm_claim"""),
+        'module_crm_helpdesk':fields.boolean("Manage helpdesk and support",
+            help="""Allows you to configure your crm_helpdesk"""),
+        
     }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
