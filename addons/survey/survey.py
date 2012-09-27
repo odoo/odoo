@@ -35,7 +35,7 @@ class survey_type(osv.osv):
     _name = 'survey.type'
     _description = 'Survey Type'
     _columns = {
-        'name': fields.char("Name", size=128, required=1),
+        'name': fields.char("Name", size=128, required=1, translate=True),
         'code': fields.char("Code", size=64),
     }
 survey_type()
@@ -94,7 +94,7 @@ class survey(osv.osv):
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
-        title = current_rec.get('title') + ' (Copy)'
+        title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title':title})
         vals.update({'history':[],'tot_start_survey':0,'tot_comp_survey':0})
         return super(survey, self).copy(cr, uid, ids, vals, context=context)
@@ -143,7 +143,7 @@ class survey(osv.osv):
                 'nodestroy':True,
             }
         return report
-    
+
     def fill_survey(self, cr, uid, ids, context=None):
         sur_obj = self.read(cr, uid, ids,['title'], context=context)
         for sur in sur_obj:
@@ -232,7 +232,7 @@ class survey_page(osv.osv):
     def copy(self, cr, uid, ids, default=None, context=None):
         vals = {}
         current_rec = self.read(cr, uid, ids, context=context)
-        title = current_rec.get('title') + ' (Copy)'
+        title = _("%s (copy)") % (current_rec.get('title'))
         vals.update({'title':title})
         return super(survey_page, self).copy(cr, uid, ids, vals, context=context)
 

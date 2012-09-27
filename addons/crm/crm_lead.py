@@ -27,13 +27,15 @@ import time
 import tools
 from tools.translate import _
 
+from base.res.res_partner import format_address
+
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(base_stage, osv.osv):
+class crm_lead(base_stage, format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -104,6 +106,12 @@ class crm_lead(base_stage, osv.osv):
             fold[stage.id] = stage.fold or False
 
         return result, fold
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -292,6 +300,10 @@ class crm_lead(base_stage, osv.osv):
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
 
@@ -586,6 +598,8 @@ class crm_lead(base_stage, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'email_from': customer and customer.email or lead.email_from,
+                'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):

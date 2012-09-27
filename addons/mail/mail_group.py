@@ -19,13 +19,11 @@
 #
 ##############################################################################
 
-import datetime as DT
 import openerp
 import openerp.tools as tools
-from operator import itemgetter
 from osv import osv
 from osv import fields
-from tools.translate import _
+from openerp import SUPERUSER_ID
 
 class mail_group(osv.Model):
     """ A mail_group is a collection of users sharing messages in a discussion
@@ -47,7 +45,7 @@ class mail_group(osv.Model):
     _columns = {
         'description': fields.text('Description'),
         'menu_id': fields.many2one('ir.ui.menu', string='Related Menu', required=True, ondelete="cascade"),
-        'public': fields.selection([('public','Public'),('private','Private'),('groups','Selected Group Only')], 'Privacy', required=True,
+        'public': fields.selection([('public', 'Public'), ('private', 'Private'), ('groups', 'Selected Group Only')], 'Privacy', required=True,
             help='This group is visible by non members. \
             Invisible groups can add members through the invite button.'),
         'group_public_id': fields.many2one('res.groups', string='Authorized Group'),
@@ -118,7 +116,10 @@ class mail_group(osv.Model):
                           model_name=self._name, context=context)
             vals['alias_id'] = alias_id
 
-        mail_group_id = super(mail_group, self).create(cr, uid, vals, context)
+        #check access rights for the current user, then create as SUPERUSER because the object inherits
+        #ir.ui.menu (for which normal users do not have creation rights)
+        self.check_access_rights(cr, uid, 'create')
+        mail_group_id = super(mail_group, self).create(cr, SUPERUSER_ID, vals, context=context)
 
         # Create client action for this group and link the menu to it
         ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'action_mail_group_feeds')
@@ -126,14 +127,14 @@ class mail_group(osv.Model):
             search_ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', 'view_message_search')
             params = {
                 'search_view_id': search_ref and search_ref[1] or False,
-                'domain': [('model','=','mail.group'), ('res_id','=',mail_group_id)],
+                'domain': [('model', '=', 'mail.group'), ('res_id', '=', mail_group_id)],
                 'context': {'default_model': 'mail.group', 'default_res_id': mail_group_id},
                 'res_model': 'mail.message',
                 'thread_level': 1,
             }
             cobj = self.pool.get('ir.actions.client')
-            newref = cobj.copy(cr, uid, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
-            self.write(cr, uid, [mail_group_id], {'action': 'ir.actions.client,'+str(newref), 'mail_group_id': mail_group_id}, context=context)
+            newref = cobj.copy(cr, SUPERUSER_ID, ref[1], default={'params': str(params), 'name': vals['name']}, context=context)
+            self.write(cr, SUPERUSER_ID, [mail_group_id], {'action': 'ir.actions.client,' + str(newref), 'mail_group_id': mail_group_id}, context=context)
 
         mail_alias.write(cr, uid, [vals['alias_id']], {"alias_force_thread_id": mail_group_id}, context)
 
@@ -142,9 +143,13 @@ class mail_group(osv.Model):
         return mail_group_id
 
     def unlink(self, cr, uid, ids, context=None):
+        groups = self.browse(cr, uid, ids, context=context)
         # Cascade-delete mail aliases as well, as they should not exist without the mail group.
         mail_alias = self.pool.get('mail.alias')
-        alias_ids = [group.alias_id.id for group in self.browse(cr, uid, ids, context=context) if group.alias_id]
+        alias_ids = [group.alias_id.id for group in groups if group.alias_id]
+        # Cascade-delete menu entries as well
+        self.pool.get('ir.ui.menu').unlink(cr, uid, [group.menu_id.id for group in groups if group.menu_id], context=context)
+        # Delete mail_group
         res = super(mail_group, self).unlink(cr, uid, ids, context=context)
         mail_alias.unlink(cr, uid, alias_ids, context=context)
         return res

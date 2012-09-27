@@ -61,7 +61,7 @@ class partner_vat(osv.osv_memory):
             company_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
         period_ids = obj_period.search(cr, uid, [('date_start' ,'>=', date_start), ('date_stop','<=',date_stop), ('company_id','=',company_id)])
         if not period_ids:
-             raise osv.except_osv(_('Insufficient Data!'), _('No data for the selected year.'))
+             raise osv.except_osv(_('insufficient data!'), _('No data for the selected year.'))
 
         partners = []
         partner_ids = obj_partner.search(cr, uid, [('vat_subjected', '!=', False), ('vat','ilike','BE%')], context=context)
@@ -87,6 +87,9 @@ class partner_vat(osv.osv_memory):
             if record['turnover'] >= data['limit_amount']:
                 id_client = obj_vat_lclient.create(cr, uid, record, context=context)
                 partners.append(id_client)
+        
+        if not partners:
+            raise osv.except_osv(_('insufficient data!'), _('No data found for the selected year.'))
         context.update({'partner_ids': partners, 'year': data['year'], 'limit_amount': data['limit_amount']})
         model_data_ids = obj_model_data.search(cr, uid, [('model','=','ir.ui.view'), ('name','=','view_vat_listing')])
         resource_id = obj_model_data.read(cr, uid, model_data_ids, fields=['res_id'])[0]['res_id']
@@ -190,7 +193,7 @@ class partner_vat_list(osv.osv_memory):
             phone = ads.phone.replace(' ','') or ''
             email = ads.email or ''
             name = ads.name or ''
-            city = obj_partner.get_city(cr, uid, ads.id)
+            city = ads.city or ''
             zip = obj_partner.browse(cr, uid, ads.id, context=context).zip or ''
             if not city:
                 city = ''

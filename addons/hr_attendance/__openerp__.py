@@ -51,7 +51,6 @@ actions(Sign in/Sign out) performed by them.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0063495605613',
     
     #web
     "js": ["static/src/js/attendance.js"],

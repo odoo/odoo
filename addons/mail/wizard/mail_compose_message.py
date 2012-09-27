@@ -193,24 +193,6 @@ class mail_compose_message(osv.TransientModel):
         """
         return {'value': {'content_subtype': value}}
 
-    def _verify_partner_email(self, cr, uid, partner_ids, context=None):
-        """ Verify that selected partner_ids have an email_address defined.
-            Otherwise throw a warning. """
-        partner_wo_email_lst = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
-            if not partner.email:
-                partner_wo_email_lst.append(partner)
-        if not partner_wo_email_lst:
-            return {}
-        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
-        for partner in partner_wo_email_lst:
-            warning_msg += '\n- %s' % (partner.name)
-        return {'warning': {
-                    'title': _('Partners email addresses not found'),
-                    'message': warning_msg,
-                    }
-                }
-
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
         """ The basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
@@ -219,7 +201,7 @@ class mail_compose_message(osv.TransientModel):
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
             return
-        res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
+        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
         return res
 
     def dummy(self, cr, uid, ids, context=None):

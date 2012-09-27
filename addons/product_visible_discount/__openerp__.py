@@ -40,7 +40,6 @@ To this end, a new check box named 'Visible Discount' is added to the pricelist 
     'data': ['product_visible_discount_view.xml'],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001144718884654279901',
     'images': ['images/pricelists_visible_discount.jpeg'],
 }
 

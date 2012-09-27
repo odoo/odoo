@@ -6,6 +6,7 @@
         <field name="name">See Own Leads</field>
         <field name="category_id" ref="base.module_category_sales_management"/>
         <field name="comment">the user will have access to his own data in the sales application.</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
     </record>
 
     <record id="base.group_sale_salesman_all_leads" model="res.groups">
@@ -25,11 +26,6 @@
 
     <record id="group_invoice_so_lines" model="res.groups">
         <field name="name">Enable Invoicing Sale order lines</field>
-        <field name="category_id" ref="base.module_category_hidden"/>
-    </record>
-
-    <record id="group_invoice_deli_orders" model="res.groups">
-        <field name="name">Enable Invoicing Delivery orders</field>
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 

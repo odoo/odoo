@@ -19,6 +19,8 @@
 #
 ##############################################################################
 
+import tools
+
 from openerp.tests import common
 from openerp.tools.html_sanitize import html_sanitize
 
@@ -82,15 +84,42 @@ Sylvie
 """
 
 
-class test_mail(common.TransactionCase):
+class TestMailMockups(common.TransactionCase):
 
     def _mock_smtp_gateway(self, *args, **kwargs):
         return True
 
+    def _init_mock_build_email(self):
+        self._build_email_args_list = []
+        self._build_email_kwargs_list = []
+
     def _mock_build_email(self, *args, **kwargs):
-        self._build_email_args = args
-        self._build_email_kwargs = kwargs
-        return self.build_email_real(*args, **kwargs)
+        self._build_email_args_list.append(args)
+        self._build_email_kwargs_list.append(kwargs)
+        return self._build_email(*args, **kwargs)
+
+    def setUp(self):
+        super(TestMailMockups, self).setUp()
+        # Install mock SMTP gateway
+        self._init_mock_build_email()
+        self._build_email = self.registry('ir.mail_server').build_email
+        self.registry('ir.mail_server').build_email = self._mock_build_email
+        self._send_email = self.registry('ir.mail_server').send_email
+        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
+
+    def tearDown(self):
+        # Remove mocks
+        self.registry('ir.mail_server').build_email = self._build_email
+        self.registry('ir.mail_server').send_email = self._send_email
+        super(TestMailMockups, self).tearDown()
+
+
+class test_mail(TestMailMockups):
+
+    def _mock_send_get_mail_body(self, *args, **kwargs):
+        # def _send_get_mail_body(self, cr, uid, mail, partner=None, context=None)
+        body = tools.append_content_to_html(args[2].body_html, kwargs.get('partner').name if kwargs.get('partner') else 'No specific partner')
+        return body
 
     def setUp(self):
         super(test_mail, self).setUp()
@@ -105,10 +134,9 @@ class test_mail(common.TransactionCase):
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
-        # Install mock SMTP gateway
-        self.build_email_real = self.registry('ir.mail_server').build_email
-        self.registry('ir.mail_server').build_email = self._mock_build_email
-        self.registry('ir.mail_server').send_email = self._mock_smtp_gateway
+        # Mock send_get_mail_body to test its functionality without other addons override
+        self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
+        self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
 
         # groups@.. will cause the creation of new mail groups
         self.mail_group_model_id = self.ir_model.search(self.cr, self.uid, [('model', '=', 'mail.group')])[0]
@@ -117,6 +145,11 @@ class test_mail(common.TransactionCase):
         # create a 'pigs' group that will be used through the various tests
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
+
+    def tearDown(self):
+        # Remove mocks
+        self.registry('mail.mail').send_get_mail_body = self._send_get_mail_body
+        super(test_mail, self).tearDown()
 
     def test_00_message_process(self):
         cr, uid = self.cr, self.uid
@@ -274,18 +307,22 @@ class test_mail(common.TransactionCase):
         _attachments = [('First', 'My first attachment'), ('Second', 'My second attachment')]
 
         # CASE1: post comment, body and subject specified
+        self._init_mock_build_email()
         msg_id = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body1, subject=_subject, type='comment')
         message = self.mail_message.browse(cr, uid, msg_id)
-        sent_email = self._build_email_kwargs
+        sent_emails = self._build_email_kwargs_list
         # Test: notifications have been deleted
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id)]), 'mail.mail notifications should have been auto-deleted!')
         # Test: mail_message: subject is _subject, body is _body1 (no formatting done)
         self.assertEqual(message.subject, _subject, 'mail.message subject incorrect')
         self.assertEqual(message.body, _body1, 'mail.message body incorrect')
-        # Test: sent_email: email send by server: correct subject, body; body_alternative
-        self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
-        self.assertEqual(sent_email['body'], _mail_body1, 'sent_email body incorrect')
-        self.assertEqual(sent_email['body_alternative'], _mail_bodyalt1, 'sent_email body_alternative is incorrect')
+        # Test: sent_email: email send by server: correct subject, body, body_alternative
+        for sent_email in sent_emails:
+            self.assertEqual(sent_email['subject'], _subject, 'sent_email subject incorrect')
+            self.assertEqual(sent_email['body'], _mail_body1 + '\n<pre>Bert Tartopoils</pre>\n', 'sent_email body incorrect')
+            # the html2plaintext uses etree or beautiful soup, so the result may be slighly different
+            # depending if you have installed beautiful soup.
+            self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
         # Test: mail_message: partner_ids = group followers
         message_pids = set([partner.id for partner in message.partner_ids])
         test_pids = set([p_a_id, p_b_id, p_c_id])
@@ -295,14 +332,16 @@ class test_mail(common.TransactionCase):
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
         # Test: sent_email: email_to should contain b@b, not c@c (pref email), not a@a (writer)
-        self.assertEqual(sent_email['email_to'], ['b@b'], 'sent_email email_to is incorrect')
+        for sent_email in sent_emails:
+            self.assertEqual(sent_email['email_to'], ['b@b'], 'sent_email email_to is incorrect')
 
         # CASE2: post an email with attachments, parent_id, partner_ids
         # TESTS: automatic subject, signature in body_html, attachments propagation
+        self._init_mock_build_email()
         msg_id2 = self.mail_group.message_post(cr, uid, self.group_pigs_id, body=_body2, type='email',
             partner_ids=[(6, 0, [p_d_id])], parent_id=msg_id, attachments=_attachments)
         message = self.mail_message.browse(cr, uid, msg_id2)
-        sent_email = self._build_email_kwargs
+        sent_emails = self._build_email_kwargs_list
         self.assertFalse(self.mail_mail.search(cr, uid, [('mail_message_id', '=', msg_id2)]), 'mail.mail notifications should have been auto-deleted!')
 
         # Test: mail_message: subject is False, body is _body2 (no formatting done), parent_id is msg_id
@@ -310,9 +349,11 @@ class test_mail(common.TransactionCase):
         self.assertEqual(message.body, html_sanitize(_body2), 'mail.message body incorrect')
         self.assertEqual(message.parent_id.id, msg_id, 'mail.message parent_id incorrect')
         # Test: sent_email: email send by server: correct subject, body, body_alternative
-        self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
-        self.assertEqual(sent_email['body'], _mail_body2, 'sent_email body incorrect')
-        self.assertEqual(sent_email['body_alternative'], _mail_bodyalt2, 'sent_email body_alternative incorrect')
+        self.assertEqual(len(sent_emails), 2, 'sent_email number of sent emails incorrect')
+        for sent_email in sent_emails:
+            self.assertEqual(sent_email['subject'], _mail_subject, 'sent_email subject incorrect')
+            self.assertIn(_mail_body2, sent_email['body'], 'sent_email body incorrect')
+            self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
         # Test: mail_message: partner_ids = group followers
         message_pids = set([partner.id for partner in message.partner_ids])
         test_pids = set([p_a_id, p_b_id, p_c_id, p_d_id])
@@ -322,7 +363,8 @@ class test_mail(common.TransactionCase):
         notif_pids = set([notif.partner_id.id for notif in self.mail_notification.browse(cr, uid, notif_ids)])
         self.assertEqual(notif_pids, test_pids, 'mail.message notification partners incorrect')
         # Test: sent_email: email_to should contain b@b, c@c, not a@a (writer)
-        self.assertEqual(set(sent_email['email_to']), set(['b@b', 'c@c']), 'sent_email email_to incorrect')
+        for sent_email in sent_emails:
+            self.assertTrue(set(sent_email['email_to']).issubset(set(['b@b', 'c@c'])), 'sent_email email_to incorrect')
         # Test: attachments
         for attach in message.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
@@ -607,3 +649,33 @@ class test_mail(common.TransactionCase):
         msg1.refresh()
         self.assertEqual(5, len(group_pigs.message_ids), 'group should contain 5 messages')
         self.assertEqual(2, len(msg1.child_ids), 'msg1 should have 2 children now')
+
+    def test_60_vote(self):
+        """ Test designed for the vote/unvote feature. """
+        cr, uid = self.cr, self.uid
+        group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        user_admin = self.res_users.browse(cr, uid, uid)
+        msg1 = group_pigs.message_post(body='My Body', subject='1')
+        msg1 = self.mail_message.browse(cr, uid, msg1)
+
+        # Create user Bert Tartopoils
+        user_bert_id = self.res_users.create(cr, uid, {'name': 'Bert', 'login': 'bert'})
+        user_bert = self.res_users.browse(cr, uid, user_bert_id)
+
+        # Test: msg1 and msg2 have void vote_user_ids
+        self.assertFalse(msg1.vote_user_ids, 'newly created message msg1 has not void vote_user_ids')
+        # Do: Admin vote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id])
+        msg1.refresh()
+        # Test: msg1 has Admin as voter
+        self.assertEqual(set(msg1.vote_user_ids), set([user_admin]), 'after voting, Admin is not the voter')
+        # Do: Bert vote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id], [user_bert_id])
+        msg1.refresh()
+        # Test: msg1 has Admin and Bert as voters
+        self.assertEqual(set(msg1.vote_user_ids), set([user_admin, user_bert]), 'after voting, Admin and Bert are not the voters')
+        # Do: Admin unvote for msg1
+        self.mail_message.vote_toggle(cr, uid, [msg1.id])
+        msg1.refresh()
+        # Test: msg1 has Bert as voter
+        self.assertEqual(set(msg1.vote_user_ids), set([user_bert]), 'after unvoting for Admin, Bert is not the voter')

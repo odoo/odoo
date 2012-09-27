@@ -25,25 +25,18 @@
     'version': '1.0',
     'category': 'Project Management',
     'sequence': 20,
-    'summary': 'Personal Tasks',
+    'summary': 'Personal Tasks, Contexts, Timeboxes',
     'description': """
-This module implements all concepts defined by the Getting Things Done methodology.
-===================================================================================
+Implement concepts of the "Getting Things Done" methodology 
+===========================================================
 
-This module implements a simple personnal Todo list based on tasks. It adds in
-the project application an editable list of tasks simplified to the minimum
-required fields.
+This module implements a simple personal to-do list based on tasks. It adds an editable list of tasks simplified to the minimum required fields in the project application.
 
-The todo list is based on the GTD methodology. This world-wide used methodology
-is used for personal time management improvement.
+The to-do list is based on the GTD methodology. This world-wide used methodology is used for personal time management improvement.
 
-Getting Things Done (commonly abbreviated as GTD) is an action management
-method created by David Allen, and described in a book of the same name.
+Getting Things Done (commonly abbreviated as GTD) is an action management method created by David Allen, and described in a book of the same name.
 
-GTD rests on the principle that a person needs to move tasks out of the mind by
-recording them externally. That way, the mind is freed from the job of
-remembering everything that needs to be done, and can concentrate on actually
-performing those tasks.
+GTD rests on the principle that a person needs to move tasks out of the mind by recording them externally. That way, the mind is freed from the job of remembering everything that needs to be done, and can concentrate on actually performing those tasks.
     """,
     'author': 'OpenERP SA',
     'images': ['images/project_gtd.jpeg'],
@@ -60,6 +53,5 @@ performing those tasks.
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0043525236301',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

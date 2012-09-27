@@ -69,7 +69,7 @@ class base_stage(object):
             return False
         return uid
 
-    def onchange_partner_address_id(self, cr, uid, ids, add, email=False):
+    def onchange_partner_address_id(self, cr, uid, ids, add, email=False, context=None):
         """ This function returns value of partner email based on Partner Address
             :param add: Id of Partner's address
             :param email: Partner's email ID
@@ -77,10 +77,20 @@ class base_stage(object):
         data = {'value': {'email_from': False, 'phone':False}}
         if add:
             address = self.pool.get('res.partner').browse(cr, uid, add)
-            data['value'] = {'email_from': address and address.email or False ,
-                             'phone':  address and address.phone or False}
-        if 'phone' not in self._columns:
-            del data['value']['phone']
+            data['value'] = {'partner_name': address and address.name or False,
+                             'email_from': address and address.email or False,
+                             'phone':  address and address.phone or False,
+                             'street': address and address.street or False,
+                             'street2': address and address.street2 or False,
+                             'city': address and address.city or False,
+                             'state_id': address.state_id and address.state_id.id or False,
+                             'zip': address and address.zip or False,
+                             'country_id': address.country_id and address.country_id.id or False,
+                             }
+        fields = self.fields_get(cr, uid, context=context or {})
+        for key in data['value'].keys():
+            if key not in fields:
+                del data['value'][key]
         return data
 
     def onchange_partner_id(self, cr, uid, ids, part, email=False):
@@ -297,7 +307,7 @@ class base_stage(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        if 'message_post' in self:
+        if hasattr(self, 'message_post'):
             for case in self.browse(cr, uid, ids, context=context):
                 if destination:
                     recipient_id = case.user_id.partner_id.id
