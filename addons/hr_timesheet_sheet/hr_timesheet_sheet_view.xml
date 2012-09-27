@@ -64,9 +64,9 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                         <group>
-                            <field name="total_attendance" widget="float_time"/>
+                            <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                             <field name="total_timesheet" widget="float_time"/>
-                            <field name="total_difference" widget="float_time"/>
+                            <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                             <field name="user_id" invisible="1"/>
                         </group>
                     </group>
@@ -84,7 +84,7 @@
                                 </div>
                             </group>
                             <group colspan="4" col="3">
-                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1">
+                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
                                     <tree string="Attendances" editable="bottom">
                                         <field name="name"/>
                                         <field name="action"/>
@@ -92,14 +92,14 @@
                                     </tree>
                                 </field>
                                 <group>
-                                    <div align="right" groups="base.group_hr_manager">
-                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In"/>
-                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out"/>
+                                    <div align="right" groups="base.group_hr_manager,base.group_hr_attendance">
+                                        <button name="attendance_action_change" attrs="{'invisible': [('state_attendance', '=', 'present')]}" type="object" string="Sign In" groups="base.group_hr_attendance"/>
+                                        <button name="attendance_action_change" attrs="{'invisible': ['|', ('state_attendance','=',False), ('state_attendance', '=', 'absent')]}" type="object" string="Sign Out" groups="base.group_hr_attendance"/>
                                     </div>
                                 </group>
                             </group>
                             <group col="4">
-                                <field name="state_attendance"/>
+                                <field name="state_attendance" groups="base.group_hr_attendance"/>
                             </group>
                             <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
@@ -134,9 +134,9 @@
                             <field colspan="4" name="period_ids" nolabel="1">
                                 <tree colors="red:total_difference&lt;0.1;blue:total_difference&gt;=0.1" string="Period">
                                     <field name="name"/>
-                                    <field name="total_attendance" widget="float_time"/>
+                                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                                     <field name="total_timesheet" widget="float_time"/>
-                                    <field name="total_difference" widget="float_time"/>
+                                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                                 </tree>
                             </field>
                         </page>
@@ -318,9 +318,9 @@
                     <field name="date_from"/>
                     <field name="date_to"/>
                     <field name="department_id"/>
-                    <field name="total_attendance" widget="float_time"/>
+                    <field name="total_attendance" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time"/>
-                    <field name="total_difference" widget="float_time"/>
+                    <field name="total_difference" widget="float_time" groups="base.group_hr_attendance"/>
                     <field name="state"/>
                 </tree>
             </field>
@@ -332,9 +332,9 @@
             <field name="arch" type="xml">
                 <tree colors="blue:total_difference&lt;0.1;red:total_difference&gt;=0.1" string="Period">
                     <field name="name"/>
-                    <field name="total_attendance" widget="float_time" sum="Total Attendances"/>
+                    <field name="total_attendance" widget="float_time" sum="Total Attendances" groups="base.group_hr_attendance"/>
                     <field name="total_timesheet" widget="float_time" sum="Total Timesheet"/>
-                    <field name="total_difference" widget="float_time" sum="Total Difference"/>
+                    <field name="total_difference" widget="float_time" sum="Total Difference" groups="base.group_hr_attendance"/>
                 </tree>
             </field>
         </record>
