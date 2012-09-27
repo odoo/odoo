@@ -394,12 +394,14 @@ class test_unbound_string_field(ImporterCase):
 class test_required_string_field(ImporterCase):
     model_name = 'export.string.required'
 
+    @mute_logger('openerp.sql_db')
     def test_empty(self):
         result = self.import_(['value'], [[]])
         self.assertEqual(result['messages'], [message(
             u"Missing required value for the field 'unknown'")])
         self.assertIs(result['ids'], False)
 
+    @mute_logger('openerp.sql_db')
     def test_not_provided(self):
         result = self.import_(['const'], [['12']])
         self.assertEqual(result['messages'], [message(
@@ -920,7 +922,7 @@ class test_o2m_multiple(ImporterCase):
         ])
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
-        # Oh yeah, that's the stuff
+
         [b] = self.browse()
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
         self.assertEqual(values(b.child2), [21, 22, 23])

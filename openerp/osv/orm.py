@@ -1254,189 +1254,43 @@ class BaseModel(object):
         :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
         :rtype: (int, dict or 0, str or 0, str or 0)
         """
-        if not context:
-            context = {}
+        context = dict(context) if context is not None else {}
+        context['_import_current_module'] = current_module
+
         fields = map(fix_import_export_id_paths, fields)
         ir_model_data_obj = self.pool.get('ir.model.data')
 
-        # mode: id (XML id) or .id (database id) or False for name_get
-        def _get_id(model_name, id, current_module=False, mode='id'):
-            if mode=='.id':
-                id = int(id)
-                obj_model = self.pool.get(model_name)
-                ids = obj_model.search(cr, uid, [('id', '=', int(id))])
-                if not len(ids):
-                    raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, id))
-            elif mode=='id':
-                if '.' in id:
-                    module, xml_id = id.rsplit('.', 1)
-                else:
-                    module, xml_id = current_module, id
-                record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-                ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
-                if not ir_model_data:
-                    raise ValueError('No references to %s.%s' % (module, xml_id))
-                id = ir_model_data[0]['res_id']
-            else:
-                obj_model = self.pool.get(model_name)
-                ids = obj_model.name_search(cr, uid, id, operator='=', context=context)
-                if not ids:
-                    raise ValueError('No record found for %s' % (id,))
-                id = ids[0][0]
-            return id
+        def log(m):
+            if m['type'] == 'error':
+                raise Exception(m['message'])
 
-        # IN:
-        #   datas: a list of records, each record is defined by a list of values
-        #   prefix: a list of prefix fields ['line_ids']
-        #   position: the line to process, skip is False if it's the first line of the current record
-        # OUT:
-        #   (res, position, warning, res_id) with
-        #     res: the record for the next line to process (including it's one2many)
-        #     position: the new position for the next line
-        #     res_id: the ID of the record if it's a modification
-        def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0, skip=0):
-            line = datas[position]
-            row = {}
-            warning = []
-            data_res_id = False
-            xml_id = False
-            nbrmax = position+1
-
-            done = {}
-            for i, field in enumerate(fields):
-                res = False
-                if i >= len(line):
-                    raise Exception(_('Please check that all your lines have %d columns.'
-                        'Stopped around line %d having %d columns.') % \
-                            (len(fields), position+2, len(line)))
-                if not line[i]:
-                    continue
-
-                if field[:len(prefix)] <> prefix:
-                    if line[i] and skip:
-                        return False
-                    continue
-                field_name = field[len(prefix)]
-
-                #set the mode for m2o, o2m, m2m : xml_id/id/name
-                if len(field) == len(prefix)+1:
-                    mode = False
-                else:
-                    mode = field[len(prefix)+1]
-
-                # TODO: improve this by using csv.csv_reader
-                def many_ids(line, relation, current_module, mode):
-                    res = []
-                    for db_id in line.split(config.get('csv_internal_sep')):
-                        res.append(_get_id(relation, db_id, current_module, mode))
-                    return [(6,0,res)]
-
-                # ID of the record using a XML ID
-                if field_name == 'id':
-                    try:
-                        data_res_id = _get_id(model_name, line[i], current_module)
-                    except ValueError:
-                        pass
-                    xml_id = line[i]
-                    continue
-
-                # ID of the record using a database ID
-                elif field_name == '.id':
-                    data_res_id = _get_id(model_name, line[i], current_module, '.id')
-                    continue
-
-                field_type = fields_def[field_name]['type']
-                # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                if field_type == 'one2many':
-                    if field_name in done:
-                        continue
-                    done[field_name] = True
-                    relation = fields_def[field_name]['relation']
-                    relation_obj = self.pool.get(relation)
-                    newfd = relation_obj.fields_get( cr, uid, context=context )
-                    pos = position
-
-                    res = []
-
-                    first = 0
-                    while pos < len(datas):
-                        res2 = process_liness(self, datas, prefix + [field_name], current_module, relation_obj._name, newfd, pos, first)
-                        if not res2:
-                            break
-                        (newrow, pos, w2, data_res_id2, xml_id2) = res2
-                        nbrmax = max(nbrmax, pos)
-                        warning += w2
-                        first += 1
-
-                        if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
-                            break
-
-                        res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-
-                elif field_type == 'many2one':
-                    relation = fields_def[field_name]['relation']
-                    res = _get_id(relation, line[i], current_module, mode)
-
-                elif field_type == 'many2many':
-                    relation = fields_def[field_name]['relation']
-                    res = many_ids(line[i], relation, current_module, mode)
-
-                elif field_type == 'integer':
-                    res = line[i] and int(line[i]) or 0
-                elif field_type == 'boolean':
-                    res = line[i].lower() not in ('0', 'false', 'off')
-                elif field_type == 'float':
-                    res = line[i] and float(line[i]) or 0.0
-                elif field_type == 'selection':
-                    for key, val in fields_def[field_name]['selection']:
-                        if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
-                            res = key
-                            break
-                    if line[i] and not res:
-                        _logger.warning(
-                            _("key '%s' not found in selection field '%s'"),
-                            tools.ustr(line[i]), tools.ustr(field_name))
-                        warning.append(_("Key/value '%s' not found in selection field '%s'") % (
-                            tools.ustr(line[i]), tools.ustr(field_name)))
-
-                else:
-                    res = line[i]
-
-                row[field_name] = res or False
-
-            return row, nbrmax, warning, data_res_id, xml_id
-
-        fields_def = self.fields_get(cr, uid, context=context)
-
-        position = 0
         if config.get('import_partial') and filename:
             with open(config.get('import_partial'), 'rb') as partial_import_file:
                 data = pickle.load(partial_import_file)
                 position = data.get(filename, 0)
 
-        while position<len(datas):
-            (res, position, warning, res_id, xml_id) = \
-                    process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
-            if len(warning):
-                cr.rollback()
-                return -1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), ''
-
-            try:
+        position = 0
+        try:
+            for res_id, xml_id, res, info in self._convert_records(cr, uid,
+                            self._extract_records(cr, uid, fields, datas,
+                                                  context=context, log=log),
+                            context=context, log=log):
                 ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
-            except Exception, e:
-                return -1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), ''
-
-            if config.get('import_partial') and filename and (not (position%100)):
-                with open(config.get('import_partial'), 'rb') as partial_import:
-                    data = pickle.load(partial_import)
-                data[filename] = position
-                with open(config.get('import_partial'), 'wb') as partial_import:
-                    pickle.dump(data, partial_import)
-                if context.get('defer_parent_store_computation'):
-                    self._parent_store_compute(cr)
-                cr.commit()
+                position = info.get('rows', {}).get('to', 0) + 1
+                if config.get('import_partial') and filename and (not (position%100)):
+                    with open(config.get('import_partial'), 'rb') as partial_import:
+                        data = pickle.load(partial_import)
+                    data[filename] = position
+                    with open(config.get('import_partial'), 'wb') as partial_import:
+                        pickle.dump(data, partial_import)
+                    if context.get('defer_parent_store_computation'):
+                        self._parent_store_compute(cr)
+                    cr.commit()
+        except Exception, e:
+            cr.rollback()
+            return -1, {}, 'Line %d : %s' % (position + 1, tools.ustr(e)), ''
 
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)

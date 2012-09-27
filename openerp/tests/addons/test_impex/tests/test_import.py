@@ -80,9 +80,9 @@ class test_ids_stuff(ImporterCase):
     model_name = 'export.integer'
 
     def test_create_with_id(self):
-        self.assertRaises(
-            Exception, # dammit
-            self.import_, ['.id', 'value'], [['42', '36']])
+        self.assertEqual(
+            self.import_(['.id', 'value'], [['42', '36']]),
+            error(1, u"Unknown database identifier '42'"))
     def test_create_with_xid(self):
         self.assertEqual(
             self.import_(['id', 'value'], [['somexmlid', '42']]),
@@ -136,15 +136,13 @@ class test_boolean_field(ImporterCase):
         self.assertEqual(
             self.import_(['value'], [
                 [u'0'],
-                [u'off'],
+                [u'no'],
                 [u'false'],
                 [u'FALSE'],
-                [u'OFF'],
                 [u''],
             ]),
-            ok(6))
+            ok(5))
         self.assertEqual([
-                False,
                 False,
                 False,
                 False,
@@ -156,7 +154,7 @@ class test_boolean_field(ImporterCase):
     def test_trues(self):
         self.assertEqual(
             self.import_(['value'], [
-                ['no'],
+                ['off'],
                 ['None'],
                 ['nil'],
                 ['()'],
@@ -164,10 +162,11 @@ class test_boolean_field(ImporterCase):
                 ['#f'],
                 # Problem: OpenOffice (and probably excel) output localized booleans
                 ['VRAI'],
+                [u'OFF'],
             ]),
-            ok(7))
+            ok(8))
         self.assertEqual(
-            [True] * 7,
+            [True] * 8,
             values(self.read()))
 
 class test_integer_field(ImporterCase):
@@ -226,21 +225,20 @@ class test_integer_field(ImporterCase):
     def test_out_of_range(self):
         self.assertEqual(
             self.import_(['value'], [[str(2**31)]]),
-            error(1, "integer out of range\n", value=2**31))
+            error(1, "integer out of range\n"))
         # auto-rollbacks if error is in process_liness, but not during
         # ir.model.data write. Can differentiate because former ends lines
         # error lines with "!"
         self.cr.rollback()
         self.assertEqual(
             self.import_(['value'], [[str(-2**32)]]),
-            error(1, "integer out of range\n", value=-2**32))
+            error(1, "integer out of range\n"))
 
 
     def test_nonsense(self):
-        # FIXME: shit error reporting, exceptions half the time, messages the other half
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value'], [['zorglub']])
+        self.assertEqual(
+            self.import_(['value'], [['zorglub']]),
+            error(1, u"'zorglub' does not seem to be an integer for field 'unknown'"))
 
 class test_float_field(ImporterCase):
     model_name = 'export.float'
@@ -298,9 +296,9 @@ class test_float_field(ImporterCase):
         ], values(self.read()))
 
     def test_nonsense(self):
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value'], [['foobar']])
+        self.assertEqual(
+            self.import_(['value'], [['foobar']]),
+            error(1, u"'foobar' does not seem to be a number for field 'unknown'"))
 
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
@@ -405,8 +403,6 @@ class test_selection(ImporterCase):
                 'value': value
             })
 
-        # FIXME: can't import an exported selection field label if lang != en_US
-        # (see test_export.test_selection.test_localized_export)
         self.assertEqual(
             self.import_(['value'], [
                 ['toto'],
@@ -417,27 +413,23 @@ class test_selection(ImporterCase):
         self.assertEqual([3, 1, 2], values(self.read()))
         self.assertEqual(
             self.import_(['value'], [['Foo']], context={'lang': 'fr_FR'}),
-            error(1, "Key/value 'Foo' not found in selection field 'value'",
-                  value=False))
+            ok(1))
 
     def test_invalid(self):
         self.assertEqual(
             self.import_(['value'], [['Baz']]),
-            error(1, "Key/value 'Baz' not found in selection field 'value'",
-                  # what the fuck?
-                  value=False))
+            error(1, u"Value 'Baz' not found in selection field 'unknown'"))
         self.cr.rollback()
         self.assertEqual(
             self.import_(['value'], [[42]]),
-            error(1, "Key/value '42' not found in selection field 'value'",
-                  value=False))
+            error(1, u"Value '42' not found in selection field 'unknown'"))
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
     translations_fr = [
         ("Corge", "toto"),
         ("Grault", "titi"),
-        ("Whee", "tete"),
+        ("Wheee", "tete"),
         ("Moog", "tutu"),
     ]
 
@@ -482,8 +474,7 @@ class test_selection_function(ImporterCase):
                 ['toto'],
                 ['tete'],
             ], context={'lang': 'fr_FR'}),
-            error(1, "Key/value 'toto' not found in selection field 'value'",
-                  value=False))
+            ok(2))
         self.assertEqual(
             self.import_(['value'], [['Wheee']], context={'lang': 'fr_FR'}),
             ok(1))
@@ -555,7 +546,6 @@ class test_m2o(ImporterCase):
         self.assertEqual(
             self.import_(['value'], [[name2]]),
             ok(1))
-        # FIXME: is it really normal import does not care for name_search collisions?
         self.assertEqual([
             (integer_id1, name1)
         ], values(self.read()))
@@ -569,35 +559,35 @@ class test_m2o(ImporterCase):
         integer_id2 = self.registry('export.integer').create(
             self.cr, openerp.SUPERUSER_ID, {'value': 36})
 
-        self.assertRaises(
-            ValueError, # Because name_search all the things. Fallback schmallback
-            self.import_, ['value'], [
+        self.assertEqual(
+            self.import_(['value'], [
                 # import by id, without specifying it
                 [integer_id1],
                 [integer_id2],
                 [integer_id1],
-            ])
+            ]),
+            error(1, u"No matching record found for name '%s' in field 'unknown'" % integer_id1))
 
     def test_sub_field(self):
         """ Does not implicitly create the record, does not warn that you can't
         import m2o subfields (at all)...
         """
-        self.assertRaises(
-            ValueError, # No record found for 42, name_searches the bloody thing
-            self.import_, ['value/value'], [['42']])
+        self.assertEqual(
+            self.import_(['value/value'], [['42']]),
+            error(1, u"Can not create Many-To-One records indirectly, import the field separately"))
 
     def test_fail_noids(self):
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value'], [['nameisnoexist:3']])
+        self.assertEqual(
+            self.import_(['value'], [['nameisnoexist:3']]),
+            error(1, u"No matching record found for name 'nameisnoexist:3' in field 'unknown'"))
         self.cr.rollback()
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value/id'], [['noxidhere']]),
+        self.assertEqual(
+            self.import_(['value/id'], [['noxidhere']]),
+            error(1, u"No matching record found for external id 'noxidhere' in field 'unknown'"))
         self.cr.rollback()
-        self.assertRaises(
-            Exception, # FIXME: Why can't you be a ValueError like everybody else?
-            self.import_, ['value/.id'], [[66]])
+        self.assertEqual(
+            self.import_(['value/.id'], [[66]]),
+            error(1, u"No matching record found for database id '66' in field 'unknown'"))
 
 class test_m2m(ImporterCase):
     model_name = 'export.many2many'
@@ -635,12 +625,9 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[2].value), [3, 44, 84])
 
     def test_noids(self):
-        try:
-            self.import_(['value/.id'], [['42']])
-            self.fail("Should have raised an exception")
-        except Exception, e:
-            self.assertIs(type(e), Exception,
-                          "test should be fixed on exception subclass")
+        self.assertEqual(
+            self.import_(['value/.id'], [['42']]),
+            error(1, u"No matching record found for database id '42' in field 'unknown'"))
 
     def test_xids(self):
         M2O_o = self.registry('export.many2many.other')
@@ -662,9 +649,9 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[0].value), [3, 44])
         self.assertEqual(values(b[2].value), [44, 84])
     def test_noxids(self):
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value/id'], [['noxidforthat']])
+        self.assertEqual(
+            self.import_(['value/id'], [['noxidforthat']]),
+            error(1, u"No matching record found for external id 'noxidforthat' in field 'unknown'"))
 
     def test_names(self):
         M2O_o = self.registry('export.many2many.other')
@@ -689,9 +676,9 @@ class test_m2m(ImporterCase):
         self.assertEqual(values(b[2].value), [3, 9])
 
     def test_nonames(self):
-        self.assertRaises(
-            ValueError,
-            self.import_, ['value'], [['wherethem2mhavenonames']])
+        self.assertEqual(
+            self.import_(['value'], [['wherethem2mhavenonames']]),
+            error(1, u"No matching record found for name 'wherethem2mhavenonames' in field 'unknown'"))
 
     def test_import_to_existing(self):
         M2O_o = self.registry('export.many2many.other')
@@ -717,13 +704,13 @@ class test_o2m(ImporterCase):
     model_name = 'export.one2many'
 
     def test_name_get(self):
-        # FIXME: bloody hell why can't this just name_create the record?
-        self.assertRaises(
-            IndexError,
-            self.import_,
-            ['const', 'value'],
-            [['5', u'Java is a DSL for taking large XML files'
-                   u' and converting them to stack traces']])
+        s = u'Java is a DSL for taking large XML files and converting them to' \
+            u' stack traces'
+        self.assertEqual(
+            self.import_(
+                ['const', 'value'],
+                [['5', s]]),
+            error(1, u"No matching record found for name '%s' in field 'unknown'" % s))
 
     def test_single(self):
         self.assertEqual(
@@ -813,14 +800,11 @@ class test_o2m(ImporterCase):
             ]),
             ok(2))
 
-        # No record values alongside id => o2m resolution skipped altogether,
-        # creates 2 records => remove/don't import columns sideshow columns,
-        # get completely different semantics
-        b, b1 = self.browse()
+        [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(values(b.value), [])
-        self.assertEqual(b1.const, 4)
-        self.assertEqual(values(b1.value), [])
+        # automatically forces link between core record and o2ms
+        self.assertEqual(values(b.value), [109, 262])
+        self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
     def test_link_2(self):
         O2M_c = self.registry('export.one2many.child')
@@ -838,21 +822,10 @@ class test_o2m(ImporterCase):
             ]),
             ok(2))
 
-        (b,) = self.browse()
-        # if an id (db or xid) is provided, expectations that objects are
-        # *already* linked and emits UPDATE (1, id, {}).
-        # Noid => CREATE (0, ?, {})
-        # TODO: xid ignored aside from getting corresponding db id?
+        [b] = self.browse()
         self.assertEqual(b.const, 42)
-        self.assertEqual(values(b.value), [])
-
-        # FIXME: updates somebody else's records?
-        self.assertEqual(
-            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id1),
-            {'id': id1, 'str': 'Bf', 'value': 1, 'parent_id': False})
-        self.assertEqual(
-            O2M_c.read(self.cr, openerp.SUPERUSER_ID, id2),
-            {'id': id2, 'str': 'Me', 'value': 2, 'parent_id': False})
+        self.assertEqual(values(b.value), [1, 2])
+        self.assertEqual(values(b.value, field='parent_id'), [b, b])
 
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
@@ -866,16 +839,10 @@ class test_o2m_multiple(ImporterCase):
                 ['', '14', ''],
             ]),
             ok(4))
-        # Oh yeah, that's the stuff
-        (b, b1, b2) = self.browse()
-        self.assertEqual(values(b.child1), [11])
-        self.assertEqual(values(b.child2), [21])
 
-        self.assertEqual(values(b1.child1), [12])
-        self.assertEqual(values(b1.child2), [22])
-
-        self.assertEqual(values(b2.child1), [13, 14])
-        self.assertEqual(values(b2.child2), [23])
+        [b] = self.browse()
+        self.assertEqual(values(b.child1), [11, 12, 13, 14])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi(self):
         self.assertEqual(
@@ -888,11 +855,10 @@ class test_o2m_multiple(ImporterCase):
                 ['', '', '23'],
             ]),
             ok(6))
-        # What the actual fuck?
-        (b, b1) = self.browse()
+
+        [b] = self.browse()
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(values(b.child2), [21])
-        self.assertEqual(values(b1.child2), [22, 23])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
     def test_multi_fullsplit(self):
         self.assertEqual(
@@ -906,12 +872,11 @@ class test_o2m_multiple(ImporterCase):
                 ['', '', '23'],
             ]),
             ok(7))
-        # oh wow
-        (b, b1) = self.browse()
+
+        [b] = self.browse()
         self.assertEqual(b.const, 5)
         self.assertEqual(values(b.child1), [11, 12, 13, 14])
-        self.assertEqual(b1.const, 36)
-        self.assertEqual(values(b1.child2), [21, 22, 23])
+        self.assertEqual(values(b.child2), [21, 22, 23])
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion
