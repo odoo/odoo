@@ -230,7 +230,7 @@
                             <group string="Vehicle details">
                                 <field name="vehicle_id"/>
                             </group>
-                            <group string="Transaction details">
+                            <group string="Refueling details">
                                 <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
                                 <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
                                 <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
@@ -276,7 +276,7 @@
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_log_fuel_act'>
-            <field name="name">Vehicle Fuel Logs</field>
+            <field name="name">Vehicles Fuel Logs</field>
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -291,10 +291,18 @@
                 <form string="Services Logs" version="7.0">
                     <sheet>
                         <group col="2">
-                            <group string="Services details">
+                            <group string="Vehicle details">
                                 <field name="vehicle_id" />
+                            </group>
+                            <group string="Services details">
                                 <field name="service_ids" widget="many2many_tags"/>
                                 <field name="amount" />
+                            </group>
+                        </group>
+                        <group col="2">
+                            <group string="Odometer details">
+                                <field name="value" />
+                                <field name="unit" />
                             </group>
                             <group string="Additional details">
                                 <field name="date" />
@@ -303,30 +311,34 @@
                                 <field name="inv_ref" />
                             </group>
                         </group>
+                        <group>
+                            <field name="notes" />
+                        </group>
                     </sheet>
                 </form>
             </field>
         </record>
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_tree'>
-            
-                    <field name="name">fleet.vehicle.log.services.tree</field>
-                    <field name="model">fleet.vehicle.log.services</field>
-                    <field name="arch" type="xml">
-                        <tree string="Services Logs">
-                            <field name="vehicle_id" />
-                            <field name="service_ids" widget="many2many_tags"/>
-                            <field name="amount" />
-                            <field name="date" />
-                            <field name="purchaser_id" />
-                            <field name="vendor_id" />
-                            <field name="inv_ref" />
-                        </tree>
-                    </field>
+            <field name="name">fleet.vehicle.log.services.tree</field>
+            <field name="model">fleet.vehicle.log.services</field>
+            <field name="arch" type="xml">
+                <tree string="Services Logs">
+                    <field name="vehicle_id" />
+                    <field name="service_ids" widget="many2many_tags"/>
+                    <field name="amount" />
+                    <field name="date" />
+                    <field name="purchaser_id" />
+                    <field name="vendor_id" />
+                    <field name="inv_ref" />
+                    <field name="value" />
+                    <field name="unit" /> 
+                </tree>
+            </field>
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_log_services_act'>
-            <field name="name">Vehicle Services Logs</field>
+            <field name="name">Vehicles Services Logs</field>
             <field name="res_model">fleet.vehicle.log.services</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
@@ -346,9 +358,6 @@
                             <field name="unit" />
                             <field name="date" />
                         </group>
-                        <group>
-                            <field name="notes" />
-                        </group>
                     </sheet>
                 </form>
             </field>
@@ -363,13 +372,12 @@
                     <field name="value" />
                     <field name="unit" />
                     <field name="date" />
-                    <field name="notes" />
                 </tree>
             </field>
         </record>
 
         <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
-            <field name="name">Vehicle Odometer</field>
+            <field name="name">Vehicles Odometer</field>
             <field name="res_model">fleet.vehicle.odometer</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

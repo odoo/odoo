@@ -202,7 +202,6 @@ class fleet_vehicle_odometer(osv.Model):
         'value' : fields.float('Odometer Value'),
         'unit' : fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the measurement',required=False),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-        'notes' : fields.text('Notes'),
     }
     _defaults = {
         'date' : time.strftime('%Y-%m-%d')
@@ -259,6 +258,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'notes' : fields.text('Notes'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
@@ -278,6 +278,7 @@ class fleet_vehicle_log_services(osv.Model):
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'notes' : fields.text('Notes'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
@@ -304,6 +305,7 @@ class fleet_vehicle_log_insurance(osv.Model):
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'ins_ref' : fields.char('Insurance Reference', size=64),
+        'notes' : fields.text('Notes'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
