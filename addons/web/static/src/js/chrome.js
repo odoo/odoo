@@ -1174,6 +1174,9 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         var self = this;
         return $.when(this._super()).pipe(function() {
             return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
+                if (!self.action_id) {
+                    return;
+                }
                 return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
                     var action = result.result;
                     action.flags = _.extend({
@@ -1184,11 +1187,15 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
                         //pager : false
                     }, self.options, action.flags || {});
 
-                    self.action_manager.do_action(action);
+                    self.do_action(action);
                 });
             });
         });
     },
+
+    do_action: function(action) {
+        return this.action_manager.do_action(action);
+    }
 });
 
 instance.web.embed = function (origin, dbname, login, key, action, options) {
