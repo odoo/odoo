@@ -75,28 +75,28 @@ class fleet_vehicle(osv.Model):
         return dict(res)
 
 
-    def act_show_log(self, cr, uid, ids, context=None):
+    def act_show_log_services(self, cr, uid, ids, context=None):
         """ This opens log view to view and add new log for this vehicle
-            @return: 
+            @return: the service log view
         """
-        #print 'HELLO YOU--------------------------------------------'
-        #print ids[0]
-
-        #vehicle = self.browse(cr, uid, ids[0], context)
-        #logids = self.browse(cr,uid,log_ids,context)
-        #print vehicle
-        #print vehicle.name
-        #print vehicle.registration
-        #print logids
-        #print logids.type
-        category = self.pool.get('ir.model.data').get_object(cr, uid, 'fleet', 'fleet_vehicle_form', context)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log', context)
-        #return res
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_services', context)
         res['context'] = {
-            'default_vehicle_id': ids[0]#'Corsa',#category and category.id or False,
+            'default_vehicle_id': ids[0]
         }
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
+
+    def act_show_log_fuel(self, cr, uid, ids, context=None):
+        """ This opens log view to view and add new log for this vehicle
+            @return: the service log view
+        """
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_fuel', context)
+        res['context'] = {
+            'default_vehicle_id': ids[0]
+        }
+        res['domain']=[('vehicle_id','=', ids[0])]
+        return res
+
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'

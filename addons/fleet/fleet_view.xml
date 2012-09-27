@@ -76,7 +76,8 @@
                     <sheet>
                        
                        <div class="oe_right oe_button_box">
-                        <button name="act_show_log" type="object" string="show logs" help="show different logs for this vehicle" />
+                        <button name="act_show_log_services" type="object" string="show services logs" help="show the services logs for this vehicle" />
+                        <button name="act_show_log_fuel" type="object" string="show fuel logs" help="show the fuel logs for this vehicle" />
                         </div>
 
                         <field name="image" widget='image'/>
@@ -137,7 +138,7 @@
                                     </form>
                                 </field>
                             </page>
-                            <page string="Logs">
+                           <!-- <page string="Logs">
                                 <group>
                                     <field name="log_services">
                                         <tree string="Completed services">
@@ -201,7 +202,7 @@
                                         </form>
                                     </field>
                                 </group>
-                            </page>
+                            </page> -->
                             <page string="Engine">
                                 <group col="2">
                                     <group>
@@ -242,9 +243,18 @@
 
         <act_window
             context="{'default_vehicle_id': active_id}"
-            id="act_show_log"
-            name="Logs"
+            id="act_show_log_services"
+            name="Services Logs"
             res_model="fleet.vehicle.log.services"
+            src_model="fleet.vehicle"
+            view_mode="tree,form"
+            view_type="form"/>
+
+        <act_window
+            context="{'default_vehicle_id': active_id}"
+            id="act_show_log_fuel"
+            name="Fuel Logs"
+            res_model="fleet.vehicle.log.fuel"
             src_model="fleet.vehicle"
             view_mode="tree,form"
             view_type="form"/>
