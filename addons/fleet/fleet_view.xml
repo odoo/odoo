@@ -83,7 +83,8 @@
                         <field name="image" widget='image'/>
                         <group>
                             <field name="model_id" />
-                            <field name="registration" />
+                            <field name="license_plate" />
+                            <field name="company_id" groups="base.group_multi_company"/>
                         </group>
 
                         <group col="2">
@@ -232,7 +233,7 @@
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
                 <tree string="Vehicle" version="7.0">
-                    <field name="registration" />
+                    <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver" />
                     <field name="vin_sn" />

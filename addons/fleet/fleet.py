@@ -61,8 +61,8 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            if record.registration:
-                name = record.registration
+            if record.license_plate:
+                name = record.license_plate
             if record.model_id.modelname:
                 name = record.model_id.modelname + ' / ' + name
             if record.model_id.brand.name:
@@ -73,7 +73,6 @@ class fleet_vehicle(osv.Model):
     def _vehicle_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
-
 
     def act_show_log_services(self, cr, uid, ids, context=None):
         """ This opens log view to view and add new log for this vehicle
@@ -97,13 +96,13 @@ class fleet_vehicle(osv.Model):
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
 
-
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
 
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
-        'registration' : fields.char('Registration', size=32, required=True, help='Registration number of the vehicle (ie: plate number for a car)'),
+        'company_id': fields.many2one('res.company', 'Company'),
+        'license_plate' : fields.char('License plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
@@ -127,6 +126,9 @@ class fleet_vehicle(osv.Model):
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
 
         'image': fields.related('model_id','image',type="binary",string="Logo",store=False)
+    }
+    _defaults = {
+        'doors' : 5,
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
@@ -156,7 +158,7 @@ class fleet_vehicle(osv.Model):
         vehicle_id = super(fleet_vehicle, self).create(cr, uid, data, context=context)
         try:
             vehicle = self.browse(cr, uid, vehicle_id, context=context)
-            self.message_post(cr, uid, [vehicle_id], body='Vehicle %s has been added to the fleet!' % (vehicle.registration), context=context)
+            self.message_post(cr, uid, [vehicle_id], body='Vehicle %s has been added to the fleet!' % (vehicle.license_plate), context=context)
         except:
             pass # group deleted: do not push a message
         return vehicle_id
@@ -166,7 +168,7 @@ class fleet_vehicle(osv.Model):
         try:
             changes = {}
             for key,value in vals.items():
-                if key == 'registration' or key == 'driver':
+                if key == 'license_plate' or key == 'driver':
                     changes[key] = value
             if len(changes) > 0:
                 self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ str(changes), context=context)
