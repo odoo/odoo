@@ -1943,28 +1943,17 @@ class stock_move(osv.osv):
         @return: Dictionary of values
         """
         mod_obj = self.pool.get('ir.model.data')
-        location_source_id = False
-        location_dest_id = False
+        location_source_id = 'stock_location_stock'
+        location_dest_id = 'stock_location_stock'
         if type == 'in':
             location_source_id = 'stock_location_suppliers'
             location_dest_id = 'stock_location_stock'
         elif type == 'out':
             location_source_id = 'stock_location_stock'
             location_dest_id = 'stock_location_customers'
-        elif type == 'internal':
-            location_source_id = 'stock_location_stock'
-            location_dest_id = 'stock_location_stock'
-        if location_source_id:
-            try:
-                location_model, location_source_id = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
-            except ValueError, e:
-                location_source_id = False
-        if location_dest_id:
-            try:
-                location_model, location_dest_id = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
-            except ValueError, e:
-                location_dest_id = False
-        return {'value':{'location_id': location_source_id, 'location_dest_id': location_dest_id}}
+        source_location = mod_obj.get_object_reference(cr, uid, 'stock', location_source_id)
+        dest_location = mod_obj.get_object_reference(cr, uid, 'stock', location_dest_id)
+        return {'value':{'location_id': source_location and source_location[1] or False, 'location_dest_id': dest_location and dest_location[1] or False}}
 
     def onchange_date(self, cr, uid, ids, date, date_expected, context=None):
         """ On change of Scheduled Date gives a Move date.
