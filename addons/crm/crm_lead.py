@@ -304,6 +304,10 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
 
@@ -598,6 +602,8 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'email_from': customer and customer.email or lead.email_from,
+                'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
@@ -788,9 +794,10 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-        for lead in self.browse(cr, uid, ids, context=context):
-            if lead.section_id:
-                vals['message_follower_ids'] = [(4, follower.id) for follower in lead.section_id.message_follower_ids]
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            if section_id:
+                vals['message_follower_ids'] = [(4, follower.id) for follower in section_id.message_follower_ids]
         return super(crm_lead,self).write(cr, uid, ids, vals, context) 
 
     # ----------------------------------------

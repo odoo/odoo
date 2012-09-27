@@ -39,9 +39,10 @@ class sale_order(osv.osv):
         return order
 
     def write(self, cr, uid, ids, vals, context=None):
-        for order in self.browse(cr, uid, ids, context=context):
-            if order.section_id:
-                vals['message_follower_ids'] = [(4, follower.id) for follower in order.section_id.message_follower_ids]
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            if section_id:
+                vals['message_follower_ids'] = [(4, follower.id) for follower in section_id.message_follower_ids]
         return super(sale_order, self).write(cr, uid, ids, vals, context=context)
 
 sale_order()

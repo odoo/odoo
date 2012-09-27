@@ -308,9 +308,10 @@ class hr_holidays(osv.osv):
         return self.write(cr, uid, ids, {'state':'confirm'})
 
     def write(self, cr, uid, ids, vals, context=None):
-        for holiday in self.browse(cr, uid, ids):
-            if holiday.employee_id and holiday.employee_id.parent_id.user_id: 
-                vals['message_follower_ids'] = [(4, holiday.employee_id.parent_id.user_id.partner_id.id)]
+        if vals.get('employee_id'):
+            employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
+            if employee_id.parent_id and employee_id.parent_id.user_id:
+                vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
         return super(hr_holidays, self).write(cr, uid, ids, vals, context=context)
 
 

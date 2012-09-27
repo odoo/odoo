@@ -32,7 +32,7 @@ When a purchase order is created, you now have the opportunity to save the
 related requisition. This new object will regroup and will allow you to easily
 keep track and order all your purchase orders.
 """,
-    'depends' : ['purchase','mrp'],
+    'depends' : ['purchase'],
     'demo': ['purchase_requisition_demo.xml'],
     'data': ['security/purchase_tender.xml',
               'wizard/purchase_requisition_partner_view.xml',
@@ -48,7 +48,6 @@ keep track and order all your purchase orders.
         'test/cancel_purchase_requisition.yml',
     ],
     'installable': True,
-    'certificate': '001023264099823179629',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

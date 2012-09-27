@@ -91,7 +91,6 @@ TODO:
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '001159699313338995949',
     'images': ['images/companies_webkit.jpeg','images/header_html.jpeg','images/header_img.jpeg'],
 }
 

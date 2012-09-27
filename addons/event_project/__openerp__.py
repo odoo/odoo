@@ -36,7 +36,6 @@ This module allows you to create retro planning for managing your events.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0069726863885',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
