@@ -2,7 +2,6 @@
 import functools
 import operator
 import itertools
-import warnings
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
@@ -38,9 +37,9 @@ class ir_fields_converter(orm.Model):
         By default, tries to get a method on itself with a name matching the
         pattern ``_$fromtype_$column._type`` and returns it.
 
-        Converter callables can either return a value to their caller or raise
-        ``ValueError``, which will be interpreted as a validation & conversion
-        failure.
+        Converter callables can either return a value and a list of warnings
+        to their caller or raise ``ValueError``, which will be interpreted as a
+        validation & conversion failure.
 
         ValueError can have either one or two parameters. The first parameter
         is mandatory, **must** be a unicode string and will be used as the
@@ -53,10 +52,10 @@ class ir_fields_converter(orm.Model):
         client.
 
         If a converter can perform its function but has to make assumptions
-        about the data, it can send a warning to the user through signalling
-        an :class:`~openerp.osv.orm.ImportWarning` (via ``warnings.warn``). The
-        handling of a warning at the upper levels is the same as
-        ``ValueError`` above.
+        about the data, it can send a warning to the user through adding an
+        instance of :class:`~openerp.osv.orm.ImportWarning` to the second value
+        it returns. The handling of a warning at the upper levels is the same
+        as ``ValueError`` above.
 
         :param cr: openerp cursor
         :param uid: ID of user calling the converter
@@ -84,7 +83,7 @@ class ir_fields_converter(orm.Model):
             self._get_translations(cr, uid, ['code'], u"true", context=context),
             self._get_translations(cr, uid, ['code'], u"yes", context=context),
         ))
-        if value.lower() in trues: return True
+        if value.lower() in trues: return True, []
 
         # potentially broken casefolding? What about locales?
         falses = set(word.lower() for word in itertools.chain(
@@ -92,16 +91,15 @@ class ir_fields_converter(orm.Model):
             self._get_translations(cr, uid, ['code'], u"false", context=context),
             self._get_translations(cr, uid, ['code'], u"no", context=context),
         ))
-        if value.lower() in falses: return False
+        if value.lower() in falses: return False, []
 
-        warnings.warn(orm.ImportWarning(
+        return True, [orm.ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
-                % (value, yes)))
-        return True
+                % (value, yes))]
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
         try:
-            return int(value)
+            return int(value), []
         except ValueError:
             raise ValueError(
                 _(u"'%s' does not seem to be an integer for field '%%(field)s'")
@@ -109,20 +107,20 @@ class ir_fields_converter(orm.Model):
 
     def _str_to_float(self, cr, uid, model, column, value, context=None):
         try:
-            return float(value)
+            return float(value), []
         except ValueError:
             raise ValueError(
                 _(u"'%s' does not seem to be a number for field '%%(field)s'")
                 % value)
 
     def _str_to_char(self, cr, uid, model, column, value, context=None):
-        return value
+        return value, []
 
     def _str_to_text(self, cr, uid, model, column, value, context=None):
-        return value
+        return value, []
 
     def _str_to_binary(self, cr, uid, model, column, value, context=None):
-        return value
+        return value, []
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)
@@ -151,7 +149,7 @@ class ir_fields_converter(orm.Model):
                 cr, uid, ('selection', 'model', 'code'), label, context=context)
             labels.append(label)
             if value == unicode(item) or value in labels:
-                return item
+                return item, []
         raise ValueError(
             _(u"Value '%s' not found in selection field '%%(field)s'") % (
                 value), {
@@ -173,11 +171,14 @@ class ir_fields_converter(orm.Model):
                          id
         :param value: value of the reference to match to an actual record
         :param context: OpenERP request context
-        :return: a pair of the matched database identifier (if any) and the
-                 translated user-readable name for the field
-        :rtype: (ID|None, unicode)
+        :return: a pair of the matched database identifier (if any), the
+                 translated user-readable name for the field and the list of
+                 warnings
+        :rtype: (ID|None, unicode, list)
         """
+        if context is None: context = {}
         id = None
+        warnings = []
         RelatedModel = self.pool[column._obj]
         if subfield == '.id':
             field_type = _(u"database id")
@@ -191,7 +192,7 @@ class ir_fields_converter(orm.Model):
             if '.' in value:
                 module, xid = value.split('.', 1)
             else:
-                module, xid = '', value
+                module, xid = context.get('_import_current_module', ''), value
             ModelData = self.pool['ir.model.data']
             try:
                 md_id = ModelData._get_id(cr, uid, module, xid)
@@ -206,7 +207,7 @@ class ir_fields_converter(orm.Model):
                 cr, uid, name=value, operator='=', context=context)
             if ids:
                 if len(ids) > 1:
-                    warnings.warn(orm.ImportWarning(
+                    warnings.append(orm.ImportWarning(
                         _(u"Found multiple matches for field '%%(field)s' (%d matches)")
                         % (len(ids))))
                 id, _name = ids[0]
@@ -227,7 +228,7 @@ class ir_fields_converter(orm.Model):
                         'help': _(u"See all possible values")
                     }
                 })
-        return id, field_type
+        return id, field_type, warnings
 
     def _referencing_subfield(self, record):
         """ Checks the record for the subfields allowing referencing (an
@@ -236,8 +237,8 @@ class ir_fields_converter(orm.Model):
         returns the name of the correct subfield.
 
         :param record:
-        :return: the record subfield to use for referencing
-        :rtype: str
+        :return: the record subfield to use for referencing and a list of warnings
+        :rtype: str, list
         """
         # Can import by name_get, external id or database id
         fieldset = set(record.iterkeys())
@@ -250,39 +251,42 @@ class ir_fields_converter(orm.Model):
 
         # only one field left possible, unpack
         [subfield] = fieldset
-        return subfield
+        return subfield, []
 
     def _str_to_many2one(self, cr, uid, model, column, values, context=None):
         # Should only be one record, unpack
         [record] = values
 
-        subfield = self._referencing_subfield(record)
+        subfield, w1 = self._referencing_subfield(record)
 
         reference = record[subfield]
-        id, subfield_type = self.db_id_for(
+        id, subfield_type, w2 = self.db_id_for(
             cr, uid, model, column, subfield, reference, context=context)
-        return id
+        return id, w1 + w2
 
     def _str_to_many2many(self, cr, uid, model, column, value, context=None):
         [record] = value
 
-        subfield = self._referencing_subfield(record)
+        subfield, warnings = self._referencing_subfield(record)
 
         ids = []
         for reference in record[subfield].split(','):
-            id, subfield_type = self.db_id_for(
+            id, subfield_type, ws = self.db_id_for(
                 cr, uid, model, column, subfield, reference, context=context)
             ids.append(id)
-        return [(6, 0, ids)]
+            warnings.extend(ws)
+        return [(6, 0, ids)], warnings
 
     def _str_to_one2many(self, cr, uid, model, column, records, context=None):
         commands = []
+        warnings = []
 
         if len(records) == 1 and exclude_ref_fields(records[0]) == {}:
             # only one row with only ref field, field=ref1,ref2,ref3 as in
             # m2o/m2m
             record = records[0]
-            subfield = self._referencing_subfield(record)
+            subfield, ws = self._referencing_subfield(record)
+            warnings.extend(ws)
             # transform [{subfield:ref1,ref2,ref3}] into
             # [{subfield:ref1},{subfield:ref2},{subfield:ref3}]
             records = ({subfield:item} for item in record[subfield].split(','))
@@ -292,10 +296,12 @@ class ir_fields_converter(orm.Model):
             refs = only_ref_fields(record)
             # there are ref fields in the record
             if refs:
-                subfield = self._referencing_subfield(refs)
+                subfield, w1 = self._referencing_subfield(refs)
+                warnings.extend(w1)
                 reference = record[subfield]
-                id, subfield_type = self.db_id_for(
+                id, subfield_type, w2 = self.db_id_for(
                     cr, uid, model, column, subfield, reference, context=context)
+                warnings.extend(w2)
 
             writable = exclude_ref_fields(record)
             if id:
@@ -304,4 +310,4 @@ class ir_fields_converter(orm.Model):
             else:
                 commands.append(CREATE(writable))
 
-        return commands
+        return commands, warnings

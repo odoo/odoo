@@ -186,7 +186,7 @@ class test_boolean_field(ImporterCase):
             message(u"Unknown value '%s' for boolean field 'unknown', assuming 'yes'" % v[0],
                     type='warning', from_=i, to_=i, record=i)
             for i, v in enumerate(trues)
-            if v[0] != 'true' if v[0] != 'yes' if v[0] != '1'
+            if v[0] not in ('true', 'yes', '1')
         ])
         self.assertEqual(
             [True] * 10,

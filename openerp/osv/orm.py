@@ -1670,15 +1670,9 @@ class BaseModel(object):
                 message_base = dict(
                     extras, record=stream.index, field=field_names[field])
                 try:
-                    with warnings.catch_warnings(record=True) as ws:
-                        converted[field] = converters[field](strvalue)
+                    converted[field], ws = converters[field](strvalue)
 
-                    for warning in ws:
-                        # bubble non-import warnings upward
-                        if warning.category != ImportWarning:
-                            warnings.warn(warning.message, warning.category)
-                            continue
-                        w = warning.message
+                    for w in ws:
                         if isinstance(w, basestring):
                             # wrap warning string in an ImportWarning for
                             # uniform handling
