@@ -41,7 +41,6 @@ VAT 0%, 7% i 22%. Moduł ustawia też konta do kupna i sprzedaży towarów zakł
     ],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00885794372803776829',
     'images': ['images/config_chart_l10n_pl.jpeg','images/l10n_pl_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

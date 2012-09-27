@@ -38,9 +38,6 @@ If set to true it allows user to cancel entries & invoices.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '001101250473177981989',
-
-
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

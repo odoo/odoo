@@ -7,7 +7,11 @@
         <record id="product_category_all" model="product.category">
             <field name="name">All products</field>
         </record>
-
+        <record id="product_category_1" model="product.category">
+            <field name="parent_id" ref="product_category_all"/>
+            <field name="name">Saleable</field>
+        </record>
+        
         <record id="product_uom_categ_unit" model="product.uom.categ">
             <field name="name">Unit</field>
         </record>

@@ -50,7 +50,6 @@ synchronization with other companies.
     ],
     'installable': True,
     'web': True,
-    'certificate' : '001301246528927038493',
     'js': ['static/src/js/share.js'],
     'css': ['static/src/css/share.css'],
     'qweb' : ['static/src/xml/*.xml'],
