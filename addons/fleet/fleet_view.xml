@@ -62,19 +62,40 @@
             <field name="view_mode">tree,form</field>
         </record>
 
+        <record model='ir.ui.view' id='fleet_vehicle_state_tree'>
+            <field name="name">fleet.vehicle.state.tree</field>
+            <field name="model">fleet.vehicle.state</field>
+            <field name="arch" type="xml">
+                <tree string="State" version="7.0" editable="bottom">
+                    <field name="name" />
+                    <field name="sequence" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_state_act'>
+            <field name="name">States of Vehicle</field>
+            <field name="res_model">fleet.vehicle.state</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
         <menuitem name="Fleet Management" id="menu_root" />
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
         <menuitem action="fleet_vehicle_model_brand_act" parent="fleet_configuration" id="fleet_vehicle_model_brand_menu" />
+        <menuitem action="fleet_vehicle_state_act" parent="fleet_configuration" id="fleet_vehicle_state_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_form'>
             <field name="name">fleet.vehicle.form</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
                 <form string="Vehicle" version="7.0">
+                    <header>
+                        <field name="state" domain="[('name','!=','#TOCHANGE_STATUSBARBUG')]" widget="statusbar" clickable="True" />
+                    </header>
                     <sheet>
-                       
                        <div class="oe_right oe_button_box">
                         <button name="act_show_log_services" type="object" string="show services logs" help="show the services logs for this vehicle" />
                         <button name="act_show_log_fuel" type="object" string="show fuel logs" help="show the fuel logs for this vehicle" />
@@ -101,7 +122,6 @@
                                 <field name="doors" />
                                 <field name="color" />
                                 <field name="location" />
-                                <field name="status" />
                                 <field name="driver" />
                             </group>
                         </group>
@@ -242,6 +262,7 @@
                     <field name="driver" />
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
+                    <field name="state" />
                 </tree>
             </field>
         </record>

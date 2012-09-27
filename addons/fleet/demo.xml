@@ -29,6 +29,31 @@
           <field name="brand" ref="brand_opel" />
       </record>
 
+      <record id="vehicle_state_inshop" model="fleet.vehicle.state">
+        <field name="name">In shop</field>
+        <field name="sequence">1</field>
+      </record>
+
+      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
+        <field name="name">Inactive</field>
+        <field name="sequence">2</field>
+      </record>
+
+      <record id="vehicle_state_active" model="fleet.vehicle.state">
+        <field name="name">Active</field>
+        <field name="sequence">3</field>
+      </record>
+
+      <record id="vehicle_state_out" model="fleet.vehicle.state">
+        <field name="name">Out of order</field>
+        <field name="sequence">4</field>
+      </record>
+
+      <record id="vehicle_state_sold" model="fleet.vehicle.state">
+        <field name="name">Sold</field>
+        <field name="sequence">5</field>
+      </record>
+
       <record id="vehicle_1" model="fleet.vehicle">
           <field name="license_plate">1-ACK-205</field>
           <field name="vin_sn">5454541</field>
@@ -38,6 +63,7 @@
           <field name="doors">5</field>
           <field name="driver" ref="hr.employee_fp" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state" ref="vehicle_state_active"/>
       </record>
 
       <record id="vehicle_2" model="fleet.vehicle">
@@ -49,6 +75,7 @@
           <field name="doors">5</field>
           <field name="driver" ref="hr.employee_fp" />
           <field name="acquisition_date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
+          <field name="state" ref="vehicle_state_inactive"/>
       </record>
 
       <record id="type_service_oil" model="fleet.service.type">

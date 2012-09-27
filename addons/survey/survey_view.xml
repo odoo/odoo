@@ -19,9 +19,7 @@
             <field name="arch" type="xml">
                 <form string="Survey" version="7.0">
                 <header>
-                    <button name="survey_open" string="Open" states="cancel,close" type="object"/>
-                    <button name="survey_close" string="Close" states="open" type="object" class="oe_highlight"/>
-                    <button name="survey_cancel" string="Cancel" states="open" type="object"/>
+                    
                     <field name="state" widget="statusbar" statusbar_visible="open,close"/>
                 </header>
                 <sheet>

@@ -2,7 +2,6 @@ from itertools import chain
 from osv import osv, fields
 import time
 
-
 class fleet_vehicle_model_type(osv.Model):
     _name = 'fleet.vehicle.type'
     _description = 'Type of the vehicle'
@@ -15,6 +14,14 @@ class fleet_vehicle_tag(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
+
+class fleet_vehicle_state(osv.Model):
+    _name = 'fleet.vehicle.state'
+    _columns = {
+        'name': fields.char('Name', required=True),
+        'sequence': fields.integer('Order',help="Used to order the note stages")
+    }
+    _order = 'sequence asc'
 
 class fleet_vehicle_model(osv.Model):
 
@@ -100,7 +107,7 @@ class fleet_vehicle(osv.Model):
             'default_vehicle_id': ids[0]
         }
         res['domain']=[('vehicle_id','=', ids[0])]
-        return res
+        return res    
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
@@ -119,7 +126,7 @@ class fleet_vehicle(osv.Model):
         'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
-        'status' : fields.char('Status',size=32, help='Status of the vehicle (in repair, active, ...)'),
+        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', domain='[]'),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Number of doors', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
