@@ -107,7 +107,7 @@ instance.web.Query = instance.web.Class.extend({
      * Performs a groups read according to the provided grouping criterion
      *
      * @param {String|Array<String>} grouping
-     * @returns {jQuery.Deferred<Array<openerp.web.data.Group>> | null}
+     * @returns {jQuery.Deferred<Array<openerp.web.QueryGroup>> | null}
      */
     group_by: function (grouping) {
         if (grouping === undefined) {
@@ -130,7 +130,7 @@ instance.web.Query = instance.web.Class.extend({
             orderby: instance.web.serialize_sort(this._order_by) || false
         }).pipe(function (results) {
             return _(results).map(function (result) {
-                return new instance.web.data.Group(
+                return new instance.web.QueryGroup(
                     self._model.name, grouping[0], result);
             });
         });
@@ -194,7 +194,54 @@ instance.web.Query = instance.web.Class.extend({
     }
 });
 
-instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
+instance.web.QueryGroup = instance.web.Class.extend({
+    init: function (model, grouping_field, read_group_group) {
+        // In cases where group_by_no_leaf and no group_by, the result of
+        // read_group has aggregate fields but no __context or __domain.
+        // Create default (empty) values for those so that things don't break
+        var fixed_group = _.extend(
+            {__context: {group_by: []}, __domain: []},
+            read_group_group);
+
+        var aggregates = {};
+        _(fixed_group).each(function (value, key) {
+            if (key.indexOf('__') === 0
+                    || key === grouping_field
+                    || key === grouping_field + '_count') {
+                return;
+            }
+            aggregates[key] = value || 0;
+        });
+
+        this.model = new instance.web.Model(
+            model, fixed_group.__context, fixed_group.__domain);
+
+        var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
+        var leaf_group = fixed_group.__context.group_by.length === 0;
+        this.attributes = {
+            folded: !!(fixed_group.__fold),
+            grouped_on: grouping_field,
+            // if terminal group (or no group) and group_by_no_leaf => use group.__count
+            length: group_size,
+            value: fixed_group[grouping_field],
+            // A group is open-able if it's not a leaf in group_by_no_leaf mode
+            has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
+
+            aggregates: aggregates
+        };
+    },
+    get: function (key) {
+        return this.attributes[key];
+    },
+    subgroups: function () {
+        return this.model.query().group_by(this.model.context().group_by);
+    },
+    query: function () {
+        return this.model.query.apply(this.model, arguments);
+    }
+});
+
+instance.web.Model = instance.web.Class.extend({
     /**
      * @constructs instance.web.Model
      * @extends instance.web.Class
@@ -302,7 +349,7 @@ instance.web.Model = instance.web.Class.extend(/** @lends openerp.web.Model# */{
     },
 });
 
-instance.web.Traverser = instance.web.Class.extend(/** @lends openerp.web.Traverser# */{
+instance.web.Traverser = instance.web.Class.extend({
     /**
      * @constructs instance.web.Traverser
      * @extends instance.web.Class
@@ -381,66 +428,7 @@ instance.web.Traverser = instance.web.Class.extend(/** @lends openerp.web.Traver
 
 });
 
-/**
- * Utility objects, should never need to be instantiated from outside of this
- * module
- *
- * @namespace
- */
-instance.web.data = {
-    Group: instance.web.Class.extend(/** @lends openerp.web.data.Group# */{
-        /**
-         * @constructs instance.web.data.Group
-         * @extends instance.web.Class
-         */
-        init: function (model, grouping_field, read_group_group) {
-            // In cases where group_by_no_leaf and no group_by, the result of
-            // read_group has aggregate fields but no __context or __domain.
-            // Create default (empty) values for those so that things don't break
-            var fixed_group = _.extend(
-                {__context: {group_by: []}, __domain: []},
-                read_group_group);
-
-            var aggregates = {};
-            _(fixed_group).each(function (value, key) {
-                if (key.indexOf('__') === 0
-                        || key === grouping_field
-                        || key === grouping_field + '_count') {
-                    return;
-                }
-                aggregates[key] = value || 0;
-            });
-
-            this.model = new instance.web.Model(
-                model, fixed_group.__context, fixed_group.__domain);
-
-            var group_size = fixed_group[grouping_field + '_count'] || fixed_group.__count || 0;
-            var leaf_group = fixed_group.__context.group_by.length === 0;
-            this.attributes = {
-                folded: !!(fixed_group.__fold),
-                grouped_on: grouping_field,
-                // if terminal group (or no group) and group_by_no_leaf => use group.__count
-                length: group_size,
-                value: fixed_group[grouping_field],
-                // A group is open-able if it's not a leaf in group_by_no_leaf mode
-                has_children: !(leaf_group && fixed_group.__context['group_by_no_leaf']),
-
-                aggregates: aggregates
-            };
-        },
-        get: function (key) {
-            return this.attributes[key];
-        },
-        subgroups: function () {
-            return this.model.query().group_by(this.model.context().group_by);
-        },
-        query: function () {
-            return this.model.query.apply(this.model, arguments);
-        }
-    })
-};
-
-instance.web.DataGroup =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataGroup# */{
+instance.web.DataGroup =  instance.web.CallbackEnabled.extend({
     /**
      * Management interface between views and grouped collections of OpenERP
      * records.
@@ -472,50 +460,47 @@ instance.web.DataGroup =  instance.web.CallbackEnabled.extend( /** @lends opener
     },
     list: function (fields, ifGroups, ifRecords) {
         var self = this;
-        $.when(this.model.query(fields)
-                    .order_by(this.sort)
-                    .group_by(this.group_by)).then(function (groups) {
-            if (!groups) {
-                ifRecords(_.extend(
-                    new instance.web.DataSetSearch(
-                            self, self.model.name,
-                            self.model.context(),
-                            self.model.domain()),
-                    {_sort: self.sort}));
+        var query = this.model.query(fields).order_by(this.sort).group_by(this.group_by);
+        $.when(query).then(function (querygroups) {
+            // leaf node
+            if (!querygroups) {
+                var ds = new instance.web.DataSetSearch(self, self.model.name, self.model.context(), self.model.domain());
+                ds._sort = self.sort;
+                ifRecords(ds);
                 return;
             }
-            ifGroups(_(groups).map(function (group) {
+            // internal node
+            var child_datagroups = _(querygroups).map(function (group) {
                 var child_context = _.extend(
                     {}, self.model.context(), group.model.context());
-                return _.extend(
-                    new instance.web.DataGroup(
-                        self, self.model.name, group.model.domain(),
-                        child_context, group.model._context.group_by,
-                        self.level + 1),
-                    {
-                        __context: child_context,
-                        __domain: group.model.domain(),
-                        folded: group.get('folded'),
-                        grouped_on: group.get('grouped_on'),
-                        length: group.get('length'),
-                        value: group.get('value'),
-                        openable: group.get('has_children'),
-                        aggregates: group.get('aggregates')
-                    }, {sort: self.sort});
-            }));
+                var child_dg = new instance.web.DataGroup(
+                    self, self.model.name, group.model.domain(),
+                    child_context, group.model._context.group_by,
+                    self.level + 1);
+                child_dg.sort = self.sort;
+                // copy querygroup properties
+                child_dg.__context = child_context;
+                child_dg.__domain = group.model.domain();
+                child_dg.folded = group.get('folded');
+                child_dg.grouped_on = group.get('grouped_on');
+                child_dg.length = group.get('length');
+                child_dg.value = group.get('value');
+                child_dg.openable = group.get('has_children');
+                child_dg.aggregates = group.get('aggregates');
+                return child_dg;
+            });
+            ifGroups(child_datagroups);
         });
     }
 });
-instance.web.ContainerDataGroup = instance.web.DataGroup.extend({ });
-instance.web.GrouplessDataGroup = instance.web.DataGroup.extend({ });
 
-instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lends openerp.web.StaticDataGroup# */ {
+instance.web.StaticDataGroup = instance.web.DataGroup.extend({
     /**
-     * A specialization of groupless data groups, relying on a single static
+     * A specialization of data groups, relying on a single static
      * dataset as its records provider.
      *
      * @constructs instance.web.StaticDataGroup
-     * @extends instance.web.GrouplessDataGroup
+     * @extends instance.web.DataGroup
      * @param {openep.web.DataSetStatic} dataset a static dataset backing the groups
      */
     init: function (dataset) {
@@ -526,7 +511,7 @@ instance.web.StaticDataGroup = instance.web.GrouplessDataGroup.extend( /** @lend
     }
 });
 
-instance.web.DataSet =  instance.web.CallbackEnabled.extend( /** @lends openerp.web.DataSet# */{
+instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     /**
      * DateaManagement interface between views and the collection of selected
      * OpenERP records (represents the view's state?)
@@ -854,7 +839,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
-instance.web.DataSetSearch =  instance.web.DataSet.extend(/** @lends openerp.web.DataSetSearch */{
+instance.web.DataSetSearch =  instance.web.DataSet.extend({
     /**
      * @constructs instance.web.DataSetSearch
      * @extends instance.web.DataSet
@@ -1183,7 +1168,7 @@ instance.web.CompoundDomain = instance.web.Class.extend({
     }
 });
 
-instance.web.DropMisordered = instance.web.Class.extend(/** @lends openerp.web.DropMisordered# */{
+instance.web.DropMisordered = instance.web.Class.extend({
     /**
      * @constructs instance.web.DropMisordered
      * @extends instance.web.Class
