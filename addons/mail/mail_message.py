@@ -219,7 +219,8 @@ class mail_message(osv.Model):
             'child_nbr': child_nbr,
             'parent_id': msg.parent_id and msg.parent_id.id or False,
             'vote_user_ids': vote_ids,
-            'has_voted': has_voted
+            'has_voted': has_voted,
+            'unread': msg.unread and msg.unread['unread'] or False
         }
 
     def message_read_tree_get_expandable(self, cr, uid, parent_message, last_message, domain=[], current_level=0, level=0, context=None):

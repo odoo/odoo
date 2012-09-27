@@ -47,11 +47,11 @@
         Template used to display the communication history in documents
         form view.
         -->
-    <div t-name="mail.record_thread">
+    <div t-name="mail.record_thread" class="oe_mail_record_wall">
         <!-- <h4>History and Comments</h4> -->
-        <div class="oe_mail_recthread_main">
+        <ul class="oe_mail_wall_threads">
             <!-- contains the document thread -->
-        </div>
+        </ul>
     </div>
 
     <!--
@@ -107,7 +107,7 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_model="{record.model}" t-attf-data-msg_id="{record.id}" t-attf-data-msg_timestamp="{record.timestamp}">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{record.unread?'oe_mail_unread':'oe_mail_read'}" t-attf-data-msg_model="{record.model}" t-attf-data-msg_id="{record.id}" t-attf-data-msg_timestamp="{record.timestamp}">
         <div t-attf-class="oe_mail_msg_#{record.type} oe_semantic_html_override">
 
             <!-- message actions (read/unread, reply, delete...) -->
