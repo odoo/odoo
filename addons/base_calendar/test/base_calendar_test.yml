@@ -54,24 +54,3 @@
 -
     !python {model: calendar.event}: |
      self.write(cr, uid, [ref("calendar_event_alldaytestevent0")], {'alarm_id': ref("res_alarm_daybeforeeventstarts0")})
--
-  In order to assign attendee I will invite Demo user
-- 
-  !record {model: base_calendar.invite.attendee, id: base_calendar_invite_attendee_0}:
-    type: internal
-    send_mail: False
-    partner_id: base.res_partner_9 # Put bcz of problem in read
-    user_ids:
-      - base.user_demo
--
-  Then I click on Invite Button
--
-    !python {model: base_calendar.invite.attendee}: |
-     self.do_invite(cr, uid, [ref("base_calendar_invite_attendee_0")], {'active_id': ref("calendar_event_alldaytestevent0"), 'model' : 'calendar.event', 'attendee_field':'attendee_ids'})
--
-  Now I will Accept this invitation
--
-    !python {model: calendar.attendee}: |
-        ids = self.search(cr, uid, [('ref', '=', 'calendar.event' + ',' + str(ref("calendar_event_alldaytestevent0")))])
-        if ids:
-            self.do_accept(cr, uid, ids, context=context)

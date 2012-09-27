@@ -56,7 +56,7 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
-                <group name="procurement" position="inside">
+                <group name="procurement_help" position="after">
                     <group name="delay" string="Delays">
                         <label for="produce_delay" attrs="{'invisible':[('type','=','service')]}"/>
                         <div attrs="{'invisible':[('type','=','service')]}">

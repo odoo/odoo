@@ -67,7 +67,6 @@ This module also uses analytic accounting and is compatible with the invoice on 
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0062479841789',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

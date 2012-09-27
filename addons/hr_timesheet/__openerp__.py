@@ -62,6 +62,5 @@ up a management by affair.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0071405533469',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

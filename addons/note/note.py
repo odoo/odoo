@@ -185,5 +185,4 @@ class note_base_config_settings(osv.osv_memory):
     _columns = {
         'module_note_pad': fields.boolean('Use collaborative pads (etherpad)'),
         'group_note_fancy': fields.boolean('Use fancy layouts for notes', implied_group='note.group_note_fancy'),
-        'group_note_tags': fields.boolean('Allow setting tags on notes', implied_group='note.group_note_tags'),
     }

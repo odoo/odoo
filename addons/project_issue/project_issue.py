@@ -355,7 +355,7 @@ class project_issue(base_stage, osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['name'] = issue['name'] + _(' (copy)')
+        default.update(name=_('%s (copy)') % (issue['name']))
         return super(project_issue, self).copy(cr, uid, id, default=default,
                 context=context)
 
@@ -534,7 +534,7 @@ class project(osv.osv):
 
     def _get_alias_models(self, cr, uid, context=None):
         return [('project.task', "Tasks"), ("project.issue", "Issues")]
-        
+
     def _issue_count(self, cr, uid, ids, field_name, arg, context=None):
         res = dict.fromkeys(ids, 0)
         issue_ids = self.pool.get('project.issue').search(cr, uid, [('project_id', 'in', ids)])
@@ -557,7 +557,7 @@ class project(osv.osv):
     _constraints = [
         (_check_escalation, 'Error! You cannot assign escalation to the same project!', ['project_escalation_id'])
     ]
-    
+
 project()
 
 class account_analytic_account(osv.osv):

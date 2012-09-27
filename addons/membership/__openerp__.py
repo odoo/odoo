@@ -51,7 +51,6 @@ invoice and send propositions for membership renewal.
     'test': ['test/test_membership.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0042907796381',
     'images': ['images/members.jpeg','images/membership_list.jpeg', 'images/membership_products.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
