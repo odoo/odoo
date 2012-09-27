@@ -439,10 +439,10 @@ class pos_session(osv.osv):
             context = {}
         if not ids:
             return {}
-        context.update({'session_id' : ids[0]})
+        context.update({'active_id': ids[0]})
         return {
             'type' : 'ir.actions.client',
-            'name' : 'Start Point Of Sale',
+            'name' : _('Start Point Of Sale'),
             'tag' : 'pos.ui',
             'context' : context,
         }
