@@ -135,6 +135,8 @@ class account_analytic_line(osv.osv):
     def _default_general_account(self, cr, uid, context=None):
         proxy = self.pool.get('hr.employee')
         record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        if not len(record_ids):
+            raise osv.except_osv(_('Error!'), _('Please create an employee and associate it with this user.'))
         employee = proxy.browse(cr, uid, record_ids[0], context=context)
         if employee.product_id and employee.product_id.property_account_income:
             return employee.product_id.property_account_income.id
