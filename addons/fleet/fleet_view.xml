@@ -102,147 +102,71 @@
                         </div>
                         <field name="image" widget='image'/>
                         <group col ="2">
-                            <group>
+                            <group string="General properties">
                                 <field name="model_id" />
                                 <field name="license_plate" />
+                                <field name="vin_sn" />
+                                 <field name="driver" />
+                                 <field name="location" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-                            <group>
+                            <group string="Additional properties">
                                 <field name="tag_ids" widget="many2many_tags" />
-                            </group>
-                        </group>
-
-                        <group col="2">
-                            <group>
-                                <field name="vin_sn" />
                                 <field name="acquisition_date" />
                                 <field name="acquisition_price" />
                             </group>
-                            <group>
+                        </group>
+                        <group col="2">
+                            <group string="External Options">
                                 <field name="doors" />
                                 <field name="color" />
-                                <field name="location" />
-                                <field name="driver" />
                             </group>
+                            <group string="Engine Options">
+                                <field name="transmission" />
+                                <field name="fuel_type" />
+                                <field name="co2" />
+                                <field name="horsepower" />
+                                <field name="horsepower_tax" />
+                                <field name="power" />
+                            </group>  
                         </group>
-                        <notebook>
-                            <page string="Insurances">
-                                <field name="log_insurances">
-                                    <tree string="Insurances">
-                                        <field name="insurance_type" />
-                                        <field name="start_date" />
-                                        <field name="expiration_date" />
-                                        <field name="insurer_id" />
-                                        <field name="price" />
-                                        <field name="value" />
-                                        <field name="unit" />
-                                    </tree>
-                                    <form string="Insurances" version="7.0">
-                                        <sheet>
-                                            <group col="2">
-                                                <group string="Insurance details">
-                                                    <field name="insurance_type" />
-                                                    <field name="start_date" />
-                                                    <field name="expiration_date" />
-                                                    <field name="price" />
-                                                </group>
-                                                <group></group>
+                        <group string="Insurances">
+                            <field name="log_insurances" nolabel="1">
+                                <tree string="Insurances">
+                                    <field name="insurance_type" />
+                                    <field name="start_date" />
+                                    <field name="expiration_date" />
+                                    <field name="insurer_id" />
+                                    <field name="price" />
+                                    <field name="value" />
+                                    <field name="unit" />
+                                </tree>
+                                <form string="Insurances" version="7.0">
+                                    <sheet>
+                                        <group col="2">
+                                            <group string="Insurance details">
+                                                <field name="insurance_type" />
+                                                <field name="start_date" />
+                                                <field name="expiration_date" />
+                                                <field name="price" />
                                             </group>
-                                            <group col="2">
-                                                <group string="Odometer details">
-                                                    <field name="value" />
-                                                    <field name="unit" />
-                                                </group>
-                                                <group string="Additional details">
-                                                    <field name="date" />
-                                                    <field name="insurer_id" />
-                                                    <field name="ins_ref" />
-                                                </group>
+                                            <group></group>
+                                        </group>
+                                        <group col="2">
+                                            <group string="Odometer details">
+                                                <field name="value" />
+                                                <field name="unit" />
                                             </group>
-                                        </sheet>
-                                    </form>
-                                </field>
-                            </page>
-                           <!-- <page string="Logs">
-                                <group>
-                                    <field name="log_services">
-                                        <tree string="Completed services">
-                                            <field name="service_ids" widget="many2many_tags"/>
-                                            <field name="amount" />
-                                            <field name="date" />
-                                            <field name="purchaser_id" />
-                                            <field name="vendor_id" />
-                                            <field name="inv_ref" />
-                                        </tree>
-                                        <form string="Services Logs" version="7.0">
-                                            <sheet>
-                                                <group>
-                                                        <field name="service_ids" widget="many2many_tags"/>
-                                                        <field name="amount" />
-                                                        <field name="date" />
-                                                        <field name="purchaser_id" />
-                                                        <field name="vendor_id" />
-                                                        <field name="inv_ref" />
-                                                </group>
-                                            </sheet>
-                                        </form>
-                                    </field>
-                                </group>
-                                <group>
-                                    <field name="log_fuel">
-                                        <tree string="Fuel Logs">
-                                            <field name="liter" />
-                                            <field name="price_per_liter" />
-                                            <field name="amount" />
-                                            <field name="purchaser_id" />
-                                            <field name="vendor_id" />
-                                            <field name="inv_ref" />
-                                            <field name="date" />
-                                        </tree>
-                                        <form string="Fuel Logs" version="7.0">
-                                            <sheet>
-                                                <group col="2">
-                                                    <group string="Transaction details">
-                                                        <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
-                                                        <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
-                                                        <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
-                                                    </group>
-                                                </group>
-                                                <group col="2">
-                                                    <group string="Odometer details">
-                                                        <field name="value" />
-                                                        <field name="unit" />
-                                                    </group>
-                                                    <group string="Additional details">
-                                                        <field name="date" />
-                                                        <field name="purchaser_id" />
-                                                        <field name="inv_ref" />
-                                                        <field name="vendor_id" />
-                                                    </group>
-                                                </group>
-                                                <group>
-                                                    <field name="notes" />
-                                                </group>
-                                            </sheet>
-                                        </form>
-                                    </field>
-                                </group>
-                            </page> -->
-                            <page string="Engine">
-                                <group col="2">
-                                    <group>
-                                        <field name="transmission" />
-                                        <field name="fuel_type" />
-                                        <field name="co2" />
-                                    </group>
-                                    <group>
-                                        <field name="horsepower" />
-                                        <field name="horsepower_tax" />
-                                        <field name="power" />
-                                    </group>    
-                                </group>
-                            </page>
-                        </notebook>
+                                            <group string="Additional details">
+                                                <field name="date" />
+                                                <field name="insurer_id" />
+                                                <field name="ins_ref" />
+                                            </group>
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                        </group>
                     </sheet>
                     <div class="oe_chatter">
                         <field name="message_ids" widget="mail_thread" options='{"thread_level": 1}'/>
