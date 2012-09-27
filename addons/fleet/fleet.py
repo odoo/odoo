@@ -9,7 +9,13 @@ class fleet_vehicle_model_type(osv.Model):
     _columns = {
         'name' : fields.char('Name', size=32, required=True),
     }
-#comment to delete#comment to delete
+
+class fleet_vehicle_tag(osv.Model):
+    _name = 'fleet.vehicle.tag'
+    _columns = {
+        'name': fields.char('Name', required=True, translate=True),
+    }
+
 class fleet_vehicle_model(osv.Model):
 
     def name_get(self, cr, uid, ids, context=None):
@@ -110,13 +116,13 @@ class fleet_vehicle(osv.Model):
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
-        'log_odometer' : fields.one2many('fleet.vehicle.log.odometer','vehicle_id', 'Odometer'),
         'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'status' : fields.char('Status',size=32, help='Status of the vehicle (in repair, active, ...)'),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Number of doors', help='Number of doors of the vehicle'),
+        'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),

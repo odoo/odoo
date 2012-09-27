@@ -79,12 +79,16 @@
                         <button name="act_show_log_services" type="object" string="show services logs" help="show the services logs for this vehicle" />
                         <button name="act_show_log_fuel" type="object" string="show fuel logs" help="show the fuel logs for this vehicle" />
                         </div>
-
                         <field name="image" widget='image'/>
-                        <group>
-                            <field name="model_id" />
-                            <field name="license_plate" />
-                            <field name="company_id" groups="base.group_multi_company"/>
+                        <group col ="2">
+                            <group>
+                                <field name="model_id" />
+                                <field name="license_plate" />
+                                <field name="company_id" groups="base.group_multi_company"/>
+                            </group>
+                            <group>
+                                <field name="tag_ids" widget="many2many_tags" />
+                            </group>
                         </group>
 
                         <group col="2">
