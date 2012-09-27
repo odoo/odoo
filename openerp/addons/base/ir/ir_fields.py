@@ -100,10 +100,20 @@ class ir_fields_converter(orm.Model):
         return True
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
-        return int(value)
+        try:
+            return int(value)
+        except ValueError:
+            raise ValueError(
+                _(u"'%s' does not seem to be an integer for field '%%(field)s'")
+                % value)
 
     def _str_to_float(self, cr, uid, model, column, value, context=None):
-        return float(value)
+        try:
+            return float(value)
+        except ValueError:
+            raise ValueError(
+                _(u"'%s' does not seem to be a number for field '%%(field)s'")
+                % value)
 
     def _str_to_char(self, cr, uid, model, column, value, context=None):
         return value

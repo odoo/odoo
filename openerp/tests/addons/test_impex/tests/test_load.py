@@ -275,7 +275,7 @@ class test_integer_field(ImporterCase):
             'rows': {'from': 0, 'to': 0},
             'record': 0,
             'field': 'value',
-            'message': u"invalid literal for int() with base 10: 'zorglub'",
+            'message': u"'zorglub' does not seem to be an integer for field 'unknown'",
         }])
 
 class test_float_field(ImporterCase):
@@ -344,7 +344,7 @@ class test_float_field(ImporterCase):
             'rows': {'from': 0, 'to': 0},
             'record': 0,
             'field': 'value',
-            'message': u"invalid literal for float(): foobar",
+            'message': u"'foobar' does not seem to be a number for field 'unknown'",
         }])
 
 class test_string_field(ImporterCase):
