@@ -934,7 +934,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '!=', 'closed')]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', 'not in', ('closed', 'closing_control'))]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>
