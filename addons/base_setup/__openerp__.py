@@ -43,7 +43,6 @@ Shows you a list of applications features to install from.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0086711085869',
     'images': ['images/base_setup1.jpeg','images/base_setup2.jpeg','images/base_setup3.jpeg','images/base_setup4.jpeg',],
     'js': ['static/src/js/base_setup.js'],
     'css': ['static/src/css/base_setup.css'],

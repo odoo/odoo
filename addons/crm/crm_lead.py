@@ -300,6 +300,10 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
 
@@ -594,6 +598,8 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'email_from': customer and customer.email or lead.email_from,
+                'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
