@@ -22,7 +22,7 @@ from openerp.osv import osv, fields
 import datetime
 import uuid
 
-class auth_oauth2_token(osv.osv):
+class auth_oauth2_token(osv.TransientModel):
     """Oauth2 Token Class"""
 
     _name = 'auth.oauth2.token'
