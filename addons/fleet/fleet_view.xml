@@ -74,14 +74,17 @@
             <field name="arch" type="xml">
                 <form string="Vehicle" version="7.0">
                     <sheet>
-                        <div class="oe_right oe_button_box">
-                        <button name="action_showLog" type="object" string="show logs" help="show different logs for this vehicle" domain="['name','=','name']"/>
+                       
+                       <div class="oe_right oe_button_box">
+                        <button name="act_show_log" type="object" string="show logs" help="show different logs for this vehicle" />
                         </div>
+
                         <field name="image" widget='image'/>
                         <group>
                             <field name="model_id" />
                             <field name="registration" />
                         </group>
+
                         <group col="2">
                             <group>
                                 <field name="vin_sn" />
@@ -236,6 +239,16 @@
                 </tree>
             </field>
         </record>
+
+        <act_window
+            context="{'default_vehicle_id': active_id}"
+            id="act_show_log"
+            name="Logs"
+            res_model="fleet.vehicle.log.services"
+            src_model="fleet.vehicle"
+            view_mode="tree,form"
+            view_type="form"/>
+        
 
         <record model='ir.actions.act_window' id='fleet_vehicle_act'>
             <field name="name">Vehicles</field>

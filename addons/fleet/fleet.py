@@ -75,7 +75,7 @@ class fleet_vehicle(osv.Model):
         return dict(res)
 
 
-    def action_showLog(self, cr, uid, ids, context=None):
+    def act_show_log(self, cr, uid, ids, context=None):
         """ This opens log view to view and add new log for this vehicle
             @return: 
         """
@@ -89,11 +89,13 @@ class fleet_vehicle(osv.Model):
         #print vehicle.registration
         #print logids
         #print logids.type
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','fleet_vehicle_log_act', context)
+        category = self.pool.get('ir.model.data').get_object(cr, uid, 'fleet', 'fleet_vehicle_form', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log', context)
         #return res
-        #res['context'] = {
-        #    'default_type': 'log',
-        #}
+        res['context'] = {
+            'default_vehicle_id': ids[0]#'Corsa',#category and category.id or False,
+        }
+        res['domain']=[('vehicle_id','=', ids[0])]
         return res
 
     _name = 'fleet.vehicle'
