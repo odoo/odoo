@@ -209,6 +209,10 @@
                         <field nolabel="1" name="note_summary" placeholder="Action Plan..."/>
                     </group>
               </sheet>
+	          <div class="oe_chatter">
+	              <field name="message_ids" widget="mail_thread"/>
+	              <field name="message_follower_ids" widget="mail_followers"/>
+	          </div>
               </form>
             </field>
         </record>
