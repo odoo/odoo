@@ -83,6 +83,12 @@ openerp.base_import = function (instance) {
             'click .oe_import_report a.oe_import_report_count': function (e) {
                 e.preventDefault();
                 $(e.target).parent().toggleClass('oe_import_report_showmore');
+            },
+            'click .oe_import_moreinfo_action a': function (e) {
+                e.preventDefault();
+                // #data will parse the attribute on its own, we don't like that
+                var action = JSON.parse($(e.target).attr('data-action'));
+                console.log(action);
             }
         },
         init: function (parent, dataset) {
@@ -307,7 +313,34 @@ openerp.base_import = function (instance) {
                                              from, to);
                     },
                     more: function (n) {
-                        return _.str.sprintf(_t("(%d times more)"), n);
+                        return _.str.sprintf(_t("(%d more)"), n);
+                    },
+                    info: function (msg) {
+                        if (typeof msg === 'string') {
+                            return _.str.sprintf(
+                                '<div class="oe_import_moreinfo oe_import_moreinfo_message">%s</div>',
+                                _.str.escapeHTML(msg));
+                        }
+                        if (msg instanceof Array) {
+                            return _.str.sprintf(
+                                '<div class="oe_import_moreinfo oe_import_moreinfo_choices">%s <ul>%s</ul></div>',
+                                _.str.escapeHTML(_t("Here are the possible values:")),
+                                _(msg).map(function (msg) {
+                                    return '<li>'
+                                        + _.str.escapeHTML(msg)
+                                    + '</li>';
+                                }).join());
+                        }
+                        // Final should be object, action descriptor
+                        return [
+                            '<div class="oe_import_moreinfo oe_import_moreinfo_action">',
+                                _.str.sprintf('<a href="#" data-action="%s">',
+                                        _.str.escapeHTML(JSON.stringify(msg))),
+                                    _.str.escapeHTML(
+                                        _t("Get all possible values")),
+                                '</a>',
+                            '</div>'
+                        ].join('')
                     },
                 }));
         },
