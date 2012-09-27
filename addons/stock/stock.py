@@ -1728,6 +1728,8 @@ class stock_move(osv.osv):
                 location_xml_id = 'stock_location_stock'
             elif picking_type == 'out':
                 location_xml_id = 'stock_location_customers'
+            elif picking_type == 'internal':
+                location_xml_id = 'stock_location_stock'
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
         return location_id
@@ -1756,6 +1758,8 @@ class stock_move(osv.osv):
             if picking_type == 'in':
                 location_xml_id = 'stock_location_suppliers'
             elif picking_type == 'out':
+                location_xml_id = 'stock_location_stock'
+            elif picking_type == 'internal':
                 location_xml_id = 'stock_location_stock'
             if location_xml_id:
                 location_model, location_id = mod_obj.get_object_reference(cr, uid, 'stock', location_xml_id)
