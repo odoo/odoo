@@ -7,8 +7,8 @@
             <field name="name">crm.merge.opportunity.form</field>
             <field name="model">crm.merge.opportunity</field>
             <field name="arch" type="xml">
-                <form string="Merge Opportunities" version="7.0">
-                    <separator string="Select Opportunities"/>
+                <form string="Merge Leads/Opportunities" version="7.0">
+                    <separator string="Select Leads/Opportunities"/>
                     <field name="opportunity_ids">
                         <tree>
                             <field name="name"/>
@@ -18,7 +18,7 @@
                         </tree>
                     </field>
                     <footer>
-                        <button name="action_merge" type="object" string="_Merge" class="oe_highlight"/>
+                        <button name="action_merge" type="object" string="Merge" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -26,9 +26,9 @@
             </field>
         </record>
 
-        <!--  Merge Opportunities action -->
+        <!--  Merge leads/opportunities action -->
         <record model="ir.actions.act_window" id="merge_opportunity_act">
-            <field name="name">Merge Opportunities</field>
+            <field name="name">Merge leads/opportunities</field>
             <field name="res_model">crm.merge.opportunity</field>
             <field name="view_type">form</field>
             <field name="view_mode">form</field>
@@ -38,7 +38,7 @@
 
         <act_window id="action_merge_opportunities"
             multi="True"
-            key2="client_action_multi" name="Merge Opportunities"
+            key2="client_action_multi" name="Merge leads/opportunities"
             res_model="crm.merge.opportunity" src_model="crm.lead"
             view_mode="form" target="new" view_type="form"/>
 
