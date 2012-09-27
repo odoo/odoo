@@ -76,6 +76,9 @@ class auth_oauth2_token(osv.TransientModel):
             "expires_in": expires_in,
             "audience": token.client,
         }
+        return self._tokeninfo(r, token)
+    def _tokeninfo(self, r, token):
+        # Allows easy overloading
         if token.user_id.email: # TODO: should deliver only according to scopes
             r['email'] = token.user_id.email
         return r
