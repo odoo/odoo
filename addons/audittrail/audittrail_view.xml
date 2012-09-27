@@ -41,7 +41,7 @@
             <field name="name">audittrail.rule.tree</field>
             <field name="model">audittrail.rule</field>
             <field name="arch" type="xml">
-                <tree colors="blue:state == 'draft';black:state == 'subscribed'" string="AuditTrail Rules">
+                <tree colors="blue:state == 'draft';black:state == 'subscribed'" create="false" string="AuditTrail Rules">
                     <field name="name"/>
                     <field name="object_id"/>
                     <field name="log_read"/>
@@ -145,7 +145,7 @@
             <field name="name">audittrail.log.tree</field>
             <field name="model">audittrail.log</field>
             <field name="arch" type="xml">
-                <tree string="AuditTrail Logs">
+                <tree string="AuditTrail Logs" create="false">
                     <field name="timestamp"/>
                     <field name="name"/>
                     <field name="object_id"/>
