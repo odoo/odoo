@@ -117,7 +117,7 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate' : fields.char('License plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver' : fields.many2one('hr.employee', 'Driver',required=False, help='Driver of the vehicle'),
+        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Other Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
@@ -305,11 +305,11 @@ class fleet_service_type(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
     }
 
-class hr_employee(osv.Model):
-    _inherit = 'hr.employee'
+#class hr_employee(osv.Model):
+#    _inherit = 'hr.employee'
 
-    _columns = {
-        'vehicle_id' : fields.one2many('fleet.vehicle','driver', 'Vehicle',type="char"),
-        'log_ids' : fields.one2many('fleet.vehicle.log', 'employee_id', 'Logs'),
-    }
+#    _columns = {
+#        'vehicle_id' : fields.one2many('fleet.vehicle','driver', 'Vehicle',type="char"),
+#        'log_ids' : fields.one2many('fleet.vehicle.log', 'employee_id', 'Logs'),
+#    }
 
