@@ -298,7 +298,6 @@
     display: none;
 }
 
-
 /* ------------------------------------------------------------ */
 /* mail.compose.message form view & OpenERP hacks
 /* ------------------------------------------------------------ */
@@ -403,15 +402,37 @@
 }
 
 /* Dropdown menu */
-.openerp .oe_mail_msg_content .oe_dropdown_toggle {
+/*.openerp .oe_mail_msg_content .oe_dropdown_toggle {
     position: absolute;
     top: 0px;
     right: 3px;
+}*/
+
+.openerp .oe_mail .oe_semantic_html_override {
+    position: relative;
 }
+
+.openerp .oe_mail ul.oe_header {
+    position: absolute;
+    right: 3px;
+    top: -6px;
+    display: none;
+    z-index: 10;
+}
+
+.openerp .oe_mail ul.oe_header a {
+    text-decoration: none;
+}
+
+.openerp .oe_mail .oe_semantic_html_override:hover ul.oe_header {
+    display: block;
+}
+
+.openerp .oe_mail ul.oe_header>li {
+    display: inline-block;
+}
+
 .openerp .oe_mail_msg_content .oe_dropdown_arrow:after {
-    border-top: 4px solid transparent;
-}
-.openerp .oe_mail_msg_content:hover .oe_dropdown_arrow:after {
     border-top: 4px solid #404040;
 }
 

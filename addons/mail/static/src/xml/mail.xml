@@ -93,38 +93,50 @@
         container, holding the composition form. Then come the various
         messages. Then comes the 'more' button.
         -->
-    <ul t-name="mail.thread" class="oe_mail oe_mail_thread oe_semantic_html_override">
+    <div t-name="mail.thread" class="oe_mail oe_mail_thread oe_semantic_html_override">
         <div class="oe_mail_thread_action">
             <!-- contains the composition box (form + image) -->
             <t t-call="mail.compose_message"/>
         </div>
-        <div class="oe_mail_thread_display">
+        <ul class="oe_mail_thread_display">
             <!-- contains the threads -->
-        </div>
-<!--         <div class="oe_mail_thread_more">
+        </ul>
+         <div class="oe_mail_thread_more">
             <button class="oe_mail_button_more" type="button">Load more messages</button>
-        </div> -->
-    </ul>
+        </div>
+    </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_id="{record.id}">
+    <li t-name="mail.thread.message" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_model="{record.model}" t-attf-data-msg_id="{record.id}" t-attf-data-msg_timestamp="{record.timestamp}">
         <div t-attf-class="oe_mail_msg_#{record.type} oe_semantic_html_override">
+
+            <!-- message actions (read/unread, reply, delete...) -->
+            <ul class="oe_header">
+                <li t-if="options.thread_level>0"><a class="oe_read oe_e">W<!-- Read/Unread --></a></li>
+                <li t-if="options.show_reply"><a class="oe_mail_msg_reply oe_e">)</a></li>
+                <li t-if="options.show_reply_by_email"><a class="oe_mail_msg_reply_by_email oe_e">)</a></li>
+                <li>
+                    <span class="oe_dropdown_toggle">
+                        <a class="oe_e">é</a>
+                        <ul class="oe_dropdown_menu">
+                            <li t-if="record.is_author and options.show_dd_delete"><a class="oe_mail_msg_delete">Delete</a></li>
+                            <!--  Uncomment when adding subtype hiding
+                            <li t-if="display['show_hide']">
+                                <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
+                            </li> -->
+                            <li t-if="options.show_dd_reply_by_email"><a class="oe_mail_msg_reply_by_email">Quote and reply</a></li>
+                            <li t-if="record.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{record.id}" >Details</a></li>
+                        </ul>
+                    </span>
+                </li>
+            </ul>
+
             <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.avatar"/>
+
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
                 <span class="placeholder-mail-thread-message-vote"/>
-                <span class="oe_dropdown_toggle oe_dropdown_arrow">
-                    <ul class="oe_dropdown_menu">
-                        <li t-if="record.is_author and options.show_dd_delete"><a class="oe_mail_msg_delete" t-attf-data-id='{record.id}'>Delete</a></li>
-                        <li t-if="options.show_dd_hide"><a class="oe_mail_msg_hide" t-attf-data-id='{record.id}'>Remove notification</a></li>
-<!--                    Uncomment when adding subtype hiding
-                        <li t-if="display['show_hide']">
-                            <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
-                        </li> -->
-                        <li t-if="options.show_dd_reply_by_email"><a class="oe_mail_msg_reply_by_email" t-attf-data-msg_id="{record.id}">Quote and reply</a></li>
-                        <li t-if="record.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{record.id}" >Details</a></li>
-                    </ul>
-                </span>
+
                 <!-- message itself -->
                 <div class="oe_mail_msg">
                     <h1 t-if="record.subject" class="oe_mail_msg_title">
@@ -144,8 +156,6 @@
                         <li t-if="record.author_id"><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                         <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                         <t t-call="mail.thread.message.vote"/>
-                        <li t-if="options.show_reply"><a class="oe_mail_msg_reply">Reply</a></li>
-                        <li t-if="options.show_reply_by_email"><a class="oe_mail_msg_reply_by_email" t-attf-data-msg_id="{record.id}">Reply</a></li>
                         <li t-if="record.attachment_ids.length > 0">
                             <a class="oe_mail_msg_view_attachments">
                                 <t t-if="record.attachment_ids.length == 1">1 Attachment</t>

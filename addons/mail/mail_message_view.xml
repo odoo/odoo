@@ -56,6 +56,9 @@
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <field name="author_id"/>
+                    <filter icon="terp-personal+" string="Unread"
+                            name="unread_message" help="Show unread message"
+                            domain="[('unread', '=', True)]"/>
                     <filter icon="terp-personal+" string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
@@ -75,6 +78,7 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
+            <field name="context">{'search_default_unread_message':True}</field>
         </record>
 
         <act_window domain="[('partner_id', '=', active_id), ('email_from', '!=', False)]"
