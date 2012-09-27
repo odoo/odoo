@@ -15,7 +15,7 @@
     lead_ids = self.search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     assert lead_ids and len(lead_ids), "Lead is not created after getting request"
     lead = self.browse(cr, uid, lead_ids[0], context=context)
-    assert not lead.partner_id, "Customer should be a new"
+    assert not lead.partner_id, "Customer should be a new one"
     assert lead.name == "Fournir votre devis avec le meilleur prix.", "Subject does not match"
 -
   I reply his request with welcome message. TODO revert mail.mail to mail.compose.message (conversion to customer should be automatic).
@@ -23,7 +23,7 @@
   !python {model: mail.mail}: |
     lead_ids = self.pool.get('crm.lead').search(cr, uid, [('email_from','=', 'Mr. John Right <info@customer.com>')])
     context.update({'active_model': 'crm.lead','active_id': lead_ids[0]})
-    id = self.create(cr, uid, {'body': "Merci à l'intérêt pour notre produit.nous vous contacterons bientôt. Merci", 'email_from': 'sales@mycompany.com'}, context=context)
+    id = self.create(cr, uid, {'body': "Merci de votre intérêt pour notre produit, nous vous contacterons bientôt. Bien à vous", 'email_from': 'sales@mycompany.com'}, context=context)
     try:
         self.send_mail(cr, uid, [id], context=context)
     except:
@@ -48,5 +48,5 @@
     partner_id = self.search(cr, uid, [('phonecall_ids', '=', ref('crm.crm_phonecall_4'))])
     assert partner_id, "Customer is not found in regular customer list."
     data = self.browse(cr, uid, partner_id, context=context)[0]
-    assert data.user_id.id == ref("base.user_root"), "User not assign properly"
+    assert data.user_id.id == ref("base.user_root"), "User not assigned properly"
     assert data.name == "Wanted information about pricing of laptops", "Bad partner name"
