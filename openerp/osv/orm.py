@@ -5376,7 +5376,7 @@ class ImportWarning(Warning):
 
 def convert_pgerror_23502(model, fields, info, e):
     m = re.match(r'^null value in column "(?P<field>\w+)" violates '
-                 r'not-null constraint\n$',
+                 r'not-null constraint\n',
                  str(e))
     if not m or m.group('field') not in fields:
         return {'message': unicode(e)}
