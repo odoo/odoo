@@ -4827,7 +4827,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         var self = this;
         if (this.field.type == "many2one") {
             var domain = [];
-            if(this.field.domain || this.node.attrs.domain) {
+            if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
                 domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
             }
             var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
