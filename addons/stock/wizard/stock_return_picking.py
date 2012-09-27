@@ -72,7 +72,7 @@ class stock_return_picking(osv.osv_memory):
                     res.update({'invoice_state': 'none'})
             return_history = self.get_return_history(cr, uid, record_id, context)       
             for line in pick.move_lines:
-                qty = line.product_qty - return_history[line.id]
+                qty = line.product_qty - return_history.get(line.id, False)
                 if qty > 0:
                     result1.append({'product_id': line.product_id.id, 'quantity': qty,'move_id':line.id})
             if 'product_return_moves' in fields:
@@ -100,7 +100,7 @@ class stock_return_picking(osv.osv_memory):
             valid_lines = 0
             return_history = self.get_return_history(cr, uid, record_id, context)
             for m  in pick.move_lines:
-                if m.product_qty * m.product_uom.factor > return_history[m.id]:
+                if m.product_qty * m.product_uom.factor > return_history.get(m.id, False):
                         valid_lines += 1
             if not valid_lines:
                 raise osv.except_osv(_('Warning!'), _("No products to return (only lines in Done state and not fully returned yet can be returned)!"))
