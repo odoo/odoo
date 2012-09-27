@@ -685,7 +685,6 @@ openerp.mail = function(session) {
         /*  Display the message if if the msg_id don't exists.
         *   If the record have a parent, insert parent or inside parent */
         message_treat_new_data: function(records) {
-            console.log(this, records);
             var self=this;
             _(records.reverse()).each(function (record) {
                 if(!self.browse_thread({'id':record.id, 'model':record.model})){
