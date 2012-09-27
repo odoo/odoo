@@ -314,7 +314,7 @@
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
-            <t t-call="Menu.secondary.link"/>
+            <t t-call="Menu.link"/>
         </li>
     </ul>
 </t>
@@ -333,7 +333,7 @@
                 <t t-esc="menu.name"/>
                 <!--
                     Shall the section be still clickable ?
-                    <t t-call="Menu.secondary.link"/>
+                    <t t-call="Menu.link"/>
                 -->
             </div>
             <t t-call="Menu.secondary.submenu"/>
@@ -343,13 +343,13 @@
 <t t-name="Menu.secondary.submenu">
     <ul t-if="menu.children.length" class="oe_secondary_submenu">
         <li t-foreach="menu.children" t-as="menu">
-            <t t-call="Menu.secondary.link"/>
+            <t t-call="Menu.link"/>
             <!--<span class="oe_menu_label">8</span>-->
             <t t-call="Menu.secondary.submenu"/>
         </li>
     </ul>
 </t>
-<t t-name="Menu.secondary.link">
+<t t-name="Menu.link">
     <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
@@ -592,7 +592,7 @@
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + (4 + 19*(level-1)) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
