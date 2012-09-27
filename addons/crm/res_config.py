@@ -48,8 +48,7 @@ class crm_configuration(osv.osv_memory):
             help="""Allows you to track your customers/suppliers claims and grievances.
                     This installs the module crm_claim."""),
         'module_crm_helpdesk':fields.boolean("Manage helpdesk and support",
-            help="""Allows you to processing of Customer claims, and to oral communication with Customer.
-                   This installs the module crm_helpdesk."""),
+            help="""Allows you to process Customer issues , question , and  communicate with them. This installs the module crm_helpdesk."""),
         
         
     }
