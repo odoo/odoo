@@ -86,9 +86,20 @@ openerp.base_import = function (instance) {
             },
             'click .oe_import_moreinfo_action a': function (e) {
                 e.preventDefault();
-                // #data will parse the attribute on its own, we don't like that
+                // #data will parse the attribute on its own, we don't like
+                // that sort of things
                 var action = JSON.parse($(e.target).attr('data-action'));
-                console.log(action);
+                // FIXME: when JS-side clean_action
+                action.views = _(action.views).map(function (view) {
+                    var id = view[0], type = view[1];
+                    return [
+                        id,
+                        type !== 'tree' ? type
+                          : action.view_type === 'form' ? 'list'
+                          : 'tree'
+                    ];
+                });
+                this.do_action(_.extend(action, {target: 'new'}));
             }
         },
         init: function (parent, dataset) {
@@ -329,7 +340,7 @@ openerp.base_import = function (instance) {
                                     return '<li>'
                                         + _.str.escapeHTML(msg)
                                     + '</li>';
-                                }).join());
+                                }).join(''));
                         }
                         // Final should be object, action descriptor
                         return [
