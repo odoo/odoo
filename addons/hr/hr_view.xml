@@ -360,10 +360,13 @@
                         <label for="name" class="oe_edit_only"/>
                         <h1>
                             <field name="name" class="oe_inline"/>
+                        </h1>
+                        <label for="department_id" class="oe_edit_only"/>
+                        <h2>
                             <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
                             <field name="department_id" class="oe_inline"/>
                             <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                        </h1>
+                        </h2>
                         <group>
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
