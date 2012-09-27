@@ -37,7 +37,6 @@ Mexican accounting chart and localization.
     ],
     'auto_install': False,
     'installable': True,
-    'certificate': '00858539161332598061',
     'images': ['images/config_chart_l10n_mx.jpeg','images/l10n_mx_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

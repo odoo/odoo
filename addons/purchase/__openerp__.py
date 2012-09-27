@@ -84,7 +84,6 @@ Dashboard / Reports for Purchase Management will include:
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0057234283549',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -66,7 +66,6 @@ Print product labels with barcode.
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '0068861431437',
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

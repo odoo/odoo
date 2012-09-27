@@ -44,7 +44,6 @@ trigger an automatic reminder email.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001017908446466333429',
     'images': ['images/base_action_rule1.jpeg','images/base_action_rule2.jpeg','images/base_action_rule3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
