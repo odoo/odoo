@@ -779,7 +779,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     arch.arch = convert_to_utf;
                     this.dataset.write(this.one_object.clicked_tr_view[0] ,{"arch":convert_to_utf}, function(r) {});
                 } else {
-                    this.dataset.unlink([this.one_object.clicked_tr_view[0]],function(res) {});
+                    this.dataset.unlink([this.one_object.clicked_tr_view[0]]);
                 }
                 if(move_direct == "add_node"){
                     self.add_node_dialog.close();

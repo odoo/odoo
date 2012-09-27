@@ -359,7 +359,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this,
             index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(event_id, function() {
+            this.dataset.unlink(event_id).then(function() {
                 self.refresh_minical();
             });
         }

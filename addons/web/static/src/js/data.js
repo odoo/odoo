@@ -664,10 +664,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} callback function called with operation result
      * @param {Function} error_callback function called in case of deletion error
      */
-    unlink: function(ids, callback, error_callback) {
-        return this._model.call('unlink',
-            [ids], {context: this._model.context()})
-                .then(callback, error_callback);
+    unlink: function(ids) {
+        return this._model.call('unlink', [ids], {context: this._model.context()});
     },
     /**
      * Calls an arbitrary RPC method
@@ -889,7 +887,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
-        return this._super(ids, function(result) {
+        return this._super(ids).then(function(result) {
             self.ids = _(self.ids).difference(ids);
             if (self._length) {
                 self._length -= 1;
@@ -898,9 +896,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
                 self.index = self.index <= self.ids.length - 1 ?
                     self.index : (self.ids.length > 0 ? self.ids.length -1 : 0);
             }
-            if (callback)
-                callback(result);
-        }, error_callback);
+        });
     },
     size: function () {
         if (this._length !== undefined) {
@@ -1113,9 +1109,9 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    unlink: function(ids, callback, error_callback) {
+    unlink: function(ids) {
         if (this.unlink_function) {
-            return this.unlink_function(ids, this._super).then(callback, error_callback);
+            return this.unlink_function(ids, this._super);
         } else {
             return this._super.apply(this, arguments);
         }
