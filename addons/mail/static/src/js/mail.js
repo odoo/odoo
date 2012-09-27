@@ -291,7 +291,7 @@ openerp.mail = function(session) {
                 show_dd_hide: options.show_dd_hide || false,
                 truncate_limit: options.truncate_limit || 250,
                 expandable_number: options.expandable_number || 5,
-                expandable_max: options.expandable_max || 10,
+                expandable_max: options.expandable_max || 5,
                 not_expendable: options.not_expendable || false,
             }
 
@@ -334,6 +334,7 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
+            this.$('*').unbind('click');
             // event: click on 'More' at bottom of thread
             this.$el.on('click', 'a.oe_mail_fetch_more', this.do_message_fetch_more);
             // event: writing in basic textarea of composition form (quick reply)
@@ -417,7 +418,7 @@ openerp.mail = function(session) {
          * @param {object}{boolean} option._go_thread_wall
          *      private for check the top thread
          * @param {object}{boolean} option.top_thread
-         *      return the top thread (wall)
+         *      return the top thread (wall) if no thread found
          * @return thread object
          */
         browse_thread: function(options){
@@ -425,16 +426,21 @@ openerp.mail = function(session) {
             if(!options._go_thread_wall) {
                 options._go_thread_wall = true;
                 return this.top_parent.browse_thread(options);
-            } else if(options.top_thread){
-                return this;
             }
 
-            if(this.id==options.id && this.model==options.model)
-                return this;
+            if(this.id && this.model){
+                if(this.id==options.id && this.model==options.model)
+                    return this;
 
-            for(var i in this.thread){
-                var res=this.thread[i].browse_thread(options);
-                if(res) return res;
+                for(var i in this.thread){
+                    var res=this.thread[i].browse_thread(options);
+                    if(res) return res;
+                }
+            }
+
+            //if option top_thread, return the top if no found thread
+            if(options.top_thread){
+                return this;
             }
 
             return false;
@@ -522,7 +528,7 @@ openerp.mail = function(session) {
             if (initial_mode && this.options.message_data) {
                 return this.message_display_create_thread(this.options.message_data);
             }
-            message_ids = initial_mode && this.options.message_ids != null && this.options.message_ids || false;
+            message_ids = this.options.message_ids && this.options.message_ids[0] ? this.options.message_ids : false;
             return this.ds_message.call('message_read', [message_ids, fetch_domain, this.options.thread_level, fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('message_treat_new_data'));
         },
@@ -583,14 +589,17 @@ openerp.mail = function(session) {
         */
         display_expandable: function(){
             var self =this;
-            var rec = self.$('>ul>.oe_mail_thread_msg:not([data-msg_id=-1]):gt('+(self.options.expandable_max-1)+')');
-            if(rec.size()){
+            var rec = self.$('>ul>li.oe_mail_thread_msg:not([data-msg_id="-1"]):gt('+(self.options.expandable_max-1)+')');
+            if(rec.size()>0){
                 rec.hide();
-                self.$('>ul>.oe_mail_thread[data-msg_id=-1]').show();
+                self.$('>ul>li.oe_mail_thread_msg[data-msg_id="-1"]').show();
+                return false;
             } else {
-                self.$('>ul>.oe_mail_thread_msg:not([data-msg_id=-1])').show();
-                self.$('>ul>.oe_mail_thread_msg[data-msg_id=-1]').hide();
+                self.$('>ul>li.oe_mail_thread_msg:not([data-msg_id="-1"])').show();
+                self.$('>ul>li.oe_mail_thread_msg[data-msg_id="-1"]').hide();
+                return true;
             }
+            debugger;
         },
 
         /** Displays a record and performs some formatting on the record :
@@ -624,7 +633,7 @@ openerp.mail = function(session) {
                 var timestamp=$(this).data("msg_timestamp");
                 if(timestamp > record.timestamp){
                     if(!parent_newer || parent_newer>timestamp) parent_newer = timestamp;
-                } else if(timestamp < record.timestamp) {
+                } else if(timestamp>0 && timestamp < record.timestamp) {
                     if(!parent_older || parent_older<timestamp) parent_older = timestamp;
                 }
             });
@@ -636,7 +645,8 @@ openerp.mail = function(session) {
             else if(parent_older)
                 $rendered.insertBefore(this.$('> ul.oe_mail_thread_display:first > li[data-msg_timestamp='+parent_older+']'));
             else
-                $rendered.appendTo(this.$('> ul.oe_mail_thread_display:first'));
+                $rendered.prependTo(this.$('> ul.oe_mail_thread_display:first'));
+
 
             this.$('> div.oe_mail_msg_body').expander({
                 slicePoint: this.options.truncate_limit,
@@ -707,17 +717,16 @@ openerp.mail = function(session) {
         /** Action: 'shows more' to fetch new messages */
         do_message_fetch_more: function (event) {
             event.stopPropagation();
-            $(event.srcElement).parents('li').eq(0).remove();
 
             var source = $(event.srcElement).parents('[data-msg_id]:first');
             var msg_id = source.data("msg_id");
             var msg_model = source.data("msg_model");
-            if (!msg_id || !msg_model) return false;
 
-            var thread=this.browse_thread({'id':msg_id, 'model':msg_model});
+            var thread=this.browse_thread({'id':msg_id, 'model':msg_model, 'top_thread': true});
             if(thread){
                 thread.options.expandable_max+=thread.options.expendable_number;
-                return thread.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
+                if(thread.display_expandable())
+                    return thread.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
             }
         },
     });

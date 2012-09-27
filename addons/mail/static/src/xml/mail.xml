@@ -131,7 +131,9 @@
                 </li>
             </ul>
 
-            <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.avatar"/>
+            <a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}" t-att-title="record.author_id[1]">
+                <img class="oe_mail_icon oe_mail_frame oe_left" t-att-src="record.avatar"/>
+            </a>
 
             <div class="oe_mail_msg_content">
                 <!-- dropdown menu with message options and actions -->
@@ -142,18 +144,11 @@
                     <h1 t-if="record.subject" class="oe_mail_msg_title">
                         <t t-raw="record.subject"/>
                     </h1>
-                    <div class="oe_mail_msg_body">
-                        <t t-if="options.show_record_name and record.record_name and (!record.subject) and (options.thread_level > 0)">
-                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
-                        </t>
-                        <t t-raw="record.body"/>
-                    </div>
-                    <div class="oe_clear"/>
                     <ul class="oe_mail_msg_footer">
                         <li t-if="options.show_record_name and record.record_name and record.subject and options.thread_level > 0">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </li>
-                        <li t-if="record.author_id"><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
+                        <!--li t-if="record.author_id"><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li-->
                         <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                         <t t-call="mail.thread.message.vote"/>
                         <li t-if="record.attachment_ids.length > 0">
@@ -163,6 +158,13 @@
                             </a>
                         </li>
                     </ul>
+                    <div class="oe_clear"/>
+                    <div class="oe_mail_msg_body">
+                        <t t-if="options.show_record_name and record.record_name and (!record.subject) and (options.thread_level > 0)">
+                            <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
+                        </t>
+                        <t t-raw="record.body"/>
+                    </div>
                     <t t-if="record.attachment_ids.length > 0">
                         <div class="oe_clear"></div>
                         <t t-call="mail.thread.message.attachments"/>
@@ -171,9 +173,8 @@
             </div>
         </div>
     </li>
-
     <!-- expandable message layout -->
-    <li t-name="mail.thread.message.expandable" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_id="{record.id}">
+    <li t-name="mail.thread.message.expandable" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_model="{record.model}" t-attf-data-msg_id="{record.id}" data-msg_timestamp="-1">
         <div t-attf-class="oe_mail_msg_expandable oe_semantic_html_override">
             <div class="oe_mail_msg_content">
                 <!-- message itself -->
