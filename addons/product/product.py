@@ -309,7 +309,7 @@ class product_template(osv.osv):
         'uos_coeff': fields.float('Unit of Measure -> UOS Coeff', digits_compute= dp.get_precision('Product UoS'),
             help='Coefficient to convert Unit of Measure to UOS\n'
             ' uos = uom * coeff'),
-        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type', required=True),
+        'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
         'loc_rack': fields.char('Rack', size=16),
         'loc_row': fields.char('Row', size=16),
