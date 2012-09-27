@@ -47,7 +47,7 @@ class crm_configuration(osv.osv_memory):
         'module_crm_claim':fields.boolean("Manage Customer Claims",
             help="""Allows you to track your customers/suppliers claims and grievances.
                     This installs the module crm_claim."""),
-        'module_crm_helpdesk':fields.boolean("Manage helpdesk and support",
+        'module_crm_helpdesk':fields.boolean("Manage Helpdesk and Support",
             help="""Allows you to communicate with Customer,  process Customer query, and provide better help and support. This installs the module crm_helpdesk."""),
         
         
