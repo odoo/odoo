@@ -532,7 +532,9 @@ instance.web.Login =  instance.web.Widget.extend({
         });
         var d;
         if (self.params.db) {
-            d = self.do_login(self.params.db, self.params.login, self.params.password);
+            if (self.params.login && self.params.password) {
+                d = self.do_login(self.params.db, self.params.login, self.params.password);
+            }
         } else {
             d = self.rpc("/web/database/get_list", {}).done(self.on_db_loaded).fail(self.on_db_failed);
         }
@@ -577,7 +579,7 @@ instance.web.Login =  instance.web.Widget.extend({
      */
     do_login: function (db, login, password) {
         var self = this;
-        this.$el.removeClass('oe_login_invalid');
+        self.hide_error();
         self.$(".oe_login_pane").fadeOut("slow");
         return this.session.session_authenticate(db, login, password).pipe(function() {
             if (self.has_local_storage) {
@@ -594,11 +596,18 @@ instance.web.Login =  instance.web.Widget.extend({
                 }
             }
             self.trigger('login_successful');
-        },function () {
+        }, function () {
             self.$(".oe_login_pane").fadeIn("fast", function() {
-                self.$el.addClass("oe_login_invalid");
+                self.show_error("Invalid username or password");
             });
         });
+    },
+    show_error: function(message) {
+        this.$el.addClass("oe_login_invalid");
+        this.$(".oe_login_error_message").text(message);
+    },
+    hide_error: function() {
+        this.$el.removeClass('oe_login_invalid');
     },
 });
 instance.web.client_actions.add("login", "instance.web.Login");

@@ -16,6 +16,14 @@ instance.web.form = {};
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
+ *     - field_changed:<field_name> : when the value of a field change, an event is triggered
+ *     named "field_changed:<field_name>" with <field_name> replaced by the name of the field.
+ *     This event is not related to the on_change mechanism of OpenERP and is always called
+ *     when the value of a field is setted or changed. This event is only triggered when the
+ *     value of the field is syntactically valid, but it can be triggered when the value
+ *     is sematically invalid (ie, when a required field is false). It is possible that an event
+ *     about a precise field is never triggered even if that field exists in the view, in that
+ *     case the value of the field is assumed to be false.
  */
 instance.web.form.FieldManagerMixin = {
     /**
@@ -26,6 +34,11 @@ instance.web.form.FieldManagerMixin = {
      * Returns true when the view is in create mode.
      */
     is_create_mode: function() {},
+    /**
+     * Returns the current value of a field present in the view. See the get_value() method
+     * method in FieldInterface for further information.
+     */
+    get_field_value: function(field_name) {},
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
@@ -331,7 +344,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
+            field._inhibit_on_change_flag = true;
             var result = field.set_value(self.datarecord[f] || false);
+            field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
         return $.when.apply(null, set_values).pipe(function() {
@@ -580,7 +595,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (field) {
                     var value_ = result.value[f];
                     if (field.get_value() != value_) {
+                        field._inhibit_on_change_flag = true;
                         field.set_value(value_);
+                        field._inhibit_on_change_flag = false;
                         field._dirty_flag = true;
                         if (!_.contains(processed, field.name)) {
                             this.do_onchange(field, processed);
@@ -940,6 +957,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return self.dataset.parent_view.recursive_save();
         });
     },
+    recursive_reload: function() {
+        var self = this;
+        var pre = $.when();
+        if (self.dataset.parent_view)
+                pre = self.dataset.parent_view.recursive_reload();
+        return pre.pipe(function() {
+            return self.reload();
+        });
+    },
     is_dirty: function() {
         return _.any(this.fields, function (value_) {
             return value_._dirty_flag;
@@ -1043,6 +1069,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.translatable_fields.push(field);
         }
         field.on('changed_value', this, function() {
+            if (field.is_syntax_valid()) {
+                this.trigger('field_changed:' + name);
+            }
+            if (field._inhibit_on_change_flag) {
+                return;
+            }
             field._dirty_flag = true;
             if (field.is_syntax_valid()) {
                 this.do_onchange(field);
@@ -1056,6 +1088,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     is_create_mode: function() {
         return this.get("actual_mode") === "create";
+    },
+    get_field_value: function(field_name) {
+        return this.fields[field_name].get_value();
     },
 });
 
@@ -1809,7 +1844,7 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
         return this.view.do_execute_action(
             _.extend({}, this.node.attrs, {context: context}),
             this.view.dataset, this.view.datarecord.id, function () {
-                self.view.reload();
+                self.view.recursive_reload();
             });
     },
     check_disable: function() {
@@ -1827,7 +1862,8 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
  *     - force_readonly: boolean, When it is true, the field should always appear
  *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
- *     - changed_value: triggered to inform the view to check on_changes
+ *     - changed_value: triggered when the value of the field has changed. This can be due
+ *      to a user interaction or a call to set_value().
  *
  */
 instance.web.form.FieldInterface = {
@@ -1939,8 +1975,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.on("change:force_readonly", this, test_effective_readonly);
         test_effective_readonly.call(this);
         this.on("change:value", this, function() {
-            if (! this._inhibit_on_change)
-                this.trigger('changed_value');
+            this.trigger('changed_value');
             this._check_css_flags();
         });
     },
@@ -1975,9 +2010,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.$el.toggleClass('oe_form_required', this.get("required"));
     },
     set_value: function(value_) {
-        this._inhibit_on_change = true;
         this.set({'value': value_});
-        this._inhibit_on_change = false;
     },
     get_value: function() {
         return this.get('value');
@@ -3312,6 +3345,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             this.dataset.index = 0;
         }
         self.is_setted.resolve();
+        this.trigger_on_change();
         return self.reload_current_view();
     },
     get_value: function() {
@@ -3364,7 +3398,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }, this));
     },
     is_syntax_valid: function() {
-        if (!this.viewmanager.views[this.viewmanager.active_view])
+        if (! this.viewmanager || ! this.viewmanager.views[this.viewmanager.active_view])
             return true;
         var view = this.viewmanager.views[this.viewmanager.active_view].controller;
         switch (this.viewmanager.active_view) {
@@ -4792,7 +4826,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     get_selection: function() {
         var self = this;
         if (this.field.type == "many2one") {
-            var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            var domain = [];
+            if(this.field.domain || this.node.attrs.domain) {
+                domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            }
             var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
             ds.read_slice(['name'], {}).done( function (records) {
                 for(var i = 0; i < records.length; i++) {
