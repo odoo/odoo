@@ -41,24 +41,21 @@ def now():
 class res_partner(osv.Model):
     _inherit = 'res.partner'
 
-    def signup_get_url(self, cr, uid, partner_ids, name, arg, context=None):
-        """ determine a url for the partner_id to sign up """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        res = {}
-        for partner in self.browse(cr, uid, partner_ids, context):
-            token = partner.signup_token
-            if not token:
-                token = self._signup_generate_token(cr, uid, partner.id, context=context)
-            res[partner.id] = urlparse.urljoin(base_url, '#action=login&db=%s&token=%s' % (cr.dbname, token))
-        return res
-
     _columns = {
         'signup_token': fields.char(size=24, string='Signup Ticket'),
         'signup_expiration': fields.datetime(string='Signup Expiration'),
-        'signup_url': fields.function(signup_get_url, type='char', string='Signup URL'),
     }
 
-    def _signup_generate_token(self, cr, uid, partner_id, expiration=False, context=None):
+    def signup_get_url(self, cr, uid, partner_id, context=None):
+        """ determine a signup url for the given partner_id """
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        partner = self.browse(cr, uid, partner_id, context)
+        token = partner.signup_token
+        if not token:
+            token = self.signup_generate_token(cr, uid, partner.id, context=context)
+        return urlparse.urljoin(base_url, '#action=login&db=%s&token=%s' % (cr.dbname, token))
+
+    def signup_generate_token(self, cr, uid, partner_id, expiration=False, context=None):
         """ generate a new token for a partner, and return it
             :param partner_id: the partner id
             :param expiration: the expiration datetime of the token (string, optional)
