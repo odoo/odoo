@@ -63,6 +63,11 @@ instance.auth_oauth2_provider.ProviderAction = instance.web.Widget.extend({
             new_params.state = params.state;
         }
         var redirect = params.redirect_uri + (a.hash ? '&' : '#') + $.param(new_params);
+
+        // Hack in order to avoid pending request failure notification
+        // TODO: a stop() method on webclient wich will return a deferred resolved when pending
+        //       rpc calls are done
+        instance.session.on_rpc_error = function() { };
         window.location = redirect;
     },
     error: function(msg) {
