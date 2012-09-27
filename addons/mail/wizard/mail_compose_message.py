@@ -217,6 +217,10 @@ class mail_compose_message(osv.TransientModel):
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
+
+        print ""
+        print "send_mail", ids, context
+
         if context is None:
             context = {}
         active_ids = context.get('active_ids')
@@ -224,6 +228,9 @@ class mail_compose_message(osv.TransientModel):
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
+
+            if wizard.body_text==False:
+                return False
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]

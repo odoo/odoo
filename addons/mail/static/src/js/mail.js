@@ -685,6 +685,7 @@ openerp.mail = function(session) {
         /*  Display the message if if the msg_id don't exists.
         *   If the record have a parent, insert parent or inside parent */
         message_treat_new_data: function(records) {
+            console.log(this, records);
             var self=this;
             _(records.reverse()).each(function (record) {
                 if(!self.browse_thread({'id':record.id, 'model':record.model})){
@@ -709,9 +710,12 @@ openerp.mail = function(session) {
                 var body = comment_node.val();
                 comment_node.val('');
             }
-            return this.ds_thread.call('message_post_api', [
-                [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, undefined])
-                .then(this.proxy('message_treat_new_data'));
+            if(body.match(/\S+/))
+                return this.ds_thread.call('message_post_api', [
+                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, undefined])
+                    .then(this.proxy('message_treat_new_data'));
+            else
+                return false;
         },
 
         /** Action: 'shows more' to fetch new messages */
