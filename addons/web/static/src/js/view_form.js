@@ -3007,7 +3007,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
-            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
+            if(this.is_false()){
+                this.$('.oe_m2o_cm_button').css({'display':'none'});
+            }
         } else {
             var lines = _.escape(str).split("\n");
             var link = "";

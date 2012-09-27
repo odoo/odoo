@@ -1059,7 +1059,7 @@ $sheet-max-width: 860px
     // ViewManager common {{{
     .oe_view_manager
         .oe_view_manager_body
-            height: inherit
+            height: inherit 
         .oe_view_manager_view_kanban
             height: inherit
 
@@ -1197,7 +1197,6 @@ $sheet-max-width: 860px
     .oe_view_manager_current
         height: 100%
         > .oe_view_manager_header
-            border-top: 1px solid #cacaca
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
             @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
@@ -1751,6 +1750,8 @@ $sheet-max-width: 860px
             background: white
             min-width: 60px
             color: #1f1f1f
+        textarea
+            height: 32px
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -2180,22 +2181,29 @@ $sheet-max-width: 860px
         width: 100%
         background-color: white
         border-spacing: 0
+        color: #4c4c4c
         th
             padding: 10px
-            color: #4c4c4c
             font-weight: bold
             background-color: #f0f0f0
             border-bottom: 2px solid #cacaca
-        .treeview-tr, .treeview-td
+
+        td
             cursor: pointer
-            border-right: 1px dotted $tag-border
-            vertical-align: top
+            vertical-align: middle
             text-align: left
-            border-bottom: 1px solid #cfcccc
-        tr:hover
-            background-color: #e0e0f8
-        .oe-number
+            vertical-align: middle
+            height: 20px
+            padding-left: 4px
+            padding-right: 4px
+            border-right: 1px solid #e7e7e7
+
+        td.oe_number
             text-align: right !important
+        tr
+            border-bottom: 1px solid #d6d6d6
+            &:hover
+                background-color: #e7e7e7
         span
             font-size: 90%
             font-weight: normal
@@ -2207,6 +2215,7 @@ $sheet-max-width: 860px
             background-image: url(/web/static/src/img/collapse.gif)
         .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
             margin-left: 16px
+
     // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
