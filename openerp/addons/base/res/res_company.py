@@ -195,11 +195,11 @@ class res_company(osv.osv):
         ]
 
         ids = proxy.search(cr, uid, args, context=context)
-        user = self.pool.get('res.users').read(cr, uid, [uid], ['company_id'], context=context)[0]
+        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, [uid], ['company_id'], context=context)[0]
         for rule in proxy.browse(cr, uid, ids, context):
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
-        return user['company_id'][0]
+        return user.company_id.id
 
     @tools.ormcache()
     def _get_company_children(self, cr, uid=None, company=None):

@@ -264,7 +264,7 @@ class res_users(osv.osv):
     # User can write on a few of his own fields (but not his groups for example)
     SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
     # User can read a few of his own fields
-    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id']
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id', '__last_update']
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         def override_password(o):
@@ -272,9 +272,9 @@ class res_users(osv.osv):
                 o['password'] = '********'
             return o
 
-        if (isinstance(ids, (list, tuple)) and ids == [uid]) or ids == uid:
+        if fields and (ids == [uid] or ids == uid):
             for key in fields:
-                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_') or key in ['__last_update']):
+                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
                     break
             else:
                 # safe fields only, so we read as super-user to bypass access rights
