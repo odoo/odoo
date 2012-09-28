@@ -49,7 +49,6 @@ You have to create the print buttons by calling the wizard. For more details see
     'data': ['report_webkit_html_view.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '00436592682591421981',
     'images': ['images/webkit_invoice_report.jpeg'],
 }
 

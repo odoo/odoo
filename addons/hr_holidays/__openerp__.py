@@ -66,6 +66,5 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0086579209325',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
