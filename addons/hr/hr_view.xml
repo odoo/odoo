@@ -350,10 +350,8 @@
             <field name="arch" type="xml">
                 <form string="Job" version="7.0">
                     <header>
-                        <span groups="base.group_user">
-                            <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight"/>
-                            <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight"/>
-                        </span>
+                        <button name="job_recruitement" string="In Recruitement" states="open" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="job_open" string="Recruitment Done" states="recruit" type="object" class="oe_highlight" groups="base.group_user"/>
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>

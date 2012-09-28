@@ -64,7 +64,6 @@ The validation can be configured in the company:
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0073297700829',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

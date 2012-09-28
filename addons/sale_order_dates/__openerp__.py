@@ -43,7 +43,6 @@ You can add the following additional dates to a sale order:
     'test': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00867497685972962845',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

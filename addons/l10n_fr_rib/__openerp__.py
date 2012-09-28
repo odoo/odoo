@@ -53,7 +53,6 @@ Accounts in OpenERP: the first with the type 'RIB', the second with the type 'IB
     'depends': ['account', 'base_iban'],
     'data': ['bank_data.xml', 'bank_view.xml'],
     'installable': True,
-    'certificate': '003407950790',
     'auto_install': False,
 }
 

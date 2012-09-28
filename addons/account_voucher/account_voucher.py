@@ -782,9 +782,16 @@ class account_voucher(osv.osv):
             vals[key].update(res[key])
         return vals
 
+    def button_proforma_voucher(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService("workflow")
+        for vid in ids:
+            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        return {'type': 'ir.actions.act_window_close'}
+
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
