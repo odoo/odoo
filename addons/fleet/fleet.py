@@ -120,6 +120,25 @@ class fleet_vehicle(osv.Model):
         res['domain']=[('vehicle_id','=', ids[0])]
         return res    
 
+    def get_odometer(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='date desc')
+            if len(odometers) > 0:
+                res.append((record.id,self.pool.get('fleet.vehicle.odometer').browse(cr, uid, odometers[0], context=context).value))
+            else :
+                res.append((record.id,0))
+        return res
+
+    def _vehicle_odometer_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.get_odometer(cr, uid, ids, context=context)
+        return dict(res)
+
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
 
@@ -141,6 +160,8 @@ class fleet_vehicle(osv.Model):
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
+
+        'odometer' : fields.function(_vehicle_odometer_get_fnc, type="float", string='Odometer', store=False),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
@@ -205,6 +226,8 @@ class fleet_vehicle(osv.Model):
 class fleet_vehicle_odometer(osv.Model):
     _name='fleet.vehicle.odometer'
     _description='Odometer log for a vehicle'
+
+    _order='date desc'
 
     def name_get(self, cr, uid, ids, context=None):
         if context is None:

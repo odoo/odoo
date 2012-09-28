@@ -95,26 +95,36 @@
                     <header>
                         <field name="state"  widget="statusbar" clickable="True" />
                     </header>
-                    <sheet>
-                       <div class="oe_right oe_button_box">
-                        <button name="act_show_log_insurance" type="object" string="Insurances" help="show the insurance for this vehicle" />
-                        <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
-                        
-                        <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
-
+                    <sheet> 
+                        <field name="image" widget='image' class="oe_left oe_avatar"/> 
+                        <div class="oe_title">
+                            <label for="model_id" class="oe_edit_only"/>
+                            <h1>
+                                <field name="model_id" class="oe_inline"/>
+                            </h1>
+                            <label for="license_plate" class="oe_edit_only"/>
+                            <h2>
+                                <field name="license_plate" class="oe_inline"/>
+                            </h2>
+                            
+                            <label for="tag_ids" class="oe_edit_only"/>
+                            <field name="tag_ids" widget="many2many_tags" />
+                            
                         </div>
-                        <field name="image" widget='image'/>
+                        <div class="oe_right oe_button_box">
+                            <button name="act_show_log_insurance" type="object" string="Insurances" help="show the insurance for this vehicle" />
+                            <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" /> 
+                            <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
+                        </div> 
                         <group col ="2">
                             <group string="General Properties">
-                                <field name="model_id" />
-                                <field name="license_plate" />
                                 <field name="vin_sn" />
-                                 <field name="driver" />
-                                 <field name="location" />
+                                <field name="driver" />
+                                <field name="location" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group string="Additional Properties">
-                                <field name="tag_ids" widget="many2many_tags" />
+                                <field name="odometer" />
                                 <field name="acquisition_date" />
                                 <field name="acquisition_price" />
                             </group>
@@ -153,6 +163,7 @@
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
                     <field name="state" />
+                    <field name="odometer" />
                 </tree>
             </field>
         </record>
