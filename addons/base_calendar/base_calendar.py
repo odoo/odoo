@@ -1058,6 +1058,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'active': fields.boolean('Active', help="If the active field is set to \
          true, it will allow you to hide the event alarm information without removing it."),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
+        'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
     }
 
     def create_attendees(self, cr, uid, ids, context):
