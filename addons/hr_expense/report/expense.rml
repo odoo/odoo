@@ -277,7 +277,7 @@
           <para style="terp_tblheader_Details">Total:</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang(o.amount) ]] [[ o.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang(o.amount, digits=get_digits(dp='Account'), currency_obj=o.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
