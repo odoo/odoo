@@ -20,7 +20,7 @@ Add insurance and services reminder that will help you by sending you a mail whe
 """,
     'depends' : [
         'base',
-        'hr',
+        'mail',
     ],
     'data' : [
         'fleet_view.xml',

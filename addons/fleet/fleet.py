@@ -175,6 +175,7 @@ class fleet_vehicle(osv.Model):
         'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
         'odometer' : fields.function(_vehicle_odometer_get_fnc, type="float", string='Odometer', store=False),
+        'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=False),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
         'fuel_type' : fields.selection([('gasoline', 'Gasoline'),('diesel','Diesel'),('electric','Electric'),('hybrid','Hybrid')], 'Fuel Type', help='Fuel Used by the vehicle',required=False),
@@ -187,6 +188,7 @@ class fleet_vehicle(osv.Model):
     }
     _defaults = {
         'doors' : 5,
+        'odometer_unit' : 'Kilometers',
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
@@ -271,7 +273,7 @@ class fleet_vehicle_odometer(osv.Model):
 
         'date' : fields.date('Execution Date'),
         'value' : fields.float('Odometer Value'),
-        'unit' : fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the measurement',required=False),
+        'unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
         'month' : fields.function(_vehicle_log_month_get_fnc,string="Month", type="char",size=32, store=True)
     }

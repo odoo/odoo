@@ -80,7 +80,7 @@
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem name="Fleet Management" id="menu_root" />
+        <menuitem name="Fleet" id="menu_root" />
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem name="Configuration" parent="menu_root" id="fleet_configuration" />
         <menuitem action="fleet_vehicle_model_act" parent="fleet_configuration" id="fleet_vehicle_model_menu" />
@@ -122,7 +122,11 @@
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group string="Additional Properties">
-                                <field name="odometer" />
+                                <label for="odometer" />
+                                <div>
+                                    <field name="odometer" class="oe_inline"/>
+                                    <field name="odometer_unit" class="oe_inline"/>
+                                </div>
                                 <field name="acquisition_date" />
                                 <field name="acquisition_price" />
                             </group>
