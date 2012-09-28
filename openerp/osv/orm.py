@@ -1218,7 +1218,11 @@ class BaseModel(object):
         return {'datas': datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """Import given data in given module
+        """
+        .. deprecated:: 7.0
+            Use :meth:`~load` instead
+
+        Import given data in given module
 
         This method is used when importing data via client menu.
 
@@ -1301,6 +1305,10 @@ class BaseModel(object):
         Attempts to load the data matrix, and returns a list of ids (or
         ``False`` if there was an error and no id could be generated) and a
         list of messages.
+
+        The ids are those of the records created and saved (in database), in
+        the same order they were extracted from the file. They can be passed
+        directly to :meth:`~read`
 
         Each message is a dictionary with the following keys:
 
@@ -5065,7 +5073,7 @@ class BaseModel(object):
     def is_transient(self):
         """ Return whether the model is transient.
 
-        See TransientModel.
+        See :class:`TransientModel`.
 
         """
         return self._transient
