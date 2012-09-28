@@ -4549,10 +4549,10 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     initialize_content: function() {
         var self = this;
         this.selection = new instance.web.form.FieldSelection(this, { attrs: {
-            name: 'selection'
+            name: 'selection',
+            modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.selection.view = this.view;
-        this.selection.set({force_readonly: this.get('effective_readonly')});
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.setElement(this.$(".oe_form_view_reference_selection"));
         this.selection.renderElement();
@@ -4562,7 +4562,8 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('blurred', null, function () {self.trigger('blurred')});
 
         this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
-            name: 'm2o'
+            name: 'm2o',
+            modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.view = this.view;
         this.m2o.set({force_readonly: this.get("effective_readonly")});
