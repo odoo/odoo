@@ -35,12 +35,14 @@ _logger = logging.getLogger(__name__)
 WELCOME_EMAIL_SUBJECT = _("Your OpenERP account at %(company)s")
 WELCOME_EMAIL_BODY = _("""Dear %(name)s,
 
-You have been given access to %(portal)s at %(url)s.
+You have been given access to %(portal)s.
 
 Your login account data is:
 Database: %(db)s
-User:     %(login)s
-Password: %(password)s
+Username: %(login)s
+
+In order to complete the signin process, click on the following url:
+%(url)s
 
 %(welcome_message)s
 
@@ -164,6 +166,8 @@ class wizard_user(osv.osv_memory):
                     user = self._create_user(cr, SUPERUSER_ID, wizard_user, context)
                 if (not user.active) or (portal not in user.groups_id):
                     user.write({'active': True, 'groups_id': [(4, portal.id)]})
+                    # prepare for the signup process
+                    user.partner_id.signup_prepare()
                     wizard_user = self.browse(cr, SUPERUSER_ID, wizard_user.id, context)
                     self._send_email(cr, uid, wizard_user, context)
             else:
@@ -219,7 +223,8 @@ class wizard_user(osv.osv_memory):
                 _('You must have an email address in your User Preferences to send emails.'))
 
         # determine subject and body in the portal user's language
-        url = self.pool.get('ir.config_parameter').get_param(cr, SUPERUSER_ID, 'web.base.url', context=this_context)
+        ir_config_parameter = self.pool.get('ir.config_parameter')
+        url = ir_config_parameter.get_param(cr, SUPERUSER_ID, 'web.base.url', context=this_context)
         user = self._retrieve_user(cr, SUPERUSER_ID, wizard_user, context)
         context = dict(this_context or {}, lang=user.lang)
         data = {
@@ -227,11 +232,10 @@ class wizard_user(osv.osv_memory):
             'portal': wizard_user.wizard_id.portal_id.name,
             'welcome_message': wizard_user.wizard_id.welcome_message or "",
             'goodbye_message': wizard_user.wizard_id.goodbye_message or "",
-            'url': url or _("(missing url)"),
             'db': cr.dbname,
+            'name': user.name,
             'login': user.login,
-            'password': user.password,
-            'name': user.name            
+            'url': user.signup_url,
         }
         if wizard_user.in_portal:
             subject = _(WELCOME_EMAIL_SUBJECT) % data
