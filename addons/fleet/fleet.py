@@ -66,7 +66,9 @@ class fleet_vehicle_model(osv.Model):
         'modelname' : fields.char('Model name', size=32, required=True), 
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
-        'image': fields.related('brand','image',type="binary",string="Logo",store=False)
+        'image': fields.related('brand','image',type="binary",string="Logo",store=False),
+        'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
+        'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
     }
 
 class fleet_vehicle_model_brand(osv.Model):
@@ -190,7 +192,7 @@ class fleet_vehicle(osv.Model):
         'company_id': fields.many2one('res.company', 'Company'),
         'license_plate' : fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
-        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle'),
+        'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle', domain="['|',('customer','=',True),('employee','=',True)]"),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Other Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
@@ -215,6 +217,8 @@ class fleet_vehicle(osv.Model):
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
 
         'image': fields.related('model_id','image',type="binary",string="Logo",store=False),
+        'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
+        'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
         }
 
@@ -371,7 +375,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price Per Liter'),
         'amount': fields.float('Total price'),
-        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' : fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes' : fields.text('Notes'),
@@ -391,7 +395,7 @@ class fleet_vehicle_log_services(osv.Model):
         'date' :fields.date('Service Date',help='Date when the service will be/has been performed'),
         'amount' :fields.float('Cost', help="Total cost of the service"),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
-        'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="[('supplier','=',False)]"),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes' : fields.text('Notes'),
