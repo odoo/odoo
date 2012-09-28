@@ -22,6 +22,7 @@
 import math
 import openerp
 from osv import osv, fields
+from openerp import SUPERUSER_ID
 import re
 import tools
 from tools.translate import _
@@ -33,7 +34,7 @@ from lxml import etree
 class format_address(object):
     def fields_view_get_address(self, cr, uid, arch, context={}):
         user_obj = self.pool.get('res.users')
-        fmt = user_obj.browse(cr, uid, uid,context).company_id.country_id
+        fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
         fmt = fmt and fmt.address_format
         layouts = {
             '%(city)s %(state_code)s\n%(zip)s': """
@@ -396,7 +397,7 @@ class res_partner(osv.osv, format_address):
             - otherwise: default, everything is set as the name """
         match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
         if match:
-            email = match.group(1) 
+            email = match.group(1)
             name = text[:text.index(email)].replace('"','').replace('<','').strip()
         else:
             name, email = text, ''
@@ -444,7 +445,7 @@ class res_partner(osv.osv, format_address):
     def find_or_create(self, cr, uid, email, context=None):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
-            
+
             :param str email: email-like string, which should contain at least one email,
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'
