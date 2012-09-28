@@ -142,6 +142,7 @@ class res_users(osv.Model):
             else:
                 # user does not exist: sign up invited user
                 self._signup_create_user(cr, uid, {
+                    'name': partner.name,
                     'login': values['login'],
                     'password': values['password'],
                     'email': values['login'],
@@ -165,22 +166,11 @@ class res_users(osv.Model):
         template_user_id = safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.template_user_id', 'False'))
         assert template_user_id and self.exists(cr, uid, template_user_id, context=context), 'Signup: invalid template user'
 
-        values['active'] = True
-        if values.get('partner_id'):
-            # create a copy of the template user attached to values['partner_id']
-            # note: we do not include 'partner_id' here, as copy() does not handle it correctly
-            safe_values = {'login': values['login'], 'password': values['password']}
-            user_id = self.copy(cr, uid, template_user_id, safe_values, context=context)
-            # problem: the res.partner part of the template user has been duplicated
-            # solution: unlink it, and replace it by values['partner_id']
-            user = self.browse(cr, uid, user_id, context=context)
-            partner = user.partner_id
-            user.write(values)
-            partner.unlink()
-        else:
-            # check that uninvited users may sign up
+        # check that uninvited users may sign up
+        if 'partner_id' not in values:
             if not safe_eval(ir_config_parameter.get_param(cr, uid, 'auth_signup.allow_uninvited', 'False')):
                 raise Exception('Signup is not allowed for uninvited users')
-            user_id = self.copy(cr, uid, template_user_id, values, context=context)
 
-        return user_id
+        # create a copy of the template user (attached to a specific partner_id if given)
+        values['active'] = True
+        return self.copy(cr, uid, template_user_id, values, context=context)
