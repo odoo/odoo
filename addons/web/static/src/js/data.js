@@ -719,10 +719,9 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} callback
      * @returns {$.Deferred}
      */
-    name_get: function(ids, callback) {
+    name_get: function(ids) {
         return this._model.call('name_get',
-            [ids], {context: this._model.context()})
-                .then(callback);
+            [ids], {context: this._model.context()});
     },
     /**
      * 

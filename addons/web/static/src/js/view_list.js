@@ -989,7 +989,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // to get a correctly displayable value in the field
                 var model = ref_match[1],
                     id = parseInt(ref_match[2], 10);
-                new instance.web.DataSet(this.view, model).name_get([id], function(names) {
+                new instance.web.DataSet(this.view, model).name_get([id]).then(function(names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0][1]);
                 });
@@ -1005,7 +1005,7 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                 // and let the various registered events handle refreshing the
                 // row
                 new instance.web.DataSet(this.view, column.relation)
-                        .name_get([value], function (names) {
+                        .name_get([value]).then(function (names) {
                     if (!names.length) { return; }
                     record.set(column.id, names[0]);
                 });
