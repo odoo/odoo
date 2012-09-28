@@ -1219,7 +1219,7 @@ instance.web.View = instance.web.Widget.extend({
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
-            return dataset.exec_workflow(record_id, action_data.name, handler);
+            return dataset.exec_workflow(record_id, action_data.name).then(handler(r));
         }
     },
     /**
