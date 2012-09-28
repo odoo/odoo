@@ -338,7 +338,7 @@ class Partner(osv.osv):
                     -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
-                    string = 'Start Membership Date', type = 'date',
+                    string = 'Membership Start Date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10, ),
@@ -346,7 +346,7 @@ class Partner(osv.osv):
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
                     _membership_date,
-                    string = 'Stop Membership Date', type='date', multi='membership_stop',
+                    string = 'Membership End Date', type='date', multi='membership_stop',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
