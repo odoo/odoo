@@ -2074,16 +2074,20 @@ instance.web.list.Button = instance.web.list.Column.extend({
      * Return an actual ``<button>`` tag
      */
     format: function (row_data, options) {
-        return _.template('<button type="button" title="<%-title%>" <%=additional_attributes%> >' +
-            '<img src="<%-prefix%>/web/static/src/img/icons/<%-icon%>.png" alt="<%-alt%>"/>' +
-            '</button>', {
-                title: this.string || '',
-                additional_attributes: isNaN(row_data["id"].value) && instance.web.BufferedDataSet.virtual_id_regex.test(row_data["id"].value) ?
-                    'disabled="disabled" class="oe_list_button_disabled"' : '',
-                prefix: instance.session.prefix,
-                icon: this.icon,
-                alt: this.string || ''
-            });
+        options = options || {};
+        var attrs = {};
+        if (options.process_modifiers !== false) {
+            attrs = this.modifiers_for(row_data);
+        }
+        if (attrs.invisible) { return ''; }
+
+        return QWeb.render('ListView.row.button', {
+            widget: this,
+            prefix: instance.session.prefix,
+            disabled: attrs.readonly
+                || isNaN(row_data.id.value)
+                || instance.web.BufferedDataSet.virtual_id_regex.test(row_data.id.value)
+        });
     }
 });
 instance.web.list.Boolean = instance.web.list.Column.extend({
