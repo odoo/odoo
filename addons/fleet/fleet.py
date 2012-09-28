@@ -304,7 +304,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'amount': fields.float('Total price'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
-        'vendor_id' : fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'vendor_id' : fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes' : fields.text('Notes'),
     }
     _defaults = {
@@ -319,16 +319,17 @@ class fleet_vehicle_log_services(osv.Model):
     _columns = {
 
         #'name' : fields.char('Name',size=64),
-        
+        'date' :fields.date('Service Date',help='Date when the service will be/has been performed'),
         'amount' :fields.float('Cost', help="Total cost of the service"),
         'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
-        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="[('supplier','=',False)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
-        'vendor_id' :fields.many2one('res.partner', 'Vendor', domain="[('supplier','=',True)]"),
+        'vendor_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes' : fields.text('Notes'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
+        'date' : time.strftime('%Y-%m-%d'),
     }
 
 class fleet_insurance_type(osv.Model):
@@ -340,9 +341,16 @@ class fleet_insurance_type(osv.Model):
 class fleet_vehicle_log_insurance(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
-    def compute_next_year_date(strdate):
+    def compute_next_year_date(self, strdate):
         nextyear=int(strdate[:4])+1
         return str(nextyear)+strdate[4:]
+
+    def on_change_start_date(self, cr, uid, ids, strdate, context=None):
+        if (strdate):
+           
+            return {'value' : {'expiration_date' : self.compute_next_year_date(strdate),}}
+        else:
+            return {}
 
     _name = 'fleet.vehicle.log.insurance'
     _columns = {
@@ -356,12 +364,12 @@ class fleet_vehicle_log_insurance(osv.Model):
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'ins_ref' : fields.char('Insurance Reference', size=64),
-        'notes' : fields.text('Notes'),
+        'notes' : fields.text('Terms and Conditions'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'start_date' : time.strftime('%Y-%m-%d'),
-        'expiration_date' : compute_next_year_date(time.strftime('%Y-%m-%d')),
+        #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }
 

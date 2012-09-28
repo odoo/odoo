@@ -238,12 +238,14 @@
                     <sheet>
                         <group col="2">
                             <group string="Insurance details">
+                                    <field name="vehicle_id" />
                                     <field name="insurance_type" />
-                                    <field name="start_date" />
+                                    <field name="start_date" on_change="on_change_start_date(start_date)"/>
                                     <field name="expiration_date" />
                                     <field name="price" />
                             </group>
-                            <group></group>
+                            
+
                         </group>
                         <group col="2">
                             <group string="Odometer details">
@@ -256,6 +258,8 @@
                                 <field name="ins_ref" />
                             </group>
                         </group>
+                        <group string="Terms and Conditions"></group>
+                        <field name="notes" />
                     </sheet>
                 </form>
             </field>
@@ -274,6 +278,7 @@
                     <field name="price" />
                     <field name="value" />
                     <field name="unit" />
+                    <field name="notes" />
                 </tree>
             </field>
         </record>
