@@ -635,11 +635,10 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback function called in case of creation error
      * @returns {$.Deferred}
      */
-    create: function(data, callback, error_callback) {
+    create: function(data) {
         return this._model.call('create',
             [data], {context: this._model.context()})
-                .pipe(function (r) { return {result: r}; })
-                    .then(callback, error_callback);
+                .pipe(function (r) { return {result: r}; });
     },
     /**
      * Saves the provided data in an existing db record
@@ -919,14 +918,12 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     on_default_get: function(res) {
         this.last_default_get = res;
     },
-    create: function(data, callback, error_callback) {
+    create: function(data) {
         var cached = {id:_.uniqueId(this.virtual_id_prefix), values: data,
             defaults: this.last_default_get};
         this.to_create.push(_.extend(_.clone(cached), {values: _.clone(cached.values)}));
         this.cache.push(cached);
-        var prom = $.Deferred().then(callback);
-        prom.resolve({result: cached.id});
-        return prom.promise();
+        return $.Deferred().resolve({result: cached.id}).promise();
     },
     write: function (id, data, options, callback) {
         var self = this;
@@ -1095,9 +1092,9 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    create: function(data, callback, error_callback) {
+    create: function(data) {
         if (this.create_function) {
-            return this.create_function(data, this._super).then(callback, error_callback);
+            return this.create_function(data, this._super);
         } else {
             return this._super.apply(this, arguments);
         }
