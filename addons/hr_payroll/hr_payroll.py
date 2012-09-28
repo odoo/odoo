@@ -81,10 +81,9 @@ class hr_payroll_structure(osv.osv):
         """
         if not default:
             default = {}
-        default.update({
-            'code': self.browse(cr, uid, id, context=context).code + "(copy)",
-            'company_id': self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id
-        })
+        default.update(
+            code=_("%s (copy)") % (self.browse(cr, uid, id, context=context).code),
+            company_id=self.pool.get('res.users').browse(cr, uid, uid, context=context).company_id.id)
         return super(hr_payroll_structure, self).copy(cr, uid, id, default, context=context)
 
     def get_all_rules(self, cr, uid, structure_ids, context=None):
@@ -305,7 +304,7 @@ class hr_payslip(osv.osv):
                 return False
         return True
 
-    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]  
+    _constraints = [(_check_dates, "Payslip 'Date From' must be before 'Date To'.", ['date_from', 'date_to'])]
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
@@ -669,26 +668,26 @@ class hr_payslip(osv.osv):
         if not context.get('contract', False):
             #fill with the first contract of the employee
             contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-            res['value'].update({
-                        'struct_id': contract_ids and contract_obj.read(cr, uid, contract_ids[0], ['struct_id'], context=context)['struct_id'][0] or False,
-                        'contract_id': contract_ids and contract_ids[0] or False,
-            })
         else:
             if contract_id:
                 #set the list of contract for which the input have to be filled
                 contract_ids = [contract_id]
-                #fill the structure with the one on the selected contract
-                contract_record = contract_obj.browse(cr, uid, contract_id, context=context)
-                res['value'].update({
-                            'struct_id': contract_record.struct_id.id,
-                            'contract_id': contract_id
-                })
             else:
                 #if we don't give the contract, then the input to fill should be for all current contracts of the employee
                 contract_ids = self.get_contract(cr, uid, employee_id, date_from, date_to, context=context)
-                if not contract_ids:
-                    return res
 
+        if not contract_ids:
+            return res
+        contract_record = contract_obj.browse(cr, uid, contract_ids[0], context=context)
+        res['value'].update({
+                    'contract_id': contract_record and contract_record.id or False
+        })
+        struct_record = contract_record and contract_record.struct_id or False
+        if not struct_record:
+            return res
+        res['value'].update({
+                    'struct_id': struct_record.id,
+        })
         #computation of the salary input
         worked_days_line_ids = self.get_worked_day_lines(cr, uid, contract_ids, date_from, date_to, context=context)
         input_line_ids = self.get_inputs(cr, uid, contract_ids, date_from, date_to, context=context)
@@ -851,7 +850,7 @@ result = rules.NET > categories.NET * 0.10''',
         """
         :param rule_id: id of rule to compute
         :param localdict: dictionary containing the environement in which to compute the rule
-        :return: returns a tuple build as the base/amount computed, the quantity and the rate 
+        :return: returns a tuple build as the base/amount computed, the quantity and the rate
         :rtype: (float, float, float)
         """
         rule = self.browse(cr, uid, rule_id, context=context)

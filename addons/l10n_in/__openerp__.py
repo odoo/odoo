@@ -45,7 +45,6 @@ Indian accounting chart and localization.
     ],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001308250150600713245',
     'images': ['images/config_chart_l10n_in.jpeg','images/l10n_in_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

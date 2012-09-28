@@ -20,6 +20,7 @@
 ##############################################################################
 
 from base_status.base_state import base_state
+from base_status.base_stage import base_stage
 from crm import crm
 from osv import fields, osv
 import tools
@@ -31,7 +32,7 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_helpdesk(base_state, osv.osv):
+class crm_helpdesk(base_state, base_stage, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"

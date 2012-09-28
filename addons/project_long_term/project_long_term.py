@@ -138,7 +138,7 @@ class project_phase(osv.osv):
         if default is None:
             default = {}
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+            default.update(name=_('%s (copy)') % (self.browse(cr, uid, id, context=context).name))
         return super(project_phase, self).copy(cr, uid, id, default, context)
 
     def set_draft(self, cr, uid, ids, *args):
@@ -227,7 +227,7 @@ class project(osv.osv):
         'phase_ids': fields.one2many('project.phase', 'project_id', "Project Phases"),
         'phase_count': fields.function(_phase_count, type='integer', string="Open Phases"),
     }
-    
+
     def schedule_phases(self, cr, uid, ids, context=None):
         context = context or {}
         if type(ids) in (long, int,):
@@ -250,7 +250,7 @@ class project(osv.osv):
                 # Maybe it's better to update than unlink/create if it already exists ?
                 p = getattr(project_gantt, 'Phase_%d' % (phase.id,))
 
-                self.pool.get('project.user.allocation').unlink(cr, uid, 
+                self.pool.get('project.user.allocation').unlink(cr, uid,
                     [x.id for x in phase.user_ids],
                     context=context
                 )

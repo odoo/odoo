@@ -92,7 +92,7 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -137,7 +137,7 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -483,6 +483,7 @@
         <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
             <field name="name">hr.employee.leave.tree</field>
             <field name="model">hr.employee</field>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <tree string="Assign Leaves" editable="bottom">
                     <field name="name" string="Employee"/>
@@ -522,7 +523,7 @@
                     </group>
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">
-                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action"/>
+                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" groups="base.group_hr_user"/>
                 </xpath>
             </field>
         </record>

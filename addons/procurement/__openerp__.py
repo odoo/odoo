@@ -60,8 +60,7 @@ depending on the product's configuration.
     'demo': ['stock_orderpoint.xml'],
     'test': ['test/procurement.yml'],
     'installable': True,
-    'auto_install': False,
-    'certificate': '00954248826881074509',
+    'auto_install': True,
     'images': ['images/compute_schedulers.jpeg','images/config_companies_sched.jpeg', 'images/minimum_stock_rules.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

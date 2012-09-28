@@ -70,7 +70,6 @@ which needs explicit configuration in openerp-server.conf too.
     ],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001236490750845657973',
     'images': ['images/dav_properties.jpeg','images/directories_structure_principals.jpeg'],
 }
 

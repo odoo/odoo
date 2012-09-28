@@ -61,7 +61,6 @@ It allows the manager to quickly check the issues, assign them and decide on the
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '001236490750848623845',
     'js': ['static/src/js/project_issue.js'],
 }
 

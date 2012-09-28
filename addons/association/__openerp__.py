@@ -37,7 +37,6 @@ membership products (schemes).
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0078696047261',
     'images': ['images/association1.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

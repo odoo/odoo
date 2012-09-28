@@ -68,7 +68,6 @@ configuration of their taxes and fiscal positions manually.
     ],
     'test': ['test/l10n_fr_report.yml'],
     'demo': [],
-    'certificate': '00435321693876313629',
     'auto_install': False,
     'installable': True,
     'images': ['images/config_chart_l10n_fr.jpeg','images/l10n_fr_chart.jpeg'],
