@@ -267,7 +267,7 @@ class fleet_vehicle_odometer(osv.Model):
     _columns = {
         'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
-        'date' : fields.date('Date'),
+        'date' : fields.date('Execution Date'),
         'value' : fields.float('Odometer Value'),
         'unit' : fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the measurement',required=False),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
@@ -382,7 +382,7 @@ class fleet_vehicle_log_insurance(osv.Model):
 
         'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
         'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the insurance begins'),
-        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the insurance expirates'),
+        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the insurance expirates (by default, one year after begin date)'),
         'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
