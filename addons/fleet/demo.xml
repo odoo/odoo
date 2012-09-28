@@ -84,7 +84,7 @@
 
       <record id="log_service_1" model="fleet.vehicle.log.services">
           <field name="vehicle_id" ref="vehicle_1" />
-          <field name="purchaser_id" ref="hr.employee_fp" />
+          <field name="purchaser_id" ref="base.res_partner_2" />
           <field name="vendor_id">5</field>
           <field name="date" eval="time.strftime('%Y-%m-%d 16:00:00')" />
           <field name="amount">500.0</field>
@@ -96,7 +96,7 @@
       </record>
 
        <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
-          <field name="purchaser_id" ref="hr.employee_fp" />
+          <field name="purchaser_id" ref="base.res_partner_2" />
           <field name="vehicle_id" ref="vehicle_1" />
           <field name="vendor_id">6</field>
           <field name="date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
@@ -109,6 +109,5 @@
           <field name="unit">kilometers</field>
           <field name="notes">Trip to Paris</field>
       </record>
-
     </data>
 </openerp>

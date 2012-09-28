@@ -315,7 +315,21 @@
                     <field name="unit" />         
                     <field name="inv_ref" />
                     <field name="vendor_id" />
+                    <field name="month" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
+           <field name="name">fleet.vehicle.log.fuel.graph</field>
+           <field name="model">fleet.vehicle.log.fuel</field>
+           <field name="type">graph</field>
+           <field name="arch" type="xml">
+                <graph string="Odometer value per month">
+                    <field name="month" />
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="amount" operator="+"/>
+                </graph>
             </field>
         </record>
 
@@ -323,7 +337,7 @@
             <field name="name">Vehicles Fuel Logs</field>
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
@@ -430,11 +444,24 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="fleet_vehicle_log_services_graph">
+           <field name="name">fleet.vehicle.log.services.graph</field>
+           <field name="model">fleet.vehicle.log.services</field>
+           <field name="type">graph</field>
+           <field name="arch" type="xml">
+                <graph string="Odometer value per month">
+                    <field name="month" />
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="amount" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_log_services_act'>
             <field name="name">Vehicles Services Logs</field>
             <field name="res_model">fleet.vehicle.log.services</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
@@ -469,11 +496,24 @@
             </field>
         </record>
 
+        <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
+           <field name="name">fleet.vehicle.odometer.graph</field>
+           <field name="model">fleet.vehicle.odometer</field>
+           <field name="type">graph</field>
+           <field name="arch" type="xml">
+                <graph string="Odometer value per month">
+                    <field name="month" />
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="value" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
         <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
             <field name="name">Vehicles Odometer</field>
             <field name="res_model">fleet.vehicle.odometer</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,graph</field>
         </record>
 
         <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
