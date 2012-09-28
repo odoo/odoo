@@ -13,6 +13,7 @@ instance.web.form = {};
  * Properties:
  *     - display_invalid_fields : if true, all fields where is_valid() return true should
  *     be displayed as invalid.
+ *     - actual_mode : the current mode of the field manager. Can be "view", "edit" or "create".
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
@@ -704,17 +705,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             self.$sidebar.show();
-            _.each(this.fields,function(field){
-                field.set({"force_readonly": true});
-            });
         } else {
             self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
             self.$sidebar.hide();
-            _.each(this.fields,function(field){
-                field.set({"force_readonly": false});
-            });
             this.autofocus();
         }
     },
@@ -1899,10 +1894,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
 /**
  * Interface to be implemented by fields.
  *
- * Properties:
- *     - readonly: boolean. If set to true the field should appear in readonly mode.
- *     - force_readonly: boolean, When it is true, the field should always appear
- *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
  *     - changed_value: triggered when the value of the field has changed. This can be due
  *      to a user interaction or a call to set_value().
@@ -1972,7 +1963,7 @@ instance.web.form.FieldInterface = {
     /**
      * Called when the translate button is clicked.
      */
-        on_translate: function() {},
+    on_translate: function() {},
 };
 
 /**
@@ -1980,7 +1971,7 @@ instance.web.form.FieldInterface = {
  *
  * Properties:
  *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
- *      the values of the "readonly" property and the "force_readonly" property on the field manager.
+ *      the values of the "readonly" property and the "mode" property on the field manager.
  *     - value: useful property to hold the value of the field. By default, set_value() and get_value()
  *     set and retrieve the value property. Changing the value property also triggers automatically
  *     a 'changed_value' event that inform the view to trigger on_changes.
@@ -2007,14 +1998,13 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.set({required: this.modifiers['required'] === true});
 
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
-        // "force_readonly"
+        // "mode"
         this.set({"readonly": this.modifiers['readonly'] === true});
-        this.set({"force_readonly": false});
         var test_effective_readonly = function() {
-            self.set({"effective_readonly": self.get("readonly") || !!self.get("force_readonly")});
+            self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
         };
         this.on("change:readonly", this, test_effective_readonly);
-        this.on("change:force_readonly", this, test_effective_readonly);
+        this.field_manager.on("change:actual_mode", this, test_effective_readonly);
         test_effective_readonly.call(this);
         this.on("change:value", this, function() {
             this.trigger('changed_value');
@@ -4566,7 +4556,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.view = this.view;
-        this.m2o.set({force_readonly: this.get("effective_readonly")});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.setElement(this.$(".oe_form_view_reference_m2o"));
         this.m2o.renderElement();
