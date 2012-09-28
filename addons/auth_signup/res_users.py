@@ -41,32 +41,49 @@ def now():
 class res_partner(osv.Model):
     _inherit = 'res.partner'
 
+    def _get_signup_valid(self, cr, uid, ids, name, arg, context=None):
+        dt = now()
+        res = {}
+        for partner in self.browse(cr, uid, ids, context):
+            res[partner.id] = bool(partner.signup_token) and (partner.signup_expiration or '') <= dt
+        return res
+
+    def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
+        """ determine a signup url for a given partner """
+        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
+        template_url = '#action=login&db=%s&token=%s'
+
+        # if required, make sure that every partner has a valid signup token
+        if context and context.get('signup_valid'):
+            self.signup_prepare(cr, uid, ids, context=context)
+
+        res = dict.fromkeys(ids, False)
+        for partner in self.browse(cr, uid, ids, context):
+            if partner.signup_token:
+                res[partner.id] = urlparse.urljoin(base_url, template_url % (cr.dbname, partner.signup_token))
+        return res
+
     _columns = {
-        'signup_token': fields.char(size=24, string='Signup Ticket'),
+        'signup_token': fields.char(size=24, string='Signup Token'),
         'signup_expiration': fields.datetime(string='Signup Expiration'),
+        'signup_valid': fields.function(_get_signup_valid, type='boolean', string='Signup Token is Valid'),
+        'signup_url': fields.function(_get_signup_url, type='char', string='Signup URL'),
     }
 
-    def signup_get_url(self, cr, uid, partner_id, context=None):
-        """ determine a signup url for the given partner_id """
-        base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        partner = self.browse(cr, uid, partner_id, context)
-        token = partner.signup_token
-        if not token:
-            token = self.signup_generate_token(cr, uid, partner.id, context=context)
-        return urlparse.urljoin(base_url, '#action=login&db=%s&token=%s' % (cr.dbname, token))
+    def action_signup_prepare(self, cr, uid, ids, context=None):
+        return self.signup_prepare(cr, uid, ids, context=context)
 
-    def signup_generate_token(self, cr, uid, partner_id, expiration=False, context=None):
-        """ generate a new token for a partner, and return it
-            :param partner_id: the partner id
+    def signup_prepare(self, cr, uid, ids, expiration=False, context=None):
+        """ generate a new token for the partners with the given validity, if necessary
             :param expiration: the expiration datetime of the token (string, optional)
-            :return: the token (string)
         """
-        # generate a unique token
-        token = random_token()
-        while self._signup_retrieve_partner(cr, uid, token, context=context):
-            token = random_token()
-        self.write(cr, uid, [partner_id], {'signup_token': token, 'signup_expiration': expiration}, context=context)
-        return token
+        for partner in self.browse(cr, uid, ids, context):
+            if expiration or not partner.signup_valid:
+                token = random_token()
+                while self._signup_retrieve_partner(cr, uid, token, context=context):
+                    token = random_token()
+                partner.write({'signup_token': token, 'signup_expiration': expiration})
+        return True
 
     def _signup_retrieve_partner(self, cr, uid, token, raise_exception=False, context=None):
         """ find the partner corresponding to a token, and check its validity
@@ -79,7 +96,7 @@ class res_partner(osv.Model):
                 raise Exception("Signup token '%s' is not valid" % token)
             return False
         partner = self.browse(cr, uid, partner_ids[0], context)
-        if partner.signup_expiration and partner.signup_expiration < now():
+        if not partner.signup_valid:
             if raise_exception:
                 raise Exception("Signup token '%s' is no longer valid" % token)
             return False
