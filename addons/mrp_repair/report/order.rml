@@ -353,7 +353,7 @@
           <para style="terp_default_9">Net Total :</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_untaxed, dp='Sale Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
 
       </tr>
@@ -367,7 +367,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account'), currency_obj=o.pricelist_id.currency_id) ]]</para>
+          <para style="P26">[[ formatLang(o.amount_tax, dp='Sale Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
@@ -380,7 +380,7 @@
           <para style="terp_tblheader_Details">Total :</para>
         </td>
         <td>
-          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price') ]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="terp_default_right_bold_9">[[ formatLang(total(o), dp='Sale Price', currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
     </blockTable>
