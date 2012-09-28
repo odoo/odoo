@@ -1,6 +1,8 @@
 from itertools import chain
 from osv import osv, fields
 import time
+import tools
+
 
 class fleet_vehicle_model_type(osv.Model):
     _name = 'fleet.vehicle.type'
@@ -70,9 +72,37 @@ class fleet_vehicle_model(osv.Model):
 class fleet_vehicle_model_brand(osv.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand model of the vehicle'
+
+    def _get_image(self, cr, uid, ids, name, args, context=None):
+        result = dict.fromkeys(ids, False)
+        for obj in self.browse(cr, uid, ids, context=context):
+            result[obj.id] = tools.image_get_resized_images(obj.image)
+        return result
+    
+    def _set_image(self, cr, uid, id, name, value, args, context=None):
+        return self.write(cr, uid, [id], {'image': tools.image_resize_image_big(value)}, context=context)
+
     _columns = {
         'name' : fields.char('Brand Name',size=32, required=True),
-        'image': fields.binary("Logo",help="This field holds the image used as logo for the brand, limited to 128x128px."),
+
+        'image': fields.binary("Logo",
+            help="This field holds the image used as logo for the brand, limited to 1024x1024px."),
+        'image_medium': fields.function(_get_image, fnct_inv=_set_image,
+            string="Medium-sized photo", type="binary", multi="_get_image",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Medium-sized logo of the brand. It is automatically "\
+                 "resized as a 128x128px image, with aspect ratio preserved. "\
+                 "Use this field in form views or some kanban views."),
+        'image_small': fields.function(_get_image, fnct_inv=_set_image,
+            string="Smal-sized photo", type="binary", multi="_get_image",
+            store = {
+                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+            },
+            help="Small-sized photo of the brand. It is automatically "\
+                 "resized as a 64x64px image, with aspect ratio preserved. "\
+                 "Use this field anywhere a small image is required."),
     }
 
 class fleet_vehicle(osv.Model):
@@ -184,8 +214,10 @@ class fleet_vehicle(osv.Model):
         'power' : fields.integer('Power (kW)',required=False,help='Power in kW of the vehicle'),
         'co2' : fields.float('CO2 Emissions',required=False,help='CO2 emissions of the vehicle'),
 
-        'image': fields.related('model_id','image',type="binary",string="Logo",store=False)
-    }
+        'image': fields.related('model_id','image',type="binary",string="Logo",store=False),
+
+        }
+
     _defaults = {
         'doors' : 5,
         'odometer_unit' : 'Kilometers',
