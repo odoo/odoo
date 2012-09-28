@@ -32,10 +32,6 @@ instance.web.form.FieldManagerMixin = {
      */
     get_field: function(field_name) {},
     /**
-     * Returns true when the view is in create mode.
-     */
-    is_create_mode: function() {},
-    /**
      * Returns the current value of a field present in the view. See the get_value() method
      * method in FieldInterface for further information.
      */
@@ -1109,9 +1105,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     get_field: function(field_name) {
         return this.fields_view.fields[field_name];
     },
-    is_create_mode: function() {
-        return this.get("actual_mode") === "create";
-    },
     get_field_value: function(field_name) {
         return this.fields[field_name].get_value();
     },
@@ -2069,7 +2062,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
     _check_css_flags: function() {
         if (this.field.translate) {
-            this.$el.find('.oe_field_translate').toggle(!this.field_manager.is_create_mode());
+            this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
         if (!this.disable_utility_classes) {
             if (this.field_manager.get('display_invalid_fields')) {
