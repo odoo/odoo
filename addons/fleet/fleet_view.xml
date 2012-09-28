@@ -97,9 +97,11 @@
                     </header>
                     <sheet>
                        <div class="oe_right oe_button_box">
+                        <button name="act_show_log_insurance" type="object" string="Insurances" help="show the insurance for this vehicle" />
                         <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
-                        <button name="act_show_log_insurance" type="object" string="Insurance Logs" help="show the insurance logs for this vehicle" />
+                        
                         <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
+
                         </div>
                         <field name="image" widget='image'/>
                         <group col ="2">
@@ -130,43 +132,6 @@
                                 <field name="horsepower_tax" />
                                 <field name="power" />
                             </group>  
-                        </group>
-                        <group string="Insurances">
-                            <field name="log_insurances" nolabel="1">
-                                <tree string="Insurances">
-                                    <field name="insurance_type" />
-                                    <field name="start_date" />
-                                    <field name="expiration_date" />
-                                    <field name="insurer_id" />
-                                    <field name="price" />
-                                    <field name="value" />
-                                    <field name="unit" />
-                                </tree>
-                                <form string="Insurances" version="7.0">
-                                    <sheet>
-                                        <group col="2">
-                                            <group string="Insurance Details">
-                                                <field name="insurance_type" />
-                                                <field name="start_date" />
-                                                <field name="expiration_date" />
-                                                <field name="price" />
-                                            </group>
-                                            <group></group>
-                                        </group>
-                                        <group col="2">
-                                            <group string="Odometer Details">
-                                                <field name="value" />
-                                                <field name="unit" />
-                                            </group>
-                                            <group string="Additional Details">
-                                                <field name="date" />
-                                                <field name="insurer_id" />
-                                                <field name="ins_ref" />
-                                            </group>
-                                        </group>
-                                    </sheet>
-                                </form>
-                            </field>
                         </group>
                     </sheet>
                     <div class="oe_chatter">
@@ -247,7 +212,7 @@
         <act_window
             context="{'default_vehicle_id': active_id}"
             id="act_show_log_insurance"
-            name="Insurance Logs"
+            name="Insurance"
             res_model="fleet.vehicle.log.insurance"
             src_model="fleet.vehicle"
             view_mode="tree,form"
@@ -263,6 +228,116 @@
 
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
+
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_form'>
+            <field name="name">fleet.vehicle.log_insurance.form</field>
+            <field name="model">fleet.vehicle.log.insurance</field>
+            <field name="arch" type="xml">
+                <form string="Insurance logs" version="7.0">
+                    <sheet>
+                        <group col="2">
+                            <group string="Insurance details">
+                                    <field name="insurance_type" />
+                                    <field name="start_date" />
+                                    <field name="expiration_date" />
+                                    <field name="price" />
+                            </group>
+                            <group></group>
+                        </group>
+                        <group col="2">
+                            <group string="Odometer details">
+                                <field name="value" />
+                                <field name="unit" />
+                            </group>
+                            <group string="Additional details">
+                                <field name="date" />
+                                <field name="insurer_id" />
+                                <field name="ins_ref" />
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_tree'>
+            <field name="name">fleet.vehicle.log.insurance.tree</field>
+            <field name="model">fleet.vehicle.log.insurance</field>
+            <field name="arch" type="xml">
+                <tree string="Insurance logs" version="7.0">
+                    <field name="vehicle_id" />
+                    <field name="insurance_type" />
+                    <field name="start_date" />
+                    <field name="expiration_date" />
+                    <field name="insurer_id" />
+                    <field name="price" />
+                    <field name="value" />
+                    <field name="unit" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_insurance_act'>
+            <field name="name">Vehicles Insurances</field>
+            <field name="res_model">fleet.vehicle.log.insurance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_insurance_act" parent="fleet_vehicles" id="fleet_vehicle_log_insurance_menu" />
+
+       <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
+            <field name="name">fleet.vehicle.odometer.form</field>
+            <field name="model">fleet.vehicle.odometer</field>
+            <field name="arch" type="xml">
+                <form string="Odometer Logs" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="vehicle_id" />
+                            <field name="value" />
+                            <field name="unit" />
+                            <field name="date" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_odometer_tree'>
+            <field name="name">fleet.vehicle.odometer.tree</field>
+            <field name="model">fleet.vehicle.odometer</field>
+            <field name="arch" type="xml">
+                <tree string="Odometer Logs" version="7.0" editable="bottom">
+                    <field name="vehicle_id" />
+                    <field name="value" />
+                    <field name="unit" />
+                    <field name="date" />
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
+           <field name="name">fleet.vehicle.odometer.graph</field>
+           <field name="model">fleet.vehicle.odometer</field>
+           <field name="type">graph</field>
+           <field name="arch" type="xml">
+                <graph string="Odometer value per month">
+                    <field name="month" />
+                    <field name="vehicle_id" group="True" /> 
+                    <field name="value" operator="+"/>
+                </graph>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
+            <field name="name">Vehicles Odometer</field>
+            <field name="res_model">fleet.vehicle.odometer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,graph</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_fuel_form'>
             <field name="name">fleet.vehicle.log.fuel.form</field>
@@ -342,54 +417,6 @@
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_form'>
-            <field name="name">fleet.vehicle.log_insurance.form</field>
-            <field name="model">fleet.vehicle.log.insurance</field>
-            <field name="arch" type="xml">
-                <form string="Insurance logs" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="vehicle_id" />
-                            <field name="insurance_type" />
-                            <field name="start_date" />
-                            <field name="expiration_date" />
-                            <field name="price" />
-                            <field name="insurer_id" />
-                            <field name="purchaser_id" />
-                            <field name="ins_ref" />
-                            <field name="notes" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_tree'>
-            <field name="name">fleet.vehicle.log.insurance.tree</field>
-            <field name="model">fleet.vehicle.log.insurance</field>
-            <field name="arch" type="xml">
-                <tree string="Insurance logs" version="7.0">
-                    <field name="vehicle_id" />
-                    <field name="insurance_type" />
-                    <field name="start_date" />
-                    <field name="expiration_date" />
-                    <field name="price" />
-                    <field name="insurer_id" />
-                    <field name="purchaser_id" />
-                    <field name="ins_ref" />
-                    <field name="notes" />
-                </tree>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_insurance_act'>
-            <field name="name">Vehicles Insurance Logs</field>
-            <field name="res_model">fleet.vehicle.log.insurance</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-
-        <menuitem action="fleet_vehicle_log_insurance_act" parent="fleet_vehicles" id="fleet_vehicle_log_insurance_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
             <field name="name">fleet.vehicle.log.services.form</field>
@@ -465,58 +492,6 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
-
-        <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
-            <field name="name">fleet.vehicle.odometer.form</field>
-            <field name="model">fleet.vehicle.odometer</field>
-            <field name="arch" type="xml">
-                <form string="Odometer Logs" version="7.0">
-                    <sheet>
-                        <group>
-                            <field name="vehicle_id" />
-                            <field name="value" />
-                            <field name="unit" />
-                            <field name="date" />
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model='ir.ui.view' id='fleet_vehicle_odometer_tree'>
-            <field name="name">fleet.vehicle.odometer.tree</field>
-            <field name="model">fleet.vehicle.odometer</field>
-            <field name="arch" type="xml">
-                <tree string="Odometer Logs" version="7.0" editable="bottom">
-                    <field name="vehicle_id" />
-                    <field name="value" />
-                    <field name="unit" />
-                    <field name="date" />
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
-           <field name="name">fleet.vehicle.odometer.graph</field>
-           <field name="model">fleet.vehicle.odometer</field>
-           <field name="type">graph</field>
-           <field name="arch" type="xml">
-                <graph string="Odometer value per month">
-                    <field name="month" />
-                    <field name="vehicle_id" group="True" /> 
-                    <field name="value" operator="+"/>
-                </graph>
-            </field>
-        </record>
-
-        <record model='ir.actions.act_window' id='fleet_vehicle_odometer_act'>
-            <field name="name">Vehicles Odometer</field>
-            <field name="res_model">fleet.vehicle.odometer</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
-        </record>
-
-        <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
 
         
 <!--    

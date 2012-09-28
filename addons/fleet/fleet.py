@@ -340,6 +340,10 @@ class fleet_insurance_type(osv.Model):
 class fleet_vehicle_log_insurance(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
+    def compute_next_year_date(strdate):
+        nextyear=int(strdate[:4])+1
+        return str(nextyear)+strdate[4:]
+
     _name = 'fleet.vehicle.log.insurance'
     _columns = {
 
@@ -356,6 +360,9 @@ class fleet_vehicle_log_insurance(osv.Model):
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
+        'start_date' : time.strftime('%Y-%m-%d'),
+        'expiration_date' : compute_next_year_date(time.strftime('%Y-%m-%d')),
+    
     }
 
 class fleet_service_type(osv.Model):
