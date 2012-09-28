@@ -26,8 +26,9 @@ try:
     from gdata.client import RequestError
     from gdata.docs.service import DOCUMENT_LABEL
     import gdata.auth
+    from gdata.docs.data import Resource
 except ImportError:
-    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list.'))
+    raise osv.except_osv(_('Google Docs Error!'), _('Please install latest gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list.'))
 
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
