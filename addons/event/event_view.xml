@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <act_window
-            id="act_event_list_register_event"
-            name="Registration"
-            res_model="event.registration"
-            src_model="event.event"
-            view_mode="calendar,tree,form,graph"
-            context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
-            view_type="form"/>
+        
+        <record id="act_event_list_register_event" model="ir.actions.act_window">
+            <field name="res_model">event.registration</field>
+            <field name="view_type">form</field>
+            <field name="name">Registrations</field>
+            <field name="view_mode">calendar,tree,form,graph</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        </record>
 
         <!-- Top menu item -->
         <menuitem name="Events"

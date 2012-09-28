@@ -31,13 +31,12 @@ Price and Cost Price.
     """,
     'author':'OpenERP SA',
     'images':['images/sale_margin.jpeg'],
-    'depends':['sale'],
+    'depends':['sale_stock'],
     'demo':[],
     'test': ['test/sale_margin.yml'],
     'data':['security/ir.model.access.csv','sale_margin_view.xml'],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001165700015525701661',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

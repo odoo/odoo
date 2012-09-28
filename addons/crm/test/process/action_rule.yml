@@ -7,14 +7,14 @@
     new_id = self.create(cr, uid, {'name': 'New Rule', 'model_id': model_ids[0],  'trg_user_id': ref('base.user_root'), 'trg_partner_id': ref('base.res_partner_1'), 'act_user_id': ref('base.user_demo') })
     self._check(cr, uid)
 -
-  I create new lead to check record rule.
+  I create a new lead to check the record rule.
 -
   !record {model: crm.lead, id: crm_lead_test_rules_id}:
     name: 'Test lead rules'
     partner_id: base.res_partner_1
 -
-  I check record rule is apply and responsible is changed.
+  I check if the record rule is applied and the responsible is changed.
 -
   !python {model: crm.lead}: |
     lead_user = self.browse(cr, uid, ref('crm_lead_test_rules_id'))
-    assert lead_user.user_id.id == ref('base.user_demo'), "Responsible of lead is not changed." 
+    assert lead_user.user_id.id == ref('base.user_demo'), "Responsible of lead is not changed."

@@ -50,7 +50,6 @@ You can also use the geolocalization without using the GPS coordinates.
     'test': ['test/partner_assign.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '00503409558942442061',
     'images': ['images/partner_geo_localization.jpeg','images/partner_grade.jpeg'],
 }
 

@@ -39,7 +39,6 @@ Used, for example, in food industries.""",
     'data' : ['product_expiry_view.xml'],
     'auto_install': False,
     'installable': True,
-    'certificate': '00421222123914960109',
     'images': ['images/production_lots_dates.jpeg','images/products_dates.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

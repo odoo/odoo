@@ -69,7 +69,6 @@ To access OpenERP Calendar using WebCal to remote site use the URL like:
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '00924841426645403741',
     'images': ['images/calendar_collections.jpeg','images/calendars.jpeg','images/export_ics_file.jpeg'],
 }
 

@@ -36,7 +36,7 @@ It manages key tasks such as communication, identification, prioritization, assi
 
 OpenERP ensures that all cases are successfully tracked by users, customers and suppliers. It can automatically send reminders, escalate the request, trigger specific methods and many other actions based on your own enterprise rules.
 
-The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker. 
+The greatest thing about this system is that users don't need to do anything special. The CRM module has an email gateway for the synchronization interface between mails and OpenERP. That way, users can just send emails to the request tracker.
 
 OpenERP will take care of thanking them for their message, automatically routing it to the appropriate staff and make sure all future correspondence gets to the right place.
 
@@ -99,7 +99,7 @@ Dashboard for CRM will include:
 
         'res_partner_view.xml',
         'board_crm_view.xml',
-        
+
         'res_config_view.xml',
 
     ],
@@ -115,14 +115,14 @@ Dashboard for CRM will include:
         'test/process/cancel_lead.yml',
         'test/process/action_rule.yml',
         'test/process/segmentation.yml',
+        'test/process/phonecalls.yml',
         'test/ui/crm_demo.yml',
         'test/ui/duplicate_lead.yml',
-        'test/ui/delete_lead.yml'
+        'test/ui/delete_lead.yml',
     ],
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0079056041421',
     'images': ['images/sale_crm_crm_dashboard.png', 'images/crm_dashboard.jpeg','images/leads.jpeg','images/meetings.jpeg','images/opportunities.jpeg','images/outbound_calls.jpeg','images/stages.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -9,11 +9,7 @@
         <!--
     Resource: product.category
     -->
-
-        <record id="product_category_1" model="product.category">
-            <field name="parent_id" ref="product.product_category_all"/>
-            <field name="name">Saleable</field>
-        </record>
+ 
         <record id="product_category_2" model="product.category">
             <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Internal</field>
@@ -23,27 +19,27 @@
             <field name="name">Other Products</field>
         </record>
         <record id="product_category_4" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Computers</field>
         </record>
         <record id="product_category_5" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Services</field>
         </record>
         <record id="product_category_6" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">External Devices</field>
         </record>
         <record id="product_category_7" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Accessories</field>
         </record>
         <record id="product_category_8" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Components</field>
         </record>
         <record id="product_category_9" model="product.category">
-            <field name="parent_id" ref="product_category_1"/>
+            <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Softwares</field>
         </record>
         <record id="product_category_10" model="product.category">
