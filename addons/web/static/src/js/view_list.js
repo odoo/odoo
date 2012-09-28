@@ -1010,6 +1010,28 @@ instance.web.ListView.List = instance.web.Class.extend( /** @lends instance.web.
                     record.set(column.id, names[0]);
                 });
             }
+        } else if (column.type === 'many2many') {
+            value = record.get(column.id);
+            // non-resolved (string) m2m values are arrays
+            if (value instanceof Array && !_.isEmpty(value)) {
+                var ids;
+                // they come in two shapes:
+                if (value[0] instanceof Array) {
+                    var command = value[0];
+                    // 1. an array of m2m commands (usually (6, false, ids))
+                    if (command[0] !== 6) {
+                        throw new Error(_t("Unknown m2m command ") + command[0]);
+                    }
+                    ids = command[2];
+                } else {
+                    // 2. an array of ids
+                    ids = value;
+                }
+                new instance.web.Model(column.relation)
+                    .call('name_get', [ids]).then(function (names) {
+                        record.set(column.id, _(names).pluck(1).join(', '));
+                    })
+            }
         }
         return column.format(record.toForm().data, {
             model: this.dataset.model,
