@@ -136,7 +136,6 @@
                                 </group>
                                 <group string="Miscellaneous" name="misc">
                                     <field name="date"/>
-                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
 
