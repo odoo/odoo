@@ -1,30 +1,27 @@
 openerp.base = function(instance) {
 
-    instance.base = {};
-    instance.base.Apps = instance.web.Widget.extend({
-        template: 'EmptyComponent',
-        init: function(parent, options) {
-            this._super(parent);
-            this.params = options;      // NOTE read by embeded client action
-            this.clean();
-            // create a new instance
-            this.remote_instance = new openerp.init();
-        },
+    instance.base = {apps:{}};
 
-        clean: function() {
-            if (this.client) {
-                this.client.destroy();
-            }
-        },
+    instance.base.apps.remote_instance = null;
 
-        destroy: function() {
-            this.clean();
-            //delete this.remote_instance;
-            return this._super();
-        },
-
-        _get_options: function() {
-            var self = this;
+    instance.base.apps.get_client = function() {
+        // return the client via a deferred, resolved or rejected depending if the remote host is available or not.
+        var check_client_available = function(client) {
+            var d = $.Deferred();
+            var i = new Image();
+            i.onerror = function() {
+                d.reject(client);
+            };
+            i.onload = function() {
+                console.log('client is available', client);
+                d.resolve(client);
+            };
+            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', client.origin);
+            return d.promise();
+        };
+        if (instance.base.apps._client) {
+            return check_client_available(instance.base.apps._client);
+        } else {
             //var DEFAULT_SERVER = 'http://apps.openerp.com/loempia';           // PROD
             var DEFAULT_SERVER = 'http://apps.openerp.com:9069/loempia7';     // TEST
             //var DEFAULT_SERVER = 'http://localhost:8080/trunk_loempia7';        // DEV
@@ -37,41 +34,60 @@ openerp.base = function(instance) {
                 var login = (sessionStorage ? sessionStorage.getItem('loempia.login') : null) || 'anonymous';
                 var passwd = (sessionStorage ? sessionStorage.getItem('loempia.passwd') : null) || 'anonymous';
 
-                return {
-                   url: host,
-                   dbname: dbname,
-                   login: login,
-                   password: passwd,
-                   action_id: 'loempia.action_embed'
-                };
+                if (_.isNull(instance.base.apps.remote_instance)) {
+                    instance.base.apps.remote_instance = new openerp.init();
+                }
+                var client = new instance.base.apps.remote_instance.web.EmbeddedClient(null, host,
+                                                                         dbname, login, passwd);
+
+                console.log('new client', client);
+                instance.base.apps._client = client;
+                return check_client_available(client);
             });
+        }
+
+    };
+
+    instance.base.apps.Apps = instance.web.Widget.extend({
+        template: 'EmptyComponent',
+        init: function(parent, options) {
+            this._super(parent);
+            this.params = options;      // NOTE read by embeded client action
+        },
+
+        clean: function() {
+            instance.base.apps.get_client().always(function(client) { client.destroy(); });
+        },
+
+        destroy: function() {
+            this.clean();
+            return this._super();
         },
 
         start: function() {
-            return this._get_options().then(this.proxy('_connect'));
-        },
-        _connect: function(options) {
             var self = this;
-            // before creating the client, check the connectivity...
-            var i = new Image();
-            i.onerror = function() {
-                self.do_warn(_.str.sprintf('Apps Server %s not available.', options.url), 'Showing local modules.', true);
-                self.do_action('base.open_module_tree');
-            };
-            i.onload = function() {
+            console.time('apps');
+            console.time('client');
+            console.log('Apps.start()');
+            return instance.base.apps.get_client().
+                done(function(client) {
+                    console.timeEnd('client');
+                    client.replace(self.$el).
+                        done(function() {
+                            client.$el.removeClass('openerp');
+                            console.timeEnd('apps');
+                            client.do_action('loempia.action_embed');
+                        });
+                }).
+                fail(function(client) {
+                    self.do_warn('Apps Server not reachable.', 'Showing local modules.', true);
+                    self.do_action('base.open_module_tree');
+                });
+        },
 
-                var client = self.client = new self.remote_instance.web.EmbeddedClient(null, options.url,
-                                                                         options.dbname, options.login, options.password,
-                                                                         options.action_id);
-
-                client.replace(self.$el).
-                    done(function() {
-                        client.$el.removeClass('openerp');
-                    });
-            };
-            i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif', options.url);
-        }
+        0:0
     });
 
-    instance.web.client_actions.add("apps", "instance.base.Apps");
+    instance.web.client_actions.add("apps", "instance.base.apps.Apps");
+
 };
