@@ -40,7 +40,6 @@ class Controller(openerpweb.Controller):
         with registry.cursor() as cr:
             res_partner = registry.get('res.partner')
             user_info = res_partner.signup_retrieve_info(cr, SUPERUSER_ID, token)
-            user_info.update(db=dbname, token=token)
         return user_info
 
     @openerpweb.httprequest

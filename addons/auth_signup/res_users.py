@@ -85,10 +85,13 @@ class res_partner(osv.Model):
                 partner.write({'signup_token': token, 'signup_expiration': expiration})
         return True
 
-    def _signup_retrieve_partner(self, cr, uid, token, raise_exception=False, context=None):
-        """ find the partner corresponding to a token, and check its validity
+    def _signup_retrieve_partner(self, cr, uid, token,
+            check_validity=False, raise_exception=False, context=None):
+        """ find the partner corresponding to a token, and possibly check its validity
+            :param token: the token to resolve
+            :param check_validity: if True, also check validity
+            :param raise_exception: if True, raise exception instead of returning False
             :return: partner (browse record) or False (if raise_exception is False)
-            :raise: when token not valid (if raise_exception is True)
         """
         partner_ids = self.search(cr, uid, [('signup_token', '=', token)], context=context)
         if not partner_ids:
@@ -96,7 +99,7 @@ class res_partner(osv.Model):
                 raise Exception("Signup token '%s' is not valid" % token)
             return False
         partner = self.browse(cr, uid, partner_ids[0], context)
-        if not partner.signup_valid:
+        if check_validity and not partner.signup_valid:
             if raise_exception:
                 raise Exception("Signup token '%s' is no longer valid" % token)
             return False
@@ -104,14 +107,23 @@ class res_partner(osv.Model):
 
     def signup_retrieve_info(self, cr, uid, token, context=None):
         """ retrieve the user info about the token
-            :return: either {'name': ..., 'login': ...} if a user exists for that token,
-                     or {'name': ..., 'email': ...} otherwise
+            :return: a dictionary with the user information:
+                - 'db': the name of the database
+                - 'token': the token, if token is valid
+                - 'name': the name of the partner, if token is valid
+                - 'login': the user login, if the user already exists
+                - 'email': the partner email, if the user does not exist
         """
         partner = self._signup_retrieve_partner(cr, uid, token, raise_exception=True, context=None)
+        res = {'db': cr.dbname}
+        if partner.signup_valid:
+            res['token'] = token
+            res['name'] = partner.name
         if partner.user_ids:
-            return {'name': partner.name, 'login': partner.user_ids[0].login}
+            res['login'] = partner.user_ids[0].login
         else:
-            return {'name': partner.name, 'email': partner.email or ''}
+            res['email'] = partner.email or ''
+        return res
 
 
 
@@ -133,7 +145,8 @@ class res_users(osv.Model):
         if token:
             # signup with a token: find the corresponding partner id
             res_partner = self.pool.get('res.partner')
-            partner = res_partner._signup_retrieve_partner(cr, uid, token, raise_exception=True, context=None)
+            partner = res_partner._signup_retrieve_partner(cr, uid, token,
+                                        check_validity=True, raise_exception=True, context=None)
             # invalidate signup token
             partner.write({'signup_token': False, 'signup_expiration': False})
             if partner.user_ids:

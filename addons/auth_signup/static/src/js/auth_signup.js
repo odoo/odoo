@@ -31,20 +31,23 @@ openerp.auth_signup = function(instance) {
             return d;
         },
         on_token_loaded: function(result) {
-            // switch to signup mode
-            this.$el.addClass("oe_login_signup");
             // select the right the database
             this.selected_db = result.db;
             this.on_db_loaded({db_list: [result.db]});
-            // set the name and login of user
-            this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
-            if (result.login) {
-                this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
+            if (result.token) {
+                // switch to signup mode, set user name and login
+                this.$el.addClass("oe_login_signup");
+                this.$("form input[name=name]").val(result.name).attr("readonly", "readonly");
+                if (result.login) {
+                    this.$("form input[name=login]").val(result.login).attr("readonly", "readonly");
+                } else {
+                    this.$("form input[name=login]").val(result.email);
+                }
             } else {
-                this.$("form input[name=login]").val(result.email);
+                // remain in login mode, set login if present
+                delete this.params.token;
+                this.$("form input[name=login]").val(result.login || "");
             }
-            this.$("form input[name=password]").val("");
-            this.$("form input[name=confirm_password]").val("");
         },
         on_token_failed: function(result, ev) {
             if (ev) {
