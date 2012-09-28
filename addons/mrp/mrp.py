@@ -902,12 +902,11 @@ class mrp_production(osv.osv):
         # Internal shipment is created for Stockable and Consumer Products
         if production_line.product_id.type not in ('product', 'consu'):
             return False
-        move_name = _('PROD: %s') % production.name
         source_location_id = production.location_src_id.id
         if not destination_location_id:
             destination_location_id = source_location_id
         return stock_move.create(cr, uid, {
-                        'name': move_name,
+                        'name': production.name,
                         'picking_id': shipment_id,
                         'product_id': production_line.product_id.id,
                         'product_qty': production_line.product_qty,
@@ -957,9 +956,8 @@ class mrp_production(osv.osv):
         stock_move = self.pool.get('stock.move')
         source_location_id = production.product_id.product_tmpl_id.property_stock_production.id
         destination_location_id = production.location_dest_id.id
-        move_name = _('PROD: %s') + production.name
         data = {
-            'name': move_name,
+            'name': production.name,
             'date': production.date_planned,
             'product_id': production.product_id.id,
             'product_qty': production.product_qty,
@@ -982,12 +980,11 @@ class mrp_production(osv.osv):
         # Internal shipment is created for Stockable and Consumer Products
         if production_line.product_id.type not in ('product', 'consu'):
             return False
-        move_name = _('PROD: %s') % production.name
         destination_location_id = production.product_id.product_tmpl_id.property_stock_production.id
         if not source_location_id:
             source_location_id = production.location_src_id.id
         move_id = stock_move.create(cr, uid, {
-            'name': move_name,
+            'name': production.name,
             'date': production.date_planned,
             'product_id': production_line.product_id.id,
             'product_qty': production_line.product_qty,
