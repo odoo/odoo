@@ -50,9 +50,13 @@ openerp.base = function(instance) {
 
     instance.base.apps.Apps = instance.web.Widget.extend({
         template: 'EmptyComponent',
+
+        remote_action_id: 'loempia.action_embed',
+        failback_action_id: 'base.open_module_tree',
+
         init: function(parent, options) {
             this._super(parent);
-            this.params = options;      // NOTE read by embeded client action
+            this.params = options;      // NOTE read by embedded client action
         },
 
         clean: function() {
@@ -76,18 +80,23 @@ openerp.base = function(instance) {
                         done(function() {
                             client.$el.removeClass('openerp');
                             console.timeEnd('apps');
-                            client.do_action('loempia.action_embed');
+                            client.do_action(self.remote_action_id);
                         });
                 }).
                 fail(function(client) {
                     self.do_warn('Apps Server not reachable.', 'Showing local modules.', true);
-                    self.do_action('base.open_module_tree');
+                    self.do_action(self.failback_action_id);
                 });
         },
 
         0:0
     });
 
+    instance.base.apps.UpdatesAvailable = instance.base.apps.Apps.extend({
+        remote_action_id: 'loempia.action_embed_updates'
+    })
+
     instance.web.client_actions.add("apps", "instance.base.apps.Apps");
+    instance.web.client_actions.add("apps.updates", "instance.base.apps.UpdatesAvailable");
 
 };
