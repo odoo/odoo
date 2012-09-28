@@ -83,14 +83,14 @@ class mail_notification(osv.Model):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
         return False
 
-    def set_message_read(self, cr, uid, msg_ids, context=None):
+    def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
         if msg_ids == None:
             return False
         if type(msg_ids) is not list:
             msg_ids=[msg_ids]
         partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
         notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', 'in', msg_ids)], context=context)
-        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
+        return self.write(cr, uid, notif_ids, {'read': read}, context=context)
 
     def get_partners_to_notify(self, cr, uid, partner_ids, message, context=None):
         """ Return the list of partners to notify, based on their preferences.

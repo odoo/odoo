@@ -112,9 +112,10 @@
 
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
-                <li t-if="options.thread_level>0"><a class="oe_read oe_e">W<!-- Read/Unread --></a></li>
-                <li t-if="options.show_reply"><a class="oe_mail_msg_reply oe_e">)</a></li>
-                <li t-if="options.show_reply_by_email"><a class="oe_mail_msg_reply_by_email oe_e">)</a></li>
+                <li t-if="options.thread_level>0 and record.unread"><a class="oe_read oe_e">W</a></li>
+                <li t-if="options.thread_level>0 and !record.unread"><a class="oe_unread oe_e">h</a></li>
+                <li t-if="options.thread_level>0 and options.show_reply"><a class="oe_reply oe_e">)</a></li>
+                <li t-if="options.show_reply_by_email"><a class="oe_reply_by_email oe_e">)</a></li>
                 <li>
                     <span class="oe_dropdown_toggle">
                         <a class="oe_e">é</a>
@@ -124,7 +125,7 @@
                             <li t-if="display['show_hide']">
                                 <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{record.subtype}'>Hide '<t t-esc="record.subtype"/>' for this document</a>
                             </li> -->
-                            <li t-if="options.show_dd_reply_by_email"><a class="oe_mail_msg_reply_by_email">Quote and reply</a></li>
+                            <li t-if="options.show_dd_reply_by_email"><a class="oe_reply_by_email">Quote and reply</a></li>
                             <li t-if="record.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{record.id}" >Details</a></li>
                         </ul>
                     </span>
@@ -173,6 +174,7 @@
             </div>
         </div>
     </li>
+
     <!-- expandable message layout -->
     <li t-name="mail.thread.message.expandable" class="oe_mail oe_mail_thread_msg" t-attf-data-msg_model="{record.model}" t-attf-data-msg_id="{record.id}" data-msg_timestamp="-1">
         <div t-attf-class="oe_mail_msg_expandable oe_semantic_html_override">

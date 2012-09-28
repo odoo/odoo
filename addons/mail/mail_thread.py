@@ -615,6 +615,7 @@ class mail_thread(osv.AbstractModel):
         """ Post a new message in an existing thread, returning the new
             mail.message ID. Extra keyword arguments will be used as default
             column values for the new mail.message record.
+            Auto link messages for same id and object
             :param int thread_id: thread ID to post into, or list with one ID
             :param str body: body of the message, usually raw HTML that will
                 be sanitized
@@ -655,11 +656,12 @@ class mail_thread(osv.AbstractModel):
         else:
             subtype_id = False
 
+        model = context.get('thread_model', self._name) if thread_id else False
+        messages = self.pool.get('mail.message')
+
 
         #auto link messages for same id and object
-        messages = self.pool.get('mail.message')
-        model = context.get('thread_model', self._name) if thread_id else False
-        if model != 'res.partner':
+        if model != 'res.partner' and thread_id:
             message_ids = messages.search(cr, uid, ['&',('res_id', '=', thread_id),('model','=',model)], context=context)
             if len(message_ids):
                 parent_id = min(message_ids)

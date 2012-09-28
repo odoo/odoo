@@ -94,14 +94,14 @@
         <record id="action_mail_inbox_feeds" model="ir.actions.client">
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': ['&amp;','|','&amp;','&amp;',('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True),('author_id.user_ids', 'in', [uid]),('type', '=', 'comment'),('unread', '=', True)],
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid]),('unread', '=', False)],
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', False)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 

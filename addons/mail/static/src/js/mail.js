@@ -294,7 +294,6 @@ openerp.mail = function(session) {
                 expandable_max: options.expandable_max || 5,
                 not_expendable: options.not_expendable || false,
             }
-
             // datasets and internal vars
             this.id= options.id || false;
             this.top_parent= (options.top_parent && options.top_parent.browse_thread) ? options.top_parent : (parent.browse_thread ? parent : this);
@@ -337,28 +336,35 @@ openerp.mail = function(session) {
             this.$('*').unbind('click');
             // event: click on 'More' at bottom of thread
             this.$el.on('click', 'a.oe_mail_fetch_more', this.do_message_fetch_more);
-            // event: writing in basic textarea of composition form (quick reply)
-            this.$('textarea.oe_mail_compose_textarea').keyup(function (event) {
-                var charCode = (event.which) ? event.which : window.event.keyCode;
-                if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
-                else if (charCode == 13) { return self.message_post(); }
-            });
             // event: click on 'Reply' in msg
-            this.$el.on('click', 'a.oe_mail_msg_reply', function (event) {
+            this.$el.on('click', 'a.oe_reply', function (event) {
                 var act_dom = $(this).parents('li.oe_mail_thread_msg').eq(0).find('div.oe_mail_thread_action:first');
                 act_dom.toggle();
             });
+            // event: writing in basic textarea of composition form (quick reply)
+            // event: onblur for hide 'Reply'
+            this.$('textarea.oe_mail_compose_textarea:first')
+                .keyup(function (event) {
+                    var charCode = (event.which) ? event.which : window.event.keyCode;
+                    if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
+                    else if (charCode == 13) { return self.message_post(); }
+                })
+                .blur(function (event) {
+                    $(this).parents('.oe_mail_thread_action:first').toggle();
+                });
             // event: click on 'Attachment(s)' in msg
             this.$el.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
                 var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
                 act_dom.toggle();
             });
             // event: click on icone 'Read' in header
-            this.$el.on('click', 'a.oe_read', this.on_message_read);
+            this.$el.on('click', 'a.oe_read', this.on_message_read_unread);
+            // event: click on icone 'UnRead' in header
+            this.$el.on('click', 'a.oe_unread', this.on_message_read_unread);
             // event: click on 'Delete' in msg side menu
             this.$el.on('click', 'a.oe_mail_msg_delete', this.on_message_delete);
             // event: click on 'Reply by email' in msg side menu
-            this.$el.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
+            this.$el.on('click', 'a.oe_reply_by_email', function (event) {
                 if (! self.compose_message_widget) return true;
                 var msg_id = event.srcElement.dataset.msg_id;
                 if (! msg_id) return false;
@@ -373,17 +379,7 @@ openerp.mail = function(session) {
 
         on_message_delete: function (event) {
             if (! confirm(_t("Do you really want to delete this message?"))) { return false; }
-            var msg_id = event.srcElement.dataset.id;
-            if (! msg_id) return false;
-            $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
-            return this.ds_message.unlink([parseInt(msg_id)]);
-        },
 
-        /*The selected thread and all childs (messages/thread) became read
-        * @param {object} mouse envent
-        */
-        on_message_read: function (event) {
-            //TDE: TODO
             var source = $(event.srcElement).parents('[data-msg_id]:first');
             var msg_id = source.data("msg_id");
             var msg_model = source.data("msg_model");
@@ -392,12 +388,29 @@ openerp.mail = function(session) {
             var thread=this.browse_thread({'id':msg_id, 'model':msg_model});
             if(thread){
                 thread.animated_destroy({fadeTime:250});
+                var ids = [thread.id]
+                // delete this thread and his childs
+                var ids = ids.concat( thread.get_child_thread_ids() );
+                this.ds_message.unlink(ids);
+            }
+        },
 
+        /*The selected thread and all childs (messages/thread) became read
+        * @param {object} mouse envent
+        */
+        on_message_read_unread: function (event) {
+            var source = $(event.srcElement).parents('[data-msg_id]:first');
+            var msg_id = source.data("msg_id");
+            var msg_model = source.data("msg_model");
+            if (!msg_id || !msg_model) return false;
+
+            var thread=this.browse_thread({'id':msg_id, 'model':msg_model});
+            if(thread){
+                thread.animated_destroy({fadeTime:250});
                 var ids = [thread.id]
                 // if this thread is read, all childs thread display is read
                 var ids = ids.concat( thread.get_child_thread_ids() );
-
-                thread.ds_notification.call('set_message_read', [ids]);
+                thread.ds_notification.call('set_message_read', [ids,$(event.srcElement).hasClass("oe_read")]);
             }
         },
 
@@ -428,7 +441,7 @@ openerp.mail = function(session) {
                 return this.top_parent.browse_thread(options);
             }
 
-            if(this.id && this.model){
+            if(options.id && options.model){
                 if(this.id==options.id && this.model==options.model)
                     return this;
 
@@ -448,7 +461,7 @@ openerp.mail = function(session) {
 
         animated_destroy: function(options) {
             var self=this;
-            //graphic effects
+            //graphic effects  
             if(options.fadeTime)
                 self.$el.parents(".oe_mail_thread_msg:first").fadeOut(options.fadeTime, function(){
                     self.destroy();
@@ -490,6 +503,7 @@ openerp.mail = function(session) {
         /** Instantiate the composition form, with every parameters in context
             or in the widget context. */
         instantiate_composition_form: function(context) {
+            var self=this;
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
             }
@@ -498,7 +512,12 @@ openerp.mail = function(session) {
             });
             var composition_node = this.$('div.oe_mail_thread_action');
             composition_node.empty();
-            var compose_done = this.compose_message_widget.appendTo(composition_node);
+            var compose_done = this.compose_message_widget.appendTo(composition_node)
+                .then(function(){
+                    self.$("button.oe_mail_compose_message_button_send").mouseup(function(){
+                        self.browse_thread({'top_thread':1}).message_fetch();
+                    });
+                });
             return compose_done;
         },
 
@@ -524,6 +543,12 @@ openerp.mail = function(session) {
             // domain and context: options + additional
             fetch_domain = _.flatten([this.domain, additional_domain || []], true);
             fetch_context = _.extend({}, this.context, additional_context || {});
+
+            fetch_context.message_loaded=[];
+            self.$("li[data-msg_id][data-msg_model]").each(function(){
+                fetch_context.message_loaded.push($(this).data("msg_id"))
+            });
+
             // initial mode: try to use message_data or message_ids
             if (initial_mode && this.options.message_data) {
                 return this.message_display_create_thread(this.options.message_data);
@@ -548,6 +573,11 @@ openerp.mail = function(session) {
                     $(rendered).appendTo(self.$el.children('ul.oe_mail_thread_display:first'));
                 }
                 else if(inc<=self.options.expandable_max) {
+
+                    //if thread exists, don't create new thread
+                    if(self.browse_thread({'model': record.model,'id': record.id,}))
+                        return false;
+
                     /*create thread*/
                     var thread = new mail.Thread(self, self.domain,
                         {   'default_model': record.model,
@@ -558,7 +588,7 @@ openerp.mail = function(session) {
                             'message_data': record.child_ids,
                             'thread_level': self.options.thread_level - 1,
                             'show_header_compose': false,
-                            'show_reply': self.options.show_reply && self.options.thread_level > 1,
+                            'show_reply': self.options.show_reply,
                             'show_reply_by_email': self.options.show_reply_by_email,
                             'show_dd_hide': self.options.show_dd_hide,
                             'show_dd_delete': self.options.show_dd_delete,
@@ -646,6 +676,8 @@ openerp.mail = function(session) {
                 $rendered.insertBefore(this.$('> ul.oe_mail_thread_display:first > li[data-msg_timestamp='+parent_older+']'));
             else
                 $rendered.prependTo(this.$('> ul.oe_mail_thread_display:first'));
+
+            $rendered.hide().fadeIn(750);
 
 
             this.$('> div.oe_mail_msg_body').expander({
@@ -882,7 +914,7 @@ openerp.mail = function(session) {
                 {   'thread_level': this.options.thread_level,
                     'use_composer': true,
                     'show_reply': this.options.thread_level > 0,
-                    'show_dd_hide': true
+                    'show_dd_hide': true,
                 }
             );
 

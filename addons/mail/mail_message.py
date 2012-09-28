@@ -201,7 +201,7 @@ class mail_message(osv.Model):
             partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
-        
+
         return {
             'id': msg.id,
             'type': msg.type,
@@ -302,6 +302,12 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
+
+        # don't read the message display by .js, in context message_loaded list
+        if context and context.get('message_loaded'):
+            domain += [['id','not in',context.get('message_loaded')]];
+
+
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
@@ -325,13 +331,14 @@ class mail_message(osv.Model):
                     record_parent['child_ids'].append(record)
                 record = record_parent
                 msg = msg.parent_id
-            if msg.id not in tree:
+            # if not in record and not in message_loded list
+            if msg.id not in tree and not(context and context.get('message_loaded') and msg.id in context.get('message_loaded')) :
                 result.append(record)
                 tree[msg.id] = record
 
         # Flatten the result
-        result = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context, limit=limit, add_expandable=add_expandable)
-        return result
+        result2 = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context, limit=limit, add_expandable=add_expandable)
+        return result2
 
     #------------------------------------------------------
     # Email api
@@ -483,11 +490,18 @@ class mail_message(osv.Model):
             fol_objs = fol_obj.browse(cr, uid, fol_ids, context=context)
             extra_notified = set(fol.partner_id.id for fol in fol_objs)
             missing_notified = extra_notified - partners_to_notify
+            missing_notified = missing_notified
             if missing_notified:
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified
-        # # remove uid from partners
-        self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, uid)]}, context=context)
+
+        if message.model=="res.partner" and message.res_id==message.author_id.id:
+            # add myself author if I wrote on my wall
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
+        else:
+            # unless remove myself author
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
+
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

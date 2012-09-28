@@ -217,10 +217,6 @@ class mail_compose_message(osv.TransientModel):
     def send_mail(self, cr, uid, ids, context=None):
         """ Process the wizard content and proceed with sending the related
             email(s), rendering any template patterns on the fly if needed. """
-
-        print ""
-        print "send_mail", ids, context
-
         if context is None:
             context = {}
         active_ids = context.get('active_ids')
@@ -256,7 +252,10 @@ class mail_compose_message(osv.TransientModel):
             # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
             self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {'res_id': wizard.id}, context=context)
 
-        return {'type': 'ir.actions.act_window_close'}
+        if context.get('mail_action_wizard_close'):
+            return {'type': 'ir.actions.act_window_close'}
+        else:
+            return False
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
         """ Generate an email from the template for given (wizard.model, res_id)
