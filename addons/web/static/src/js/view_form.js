@@ -2659,7 +2659,7 @@ instance.web.form.CompletionFieldMixin = {
 
         return this.orderer.add(dataset.name_search(
                 search_val, new instance.web.CompoundDomain(self.build_domain(), [["id", "not in", blacklist]]),
-                'ilike', this.limit + 1, self.build_context())).pipe(function(data) {
+                'ilike', this.limit + 1)).then(self.trigger('build_context')).pipe(function(data) {
             self.last_search = data;
             // possible selections for the m2o
             var values = _.map(data, function(x) {
@@ -2678,7 +2678,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', false, function(data) {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', false).then(function(data) {
                             self._search_create_popup("search", data);
                         });
                     },
