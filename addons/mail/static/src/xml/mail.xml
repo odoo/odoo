@@ -149,7 +149,7 @@
                         <li t-if="options.show_record_name and record.record_name and record.subject and options.thread_level > 0">
                             <a t-attf-href="#model=#{record.model}&amp;id=#{record.res_id}"><t t-raw="record.record_name"/></a>
                         </li>
-                        <!--li t-if="record.author_id"><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li-->
+                        <li t-if="record.author_id"><a t-attf-href="#model=res.partner&amp;id=#{record.author_id[0]}"><t t-raw="record.author_id[1]"/></a></li>
                         <li><span t-att-title="record.date"><t t-raw="record.timerelative"/></span></li>
                         <t t-call="mail.thread.message.vote"/>
                         <li t-if="record.attachment_ids.length > 0">

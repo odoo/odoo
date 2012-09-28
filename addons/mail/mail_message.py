@@ -307,7 +307,6 @@ class mail_message(osv.Model):
         if context and context.get('message_loaded'):
             domain += [['id','not in',context.get('message_loaded')]];
 
-
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
@@ -474,6 +473,9 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids.
             Call mail_notification.notify to manage the email sending
         """
+
+        print "notification ?"
+
         message = self.browse(cr, uid, newid, context=context)
         partners_to_notify = set([])
         # message has no subtype_id: pure log message -> no partners, no one notified
@@ -495,11 +497,14 @@ class mail_message(osv.Model):
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified
 
-        if message.model=="res.partner" and message.res_id==message.author_id.id:
-            # add myself author if I wrote on my wall
+        # add myself if I wrote on my wall, 
+        # unless remove myself author
+        if ((message.model=="res.partner" and message.res_id==message.author_id.id)):
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
+            # add myself if this message have a parent message and I recive parent message
+            # ! subtype_id: pure log message => do this in read_message
+            # or (message.parent_id and self.pool.get('mail.notification').search(cr, uid, [('partner_id','=',message.author_id.id),('message_id','=',message.parent_id)])):
         else:
-            # unless remove myself author
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
 
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)

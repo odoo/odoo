@@ -485,12 +485,12 @@ openerp.mail = function(session) {
         },
 
         /**
-         * Override-hack of do_action: automatically reload the chatter.
+         * Override-hack of do_action: automatically load message on the chatter.
          * Normally it should be called only when clicking on 'Post/Send'
          * in the composition form. */
         do_action: function(action, on_close) {
             //TDE: TODO: instead of reloading, push the message ?
-            this.message_clean();
+            console.log("do_action");
             this.message_fetch();
             if (this.compose_message_widget) {
                 this.compose_message_widget.refresh({
@@ -513,22 +513,13 @@ openerp.mail = function(session) {
             var composition_node = this.$('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node)
-                .then(function(){
-                    self.$("button.oe_mail_compose_message_button_send").mouseup(function(){
-                        self.browse_thread({'top_thread':1}).message_fetch();
-                    });
-                });
+                .then(function(){ self.message_post_wizard(); });
             return compose_done;
         },
 
         refresh_composition_form: function (context) {
             if (! this.compose_message_widget) return;
             return this.compose_message_widget.refresh(context);
-        },
-
-        /** Clean the thread */
-        message_clean: function() {
-            this.$('ul.oe_mail_thread_display').empty();
         },
 
         /** Fetch messages
@@ -747,6 +738,18 @@ openerp.mail = function(session) {
                     .then(this.proxy('message_treat_new_data'));
             else
                 return false;
+        },
+
+        /*post a message and flatch the message with wizard form*/
+        message_post_wizard: function () {
+            var self=this;
+            self.$("button.oe_mail_compose_message_button_send").mouseup(function(){
+                window.setTimeout(function(){
+                    self.$('.oe_mail_msg_content textarea').val("");
+                    self.browse_thread({'top_thread':1}).message_fetch();
+                },250);
+                console.log("todo : load after write on wizard !");
+            });
         },
 
         /** Action: 'shows more' to fetch new messages */
