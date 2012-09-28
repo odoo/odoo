@@ -625,7 +625,7 @@ class sale_order_line(osv.osv):
                 uom = False
         if not uom2:
             uom2 = product_obj.uom_id
-            
+
         compare_qty = float_compare(product_obj.virtual_available * uom2.factor, qty * product_obj.uom_id.factor, precision_rounding=product_obj.uom_id.rounding)
         if (product_obj.type=='product') and int(compare_qty) == -1 \
           and (product_obj.procure_method=='make_to_stock'):

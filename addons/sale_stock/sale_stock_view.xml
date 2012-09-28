@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
         <record id="view_sale_shop_form_inherit" model="ir.ui.view">
             <field name="name">sale.shop.inherit.form</field>
             <field name="model">sale.shop</field>
@@ -13,7 +13,7 @@
                 </xpath>
             </field>
         </record>
-        
+
          <record id="view_shop_tree_inherit" model="ir.ui.view">
              <field name="name">sale.shop.sale.stock</field>
              <field name="model">sale.shop</field>
@@ -41,7 +41,7 @@
                    </xpath>
                    <xpath expr="//button[@name='action_view_invoice']" position="after">
                        <button name="action_view_delivery" string="View Delivery Order" type="object" class="oe_highlight"
-                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>                   </xpath>                   
+                           attrs="{'invisible': ['|','|','|',('picking_ids','=',False),('picking_ids','=',[]), ('state', 'not in', ('progress','manual')),('shipped','=',True)]}"/>                   </xpath>
                     <xpath expr="//button[@name='action_cancel']" position="after">
                         <button name="ship_cancel" states="shipping_except" string="Cancel"/>
                     </xpath>
