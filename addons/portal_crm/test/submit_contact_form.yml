@@ -1,0 +1,12 @@
+-
+  As a portal user, I fill in the contact form and submit it
+-
+  !python {model: portal_crm.crm_contact_us}: |
+    values = {
+        'name': 'Need information about your products',
+        'partner_name': 'Mr. John Doe',
+        'email_from': 'mister@john.doe',
+        'phone': '+32 444 11 22 33',
+        'description': 'Dear Sir or Madam, could you get back to me asap ?  Regards.'
+    }
+    self.create(cr, ref("portal.demo_user0"), values, context=context)

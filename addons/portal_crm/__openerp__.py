@@ -27,11 +27,14 @@
     'complexity': 'easy',
     'description': """
 This module adds a contact page (with a contact form creating a lead when submitted) to your portal if crm and portal are installed.
-====================================================================================================================================    
+====================================================================================================================================
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','portal'],
     'data': ['wizard/contact_view.xml'],
+    'test': [
+        'test/submit_contact_form.yml',
+    ],
     'installable': True,
     'auto_install': True,
     'category': 'Hidden',
