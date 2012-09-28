@@ -2093,10 +2093,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
 });
 
 /**
- * A mixin to apply on any field that has to completely re-render when its readonly state
+ * A mixin to apply on any FormWidget that has to completely re-render when its readonly state
  * switch.
  */
-instance.web.form.ReinitializeFieldMixin =  {
+instance.web.form.ReinitializeWidgetMixin =  {
     /**
      * Default implementation of start(), use it or call explicitly initialize_field().
      */
@@ -2109,10 +2109,8 @@ instance.web.form.ReinitializeFieldMixin =  {
             this.destroy_content();
             this.renderElement();
             this.initialize_content();
-            this.render_value();
         });
         this.initialize_content();
-        this.render_value();
     },
     /**
      * Called to destroy anything that could have been created previously, called before a
@@ -2123,11 +2121,25 @@ instance.web.form.ReinitializeFieldMixin =  {
      * Called to initialize the content.
      */
     initialize_content: function() {},
+};
+
+/**
+ * A mixin to apply on any field that has to completely re-render when its readonly state
+ * switch.
+ */
+instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
+    initialize_field: function() {
+        instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
+        this.on("change:effective_readonly", this, function() {
+            this.render_value();
+        });
+        this.render_value();
+    },
     /**
      * Called to render the value. Should also be explicitly called at the end of a set_value().
      */
     render_value: function() {},
-};
+});
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
