@@ -1305,16 +1305,6 @@
     Account.Entry Edition
     -->
 
-        <record id="account_move_graph" model="ir.ui.view">
-            <field name="name">account.move.graph</field>
-            <field name="model">account.move</field>
-            <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
-                    <field name="period_id"/>
-                    <field name="amount" operator="+"/>
-                </graph>
-            </field>
-         </record>
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -1488,7 +1478,7 @@
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="help" type="html">
