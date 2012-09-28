@@ -650,11 +650,9 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <div name="oe_list_add_div">
-            <button type="button" class="oe_button oe_list_add oe_highlight">
-                <t t-esc="widget.options.addable"/>
-            </button>
-        </div>
+        <button type="button" class="oe_button oe_list_add oe_highlight">
+            <t t-esc="widget.options.addable"/>
+        </button>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -695,7 +693,7 @@
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="div.oe_list_add_div" t-operation="after">
+    <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
         <span class="oe_alternative">
