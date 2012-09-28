@@ -349,7 +349,8 @@ openerp.mail = function(session) {
             // event: click on 'Reply by email' in msg side menu
             this.$el.on('click', 'a.oe_mail_msg_reply_by_email', function (event) {
                 if (! self.compose_message_widget) return true;
-                var msg_id = event.srcElement.dataset.msg_id;
+                evt = event.target || event.srcElement;
+                var msg_id = evt.dataset.msg_id;
                 if (! msg_id) return false;
                 self.compose_message_widget.refresh({
                     'default_composition_mode': 'reply',
@@ -370,9 +371,10 @@ openerp.mail = function(session) {
 
         on_message_read: function (event) {
             //TDE: TODO
-            var msg_id = event.srcElement.dataset.id;
+            evt = event.target || event.srcElement;
+            var msg_id = evt.dataset.id;
             if (! msg_id) return false;
-            $(event.srcElement).parents('li.oe_mail_thread_msg').eq(0).remove();
+            $(evt).parents('li.oe_mail_thread_msg').eq(0).remove();
             return this.ds_notification.call('set_message_read', [parseInt(msg_id)]);
         },
 
