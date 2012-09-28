@@ -105,7 +105,7 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group>
-                                        <field name="procure_method" groups="base.group_user"/>
+                                     <!--   <field name="procure_method" groups="base.group_user"/>  -->
                                         <field name="supply_method" groups="base.group_user" invisible="1"/>
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
@@ -467,11 +467,15 @@
                         </group>
                         <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
+                                e.g: 1 * (reference unit) = ratio * (this unit)
+                            </p>
+                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
+                                e.g: 1 * (this unit) = ratio * (reference unit)
+                            </p>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
                             <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
-                            <label string="  e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
@@ -715,7 +719,7 @@
                             </group>
                             <group string="Procurement">
                                 <field name="type"/>
-                                <field name="procure_method"/>
+                          <!--      <field name="procure_method"/>   -->
                                 <field name="supply_method"/>
                             </group>
 

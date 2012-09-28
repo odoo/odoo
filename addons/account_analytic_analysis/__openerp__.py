@@ -47,7 +47,6 @@ Adds menu to show relevant information to each manager.You can also view the rep
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0042927202589',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

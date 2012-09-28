@@ -284,7 +284,6 @@ class product_template(osv.osv):
         'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
         'sale_delay': fields.float('Customer Lead Time', help="This is the average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
         'produce_delay': fields.float('Manufacturing Lead Time', help="Average delay in days to produce this product. This is only for the production order and, if it is a multi-level bill of material, it's only for the level of this product. Different lead times will be summed for all levels and purchase orders."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
         'rental': fields.boolean('Can be Rent'),
         'categ_id': fields.many2one('product.category','Category', required=True, change_default=True, domain="[('type','=','normal')]" ,help="Select category for the current product"),
         'list_price': fields.float('Sale Price', digits_compute=dp.get_precision('Product Price'), help="Base price for computing the customer price. Sometimes called the catalog price."),
@@ -743,6 +742,14 @@ class product_product(osv.osv):
         else:
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context and context.get('search_default_categ_id', False):
+            args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
+        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
 product_product()
 
 class product_packaging(osv.osv):

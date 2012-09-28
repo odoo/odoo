@@ -84,6 +84,5 @@ Dashboard / Reports for MRP will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0032052481373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

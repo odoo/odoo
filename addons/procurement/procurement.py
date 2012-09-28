@@ -102,7 +102,6 @@ class procurement_order(osv.osv):
         'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
-
         'note': fields.text('Note'),
         'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
@@ -629,6 +628,7 @@ class product_product(osv.osv):
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
         'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
     }
 
 product_product()

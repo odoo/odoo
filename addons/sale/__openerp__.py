@@ -88,6 +88,5 @@ The Dashboard for the Sales Manager will include
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '0058103601429',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
