@@ -1493,11 +1493,8 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
             if (value.length === 2 && _.isString(value[1])) {
                 return $.when(facet_from(this, value));
             }
-            if (value.length > 1) {
-                // more than one search_default m2o id? Should we OR them?
-                throw new Error(
-                    _("M2O search fields do not currently handle multiple default values"));
-            }
+            assert(value.length <= 1,
+                   _("M2O search fields do not currently handle multiple default values"));
             // there are many cases of {search_default_$m2ofield: [id]}, need
             // to handle this as if it were a single value.
             value = value[0];
