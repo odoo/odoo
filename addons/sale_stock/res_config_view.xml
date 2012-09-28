@@ -9,6 +9,12 @@
              <field name="inherit_id" ref="sale.view_sales_config"/>
              <field name="arch" type="xml">
                  <data>
+                     <xpath expr="//div[@name='Customer Features']" position="inside">
+                         <div>
+                              <field name="group_sale_delivery_address" class="oe_inline"/>
+                              <label for="group_sale_delivery_address"/>
+                         </div>
+                     </xpath>
                      <xpath expr="//div[@name='group_invoice_so_lines']" position="replace">
                          <div>
                              <field name="group_invoice_so_lines" on_change="onchange_invoice_methods(group_invoice_so_lines, group_invoice_deli_orders)" class="oe_inline"/>
