@@ -972,6 +972,11 @@ instance.web.Registry = instance.web.Class.extend({
 });
 
 instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
+    events: {
+        'request': 'Request sent',
+        'response': 'Response received',
+        'error': 'HTTP Error response or timeout received',
+    },
     /**
      * @constructs instance.web.JsonRPC
      * @extends instance.web.CallbackEnabled
