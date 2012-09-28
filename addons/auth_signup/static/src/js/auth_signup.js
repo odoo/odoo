@@ -58,7 +58,7 @@ openerp.auth_signup = function(instance) {
             if (ev) {
                 ev.preventDefault();
             }
-            if (this.params.token || this.$("input[name=signup]:checked").val()) {
+            if (this.$el.hasClass("oe_login_signup")) {
                 // signup user (or reset password)
                 var db = this.$("form [name=db]").val();
                 var name = this.$("form input[name=name]").val();
