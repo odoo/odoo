@@ -247,12 +247,22 @@ class fleet_vehicle(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
         try:
-            changes = {}
+            changes = []
             for key,value in vals.items():
-                if key == 'license_plate' or key == 'driver':
-                    changes[key] = value
+                if key in ['license_plate','driver','state']:
+                    if key == 'driver':
+                        value = self.pool.get('res.partner').browse(cr,uid,value,context=context).name
+                    if key == 'state':
+                        value = self.pool.get('fleet.vehicle.state').browse(cr,uid,value,context=context).name
+                    if key == 'driver':
+                        key = 'Driver'
+                    elif key == 'license_plate':
+                        key = 'License Plate'
+                    elif key =='state':
+                        key = 'State'
+                    changes.append(key + ' to \'' + value+'\'')
             if len(changes) > 0:
-                self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ str(changes), context=context)
+                self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ ", ".join(changes), context=context)
                 #self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ ','.join(chain(*str(changes.items()))), context=context)
         except Exception as e:
             print e
