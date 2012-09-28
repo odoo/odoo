@@ -41,7 +41,7 @@ class test_portal(test_mail.TestMailMockups):
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
 
         # Find Portal group
-        group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal_member')
+        group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
         self.group_portal_id = group_portal_ref and group_portal_ref[1] or False
 
         # Create Chell (portal user)
