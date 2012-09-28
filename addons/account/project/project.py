@@ -21,6 +21,7 @@
 
 from osv import fields
 from osv import osv
+import time
 
 class account_analytic_journal(osv.osv):
     _name = 'account.analytic.journal'
@@ -50,4 +51,39 @@ class account_journal(osv.osv):
 
 account_journal()
 
+class account_analytic_journal_report_print(osv.osv_memory):
+    _name = 'account.analytic.journal.report.print'
+    _description = 'Account Analytic Journal Print'
+
+    _columns = {
+        'date1': fields.date('Start of period', required=True),
+        'date2': fields.date('End of period', required=True),
+        'analytic_account_journal_id': fields.many2many('account.analytic.journal', 'account_analytic_journal_name', 'journal_line_id', 'journal_print_id', 'Journals', required=True),
+    }
+
+    _defaults = {
+        'date1': lambda *a: time.strftime('%Y-01-01'),
+        'date2': lambda *a: time.strftime('%Y-%m-%d')
+    }
+
+    def check_print_report(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        data = self.read(cr, uid, ids)[0]
+        data_b = self.browse(cr, uid, ids)[0]
+        analytic_jounal_id = []
+        for journal_id in data_b.analytic_account_journal_id:
+            analytic_jounal_id.append(journal_id.id)
+        datas = {
+             'ids': analytic_jounal_id,
+             'model': 'account.analytic.journal',
+             'form': data
+                 }
+        return {
+            'type': 'ir.actions.report.xml',
+            'report_name': 'account.analytic.journal',
+            'datas': datas,
+            }
+
+account_analytic_journal_report_print()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
