@@ -29,8 +29,6 @@ class base_language_import(osv.osv_memory):
 
     _name = "base.language.import"
     _description = "Language Import"
-    _inherit = "ir.wizard.screen"
-
     _columns = {
         'name': fields.char('Language Name',size=64 , required=True),
         'code': fields.char('Code (eg:en__US)',size=5 , required=True),
@@ -66,6 +64,5 @@ class base_language_import(osv.osv_memory):
         fileobj.close()
         return {}
 
-base_language_import()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

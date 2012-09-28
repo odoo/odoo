@@ -36,7 +36,6 @@ import ir_translation
 import ir_exports
 import workflow
 import ir_rule
-import wizard
 import ir_config_parameter
 import osv_memory_autovacuum
 import ir_mail_server
