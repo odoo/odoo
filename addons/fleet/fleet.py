@@ -49,7 +49,7 @@ class fleet_vehicle_model(osv.Model):
     _columns = {
         'name' : fields.function(_model_name_get_fnc, type="char", string='Name', store=True),
         'modelname' : fields.char('Model name', size=32, required=True), 
-        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model brand', required=True, help='Brand of the vehicle'),
+        'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
         'image': fields.related('brand','image',type="binary",string="Logo",store=False)
     }
@@ -126,7 +126,7 @@ class fleet_vehicle(osv.Model):
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
-        'license_plate' : fields.char('License plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
+        'license_plate' : fields.char('License Plate', size=32, required=True, help='License plate number of the vehicle (ie: plate number for a car)'),
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle'),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
@@ -134,12 +134,12 @@ class fleet_vehicle(osv.Model):
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
-        'acquisition_date' : fields.date('Acquisition date', required=False, help='Date when the vehicle has been bought'),
+        'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', domain='[]'),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
-        'doors' : fields.integer('Number of doors', help='Number of doors of the vehicle'),
+        'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
@@ -300,7 +300,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         #'name' : fields.char('Name',size=64),
 
         'liter' : fields.float('Liter'),
-        'price_per_liter' : fields.float('Price per liter'),
+        'price_per_liter' : fields.float('Price Per Liter'),
         'amount': fields.float('Total price'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
         'inv_ref' : fields.char('Invoice Reference', size=64),
@@ -346,8 +346,8 @@ class fleet_vehicle_log_insurance(osv.Model):
         #'name' : fields.char('Name',size=64),
 
         'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
-        'start_date' : fields.date('Start date', required=False, help='Date when the coverage of the insurance begins'),
-        'expiration_date' : fields.date('Expiration date', required=False, help='Date when the coverage of the insurance expirates'),
+        'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the insurance begins'),
+        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the insurance expirates'),
         'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
@@ -363,12 +363,3 @@ class fleet_service_type(osv.Model):
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
-
-#class hr_employee(osv.Model):
-#    _inherit = 'hr.employee'
-
-#    _columns = {
-#        'vehicle_id' : fields.one2many('fleet.vehicle','driver', 'Vehicle',type="char"),
-#        'log_ids' : fields.one2many('fleet.vehicle.log', 'employee_id', 'Logs'),
-#    }
-

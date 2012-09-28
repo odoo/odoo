@@ -97,13 +97,13 @@
                     </header>
                     <sheet>
                        <div class="oe_right oe_button_box">
-                        <button name="act_show_log_fuel" type="object" string="fuel logs" help="show the fuel logs for this vehicle" />
-                        <button name="act_show_log_insurance" type="object" string="insurance logs" help="show the insurance logs for this vehicle" />
-                        <button name="act_show_log_services" type="object" string="services logs" help="show the services logs for this vehicle" />
+                        <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" />
+                        <button name="act_show_log_insurance" type="object" string="Insurance Logs" help="show the insurance logs for this vehicle" />
+                        <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
                         </div>
                         <field name="image" widget='image'/>
                         <group col ="2">
-                            <group string="General properties">
+                            <group string="General Properties">
                                 <field name="model_id" />
                                 <field name="license_plate" />
                                 <field name="vin_sn" />
@@ -111,7 +111,7 @@
                                  <field name="location" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
-                            <group string="Additional properties">
+                            <group string="Additional Properties">
                                 <field name="tag_ids" widget="many2many_tags" />
                                 <field name="acquisition_date" />
                                 <field name="acquisition_price" />
@@ -145,7 +145,7 @@
                                 <form string="Insurances" version="7.0">
                                     <sheet>
                                         <group col="2">
-                                            <group string="Insurance details">
+                                            <group string="Insurance Details">
                                                 <field name="insurance_type" />
                                                 <field name="start_date" />
                                                 <field name="expiration_date" />
@@ -154,11 +154,11 @@
                                             <group></group>
                                         </group>
                                         <group col="2">
-                                            <group string="Odometer details">
+                                            <group string="Odometer Details">
                                                 <field name="value" />
                                                 <field name="unit" />
                                             </group>
-                                            <group string="Additional details">
+                                            <group string="Additional Details">
                                                 <field name="date" />
                                                 <field name="insurer_id" />
                                                 <field name="ins_ref" />
@@ -271,21 +271,21 @@
                 <form string="Fuel Logs" version="7.0">
                     <sheet>
                         <group col="2">
-                            <group string="Vehicle details">
+                            <group string="Vehicle Details">
                                 <field name="vehicle_id"/>
                             </group>
-                            <group string="Refueling details">
+                            <group string="Refueling Details">
                                 <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
                                 <field name="price_per_liter" on_change="on_change_price_per_liter(liter,price_per_liter,amount)" />
                                 <field name="amount" on_change="on_change_amount(liter,price_per_liter,amount)"/>
                             </group>
                         </group>
                         <group col="2">
-                            <group string="Odometer details">
+                            <group string="Odometer Details">
                                 <field name="value" />
                                 <field name="unit" />
                             </group>
-                            <group string="Additional details">
+                            <group string="Additional Details">
                                 <field name="date" />
                                 <field name="purchaser_id" />
                                 <field name="inv_ref" />
@@ -398,20 +398,20 @@
                 <form string="Services Logs" version="7.0">
                     <sheet>
                         <group col="2">
-                            <group string="Vehicle details">
+                            <group string="Vehicle Details">
                                 <field name="vehicle_id" />
                             </group>
-                            <group string="Services details">
+                            <group string="Services Details">
                                 <field name="service_ids" widget="many2many_tags"/>
                                 <field name="amount" />
                             </group>
                         </group>
                         <group col="2">
-                            <group string="Odometer details">
+                            <group string="Odometer Details">
                                 <field name="value" />
                                 <field name="unit" />
                             </group>
-                            <group string="Additional details">
+                            <group string="Additional Details">
                                 <field name="date" />
                                 <field name="purchaser_id" />
                                 <field name="vendor_id" />
@@ -449,7 +449,7 @@
            <field name="model">fleet.vehicle.log.services</field>
            <field name="type">graph</field>
            <field name="arch" type="xml">
-                <graph string="Odometer value per month">
+                <graph string="Services total amount per month">
                     <field name="month" />
                     <field name="vehicle_id" group="True" /> 
                     <field name="amount" operator="+"/>
@@ -470,7 +470,7 @@
             <field name="name">fleet.vehicle.odometer.form</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
-                <form string="Odometer logs" version="7.0">
+                <form string="Odometer Logs" version="7.0">
                     <sheet>
                         <group>
                             <field name="vehicle_id" />
@@ -487,7 +487,7 @@
             <field name="name">fleet.vehicle.odometer.tree</field>
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
-                <tree string="Odometer logs" version="7.0" editable="bottom">
+                <tree string="Odometer Logs" version="7.0" editable="bottom">
                     <field name="vehicle_id" />
                     <field name="value" />
                     <field name="unit" />
