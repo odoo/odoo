@@ -43,6 +43,19 @@ class fleet_vehicle_model(osv.Model):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
 
+    def on_change_brand(self, cr, uid, ids, model_id, context=None):
+
+        if not model_id:
+            return {}
+
+        brand = self.pool.get('fleet.vehicle.model.brand').browse(cr, uid, model_id, context=context)
+
+        return {
+            'value' : {
+                'image' : brand.image,
+            }
+        }
+
     _name = 'fleet.vehicle.model'
     _description = 'Model of a vehicle'
 
@@ -177,26 +190,15 @@ class fleet_vehicle(osv.Model):
     }
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
-        # print "ids: %r" % (ids,)
-        # print "model_id: %r" % (model_id,)
-        # print "context: %r" % (context,)
-        # import logging
-        # logger = logging.getLogger('fleet.vehicle')
-        # logger.info('Hello')
-
-        # import ipdb
-        # ipdb.set_trace()
 
         if not model_id:
             return {}
 
         model = self.pool.get('fleet.vehicle.model').browse(cr, uid, model_id, context=context)
 
-        print "model: %r" % (model.name,)
-
         return {
             'value' : {
-                'message' : "You have selected this %s model" % (model.name,),
+                'image' : model.image,
             }
         }
     def create(self, cr, uid, data, context=None):

@@ -10,7 +10,7 @@
                         <field name="image" widget='image' class="oe_left oe_avatar"/>
                         <group col="2">
                             <group>
-                                <field name="brand" />
+                                <field name="brand" on_change="on_change_brand(brand)"/>
                             </group>
                             <group>
                                 <field name="modelname" />   
@@ -100,16 +100,14 @@
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
                             <h1>
-                                <field name="model_id" class="oe_inline"/>
+                                <field name="model_id" class="oe_inline" on_change="on_change_model(model_id)"/>
                             </h1>
                             <label for="license_plate" class="oe_edit_only"/>
                             <h2>
                                 <field name="license_plate" class="oe_inline"/>
                             </h2>
-                            
                             <label for="tag_ids" class="oe_edit_only"/>
                             <field name="tag_ids" widget="many2many_tags" />
-                            
                         </div>
                         <div class="oe_right oe_button_box">
                             <button name="act_show_log_insurance" type="object" string="Insurances" help="show the insurance for this vehicle" />
@@ -187,7 +185,7 @@
                                 <div class="oe_vehicle_desc">
                                     <h4><a type="open"><field name="license_plate"/></a></h4>
                                     <p>
-                                        <field name="model_id"/><br/>
+                                        <field name="model_id" on_change="on_change_model(model_id)"/><br/>
                                         <t t-if="record.driver.raw_value"><field name="driver"/><br/></t>
                                         <t t-if="record.location.raw_value"><field name="location"/><br/></t>
                                     </p>
