@@ -55,6 +55,5 @@ task is completed.
     'test': ['test/project_task_procurement.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0031976495453',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

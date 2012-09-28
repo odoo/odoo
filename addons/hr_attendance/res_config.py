@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
-#    OpenERP, Open Source Management Solution
-#    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
+#    OpenERP, Open Source Business Applications
+#    Copyright (C) 2004-2012 OpenERP S.A. (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,15 @@
 #
 ##############################################################################
 
-import base_calendar_invite_attendee
+from osv import fields, osv
+
+class hr_attendance_config_settings(osv.osv_memory):
+    _inherit = 'hr.config.settings'
+
+    _columns = {
+        'group_hr_attendance': fields.boolean('Track attendances',
+            implied_group='base.group_hr_attendance',
+            help="Allocates attendance group to all users."),
+    }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

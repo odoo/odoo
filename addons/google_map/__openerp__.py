@@ -40,6 +40,5 @@ Using this you can directly open Google Map from the URL widget.""",
     'js': ['static/src/js/google_map.js'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0029498930765',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

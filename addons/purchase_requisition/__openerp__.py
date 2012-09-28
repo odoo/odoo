@@ -48,7 +48,6 @@ keep track and order all your purchase orders.
         'test/cancel_purchase_requisition.yml',
     ],
     'installable': True,
-    'certificate': '001023264099823179629',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

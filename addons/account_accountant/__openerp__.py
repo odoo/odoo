@@ -43,6 +43,5 @@ It assigns manager and user access rights to the Administrator and only user rig
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '00395091383933390541',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

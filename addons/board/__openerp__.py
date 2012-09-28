@@ -42,7 +42,6 @@ Allows users to create custom dashboard.
     'qweb': ['static/src/xml/*.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0076912305725',
     'images': ['images/1_dashboard_definition.jpeg','images/2_publish_note.jpeg','images/3_admin_dashboard.jpeg',],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

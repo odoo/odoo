@@ -115,6 +115,10 @@
                             <field name="note"/>
                         </page>
                     </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Followers of this salesteam follow automatically all opportunities related to this salesteam."/>
+                    </div>
                 </form>
             </field>
         </record>
