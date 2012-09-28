@@ -117,6 +117,9 @@ class account_config_settings(osv.osv_memory):
         'group_multi_currency': fields.boolean('Allow multi currencies',
             implied_group='base.group_multi_currency',
             help="Allows you multi currency environment"),
+        'group_analytic_accounting': fields.boolean('Analytic accounting',
+            implied_group='analytic.group_analytic_accounting',
+            help="Allows you to use the analytic accounting."),
     }
 
     def _default_company(self, cr, uid, context=None):

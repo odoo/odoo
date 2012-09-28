@@ -141,6 +141,7 @@ hr_employee()
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
+    _inherit = "mail.thread"
     _description = "Employee Appraisal"
     _rec_name = 'employee_id'
     _columns = {
@@ -242,8 +243,10 @@ class hr_evaluation(osv.osv):
     def button_final_validation(self, cr, uid, ids, context=None):
         request_obj = self.pool.get('hr.evaluation.interview')
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
-        for id in self.browse(cr, uid, ids, context=context):
-            if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
+        for evaluation in self.browse(cr, uid, ids, context=context):
+            if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
+                self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
+            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
@@ -263,6 +266,10 @@ class hr_evaluation(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('employee_id'):
+            employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
+            if employee_id.parent_id and employee_id.parent_id.user_id:
+                vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
         if 'date' in vals:
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
