@@ -195,7 +195,7 @@ class res_company(osv.osv):
         ]
 
         ids = proxy.search(cr, uid, args, context=context)
-        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, ['company_id'], context=context)
+        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
