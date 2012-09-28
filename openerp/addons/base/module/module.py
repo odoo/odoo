@@ -664,7 +664,10 @@ class module(osv.osv):
                 # if any to update
                 cr.commit()
                 openerp.service.restart_server()
-                return False
+                return {
+                    'type': 'ir.actions.client',
+                    'tag': 'reload'
+                }
             return self.button_immediate_install(cr, uid, ids, context=context)
         finally:
             shutil.rmtree(tmp)
