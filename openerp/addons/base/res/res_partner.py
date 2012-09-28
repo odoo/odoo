@@ -200,7 +200,10 @@ class res_partner(osv.osv, format_address):
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
+        'address': fields.one2many('res.partner.address', 'partner_id', 'Addresses',
+                deprecated="The address information is now directly stored on each Partner record. "\
+                           "Multiple contacts with their own address can be added via the child_ids relationship. "\
+                           "This field will be removed as of OpenERP 7.1."),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
@@ -219,7 +222,8 @@ class res_partner(osv.osv, format_address):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
+        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
+                                  deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
         'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),

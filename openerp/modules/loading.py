@@ -61,7 +61,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True, skip_modules=
        :param graph: graph of module nodes to load
        :param status: status dictionary for keeping track of progress
        :param perform_checks: whether module descriptors should be checked for validity (prints warnings
-                              for same cases, and even raise osv_except if certificate is invalid)
+                              for same cases)
        :param skip_modules: optional list of module names (packages) which have previously been loaded and can be skipped
        :return: list of modules that were installed or updated
     """
