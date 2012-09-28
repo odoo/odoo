@@ -37,7 +37,6 @@ Price and Cost Price.
     'data':['security/ir.model.access.csv','sale_margin_view.xml'],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001165700015525701661',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

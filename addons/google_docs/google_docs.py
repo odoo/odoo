@@ -134,8 +134,8 @@ class config(osv.osv):
     _description = "Google Docs templates config"
 
     _columns = {
-        'model_id': fields.many2one('ir.model', 'Model'),
-        'gdocs_resource_id': fields.char('Google resource ID', size=64,help='''
+        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'gdocs_resource_id': fields.char('Google Resource ID to Use as Template', size=64,help='''
 This is the id of the template document, on google side. You can find it thanks to its URL: 
 *for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`
 *for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`
@@ -143,7 +143,7 @@ This is the id of the template document, on google side. You can find it thanks 
 *for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
 ...
 '''),
-        'name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
+        'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side'),
     }
 
     _defaults = {

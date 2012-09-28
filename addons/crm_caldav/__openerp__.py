@@ -42,7 +42,6 @@ Caldav features in Meeting.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '001088048737252670109',
     'images': ['images/caldav_browse_step1.jpeg','images/caldav_browse_step2.jpeg'],
 }
 

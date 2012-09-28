@@ -13,7 +13,7 @@ var _t = instance.web._t;
             });
             if (! flag) {
                 this.add_items('files', [
-                    { label: _t('Google Doc'), callback: self.on_google_doc },
+                    { label: _t('Add Google Doc...'), callback: self.on_google_doc },
                 ]);
             }
         },
