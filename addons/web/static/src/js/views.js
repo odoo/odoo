@@ -1215,7 +1215,7 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args, handler);
+            return dataset.call_button(action_data.name, args).then(handler(r));
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
