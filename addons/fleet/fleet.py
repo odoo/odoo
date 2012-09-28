@@ -98,9 +98,20 @@ class fleet_vehicle(osv.Model):
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
 
+    def act_show_log_insurance(self, cr, uid, ids, context=None):
+        """ This opens log view to view and add new log for this vehicle
+            @return: the insurance log view
+        """
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_insurance', context)
+        res['context'] = {
+            'default_vehicle_id': ids[0]
+        }
+        res['domain']=[('vehicle_id','=', ids[0])]
+        return res
+
     def act_show_log_fuel(self, cr, uid, ids, context=None):
         """ This opens log view to view and add new log for this vehicle
-            @return: the service log view
+            @return: the fuel log view
         """
         res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_fuel', context)
         res['context'] = {

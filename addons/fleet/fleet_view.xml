@@ -97,8 +97,9 @@
                     </header>
                     <sheet>
                        <div class="oe_right oe_button_box">
-                        <button name="act_show_log_services" type="object" string="services logs" help="show the services logs for this vehicle" />
                         <button name="act_show_log_fuel" type="object" string="fuel logs" help="show the fuel logs for this vehicle" />
+                        <button name="act_show_log_insurance" type="object" string="insurance logs" help="show the insurance logs for this vehicle" />
+                        <button name="act_show_log_services" type="object" string="services logs" help="show the services logs for this vehicle" />
                         </div>
                         <field name="image" widget='image'/>
                         <group col ="2">
@@ -242,6 +243,15 @@
             src_model="fleet.vehicle"
             view_mode="tree,form"
             view_type="form"/>
+
+        <act_window
+            context="{'default_vehicle_id': active_id}"
+            id="act_show_log_insurance"
+            name="Insurance Logs"
+            res_model="fleet.vehicle.log.insurance"
+            src_model="fleet.vehicle"
+            view_mode="tree,form"
+            view_type="form"/>
         
 
         <record model='ir.actions.act_window' id='fleet_vehicle_act'>
@@ -317,6 +327,55 @@
         </record>
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_form'>
+            <field name="name">fleet.vehicle.log_insurance.form</field>
+            <field name="model">fleet.vehicle.log.insurance</field>
+            <field name="arch" type="xml">
+                <form string="Insurance logs" version="7.0">
+                    <sheet>
+                        <group>
+                            <field name="vehicle_id" />
+                            <field name="insurance_type" />
+                            <field name="start_date" />
+                            <field name="expiration_date" />
+                            <field name="price" />
+                            <field name="insurer_id" />
+                            <field name="purchaser_id" />
+                            <field name="ins_ref" />
+                            <field name="notes" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_tree'>
+            <field name="name">fleet.vehicle.log.insurance.tree</field>
+            <field name="model">fleet.vehicle.log.insurance</field>
+            <field name="arch" type="xml">
+                <tree string="Insurance logs" version="7.0">
+                    <field name="vehicle_id" />
+                    <field name="insurance_type" />
+                    <field name="start_date" />
+                    <field name="expiration_date" />
+                    <field name="price" />
+                    <field name="insurer_id" />
+                    <field name="purchaser_id" />
+                    <field name="ins_ref" />
+                    <field name="notes" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_insurance_act'>
+            <field name="name">Vehicles Insurance Logs</field>
+            <field name="res_model">fleet.vehicle.log.insurance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_log_insurance_act" parent="fleet_vehicles" id="fleet_vehicle_log_insurance_menu" />
 
         <record model='ir.ui.view' id='fleet_vehicle_log_services_form'>
             <field name="name">fleet.vehicle.log.services.form</field>
@@ -418,6 +477,8 @@
         </record>
 
         <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
+
+        
 <!--    
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>
