@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
         <record id="wizard_lang_export" model="ir.ui.view">
-            <field name="name">Export Translations</field>
+            <field name="name">Translations Export</field>
             <field name="model">base.language.export</field>
             <field name="arch" type="xml">
-                <form string="Export Translations" version="7.0">
-                    <group colspan="4" states="choose">
-                        <separator colspan="4" string="Export Translation"/>
+                <form string="Translations Export" version="7.0">
+                    <field invisible="1" name="state"/>
+                    <field name="name" invisible="1"/>
+                    <group states="choose" string="Export Settings">
                         <field name="lang"/>
-                        <field name="format" required="1"/>
-                        <field name="modules" nolabel="1"/>
-                        <field invisible="1" name="state"/>
+                        <field name="format"/>
+                        <field name="modules"/>
                     </group>
-                    <group colspan="4" states="get">
-                        <separator string="Export done" colspan="4"/>
-                        <field name="name" invisible="1" colspan="4"/>
-                        <field name="data" nolabel="1" readonly="1" filename="name" colspan="4"/>
-                        <field height="80" name="advice" nolabel="1" colspan="4"/>
-                    </group>
+                    <div states="get">
+                        <h2>Export Complete</h2>
+                        <p>Here is the exported translation file: <field name="data" readonly="1" filename="name"/></p>
+                        <p>This file was generated using the universal <strong>Unicode/UTF-8</strong> file encoding, please be sure to view and edit
+                           using the same encoding.</p> 
+                        <p>The next step depends on the file format:
+                            <ul>
+                            <li>CSV format: you may edit it directly with your favorite spreadsheet software,
+                                the rightmost column (value) contains the translations</li>
+                            <li>PO(T) format: you should edit it with a PO editor such as
+                                <a href="http://www.poedit.net/" target="_blank">POEdit</a>, or your preferred text editor</li>
+                            <li>TGZ format: this is a compressed archive containing a PO file, directly suitable
+                                for uploading to OpenERP's translation platform,
+                                <a href="https://translations.launchpad.net/openobject-addons" target="_blank">Launchpad</a></li>
+                            </ul>
+                        </p>
+                        <p>For more details about translating OpenERP in your language, please refer to the
+                           <a href="http://doc.openerp.com/v6.1/contribute/07_improving_translations.html" target="_blank">documentation</a>.</p>
+                    </div>
                     <footer states="choose">
-                        <button name="act_getfile" string="_Export" type="object" class="oe_highlight"/> or 
-                        <button name="act_cancel" special="cancel" string="_Cancel" type="object" class="oe_link"/>
+                        <button name="act_getfile" string="Export" type="object" class="oe_highlight"/> or 
+                        <button special="cancel" string="Cancel" type="object" class="oe_link"/>
                     </footer>
                     <footer states="get">
-                        <button name="act_cancel" special="cancel" string="_Close" type="object"/>
+                        <button special="cancel" string="Close" type="object"/>
                     </footer>
                 </form>
             </field>
