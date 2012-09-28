@@ -36,7 +36,6 @@ Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
     'depends' : ['base', 'account'],
     'data' : [
-        'security/compta_security.xml',
         'security/ir.model.access.csv',
         'account_type.xml',
         'account_pcg_morocco.xml',
@@ -47,7 +46,6 @@ Seddik au cours du troisième trimestre 2010.""",
     'demo' : [],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00599614652359069981',
     'images': ['images/config_chart_l10n_ma.jpeg','images/l10n_ma_chart.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

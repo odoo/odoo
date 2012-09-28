@@ -729,14 +729,16 @@ class stock_picking(osv.osv):
         """ Confirms picking.
         @return: True
         """
+        pickings = self.browse(cr, uid, ids, context=context)
+        for picking in pickings:
+            if picking.state <> 'confirmed':
+                self.confirm_send_note(cr, uid, [picking.id], context=context)
         self.write(cr, uid, ids, {'state': 'confirmed'})
         todo = []
-        for picking in self.browse(cr, uid, ids, context=context):
+        for picking in pickings:
             for r in picking.move_lines:
                 if r.state == 'draft':
                     todo.append(r.id)
-
-
         todo = self.action_explode(cr, uid, todo, context)
         if len(todo):
             self.pool.get('stock.move').action_confirm(cr, uid, todo, context=context)
@@ -1170,8 +1172,9 @@ class stock_picking(osv.osv):
                 return True
             for move in pick.move_lines:
                 if move.state == 'done':
-                    raise osv.except_osv(_('Error!'), _('You cannot cancel picking because stock move is in done state!'))
+                    raise osv.except_osv(_('Error!'), _('You cannot cancel the picking as some moves have been done. You should cancel the picking lines.'))
         return True
+
     def unlink(self, cr, uid, ids, context=None):
         move_obj = self.pool.get('stock.move')
         if context is None:
@@ -1385,17 +1388,21 @@ class stock_picking(osv.osv):
     # OpenChatter methods and notifications
     # -----------------------------------------
 
-    def _get_document_type(self, type):
+    def _get_document_type(self, cr, uid, obj, context=None):
         type_dict = {
-                'out': 'Delivery order',
-                'in': 'Shipment',
-                'internal': 'Internal picking',
+                'out': _('Delivery order'),
+                'in': _('Shipment'),
+                'internal': _('Internal picking'),
         }
-        return type_dict.get(type, 'Stock picking')
+        return type_dict.get(obj.type, _('Picking'))
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
+
+    def confirm_send_note(self, cr, uid, ids, context=None):
+        for obj in self.browse(cr, uid, ids, context=context):
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>confirmed</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
 
     def scrap_send_note(self, cr, uid, ids, quantity, uom, name, context=None):
         return self.message_post(cr, uid, ids, body= _("%s %s %s has been <b>moved to</b> scrap.") % (quantity, uom, name), context=context)
@@ -1405,16 +1412,16 @@ class stock_picking(osv.osv):
 
     def ship_done_send_note(self, cr, uid, ids, context=None):
         type_dict = {
-                'out': 'delivered',
-                'in': 'received',
-                'internal': 'moved',
+                'out': _("Products have been <b>delivered</b>."),
+                'in': _("Products have been <b>received</b>."),
+                'internal': _("Products have been <b>moved</b>."),
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
+            self.message_post(cr, uid, [obj.id], body=type_dict.get(obj.type, _('Products have been moved.')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(obj.type)), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>cancelled</b>.") % (self._get_document_type(cr, uid, obj, context=context)), context=context)
 
 
 stock_picking()
@@ -1501,7 +1508,7 @@ class stock_production_lot(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True, domain=[('type', '<>', 'service')]),
         'date': fields.datetime('Creation Date', required=True),
         'stock_available': fields.function(_get_stock, fnct_search=_stock_search, type="float", string="Available", select=True,
-            help="Current quantity of products with this Production Lot Number available in company warehouses",
+            help="Current quantity of products with this Serial Number available in company warehouses",
             digits_compute=dp.get_precision('Product Unit of Measure')),
         'revisions': fields.one2many('stock.production.lot.revision', 'lot_id', 'Revisions'),
         'company_id': fields.many2one('res.company', 'Company', select=True),
@@ -1839,8 +1846,8 @@ class stock_move(osv.osv):
         warning = {}
         if (location.usage == 'internal') and (product_qty > (amount_actual or 0.0)):
             warning = {
-                'title': _('Insufficient Stock in Lot !'),
-                'message': _('You are moving %.2f %s products but only %.2f %s available in this lot.') % (product_qty, uom.name, amount_actual, uom.name)
+                'title': _('Insufficient Stock for Serial Number !'),
+                'message': _('You are moving %.2f %s but only %.2f %s available for this serial number.') % (product_qty, uom.name, amount_actual, uom.name)
             }
         return {'warning': warning}
 

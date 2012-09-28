@@ -57,9 +57,9 @@ ATTENTION:
     ],
     'demo': [ 'document_demo.xml','board_document_demo.xml'],
     'test': ['test/document_test2.yml'],
+    'js': ['static/src/js/document.js'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0070515416461',
     'images': ['images/1_directories.jpeg','images/2_storage_media.jpeg','images/3_directories_structure.jpeg'],
 }
 
