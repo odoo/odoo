@@ -605,8 +605,7 @@ var messages_by_seconds = function() {
         [120, _t("Don't leave yet,<br />it's still loading...")],
         [300, _t("You may not believe it,<br />but the application is actually loading...")],
         [420, _t("Take a minute to get a coffee,<br />because it's loading...")],
-        [600, _t("It's loading...<br />By the way, did you tried the kitten mode?")],
-        [3600, _t("Maybe you should consider pressing F5...")],
+        [3600, _t("Maybe you should consider reloading the application by pressing F5...")],
     ];
 };
 
