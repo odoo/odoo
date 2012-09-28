@@ -2518,7 +2518,7 @@ class account_account_template(osv.osv):
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
-        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
@@ -2535,20 +2535,6 @@ class account_account_template(osv.osv):
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        if 'parent_id' in vals:
-            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
-            if parent and parent[0]['type'] != 'view':
-                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
-        return super(account_account_template, self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'parent_id' in vals:
-            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
-            if parent and parent[0]['type'] != 'view':
-                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
-        return super(account_account_template, self).write(cr, uid, ids, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
