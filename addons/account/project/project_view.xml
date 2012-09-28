@@ -73,7 +73,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">account.analytic.account</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,graph,form</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_account_analytic_account_tree"/>
             <field name="search_view_id" ref="account.view_account_analytic_account_search"/>
         </record>
@@ -359,17 +359,6 @@
                 </field>
             </field>
         </record>
-
-     <record id="analytic_accounts_graph" model="ir.ui.view">
-            <field name="name">analytic.accounts.graph</field>
-            <field name="model">account.analytic.account</field>
-            <field name="arch" type="xml">
-                <graph string="Analytic Account Statistics" type="bar">
-                    <field name="name"/>
-                    <field name="balance" operator="+"/>
-                </graph>
-            </field>
-     </record>
 
     </data>
 </openerp>
