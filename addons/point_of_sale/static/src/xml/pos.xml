@@ -261,8 +261,10 @@
     <t t-name="WelcomeScreenWidget">
         <div class="welcome-screen screen">
             <header><h2>Welcome</h2></header>
+            <div class="dialog">
             <img src="/point_of_sale/static/src/img/scan.png" />
             <p> Please scan an item or your member card </p>
+            </div>
         </div>
         <div class="goodbye-message">
             <p>Thank you for shopping with us.</p>
@@ -280,9 +282,11 @@
     <t t-name="ClientPaymentScreenWidget">
         <div class="scan-product-screen screen">
             <header><h2>Payment</h2></header>
-            <img src="/point_of_sale/static/src/img/bancontact.png" />
-            <p>Please insert your card in the reader and follow the instructions to complete
+            <div class="dialog">
+                <img src="/point_of_sale/static/src/img/bancontact.png" />
+                <p>Please insert your card in the reader and follow the instructions to complete
             your purchase</p>
+            </div>
         </div>
     </t>
 
