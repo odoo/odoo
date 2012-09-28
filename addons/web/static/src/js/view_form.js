@@ -1683,22 +1683,42 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(instance.web.P
     },
 });
 
+/**
+    Base class for all fields, custom widgets and buttons to be displayed in the form view.
+
+    Properties:
+        - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
+        the values of the "readonly" property and the "mode" property on the field manager.
+*/
 instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.InvisibilityChangerMixin, {
     /**
      * @constructs instance.web.form.FormWidget
      * @extends instance.web.Widget
      *
-     * @param view
+     * @param field_manager
      * @param node
      */
-    init: function(view, node) {
-        this._super(view);
-        this.view = view;
+    init: function(field_manager, node) {
+        this._super(field_manager);
+        this.view = field_manager;
+        this.field_manager = field_manager;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
-        instance.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
+        instance.web.form.InvisibilityChangerMixin.init.call(this, this.field_manager, this.modifiers.invisible);
 
-        this.view.on("view_content_has_changed", this, this.process_modifiers);
+        this.field_manager.on("view_content_has_changed", this, this.process_modifiers);
+
+        this.set({required: this.modifiers['required'] === true});
+        // some events to make the property "effective_readonly" sync automatically with "readonly" and
+        // "mode" on field_manager
+        var self = this;
+        this.set({"readonly": this.modifiers['readonly'] === true});
+        var test_effective_readonly = function() {
+            self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
+        };
+        this.on("change:readonly", this, test_effective_readonly);
+        this.field_manager.on("change:actual_mode", this, test_effective_readonly);
+        test_effective_readonly.call(this);
     },
     renderElement: function() {
         this._super();
@@ -1808,8 +1828,8 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 
 instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
         if (JSON.parse(this.node.attrs.default_focus || "0")) {
@@ -1970,8 +1990,6 @@ instance.web.form.FieldInterface = {
  * Abstract class for classes implementing FieldInterface.
  *
  * Properties:
- *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
- *      the values of the "readonly" property and the "mode" property on the field manager.
  *     - value: useful property to hold the value of the field. By default, set_value() and get_value()
  *     set and retrieve the value property. Changing the value property also triggers automatically
  *     a 'changed_value' event that inform the view to trigger on_changes.
@@ -1988,24 +2006,13 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     init: function(field_manager, node) {
         var self = this
         this._super(field_manager, node);
-        this.field_manager = field_manager;
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
         this.options = JSON.parse(this.node.attrs.options || '{}');
         this.set({'value': false});
-        this.set({required: this.modifiers['required'] === true});
 
-        // some events to make the property "effective_readonly" sync automatically with "readonly" and
-        // "mode"
-        this.set({"readonly": this.modifiers['readonly'] === true});
-        var test_effective_readonly = function() {
-            self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
-        };
-        this.on("change:readonly", this, test_effective_readonly);
-        this.field_manager.on("change:actual_mode", this, test_effective_readonly);
-        test_effective_readonly.call(this);
         this.on("change:value", this, function() {
             this.trigger('changed_value');
             this._check_css_flags();
