@@ -1310,37 +1310,6 @@ class BaseModel(object):
         the same order they were extracted from the file. They can be passed
         directly to :meth:`~read`
 
-        Each message is a dictionary with the following keys:
-
-        ``type``
-            the type of message, either ``warning`` or ``error``. Any ``error``
-            message indicates the import failed and was rolled back.
-        ``message``
-            the message's actual text, which should be translated and can be
-            shown to the user directly
-        ``rows``
-            a dict with 2 keys ``from`` and ``to``, indicates the range of rows
-            in ``data`` which generated the message
-        ``record``
-            a single integer, for warnings the index of the record which
-            generated the message (can be obtained from a non-false ``ids``
-            result)
-        ``field``
-            the name of the (logical) OpenERP field for which the error or
-            warning was generated
-        ``moreinfo`` (optional)
-            A string, a list or a dict, leading to more information about the
-            warning.
-
-            * If ``moreinfo`` is a string, it is a supplementary warnings
-              message which should be hidden by default
-            * If ``moreinfo`` is a list, it provides a number of possible or
-              alternative values for the string
-            * If ``moreinfo`` is a dict, it is an OpenERP action descriptor
-              which can be executed to get more information about the issues
-              with the field. If present, the ``help`` key serves as a label
-              for the action (e.g. the text of the link).
-
         :param cr: cursor for the request
         :param int uid: ID of the user attempting the data import
         :param fields: list of fields to import, at the same index as the corresponding data
