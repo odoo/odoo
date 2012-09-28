@@ -91,6 +91,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
         this.tags_registry = instance.web.form.tags;
+        this.widgets_registry = instance.web.form.custom_widgets;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
@@ -142,6 +143,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.rendering_engine.set_fields_registry(this.fields_registry);
         this.rendering_engine.set_tags_registry(this.tags_registry);
+        this.rendering_engine.set_widgets_registry(this.widgets_registry);
         if (!this.extract_qweb_template(data)) {
             this.rendering_engine.set_fields_view(data);
             var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
@@ -1151,6 +1153,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_fields_registry: function(fields_registry) {
         this.fields_registry = fields_registry;
     },
+    set_widgets_registry: function(widgets_registry) {
+        this.widgets_registry = widgets_registry;
+    },
     // Backward compatibility tools, current default version: v6.1
     process_version: function() {
         if (this.version < 7.0) {
@@ -1175,6 +1180,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         this.fields_to_init = [];
         this.tags_to_init = [];
+        this.widgets_to_init = [];
         this.labels = {};
         this.process(this.$form);
 
@@ -1201,6 +1207,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
             var obj = self.tags_registry.get_object(tag_name);
+            var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
+            w.replace($elem);
+        });
+        _.each(this.widgets_to_init, function($elem) {
+            var widget_type = $elem.attr("type");
+            var obj = self.widgets_registry.get_object(widget_type);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             w.replace($elem);
         });
@@ -1245,6 +1257,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             $tag.removeAttr("modifiers");
             return $tag;
         }
+    },
+    process_widget: function($widget) {
+        this.widgets_to_init.push($widget);
+        return $widget;
     },
     process_sheet: function($sheet) {
         var $new_sheet = this.render_element('FormRenderingSheet', $sheet.getAttributes());
@@ -1956,7 +1972,7 @@ instance.web.form.FieldInterface = {
     /**
      * Called when the translate button is clicked.
      */
-    on_translate: function() {},
+        on_translate: function() {},
 };
 
 /**
@@ -4952,6 +4968,9 @@ instance.web.form.widgets = new instance.web.Registry({
  */
 instance.web.form.tags = new instance.web.Registry({
     'button' : 'instance.web.form.WidgetButton',
+});
+
+instance.web.form.custom_widgets = new instance.web.Registry({
 });
 
 };
