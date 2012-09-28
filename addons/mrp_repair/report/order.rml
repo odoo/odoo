@@ -367,7 +367,7 @@
           <para style="terp_default_9">Taxes:</para>
         </td>
         <td>
-          <para style="P26">[[ formatLang(o.amount_tax, dp='Account')]] [[ o.pricelist_id.currency_id. symbol ]]</para>
+          <para style="P26">[[ formatLang(o.amount_tax, digits=get_digits(dp='Account'), currency_obj=o.pricelist_id.currency_id) ]]</para>
         </td>
       </tr>
       <tr>
