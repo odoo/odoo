@@ -105,18 +105,17 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group>
-                                     <!--   <field name="procure_method" groups="base.group_user"/>  -->
                                         <field name="supply_method" groups="base.group_user" invisible="1"/>
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
                                     <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','service')]}">
                                             When you sell this service, nothing special will be trigered
                                             to deliver the customer, as you set the procurement method as
                                             'Make to Stock'.
                                         </p>
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','product')]}">
                                             When you sell this product, OpenERP will <b>use the available
                                             inventory</b> for the delivery order.
                                             <br/><br/>
@@ -124,7 +123,7 @@
                                             will wait for new products. To fulfill the inventory, you should
                                             create others rules like orderpoints.
                                         </p>
-                                        <p attrs="{'invisible': [('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','consu')]}">
                                             When you sell this product, a delivery order will be created.
                                             OpenERP will consider that the <b>required quantities are always
                                             available</b> as it's a consumable (as a result of this, the quantity
@@ -719,7 +718,6 @@
                             </group>
                             <group string="Procurement">
                                 <field name="type"/>
-                          <!--      <field name="procure_method"/>   -->
                                 <field name="supply_method"/>
                             </group>
 

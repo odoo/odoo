@@ -358,7 +358,6 @@ class product_template(osv.osv):
         'sale_delay': lambda *a: 7,
         'produce_delay': lambda *a: 1,
         'purchase_ok': lambda *a: 1,
-        'procure_method': lambda *a: 'make_to_stock',
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
