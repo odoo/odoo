@@ -690,7 +690,6 @@ class task(base_stage, osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
-        default['stage_id'] = False
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
