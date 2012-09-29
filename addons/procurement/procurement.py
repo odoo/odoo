@@ -423,24 +423,26 @@ class procurement_order(osv.osv):
         """
         return 0
 
+    # XXX action_cancel() should accept a context argument
     def action_cancel(self, cr, uid, ids):
-        """ Cancels procurement and writes move state to Assigned.
+        """Cancel Procurements and either cancel or assign the related Stock Moves, depending on the procurement configuration.
+        
         @return: True
         """
-        todo = []
-        todo2 = []
+        to_assign = []
+        to_cancel = []
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
             if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done', 'cancel'):
-                    todo2.append(proc.move_id.id)
+                    to_cancel.append(proc.move_id.id)
             else:
                 if proc.move_id and proc.move_id.state == 'waiting':
-                    todo.append(proc.move_id.id)
-        if len(todo2):
-            move_obj.action_cancel(cr, uid, todo2)
-        if len(todo):
-            move_obj.write(cr, uid, todo, {'state': 'assigned'})
+                    to_assign.append(proc.move_id.id)
+        if len(to_cancel):
+            move_obj.action_cancel(cr, uid, to_cancel)
+        if len(to_assign):
+            move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
