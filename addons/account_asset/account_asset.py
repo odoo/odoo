@@ -368,7 +368,7 @@ class account_asset_depreciation_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
                 can_close = True
-            depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
+            depreciation_date = time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id
