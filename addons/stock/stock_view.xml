@@ -1122,7 +1122,7 @@
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
-            <field eval="6" name="priority"/>
+            <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="name"/>
