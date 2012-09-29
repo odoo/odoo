@@ -679,6 +679,7 @@ class stock_picking(osv.osv):
     def action_process(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
+        """Open the partial picking wizard"""
         context.update({
             'active_model': self._name,
             'active_ids': ids,
@@ -727,6 +728,7 @@ class stock_picking(osv.osv):
         return {}
 
     def action_explode(self, cr, uid, moves, context=None):
+        """Hook to allow other modules to split the moves of a picking."""
         return moves
 
     def action_confirm(self, cr, uid, ids, context=None):
@@ -868,14 +870,20 @@ class stock_picking(osv.osv):
     # TODO: change and create a move if not parents
     #
     def action_done(self, cr, uid, ids, context=None):
-        """ Changes picking state to done.
+        """Changes picking state to done.
+        
+        This method is called at the end of the workflow by the activity "done".
         @return: True
         """
         self.write(cr, uid, ids, {'state': 'done', 'date_done': time.strftime('%Y-%m-%d %H:%M:%S')})
         return True
 
     def action_move(self, cr, uid, ids, context=None):
-        """ Changes move state to assigned.
+        """Process the Stock Moves of the Picking
+        
+        This method is called by the workflow by the activity "move".
+        Normally that happens when the signal button_done is received (button 
+        "Done" pressed on a Picking view). 
         @return: True
         """
         for pick in self.browse(cr, uid, ids, context=context):
@@ -2551,6 +2559,7 @@ class stock_move(osv.osv):
         return res
 
     # action_split function is not used anywhere
+    # FIXME: deprecate this method
     def action_split(self, cr, uid, ids, quantity, split_by_qty=1, prefix=False, with_lot=True, context=None):
         """ Split Stock Move lines into production lot which specified split by quantity.
         @param cr: the database cursor
