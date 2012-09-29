@@ -1328,8 +1328,8 @@
             <field name="arch" type="xml">
                 <form string="Account Entry" version="7.0">
                 <header>
-                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                    <button name="button_cancel" states="posted" string="Cancel" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Journal Entries" >
