@@ -350,7 +350,7 @@ class account_asset_depreciation_line(osv.osv):
         'amount': fields.float('Depreciation Amount', required=True),
         'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
-        'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
+        'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
         'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
