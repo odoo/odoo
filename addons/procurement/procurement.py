@@ -550,6 +550,19 @@ class stock_warehouse_orderpoint(osv.osv):
             result[orderpoint.id] = procurement_ids
         return result
 
+    def _check_product_uom(self, cr, uid, ids, context=None):
+        '''
+        Check if the UoM has the same category as the product standard UoM
+        '''
+        if not context:
+            context = {}
+            
+        for rule in self.browse(cr, uid, ids, context=context):
+            if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
+                return False
+            
+        return True
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
@@ -582,6 +595,9 @@ class stock_warehouse_orderpoint(osv.osv):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
+    _constraints = [
+        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
+    ]
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
@@ -612,9 +628,10 @@ class stock_warehouse_orderpoint(osv.osv):
         """
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            d = {'product_uom': [('category_id', '=', prod.uom_id.category_id.id)]}
             v = {'product_uom': prod.uom_id.id}
-            return {'value': v}
-        return {}
+            return {'value': v, 'domain': d}
+        return {'domain': {'product_uom': []}}
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
