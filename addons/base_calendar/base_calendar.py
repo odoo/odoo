@@ -971,8 +971,8 @@ class calendar_event(osv.osv):
             event = datas['id']
             if datas.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
-            if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count cannot be negative.'))
+            if datas.get('count', 0) <= 0:
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
             if datas['recurrency']:
                 result[event] = self.compute_rule_string(datas)
             else:
