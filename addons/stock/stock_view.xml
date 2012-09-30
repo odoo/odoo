@@ -1493,7 +1493,7 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{'product_receive': True, 'search_default_future': True, 'picking_type': 'in'}</field>
             <field name="help" type="html">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to register a product reception. 
               </p><p>
                 Here you can receive individual products, no matter what
@@ -1628,6 +1628,9 @@
             <field name="view_id" ref="view_move_tree_reception_picking"/>
             <field name="context">{'picking_type': 'out', 'search_default_future': True}</field>
             <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to register a product delivery.
+              </p>
               <p>
                 You will find in this list all products you have to deliver to
                 your customers. You can process the deliveries directly from
@@ -1693,7 +1696,7 @@
             <field name="type">ir.actions.act_window</field>
             <field name="view_type">form</field>
             <field name="help" type="html">
-              <p>
+              <p class="oe_view_nocontent_create">
                 Click to create a new journal. 
               </p><p>
                 The stock journal system allows you to assign each stock
