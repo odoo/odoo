@@ -749,10 +749,9 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         return this._model.call('name_create',
             [name], {context: this._model.context()});
     },
-    exec_workflow: function (id, signal, callback) {
+    exec_workflow: function (id, signal) {
         return this._model.exec_workflow(id, signal)
-            .pipe(function (result) { return { result: result }; })
-                .then(callback);
+            .pipe(function (result) { return { result: result }; });
     },
     get_context: function(request_context) {
         return this._model.context(request_context);
