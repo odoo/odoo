@@ -148,9 +148,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     if (records) {view_string = records[0].name;}
                     var arch = _.str.sprintf("<?xml version='1.0'?>\n<%s string='%s'>\n\t<field name='%s'/>\n</%s>", values.view_type, view_string, field_name, values.view_type);
                     var vals = {'model': self.model, 'name': values.view_name, 'priority': values.priority, 'type': values.view_type, 'arch': arch};
-                    self.dataset.create(vals, function(suc) {
-                        def.resolve();
-                    });
+                    def = self.dataset.create(vals);
                 });
             }
         });
@@ -458,7 +456,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
-        this.dataset.create(vals, function(suc) {
+        this.dataset.create(vals).then(function(suc) {
             var arch_to_obj = self.parse_xml(arch,suc.result);
             obj.child_id.push(arch_to_obj[0]);
             self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);

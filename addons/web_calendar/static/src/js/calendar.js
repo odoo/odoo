@@ -305,7 +305,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_create_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.create(data, function(r) {
+        this.dataset.create(data).then(function(r) {
             var id = r.result;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
