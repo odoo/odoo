@@ -1561,18 +1561,19 @@ class account_invoice_line(osv.osv):
     def onchange_account_id(self, cr, uid, ids, product_id, partner_id, inv_type, fposition_id, account_id):
         if not account_id:
             return {}
-        account = self.pool.get('account.account').browse(cr, uid, account_id)
-        taxes = account.tax_ids
+        unique_tax_ids = []
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
-        tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-
-        product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
-                                                       partner_id=partner_id, fposition_id=fposition_id,
-                                                       company_id=account.company_id.id)
-        unique_tax_ids = set(tax_ids)
-        if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
-            unique_tax_ids |= set(product_change_result['value']['invoice_line_tax_id'])
-        return {'value':{'invoice_line_tax_id': list(unique_tax_ids)}}
+        if not product_id:
+            account = self.pool.get('account.account').browse(cr, uid, account_id)
+            taxes = account.tax_ids
+            unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        else:
+            product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
+                partner_id=partner_id, fposition_id=fposition_id,
+                company_id=account.company_id.id)
+            if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
+                unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
+        return {'value':{'invoice_line_tax_id': unique_tax_ids}}
 
 account_invoice_line()
 
