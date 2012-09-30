@@ -1563,8 +1563,8 @@ class account_invoice_line(osv.osv):
             return {}
         unique_tax_ids = []
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
+        account = self.pool.get('account.account').browse(cr, uid, account_id)
         if not product_id:
-            account = self.pool.get('account.account').browse(cr, uid, account_id)
             taxes = account.tax_ids
             unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
         else:
