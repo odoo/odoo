@@ -831,7 +831,8 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.hour,
-                        'product_uom_id': wc.product_id.uom_id.id
+                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
+                        
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -847,7 +848,8 @@ class mrp_production(osv.osv):
                         'ref': wc.code,
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.cycle,
-                        'product_uom_id': wc.product_id.uom_id.id
+                        'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
+                        
                     } )
         return amount
 
