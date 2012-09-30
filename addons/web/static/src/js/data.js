@@ -706,9 +706,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback
      * @returns {$.Deferred}
      */
-    call_button: function (method, args, callback, error_callback) {
-        return this._model.call_button(method, args)
-            .then(callback, error_callback);
+    call_button: function (method, args) {
+        return this._model.call_button(method, args);
     },
     /**
      * Fetches the "readable name" for records, based on intrinsic rules
@@ -1043,7 +1042,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         return completion.promise();
     },
-    call_button: function (method, args, callback, error_callback) {
+    call_button: function (method, args) {
         var id = args[0][0], index;
         for(var i=0, len=this.cache.length; i<len; ++i) {
             var record = this.cache[i];
@@ -1054,7 +1053,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
                 break;
             }
         }
-        return this._super(method, args, callback, error_callback);
+        return this._super(method, args);
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
