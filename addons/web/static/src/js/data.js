@@ -688,14 +688,14 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback
      * @returns {$.Deferred}
      */
-    call_and_eval: function (method, args, domain_index, context_index, callback, error_callback) {
+    call_and_eval: function (method, args, domain_index, context_index) {
         return instance.session.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
             domain_id: domain_index == undefined ? null : domain_index,
             context_id: context_index == undefined ? null : context_index,
             args: args || []
-        }, callback, error_callback);
+        });
     },
     /**
      * Calls a button method, usually returning some sort of action
