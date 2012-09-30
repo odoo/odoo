@@ -942,7 +942,7 @@ class account_coda_import(osv.osv_memory):
     def action_open_coda_statements(self, cr, uid, ids, context=None):
         if context is None:
             context = {}
-        module, xml_id = 'account_coda', 'action_coda_bank_statements'
+        module, xml_id = 'l10n_be_coda', 'action_coda_bank_statements'
         res_model, res_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, module, xml_id)
         action = self.pool.get('ir.actions.act_window').read(cr, uid, res_id, context=context)
         domain = eval(action.get('domain') or '[]')
@@ -973,9 +973,9 @@ def str2float(str):
         return 0.0
 
 def list2float(lst):
-            try:
-                return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
-            except:
-                return 0.0
+    try:
+        return str2float((lambda s : s[:-3] + '.' + s[-3:])(lst))
+    except:
+        return 0.0
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

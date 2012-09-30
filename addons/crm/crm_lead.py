@@ -297,12 +297,16 @@ class crm_lead(base_stage, format_address, osv.osv):
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name' : partner.name, 
+                'partner_name' : partner.name,
                 'street' : partner.street,
                 'street2' : partner.street2,
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
 
@@ -490,7 +494,8 @@ class crm_lead(base_stage, format_address, osv.osv):
             title = "%s : %s" % (merge_message, opportunity.name)
             details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
-        subject = subject[0] + ", ".join(subject[1:])
+        # Chatter message's subject
+        subject = subject[0] + ": " + ", ".join(subject[1:])
         details = "\n\n".join(details)
         return self.message_post(cr, uid, [opportunity_id], body=details, subject=subject, context=context)
 
@@ -559,19 +564,18 @@ class crm_lead(base_stage, format_address, osv.osv):
 
         data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
 
-        # merge data into first opportunity
-        self.write(cr, uid, [first_opportunity.id], data, context=context)
-
-        #copy message and attachements into the first opportunity
+        # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
 
-        #Notification about loss of information
+        # Merge notifications about loss of information
         self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
-        #delete tail opportunities
+        # Write merged data into first opportunity
+        self.write(cr, uid, [first_opportunity.id], data, context=context)
+        # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
-        #open first opportunity
+        # Open first opportunity
         self.case_open(cr, uid, [first_opportunity.id])
         return first_opportunity.id
 
@@ -580,13 +584,16 @@ class crm_lead(base_stage, format_address, osv.osv):
         contact_id = False
         if customer:
             contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
+
         if section_id:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
         else:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
         stage_id = stage_ids and stage_ids[0] or False
+
         return {
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
@@ -597,11 +604,12 @@ class crm_lead(base_stage, format_address, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'email_from': customer and customer.email or lead.email_from,
+                'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
-        mail_message = self.pool.get('mail.message')
         customer = False
         if partner_id:
             customer = partner.browse(cr, uid, partner_id, context=context)
@@ -787,7 +795,12 @@ class crm_lead(base_stage, format_address, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
-        return super(crm_lead,self).write(cr, uid, ids, vals, context)
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            if section_id:
+                vals.setdefault('message_follower_ids', [])
+                vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
+        return super(crm_lead,self).write(cr, uid, ids, vals, context) 
 
     # ----------------------------------------
     # Mail Gateway

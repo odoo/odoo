@@ -31,7 +31,7 @@ import decimal_precision as dp
 from tools.translate import _
 from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-
+import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -227,7 +227,7 @@ class account_account(osv.osv):
         while pos < len(args):
 
             if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', str(args[pos][2].replace('%', ''))+'%')
+                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
             if args[pos][0] == 'journal_id':
                 if not args[pos][2]:
                     del args[pos]
@@ -601,7 +601,7 @@ class account_account(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['code'] = (account['code'] or '') + '(copy)'
+        default.update(code=_("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
         if account.id in done_list:
@@ -682,7 +682,7 @@ class account_journal_view(osv.osv):
     _name = "account.journal.view"
     _description = "Journal View"
     _columns = {
-        'name': fields.char('Journal View', size=64, required=True),
+        'name': fields.char('Journal View', size=64, required=True, translate=True),
         'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
     }
     _order = "name"
@@ -782,9 +782,10 @@ class account_journal(osv.osv):
         if not default:
             default = {}
         default = default.copy()
-        default['code'] = (journal['code'] or '') + '(copy)'
-        default['name'] = (journal['name'] or '') + '(copy)'
-        default['sequence_id'] = False
+        default.update(
+            code=_("%s (copy)") % (journal['code'] or ''),
+            name=_("%s (copy)") % (journal['name'] or ''),
+            sequence_id=False)
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1907,7 +1908,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Tax Code',size=32),
+        'description': fields.char('Tax Code'),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
@@ -2827,7 +2828,7 @@ class account_tax_template(osv.osv):
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
-        'description': fields.char('Internal Name', size=32),
+        'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }

@@ -72,7 +72,6 @@ This module manages:
         'test/case4_cad_chf.yml',
         'test/case_eur_usd.yml',
     ],
-    'certificate': '0037580727101',
     'auto_install': False,
     'application': True,
     'installable': True,

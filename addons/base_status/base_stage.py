@@ -307,7 +307,7 @@ class base_stage(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        if 'message_post' in self:
+        if hasattr(self, 'message_post'):
             for case in self.browse(cr, uid, ids, context=context):
                 if destination:
                     recipient_id = case.user_id.partner_id.id

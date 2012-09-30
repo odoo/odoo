@@ -18,6 +18,11 @@
                 </div>
             </div>
         </div>
+        <div class="oe_grey">
+            <t t-if="widget.options.comment">
+                <h5><t t-raw="widget.options.comment"/></h5>
+            </t>
+        </div>
         <div class="oe_mail_recthread_followers">
             <button type="button" class="oe_invite"><span>Invite</span></button>
             <t t-if="widget.options.title">

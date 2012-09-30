@@ -115,6 +115,10 @@
                             <field name="note"/>
                         </page>
                     </notebook>
+                    <div class="oe_chatter">
+                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" widget="mail_followers" help="Followers of this salesteam follow automatically all opportunities related to this salesteam."/>
+                    </div>
                 </form>
             </field>
         </record>
@@ -446,13 +450,11 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
-        <menuitem id="menu_crm_payment_mode" name="Fund Raising"
-            parent="base.menu_base_config" sequence="85" groups="crm.group_fund_raising"/>
             
         <menuitem action="action_crm_payment_mode"
             id="menu_crm_payment_mode_act"
+            groups="base.group_no_one"
             name="Payment Modes"
-            parent="menu_crm_payment_mode" />
+            parent="base.menu_crm_config_lead" />
     </data>
 </openerp>

@@ -10,15 +10,14 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-
-        <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="kanban,tree,form,calendar,graph"
-            view_type="form"/>
+        
+        <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="name">Tasks</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+        </record>
 
         <!-- Project Read/Unread actions -->
         <record id="actions_server_project_unread" model="ir.actions.server">
@@ -104,7 +103,7 @@
                     <notebook>
                         <page string="Team" name="team">
                             <field colspan="4" name="members" widget="many2many_kanban">
-                                <kanban quick_create="true" create="false">
+                                <kanban quick_create="false" create="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -137,7 +136,6 @@
                                 </group>
                                 <group string="Miscellaneous" name="misc">
                                     <field name="date"/>
-                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
                                     <field name="priority"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
 
@@ -153,7 +151,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues."/>
                 </div>
                 </form>
             </field>
@@ -206,15 +204,6 @@
                 </tree>
             </field>
         </record>
-
-        <act_window
-            context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="kanban,tree,form,calendar,graph"
-            view_type="form"/>
 
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>

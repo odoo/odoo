@@ -442,11 +442,13 @@ class audittrail_objects_proxy(object_proxy):
 
             # if at least one modification has been found
             for model_id, resource_id in lines:
+                name = pool.get(model.model).name_get(cr, uid, [resource_id])[0][1]
                 vals = {
                     'method': method,
                     'object_id': model_id,
                     'user_id': uid,
                     'res_id': resource_id,
+                    'name': name,
                 }
                 if (model_id, resource_id) not in old_values and method not in ('copy', 'read'):
                     # the resource was not existing so we are forcing the method to 'create'

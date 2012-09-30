@@ -68,7 +68,6 @@ Main Features
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
         'images/messages_form.jpeg',

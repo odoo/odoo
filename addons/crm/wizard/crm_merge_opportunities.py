@@ -27,6 +27,8 @@ class crm_merge_opportunity(osv.osv_memory):
     _description = 'Merge two Opportunities'
 
     def action_merge(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         lead = self.pool.get('crm.lead')
         record = self.browse(cr, uid, ids[0], context=context)
         opportunities = record.opportunity_ids
@@ -38,7 +40,7 @@ class crm_merge_opportunity(osv.osv_memory):
         return lead.redirect_opportunity_view(cr, uid, merge_id, context=context)
 
     _columns = {
-        'opportunity_ids' : fields.many2many('crm.lead',  'merge_opportunity_rel', 'merge_id', 'opportunity_id', 'Opportunities', domain=[('type', '=', 'opportunity')]),
+        'opportunity_ids': fields.many2many('crm.lead', rel='merge_opportunity_rel', id1='merge_id', id2='opportunity_id', string='Leads/Opportunities'),
     }
 
     def default_get(self, cr, uid, fields, context=None):

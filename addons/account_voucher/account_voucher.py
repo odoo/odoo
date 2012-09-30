@@ -32,11 +32,11 @@ class res_company(osv.osv):
     _columns = {
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Income Currency Rate",
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Expense Currency Rate",
+            string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
     }
 
@@ -782,9 +782,16 @@ class account_voucher(osv.osv):
             vals[key].update(res[key])
         return vals
 
+    def button_proforma_voucher(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService("workflow")
+        for vid in ids:
+            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        return {'type': 'ir.actions.act_window_close'}
+
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
