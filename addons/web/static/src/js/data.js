@@ -636,8 +636,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     create: function(data) {
-        return this._model.call('create',
-            [data], {context: this._model.context()})
+        return this._model.call('create', [data], {context: this._model.context()})
                 .pipe(function (r) { return {result: r}; });
     },
     /**
@@ -718,10 +717,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} callback
      * @returns {$.Deferred}
      */
-    name_get: function(ids, callback) {
-        return this._model.call('name_get',
-            [ids], {context: this._model.context()})
-                .then(callback);
+    name_get: function(ids) {
+        return this._model.call('name_get', [ids], {context: this._model.context()});
     },
     /**
      * 
@@ -746,8 +743,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param callback
      */
     name_create: function(name) {
-        return this._model.call('name_create',
-            [name], {context: this._model.context()});
+        return this._model.call('name_create', [name], {context: this._model.context()});
     },
     exec_workflow: function (id, signal) {
         return this._model.exec_workflow(id, signal)

@@ -3040,7 +3040,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         }
         if (! no_recurse) {
             var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
-            dataset.name_get([self.get("value")], function(data) {
+            dataset.name_get([self.get("value")]).then(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
             });
