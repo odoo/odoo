@@ -230,6 +230,14 @@
                     <field name="carrier_tracking_ref"/>
                     <field name="number_of_packages"/>
                 </field>
+                <field name="company_id" position="before">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+               </field>
+               <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+               </xpath>
             </field>
         </record>
 
@@ -242,6 +250,10 @@
                     <field name="weight"/>
                     <field name="weight_net" groups="base.group_no_one"/>
                 </field>
+                <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+                </xpath>
             </field>
         </record>
 
@@ -314,6 +326,22 @@
                 </xpath>
             </field>
         </record>
-
+        
+        <record id="view_picking_withcarrier_in_form" model="ir.ui.view">
+            <field name="name">delivery.stock.picking_withcarrier.in.form.view</field>
+            <field name="type">form</field>
+            <field name="model">stock.picking.in</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field name="arch" type="xml">
+              <field name="company_id" position="before">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+               </field>
+               <xpath expr="/form/sheet/notebook/page/field[@name='move_lines']/tree/field[@name='product_uom']" position="after">
+                    <field name="weight"/>
+                    <field name="weight_net" groups="base.group_no_one"/>
+               </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

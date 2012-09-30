@@ -3012,7 +3012,7 @@ class stock_picking_in(osv.osv):
     _name = "stock.picking.in"
     _inherit = "stock.picking"
     _table = "stock_picking"
-    _description = "Incomming Shipments"
+    _description = "Incoming Shipments"
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object
