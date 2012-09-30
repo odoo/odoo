@@ -2714,7 +2714,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', false, function(data) {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', false).then(function(data) {
                             self._search_create_popup("search", data);
                         });
                     },

@@ -732,14 +732,14 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} callback function to call with name_search result
      * @returns {$.Deferred}
      */
-    name_search: function (name, domain, operator, limit, callback) {
+    name_search: function (name, domain, operator, limit) {
         return this._model.call('name_search', {
             name: name || '',
             args: domain || false,
             operator: operator || 'ilike',
             context: this._model.context(),
             limit: limit || 0
-        }).then(callback);
+        });
     },
     /**
      * @param name
