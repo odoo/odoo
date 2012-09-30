@@ -673,7 +673,7 @@
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="prodlot_id" groups="stock.group_production_lot"/>
+                                            <field name="prodlot_id" groups="stock.group_production_lot" context="{'product_id': product_id}"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"

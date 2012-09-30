@@ -27,6 +27,7 @@ from dateutil import *
 from pytz import timezone
 from datetime import datetime
 import time
+import base64
 from osv import *
 from tools.translate import _
 
@@ -282,7 +283,7 @@ class google_import(import_framework):
             self.contact = self.gd_client.GetContactsFeed()
         while self.contact:
             for entry in self.contact.entry:
-                data = {}
+                data = {}                
                 data['id'] = entry.id.text
                 name = tools.ustr(entry.title.text)
                 if name == "None":
@@ -290,6 +291,8 @@ class google_import(import_framework):
                 data['name'] = name or _('Unknown')
                 emails = ','.join(email.address for email in entry.email)
                 data['email'] = emails
+                if self.gd_client.GetPhoto(entry):
+                    data['image'] = base64.encodestring(self.gd_client.GetPhoto(entry))
                 if table == 'Contact':
                     data.update({'customer': str(self.context.get('customer')),
                                  'supplier': str(self.context.get('supplier'))})
@@ -322,6 +325,12 @@ class google_import(import_framework):
                 'name': value('company', fallback='name'),
                 'customer': 'customer',
                 'supplier': 'supplier',
+                'city': 'city',
+                'phone': 'phone',
+                'mobile': 'mobile',
+                'email': 'email',
+                'image': 'image',
+                'fax': 'fax',
                 'child_ids/id': ref(self.TABLE_ADDRESS, 'id'),
                 }
             }

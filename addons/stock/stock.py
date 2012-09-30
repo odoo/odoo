@@ -2820,7 +2820,7 @@ class stock_inventory(osv.osv):
         'name': fields.char('Inventory Reference', size=64, required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date': fields.datetime('Creation Date', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'date_done': fields.datetime('Date done'),
-        'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', states={'done': [('readonly', True)]}),
+        'inventory_line_id': fields.one2many('stock.inventory.line', 'inventory_id', 'Inventories', readonly=True, states={'draft': [('readonly', False)]}),
         'move_ids': fields.many2many('stock.move', 'stock_inventory_move_rel', 'inventory_id', 'move_id', 'Created Moves'),
         'state': fields.selection( (('draft', 'Draft'), ('cancel','Cancelled'), ('confirm','Confirmed'), ('done', 'Done')), 'Status', readonly=True, select=True),
         'company_id': fields.many2one('res.company', 'Company', required=True, select=True, readonly=True, states={'draft':[('readonly',False)]}),
@@ -3016,7 +3016,7 @@ class stock_picking_in(osv.osv):
     _name = "stock.picking.in"
     _inherit = "stock.picking"
     _table = "stock_picking"
-    _description = "Incomming Shipments"
+    _description = "Incoming Shipments"
 
     def check_access_rights(self, cr, uid, operation, raise_exception=True):
         #override in order to redirect the check of acces rights on the stock.picking object

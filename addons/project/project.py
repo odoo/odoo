@@ -509,6 +509,8 @@ def Project():
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
+        if vals.get('partner_id', False):
+            vals['type'] = 'contract'
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
         self.create_send_note(cr, uid, [project_id], context=context)
@@ -763,7 +765,7 @@ class task(base_stage, osv.osv):
             }),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
