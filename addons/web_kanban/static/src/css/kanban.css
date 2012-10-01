@@ -385,9 +385,6 @@
 .openerp .oe_kanban_view .oe_kanban_card h3:hover, .openerp .oe_kanban_view .oe_kanban_quick_create h3:hover {
   text-decoration: none;
 }
-.openerp .oe_kanban_view .oe_kanban_card .oe_dropdown_kanban, .openerp .oe_kanban_view .oe_kanban_quick_create .oe_dropdown_kanban {
-  margin-top: 4px;
-}
 .openerp .oe_kanban_view .oe_kanban_card .oe_dropdown_kanban .oe_kanban_project_times li, .openerp .oe_kanban_view .oe_kanban_quick_create .oe_dropdown_kanban .oe_kanban_project_times li {
   float: left;
 }
@@ -480,10 +477,10 @@
   white-space: nowrap;
 }
 .openerp .oe_kanban_view .oe_dropdown_kanban {
-  position: absolute;
-  top: -8px;
-  right: 3px;
+  float: right;
+  clear: both;
   cursor: pointer;
+  margin-top: -6px;
 }
 .openerp .oe_kanban_view .oe_dropdown_kanban:hover {
   text-decoration: none;
