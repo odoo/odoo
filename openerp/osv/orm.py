@@ -51,6 +51,7 @@ import pickle
 import re
 import simplejson
 import time
+import traceback
 import types
 from lxml import etree
 
@@ -373,6 +374,8 @@ class browse_record(object):
             else:
                 error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
                 self.__logger.warning(error_msg)
+                if self.__logger.isEnabledFor(logging.DEBUG):
+                    self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
