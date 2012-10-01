@@ -36,7 +36,6 @@ Seddik au cours du troisième trimestre 2010.""",
     'website': 'http://www.kazacube.com',
     'depends' : ['base', 'account'],
     'data' : [
-        'security/compta_security.xml',
         'security/ir.model.access.csv',
         'account_type.xml',
         'account_pcg_morocco.xml',

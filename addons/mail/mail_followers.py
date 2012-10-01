@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
 import tools
@@ -91,7 +92,7 @@ class mail_notification(osv.Model):
             :param browse_record message: mail.message to notify
         """
         notify_pids = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+        for partner in self.pool.get('res.partner').browse(cr, SUPERUSER_ID, partner_ids, context=context):
             # Do not send an email to the writer
             if partner.user_ids and partner.user_ids[0].id == uid:
                 continue

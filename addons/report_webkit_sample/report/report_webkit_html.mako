@@ -8,7 +8,7 @@
     %for inv in objects :
     <% setLang(inv.partner_id.lang) %>
     <table class="dest_address">
-        <tr><td ><b>${inv.partner_id.title or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
+        <tr><td ><b>${inv.partner_id.title and inv.partner_id.title.name or ''|entity}  ${inv.partner_id.name |entity}</b></td></tr>
         <tr><td>${inv.address_invoice_id.street or ''|entity}</td></tr>
         <tr><td>${inv.address_invoice_id.street2 or ''|entity}</td></tr>
         <tr><td>${inv.address_invoice_id.zip or ''|entity} ${inv.address_invoice_id.city or ''|entity}</td></tr>
