@@ -108,20 +108,48 @@ openerp.hr_timesheet_sheet = function(instance) {
                     self.account_names[el[0]] = el[1];
                 });
                 //real rendering
-                self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
-                _.each(self.accounts, function(account) {
-                    var total = 0;
-                    _.each(_.range(account.days.length), function(day_count) {
-                        var line_total = 0;
-                        _.each(account.days[day_count].lines, function(line) {
-                            line_total += line.unit_amount;
-                        });
-                        self.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]').val(line_total);
-                        total += line_total;
+                self.display_data();
+            });
+        },
+        display_data: function() {
+            var self = this;
+            self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
+            _.each(self.accounts, function(account) {
+                _.each(_.range(account.days.length), function(day_count) {
+                    self.get_case(account, day_count).val(self.sum_case(account, day_count)).change(function() {
+                        var num = Number($(this).val());
+                        if (isNaN(num)) {
+                            $(this).val(self.sum_case(account, day_count));
+                        } else {
+                            account.days[day_count].lines[0].unit_amount += num - self.sum_case(account, day_count);
+                            self.get_total(account).html(self.sum_total(account));
+                        }
                     });
-                    self.$('[data-account-total="' + account.account + '"]').html(total);
+                });
+                self.get_total(account).html(self.sum_total(account));
+            });
+        },
+        get_case: function(account, day_count) {
+            return this.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]');
+        },
+        get_total: function(account) {
+            return this.$('[data-account-total="' + account.account + '"]');
+        },
+        sum_case: function(account, day_count) {
+            var line_total = 0;
+            _.each(account.days[day_count].lines, function(line) {
+                line_total += line.unit_amount;
+            });
+            return line_total;
+        },
+        sum_total: function(account) {
+            var total = 0;
+            _.each(account.days, function(day) {
+                _.each(day.lines, function(line) {
+                    total += line.unit_amount;
                 });
             });
+            return total;
         },
     });
 
