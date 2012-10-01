@@ -68,8 +68,8 @@ class fleet_vehicle_model(osv.Model):
         'brand' : fields.many2one('fleet.vehicle.model.brand', 'Model Brand', required=True, help='Brand of the vehicle'),
         'vendors': fields.many2many('res.partner','fleet_vehicle_model_vendors','model_id', 'partner_id',string='Vendors',required=False),
         'image': fields.related('brand','image',type="binary",string="Logo",store=False),
-        'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
-        'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
+        'image_medium': fields.related('brand','image_medium',type="binary",string="Logo",store=False),
+        'image_small': fields.related('brand','image_small',type="binary",string="Logo",store=False),
     }
 
 class fleet_vehicle_model_brand(osv.Model):
@@ -93,7 +93,7 @@ class fleet_vehicle_model_brand(osv.Model):
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized photo", type="binary", multi="_get_image",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Medium-sized logo of the brand. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
@@ -101,7 +101,7 @@ class fleet_vehicle_model_brand(osv.Model):
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
             string="Smal-sized photo", type="binary", multi="_get_image",
             store = {
-                'hr.employee': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
+                'fleet.vehicle.model.brand': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
             help="Small-sized photo of the brand. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\

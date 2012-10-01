@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Model" version="7.0">
                     <sheet>
-                        <field name="image" widget='image' class="oe_left oe_avatar"/>
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
                         <group col="2">
                             <group>
                                 <field name="brand" on_change="on_change_brand(brand)"/>
@@ -62,7 +62,7 @@
                     <sheet>
                         <group>
                             <div>
-                                <field name="image" widget="image" class="oe_left oe_avatar"/>
+                                <field name="image_medium" widget="image" class="oe_left oe_avatar"/>
                                 <label for="name" class="oe_edit_only"/>
                                 <h1>
                                     <field name="name" class="oe_inline" />
@@ -115,7 +115,7 @@
                         <field name="state"  widget="statusbar" clickable="True" />
                     </header>
                     <sheet> 
-                        <field name="image" widget='image' class="oe_left oe_avatar"/> 
+                        <field name="image_medium" widget='image' class="oe_left oe_avatar"/> 
                         <div class="oe_title">
                             <label for="model_id" class="oe_edit_only"/>
                             <h1>
@@ -231,7 +231,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
                                 <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                    <img t-att-src="kanban_image('fleet.vehicle', 'image', record.id.value)" class="oe_kanban_image"/>
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)" class="oe_employee_picture"/>
                                 </a>
                                 <div class="oe_kanban_details">
                                     <h4 class="oe_partner_heading">
