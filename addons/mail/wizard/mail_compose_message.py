@@ -249,9 +249,11 @@ class mail_compose_message(osv.TransientModel):
                     post_values.update(email_dict)
                 # post the message
                 active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
-            # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
-            self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {'res_id': wizard.id}, context=context)
 
+            # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
+            self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
+                'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
+        
         if context.get('mail_action_wizard_close'):
             return {'type': 'ir.actions.act_window_close'}
         else:

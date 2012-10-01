@@ -318,8 +318,6 @@ class test_mail(TestMailMockups):
         user_admin = self.res_users.browse(cr, uid, uid)
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
 
-        # 0 - Admin
-        p_a_id = user_admin.partner_id.id
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -363,7 +361,7 @@ class test_mail(TestMailMockups):
             self.assertIn(sent_email['body_alternative'], _mail_bodyalt1 + '\nBert Tartopoils\n', 'sent_email body_alternative is incorrect')
         # Test: mail_message: partner_ids = group followers
         message_pids = set([partner.id for partner in message.partner_ids])
-        test_pids = set([p_a_id, p_b_id, p_c_id])
+        test_pids = set([p_b_id, p_c_id])
         self.assertEqual(test_pids, message_pids, 'mail.message partners incorrect')
         # Test: notification linked to this message = group followers = partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
@@ -397,7 +395,7 @@ class test_mail(TestMailMockups):
             self.assertIn(_mail_bodyalt2, sent_email['body_alternative'], 'sent_email body_alternative incorrect')
         # Test: mail_message: partner_ids = group followers
         message_pids = set([partner.id for partner in message.partner_ids])
-        test_pids = set([p_a_id, p_b_id, p_c_id, p_d_id])
+        test_pids = set([p_b_id, p_c_id, p_d_id])
         self.assertEqual(message_pids, test_pids, 'mail.message partners incorrect')
         # Test: notifications linked to this message = group followers = partner_ids
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
@@ -435,8 +433,6 @@ class test_mail(TestMailMockups):
         _attachments_test = [('first.txt', 'My first attachment'), ('second.txt', 'My second attachment')]
 
         # Create partners
-        # 0 - Admin
-        p_a_id = user_admin.partner_id.id
         # 1 - Bert Tartopoils, with email, should receive emails for comments and emails
         p_b_id = self.res_partner.create(cr, uid, {'name': 'Bert Tartopoils', 'email': 'b@b'})
         # 2 - Carine Poilvache, with email, should never receive emails
@@ -470,9 +466,10 @@ class test_mail(TestMailMockups):
         self.assertEqual(message.body, _msg_body, 'mail.message incorrect body')
         # Test: mail.message: partner_ids = entries in mail.notification: group_pigs fans (a, b) + mail.compose.message partner_ids (c, d)
         msg_pids = [partner.id for partner in message.partner_ids]
-        test_pids = [p_a_id, p_b_id, p_c_id, p_d_id]
+        test_pids = [p_b_id, p_c_id, p_d_id]
         notif_ids = self.mail_notification.search(cr, uid, [('message_id', '=', message.id)])
-        self.assertEqual(len(notif_ids), 4, 'mail.message: too much notifications created')
+
+        self.assertEqual(len(notif_ids), 3, 'mail.message: too much notifications created')
         self.assertEqual(set(msg_pids), set(test_pids), 'mail.message partner_ids incorrect')
 
         # ----------------------------------------
@@ -490,22 +487,15 @@ class test_mail(TestMailMockups):
         self.assertEqual(compose.res_id, self.group_pigs_id, 'mail.compose.message incorrect res_id')
         self.assertEqual(compose.parent_id.id, message.id, 'mail.compose.message incorrect parent_id')
         self.assertEqual(compose.content_subtype, 'html', 'mail.compose.message incorrect content_subtype')
-
-        # 2. Post the comment, get created message
-        parent_id = message.id
-        mail_compose.send_mail(cr, uid, [compose_id])
-        group_pigs.refresh()
-        message = group_pigs.message_ids[0]
         # Test: mail.message: subject as Re:.., body in html, parent_id
-        self.assertEqual(message.subject, _msg_reply, 'mail.message incorrect subject')
-        self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote></div>', message.body, 'mail.message body is incorrect')
-        self.assertEqual(message.parent_id and message.parent_id.id, parent_id, 'mail.message parent_id incorrect')
+        self.assertEqual(compose.subject, _msg_reply, 'mail.message incorrect subject')
+        self.assertIn('Administrator wrote:<blockquote><pre>Pigs rules</pre></blockquote>', compose.body, 'mail.message body is incorrect')
+        self.assertEqual(compose.parent_id and compose.parent_id.id, message.id, 'mail.message parent_id incorrect')
         # Test: mail.message: attachments
-        for attach in message.attachment_ids:
+        for attach in compose.attachment_ids:
             self.assertEqual(attach.res_model, 'mail.group', 'mail.message attachment res_model incorrect')
             self.assertEqual(attach.res_id, self.group_pigs_id, 'mail.message attachment res_id incorrect')
-            self.assertIn((attach.name, attach.datas.decode('base64')), _attachments_test,
-                'mail.message attachment name / data incorrect')
+            self.assertIn((attach.datas_fname, attach.datas.decode('base64')), _attachments_test, 'mail.message attachment name / data incorrect')
 
         # ----------------------------------------
         # CASE3: mass_mail on Pigs and Bird
@@ -547,6 +537,7 @@ class test_mail(TestMailMockups):
         def _compare_structures(struct1, struct2, n=0):
             # print '%scompare structure' % ('\t' * n)
             # self.assertEqual(len(struct1), len(struct2), 'message_read structure number of childs incorrect')
+
             for x in range(len(struct1)):
                 if struct1[x].get('type') == 'expandable':
                     continue
