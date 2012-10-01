@@ -46,7 +46,8 @@ class res_partner(osv.Model):
         dt = now()
         res = {}
         for partner in self.browse(cr, uid, ids, context):
-            res[partner.id] = bool(partner.signup_token) and (partner.signup_expiration or '') <= dt
+            res[partner.id] = bool(partner.signup_token) and \
+                                (not partner.signup_expiration or dt <= partner.signup_expiration)
         return res
 
     def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
