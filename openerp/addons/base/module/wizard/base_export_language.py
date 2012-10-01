@@ -45,7 +45,6 @@ class base_language_export(osv.osv_memory):
                                         ('tgz', 'TGZ Archive')], 'File Format', required=True),
             'modules': fields.many2many('ir.module.module', 'rel_modules_langexport', 'wiz_id', 'module_id', 'Modules To Export', domain=[('state','=','installed')]),
             'data': fields.binary('File', readonly=True),
-            'advice': fields.text('Note', readonly=True),
             'state': fields.selection([('choose', 'choose'),   # choose language
                                        ('get', 'get')])        # get the file
     }
@@ -62,18 +61,10 @@ class base_language_export(osv.osv_memory):
         mods = map(lambda m: m.name, this.modules) or ['all']
         mods.sort()
         buf = cStringIO.StringIO()
-        tools.trans_export(this.lang, mods, buf, this.format, cr)
-        if this.format == 'csv':
-            this.advice = _("Save this document as a .CSV file and open it with your favourite spreadsheet software. The file encoding is UTF-8. You have to translate the last column before reimporting it.")
-        elif this.format == 'po':
-            if not lang:
-                this.format = 'pot'
-            this.advice = _("Save this document as a %s file and edit it with a PO editor or a text editor. The file encoding is UTF-8.") % ('.'+this.format,)
-        elif this.format == 'tgz':
-            this.advice = _('Save this document as a .tgz file. This archive contains UTF-8 %s files and may be uploaded to launchpad.')
-        filename = _('new')
+        tools.trans_export(lang, mods, buf, this.format, cr)
+        filename = 'new'
         if lang:
-            filename = get_iso_codes(this.lang)
+            filename = get_iso_codes(lang)
         elif len(mods) == 1:
             filename = mods[0]
         this.name = "%s.%s" % (filename, this.format)
@@ -81,7 +72,6 @@ class base_language_export(osv.osv_memory):
         buf.close()
         self.write(cr, uid, ids, {'state': 'get',
                                   'data': out,
-                                  'advice': this.advice,
                                   'name':this.name}, context=context)
         return True
 

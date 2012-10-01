@@ -30,8 +30,8 @@ class base_language_import(osv.osv_memory):
     _name = "base.language.import"
     _description = "Language Import"
     _columns = {
-        'name': fields.char('Language Name',size=64 , required=True),
-        'code': fields.char('Code (eg:en__US)',size=5 , required=True),
+        'name': fields.char('Language Name', size=64 , required=True),
+        'code': fields.char('ISO Code', size=5, help="ISO Language and Country code, e.g. en_US", required=True),
         'data': fields.binary('File', required=True),
         'overwrite': fields.boolean('Overwrite Existing Terms',
                                     help="If you enable this option, existing translations (including custom ones) "
@@ -39,30 +39,25 @@ class base_language_import(osv.osv_memory):
     }
 
     def import_lang(self, cr, uid, ids, context=None):
-        """
-            Import Language
-            @param cr: the current row, from the database cursor.
-            @param uid: the current user’s ID for security checks.
-            @param ids: the ID or list of IDs
-            @param context: A standard dictionary
-        """
         if context is None:
             context = {}
-        import_data = self.browse(cr, uid, ids)[0]
-        if import_data.overwrite:
+        this = self.browse(cr, uid, ids[0])
+        if this.overwrite:
             context.update(overwrite=True)
         fileobj = TemporaryFile('w+')
-        fileobj.write(base64.decodestring(import_data.data))
-
-        # now we determine the file format
-        fileobj.seek(0)
-        first_line = fileobj.readline().strip().replace('"', '').replace(' ', '')
-        fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
-        fileobj.seek(0)
-
-        tools.trans_load_data(cr, fileobj, fileformat, import_data.code, lang_name=import_data.name, context=context)
-        fileobj.close()
-        return {}
+        try:
+            fileobj.write(base64.decodestring(this.data))
+    
+            # now we determine the file format
+            fileobj.seek(0)
+            first_line = fileobj.readline().strip().replace('"', '').replace(' ', '')
+            fileformat = first_line.endswith("type,name,res_id,src,value") and 'csv' or 'po'
+            fileobj.seek(0)
+    
+            tools.trans_load_data(cr, fileobj, fileformat, this.code, lang_name=this.name, context=context)
+        finally:
+            fileobj.close()
+        return True
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
