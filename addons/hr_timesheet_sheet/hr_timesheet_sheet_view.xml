@@ -76,19 +76,8 @@
                             </widget>
                         </page>
                         <page string="Daily">
-                            <group>
-                                <div>
-                                    <button name="button_dummy" class="oe_inline" string="Go to" type="object" icon="terp-gtk-jump-to-ltr"/> :
-                                    <field name="date_current" class="oe_inline"/>
-                                </div>
-                                <div align="right">
-                                    <button class="oe_inline" icon="terp-gtk-go-back-ltr" name="date_previous" string="" type="object"/>
-                                    <button class="oe_inline" name="date_today" string="Today" type="object" icon="terp-go-today"/>
-                                    <button class="oe_inline" icon="terp-gtk-go-back-rtl" name="date_next" string="" type="object"/>
-                                </div>
-                            </group>
                             <group colspan="4" col="3">
-                                <field context="{'name':date_current,'user_id':user_id}" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
+                                <field context="{'user_id':user_id}" name="attendances_ids" nolabel="1" groups="base.group_hr_attendance">
                                     <tree string="Attendances" editable="bottom">
                                         <field name="name"/>
                                         <field name="action"/>
@@ -105,9 +94,9 @@
                             <group col="4">
                                 <field name="state_attendance" groups="base.group_hr_attendance"/>
                             </group>
-                            <field colspan="4" context="{'date':date_current,'user_id':user_id}" domain="[('name','=',date_current)]" name="timesheet_ids" nolabel="1">
+                            <field colspan="4" context="{'user_id':user_id}" name="timesheet_ids" nolabel="1">
                                 <tree editable="top" string="Timesheet Lines">
-                                    <field invisible="1" name="date"/>
+                                    <field name="date"/>
                                     <field domain="[('type','in',['normal', 'contract']), ('state', '&lt;&gt;', 'close'),('use_timesheets','=',1)]" name="account_id" on_change="on_change_account_id(account_id)" context="{'default_use_timesheets': 1}"/>
                                     <field name="name"/>
                                     <field name="unit_amount" on_change="on_change_unit_amount(product_id, unit_amount, False, product_uom_id,journal_id)" widget="float_time"/>

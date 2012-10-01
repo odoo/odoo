@@ -27,80 +27,6 @@ from osv import fields, osv
 from tools.translate import _
 import netsvc
 
-class one2many_mod2(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-
-        if values is None:
-            values = {}
-
-        # res6 = {id: date_current, ...}
-        res6 = dict([(rec['id'], rec['date_current'])
-            for rec in obj.read(cr, user, ids, ['date_current'], context=context)])
-
-        dom = []
-        for c, id in enumerate(ids):
-            if id in res6:
-                if c: # skip first
-                    dom.insert(0 ,'|')
-                dom.append('&')
-                dom.append('&')
-                dom.append(('name', '>=', res6[id]))
-                dom.append(('name', '<=', res6[id]))
-                dom.append(('sheet_id', '=', id))
-
-        ids2 = obj.pool.get(self._obj).search(cr, user, dom, limit=self._limit)
-
-        res = {}
-        for i in ids:
-            res[i] = []
-
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2, [self._fields_id], context=context, load='_classic_read'):
-            if r[self._fields_id]:
-                res[r[self._fields_id][0]].append(r['id'])
-        return res
-
-    def set(self, cr, obj, id, field, values, user=None, context=None):
-        if context is None:
-            context = {}
-
-        context = context.copy()
-        context['sheet_id'] = id
-        return super(one2many_mod2, self).set(cr, obj, id, field, values, user=user, context=context)
-
-
-class one2many_mod(fields.one2many):
-    def get(self, cr, obj, ids, name, user=None, offset=0, context=None, values=None):
-        if context is None:
-            context = {}
-
-        if values is None:
-            values = {}
-
-
-        res5 = obj.read(cr, user, ids, ['date_current'], context=context)
-        res6 = {}
-        for r in res5:
-            res6[r['id']] = r['date_current']
-
-        ids2 = []
-        for id in ids:
-            dom = []
-            if id in res6:
-                dom = [('date', '=', res6[id]), ('sheet_id', '=', id)]
-            ids2.extend(obj.pool.get(self._obj).search(cr, user,
-                dom, limit=self._limit))
-        res = {}
-        for i in ids:
-            res[i] = []
-        for r in obj.pool.get(self._obj)._read_flat(cr, user, ids2,
-                [self._fields_id], context=context, load='_classic_read'):
-            if r[self._fields_id]:
-                res[r[self._fields_id][0]].append(r['id'])
-
-        return res
-
 class hr_timesheet_sheet(osv.osv):
     _name = "hr_timesheet_sheet.sheet"
     _inherit = "mail.thread"
@@ -111,8 +37,7 @@ class hr_timesheet_sheet(osv.osv):
     def _total_attendances(self, cr, uid, ids, name, args, context=None):
         """ Get the total attendance for the timesheets
             Returns a dict like :
-                {id: {'date_current': '2011-06-17',
-                      'total_per_day': {day: timedelta, ...},
+                {id: {'total_per_day': {day: timedelta, ...},
                      },
                  ...
                 }
@@ -122,7 +47,6 @@ class hr_timesheet_sheet(osv.osv):
         res = {}
         for sheet_id in ids:
             sheet = self.browse(cr, uid, sheet_id, context=context)
-            date_current = sheet.date_current
             # field attendances_ids of hr_timesheet_sheet.sheet only
             # returns attendances of timesheet's current date
             attendance_ids = attendance_obj.search(cr, uid, [('sheet_id', '=', sheet_id)], context=context)
@@ -143,20 +67,7 @@ class hr_timesheet_sheet(osv.osv):
                 else:
                     total_attendance[day] += attendance_interval
 
-                # if the delta is negative, it means that a sign out is missing
-                # in a such case, we want to have the time to the end of the day
-                # for a past date, and the time to now for the current date
-                if total_attendance[day] < timedelta(0):
-                    if day == date_current:
-                        now = datetime.now()
-                        total_attendance[day] += timedelta(hours=now.hour,
-                                                           minutes=now.minute,
-                                                           seconds=now.second)
-                    else:
-                        total_attendance[day] += timedelta(days=1)
-
-            res[sheet_id] = {'date_current': date_current,
-                             'total_per_day': total_attendance}
+            res[sheet_id] = {'total_per_day': total_attendance}
         return res
 
     def _total_timesheet(self, cr, uid, ids, name, args, context=None):
@@ -210,24 +121,16 @@ class hr_timesheet_sheet(osv.osv):
 
             all_attendances_sheet = all_timesheet_attendances[id]
 
-            date_current = all_attendances_sheet['date_current']
             total_attendances_sheet = all_attendances_sheet['total_per_day']
             total_attendances_all_days = sum_all_days(total_attendances_sheet)
-            total_attendances_day = total_attendances_sheet.get(date_current, timedelta(seconds=0))
 
             total_timesheets_sheet = all_timesheet_lines[id]
             total_timesheets_all_days = sum_all_days(total_timesheets_sheet)
-            total_timesheets_day = total_timesheets_sheet.get(date_current, timedelta(seconds=0))
             total_difference_all_days = total_attendances_all_days - total_timesheets_all_days
-            total_difference_day = total_attendances_day - total_timesheets_day
 
             res[id]['total_attendance'] = timedelta_to_hours(total_attendances_all_days)
             res[id]['total_timesheet'] = timedelta_to_hours(total_timesheets_all_days)
             res[id]['total_difference'] = timedelta_to_hours(total_difference_all_days)
-
-            res[id]['total_attendance_day'] = timedelta_to_hours(total_attendances_day)
-            res[id]['total_timesheet_day'] = timedelta_to_hours(total_timesheets_day)
-            res[id]['total_difference_day'] = timedelta_to_hours(total_difference_day)
         return res
 
     def check_employee_attendance_state(self, cr, uid, sheet_id, context=None):
@@ -277,44 +180,6 @@ class hr_timesheet_sheet(osv.osv):
                 raise osv.except_osv(_('Warning!'), _('Please verify that the total difference of the sheet is lower than %.2f.') %(di,))
         return True
 
-    def date_today(self, cr, uid, ids, context=None):
-        for sheet in self.browse(cr, uid, ids, context=context):
-            if datetime.today() <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
-            elif datetime.now() >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
-            else:
-                self.write(cr, uid, [sheet.id], {'date_current': time.strftime('%Y-%m-%d')}, context=context)
-        return True
-
-    def date_previous(self, cr, uid, ids, context=None):
-        for sheet in self.browse(cr, uid, ids, context=context):
-            if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
-            else:
-                self.write(cr, uid, [sheet.id], {
-                    'date_current': (datetime.strptime(sheet.date_current, '%Y-%m-%d') + relativedelta(days=-1)).strftime('%Y-%m-%d'),
-                }, context=context)
-        return True
-
-    def date_next(self, cr, uid, ids, context=None):
-        for sheet in self.browse(cr, uid, ids, context=context):
-            if datetime.strptime(sheet.date_current, '%Y-%m-%d') >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
-            else:
-                self.write(cr, uid, [sheet.id], {
-                    'date_current': (datetime.strptime(sheet.date_current, '%Y-%m-%d') + relativedelta(days=1)).strftime('%Y-%m-%d'),
-                }, context=context)
-        return True
-
-    def button_dummy(self, cr, uid, ids, context=None):
-        for sheet in self.browse(cr, uid, ids, context=context):
-            if datetime.strptime(sheet.date_current, '%Y-%m-%d') <= datetime.strptime(sheet.date_from, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_from,}, context=context)
-            elif datetime.strptime(sheet.date_current, '%Y-%m-%d') >= datetime.strptime(sheet.date_to, '%Y-%m-%d'):
-                self.write(cr, uid, [sheet.id], {'date_current': sheet.date_to,}, context=context)
-        return True
-
     def attendance_action_change(self, cr, uid, ids, context=None):
         hr_employee = self.pool.get('hr.employee')
         employee_ids = []
@@ -329,14 +194,13 @@ class hr_timesheet_sheet(osv.osv):
         'user_id': fields.related('employee_id', 'user_id', type="many2one", relation="res.users", store=True, string="User", required=False, readonly=True),#fields.many2one('res.users', 'User', required=True, select=1, states={'confirm':[('readonly', True)], 'done':[('readonly', True)]}),
         'date_from': fields.date('Date from', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
         'date_to': fields.date('Date to', required=True, select=1, readonly=True, states={'new':[('readonly', False)]}),
-        'date_current': fields.date('Current date', required=True, select=1),
-        'timesheet_ids' : one2many_mod('hr.analytic.timesheet', 'sheet_id',
-            'Timesheet lines', domain=[('date', '=', time.strftime('%Y-%m-%d'))],
+        'timesheet_ids' : fields.one2many('hr.analytic.timesheet', 'sheet_id',
+            'Timesheet lines',
             readonly=True, states={
                 'draft': [('readonly', False)],
                 'new': [('readonly', False)]}
             ),
-        'attendances_ids' : one2many_mod2('hr.attendance', 'sheet_id', 'Attendances'),
+        'attendances_ids' : fields.one2many('hr.attendance', 'sheet_id', 'Attendances'),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Open'),
@@ -346,9 +210,6 @@ class hr_timesheet_sheet(osv.osv):
                 \n* The \'Confirmed\' state is used for to confirm the timesheet by user. \
                 \n* The \'Done\' state is used when users timesheet is accepted by his/her senior.'),
         'state_attendance' : fields.related('employee_id', 'state', type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Current Status', readonly=True),
-        'total_attendance_day': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
-        'total_timesheet_day': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
-        'total_difference_day': fields.function(_total, method=True, string='Difference', multi="_total"),
         'total_attendance': fields.function(_total, method=True, string='Total Attendance', multi="_total"),
         'total_timesheet': fields.function(_total, method=True, string='Total Timesheet', multi="_total"),
         'total_difference': fields.function(_total, method=True, string='Difference', multi="_total"),
@@ -386,7 +247,6 @@ class hr_timesheet_sheet(osv.osv):
 
     _defaults = {
         'date_from' : _default_date_from,
-        'date_current' : lambda *a: time.strftime('%Y-%m-%d'),
         'date_to' : _default_date_to,
         'state': 'new',
         'employee_id': _default_employee,
@@ -406,16 +266,9 @@ class hr_timesheet_sheet(osv.osv):
                     return False
         return True
 
-    def _date_current_check(self, cr, uid, ids, context=None):
-        for sheet in self.browse(cr, uid, ids, context=context):
-            if sheet.date_current < sheet.date_from or sheet.date_current > sheet.date_to:
-                return False
-        return True
-
 
     _constraints = [
         (_sheet_date, 'You cannot have 2 timesheets that overlaps !\nPlease use the menu \'My Current Timesheet\' to avoid this problem.', ['date_from','date_to']),
-        (_date_current_check, 'You must select a Current date which is in the timesheet dates !', ['date_current']),
     ]
 
     def action_set_to_draft(self, cr, uid, ids, *args):
