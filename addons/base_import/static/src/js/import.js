@@ -106,10 +106,10 @@ openerp.base_import = function (instance) {
             var self = this;
             this._super(parent, {
                 buttons: [
-                    {text: _t("Import"), click: self.proxy('do_import'),
-                     'class': 'oe_import_dialog_button'},
                     {text: _t("Validate"), click: self.proxy('import_dryrun'),
-                     'class': 'oe_import_dialog_button'}
+                     'class': 'oe_import_dialog_button'},
+                    {text: _t("Import"), click: self.proxy('do_import'),
+                     'class': 'oe_import_dialog_button oe_highlight'}
                 ]
             });
             this.res_model = parent.model;
@@ -125,6 +125,16 @@ openerp.base_import = function (instance) {
                 self.id = id;
                 self.$('input[name=import_id]').val(id);
             });
+        },
+        open: function () {
+            this._super.apply(this, arguments);
+            this.$el.dialog('widget').find('.ui-dialog-buttonset')
+                .append(_t(" or "))
+                .append(
+                    $('<button type="button" class="oe_link oe_button">')
+                        .click(this.proxy('close'))
+                        .append($('<span>').text(_t("Cancel"))));
+            return this;
         },
 
         import_options: function () {
