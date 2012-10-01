@@ -311,8 +311,10 @@ openerp.base_import = function (instance) {
         },
         render_import_result: function (message) {
             if (_.isEmpty(message)) {
-                this.$el.removeClass('oe_import_error');
-                return;
+                message.push({
+                    type: 'info',
+                    message: _t("Everything seems valid.")
+                });
             }
             // row indexes come back 0-indexed, spreadsheets
             // display 1-indexed.
