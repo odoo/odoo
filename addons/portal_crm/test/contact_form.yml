@@ -1,4 +1,9 @@
 -
+  Set the current user as portal user.
+-
+  !context
+    'uid': 'portal.demo_user0'
+-
   As a portal user, I fill in the contact form and submit it.
 -
   !record {model: portal_crm.crm_contact_us, id: contact_us_01}:
@@ -17,9 +22,12 @@
   And a lead is created with the proper values.
 -
   !python {model: crm.lead}: |
-    ids = self.search(cr, uid, [('name', '=', 'Need information about your contact form module')])
+    from openerp import SUPERUSER_ID
+
+    ids = self.search(cr, SUPERUSER_ID, [('name', '=', 'Need information about your contact form module')])
     assert len(ids) == 1, 'There are more than one matching lead, while only one was expected'
-    obj = self.browse(cr, uid, ids[0])
+
+    obj = self.browse(cr, SUPERUSER_ID, ids[0])
     expected_values = dict(
         name='Need information about your contact form module',
         partner_name='Mr. John Doe',
