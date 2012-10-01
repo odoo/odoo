@@ -27,6 +27,7 @@ from openerp.tools.safe_eval import safe_eval
 
 import time
 import random
+import urllib
 import urlparse
 
 def random_token():
@@ -51,16 +52,21 @@ class res_partner(osv.Model):
     def _get_signup_url(self, cr, uid, ids, name, arg, context=None):
         """ determine a signup url for a given partner """
         base_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        template_url = '#action=login&db=%s&token=%s'
 
-        # if required, make sure that every partner has a valid signup token
+        # if required, make sure that every partner without user has a valid signup token
         if context and context.get('signup_valid'):
-            self.signup_prepare(cr, uid, ids, context=context)
+            unsigned_ids = [p.id for p in self.browse(cr, uid, ids, context) if not p.user_ids]
+            self.signup_prepare(cr, uid, unsigned_ids, context=context)
 
         res = dict.fromkeys(ids, False)
         for partner in self.browse(cr, uid, ids, context):
             if partner.signup_token:
-                res[partner.id] = urlparse.urljoin(base_url, template_url % (cr.dbname, partner.signup_token))
+                params = (urllib.quote(cr.dbname), urllib.quote(partner.signup_token))
+                res[partner.id] = urlparse.urljoin(base_url, "#action=login&db=%s&token=%s" % params)
+            elif partner.user_ids:
+                user = partner.user_ids[0]
+                params = (urllib.quote(cr.dbname), urllib.quote(user.login))
+                res[partner.id] = urlparse.urljoin(base_url, "#action=login&db=%s&login=%s" % params)
         return res
 
     _columns = {
