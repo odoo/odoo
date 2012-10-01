@@ -334,7 +334,7 @@
             <para style="P17"><font face="Helvetica" color="white">[[ '..'*h['level'] ]]</font>[[ h['rule_category'] ]]<font face="Helvetica">[[ h['level']!=0 and ( setTag('para','para',{'style':'terp_default_8'})) or removeParentNode('font') ]]</font></para>
           </td>
           <td>
-            <para style="P6">[[ formatLang(h['total']) ]] [[o.company_id and o.company_id.currency_id.symbol or '']] <font face="Helvetica" size="8.0">[[ h['level']==0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
+            <para style="P6">[[ formatLang(h['total'], currency_obj = o.company_id and o.company_id.currency_id)]] <font face="Helvetica" size="8.0">[[ h['level']==0 and ( setTag('para','para',{'style':'terp_default_10'})) or removeParentNode('font') ]]</font></para>
           </td>
         </tr>
       </blockTable>
