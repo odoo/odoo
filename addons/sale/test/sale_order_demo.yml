@@ -5,14 +5,12 @@
     partner_id: base.res_partner_2
     note: Invoice after delivery
     payment_term: account.account_payment_term
--
-  !record {model: sale.order.line, id: line}:
-    order_id: sale_order_test1
-    product_id: product.product_product_7
-    product_uom_qty: 8
+    order_line: 
+      - product_id: product.product_product_7
+        product_uom_qty: 8
 -
   I verify that the onchange was correctly triggered
 -
-  !assert {model: sale.order.line, id: sale.line, string: The onchange function of product was not correctly triggered}:
-    - l.name == '17” LCD Monitor'
-    - l.price_unit == 1350.0
+  !assert {model: sale.order, id: sale.sale_order_test1, string: The onchange function of product was not correctly triggered}:
+    - order_line[0].name == u'[LCD17] 17\u201d LCD Monitor'
+    - order_line[0].price_unit == 1350.0
