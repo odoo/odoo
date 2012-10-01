@@ -267,16 +267,13 @@ class procurement_order(osv.osv):
     }
     def make_po(self, cr, uid, ids, context=None):
         res = {}
-        sequence_obj = self.pool.get('ir.sequence')
         requisition_obj = self.pool.get('purchase.requisition')
         warehouse_obj = self.pool.get('stock.warehouse')
         procurement = self.browse(cr, uid, ids, context=context)[0]
         if procurement.product_id.purchase_requisition:
-             seq_name = sequence_obj.get(cr, uid, 'purchase.order.requisition')
              warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
              res[procurement.id] = requisition_obj.create(cr, uid, 
                    {
-                    'name': seq_name,
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id':warehouse_id and warehouse_id[0] or False,

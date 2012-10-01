@@ -41,6 +41,5 @@ routing of the assembly operation.
     'test': ['test/stock_no_autopicking.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0075124168925',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -35,7 +35,6 @@ Adds a Claim link to the delivery order.
               'claim_delivery_data.xml',],
     'auto_install': False,
     'installable': True,
-    'certificate' : '001101649349223746957',
     'images': ['images/1_claim_link_delivery_order.jpeg'],
 }
 

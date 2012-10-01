@@ -913,7 +913,7 @@
                         <field name="partner_id" on_change="onchange_partner_in(partner_id)"  string="Customer"/>
                     </xpath>
                     <xpath expr="//field[@name='move_lines']" position="replace">
-                        <field name="move_lines" context="{'address_in_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
+                        <field name="move_lines" context="{'address_out_id': partner_id, 'picking_type': 'out', 'form_view_ref':'view_move_picking_form', 'tree_view_ref':'view_move_picking_tree'}"/>
                     </xpath>
                     <xpath expr="/form/sheet" position="after">
                         <div class="oe_chatter">
@@ -1120,7 +1120,7 @@
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">stock.move.tree</field>
             <field name="model">stock.move</field>
-            <field eval="6" name="priority"/>
+            <field eval="8" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="grey:state == 'cancel';red:(state not in ('cancel','done')) and date > current_date" string="Moves" editable="top">
                     <field name="name"/>
