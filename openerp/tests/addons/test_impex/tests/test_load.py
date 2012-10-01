@@ -339,13 +339,8 @@ class test_float_field(ImporterCase):
     def test_nonsense(self):
         result = self.import_(['value'], [['foobar']])
         self.assertIs(result['ids'], False)
-        self.assertEqual(result['messages'], [{
-            'type': 'error',
-            'rows': {'from': 0, 'to': 0},
-            'record': 0,
-            'field': 'value',
-            'message': u"'foobar' does not seem to be a number for field 'unknown'",
-        }])
+        self.assertEqual(result['messages'], [
+            message(u"'foobar' does not seem to be a number for field 'unknown'")])
 
 class test_string_field(ImporterCase):
     model_name = 'export.string.bounded'
@@ -980,6 +975,46 @@ class test_realworld(common.TransactionCase):
             data)
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), len(data))
+
+class test_date(ImporterCase):
+    model_name = 'export.date'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], []),
+            {'ids': [], 'messages': []})
+
+    def test_basic(self):
+        result = self.import_(['value'], [['2012-02-03']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+    def test_invalid(self):
+        result = self.import_(['value'], [['not really a date']])
+        self.assertEqual(result['messages'], [
+            message(u"'not really a date' does not seem to be a valid date "
+                    u"for field 'unknown'")])
+        self.assertIs(result['ids'], False)
+
+class test_datetime(ImporterCase):
+    model_name = 'export.datetime'
+
+    def test_empty(self):
+        self.assertEqual(
+            self.import_(['value'], []),
+            {'ids': [], 'messages': []})
+
+    def test_basic(self):
+        result = self.import_(['value'], [['2012-02-03 11:11:11']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+    def test_invalid(self):
+        result = self.import_(['value'], [['not really a datetime']])
+        self.assertEqual(result['messages'], [
+            message(u"'not really a datetime' does not seem to be a valid "
+                    u"datetime for field 'unknown'")])
+        self.assertIs(result['ids'], False)
 
 # function, related, reference: written to db as-is...
 # => function uses @type for value coercion/conversion

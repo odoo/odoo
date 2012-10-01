@@ -3,8 +3,11 @@ import functools
 import operator
 import itertools
 import psycopg2
+import time
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
+from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
+                               DEFAULT_SERVER_DATETIME_FORMAT
 
 REFERENCING_FIELDS = set([None, 'id', '.id'])
 def only_ref_fields(record):
@@ -114,14 +117,25 @@ class ir_fields_converter(orm.Model):
                 _(u"'%s' does not seem to be a number for field '%%(field)s'")
                 % value)
 
-    def _str_to_char(self, cr, uid, model, column, value, context=None):
+    def _str_id(self, cr, uid, model, column, value, context=None):
         return value, []
+    _str_to_char = _str_to_text = _str_to_binary = _str_id
 
-    def _str_to_text(self, cr, uid, model, column, value, context=None):
-        return value, []
+    def _str_to_date(self, cr, uid, model, column, value, context=None):
+        try:
+            time.strptime(value, DEFAULT_SERVER_DATE_FORMAT)
+            return value, []
+        except ValueError:
+            raise ValueError(
+                _(u"'%s' does not seem to be a valid date for field '%%(field)s'") % value)
 
-    def _str_to_binary(self, cr, uid, model, column, value, context=None):
-        return value, []
+    def _str_to_datetime(self, cr, uid, model, column, value, context=None):
+        try:
+            time.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
+            return value, []
+        except ValueError:
+            raise ValueError(
+                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'") % value)
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)
