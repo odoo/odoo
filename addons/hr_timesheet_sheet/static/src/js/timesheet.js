@@ -123,6 +123,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                         } else {
                             account.days[day_count].lines[0].unit_amount += num - self.sum_case(account, day_count);
                             self.get_total(account).html(self.sum_total(account));
+                            self.sync();
                         }
                     });
                 });
@@ -150,6 +151,24 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
             return total;
+        },
+        sync: function() {
+            var self = this;
+            var lst = [];
+            _.each(self.accounts, function(account) {
+                _.each(account.days, function(day) {
+                    _.each(day.lines, function(line) {
+                        if (line.unit_amount != 0) {
+                            var tmp = _.clone(line);
+                            line.id = undefined;
+                            lst.push(tmp);
+                        }
+                    });
+                });
+            });
+            self.setting = true;
+            self.set({sheets: lst});
+            self.setting = false;
         },
     });
 
