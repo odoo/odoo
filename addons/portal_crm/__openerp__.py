@@ -33,7 +33,7 @@ This module adds a contact page (with a contact form creating a lead when submit
     'depends': ['crm','portal'],
     'data': ['wizard/contact_view.xml'],
     'test': [
-        'test/submit_contact_form.yml',
+        #'test/submit_contact_form.yml',
     ],
     'installable': True,
     'auto_install': True,
