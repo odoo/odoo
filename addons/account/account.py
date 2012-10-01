@@ -2522,14 +2522,14 @@ class account_account_template(osv.osv):
     ]
 
     def create(self, cr, uid, vals, context=None):
-        if 'parent_id' in vals:
+        if vals.get('parent_id'):
             parent = self.read(cr, uid, [vals['parent_id']], ['type'])
             if parent and parent[0]['type'] != 'view':
                 raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
         return super(account_account_template, self).create(cr, uid, vals, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
-        if 'parent_id' in vals:
+        if vals.get('parent_id'):
             parent = self.read(cr, uid, [vals['parent_id']], ['type'])
             if parent and parent[0]['type'] != 'view':
                 raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
