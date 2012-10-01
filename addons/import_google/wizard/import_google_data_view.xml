@@ -7,7 +7,7 @@
             <field name="arch" type="xml">
                 <form string="Import contacts from a google account" version="7.0">
                     <group colspan="4" col="4" width="430">
-                       <field name="group_name" colspan="4"/>
+                       <field name="group_name" colspan="4" required="1"/>
                        <newline/>
                        <group colspan="4" col="4">
                             <separator string="Partner Status for this Group:" colspan="4"/>
@@ -32,7 +32,7 @@
             <field name="arch" type="xml">
                 <form string="Import Google Calendar Events" version="7.0">
                     <group colspan="4" col="4" width="320">
-                       <field name="calendar_name" />
+                       <field name="calendar_name" required="1"/>
                     </group>
                     <footer>
                         <button name="import_google" string="_Import Events" type="object" class="oe_highlight"  />

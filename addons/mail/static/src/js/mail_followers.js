@@ -45,8 +45,8 @@ openerp_mail_followers = function(session, mail) {
         },
 
         reinit: function() {
-            this.$el.find('button.oe_mail_button_follow').hide();
-            this.$el.find('button.oe_mail_button_unfollow').hide();
+            this.message_is_follower == undefined;
+            this.display_buttons();
         },
 
         bind_events: function() {
@@ -55,7 +55,7 @@ openerp_mail_followers = function(session, mail) {
                 .mouseover(function () { $(this).html('Unfollow').removeClass('oe_mail_button_mouseout').addClass('oe_mail_button_mouseover'); })
                 .mouseleave(function () { $(this).html('Following').removeClass('oe_mail_button_mouseover').addClass('oe_mail_button_mouseout'); });
             this.$el.on('click', 'button.oe_mail_button_follow', function () { self.do_follow(); });
-            this.$el.on('click', 'button.oe_mail_button_invite', function(event) {
+            this.$el.on('click', 'a.oe_mail_invite', function(event) {
                 action = {
                     type: 'ir.actions.act_window',
                     res_model: 'mail.wizard.invite',
@@ -74,41 +74,65 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function() {
             var self = this;
-            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
-                return results[0].message_follower_ids;
-            }).pipe(this.proxy('set_value'));
+            return this.ds_model.read_ids([this.view.datarecord.id], ['message_is_follower', 'message_follower_ids']).then(function (results) {
+                self.set_value(results[0].message_follower_ids, results[0].message_is_follower);
+            });
         },
 
-        set_value: function(value_) {
+        set_value: function(value_, message_is_follower) {
             this.reinit();
             if (! this.view.datarecord.id ||
                 session.web.BufferedDataSet.virtual_id_regex.test(this.view.datarecord.id)) {
-                this.$el.find('div.oe_mail_recthread_aside').hide();
+                this.$('div.oe_mail_recthread_aside').hide();
                 return;
             }
-            return this.fetch_followers(value_  || this.get_value());
+            return this.fetch_followers(value_  || this.get_value(), message_is_follower);
         },
 
-        fetch_followers: function (value_) {
-            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'));
+        fetch_followers: function (value_, message_is_follower) {
+            this.value = value_;
+            this.message_is_follower = message_is_follower || (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
+            return this.ds_follow.call('read', [value_, ['name', 'user_ids']]).pipe(this.proxy('display_followers'), this.proxy('display_generic'));
+        },
+
+
+        /* Display generic info about follower, for people not having access to res_partner */
+        display_generic: function (error, event) {
+            event.preventDefault();
+            var node_user_list = this.$('ul.oe_mail_followers_display').empty();
+            // format content: Followers (You and 0 other) // Followers (3)
+            var content = this.options.title;
+            if (this.message_is_follower) {
+                content += ' (You and ' + (this.value.length-1) + ' other)';
+            }
+            else {
+                content += ' (' + this.value.length + ')'
+            }
+            this.$('div.oe_mail_recthread_followers h4').html(content);
+            this.display_buttons();
+            return $.when();
         },
 
         /** Display the followers, evaluate is_follower directly */
         display_followers: function (records) {
             var self = this;
-            this.message_is_follower = _.indexOf(_.flatten(_.pluck(records, 'user_ids')), this.session.uid) != -1;
-            var node_user_list = this.$el.find('ul.oe_mail_followers_display').empty();
-            this.$el.find('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
+            var node_user_list = this.$('ul.oe_mail_followers_display').empty();
+            this.$('div.oe_mail_recthread_followers h4').html(this.options.title + ' (' + records.length + ')');
             _(records).each(function (record) {
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
                 $(session.web.qweb.render('mail.followers.partner', {'record': record})).appendTo(node_user_list);
             });
-            if (this.message_is_follower) {
-                this.$el.find('button.oe_mail_button_follow').hide();
-                this.$el.find('button.oe_mail_button_unfollow').show(); }
-            else {
-                this.$el.find('button.oe_mail_button_follow').show();
-                this.$el.find('button.oe_mail_button_unfollow').hide(); }
+            this.display_buttons();
+        },
+
+        display_buttons: function () {
+            this.$('button.oe_mail_button_follow').hide();
+            this.$('button.oe_mail_button_unfollow').hide();
+            this.$('span.oe_mail_invite_wrapper').hide();
+            if (! this.view.is_action_enabled('edit')) return;
+            this.$('span.oe_mail_invite_wrapper').show();
+            if (this.message_is_follower) { this.$('button.oe_mail_button_unfollow').show(); }
+            else if (this.message_is_follower == false) { this.$('button.oe_mail_button_follow').show(); }
         },
 
         do_follow: function () {
