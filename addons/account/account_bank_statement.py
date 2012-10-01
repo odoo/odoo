@@ -457,6 +457,8 @@ class account_bank_statement(osv.osv):
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        if not journal_id:
+            return {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
 
         journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)
