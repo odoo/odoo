@@ -171,13 +171,23 @@ openerp.base_import = function (instance) {
                 'oe_import_noheaders',
                 !this.$('input.oe_import_has_header').prop('checked'));
             if (result.error) {
+                this.$('.oe_import_options').show();
                 this.$el.addClass('oe_import_preview_error oe_import_error');
                 this.$('.oe_import_error_report').html(
-                    QWeb.render('ImportView.preview.error', result));
+                        QWeb.render('ImportView.preview.error', result))
+                    .get(0).scrollIntoView();
                 return;
             }
             this.$el.addClass('oe_import_preview');
             this.$('table').html(QWeb.render('ImportView.preview', result));
+
+            if (result.headers.length === 1) {
+                this.$('.oe_import_options').show();
+                this.render_import_result([{
+                    type: 'warning',
+                    message: _t("A single column was found in the file, this often means the file separator is incorrect")
+                }]);
+            }
 
             var $fields = this.$('.oe_import_fields input');
             this.render_fields_matches(result, $fields);
@@ -365,7 +375,7 @@ openerp.base_import = function (instance) {
                             '</div>'
                         ].join('')
                     },
-                }));
+                })).get(0).scrollIntoView();
         },
     });
 };

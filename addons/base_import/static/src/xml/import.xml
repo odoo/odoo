@@ -82,7 +82,8 @@
         </tr>
     </t>
     <t t-name="ImportView.preview.error">
-        <p>Import preview failed due to: <t t-esc="error"/></p>
+        <p>Import preview failed due to: <t t-esc="error"/>. The issue is
+            usually an incorrect file encoding.</p>
         <p>Here is the start of the file we could not import:</p>
         <pre><t t-esc="preview"/></pre>
     </t>
