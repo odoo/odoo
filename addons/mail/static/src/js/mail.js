@@ -293,7 +293,7 @@ openerp.mail = function(session) {
                 }
             };
             // record options and data
-            this.parent_thread= parent.messages!= undefined ? parent : false ;
+            this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0] ;
 
             var param =         options.parameters;
             // child messages
@@ -350,10 +350,10 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             this.expender();
             this.$el.hide().fadeIn(750);
-            this.parent_thread.on_insert_message();
             this.bind_events();
-
             this.create_thread();
+
+            this.parent_thread.on_insert_message();
         },
 
         /**
@@ -659,14 +659,11 @@ openerp.mail = function(session) {
             }
             
             // add message composition form view
-            if (this.options.thread.show_header_compose && this.options.thread.use_composer &&
-                this.options.thread.thread_level >= this.options.thread._parents.length) {
-                compose_done = this.instantiate_composition_form();
-            }
+            compose_done = this.instantiate_composition_form();
 
             this.bind_events();
 
-            this.treat_new_message(this.child_ids);
+            this.switch_new_message(this.child_ids);
 
             return display_done && compose_done;
         },
@@ -687,6 +684,8 @@ openerp.mail = function(session) {
             return this._super(action, on_close);
         },
 
+        /* this method is runing for first parent thread
+        */
         on_first_thread: function(){
             // fetch and display message, using message_ids if set
             display_done = this.message_fetch(true, [], {});
@@ -785,6 +784,12 @@ openerp.mail = function(session) {
         /** Instantiate the composition form, with every parameters in context
             or in the widget context. */
         instantiate_composition_form: function(context) {
+            // add message composition form view
+            if (!this.options.thread.show_header_compose || !this.options.thread.use_composer ||
+                (this.options.thread.thread_level < this.options.thread._parents.length && this.options.thread._parents[0]!=this)) {
+                return false;
+            }
+
             var self=this;
             if (this.compose_message_widget) {
                 this.compose_message_widget.destroy();
@@ -795,13 +800,44 @@ openerp.mail = function(session) {
             var composition_node = this.$('div.oe_mail_thread_action');
             composition_node.empty();
             var compose_done = this.compose_message_widget.appendTo(composition_node)
-                .then(function(){ self.message_post_wizard(); });
+                .then(function(){ self.message_post_composition_form(); });
             return compose_done;
         },
 
         refresh_composition_form: function (context) {
             if (! this.compose_message_widget) return;
             return this.compose_message_widget.refresh(context);
+        },
+
+        /*post a message and fletch the message with wizard form*/
+        message_post_composition_form: function () {
+            var self=this;
+            self.$("button.oe_mail_compose_message_button_send").mouseup(function(){
+                window.setTimeout(function(){
+                    self.$('.oe_mail_msg_content textarea').val("");
+                    self.browse_thread({'top_thread':1}).message_fetch();
+                },250);
+                console.log("todo : load after write on wizard !");
+            });
+        },
+
+        /*post a message and fletch the message*/
+        message_post: function (body) {
+            var self = this;
+            if (! body) {
+                var comment_node = this.$('textarea');
+                var body = comment_node.val();
+                comment_node.val('');
+            }
+            if(body.match(/\S+/)) {
+                //this.$("textarea:first").blur();
+                return this.ds_thread.call('message_post_api', [
+                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, undefined])
+                    .then(this.proxy('switch_new_message'));
+            }
+            else {
+                return false;
+            }
         },
 
         /** Fetch messages
@@ -818,16 +854,15 @@ openerp.mail = function(session) {
             if (initial_mode && this.options.thread.message_data) {
                 return this.create_message_object(this.options.message_data);
             }
-
             // domain and context: options + additional
             fetch_domain = _.flatten([this.domain, additional_domain || []], true);
             fetch_context = _.extend({}, this.context, additional_context || {});
-
             fetch_context.message_loaded= [this.id].concat( self.options.thread._parents[0].get_child_ids() );
-
+            // select message_ids (optional)
             message_ids = this.options.thread.message_ids && this.options.thread.message_ids[0] ? this.options.thread.message_ids : false;
+
             return this.ds_message.call('message_read', [message_ids, fetch_domain, (this.options.thread.thread_level+1), fetch_context, this.context.default_parent_id || undefined]
-                ).then(this.proxy('treat_new_message'));
+                ).then(this.proxy('switch_new_message'));
         },
 
         /* create record object and linked him
@@ -915,6 +950,7 @@ openerp.mail = function(session) {
             if(self.child_ids>0){
                 self.more_msg.show();
             }
+            console.log("display_expandable");
         },
 
         display_user_avatar: function () {
@@ -924,53 +960,21 @@ openerp.mail = function(session) {
         
         /*  Display the message if if the msg_id don't exists.
         *   If the record have a parent, insert parent or inside parent */
-        treat_new_message: function(records) {
+        switch_new_message: function(records) {
             var self=this;
-            console.log(records);
             _(records.reverse()).each(function (record) {
-                if(record.parent_id==self.id && record.model==self.model){
-                    self.create_message_object( record );
-                } else if(record.parent_id && !self.options.thread.display_on_flat){
-                    var thread=self.browse_thread({'id':record.parent_id, 'model':record.model});
-                    if(thread) {
-                        thread.create_message_object( record );
+                if(!self.options.thread.display_on_flat){
+                    if(record.parent_id==self.id && record.model==self.model){
+                        return self.create_message_object( record );
+                    } else if(record.parent_id){
+                        var thread=self.browse_thread({'id':record.parent_id, 'model':record.model});
+                        if(thread) {
+                            return thread.create_message_object( record );
+                        }
                     }
-                } else {
-                    var thread=self.browse_thread({'top_thread':true});
-                    thread.create_message_object( record );
                 }
-            });
-            self.display_expandable();
-        },
-
-        /*post a message and fletch the message*/
-        message_post: function (body) {
-            var self = this;
-            if (! body) {
-                var comment_node = this.$('textarea');
-                var body = comment_node.val();
-                comment_node.val('');
-            }
-            if(body.match(/\S+/)) {
-                //this.$("textarea:first").blur();
-                return this.ds_thread.call('message_post_api', [
-                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, undefined])
-                    .then(this.proxy('treat_new_message'));
-            }
-            else {
-                return false;
-            }
-        },
-
-        /*post a message and fletch the message with wizard form*/
-        message_post_wizard: function () {
-            var self=this;
-            self.$("button.oe_mail_compose_message_button_send").mouseup(function(){
-                window.setTimeout(function(){
-                    self.$('.oe_mail_msg_content textarea').val("");
-                    self.browse_thread({'top_thread':1}).message_fetch();
-                },250);
-                console.log("todo : load after write on wizard !");
+                var thread=self.browse_thread({'top_thread':true});
+                return thread.create_message_object( record );
             });
         },
 
