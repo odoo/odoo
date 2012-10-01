@@ -306,7 +306,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this,
             data = this.get_event_data(event_obj);
         this.dataset.create(data).then(function(r) {
-            var id = r.result;
+            var id = r;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
             self.refresh_minical();
@@ -348,7 +348,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
             index = this.dataset.get_id_index(event_id);
         if (index != null) {
             event_id = this.dataset.ids[index];
-            this.dataset.write(event_id, data, {}, function() {
+            this.dataset.write(event_id, data, {}).then(function() {
                 self.refresh_minical();
             });
         }

@@ -881,7 +881,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Object} r result of the write function.
      */
     on_saved: function(r) {
-        if (!r.result) {
+        if (!r) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
@@ -904,11 +904,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * at the beginning of the dataset instead of the end
      */
     on_created: function(r, prepend_on_create) {
-        if (!r.result) {
+        if (!r) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
-            this.datarecord.id = r.result;
+            this.datarecord.id = r;
             if (!prepend_on_create) {
                 this.dataset.alter_ids(this.dataset.ids.concat([this.datarecord.id]));
                 this.dataset.index = this.dataset.ids.length - 1;
@@ -3484,7 +3484,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             title: _t("Open: ") + self.o2m.string,
             create_function: function(data) {
                 return self.o2m.dataset.create(data).then(function(r) {
-                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                     self.o2m.dataset.on_change();
                 });
             },
@@ -3574,7 +3574,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                     alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
                     create_function: function(data, callback, error_callback) {
                         return self.o2m.dataset.create(data).then(function(r) {
-                            self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                            self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                             self.o2m.dataset.on_change();
                         }).then(callback, error_callback);
                     },
@@ -3599,7 +3599,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
             write_function: function(id, data) {
-                return self.o2m.dataset.write(id, data, {}, function(r) {
+                return self.o2m.dataset.write(id, data, {}).then(function() {
                     self.o2m.reload_current_view();
                 });
             },
