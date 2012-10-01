@@ -19,5 +19,6 @@
 #
 ##############################################################################
 
-import controllers
-import auth_reset_password
+import main
+
+# vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
