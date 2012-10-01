@@ -25,20 +25,23 @@
     'name': 'Base',
     'version': '1.3',
     'category': 'Hidden',
-    'description': """The kernel of OpenERP, needed for all installation.""",
+    'description': """
+The kernel of OpenERP, needed for all installation.
+===================================================
+""",
     'author': 'OpenERP SA',
     'maintainer': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': [],
-    'init_xml': [
+    'data': [
         'base_data.xml',
+        'currency_data.xml',
+        'res/res_country_data.xml',
         'security/base_security.xml',
         'base_menu.xml',
         'res/res_security.xml',
         'res/res_config.xml',
-        'data/res.country.state.csv'
-    ],
-    'update_xml': [
+        'data/res.country.state.csv',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
         'ir/ir_filters.xml',
@@ -56,6 +59,7 @@
         'module/wizard/base_module_configuration_view.xml',
         'module/wizard/base_export_language_view.xml',
         'module/wizard/base_update_translations_view.xml',
+        'module/wizard/base_module_immediate_install.xml',
         'res/res_company_view.xml',
         'res/res_request_view.xml',
         'res/res_lang_view.xml',
@@ -65,25 +69,19 @@
         'res/res_bank_view.xml',
         'res/res_country_view.xml',
         'res/res_currency_view.xml',
-        'res/res_partner_event_view.xml',
         'res/res_users_view.xml',
-        'res/wizard/partner_sms_send_view.xml',
-        'res/wizard/partner_wizard_massmail_view.xml',
-        'res/wizard/partner_clear_ids_view.xml',
-        'res/wizard/partner_wizard_ean_check_view.xml',
         'res/res_partner_data.xml',
         'res/ir_property_view.xml',
         'security/base_security.xml',
-        'publisher_warranty/publisher_warranty_view.xml',
         'security/ir.model.access.csv',
         'security/ir.model.access-1.csv', # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
         'res/res_widget_view.xml',
         'res/res_widget_data.xml',
-        'publisher_warranty/publisher_warranty_data.xml',
     ],
-    'demo_xml': [
+    'demo': [
         'base_demo.xml',
         'res/res_partner_demo.xml',
+        'res/res_partner_demo.yml',
         'res/res_widget_demo.xml',
     ],
     'test': [
@@ -100,7 +98,6 @@
     ],
     'installable': True,
     'auto_install': True,
-    'certificate': '0076807797149',
-    "css": [ 'static/src/css/modules.css' ],
+    'css': ['static/src/css/modules.css'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

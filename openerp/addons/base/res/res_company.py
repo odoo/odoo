@@ -23,6 +23,8 @@ from osv import osv
 from osv import fields
 import os
 import tools
+import openerp
+from openerp import SUPERUSER_ID
 from tools.translate import _
 from tools.safe_eval import safe_eval as eval
 
@@ -80,23 +82,11 @@ class res_company(osv.osv):
         for company in self.browse(cr, uid, ids, context=context):
             result[company.id] = {}.fromkeys(field_names, False)
             if company.partner_id:
-                address_data = part_obj.address_get(cr, uid, [company.partner_id.id], adr_pref=['default'])
+                address_data = part_obj.address_get(cr, openerp.SUPERUSER_ID, [company.partner_id.id], adr_pref=['default'])
                 if address_data['default']:
-                    address = part_obj.read(cr, uid, address_data['default'], field_names, context=context)
+                    address = part_obj.read(cr, openerp.SUPERUSER_ID, address_data['default'], field_names, context=context)
                     for field in field_names:
                         result[company.id][field] = address[field] or False
-        return result
-
-
-    def _get_bank_data(self, cr, uid, ids, field_names, arg, context=None):
-        """ Read the 'address' functional fields. """
-        result = {}
-        for company in self.browse(cr, uid, ids, context=context):
-            r = []
-            for bank in company.bank_ids:
-                if bank.footer:
-                    r.append(bank.name_get(context=context)[0][1])
-            result[company.id] = ' | '.join(r)
         return result
 
     def _set_address_data(self, cr, uid, company_id, name, value, arg, context=None):
@@ -112,63 +102,81 @@ class res_company(osv.osv):
                 part_obj.create(cr, uid, {name: value or False, 'parent_id': company.partner_id.id}, context=context)
         return True
 
-
     _columns = {
         'name': fields.related('partner_id', 'name', string='Company Name', size=128, required=True, store=True, type='char'),
         'parent_id': fields.many2one('res.company', 'Parent Company', select=True),
         'child_ids': fields.one2many('res.company', 'parent_id', 'Child Companies'),
         'partner_id': fields.many2one('res.partner', 'Partner', required=True),
-        'rml_header1': fields.char('Report Header / Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents."),
-        'rml_footer1': fields.char('General Information Footer', size=200),
-        'rml_footer2': fields.function(_get_bank_data, type="char", string='Bank Accounts Footer', size=250, help="This field is computed automatically based on bank accounts defined, having the display on footer checkbox set."),
         'rml_header': fields.text('RML Header', required=True),
+        'rml_header1': fields.char('Company Slogan', size=200, help="Appears by default on the top right corner of your printed documents (report header)."),
         'rml_header2': fields.text('RML Internal Header', required=True),
-        'rml_header3': fields.text('RML Internal Header', required=True),
-        'logo': fields.related('partner_id', 'photo', string="Logo", type="binary"),
+        'rml_header3': fields.text('RML Internal Header for Landscape Reports', required=True),
+        'rml_footer': fields.text('Report Footer', help="Footer text displayed at the bottom of all reports."),
+        'rml_footer_readonly': fields.related('rml_footer', type='text', string='Report Footer', readonly=True),
+        'custom_footer': fields.boolean('Custom Footer', help="Check this to define the report footer manually.  Otherwise it will be filled in automatically."),
+        'logo': fields.related('partner_id', 'image', string="Logo", type="binary"),
         'currency_id': fields.many2one('res.currency', 'Currency', required=True),
         'currency_ids': fields.one2many('res.currency', 'company_id', 'Currency'),
         'user_ids': fields.many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', 'Accepted Users'),
         'account_no':fields.char('Account No.', size=64),
-        'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'), 
-        'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'), 
-        'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'), 
-        'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),         
-        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="Fed. State", multi='address'), 
+        'street': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street", multi='address'),
+        'street2': fields.function(_get_address_data, fnct_inv=_set_address_data, size=128, type='char', string="Street2", multi='address'),
+        'zip': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="Zip", multi='address'),
+        'city': fields.function(_get_address_data, fnct_inv=_set_address_data, size=24, type='char', string="City", multi='address'),
+        'state_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', domain="[('country_id', '=', country_id)]", relation='res.country.state', string="Fed. State", multi='address'),
         'bank_ids': fields.one2many('res.partner.bank','company_id', 'Bank Accounts', help='Bank accounts related to this company'),
-        'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'), 
-        'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'), 
-        'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'), 
-        'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'), 
-        'website': fields.related('partner_id', 'website', string="Website", type="char", size=64), 
-        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32), 
+        'country_id': fields.function(_get_address_data, fnct_inv=_set_address_data, type='many2one', relation='res.country', string="Country", multi='address'),
+        'email': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Email", multi='address'),
+        'phone': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Phone", multi='address'),
+        'fax': fields.function(_get_address_data, fnct_inv=_set_address_data, size=64, type='char', string="Fax", multi='address'),
+        'website': fields.related('partner_id', 'website', string="Website", type="char", size=64),
+        'vat': fields.related('partner_id', 'vat', string="Tax ID", type="char", size=32),
         'company_registry': fields.char('Company Registry', size=64),
         'paper_format': fields.selection([('a4', 'A4'), ('us_letter', 'US Letter')], "Paper Format", required=True),
     }
     _sql_constraints = [
         ('name_uniq', 'unique (name)', 'The company name must be unique !')
     ]
-    def on_change_header(self, cr, uid, ids, phone, email, fax, website, vat, reg=False, context=None):
-        val = []
-        if phone: val.append(_('Phone: ')+phone)
-        if fax: val.append(_('Fax: ')+fax)
-        if website: val.append(_('Website: ')+website)
-        if vat: val.append(_('VAT: ')+vat)
-        if reg: val.append(_('Reg: ')+reg)
-        return {'value': {'rml_footer1':' | '.join(val)}}
 
+    def onchange_footer(self, cr, uid, ids, custom_footer, phone, fax, email, website, vat, company_registry, bank_ids, context=None):
+        if custom_footer:
+            return {}
+
+        # first line (notice that missing elements are filtered out before the join)
+        res = ' | '.join(filter(bool, [
+            phone            and '%s: %s' % (_('Phone'), phone),
+            fax              and '%s: %s' % (_('Fax'), fax),
+            email            and '%s: %s' % (_('Email'), email),
+            website          and '%s: %s' % (_('Website'), website),
+            vat              and '%s: %s' % (_('TIN'), vat),
+            company_registry and '%s: %s' % (_('Reg'), company_registry),
+        ]))
+        # second line: bank accounts
+        res_partner_bank = self.pool.get('res.partner.bank')
+        account_data = self.resolve_2many_commands(cr, uid, 'bank_ids', bank_ids, context=context)
+        account_names = res_partner_bank._prepare_name_get(cr, uid, account_data, context=context)
+        if account_names:
+            title = _('Bank Accounts') if len(account_names) > 1 else _('Bank Account')
+            res += '\n%s: %s' % (title, ', '.join(name for id, name in account_names))
+
+        return {'value': {'rml_footer': res, 'rml_footer_readonly': res}}
+
+    def on_change_country(self, cr, uid, ids, country_id, context=None):
+        currency_id = self._get_euro(cr, uid, context=context)
+        if country_id:
+            currency_id = self.pool.get('res.country').browse(cr, uid, country_id, context=context).currency_id.id
+        return {'value': {'currency_id': currency_id}}
 
     def _search(self, cr, uid, args, offset=0, limit=None, order=None,
             context=None, count=False, access_rights_uid=None):
-
         if context is None:
             context = {}
-        user_preference = context.get('user_preference', False)
-        if user_preference:
+        if context.get('user_preference'):
             # We browse as superuser. Otherwise, the user would be able to
             # select only the currently visible companies (according to rules,
             # which are probably to allow to see the child companies) even if
             # she belongs to some other companies.
-            user = self.pool.get('res.users').browse(cr, 1, uid, context=context)
+            user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
             cmp_ids = list(set([user.company_id.id] + [cmp.id for cmp in user.company_ids]))
             return cmp_ids
         return super(res_company, self)._search(cr, uid, args, offset=offset, limit=limit, order=order,
@@ -187,7 +195,7 @@ class res_company(osv.osv):
         ]
 
         ids = proxy.search(cr, uid, args, context=context)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        user = self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=context)
         for rule in proxy.browse(cr, uid, ids, context):
             if eval(rule.expression, {'context': context, 'user': user}):
                 return rule.company_dest_id.id
@@ -234,15 +242,14 @@ class res_company(osv.osv):
         obj_partner.write(cr, uid, partner_id, {'company_id': company_id}, context=context)
         return company_id
 
-    def write(self, cr, *args, **argv):
+    def write(self, cr, uid, ids, values, context=None):
         self.cache_restart(cr)
-        return super(res_company, self).write(cr, *args, **argv)
+        return super(res_company, self).write(cr, uid, ids, values, context=context)
 
     def _get_euro(self, cr, uid, context=None):
-        try:
-            return self.pool.get('res.currency').search(cr, uid, [])[0]
-        except:
-            return False
+        rate_obj = self.pool.get('res.currency.rate')
+        rate_id = rate_obj.search(cr, uid, [('rate', '=', 1)], context=context)
+        return rate_id and rate_obj.browse(cr, uid, rate_id[0], context=context).currency_id.id or False
 
     def _get_logo(self, cr, uid, ids):
         return open(os.path.join( tools.config['root_path'], 'addons', 'base', 'res', 'res_company_logo.png'), 'rb') .read().encode('base64')
@@ -279,20 +286,22 @@ class res_company(osv.osv):
             return self._header_a4
 
     _header_main = """
-    <header>
+<header>
     <pageTemplate>
-        <frame id="first" x1="1.3cm" y1="2.5cm" height="%s" width="19.0cm"/>
+        <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
+         <stylesheet>
+            <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
+         </stylesheet>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
             <image x="1.3cm" y="%s" height="40.0" >[[ company.logo or removeParentNode('image') ]]</image>
             <setFont name="DejaVu Sans" size="8"/>
             <fill color="black"/>
             <stroke color="black"/>
+
+            <!-- page header -->
             <lines>1.3cm %s 20cm %s</lines>
-
             <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
-
-
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
@@ -302,13 +311,19 @@ class res_company(osv.osv):
             <drawRightString x="7cm" y="%s">[[ company.partner_id.email or '' ]]</drawRightString>
             <lines>1.3cm %s 7cm %s</lines>
 
+            <!-- left margin -->
+            <rotate degrees="90"/>
+            <fill color="grey"/>
+            <drawString x="2.65cm" y="-0.4cm">produced by OpenERP.com</drawString>
+            <fill color="black"/>
+            <rotate degrees="-90"/>
+
             <!--page bottom-->
-
-            <lines>1.2cm 2.15cm 19.9cm 2.15cm</lines>
-
-            <drawCentredString x="10.5cm" y="1.7cm">[[ company.rml_footer1 ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="1.25cm">[[ company.rml_footer2 ]]</drawCentredString>
-            <drawCentredString x="10.5cm" y="0.8cm">Contact : [[ user.name ]] - Page: <pageNumber/></drawCentredString>
+            <lines>1.2cm 2.65cm 19.9cm 2.65cm</lines>
+            <place x="1.3cm" y="0cm" height="2.55cm" width="19.0cm">
+                <para style="main_footer">[[ company.rml_footer ]]</para>
+                <para style="main_footer">Contact : [[ user.name ]] - Page: <pageNumber/></para>
+            </place>
         </pageGraphics>
     </pageTemplate>
 </header>"""

@@ -19,186 +19,45 @@
 #
 ##############################################################################
 
-import openerp.pooler as pooler
-from operator import itemgetter
-from osv import osv, fields
-from tools.translate import _
+from osv import osv
 
-class ir_needaction_users_rel(osv.osv):
-    '''
-    ir_needaction_users_rel holds data related to the needaction
-    mechanism inside OpenERP. A row in this model is characterized by:
-    - res_model: model of the record requiring an action
-    - res_id: ID of the record requiring an action
-    - user_id: foreign key to the res.users table, to the user that
-      has to perform the action
-    This model can be seen as a many2many, linking (res_model, res_id) to 
-    users (those whose attention is required on the record).'''
-    
-    _name = 'ir.needaction_users_rel'
-    _description = 'Needaction relationship table'
-    _rec_name = 'id'
-    _order = 'id desc'
-    _columns = {
-        'res_model': fields.char('Related Document Model', size=128,
-                        select=1, required=True),
-        'res_id': fields.integer('Related Document ID',
-                        select=1, required=True),
-        'user_id': fields.many2one('res.users', string='Related User',
-                        ondelete='cascade', select=1, required=True),
-    }
-    
-    def _get_users(self, cr, uid, res_ids, res_model, context=None):
-        """Given res_ids of res_model, get user_ids present in table"""
-        rel_ids = self.search(cr, uid, [('res_model', '=', res_model), ('res_id', 'in', res_ids)], context=context)
-        return list(set(map(itemgetter('user_id'), self.read(cr, uid, rel_ids, ['user_id'], context=context))))
-    
-    def create_users(self, cr, uid, res_ids, res_model, user_ids, context=None):
-        """Given res_ids of res_model, add user_ids to the relationship table"""
-        for res_id in res_ids:
-            for user_id in user_ids:
-                self.create(cr, uid, {'res_model': res_model, 'res_id': res_id, 'user_id': user_id}, context=context)
-        return True
-    
-    def unlink_users(self, cr, uid, res_ids, res_model, context=None):
-        """Given res_ids of res_model, delete all entries in the relationship table"""
-        to_del_ids = self.search(cr, uid, [('res_model', '=', res_model), ('res_id', 'in', res_ids)], context=context)
-        return self.unlink(cr, uid, to_del_ids, context=context)
-    
-    def update_users(self, cr, uid, res_ids, res_model, user_ids, context=None):
-        """Given res_ids of res_model, update their entries in the relationship table to user_ids"""
-        # read current records
-        cur_users = self._get_users(cr, uid, res_ids, res_model, context=context)
-        if len(cur_users) == len(user_ids) and all(cur_user in user_ids for cur_user in cur_users):
-            return True
-        # unlink old records
-        self.unlink_users(cr, uid, res_ids, res_model, context=context)
-        # link new records
-        self.create_users(cr, uid, res_ids, res_model, user_ids, context=context)
-        return True
-
-
-class ir_needaction_mixin(osv.osv):
+class ir_needaction_mixin(osv.AbstractModel):
     '''Mixin class for objects using the need action feature.
-    
-    Need action feature can be used by objects willing to be able to
-    signal that an action is required on a particular record. If in the
-    business logic an action must be performed by somebody, for instance
-    validation by a manager, this mechanism allows to set a list of
-    users asked to perform an action.
-    
-    This class wraps a class (ir.ir_needaction_users_rel) that behaves
-    like a many2many field. However, no field is added to the model
-    inheriting from this mixin class. This class handles the low-level
-    considerations of updating relationships. Every change made on the
-    record calls a method that updates the relationships.
-    
-    Objects using the 'need_action' feature should override the
-    ``get_needaction_user_ids`` method. This methods returns a dictionary
-    whose keys are record ids, and values a list of user ids, like
-    in a many2many relationship. Therefore by defining only one method,
-    you can specify if an action is required by defining the users
-    that have to do it, in every possible situation.
-    
-    This class also offers several global services,:
-    - ``needaction_get_record_ids``: for the current model and uid, get
-      all record ids that ask this user to perform an action. This
-      mechanism is used for instance to display the number of pending
-      actions in menus, such as Leads (12)
-    - ``needaction_get_action_count``: as ``needaction_get_record_ids``
-      but returns only the number of action, not the ids (performs a
-      search with count=True)
-    - ``needaction_get_user_record_references``: for a given uid, get all
-      the records that ask this user to perform an action. Records
-      are given as references, a list of tuples (model_name, record_id)
 
-    The ``ir_needaction_mixin`` class adds a function field on models inheriting 
-    from the class. This field allows to state whether a given record has 
-    a needaction for the current user. This is usefull if you want to customize 
-    views according to the needaction feature. For example, you may want to 
-    set records in bold in a list view if the current user has an action to 
-    perform on the record. This makes the class not a pure abstract class, 
-    but allows to easily use the action information.'''
-    
+    Need action feature can be used by models that have to be able to
+    signal that an action is required on a particular record. If in
+    the business logic an action must be performed by somebody, for
+    instance validation by a manager, this mechanism allows to set a
+    list of users asked to perform an action.
+
+    Models using the 'need_action' feature should override the
+    ``_needaction_domain_get`` method. This method returns a
+    domain to filter records requiring an action for a specific user.
+
+    This class also offers several global services:
+    - ``_needaction_count``: returns the number of actions uid has to perform
+    '''
+
     _name = 'ir.needaction_mixin'
-    _description = '"Need action" mixin'
-    
-    def get_needaction_pending(self, cr, uid, ids, name, arg, context=None):
-        res = {}
-        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
-        for id in ids:
-            res[id] = uid in needaction_user_ids[id]
-        return res
-    
-    _columns = {
-        'needaction_pending': fields.function(get_needaction_pending, type='boolean',
-                        string='Need action pending',
-                        help='If True, this field states that users have to perform an action. \
-                                This field comes from the needaction mechanism. Please refer \
-                                to the ir.needaction_mixin class.'),
-    }
-    
+    _needaction = True
+
     #------------------------------------------------------
-    # Addon API
+    # Addons API
     #------------------------------------------------------
-    
-    def get_needaction_user_ids(self, cr, uid, ids, context=None):
-        """ Returns the user_ids that have to perform an action
-            :return: dict { record_id: [user_ids], }
+
+    def _needaction_domain_get(self, cr, uid, context=None):
+        """ Returns the domain to filter records that require an action
+            :return: domain or False is no action
         """
-        return dict.fromkeys(ids, [])
-    
-    def create(self, cr, uid, values, context=None):
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        # perform create
-        obj_id = super(ir_needaction_mixin, self).create(cr, uid, values, context=context)
-        # link user_ids
-        needaction_user_ids = self.get_needaction_user_ids(cr, uid, [obj_id], context=context)
-        rel_obj.create_users(cr, uid, [obj_id], self._name, needaction_user_ids[obj_id], context=context)
-        return obj_id
-    
-    def write(self, cr, uid, ids, values, context=None):
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        # perform write
-        write_res = super(ir_needaction_mixin, self).write(cr, uid, ids, values, context=context)
-        # get and update user_ids
-        needaction_user_ids = self.get_needaction_user_ids(cr, uid, ids, context=context)
-        for id in ids:
-            rel_obj.update_users(cr, uid, [id], self._name, needaction_user_ids[id], context=context)
-        return write_res
-    
-    def unlink(self, cr, uid, ids, context=None):
-        # unlink user_ids
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        rel_obj.unlink_users(cr, uid, ids, self._name, context=context)
-        # perform unlink
-        return super(ir_needaction_mixin, self).unlink(cr, uid, ids, context=context)
-    
+        return False
+
     #------------------------------------------------------
     # "Need action" API
     #------------------------------------------------------
-    
-    def needaction_get_record_ids(self, cr, uid, user_id, limit=80, context=None):
-        """Given the current model and a user_id
-           return the record ids that require the user to perform an
-           action"""
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        rel_ids = rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, context=context)
-        return map(itemgetter('res_id'), rel_obj.read(cr, uid, rel_ids, ['res_id'], context=context))
-    
-    def needaction_get_action_count(self, cr, uid, user_id, limit=80, context=None):
-        """Given the current model and a user_id
-           get the number of actions it has to perform"""
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        return rel_obj.search(cr, uid, [('res_model', '=', self._name), ('user_id', '=', user_id)], limit=limit, count=True, context=context)
-    
-    def needaction_get_record_references(self, cr, uid, user_id, offset=None, limit=None, order=None, context=None):
-        """For a given user_id, get all the records that asks this user to
-           perform an action. Records are given as references, a list of
-           tuples (model_name, record_id).
-           This method is trans-model."""
-        rel_obj = self.pool.get('ir.needaction_users_rel')
-        rel_ids = rel_obj.search(cr, uid, [('user_id', '=', user_id)], offset=offset, limit=limit, order=order, context=context)
-        return map(itemgetter('res_model', 'res_id'), rel_obj.read(cr, uid, rel_ids, ['res_model', 'res_id'], context=context))
 
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    def _needaction_count(self, cr, uid, domain=[], context=None):
+        """ Get the number of actions uid has to perform. """
+        dom = self._needaction_domain_get(cr, uid, context=context)
+        if not dom:
+            return 0
+        return self.search(cr, uid, (domain or []) +dom, context=context, count=True)

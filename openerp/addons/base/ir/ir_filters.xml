@@ -14,20 +14,19 @@
         <record id="ir_filters_view_form" model="ir.ui.view">
             <field name="name">ir.filters.form</field>
             <field name="model">ir.filters</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Filters">
-                    <group colspan="4" col="6" >
+                <form string="Filters" version="7.0">
+                  <sheet>
+                    <group col="4">
                         <field name="name"/>
-                        <field name="model_id"/>
                         <field name="user_id"/>
+                        <field name="model_id"/>
                     </group>
-                    <group col="4" expand="1">
-                        <separator string="Domain" colspan="2" />
-                        <separator string="Context" colspan="2" />
-                        <field name="domain" nolabel="1" colspan="2"/>
-                        <field name="context" nolabel="1" colspan="2"/>
+                    <group>
+                        <field name="domain"/>
+                        <field name="context"/>
                     </group>
+                   </sheet>
                 </form>
             </field>
         </record>
@@ -35,7 +34,6 @@
         <record id="ir_filters_view_tree" model="ir.ui.view">
              <field name="name">ir.filters.tree</field>
             <field name="model">ir.filters</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Filters">
                     <field name="name"/>
@@ -50,19 +48,17 @@
         <record id="ir_filters_view_search" model="ir.ui.view">
             <field name="name">ir.filters.search</field>
             <field name="model">ir.filters</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Filters">
+                    <field name="name" string="Filter Name"/>
                     <filter string="Personal" domain="[('user_id','!=',False)]" help="Filters visible only for one user"/>
                     <filter string="Shared" domain="[('user_id','=',False)]" help="Filters shared with all users"/>
-                    <separator orientation="vertical"/>
-                    <field name="name"/>
+                    <separator/>
+                    <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]"
+                        name="my_filters"
+                        string="My Filters"/>
                     <field name="model_id"/>
-                    <field name="user_id">
-                        <filter icon="terp-personal" domain="[('user_id','in',(uid, False))]"
-                                name="my_filters"
-                                string="My Filters" />
-                    </field>
+                    <field name="user_id"/>
                 </search>
             </field>
         </record>

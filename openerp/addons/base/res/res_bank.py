@@ -35,7 +35,7 @@ class Bank(osv.osv):
         'state': fields.many2one("res.country.state", 'Fed. State',
             domain="[('country_id', '=', country)]"),
         'country': fields.many2one('res.country', 'Country'),
-        'email': fields.char('E-Mail', size=64),
+        'email': fields.char('Email', size=64),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
         'active': fields.boolean('Active'),
@@ -109,7 +109,7 @@ class res_partner_bank(osv.osv):
         if not context.get('address'):
             return value
 
-        for address in self.pool.get('res.partner').resolve_o2m_commands_to_record_dicts(
+        for address in self.pool.get('res.partner').resolve_2many_commands(
             cursor, user, 'address', context['address'], ['type', field], context=context):
 
             if address.get('type') == 'default':
@@ -172,27 +172,35 @@ class res_partner_bank(osv.osv):
                             ('required', field.required)]
         return res
 
+    def _prepare_name_get(self, cr, uid, bank_dicts, context=None):
+        """ Format the name of a res.partner.bank.
+            This function is designed to be inherited to add replacement fields.
+            :param bank_dicts: a list of res.partner.bank dicts, as returned by the method read()
+            :return: [(id, name), ...], as returned by the method name_get()
+        """
+        # prepare a mapping {code: format_layout} for all bank types
+        bank_type_obj = self.pool.get('res.partner.bank.type')
+        bank_types = bank_type_obj.browse(cr, uid, bank_type_obj.search(cr, uid, []), context=context)
+        bank_code_format = dict((bt.code, bt.format_layout) for bt in bank_types)
+
+        res = []
+        for data in bank_dicts:
+            name = data['acc_number']
+            if data['state'] and bank_code_format.get(data['state']):
+                try:
+                    if not data.get('bank_name'):
+                        data['bank_name'] = _('BANK')
+                    name = bank_code_format[data['state']] % data
+                except Exception:
+                    raise osv.except_osv(_("Formating Error"), _("Invalid Bank Account Type Name format."))
+            res.append((data.get('id', False), name))
+        return res
+
     def name_get(self, cr, uid, ids, context=None):
         if not len(ids):
             return []
-        bank_type_obj = self.pool.get('res.partner.bank.type')
-        res = []
-        for val in self.browse(cr, uid, ids, context=context):
-            result = val.acc_number
-            if val.state:
-                type_ids = bank_type_obj.search(cr, uid, [('code','=',val.state)])
-                if type_ids:
-                    t = bank_type_obj.browse(cr, uid, type_ids[0], context=context)
-                    try:
-                        # avoid the default format_layout to result in "False: ..."
-                        if not val._data[val.id]['bank_name']:
-                            val._data[val.id]['bank_name'] = _('BANK')
-                        result = t.format_layout % val._data[val.id]
-                    except:
-                        result += ' [Formatting Error]'
-                        raise
-            res.append((val.id, result))
-        return res
+        bank_dicts = self.read(cr, uid, ids, context=context)
+        return self._prepare_name_get(cr, uid, bank_dicts, context=context)
 
     def onchange_company_id(self, cr, uid, ids, company_id, context=None):
         result = {}

@@ -77,14 +77,14 @@ class ir_translation_import_cursor(object):
     def push(self, ddict):
         """Feed a translation, as a dictionary, into the cursor
         """
-
+        state =  "translated" if (ddict['value'] and ddict['value'] != "") else "to_translate"
         self._cr.execute("INSERT INTO " + self._table_name \
                 + """(name, lang, res_id, src, type,
-                        imd_model, imd_module, imd_name, value)
-                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
+                        imd_model, imd_module, imd_name, value,state)
+                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                 (ddict['name'], ddict['lang'], ddict.get('res_id'), ddict['src'], ddict['type'],
                     ddict.get('imd_model'), ddict.get('imd_module'), ddict.get('imd_name'),
-                    ddict['value']))
+                    ddict['value'],state))
 
     def finish(self):
         """ Transfer the data from the temp table to ir.translation
@@ -125,15 +125,16 @@ class ir_translation_import_cursor(object):
         # Step 2: update existing (matching) translations
         if self._overwrite:
             cr.execute("""UPDATE ONLY %s AS irt
-                SET value = ti.value 
+                SET value = ti.value,
+                state = 'translated' 
                 FROM %s AS ti
                 WHERE %s AND ti.value IS NOT NULL AND ti.value != ''
                 """ % (self._parent_table, self._table_name, find_expr))
 
         # Step 3: insert new translations
 
-        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value)
-            SELECT name, lang, res_id, src, type, value
+        cr.execute("""INSERT INTO %s(name, lang, res_id, src, type, value,state)
+            SELECT name, lang, res_id, src, type, value,state
               FROM %s AS ti
               WHERE NOT EXISTS(SELECT 1 FROM ONLY %s AS irt WHERE %s);
               """ % (self._parent_table, self._table_name, self._parent_table, find_expr))
@@ -167,6 +168,11 @@ class ir_translation(osv.osv):
         'type': fields.selection(TRANSLATION_TYPE, string='Type', size=16, select=True),
         'src': fields.text('Source'),
         'value': fields.text('Translation Value'),
+        'state':fields.selection([('to_translate','To Translate'),('inprogress','Translation in Progress'),('translated','Translated')])
+    }
+    
+    _defaults = {
+        'state':'to_translate',
     }
     
     _sql_constraints = [ ('lang_fkey_res_lang', 'FOREIGN KEY(lang) REFERENCES res_lang(code)', 
@@ -261,7 +267,7 @@ class ir_translation(osv.osv):
         # FIXME: should assert that `source` is unicode and fix all callers to always pass unicode
         # so we can remove the string encoding/decoding.
         if not lang:
-            return u''
+            return tools.ustr(source or '')
         if isinstance(types, basestring):
             types = (types,)
         if source:
@@ -301,6 +307,10 @@ class ir_translation(osv.osv):
             context = {}
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('src') or ('value' in vals and not(vals.get('value'))):
+            result = vals.update({'state':'to_translate'})
+        if vals.get('value'):
+            result = vals.update({'state':'translated'})
         result = super(ir_translation, self).write(cursor, user, ids, vals, context=context)
         for trans_obj in self.read(cursor, user, ids, ['name','type','res_id','src','lang'], context=context):
             self._get_source.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['src'])
@@ -317,6 +327,52 @@ class ir_translation(osv.osv):
             self._get_ids.clear_cache(self, user, trans_obj['name'], trans_obj['type'], trans_obj['lang'], trans_obj['res_id'])
         result = super(ir_translation, self).unlink(cursor, user, ids, context=context)
         return result
+
+    def translate_fields(self, cr, uid, model, id, field=None, context=None):
+        trans_model = self.pool.get(model)
+        domain = ['&', ('res_id', '=', id), ('name', '=like', model + ',%')]
+        langs_ids = self.pool.get('res.lang').search(cr, uid, [('code', '!=', 'en_US')], context=context)
+        langs = [lg.code for lg in self.pool.get('res.lang').browse(cr, uid, langs_ids, context=context)]
+        main_lang = 'en_US'
+        translatable_fields = []
+        for f, info in trans_model._all_columns.items():
+            if info.column.translate:
+                if info.parent_model:
+                    parent_id = trans_model.read(cr, uid, [id], [info.parent_column], context=context)[0][info.parent_column][0]
+                    translatable_fields.append({ 'name': f, 'id': parent_id, 'model': info.parent_model })
+                    domain.insert(0, '|')
+                    domain.extend(['&', ('res_id', '=', parent_id), ('name', '=', "%s,%s" % (info.parent_model, f))])
+                else:
+                    translatable_fields.append({ 'name': f, 'id': id, 'model': model })
+        if len(langs):
+            fields = [f.get('name') for f in translatable_fields]
+            record = trans_model.read(cr, uid, [id], fields, context={ 'lang': main_lang })[0]
+            for lg in langs:
+                for f in translatable_fields:
+                    # Check if record exists, else create it (at once)
+                    sql = """INSERT INTO ir_translation (lang, src, name, type, res_id, value)
+                        SELECT %s, %s, %s, 'model', %s, %s WHERE NOT EXISTS
+                        (SELECT 1 FROM ir_translation WHERE lang=%s AND name=%s AND res_id=%s AND type='model');
+                        UPDATE ir_translation SET src = %s WHERE lang=%s AND name=%s AND res_id=%s AND type='model';
+                        """
+                    src = record[f['name']] or None
+                    name = "%s,%s" % (f['model'], f['name'])
+                    cr.execute(sql, (lg, src , name, f['id'], src, lg, name, f['id'], src, lg, name, id))
+
+        action = {
+            'name': 'Translate',
+            'res_model': 'ir.translation',
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'tree,form',
+            'domain': domain,
+        }
+        if field:
+            info = trans_model._all_columns[field]
+            action['context'] = {
+                'search_default_name': "%s,%s" % (info.parent_model or model, field)
+            }
+        return action
 
     def _get_import_cursor(self, cr, uid, context=None):
         """ Return a cursor-like object for fast inserting translations

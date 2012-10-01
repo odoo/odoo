@@ -18,13 +18,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+
+import base64
+from docutils.core import publish_string
 import imp
 import logging
 import re
 import urllib
 import zipimport
 
-from openerp import modules, pooler, release, tools
+from openerp import modules, pooler, release, tools, addons
 from openerp.tools.parse_version import parse_version
 from openerp.tools.translate import _
 from openerp.osv import fields, osv, orm
@@ -79,6 +82,7 @@ class module_category(osv.osv):
 
 class module(osv.osv):
     _name = "ir.module.module"
+    _rec_name = "shortdesc"
     _description = "Module"
 
     @classmethod
@@ -91,6 +95,14 @@ class module(osv.osv):
             _logger.debug('Error when trying to fetch informations for '
                           'module %s', name, exc_info=True)
         return info
+
+    def _get_desc(self, cr, uid, ids, field_name=None, arg=None, context=None):
+        res = dict.fromkeys(ids, '')
+        for module in self.browse(cr, uid, ids, context=context):
+            overrides = dict(embed_stylesheet=False, doctitle_xform=False, output_encoding='unicode')
+            output = publish_string(source=module.description, writer_name='html', settings_overrides=overrides)
+            res[module.id] = output
+        return res
 
     def _get_latest_version(self, cr, uid, ids, field_name=None, arg=None, context=None):
         res = dict.fromkeys(ids, '')
@@ -137,14 +149,17 @@ class module(osv.osv):
             # We use try except, because views or menus may not exist.
             try:
                 res_mod_dic = res[module_rec.id]
-                for v in view_obj.browse(cr, uid, imd_models.get('ir.ui.view', []), context=context):
+                view_ids = imd_models.get('ir.ui.view', [])
+                for v in view_obj.browse(cr, uid, view_ids, context=context):
                     aa = v.inherit_id and '* INHERIT ' or ''
                     res_mod_dic['views_by_module'].append(aa + v.name + '('+v.type+')')
 
-                for rx in report_obj.browse(cr, uid, imd_models.get('ir.actions.report.xml', []), context=context):
+                report_ids = imd_models.get('ir.actions.report.xml', [])
+                for rx in report_obj.browse(cr, uid, report_ids, context=context):
                     res_mod_dic['reports_by_module'].append(rx.name)
 
-                for um in menu_obj.browse(cr, uid, imd_models.get('ir.ui.menu', []), context=context):
+                menu_ids = imd_models.get('ir.ui.menu', [])
+                for um in menu_obj.browse(cr, uid, menu_ids, context=context):
                     res_mod_dic['menus_by_module'].append(um.complete_name)
             except KeyError, e:
                 _logger.warning(
@@ -160,11 +175,25 @@ class module(osv.osv):
                 res[key][k] = "\n".join(sorted(v))
         return res
 
+    def _get_icon_image(self, cr, uid, ids, field_name=None, arg=None, context=None):
+        res = dict.fromkeys(ids, '')
+        for module in self.browse(cr, uid, ids, context=context):
+            path = addons.get_module_resource(module.name, 'static', 'src', 'img', 'icon.png')
+            if path:
+                image_file = tools.file_open(path, 'rb')
+                try:
+                    res[module.id] = image_file.read().encode('base64')
+                finally:
+                    image_file.close()
+        return res
+
     _columns = {
         'name': fields.char("Technical Name", size=128, readonly=True, required=True, select=True),
         'category_id': fields.many2one('ir.module.category', 'Category', readonly=True, select=True),
-        'shortdesc': fields.char('Name', size=256, readonly=True, translate=True),
+        'shortdesc': fields.char('Module Name', size=64, readonly=True, translate=True),
+        'summary': fields.char('Summary', size=64, readonly=True, translate=True),
         'description': fields.text("Description", readonly=True, translate=True),
+        'description_html': fields.function(_get_desc, string='Description HTML', type='html', method=True, readonly=True),
         'author': fields.char("Author", size=128, readonly=True),
         'maintainer': fields.char('Maintainer', size=128, readonly=True),
         'contributors': fields.text('Contributors', readonly=True),
@@ -204,13 +233,13 @@ class module(osv.osv):
                 ('AGPL-3', 'Affero GPL-3'),
                 ('Other OSI approved licence', 'Other OSI Approved Licence'),
                 ('Other proprietary', 'Other Proprietary')
-            ], string='License', readonly=True),
+        ], string='License', readonly=True),
         'menus_by_module': fields.function(_get_views, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
-        'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
+        'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
     }
 
     _defaults = {
@@ -223,12 +252,9 @@ class module(osv.osv):
 
     def _name_uniq_msg(self, cr, uid, ids, context=None):
         return _('The name of the module must be unique !')
-    def _certificate_uniq_msg(self, cr, uid, ids, context=None):
-        return _('The certificate ID of the module must be unique !')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)',_name_uniq_msg ),
-        ('certificate_uniq', 'UNIQUE (certificate)',_certificate_uniq_msg )
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -339,21 +365,7 @@ class module(osv.osv):
         :returns: next res.config item to execute
         :rtype: dict[str, object]
         """
-        self.button_install(cr, uid, ids, context=context)
-        cr.commit()
-        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
-
-        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
-        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
-            return config
-
-        # reload the client
-        menu_ids = self.root_menus(cr,uid,ids,context)
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'reload',
-            'params': {'menu_id': menu_ids and menu_ids[0] or False},
-        }
+        return self._button_immediate_function(cr, uid, ids, self.button_install, context=context)
 
     def button_install_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'uninstalled', 'demo':False})
@@ -364,10 +376,12 @@ class module(osv.osv):
         including the deletion of all database structures created by the module:
         tables, columns, constraints, etc."""
         ir_model_data = self.pool.get('ir.model.data')
+        ir_model_constraint = self.pool.get('ir.model.constraint')
         modules_to_remove = [m.name for m in self.browse(cr, uid, ids, context)]
-        data_ids = ir_model_data.search(cr, uid, [('module', 'in', modules_to_remove)])
-        ir_model_data._module_data_uninstall(cr, uid, data_ids, context)
-        ir_model_data.unlink(cr, uid, data_ids, context)
+        modules_to_remove_ids = [m.id for m in self.browse(cr, uid, ids, context)]
+        constraint_ids = ir_model_constraint.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
+        ir_model_constraint._module_data_uninstall(cr, uid, constraint_ids, context)
+        ir_model_data._module_data_uninstall(cr, uid, modules_to_remove, context)
         self.write(cr, uid, ids, {'state': 'uninstalled'})
         return True
 
@@ -397,8 +411,35 @@ class module(osv.osv):
                                                           known_dep_ids, exclude_states,context))
         return list(known_dep_ids)
 
+    def _button_immediate_function(self, cr, uid, ids, function, context=None):
+        function(cr, uid, ids, context=context)
+
+        cr.commit()
+        _, pool = pooler.restart_pool(cr.dbname, update_module=True)
+
+        config = pool.get('res.config').next(cr, uid, [], context=context) or {}
+        if config.get('type') not in ('ir.actions.reload', 'ir.actions.act_window_close'):
+            return config
+
+        # reload the client; open the first available root menu
+        menu_obj = self.pool.get('ir.ui.menu')
+        menu_ids = menu_obj.search(cr, uid, [('parent_id', '=', False)], context=context)
+
+        return {
+            'type' : 'ir.actions.client',
+            'tag' : 'reload',
+            'params' : {'menu_id' : menu_ids and menu_ids[0] or False}
+        }
+
+    def button_immediate_uninstall(self, cr, uid, ids, context=None):
+        """
+        Uninstall the selected module(s) immediately and fully,
+        returns the next res.config action to execute
+        """
+        return self._button_immediate_function(cr, uid, ids, self.button_uninstall, context=context)
+
     def button_uninstall(self, cr, uid, ids, context=None):
-        if any(m.name == 'base' for m in self.browse(cr, uid, ids)):
+        if any(m.name == 'base' for m in self.browse(cr, uid, ids, context=context)):
             raise orm.except_orm(_('Error'), _("The `base` module cannot be uninstalled"))
         dep_ids = self.downstream_dependencies(cr, uid, ids, context=context)
         self.write(cr, uid, ids + dep_ids, {'state': 'to remove'})
@@ -407,6 +448,13 @@ class module(osv.osv):
     def button_uninstall_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
         return True
+
+    def button_immediate_upgrade(self, cr, uid, ids, context=None):
+        """
+        Upgrade the selected module(s) immediately and fully,
+        return the next res.config action to execute
+        """
+        return self._button_immediate_function(cr, uid, ids, self.button_upgrade, context=context)
 
     def button_upgrade(self, cr, uid, ids, context=None):
         depobj = self.pool.get('ir.module.module.dependency')
@@ -439,7 +487,7 @@ class module(osv.osv):
                     to_install.extend(ids2)
 
         self.button_install(cr, uid, to_install, context=context)
-        return dict(ACTION_DICT, name=_('Upgrade'))
+        return dict(ACTION_DICT, name=_('Apply Schedule Upgrade'))
 
     def button_upgrade_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {'state': 'installed'})
@@ -459,11 +507,11 @@ class module(osv.osv):
             'contributors': ', '.join(terp.get('contributors', [])) or False,
             'website': terp.get('website', ''),
             'license': terp.get('license', 'AGPL-3'),
-            'certificate': terp.get('certificate') or False,
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False),
             'icon': terp.get('icon', False),
+            'summary': terp.get('summary', ''),
         }
 
     # update the list of available packages
@@ -623,37 +671,6 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
                 _logger.warning('module %s: description is empty !', mod.name)
-
-            if not mod.certificate or not mod.certificate.isdigit():
-                _logger.info('module %s: no quality certificate', mod.name)
-            else:
-                val = long(mod.certificate[2:]) % 97 == 29
-                if not val:
-                    _logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
-                    raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
-
-    def root_menus(self, cr, uid, ids, context=None):
-        """ Return root menu ids the menus created by the modules whose ids are
-        provided.
-
-        :param list[int] ids: modules to get menus from
-        """
-        values = self.read(cr, uid, ids, ['name'], context=context)
-        module_names = [i['name'] for i in values]
-
-        ids = self.pool.get('ir.model.data').search(cr, uid, [ ('model', '=', 'ir.ui.menu'), ('module', 'in', module_names) ], context=context)
-        values = self.pool.get('ir.model.data').read(cr, uid, ids, ['res_id'], context=context)
-        all_menu_ids = [i['res_id'] for i in values]
-
-        root_menu_ids = []
-        for menu in self.pool.get('ir.ui.menu').browse(cr, uid, all_menu_ids, context=context):
-            while menu.parent_id:
-                menu = menu.parent_id
-            if not menu.id in root_menu_ids:
-                root_menu_ids.append((menu.sequence,menu.id))
-        root_menu_ids.sort()
-        root_menu_ids = [i[1] for i in root_menu_ids]
-        return root_menu_ids
 
 class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"

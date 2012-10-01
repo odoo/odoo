@@ -29,8 +29,7 @@ from openerp import netsvc, pooler, tools
 from openerp.tools.safe_eval import safe_eval as eval
 from openerp.tools import config
 from openerp.tools.translate import _
-from openerp.osv.orm import except_orm, browse_record, EXT_ID_PREFIX_FK, \
-                            EXT_ID_PREFIX_M2M_TABLE, EXT_ID_PREFIX_CONSTRAINT
+from openerp.osv.orm import except_orm, browse_record
 
 _logger = logging.getLogger(__name__)
 
@@ -97,9 +96,9 @@ class ir_model(osv.osv):
         'field_id': fields.one2many('ir.model.fields', 'model_id', 'Fields', required=True),
         'state': fields.selection([('manual','Custom Object'),('base','Base Object')],'Type',readonly=True),
         'access_ids': fields.one2many('ir.model.access', 'model_id', 'Access'),
-        'osv_memory': fields.function(_is_osv_memory, string='In-Memory Model', type='boolean',
+        'osv_memory': fields.function(_is_osv_memory, string='Transient Model', type='boolean',
             fnct_search=_search_osv_memory,
-            help="Indicates whether this object model lives in memory only, i.e. is not persisted (osv.osv_memory)"),
+            help="This field specifies whether the model is transient or not (i.e. if records are automatically deleted from the database or not)"),
         'modules': fields.function(_in_modules, type='char', size=128, string='In Modules', help='List of modules in which the object is defined or inherited'),
         'view_ids': fields.function(_view_ids, type='one2many', obj='ir.ui.view', string='Views'),
     }
@@ -179,14 +178,15 @@ class ir_model(osv.osv):
     def create(self, cr, user, vals, context=None):
         if  context is None:
             context = {}
-        if context and context.get('manual',False):
+        if context and context.get('manual'):
             vals['state']='manual'
         res = super(ir_model,self).create(cr, user, vals, context)
         if vals.get('state','base')=='manual':
             self.instanciate(cr, user, vals['model'], context)
-            self.pool.get(vals['model']).__init__(self.pool, cr)
-            ctx = context.copy()
-            ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0')})
+            ctx = dict(context,
+                field_name=vals['name'],
+                field_state='manual',
+                select=vals.get('select_level', '0'))
             self.pool.get(vals['model'])._auto_init(cr, ctx)
             #pooler.restart_pool(cr.dbname)
         return res
@@ -197,7 +197,9 @@ class ir_model(osv.osv):
         x_custom_model._name = model
         x_custom_model._module = False
         a = x_custom_model.create_instance(self.pool, cr)
-        if (not a._columns) or ('x_name' in a._columns.keys()):
+        if not a._columns:
+            x_name = 'id'
+        elif 'x_name' in a._columns.keys():
             x_name = 'x_name'
         else:
             x_name = a._columns.keys()[0]
@@ -226,7 +228,7 @@ class ir_model_fields(osv.osv):
         'required': fields.boolean('Required'),
         'readonly': fields.boolean('Readonly'),
         'select_level': fields.selection([('0','Not Searchable'),('1','Always Searchable'),('2','Advanced Search (deprecated)')],'Searchable', required=True),
-        'translate': fields.boolean('Translate', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
+        'translate': fields.boolean('Translatable', help="Whether values for this field can be translated (enables the translation mechanism for that field)"),
         'size': fields.integer('Size'),
         'state': fields.selection([('manual','Custom Field'),('base','Base Field')],'Type', required=True, readonly=True, select=1),
         'on_delete': fields.selection([('cascade','Cascade'),('set null','Set NULL')], 'On Delete', help='On delete property for many2one fields'),
@@ -336,8 +338,11 @@ class ir_model_fields(osv.osv):
             if self.pool.get(vals['model']):
                 self.pool.get(vals['model']).__init__(self.pool, cr)
                 #Added context to _auto_init for special treatment to custom field for select_level
-                ctx = context.copy()
-                ctx.update({'field_name':vals['name'],'field_state':'manual','select':vals.get('select_level','0'),'update_custom_fields':True})
+                ctx = dict(context,
+                    field_name=vals['name'],
+                    field_state='manual',
+                    select=vals.get('select_level', '0'),
+                    update_custom_fields=True)
                 self.pool.get(vals['model'])._auto_init(cr, ctx)
 
         return res
@@ -447,8 +452,8 @@ class ir_model_fields(osv.osv):
             # was called earlier, they will be in-sync before the _auto_init.
             # Anything we don't update in _columns now will be reset from
             # the model into ir.model.fields (db).
-            ctx = context.copy()
-            ctx.update({'select': vals.get('select_level','0'),'update_custom_fields':True})
+            ctx = dict(context, select=vals.get('select_level', '0'),
+                       update_custom_fields=True)
 
             for __, patch_struct in models_patch.items():
                 obj = patch_struct[0]
@@ -463,12 +468,16 @@ class ir_model_access(osv.osv):
     _name = 'ir.model.access'
     _columns = {
         'name': fields.char('Name', size=64, required=True, select=True),
+        'active': fields.boolean('Active', help='If you uncheck the active field, it will disable the ACL without deleting it (if you delete a native ACL, it will be re-created when you reload the module.'),
         'model_id': fields.many2one('ir.model', 'Object', required=True, domain=[('osv_memory','=', False)], select=True, ondelete='cascade'),
         'group_id': fields.many2one('res.groups', 'Group', ondelete='cascade', select=True),
         'perm_read': fields.boolean('Read Access'),
         'perm_write': fields.boolean('Write Access'),
         'perm_create': fields.boolean('Create Access'),
         'perm_unlink': fields.boolean('Delete Access'),
+    }
+    _defaults = {
+        'active': True,
     }
 
     def check_groups(self, cr, uid, group):
@@ -494,14 +503,16 @@ class ir_model_access(osv.osv):
             cr.execute("SELECT perm_" + mode + " "
                    "  FROM ir_model_access a "
                    "  JOIN ir_model m ON (m.id = a.model_id) "
-                   " WHERE m.model = %s AND a.group_id = %s", (model_name, group_id)
+                   " WHERE m.model = %s AND a.active IS True "
+                   " AND a.group_id = %s", (model_name, group_id)
                    )
             r = cr.fetchone()
             if r is None:
                 cr.execute("SELECT perm_" + mode + " "
                        "  FROM ir_model_access a "
                        "  JOIN ir_model m ON (m.id = a.model_id) "
-                       " WHERE m.model = %s AND a.group_id IS NULL", (model_name, )
+                       " WHERE m.model = %s AND a.active IS True "
+                       " AND a.group_id IS NULL", (model_name, )
                        )
                 r = cr.fetchone()
 
@@ -518,15 +529,17 @@ class ir_model_access(osv.osv):
         """
         assert access_mode in ['read','write','create','unlink'], 'Invalid access mode: %s' % access_mode
         cr.execute('''SELECT
-                        g.name
+                        c.name, g.name
                       FROM
                         ir_model_access a
                         JOIN ir_model m ON (a.model_id=m.id)
                         JOIN res_groups g ON (a.group_id=g.id)
+                        LEFT JOIN ir_module_category c ON (c.id=g.category_id)
                       WHERE
                         m.model=%s AND
+                        a.active IS True AND
                         a.perm_''' + access_mode, (model_name,))
-        return [x[0] for x in cr.fetchall()]
+        return [('%s/%s' % x) if x[0] else x[1] for x in cr.fetchall()]
 
     @tools.ormcache()
     def check(self, cr, uid, model, mode='read', raise_exception=True, context=None):
@@ -554,6 +567,7 @@ class ir_model_access(osv.osv):
                    '  JOIN res_groups_users_rel gu ON (gu.gid = a.group_id) '
                    ' WHERE m.model = %s '
                    '   AND gu.uid = %s '
+                   '   AND a.active IS True '
                    , (model_name, uid,)
                    )
         r = cr.fetchone()[0]
@@ -565,20 +579,29 @@ class ir_model_access(osv.osv):
                        '  JOIN ir_model m ON (m.id = a.model_id) '
                        ' WHERE a.group_id IS NULL '
                        '   AND m.model = %s '
+                       '   AND a.active IS True '
                        , (model_name,)
                        )
             r = cr.fetchone()[0]
 
         if not r and raise_exception:
-            groups = ', '.join(self.group_names_with_access(cr, model_name, mode)) or '/'
-            msgs = {
-                'read':   _("You can not read this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'write':  _("You can not write in this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'create': _("You can not create this document (%s) ! Be sure your user belongs to one of these groups: %s."),
-                'unlink': _("You can not delete this document (%s) ! Be sure your user belongs to one of these groups: %s."),
+            groups = '\n\t'.join('- %s' % g for g in self.group_names_with_access(cr, model_name, mode))
+            msg_heads = {
+                # Messages are declared in extenso so they are properly exported in translation terms
+                'read': _("Sorry, you are not allowed to access this document."),
+                'write':  _("Sorry, you are not allowed to modify this document."),
+                'create': _("Sorry, you are not allowed to create this kind of document."),
+                'unlink': _("Sorry, you are not allowed to delete this document."),
             }
-
-            raise except_orm(_('AccessError'), msgs[mode] % (model_name, groups) )
+            if groups:
+                msg_tail = _("Only users with the following access level are currently allowed to do that") + ":\n%s\n\n(" + _("Document model") + ": %s)"
+                msg_params = (groups, model_name)
+            else:
+                msg_tail = _("Please contact your system administrator if you think this is an error.") + "\n\n(" + _("Document model") + ": %s)"
+                msg_params = (model_name,)
+            _logger.warning('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, uid, model_name)
+            msg = '%s %s' % (msg_heads[mode], msg_tail)
+            raise except_orm(_('Access Denied'), msg % msg_params)
         return r or False
 
     __cache_clearing_methods = []
@@ -633,10 +656,37 @@ class ir_model_data(osv.osv):
     """
     _name = 'ir.model.data'
     _order = 'module,model,name'
+    def _display_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        result2 = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            if res.id:
+                result.setdefault(res.model, {})
+                result[res.model][res.res_id] = res.id
+            result2[res.id] = False
+
+        for model in result:
+            try:
+                r = dict(self.pool.get(model).name_get(cr, uid, result[model].keys(), context=context))
+                for key,val in result[model].items():
+                    result2[val] = r.get(key, False)
+            except:
+                # some object have no valid name_get implemented, we accept this
+                pass
+        return result2
+
+    def _complete_name_get(self, cr, uid, ids, prop, unknow_none, context=None):
+        result = {}
+        for res in self.browse(cr, uid, ids, context=context):
+            result[res.id] = (res.module and (res.module + '.') or '')+res.name
+        return result
+
     _columns = {
         'name': fields.char('External Identifier', required=True, size=128, select=1,
                             help="External Key/Identifier that can be used for "
                                  "data integration with third-party systems"),
+        'complete_name': fields.function(_complete_name_get, type='char', string='Complete ID'),
+        'display_name': fields.function(_display_name_get, type='char', string='Record Name'),
         'model': fields.char('Model Name', required=True, size=64, select=1),
         'module': fields.char('Module', required=True, size=64, select=1),
         'res_id': fields.integer('Record ID', select=1,
@@ -790,20 +840,16 @@ class ir_model_data(osv.osv):
                                 'res_id': inherit_id.id,
                                 'noupdate': noupdate,
                                 },context=context)
-        if xml_id:
-            if res_id:
-                self.loads[(module, xml_id)] = (model, res_id)
-                if model_obj._inherits:
-                    for table in model_obj._inherits:
-                        inherit_field = model_obj._inherits[table]
-                        inherit_id = model_obj.read(cr, uid, res_id,
-                                [inherit_field])[inherit_field]
-                        self.loads[(module, xml_id + '_' + \
-                                table.replace('.', '_'))] = (table, inherit_id)
+        if xml_id and res_id:
+            self.loads[(module, xml_id)] = (model, res_id)
+            for table, inherit_field in model_obj._inherits.iteritems():
+                inherit_id = model_obj.read(cr, uid, res_id,
+                        [inherit_field])[inherit_field]
+                self.loads[(module, xml_id + '_' + table.replace('.', '_'))] = (table, inherit_id)
         return res_id
 
     def ir_set(self, cr, uid, key, key2, name, models, value, replace=True, isobject=False, meta=None, xml_id=False):
-        if type(models[0])==type([]) or type(models[0])==type(()):
+        if isinstance(models[0], (list, tuple)):
             model,res_id = models[0]
         else:
             res_id=None
@@ -823,12 +869,12 @@ class ir_model_data(osv.osv):
         res = cr.fetchone()
         if not res:
             ir_values_obj = pooler.get_pool(cr.dbname).get('ir.values')
-            res = ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
+            ir_values_obj.set(cr, uid, key, key2, name, models, value, replace, isobject, meta)
         elif xml_id:
             cr.execute('UPDATE ir_values set value=%s WHERE model=%s and key=%s and name=%s'+where,(value, model, key, name))
         return True
 
-    def _module_data_uninstall(self, cr, uid, ids, context=None):
+    def _module_data_uninstall(self, cr, uid, modules_to_remove, context=None):
         """Deletes all the records referenced by the ir.model.data entries
         ``ids`` along with their corresponding database backed (including
         dropping tables, columns, FKs, etc, as long as there is no other
@@ -839,6 +885,8 @@ class ir_model_data(osv.osv):
         This step is performed as part of the full uninstallation of a module.
         """ 
 
+        ids = self.search(cr, uid, [('module', 'in', modules_to_remove)])
+
         if uid != 1 and not self.pool.get('ir.model.access').check_groups(cr, uid, "base.group_system"):
             raise except_orm(_('Permission Denied'), (_('Administrator access is required to uninstall a module')))
 
@@ -848,50 +896,11 @@ class ir_model_data(osv.osv):
         ids_set = set(ids)
         wkf_todo = []
         to_unlink = []
-        to_drop_table = []
         ids.sort()
         ids.reverse()
         for data in self.browse(cr, uid, ids, context):
             model = data.model
             res_id = data.res_id
-            model_obj = self.pool.get(model)
-            name = tools.ustr(data.name)
-
-            if name.startswith(EXT_ID_PREFIX_FK) or name.startswith(EXT_ID_PREFIX_M2M_TABLE)\
-                 or name.startswith(EXT_ID_PREFIX_CONSTRAINT):
-                # double-check we are really going to delete all the owners of this schema element
-                cr.execute("""SELECT id from ir_model_data where name = %s and res_id IS NULL""", (data.name,))
-                external_ids = [x[0] for x in cr.fetchall()]
-                if (set(external_ids)-ids_set):
-                    # as installed modules have defined this element we must not delete it!
-                    continue
-
-            if name.startswith(EXT_ID_PREFIX_FK):
-                name = name[len(EXT_ID_PREFIX_FK):]
-                # test if FK exists on this table (it could be on a related m2m table, in which case we ignore it)
-                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('f', name, model_obj._table))
-                if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
-                    _logger.info('Dropped FK CONSTRAINT %s@%s', name, model)
-                continue
-
-            if name.startswith(EXT_ID_PREFIX_M2M_TABLE):
-                name = name[len(EXT_ID_PREFIX_M2M_TABLE):]
-                cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name=%s", (name,))
-                if cr.fetchone() and not name in to_drop_table:
-                    to_drop_table.append(name)
-                continue
-
-            if name.startswith(EXT_ID_PREFIX_CONSTRAINT):
-                name = name[len(EXT_ID_PREFIX_CONSTRAINT):]
-                # test if constraint exists
-                cr.execute("""SELECT 1 from pg_constraint cs JOIN pg_class cl ON (cs.conrelid = cl.oid)
-                              WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""", ('u', name, model_obj._table))
-                if cr.fetchone():
-                    cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (model_obj._table, name),)
-                    _logger.info('Dropped CONSTRAINT %s@%s', name, model)
-                continue
 
             pair_to_unlink = (model, res_id)
             if pair_to_unlink not in to_unlink:
@@ -909,24 +918,19 @@ class ir_model_data(osv.osv):
         for model,res_id in wkf_todo:
             try:
                 wf_service.trg_write(uid, model, res_id, cr)
-            except:
-                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model)
-
-        # drop m2m relation tables
-        for table in to_drop_table:
-            cr.execute('DROP TABLE %s CASCADE'% (table),)
-            _logger.info('Dropped table %s', table)
+            except Exception:
+                _logger.info('Unable to force processing of workflow for item %s@%s in order to leave activity to be deleted', res_id, model, exc_info=True)
 
         def unlink_if_refcount(to_unlink):
             for model, res_id in to_unlink:
                 external_ids = self.search(cr, uid, [('model', '=', model),('res_id', '=', res_id)])
-                if (set(external_ids)-ids_set):
+                if set(external_ids)-ids_set:
                     # if other modules have defined this record, we must not delete it
-                    return
+                    continue
                 _logger.info('Deleting %s@%s', res_id, model)
                 try:
                     self.pool.get(model).unlink(cr, uid, [res_id], context=context)
-                except:
+                except Exception:
                     _logger.info('Unable to delete %s@%s', res_id, model, exc_info=True)
 
         # Remove non-model records first, then model fields, and finish with models
@@ -934,10 +938,20 @@ class ir_model_data(osv.osv):
                                 if model not in ('ir.model','ir.model.fields'))
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model.fields')
+
+        ir_model_relation = self.pool.get('ir.model.relation')
+        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove)])
+        ir_module_module = self.pool.get('ir.module.module')
+        modules_to_remove_ids = ir_module_module.search(cr, uid, [('name', 'in', modules_to_remove)])
+        relation_ids = ir_model_relation.search(cr, uid, [('module', 'in', modules_to_remove_ids)])
+        ir_model_relation._module_data_uninstall(cr, uid, relation_ids, context)
+
         unlink_if_refcount((model, res_id) for model, res_id in to_unlink
                                 if model == 'ir.model')
 
         cr.commit()
+
+        self.unlink(cr, uid, ids, context)
 
     def _process_end(self, cr, uid, modules):
         """ Clear records removed from updated module data.

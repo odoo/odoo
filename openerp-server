@@ -30,7 +30,6 @@ GNU Public Licence.
 (c) 2003-TODAY, Fabien Pinckaers - OpenERP SA
 """
 
-import imp
 import logging
 import os
 import signal
@@ -92,7 +91,7 @@ def setup_pid_file():
 def preload_registry(dbname):
     """ Preload a registry, and start the cron."""
     try:
-        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
+        db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=openerp.tools.config['init'] or openerp.tools.config['update'], pooljobs=False)
 
         # jobs will start to be processed later, when openerp.cron.start_master_thread() is called by openerp.service.start_services()
         registry.schedule_cron_jobs()
@@ -105,12 +104,11 @@ def run_test_file(dbname, test_file):
         db, registry = openerp.pooler.get_db_and_pool(dbname, update_module=config['init'] or config['update'], pooljobs=False)
         cr = db.cursor()
         _logger.info('loading test file %s', test_file)
-        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), {}, 'test', True)
+        openerp.tools.convert_yaml_import(cr, 'base', file(test_file), 'test', {}, 'test', True)
         cr.rollback()
         cr.close()
     except Exception:
         _logger.exception('Failed to initialize database `%s` and run test file `%s`.', dbname, test_file)
-
 
 def export_translation():
     config = openerp.tools.config
@@ -203,9 +201,10 @@ def quit_on_signals():
     try:
         while quit_signals_received == 0:
             time.sleep(60)
-    except KeyboardInterrupt, e:
+    except KeyboardInterrupt:
         pass
 
+    config = openerp.tools.config
     if config['pidfile']:
         os.unlink(config['pidfile'])
 
@@ -218,8 +217,7 @@ def configure_babel_localedata_path():
         import babel
         babel.localedata._dirname = os.path.join(os.path.dirname(sys.executable), 'localedata')
 
-if __name__ == "__main__":
-
+def main():
     os.environ["TZ"] = "UTC"
 
     check_root_user()
@@ -248,20 +246,13 @@ if __name__ == "__main__":
         sys.exit(0)
 
     if not config["stop_after_init"]:
+        setup_pid_file()
         # Some module register themselves when they are loaded so we need the
         # services to be running before loading any registry.
-        openerp.service.start_services()
-
-    for m in openerp.conf.server_wide_modules:
-        try:
-            openerp.modules.module.load_openerp_module(m)
-        except Exception:
-            msg = ''
-            if m == 'web':
-                msg = """
-The `web` module is provided by the addons found in the `openerp-web` project.
-Maybe you forgot to add those addons in your addons_path configuration."""
-            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
+        if config['workers']:
+            openerp.service.start_services_workers()
+        else:
+            openerp.service.start_services()
 
     if config['db_name']:
         for dbname in config['db_name'].split(','):
@@ -270,8 +261,10 @@ Maybe you forgot to add those addons in your addons_path configuration."""
     if config["stop_after_init"]:
         sys.exit(0)
 
-    setup_pid_file()
     _logger.info('OpenERP server is running, waiting for connections...')
     quit_on_signals()
+
+if __name__ == "__main__":
+    main()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

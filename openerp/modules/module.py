@@ -162,7 +162,7 @@ def initialize_sys_path():
         return
 
     ad_paths = map(lambda m: os.path.abspath(tools.ustr(m.strip())), tools.config['addons_path'].split(','))
-    ad_paths.append(_ad) # for get_module_path
+    ad_paths.append(os.path.abspath(_ad)) # for get_module_path
     sys.meta_path.append(AddonsImportHook())
 
 def get_module_path(module, downloaded=False, display_warning=True):
@@ -283,25 +283,28 @@ def get_module_as_zip(modulename, b64enc=True, src=True):
 def get_module_resource(module, *args):
     """Return the full path of a resource of the given module.
 
-    @param module: the module
-    @param args: the resource path components
+    :param module: module name
+    :param list(str) args: resource path components within module
 
-    @return: absolute path to the resource
+    :rtype: str
+    :return: absolute path to the resource
 
     TODO name it get_resource_path
     TODO make it available inside on osv object (self.get_resource_path)
     """
-    a = get_module_path(module)
-    if not a: return False
-    resource_path = opj(a, *args)
-    if zipfile.is_zipfile( a +'.zip') :
-        zip = zipfile.ZipFile( a + ".zip")
+    mod_path = get_module_path(module)
+    if not mod_path: return False
+    resource_path = opj(mod_path, *args)
+    if os.path.isdir(mod_path):
+        # the module is a directory - ignore zip behavior
+        if os.path.exists(resource_path):
+            return resource_path
+    elif zipfile.is_zipfile(mod_path + '.zip'):
+        zip = zipfile.ZipFile( mod_path + ".zip")
         files = ['/'.join(f.split('/')[1:]) for f in zip.namelist()]
         resource_path = '/'.join(args)
         if resource_path in files:
-            return opj(a, resource_path)
-    elif os.path.exists(resource_path):
-        return resource_path
+            return opj(mod_path, resource_path)
     return False
 
 def get_module_icon(module):
@@ -328,7 +331,6 @@ def load_information_from_description_file(module):
                 'author': '',
                 'auto_install': False,
                 'category': 'Uncategorized',
-                'certificate': None,
                 'depends': [],
                 'description': '',
                 'icon': get_module_icon(module),
@@ -341,6 +343,7 @@ def load_information_from_description_file(module):
                 'web': False,
                 'website': '',
                 'sequence': 100,
+                'summary': '',
             }
             info.update(itertools.izip(
                 'depends data demo test init_xml update_xml demo_xml'.split(),
@@ -493,7 +496,7 @@ def get_test_modules(module, submodule, explode):
                 # It seems the module has no `tests` sub-module, no problem.
                 pass
             else:
-                print 'Can not `import %s`.' % module
+                _logger.exception('Can not `import %s`.', module)
             return []
 
     # Discover available test sub-modules.
@@ -554,6 +557,7 @@ def run_unit_tests(module_name):
     """
     import unittest2
     ms = get_test_modules(module_name, '__fast_suite__', explode=False)
+    # TODO: No need to try again if the above call failed because of e.g. a syntax error.
     ms.extend(get_test_modules(module_name, '__sanity_checks__', explode=False))
     suite = unittest2.TestSuite()
     for m in ms:
