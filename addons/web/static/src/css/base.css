@@ -2240,7 +2240,7 @@
 .openerp .oe_form .oe_datepicker_root {
   display: inline-block;
 }
-.openerp .oe_form .oe_form_required input, .openerp .oe_form .oe_form_required select, .openerp .oe_form .oe_form_required textarea {
+.openerp .oe_form .oe_form_required input:not([disabled]), .openerp .oe_form .oe_form_required select:not([disabled]), .openerp .oe_form .oe_form_required textarea:not([disabled]) {
   background-color: #d2d2ff !important;
 }
 .openerp .oe_form .oe_form_invalid input, .openerp .oe_form .oe_form_invalid select, .openerp .oe_form .oe_form_invalid textarea {
