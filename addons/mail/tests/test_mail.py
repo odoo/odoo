@@ -135,6 +135,8 @@ class test_mail(TestMailMockups):
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
+        self.user_demo = self.registry('ir.model.data').get_object_reference(self.cr, self.uid, 'base', 'user_demo')[1]
+
         # Mock send_get_mail_body to test its functionality without other addons override
         self._send_get_mail_body = self.registry('mail.mail').send_get_mail_body
         self.registry('mail.mail').send_get_mail_body = self._mock_send_get_mail_body
@@ -634,6 +636,7 @@ class test_mail(TestMailMockups):
         """ Tests for mail.message needaction. """
         cr, uid = self.cr, self.uid
         group_pigs = self.mail_group.browse(cr, uid, self.group_pigs_id)
+        group_pigs_demo = self.mail_group.browse(cr, self.user_demo, self.group_pigs_id)
         user_admin = self.res_users.browse(cr, uid, uid)
 
         # Demo values: check unread notification = needaction on mail.message
@@ -644,9 +647,12 @@ class test_mail(TestMailMockups):
         na_count = self.mail_message._needaction_count(cr, uid, domain=[])
         self.assertEqual(len(notif_ids), na_count, 'unread notifications count does not match needaction count')
 
-        # Post 4 message on group_pigs
-        for dummy in range(4):
+        na_count1 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        # Post 2 message on group_pigs as admin, 3 messages as demo user
+        for dummy in range(2):
             group_pigs.message_post(body='My Body', subtype='mt_comment')
+        for dummy in range(3):
+            group_pigs_demo.message_post(body='My Demo Body', subtype='mt_comment')
 
         # Check there are 4 new needaction on mail.message
         notif_ids = self.mail_notification.search(cr, uid, [
@@ -665,6 +671,12 @@ class test_mail(TestMailMockups):
             ('message_id.res_id','=',self.group_pigs_id)
             ])
         self.assertEqual(len(notif_ids), na_count, 'posted message count does not match needaction count')
+
+        na_count3 = self.mail_message._needaction_count(cr, self.user_demo, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count3-na_count1, 0, 'demo has 0 message: not a follower and do not follow his own messages')
+
+        na_count2 = self.mail_message._needaction_count(cr, uid, domain=[('model', '=', 'mail.group'), ('res_id', '=', self.group_pigs_id)])
+        self.assertEqual(na_count2-na_count1, 3, 'admin has 3 messages: 0 from itself as they are marked as read, 3 from demo')
 
     def test_50_thread_parent_resolution(self):
         """Verify parent/child relationships are correctly established when processing incoming mails"""
