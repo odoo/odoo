@@ -184,6 +184,36 @@ class fleet_vehicle(osv.Model):
         res = self.get_odometer(cr, uid, ids, context=context)
         return dict(res)
 
+    def get_next_insurance_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+        if context is None:
+            context={}
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+        for record in reads:
+            insurances = self.pool.get('fleet.vehicle.log.insurance').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            if (len(insurances) > 0):
+                res.append((record.id,self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,insurances[0],context=context).expiration_date))
+            else:
+                res.append((record.id,None))
+        return dict(res)
+
+    def get_next_service_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+        if context is None:
+            context={}
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+        for record in reads:
+            services = self.pool.get('fleet.vehicle.log.services').search(cr,uid,[('vehicle_id','=',record.id)],order='date')
+            if (len(services) > 0):
+                res.append((record.id,self.pool.get('fleet.vehicle.log.services').browse(cr,uid,services[0],context=context).date))
+            else:
+                res.append((record.id,None))
+        return dict(res)
+
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
 
@@ -220,6 +250,8 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
+        'next_insurance_date' : fields.function(get_next_insurance_reminder,type="date",string='Next Insurance Due Date',store=False),
+        'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
         }
 
     _defaults = {
@@ -395,6 +427,12 @@ class fleet_insurance_type(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
     }
 
+class fleet_insurance_state(osv.Model):
+    _name = 'fleet.insurance.state'
+    _columns = {
+        'name':fields.char('Insurance Status',size=32),
+    }
+
 class fleet_vehicle_log_insurance(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
@@ -410,6 +448,7 @@ class fleet_vehicle_log_insurance(osv.Model):
             return {}
 
     _name = 'fleet.vehicle.log.insurance'
+    _order='expiration_date'
     _columns = {
 
         #'name' : fields.char('Name',size=64),
@@ -419,13 +458,15 @@ class fleet_vehicle_log_insurance(osv.Model):
         'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the insurance expirates (by default, one year after begin date)'),
         'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
-        'purchaser_id' : fields.many2one('res.partner', 'Purchaser'),
+        'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'ins_ref' : fields.char('Insurance Reference', size=64),
+        'state' : fields.many2one('fleet.insurance.state', 'Insurance Status', help='Choose wheter the insurance is still valid or not'),
         'notes' : fields.text('Terms and Conditions'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'start_date' : time.strftime('%Y-%m-%d'),
+        #'state' : 'in_progress',
         #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }

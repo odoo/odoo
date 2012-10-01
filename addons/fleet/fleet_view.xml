@@ -183,8 +183,10 @@
                     <field name="driver" />
                     <field name="vin_sn" />
                     <field name="acquisition_date" />
-                    <field name="state" />
+                    <field name="state"/>
                     <field name="odometer" />
+                    <field name="next_insurance_date" />
+                    <field name="next_service_date" />
                 </tree>
             </field>
         </record>
@@ -203,6 +205,7 @@
                     <field name="odometer_unit" />
                     <field name="image" />
                     <field name="tag_ids" />
+                    <field name="next_insurance_date" />
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -235,10 +238,14 @@
                                             <t t_if="record.odometer.raw_value"><field name="odometer" /></t>
                                             <t t_if="record.odometer_unit.raw_value"><field name="odometer_unit" /></t>
                                         </li>
+                                        <li>
+                                            <t t-if="record.next_insurance_date.raw_value">Insurance renewal due soon</t>
+                                        </li>
                                     </ul>
 
                                     
                                 </div>
+                                
                             </div>
                             <script>
                             $('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
@@ -292,6 +299,9 @@
             <field name="model">fleet.vehicle.log.insurance</field>
             <field name="arch" type="xml">
                 <form string="Insurance logs" version="7.0">
+                    <header>
+                        <field name="state" widget="statusbar" clickable="True" />
+                    </header>
                     <sheet>
                         <group col="2">
                             <group string="Insurance details">
@@ -301,8 +311,6 @@
                                     <field name="expiration_date" />
                                     <field name="price" />
                             </group>
-                            
-
                         </group>
                         <group col="2">
                             <group string="Odometer details">
@@ -329,6 +337,7 @@
                 <tree string="Insurance logs" version="7.0">
                     <field name="vehicle_id" />
                     <field name="insurance_type" />
+                    <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="insurer_id" />
