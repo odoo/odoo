@@ -168,7 +168,7 @@ class mail_message(osv.Model):
                     self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
                 else:
                     self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
-        return True
+        return not(has_voted) or False
 
     #------------------------------------------------------
     # Message loading for web interface
@@ -336,7 +336,7 @@ class mail_message(osv.Model):
                 tree[msg.id] = record
 
         # Flatten the result
-        result2 = self.message_read_tree_flatten(cr, uid, None, result, domain, level, context=context, limit=limit, add_expandable=add_expandable)
+        result2 = self.message_read_tree_flatten(cr, uid, None, result, [], level, context=context, limit=limit, add_expandable=add_expandable)
         return result2
 
     #------------------------------------------------------
