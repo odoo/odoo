@@ -48,10 +48,29 @@
             <field name="name">fleet.vehicle.model.brand.tree</field>
             <field name="model">fleet.vehicle.model.brand</field>
             <field name="arch" type="xml">
-                <tree string="Model Brand" version="7.0" editable="bottom">
+                <tree string="Model Brand" version="7.0">
                     <field name="name" />
-                    <field name="image" />
                 </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_model_brand_form'>
+            <field name="name">fleet.vehicle.model.brand.form</field>
+            <field name="model">fleet.vehicle.model.brand</field>
+            <field name="arch" type="xml">
+                <form string="Model Brand" version="7.0">
+                    <sheet>
+                        <group>
+                            <div>
+                                <field name="image" widget="image" class="oe_left oe_avatar"/>
+                                <label for="name" class="oe_edit_only"/>
+                                <h1>
+                                    <field name="name" class="oe_inline" />
+                                </h1>
+                            </div>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 
