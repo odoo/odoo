@@ -21,31 +21,31 @@ instance.web.DataExport = instance.web.Dialog.extend({
             ],
             close: function(event, ui){ self.close();}
         });
-        self.$element.removeClass('ui-dialog-content ui-widget-content');
-        self.$element.find('#add_field').click(function() {
+        self.$el.removeClass('ui-dialog-content ui-widget-content');
+        self.$el.find('#add_field').click(function() {
             if ($('#field-tree-structure tr.ui-selected')) {
-                var fld = self.$element.find('#field-tree-structure tr.ui-selected').find('a');
+                var fld = self.$el.find('#field-tree-structure tr.ui-selected').find('a');
                 for (var i = 0; i < fld.length; i++) {
                     var id = $(fld[i]).attr('id').split('-')[1];
                     var string = $(fld[i]).attr('string');
                     self.add_field(id, string);
                 }
-                self.$element.find('#field-tree-structure tr').removeClass('ui-selected');
+                self.$el.find('#field-tree-structure tr').removeClass('ui-selected');
             }
         });
-        self.$element.find('#remove_field').click(function() {
-            self.$element.find('#fields_list option:selected').remove();
+        self.$el.find('#remove_field').click(function() {
+            self.$el.find('#fields_list option:selected').remove();
         });
-        self.$element.find('#remove_all_field').click(function() {
-            self.$element.find('#fields_list').empty();
+        self.$el.find('#remove_all_field').click(function() {
+            self.$el.find('#fields_list').empty();
         });
-        this.$element.find('#export_new_list').click(this.on_show_save_list);
+        this.$el.find('#export_new_list').click(this.on_show_save_list);
 
         var got_fields = new $.Deferred();
-        this.$element.find('#import_compat').change(function() {
-            self.$element.find('#fields_list').empty();
-            self.$element.find('#field-tree-structure').remove();
-            var import_comp = self.$element.find("#import_compat").val();
+        this.$el.find('#import_compat').change(function() {
+            self.$el.find('#fields_list').empty();
+            self.$el.find('#field-tree-structure').remove();
+            var import_comp = self.$el.find("#import_compat").val();
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
                 import_compat: Boolean(import_comp)
@@ -61,7 +61,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             this.show_exports_list());
     },
     do_setup_export_formats: function (formats) {
-        var $fmts = this.$element.find('#export_format');
+        var $fmts = this.$el.find('#export_format');
         _(formats).each(function (format) {
             var opt = new Option(format.label, format.tag);
             if (format.error) {
@@ -76,8 +76,8 @@ instance.web.DataExport = instance.web.Dialog.extend({
     },
     show_exports_list: function() {
         var self = this;
-        if (self.$element.find('#saved_export_list').is(':hidden')) {
-            self.$element.find('#ExistsExportList').show();
+        if (self.$el.find('#saved_export_list').is(':hidden')) {
+            self.$el.find('#ExistsExportList').show();
             return;
         }
         return this.exports.read_slice(['name'], {
@@ -86,35 +86,35 @@ instance.web.DataExport = instance.web.Dialog.extend({
             if (!export_list.length) {
                 return;
             }
-            self.$element.find('#ExistsExportList').append(QWeb.render('Exists.ExportList', {'existing_exports': export_list}));
-            self.$element.find('#saved_export_list').change(function() {
-                self.$element.find('#fields_list option').remove();
-                var export_id = self.$element.find('#saved_export_list option:selected').val();
+            self.$el.find('#ExistsExportList').append(QWeb.render('Exists.ExportList', {'existing_exports': export_list}));
+            self.$el.find('#saved_export_list').change(function() {
+                self.$el.find('#fields_list option').remove();
+                var export_id = self.$el.find('#saved_export_list option:selected').val();
                 if (export_id) {
                     self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
                 }
             });
-            self.$element.find('#delete_export_list').click(function() {
-                var select_exp = self.$element.find('#saved_export_list option:selected');
+            self.$el.find('#delete_export_list').click(function() {
+                var select_exp = self.$el.find('#saved_export_list option:selected');
                 if (select_exp.val()) {
                     self.exports.unlink([parseInt(select_exp.val(), 10)]);
                     select_exp.remove();
-                    if (self.$element.find('#saved_export_list option').length <= 1) {
-                        self.$element.find('#ExistsExportList').hide();
+                    if (self.$el.find('#saved_export_list option').length <= 1) {
+                        self.$el.find('#ExistsExportList').hide();
                     }
                 }
             });
         });
     },
     do_load_export_field: function(field_list) {
-        var export_node = this.$element.find("#fields_list");
+        var export_node = this.$el.find("#fields_list");
         _(field_list).each(function (field) {
             export_node.append(new Option(field.label, field.name));
         });
     },
     on_show_save_list: function() {
         var self = this;
-        var current_node = self.$element.find("#savenewlist");
+        var current_node = self.$el.find("#savenewlist");
         if (!(current_node.find("label")).length) {
             current_node.append(QWeb.render('ExportNewList'));
             current_node.find("#add_export_list").click(function() {
@@ -150,14 +150,14 @@ instance.web.DataExport = instance.web.Dialog.extend({
             if (!export_list_id.result) {
                 return;
             }
-            self.$element.find("#saved_export_list").append(
+            self.$el.find("#saved_export_list").append(
                     new Option(value, export_list_id.result));
-            if (self.$element.find("#saved_export_list").is(":hidden")) {
+            if (self.$el.find("#saved_export_list").is(":hidden")) {
                 self.show_exports_list();
             }
         });
         this.on_show_save_list();
-        this.$element.find("#fields_list option").remove();
+        this.$el.find("#fields_list option").remove();
     },
     on_click: function(id, record) {
         var self = this;
@@ -173,7 +173,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         }
 
         if (!record.loaded) {
-            var import_comp = self.$element.find("#import_compat").val();
+            var import_comp = self.$el.find("#import_compat").val();
             self.rpc("/web/export/get_fields", {
                 model: model,
                 prefix: prefix,
@@ -191,44 +191,44 @@ instance.web.DataExport = instance.web.Dialog.extend({
     },
     on_show_data: function(result, after) {
         var self = this;
-        var imp_cmpt = Boolean(self.$element.find("#import_compat").val());
+        var imp_cmpt = Boolean(self.$el.find("#import_compat").val());
 
         if (after) {
-            var current_tr = self.$element.find("tr[id='treerow-" + after + "']");
+            var current_tr = self.$el.find("tr[id='treerow-" + after + "']");
             current_tr.addClass('open');
             current_tr.find('img').attr('src','/web/static/src/img/collapse.gif');
             current_tr.after(QWeb.render('ExportTreeView-Secondary.children', {'fields': result}));
         } else {
-            self.$element.find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
+            self.$el.find('#left_field_panel').append(QWeb.render('ExportTreeView-Secondary', {'fields': result}));
         }
         _.each(result, function(record) {
             self.records[record.id] = record.value;
             if (record.required) {
-                var required_fld = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
+                var required_fld = self.$el.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 required_fld.addClass("oe_export_requiredfield");
             }
-            self.$element.find("img[id='parentimg-" + record.id +"']").click(function() {
+            self.$el.find("img[id='parentimg-" + record.id +"']").click(function() {
                 self.on_click(this.id, record);
             });
 
-            self.$element.find("tr[id='treerow-" + record.id + "']").click(function(e) {
+            self.$el.find("tr[id='treerow-" + record.id + "']").click(function(e) {
                 if (e.shiftKey) {
                     var frst_click, scnd_click = '';
                     if (self.row_index == 0) {
                         self.row_index = this.rowIndex;
-                        frst_click = self.$element.find("tr[id^='treerow-']")[self.row_index-1];
+                        frst_click = self.$el.find("tr[id^='treerow-']")[self.row_index-1];
                         $(frst_click).addClass("ui-selected");
                     } else {
                         if (this.rowIndex >=self.row_index) {
                             for (var i = (self.row_index-1); i < this.rowIndex; i++) {
-                                scnd_click = self.$element.find("tr[id^='treerow-']")[i];
+                                scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
                                 }
                             }
                         } else {
                             for (var i = (self.row_index-1); i >= (this.rowIndex-1); i--) {
-                                scnd_click = self.$element.find("tr[id^='treerow-']")[i];
+                                scnd_click = self.$el.find("tr[id^='treerow-']")[i];
                                 if (!$(scnd_click).find('#tree-column').hasClass("oe_export_readonlyfield")) {
                                     $(scnd_click).addClass("ui-selected");
                                 }
@@ -238,10 +238,10 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 }
                 self.row_index = this.rowIndex;
 
-                self.$element.find("tr[id='treerow-" + record.id + "']").keyup(function() {
+                self.$el.find("tr[id='treerow-" + record.id + "']").keyup(function() {
                     self.row_index = 0;
                 });
-                var o2m_selection = self.$element.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
+                var o2m_selection = self.$el.find("tr[id='treerow-" + record.id + "']").find('#tree-column');
                 if ($(o2m_selection).hasClass("oe_export_readonlyfield")) {
                     return false;
                 }
@@ -252,14 +252,14 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         $(this).addClass('ui-selected').find('a').focus();
                     }
                 } else if (!e.shiftKey) {
-                    self.$element.find("tr.ui-selected")
+                    self.$el.find("tr.ui-selected")
                             .removeClass("ui-selected").find('a').blur();
                     $(this).addClass("ui-selected").find('a').focus();
                 }
                 return false;
             });
 
-            self.$element.find("tr[id='treerow-" + record.id + "']").keydown(function(e) {
+            self.$el.find("tr[id='treerow-" + record.id + "']").keydown(function(e) {
                 var keyCode = e.keyCode || e.which;
                 var arrow = {left: 37, up: 38, right: 39, down: 40 };
                 switch (keyCode) {
@@ -297,19 +297,19 @@ instance.web.DataExport = instance.web.Dialog.extend({
                         break;
                 }
             });
-            self.$element.find("tr[id='treerow-" + record.id + "']").dblclick(function() {
-                var $o2m_selection = self.$element.find("tr[id^='treerow-" + record.id + "']").find('#tree-column');
+            self.$el.find("tr[id='treerow-" + record.id + "']").dblclick(function() {
+                var $o2m_selection = self.$el.find("tr[id^='treerow-" + record.id + "']").find('#tree-column');
                 if (!$o2m_selection.hasClass("oe_export_readonlyfield")) {
                    self.add_field(record.id, $(this).find("a").attr("string"));
                 }
             });
         });
-        self.$element.find('#fields_list').mouseover(function(event) {
+        self.$el.find('#fields_list').mouseover(function(event) {
             if (event.relatedTarget) {
                 if (event.relatedTarget.attributes['id'] && event.relatedTarget.attributes['string']) {
                     var field_id = event.relatedTarget.attributes["id"]["value"];
                     if (field_id && field_id.split("-")[0] === 'export') {
-                        if (!self.$element.find("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")) {
+                        if (!self.$el.find("tr[id='treerow-" + field_id.split("-")[1] + "']").find('#tree-column').hasClass("oe_export_readonlyfield")) {
                             self.add_field(field_id.split("-")[1], event.relatedTarget.attributes["string"]["value"]);
                         }
                     }
@@ -319,7 +319,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
     },
     showcontent: function(id) {
         // show & hide the contents
-        var $this = this.$element.find("tr[id='treerow-" + id + "']");
+        var $this = this.$el.find("tr[id='treerow-" + id + "']");
         var is_open = $this.hasClass('open');
         $this.toggleClass('open');
 
@@ -329,7 +329,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
         } else {
             first_child.attr('src', '/web/static/src/img/collapse.gif');
         }
-        var child_field = this.$element.find("tr[id^='treerow-" + id +"/']");
+        var child_field = this.$el.find("tr[id^='treerow-" + id +"/']");
         var child_len = (id.split("/")).length + 1;
         for (var i = 0; i < child_field.length; i++) {
             var $child = $(child_field[i]);
@@ -345,15 +345,15 @@ instance.web.DataExport = instance.web.Dialog.extend({
         }
     },
     add_field: function(field_id, string) {
-        var field_list = this.$element.find('#fields_list');
-        if (this.$element.find("#fields_list option[value='" + field_id + "']")
-                && !this.$element.find("#fields_list option[value='" + field_id + "']").length) {
+        var field_list = this.$el.find('#fields_list');
+        if (this.$el.find("#fields_list option[value='" + field_id + "']")
+                && !this.$el.find("#fields_list option[value='" + field_id + "']").length) {
             field_list.append(new Option(string, field_id));
         }
     },
     get_fields: function() {
         var export_field = [];
-        this.$element.find("#fields_list option").each(function() {
+        this.$el.find("#fields_list option").each(function() {
             export_field.push($(this).val());
         });
         if (!export_field.length) {
@@ -363,7 +363,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
     },
     on_click_export_data: function() {
         var self = this;
-        var exported_fields = this.$element.find('#fields_list option').map(function () {
+        var exported_fields = this.$el.find('#fields_list option').map(function () {
             // DOM property is textContent, but IE8 only knows innerText
             return {name: self.records[this.value] || this.value,
                     label: this.textContent || this.innerText};
@@ -375,8 +375,8 @@ instance.web.DataExport = instance.web.Dialog.extend({
         }
 
         exported_fields.unshift({name: 'id', label: 'External ID'});
-        var export_format = this.$element.find("#export_format").val();
-        $.blockUI();
+        var export_format = this.$el.find("#export_format").val();
+        instance.web.blockUI();
         this.session.get_file({
             url: '/web/export/' + export_format,
             data: {data: JSON.stringify({
@@ -385,13 +385,13 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 ids: this.dataset.ids,
                 domain: this.dataset.domain,
                 import_compat: Boolean(
-                    this.$element.find("#import_compat").val())
+                    this.$el.find("#import_compat").val())
             })},
-            complete: $.unblockUI
+            complete: instance.web.unblockUI
         });
     },
     close: function() {
-        this.$element.remove();
+        this.$el.remove();
         this._super();
     }
 });

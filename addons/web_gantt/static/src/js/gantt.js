@@ -19,6 +19,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_loaded: function(fields_view_get, fields_get) {
         var self = this;
         this.fields_view = fields_view_get;
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
         return this.rpc("/web/searchview/fields_get", {"model": this.dataset.model}).pipe(function(fields_get) {
             self.fields = fields_get.fields;
             self.has_been_loaded.resolve();
@@ -68,7 +69,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     },
     on_data_loaded_2: function(tasks, group_bys) {
         var self = this;
-        $(".oe-gantt-view-view", this.$element).html("");
+        $(".oe_gantt", this.$el).html("");
         
         //prevent more that 1 group by
         if (group_bys.length > 0) {
@@ -176,18 +177,19 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         gantt.create(this.chart_id);
         
         // bind event to display task when we click the item in the tree
-        $(".taskNameItem", self.$element).click(function(event) {
+        $(".taskNameItem", self.$el).click(function(event) {
             var task_info = task_ids[event.target.id];
             if (task_info) {
                 self.on_task_display(task_info.internal_task);
             }
         });
-        
-        // insertion of create button
-        var td = $($("table td", self.$element)[0]);
-        var rendered = QWeb.render("GanttView-create-button");
-        $(rendered).prependTo(td);
-        $(".oe-gantt-view-create", this.$element).click(this.on_task_create);
+        if (this.is_action_enabled('create')) {        
+            // insertion of create button
+            var td = $($("table td", self.$el)[0]);
+            var rendered = QWeb.render("GanttView-create-button");
+            $(rendered).prependTo(td);
+            $(".oe_gantt_button_create", this.$el).click(this.on_task_create);
+        }
     },
     on_task_changed: function(task_obj) {
         var self = this;

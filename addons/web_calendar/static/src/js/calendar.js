@@ -28,7 +28,6 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                 width: '80%',
                 min_width: 850
             }, this.options.action_views_ids.form, dataset);
-        this.form_dialog.start();
         this.COLOR_PALETTE = ['#f57900', '#cc0000', '#d400a8', '#75507b', '#3465a4', '#73d216', '#c17d11', '#edd400',
              '#fcaf3e', '#ef2929', '#ff00c9', '#ad7fa8', '#729fcf', '#8ae234', '#e9b96e', '#fce94f',
              '#ff8e00', '#ff0000', '#b0008c', '#9000ff', '#0078ff', '#00ff00', '#e6ff00', '#ffff00',
@@ -50,6 +49,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     on_loaded: function(data) {
         this.fields_view = data;
+        this.$el.addClass(this.fields_view.arch.attrs['class']);
         this.calendar_fields = {};
         this.ids = this.dataset.ids;
         this.color_values = [];
@@ -104,7 +104,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         if (!this.sidebar && this.options.$sidebar) {
             this.sidebar = new instance.web_calendar.Sidebar(this);
-            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$element.find('.oe_calendar_sidebar_container')));
+            this.has_been_loaded.pipe(this.sidebar.appendTo(this.$el.find('.oe_calendar_sidebar_container')));
         }
 
         return this.has_been_loaded.resolve();
@@ -119,7 +119,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         }
         scheduler.config.api_date = "%Y-%m-%d %H:%i";
         scheduler.config.multi_day = true; //Multi day events are not rendered in daily and weekly views
-        scheduler.config.start_on_monday = true;
+        scheduler.config.start_on_monday = Date.CultureInfo.firstDayOfWeek !== 0; //Sunday = Sunday, Others = Monday
         scheduler.config.time_step = 30;
         scheduler.config.scroll_hour = 8;
         scheduler.config.drag_resize = true;
@@ -127,10 +127,52 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         scheduler.config.mark_now = true;
         scheduler.config.day_date = '%l %j';
 
-        scheduler.init(this.$element.find('.oe_calendar')[0], null, this.mode || 'month');
+        scheduler.locale = {
+            date:{
+                month_full: Date.CultureInfo.monthNames,
+                month_short: Date.CultureInfo.abbreviatedMonthNames,
+                day_full: Date.CultureInfo.dayNames,
+                day_short: Date.CultureInfo.abbreviatedDayNames
+            },
+            labels:{
+                dhx_cal_today_button: _t("Today"),
+                day_tab: _t("Day"),
+                week_tab: _t("Week"),
+                month_tab: _t("Month"),
+                new_event: _t("New event"),
+                icon_save: _t("Save"),
+                icon_cancel: _t("Cancel"),
+                icon_details: _t("Details"),
+                icon_edit: _t("Edit"),
+                icon_delete: _t("Delete"),
+                confirm_closing: "",//Your changes will be lost, are your sure ?
+                confirm_deleting: _t("Event will be deleted permanently, are you sure?"),
+                section_description: _t("Description"),
+                section_time: _t("Time period"),
+                full_day: _t("Full day"),
 
-        // Remove hard coded style attributes from dhtmlx scheduler
-        this.$element.find(".dhx_cal_navline div").removeAttr('style');
+                /*recurring events*/
+                confirm_recurring: _t("Do you want to edit the whole set of repeated events?"),
+                section_recurring: _t("Repeat event"),
+                button_recurring: _t("Disabled"),
+                button_recurring_open: _t("Enabled"),
+
+                /*agenda view extension*/
+                agenda_tab: _t("Agenda"),
+                date: _t("Date"),
+                description: _t("Description"),
+
+                /*year view extension*/
+                year_tab: _t("Year"),
+
+                /* week agenda extension */
+                week_agenda_tab: _t("Agenda")
+            }
+        };
+
+        scheduler.init(this.$el.find('.oe_calendar')[0], null, this.mode || 'month');
+
+
 
         scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
@@ -141,12 +183,19 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         scheduler.attachEvent('onViewChange', this.on_view_changed);
         this.refresh_scheduler();
+
+        // Remove hard coded style attributes from dhtmlx scheduler
+        this.$el.find(".dhx_cal_navline").removeAttr('style');
+        instance.web.bus.on('resize',this,function(){
+            self.$el.find(".dhx_cal_navline").removeAttr('style');
+        });
     },
     on_view_changed: function(mode, date) {
-        this.$element.find('.oe_calendar').removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
+        this.$el.find('.oe_calendar').removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
             this.do_ranged_search();
+            this.$el.find(".dhx_cal_navline div").removeAttr('style');
         }
         this.ready.resolve();
     },
@@ -203,6 +252,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
                     }
                     evt.color = filter_item.color;
                     evt.textColor = '#ffffff';
+                } else {
+                    evt.textColor = '#000000';
                 }
             }
 
@@ -225,22 +276,14 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var date_start = instance.web.str_to_datetime(evt[this.date_start]),
             date_stop = this.date_stop ? instance.web.str_to_datetime(evt[this.date_stop]) : null,
             date_delay = evt[this.date_delay] || 1.0,
-            res_text = '',
-            res_description = [];
+            res_text = '';
 
         if (this.info_fields) {
-            var fld = evt[this.info_fields[0]];
-            res_text = (typeof fld == 'object') ? fld[fld.length -1] : res_text = fld;
-
-            var sliced_info_fields = this.info_fields.slice(1);
-            for (var sl_fld in sliced_info_fields) {
-                var slc_fld = evt[sliced_info_fields[sl_fld]];
-                if (typeof slc_fld == 'object') {
-                    res_description.push(slc_fld[slc_fld.length - 1]);
-                } else if (slc_fld) {
-                    res_description.push(slc_fld);
-                }
-            }
+            res_text = _.map(this.info_fields, function(fld) {
+                if(evt[fld] instanceof Array)
+                    return evt[fld][1];
+                return evt[fld];
+            });
         }
         if (!date_stop && date_delay) {
             date_stop = date_start.clone().addHours(date_delay);
@@ -248,9 +291,8 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var r = {
             'start_date': date_start.toString('yyyy-MM-dd HH:mm:ss'),
             'end_date': date_stop.toString('yyyy-MM-dd HH:mm:ss'),
-            'text': res_text,
-            'id': evt.id,
-            'title': res_description.join()
+            'text': res_text.join(', '),
+            'id': evt.id
         };
         if (evt.color) {
             r.color = evt.color;
@@ -263,7 +305,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_create_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.create(data, function(r) {
+        this.dataset.create(data).then(function(r) {
             var id = r.result;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
@@ -275,28 +317,29 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         });
     },
     do_create_event_with_formdialog: function(event_id, event_obj) {
-        if (!event_obj) {
-            event_obj = scheduler.getEvent(event_id);
-        }
-        var self = this,
-            data = this.get_event_data(event_obj),
-            form = self.form_dialog.form,
-            fields_to_fetch = _(form.fields_view.fields).keys();
-        this.dataset.index = null;
-        self.creating_event_id = event_id;
-        this.form_dialog.form.do_show().then(function() {
-            _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
-                var field_name = self[field];
-                if (field_name && form.fields[field_name]) {
-                    var ffield = form.fields[field_name];
-                    ffield._dirty_flag = false;
-                    $.when(ffield.set_value(data[field_name])).then(function() {
-                        ffield._dirty_flag = true;
-                        form.do_onchange(ffield);
-                    });
-                }
+        var self = this;
+        $.when(! self.form_dialog.dialog_inited ? self.form_dialog.init_dialog() : true).then(function() {
+            if (!event_obj) {
+                event_obj = scheduler.getEvent(event_id);
+            }
+            var data = self.get_event_data(event_obj),
+                fields_to_fetch = _(self.form_dialog.form.fields_view.fields).keys();
+            self.dataset.index = null;
+            self.creating_event_id = event_id;
+            self.form_dialog.form.do_show().then(function() {
+                _.each(['date_start', 'date_delay', 'date_stop'], function(field) {
+                    var field_name = self[field];
+                    if (field_name && self.form_dialog.form.fields[field_name]) {
+                        var ffield = self.form_dialog.form.fields[field_name];
+                        ffield._dirty_flag = false;
+                        $.when(ffield.set_value(data[field_name])).then(function() {
+                            ffield._dirty_flag = true;
+                            self.form_dialog.form.do_onchange(ffield);
+                        });
+                    }
+                });
+                self.form_dialog.open();
             });
-            self.form_dialog.open();
         });
     },
     do_save_event: function(event_id, event_obj) {
@@ -316,7 +359,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this,
             index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(event_id, function() {
+            this.dataset.unlink(event_id).then(function() {
                 self.refresh_minical();
             });
         }
@@ -391,7 +434,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_show: function () {
         var self = this;
         $.when(this.has_been_loaded).then(function() {
-            self.$element.show();
+            self.$el.show();
             self.do_push_state({});
         });
     },
@@ -414,12 +457,13 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false
         });
-        this.form.appendTo(this.$element);
+        var def = this.form.appendTo(this.$el);
         this.form.on_created.add_last(this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();
         }
+        return def;
     },
     on_form_dialog_saved: function() {
         var id = this.dataset.ids[this.dataset.index];
@@ -443,7 +487,7 @@ instance.web_calendar.Sidebar = instance.web.Widget.extend({
     start: function() {
         this._super();
         this.mini_calendar = scheduler.renderCalendar({
-            container: this.$element.find('.oe_calendar_mini')[0],
+            container: this.$el.find('.oe_calendar_mini')[0],
             navigation: true,
             date: scheduler._date,
             handler: function(date, calendar) {
@@ -451,19 +495,21 @@ instance.web_calendar.Sidebar = instance.web.Widget.extend({
             }
         });
         this.filter = new instance.web_calendar.SidebarFilter(this, this.getParent());
-        this.filter.appendTo(this.$element.find('.oe_calendar_filter'));
+        this.filter.appendTo(this.$el.find('.oe_calendar_filter'));
     }
 });
 instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
+    events: {
+        'change input:checkbox': 'on_filter_click'
+    },
     init: function(parent, view) {
         this._super(parent);
         this.view = view;
-        this.$element.delegate('input:checkbox', 'change', this.on_filter_click);
     },
     on_events_loaded: function(filters) {
         var selected_filters = this.view.selected_filters.slice(0);
-        this.$element.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
-        this.$element.find('div.oe_calendar_responsible input').each(function() {
+        this.$el.html(QWeb.render('CalendarView.sidebar.responsible', { filters: filters }));
+        this.$('div.oe_calendar_responsible input').each(function() {
             if (_.indexOf(selected_filters, $(this).val()) > -1) {
                 $(this).click();
             }
@@ -474,7 +520,7 @@ instance.web_calendar.SidebarFilter = instance.web.Widget.extend({
             responsibles = [],
             $e = $(e.target);
         this.view.selected_filters = [];
-        this.$element.find('div.oe_calendar_responsible input:checked').each(function() {
+        this.$('div.oe_calendar_responsible input:checked').each(function() {
             responsibles.push($(this).val());
             self.view.selected_filters.push($(this).val());
         });

@@ -1,11 +1,15 @@
 @charset "utf-8"
 
 // Variables {{{
-$section-title-color: #8786b7
 $facets-border: #afafb6
-$facets-border-selected: #a6a6fe
+$section-title-color: #7C7BAD
+$tag-bg-light: #f0f0fa
+$tag-bg-dark: #7C7BAD
+$tag-border: #afafb6
+$tag-border-selected: #a6a6fe
 $hover-background: #f0f0fa
-$colour4: #8a89ba
+$link-color: #7C7BAD
+$sheet-max-width: 860px
 // }}}
 // Mixins {{{
 @font-face
@@ -27,6 +31,14 @@ $colour4: #8a89ba
     font-weight: normal
     font-style: normal
 
+@mixin reset()
+    border: none
+    padding: 0
+    margin: 0
+    background: none
+    @include radius(0)
+    @include box-shadow(none)
+
 @mixin vertical-gradient($startColor: #555, $endColor: #333)
     background-color: $startColor
     background-image: -webkit-gradient(linear, left top, left bottom, from($startColor), to($endColor)) /* Saf4+, Chrome */
@@ -35,7 +47,6 @@ $colour4: #8a89ba
     background-image:     -ms-linear-gradient(top, $startColor, $endColor) /* IE10 */
     background-image:      -o-linear-gradient(top, $startColor, $endColor) /* Opera 11.10+ */
     background-image:         linear-gradient(to bottom, $startColor, $endColor)
-
 
 @mixin radial-gradient($gradient)
     background-position: center center
@@ -52,7 +63,7 @@ $colour4: #8a89ba
 @mixin box-shadow($bsval: 0px 1px 4px #777)
     -moz-box-shadow: $bsval
     -webkit-box-shadow: $bsval
-    -box-shadow: $bsval
+    box-shadow: $bsval
 
 @mixin transition($transval: (border linear 0.2s, box-shadow linear 0.2s))
     -webkit-transition: $transval
@@ -70,10 +81,38 @@ $colour4: #8a89ba
     -moz-background-clip: $clip
     background-clip: $clip
 
-@mixin unscrew-box
-    -moz-box-sizing: border-box
-    -webkit-box-sizing: border-box
-    box-sizing: border-box
+@mixin box-sizing($type: content)
+    // type = border || content || padding
+    -webkit-box-sizing: #{$type}-box
+    -moz-box-sizing: #{$type}-box
+    -ms-box-sizing: #{$type}-box
+    box-sizing: #{$type}-box
+
+@mixin skew-gradient($startColor: #555, $endColor: #333)
+    background-color: $endColor
+    background: -moz-linear-gradient(135deg, $endColor, $startColor)
+    background: -o-linear-gradient(135deg, $startColor, $endColor)
+    background: -webkit-gradient(linear, left top, right bottom, from($startColor), to($endColor))
+
+@mixin transform($transform)
+    -webkit-transform: $transform
+    -moz-transform: $transform
+    -ms-transform: $transform
+    -o-transform: $transform
+    transform: $transform
+
+@mixin keyframes($name)
+    @-webkit-keyframes #{$name}
+        @content
+    @-moz-keyframes #{$name}
+        @content
+    @-ms-keyframes #{$name}
+        @content
+    @-o-keyframes #{$name}
+        @content
+    @keyframes #{$name}
+        @content
+
 
 // Transforms the (readable) text of an inline element into an mmlicons icon,
 // allows for actual readable text in-code (and in readers?) with iconic looks
@@ -81,17 +120,36 @@ $colour4: #8a89ba
     font-size: 1px
     letter-spacing: -1px
     color: transparent
+    font-weight: normal 
     &:before
-        font-family: "mnmliconsRegular"
+        font: 21px "mnmliconsRegular"
         content: $icon-name
-        font-size: 20px
+        color: $color
+
+@mixin text-to-entypo-icon($icon-name, $color: #404040, $size: 21px)
+    font-size: 1px
+    letter-spacing: -1px
+    color: transparent
+    font-weight: normal 
+    &:before
+        font: $size "entypoRegular"
+        content: $icon-name
         color: $color
 
 // }}}
 
-.openerp.openerp-web-client-container
+@media print
+    .oe_topbar, .oe_leftbar, .oe_loading
+        display: none !important
+
+.openerp.openerp_webclient_container
     height: 100%
     position: relative
+
+// jQueryUI css bug fixing
+.text-tag .text-button
+    height: auto !important
+    min-height: 16px
 
 .openerp
     // Global style {{{
@@ -101,19 +159,28 @@ $colour4: #8a89ba
     color: #4c4c4c
     font-size: 13px
     background: white
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5)
     // }}}
+    //Placeholder style{{{
+    \:-moz-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    \::-webkit-input-placeholder
+        color: $tag-border !important
+        font-style: italic !important
+    //}}}
     // Tag reset {{{
     a
         text-decoration: none
+        cursor: pointer !important
     table
         padding: 0
-        font-size: 13px
         border-collapse: collapse
     thead
         font-weight: bold
         background-color: #f0f0f0
         th
-            border-right: 1px dotted #afafb6
+            border-right: 1px dotted $tag-border
             &:last-child
                 border-right: none
     th, td
@@ -129,19 +196,156 @@ $colour4: #8a89ba
         @include vertical-gradient(#f0f0fa, #eeeef6)
     .zebra tbody tr:hover td
         @include vertical-gradient(#eee, #dedede)
-    .numeric
-        text-align: right
-        width: 82px
-        input
-            text-align: right
-    ul, li, ol
-        margin: 0
-        padding: 0
-    li
-        list-style-type: none
-    input, textarea
+    input, textarea, select
+        padding: 2px 4px
         border: 1px solid #ccc
         @include radius(3px)
+        background: white
+    img
+        vertical-align: middle
+    h4
+        margin: 4px 0
+    // }}}
+    // Button style {{{
+    a.button:link, a.button:visited, button, input[type='submit'], .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button
+        display: inline-block
+        border: 1px solid rgba(0,0,0,0.4)
+        color: #4c4c4c
+        margin: 0
+        padding: 3px 12px
+        font-size: 13px
+        text-align: center
+        @include vertical-gradient(#efefef, #d8d8d8)
+        @include radius(3px)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
+        -webkit-font-smoothing: antialiased
+        outline: none
+
+    a.button:hover, button:hover, input[type='submit']:hover, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-hover
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        cursor: pointer
+        background-position: 0
+
+    a.button:focus, button:focus, input[type='submit']:focus, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-focus
+        border: 1px solid #80bfff
+        background-position: 0
+        @include vertical-gradient(#f6f6f6, #e3e3e3)
+        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
+
+    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active, .ui-dialog-buttonpane .ui-dialog-buttonset .ui-button.ui-state-active
+        @include vertical-gradient(#e3e3e3, #f6f6f6)
+        @include box-shadow(none)
+
+    a.button.disabled, button:disabled, input[type='submit']:disabled
+        background: #efefef !important
+        border: 1px solid #d1d1d1 !important
+        @include box-shadow(none !important)
+        color: #aaa !important
+        cursor: default
+        text-shadow: 0 1px 1px #fff !important
+    // }}}
+    // Jquery ui Overrides {{{
+    .ui-widget-content a
+        color: $link-color
+    .oe_bounce_container
+        display: inline-block
+
+    // Modal box
+    &.ui-dialog
+        display: none
+        padding: 6px
+        //overflow: hidden
+        background-color: rgba(60,60,60,0.7)
+        border: 1px solid
+        border-color: #888 #555 #444
+        //overflow: hidden
+        @include radius(8px)
+        @include box-shadow(0 1px 12px rgba(0, 0, 0, 0.6))
+        @include background-clip()
+        .ui-dialog-content
+            padding: 0px
+        .ui-dialog-titlebar, .ui-dialog-content, .ui-dialog-buttonpane
+            padding: 16px
+        .ui-dialog-titlebar
+            border-bottom: 1px solid #cacaca
+            @include radius(2px 2px 0 0)
+            @include vertical-gradient(#FCFCFC, #DEDEDE)
+            .ui-dialog-title
+                margin: 0
+                padding: 0
+        .ui-widget-header
+            border: none
+        .ui-dialog-content
+            background: white
+        .ui-dialog-buttonpane
+            border-top: 1px solid #e0e0e0
+            background: #f5f7f9
+            margin: 0
+            @include radius(0 0 2px 2px)
+            button
+                margin: 0 4px 0 0
+            .ui-dialog-buttonset
+                float: left
+                .ui-button
+                    margin-right: 4px
+        .ui-dialog-titlebar-close
+            padding: 0
+            .ui-icon-closethick
+                display: none
+            &:before
+                content: "×"
+                font-size: 18px
+                font-weight: bold
+                line-height: 16px
+                color: black
+                text-shadow: 0 1px 0 white
+                padding: 0
+                cursor: pointer
+                background: transparent
+                border: 0
+                &:hover
+                    color: black
+                    text-decoration: none
+        .oe_about
+            background-color: white
+            background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+            @include radius(0 0 2px 2px)
+            a
+                color: $link-color
+                &:hover
+                    text-decoration: underline
+                &:focus
+                    outline: none
+            .oe_logo
+                margin-left: -6px
+            .oe_bottom
+                position: absolute
+                top: 50%
+                left: 0
+                right: 0
+                bottom: 0
+                text-shadow: 0 1px 1px #999999
+                @include vertical-gradient(#b41616, #600606)
+                color: #eee
+                padding: 0 16px
+                @include radius(0 0 2px 2px)
+                a
+                    color: #eee
+
+    &.ui-dialog.oe_act_window
+        .ui-dialog-content
+            padding: 0px
+
+    .modal-backdrop
+        position: fixed
+        top: 0
+        right: 0
+        bottom: 0
+        left: 0
+        z-index: 1040
+        background-color: black
+        @include opacity(.3)
 
     // }}}
     // Generic classes {{{
@@ -167,74 +371,278 @@ $colour4: #8a89ba
         cursor: wait
     .oe_fade
         color: #888
-        //font-size: 12px
+        font-weight: normal
     .oe_bold
         font-weight: bold
+    .oe_inline
+        width: auto !important
+    .oe_highlight
+        color: white
+        background: #DC5F59
+    button.oe_highlight
+        @include vertical-gradient(#df3f3f, #a21a1a)
+        @include box-shadow((0 1px 2px rgba(0, 0, 0, 0.1), 0 1px 1px rgba(155, 155, 155, 0.4) inset))
+    button.oe_highlight:hover
+        @include vertical-gradient(lighten(#e04f4f, 2%), lighten(#a21a1a, 2%))
+    button.oe_highlight:active
+        @include vertical-gradient(lighten(#a21a1a, 8%), darken(#df3f3f, 8%))
+    .oe_background_grey
+        background: #eee !important
+
+    .oe_form_dirty
+        .oe_highlight_on_dirty
+            color: white
+            background: #dc5f59
+            font-weight: bold
+        button.oe_highlight_on_dirty
+            @include vertical-gradient(#dc5f59, #b33630)
+            @include box-shadow(none)
+            &:hover
+                background: #ED6F6A
+    .oe_title
+        width: 50%
+        float: left
+    .oe_title:after
+        content: "."
+        display: block
+        height: 0
+        clear: both
+        visibility: hidden
+    .oe_button_box
+        width: 270px
+        text-align: right
+        button
+            margin: 4px
+    .oe_avatar
+        > img
+            max-height: 90px
+            max-width: 90px
+            @include radius(3px)
+            @include box-shadow(0 1px 4px rgba(0, 0, 0, 0.4))
+            border: none
+            margin-bottom: 10px
+    .oe_avatar + div
+        margin-left: 5px
+    .oe_image_small > img
+        max-width: 50px
+        max-height: 50px
+    .oe_image_medium > img
+        max-width: 180px
+        max-height: 180px
+    .oe_button.oe_link
+        @include reset()
+        img
+            display: none
+        span
+            @include reset()
+            color: $link-color
+            font-weight: bold
+            &:hover
+                text-decoration: underline
+    .oe_webclient
+        .oe_star_on, .oe_star_off
+            color: #cccccc
+            text-shadow: 0 0 2px black
+            vertical-align: top
+            position: relative
+            top: -5px
+        .oe_star_on:hover, .oe_star_off:hover
+            text-decoration: none
+        .oe_star_on
+            color: gold
     // }}}
-    // Button style {{{
-    a.button:link, a.button:visited, button, input[type='submit']
-        display: inline-block
-        border: 1px solid #ababab
-        color: #404040
-        margin: 0
-        padding: 3px 12px
-        font-size: 13px
-        text-align: center
-        @include vertical-gradient(#efefef, #d8d8d8)
+    // Tags (for many2many tags, among others) {{{
+    .oe_tag
+        border: 1px solid $tag-border
+        font-size: 11px
+        padding: 2px 4px
+        margin: 0 2px 2px 0
         @include radius(3px)
-        @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
-        text-shadow: 0 1px 1px rgba(255, 255, 255, .5)
-        -webkit-font-smoothing: antialiased
-        outline: none
+        background: $tag-bg-light
+        color: #4C4C4C
+    .oe_tag_dark
+        background: $tag-bg-dark
+        color: #eee
 
-    a.button:hover, button:hover, input[type='submit']:hover
-        @include vertical-gradient(#f6f6f6, #e3e3e3)
-        cursor: pointer
-
-    a.button:focus, button:focus, input[type='submit']:focus
-        border: 1px solid #80bfff
-        @include vertical-gradient(#f6f6f6, #e3e3e3)
-        @include box-shadow((0 0 3px #80bfff, 0 1px 1px rgba(255, 255, 255, .8) inset))
-
-    a.button:active, a.button.active, button:active, button.active, input[type='submit']:active, input[type='submit'].active
-        background: #e3e3e3
-        background: -moz-linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        background: -webkit-gradient(linear, left top, left bottom, from(#e3e3e3), to(#f6f6f6)) #1b468f
-        background: linear-gradient(top, #e3e3e3, #f6f6f6) #1b468f
-        @include box-shadow(none)
-
-    a.button.disabled, button:disabled, input[type='submit']:disabled
-        background: #efefef !important
-        border: 1px solid #d1d1d1 !important
-        @include box-shadow(none !important)
-        color: #aaa !important
+    .oe_tags
+        &.oe_inline
+            min-width: 250px
+        .text-wrap
+            width: 100% !important
+            textarea
+                width: 100% !important
+        .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
+            font-style: italic
+            text-decoration: none
+        margin-bottom: 1px
+    // }}}
+    // Tooltips {{{
+    &.oe_tooltip
+        font-size: 12px
+        .oe_tooltip_string
+            color: #FD5
+            font-weight: bold
+            font-size: 13px
+        .oe_tooltip_help
+            white-space: pre-wrap
+        .oe_tooltip_technical
+            padding: 0 0 4px 0
+            margin: 5px 0 0 15px
+            li
+                list-style: circle
+        .oe_tooltip_technical_title
+            font-weight: bold
+        .oe_tooltip_close
+            margin: -5px 0 0 2px
+            cursor: default
+            float: right
+            color: white
+            &:hover
+                color: #999
+                cursor: pointer
+        .oe_tooltip_message
+            max-width: 310px
+    // }}}
+    // Notebook {{{
+    .oe_notebook
+        margin: 8px 0
+        padding: 0 16px
+        list-style: none
+        zoom: 1
+    .oe_notebook.ui-corner-all
+        @include radius(0)
+    .oe_notebook:before, .oe_notebook:after
+        display: table
+        content: ""
+        zoom: 1
+    .oe_notebook:after
+        clear: both
+    .oe_notebook > li
+        float: left
+    .oe_notebook > li > a
+        display: block
+        color: #4c4c4c
+    .oe_notebook
+        border-color: #ddd
+        border-style: solid
+        border-width: 0 0 1px
+    .oe_notebook > li
+        position: relative
+    .oe_notebook > li > a
+        padding: 0 12px
+        margin-right: 2px
+        line-height: 30px
+        border: 1px solid transparent
+        @include radius(4px 4px 0 0)
+    .oe_notebook > li > a:hover
+        text-decoration: none
+        background-color: #eee
+        border-color: #eee #eee #ddd
+    .oe_notebook > li.ui-state-active > a, .oe_notebook > li.ui-state-active > a:hover
+        background-color: #ffffff
+        border: 1px solid #ddd
+        border-bottom-color: transparent
         cursor: default
-        text-shadow: 0 1px 1px #fff !important
-
-    button.primary
-        color: white
-        @include vertical-gradient(#dc5f59, #b33630)
-        @include box-shadow(none)
-
-    button.primary:hover
-        @include vertical-gradient(lighten(#dc5f59, 3%), lighten(#b33630, 3%))
-        @include box-shadow(0 0 1px rgba(0,0,0,0.2))
-
-    button.primary:active
-        @include vertical-gradient(#b33630, #dc5f59)
-        @include box-shadow(none)
-
-    button.following
-        color: white
-        width: 120px
-        @include vertical-gradient($colour4, darken($colour4, 3%))
-
-    button.unfollow
+    .oe_notebook_page
+        padding: 0
+    div.ui-tabs
+        padding: 3px 0px 3px 0px
+    .ui-tabs-hide
         display: none
-        color: white
-        width: 120px
-        @include vertical-gradient(#dc5f59, #b33630)
-
+    // }}}
+    // Dropdown {{{
+    .oe_dropdown, .oe_dropdown_hover, .oe_dropdown_toggle
+        position: relative
+        cursor: pointer
+    .oe_dropdown_toggle
+        color: rgba(0,0,0,0.5)
+        font-weight: normal
+    .oe_dropdown_hover:hover .oe_dropdown_menu, .oe_dropdown_menu.oe_opened
+        display: block
+    .oe_dropdown_menu
+        display: none
+        position: absolute
+        top: 26px
+        left: 0
+        z-index: 3
+        margin: 0
+        padding: 0
+        border: 1px solid $tag-border
+        background: white
+        padding: 4px 0
+        min-width: 140px
+        text-align: left
+        @include radius(3px)
+        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+        > li
+            &:hover
+                @include vertical-gradient(#f0f0fa, #eeeef6)
+                @include box-shadow(none)
+            list-style-type: none
+            float: none
+            display: block
+            position: relative
+            margin: 0
+            padding: 2px 8px
+            > a
+                white-space: nowrap
+                display: block
+                color: #4c4c4c
+                text-decoration: none
+                &:hover
+                    text-decoration: none
+    .oe_dropdown_arrow:after
+        width: 0
+        height: 0
+        display: inline-block
+        content: "&darr"
+        text-indent: -99999px
+        vertical-align: top
+        margin-top: 8px
+        //margin-left set at 3px to avoid a strange overflow
+        margin-left: 3px 
+        border-left: 4px solid transparent
+        border-right: 4px solid transparent
+        border-top: 4px solid#404040
+        @include opacity(0.5)
+    .oe_sidebar
+        white-space: nowrap
+        .oe_dropdown_menu
+            .oe_sidebar_add_attachment
+                height: 20px
+                cursor: pointer
+                padding-left: 6px
+                margin-top: 6px
+                span
+                    font-weight: bold
+                .oe_hidden_input_file
+                    width: 200px
+                &:hover
+                    @include vertical-gradient(#f0f0fa, #eeeef6)
+                    @include box-shadow(none)
+            li
+                .oe_sidebar_delete_item
+                    position: absolute
+                    top: 4px
+                    right: 4px
+                    display: none
+                    width: 12px
+                    height: 12px
+                    padding: 1px
+                    color: #8786b7
+                    line-height: 8px
+                    text-align: center
+                    font-weight: bold
+                    text-shadow: 0 1px 1px white
+                    &:hover
+                        text-decoration: none
+                        color: white
+                        background: #8786b7
+                        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
+                        @include radius(2px)
+                &:hover
+                    .oe_sidebar_delete_item
+                        display: inline-block
     // }}}
     // Loading {{{
     .oe_loading
@@ -260,13 +668,14 @@ $colour4: #8a89ba
     // }}}
     // Login {{{
     .oe_login
-        background: url("/web/static/src/img/pattern.png") repeat
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
         text-align: center
         font-size: 14px
         height: 100%
-        li
+        ul, li
+            margin: 0
             list-style-type: none
-            padding-bottom: 4px
+            padding: 0 0 4px 0
         button
             float: right
             display: inline-block
@@ -283,7 +692,7 @@ $colour4: #8a89ba
             font-family: "Lucida Grande", Helvetica, Verdana, Arial
             border: 1px solid #999999
             background: whitesmoke
-            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.3))
+            @include box-shadow(inset 0 1px 4px rgba(0, 0, 0, 0.4))
             @include radius(3px)
         input
             margin-bottom: 9px
@@ -383,64 +792,119 @@ $colour4: #8a89ba
         .oe_topbar, .oe_leftbar
             display: none
     // }}}
-    // WebClient.topbar {{{
+    // Top Menu {{{
+    
     .oe_topbar
         width: 100%
-        height: 31px
-        border-top: solid 1px #d3d3d3
+        height: 32px
+        background-color: #414141
         @include vertical-gradient(#646060, #262626)
-
         .oe_topbar_item
-            li
-                float: left
-                a
-                    display: block
-                    padding: 5px 10px 7px
-                    line-height: 20px
-                    height: 20px
-                    color: #eee
-                    vertical-align: top
-                    text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                    &:hover
-                        background: #303030
-                        color: white
-                        @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-            .oe_active
-                background: #303030
-                font-weight: bold
+            display: block
+            padding: 5px 10px 7px
+            line-height: 20px
+            height: 20px
+            text-decoration: none
+            color: #eee
+            vertical-align: top
+            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+            @include transition(all 0.2s ease-out)
+            &:hover,
+                background: rgba(0,0,0,0.2)
+                text-shadow: black 0px 0px 3px
                 color: white
-                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
 
         .oe_topbar_avatar
             width: 24px
             height: 24px
             margin: -2px 2px 0 0
-            @include radius(4px)
+            @include radius(3px)
         .oe_topbar_avatar
             vertical-align: top
-        .oe_dropdown_toggle:after
-            width: 0
-            height: 0
-            display: inline-block
-            content: "&darr"
-            text-indent: -99999px
-            vertical-align: top
-            margin-top: 8px
-            margin-left: 4px
-            border-left: 4px solid transparent
-            border-right: 4px solid transparent
+        .oe_dropdown_arrow:after
             border-top: 4px solid white
-            @include opacity(0.5)
+        .oe_dropdown_menu
+            top: 32px
+            background: #333
+            background: rgba(37,37,37,0.9)
+            border-color: #999
+            border-color: rgba(0, 0, 0, 0.2)
+            border-style: solid
+            border-width: 0 1px 1px
+            @include radius(0 0 6px 6px)
+            @include background-clip()
+            li
+                float: none
+                padding: 3px 12px
+                a
+                    color: #eee
+                &:hover
+                    @include vertical-gradient(#292929, #191919)
+                    @include box-shadow(none)
+
+    // oe menu is the list of the buttons on the left side of the bar.
+    // So why aren't the buttons oe_topbar_items ? This sad state of affairs
+    // is a leftover from an uncomplete refactoring when the left and top menu
+    // were merged. You are welcome to refactor and clean this up
+    .oe_menu
+        float: left
+        padding: 0
+        margin: 0
+        font-size: 13px
+        > li
+            list-style-type: none
+            padding: 0
+            margin: 0
+            float: left
+            display: block
+            color: #eeeeee
+            > a
+                display: block
+                padding: 5px 10px 7px
+                line-height: 20px
+                height: 20px
+                text-decoration: none
+                color: #eee
+                vertical-align: top
+                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                @include transition(all 0.2s ease-out)
+                &:hover,
+                    background: rgba(0,0,0,0.2)
+                    text-shadow: black 0px 0px 3px
+                    color: white
+                    @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
+            > .oe_active
+                background: rgba(0,0,0,0.2)
+                text-shadow: black 0px 0px 3px
+                font-weight: bold
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
+
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown_menu
+            right: -1px
+
+    .oe_systray > div
+        float: left
+        padding: 0 4px 0 4px
+    .oe_systray
+        float: right
+
     // }}}
     // Webclient.leftbar {{{
     .oe_leftbar
         display: none
         width: 220px
         background: #f0eeee
-        border-right: 1px solid #afafb6
+        border-right: 1px solid $tag-border
         text-shadow: 0 1px 1px white
         padding-bottom: 16px
-        line-height: 18px
     a.oe_logo
         width: 220px
         display: block
@@ -467,150 +931,22 @@ $colour4: #8a89ba
                 color: #c81010
                 font-style: italic
     // }}}
-    // UserMenu {{{
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown
-            position: relative
+    // Webclient.leftbar items {{{
 
-        .oe_dropdown_options
-            float: left
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            top: 32px
-            right: -1px
-            border: 0
-            z-index: 900
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            zoom: 1
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
-                display: block
-                background-color: none
-                a
-                    white-space: nowrap
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
-                hr
-                    border-top: 1px solid #999
-                    border-bottom: 0
-    // }}}
-    // Systray {{{
-    .oe_systray > div
-        float: left
-        padding: 0 4px 0 4px
-    .oe_systray
-        float: right
-
-        .oe_systray_dropdown
-            position: relative
-        .oe_systray_dropdown:hover .oe_systray_dropdown_options
-            display: block
-        .oe_systray_dropdown_options
-            background: #333
-            background: rgba(37,37,37,0.9)
-            display: none
-            position: absolute
-            z-index: 900
-            border: 0
-            margin-left: 0
-            margin-right: 0
-            padding: 6px 0
-            border-color: #999
-            border-color: rgba(0, 0, 0, 0.2)
-            border-style: solid
-            border-width: 0 1px 1px
-            @include radius(0 0 6px 6px)
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-            @include background-clip()
-            li
-                float: none
-                display: block
-                background-color: none
-                a
-                    display: block
-                    padding: 4px 15px
-                    clear: both
-                    font-weight: normal
-                    line-height: 18px
-                    color: #eee
-                    &:hover
-                        @include vertical-gradient(#292929, #191919)
-                        @include box-shadow(none)
-    // }}}
-    // Menu {{{
-    .oe_menu
-        float: left
-        padding: 0
-        margin: 0
-        li
-            float: left
-        a
-            display: block
-            padding: 5px 10px 7px
-            line-height: 20px
-            height: 20px
-            color: #eee
-            vertical-align: top
-            text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            &:hover
-                background: #303030
-                color: white
-                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-        .oe_active
-            background: #303030
-            font-weight: bold
-            color: white
-            @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-    .oe_menu_more_container
-        position: relative
-        .oe_menu_more
-            position: absolute
-            padding: 0
-            background-color: #646060
-            z-index: 1
-            border: 1px solid black
-            border-bottom-left-radius: 5px
-            border-bottom-right-radius: 5px
-            li
-                float: none
-                a
-                    white-space: nowrap
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
-        color: $colour4
+        color: $link-color
     .oe_secondary_submenu
         padding: 2px 0 8px 0
         margin: 0
         width: 100%
         display: inline-block
-        > li
+        li
             position: relative
-            padding: 1px 0 1px 20px
+            margin: 0
+            padding: 1px 0 1px 20px !important
+            list-style-type: none
             a
                 display: block
                 color: #4c4c4c
@@ -620,7 +956,7 @@ $colour4: #8a89ba
                 top: 1px
                 right: 1px
                 font-size: 10px
-                background: $colour4
+                background: $link-color
                 color: white
                 padding: 2px 4px
                 margin: 1px 6px 0 0
@@ -628,32 +964,32 @@ $colour4: #8a89ba
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include radius(4px)
                 @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
-        .oe_menu_counter 
+        .oe_menu_counter
             float: right
-            background: #8a89ba
-            color: #eee
-            font-size: 12px
-            border: 1px solid lightgray
-            padding: 0px 4px 0px 4px
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            margin: 0px
-            @include radius(4px)
+            margin: 1px 
+            padding: 1px 4px
+            border: none
+            &:hover
+                cursor: pointer
+                @include transform(scale(1.1))
         .oe_active
-            background: $colour4
             border-top: 1px solid lightGray
-            border-bottom: 1px solid lightGray
+            border-bottom: 1px solid #dedede
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            @include box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.2))
+            @include box-shadow((inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2)))
+            background: $link-color
             a
                 color: white
             .oe_menu_label
                 background: #eee
-                color: $colour4
+                color: $link-color
                 text-shadow: 0 1px 1px white
                 @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.2))
-            .oe_menu_counter 
+            .oe_menu_counter
                 background: #eee
-                color: #8a89ba
+                color: $link-color
+                @include box-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.2))
         .oe_menu_toggler:before
             width: 0
             height: 0
@@ -675,123 +1011,139 @@ $colour4: #8a89ba
             border-left: 4px solid transparent
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
+
+    // }}}
+    // About openerp {{{
+    .oe_about
+        background-color: white
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        @include radius(0 0 2px 2px)
+        a
+            color: $link-color
+            &:hover
+                text-decoration: underline
+            &:focus
+                outline: none
+        .oe_logo
+            margin-left: -6px
+        .oe_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+            color: #eee
+            padding: 0 16px
+            @include radius(0 0 2px 2px)
+            a
+                color: #eee
     // }}}
     // ActionManager {{{
     .oe_application
         width: 100%
         a
-            color: $colour4
+            color: $link-color
             &:hover
                 text-decoration: underline
+        > div
+            height: 100%
+        .oe_breadcrumb_item:not(:last-child)
+            display: inline-block
+            max-width: 7em
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
     // }}}
-    // Content Header MIT {{{
-    .oe-view-manager-header
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        h2
-            float: left
-            font-size: 18px
-            margin: 1px 0
-            a
-                color: $colour4
-        .buttons
-            padding-right: 8px
-            li
-                float: left
-                margin-right: 12px
-        .filter
-            vertical-align: top
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .header-row
-            height: 26px
-            line-height: 26px
-            margin: 8px
-            clear: both
-            text-shadow: 0 1px 1px white
-            .dropdown-toggle:after
-                margin-top: 7px
-                margin-left: 6px
-                border-top-color: #404040
-        .oe_vm_switch
-            li
-                padding-left: 1px
+    // ViewManager common {{{
+    .oe_view_manager
+        .oe_view_manager_body
+            height: inherit 
+        .oe_view_manager_view_kanban
+            height: inherit
+
+        table.oe_view_manager_header
+            width: 100%
+            table-layout: fixed
+            .oe_header_row
+                //min-height: 26px
+                //line-height: 26px
+                clear: both
+                text-shadow: 0 1px 1px white
+            .oe_header_row:last-child
+                td
+                    padding-top: 0
+            .oe_header_row:first-child
+                td
+                    padding-top: 8px
+            .oe_view_manager_sidebar
+                margin: 0px auto
                 text-align: center
-                width: 24px
-                height: 24px
-                line-height: 24px
-        .pagination
-            li
-                height: 24px
-                line-height: 24px
-                padding: 0 8px
-        .button-group
-            display: inline-block
-            border: 1px solid #ababab
-            @include radius(5px)
-            li
+            td
+                line-height: 26px
+            h2
+                font-size: 18px
+                margin: 0
                 float: left
-                border-right: 1px solid #ababab
-                &:last-child
-                    border: none
-            a
-                color: #4c4c4c
-                &:hover
-                    text-decoration: none
-            .active
-                width: 100%
-                background: #999
-                @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-                color: #fff
-                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    // }}}
-    // ViewManager.header {{{
-    .oe_view_manager_header
-        width: 100%
-        border-top: 1px solid #cacaca
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
-        .oe_header_row
-            //min-height: 26px
-            //line-height: 26px
-            clear: both
-            text-shadow: 0 1px 1px white
-            td
-                padding: 8px
-        .oe_header_row:last-child
-            td
-                padding-top: 0
-        .oe_header_row:first-child
-            td
-                padding-top: 8px
-        .oe_view_manager_sidebar
-            margin: 0px auto
-            width: 400px
-            text-align: center
-        td
+                a
+                    color: $link-color
+            .oe_dropdown_menu
+                line-height: normal
+            .oe_button_group
+                display: inline-block
+                border: 1px solid #ababab
+                @include radius(5px)
+                li
+                    float: left
+                    border-right: 1px solid #ababab
+                    &:last-child
+                        border: none
+                a
+                    color: #4c4c4c
+                    &:hover
+                        text-decoration: none
+                .active
+                    background: #999
+                    @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
+                    a
+                        color: #fff
+                        text-shadow: 0 1px 2px rgba(0,0,0,0.4)
+            .oe_view_manager_buttons
+                white-space: nowrap
+        // }}}
+        // ViewManager.pager {{{
+        .oe_view_manager_pager
             line-height: 26px
-        h2
-            font-size: 18px
-            margin: 0
+            .oe_list_pager_single_page .oe_pager_group
+                display: none
+        .oe_pager_value
             float: left
-            a
-                color: $colour4
-        .oe_button_group
+            margin-right: 8px
+        ul.oe_pager_group
+            padding: 0
+            margin: 0
+        .oe_pager_group
+            float: left
+            height: 24px
+            line-height: 24px
             display: inline-block
             border: 1px solid #ababab
+            cursor: pointer
             @include radius(5px)
             li
+                height: 24px
+                line-height: 24px
+                padding: 0
+                margin: 0
+                list-style-type: none
                 float: left
                 border-right: 1px solid #ababab
                 &:last-child
                     border: none
             a
                 color: #4c4c4c
+                padding: 0 8px
                 &:hover
                     text-decoration: none
             .active
@@ -800,128 +1152,70 @@ $colour4: #8a89ba
                 a
                     color: #fff
                     text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-        .oe_view_manager_buttons
-            white-space: nowrap
-    // }}}
-    // ViewManager.pager {{{
-    .oe_view_manager_pager
-        line-height: 26px
-    .oe_pager_value
-        float: left
-        margin-right: 8px
-    .oe_pager_group
-        float: left
-        height: 24px
-        line-height: 24px
-        display: inline-block
-        border: 1px solid #ababab
-        cursor: pointer
-        @include radius(5px)
-        li
-            height: 24px
-            line-height: 24px
+        // }}}
+        // ViewManager.switches {{{
+        .oe_view_manager_switch
             padding: 0
-            float: left
-            border-right: 1px solid #ababab
-            &:last-child
-                border: none
-        a
-            color: #4c4c4c
-            padding: 0 8px
-            &:hover
-                text-decoration: none
-        .active
-            background: #999
-            @include box-shadow(0 1px 4px rgba(0,0,0,0.3) inset)
-            a
-                color: #fff
-                text-shadow: 0 1px 2px rgba(0,0,0,0.4)
-    // }}}
-    // ViewManager.switches {{{
-    .oe_view_manager_switch
-        li
-            text-align: center
-            width: 24px
-            height: 24px
-            line-height: 16px
-            a
+            margin: 0 0 0 8px
+            li
+                margin: 0
+                width: 24px
+                height: 24px
+                line-height: 16px
+                padding: 0
+                text-align: center
+                list-style-type: none
+                a
+                    position: relative
+            .oe_vm_switch_list:after, .oe_vm_switch_tree:after
+                padding: 2px
+                content: "i"
+            .oe_vm_switch_form:after
+                content: "m"
+            .oe_vm_switch_graph:after
+                font-family: "mnmliconsRegular" !important
+                font-size: 21px
+                font-weight: 300 !important
+                content: "}"
+                top: -2px
                 position: relative
-        .oe_vm_switch_list:after, .oe_vm_switch_tree:after
-            padding: 2px
-            content: "i"
-        .oe_vm_switch_graph:after
-            font-family: "mnmliconsRegular" !important
-            font-size: 21px
-            font-weight: 300 !important
-            content: "}"
-            top: -2px
-            position: relative
-        .oe_vm_switch_gantt:after
-            font-family: "mnmliconsRegular" !important
-            font-size: 21px
-            font-weight: 300 !important
-            content: "y"
-            top: -2px
-            position: relative
-        .oe_vm_switch_calendar:after
-            content: "P"
-        .oe_vm_switch_kanban:after
-            content: "k"
-        .oe_vm_switch_diagram:after
-            content: "f"
+            .oe_vm_switch_gantt:after
+                font-family: "mnmliconsRegular" !important
+                font-size: 21px
+                font-weight: 300 !important
+                content: "y"
+                top: -2px
+                position: relative
+            .oe_vm_switch_calendar:after
+                content: "P"
+            .oe_vm_switch_kanban:after
+                content: "k"
+            .oe_vm_switch_diagram:after
+                content: "f"
+        // }}}
+    // ViewManager application {{{
+    .oe_view_manager_current
+        height: 100%
+        > .oe_view_manager_header
+            border-bottom: 1px solid #cacaca
+            @include vertical-gradient(#fcfcfc, #dedede)
+            @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
+            .oe_header_row
+                td
+                    padding: 8px
+            .oe_header_row:first-child
+                td
+                    padding-top: 8px
     // }}}
-    // ViewManager.sidebar {{{
-    .oe_form_dropdown_section
-        position: relative
-        display: inline-block
-    .oe_dropdown_toggle:after
-        width: 0
-        height: 0
-        display: inline-block
-        content: "&darr"
-        text-indent: -99999px
-        vertical-align: top
-        border-left: 4px solid transparent
-        border-right: 4px solid transparent
-        border-top: 4px solid white
-        @include opacity(0.5)
-        margin-top: 7px
-        margin-left: 6px
-        border-top-color: #404040
-    .oe_dropdown_menu
-        display: none
-        position: absolute
-        top: 28px
-        left: 0px
-        padding: 8px
-        border: 1px solid #afafb6
-        min-width: 120px
-        overflow-x: hidden
-        z-index: 900
-        text-align: left
-        background: white
-        @include radius(3px)
-        @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
-        li
-            list-style-type: none
-            float: none
-            display: block
-            background-color: none
-            a
-                display: block
-                padding: 3px 6px
-                clear: both
-                font-weight: normal
-                line-height: 14px
-                color: #4c4c4c
-                text-decoration: none
-                cursor: pointer
-                &:hover
-                    text-decoration: none
-                    @include vertical-gradient(#f0f0fa, #eeeef6)
-                    @include box-shadow(none)
-    .oe_sidebar
-        white-space: nowrap
+    // ViewManager inline {{{
+    .oe_view_manager_inline, .oe_view_manager_inlineview
+        height: 100%
+        > .oe_view_manager_header
+            display: none
+    // }}}
+    // Viewmanager popup {{{
+    .oe_popup_form > .oe_formview > .oe_form_pager
+        display: none !important
     // }}}
     // SearchView {{{
     .oe_searchview
@@ -930,7 +1224,7 @@ $colour4: #8a89ba
         float: right
         padding: 1px 0
         line-height: 18px
-        width: 480px
+        width: 400px
         border: 1px solid #ababab
         background: white
         @include radius(13px)
@@ -938,13 +1232,11 @@ $colour4: #8a89ba
         input, textarea
             padding: 3px
             height: 14px
-            font-size: 11px
+            font-size: 12px
             line-height: 18px
-            border: 1px solid #ccc
-            @include radius(3px)
         &.oe_focused
-            border-color: $facets-border-selected
-            @include box-shadow(0 1px 2px $facets-border-selected inset)
+            border-color: $tag-border-selected
+            @include box-shadow(0 1px 2px $tag-border-selected inset)
         .oe_searchview_clear
             cursor: pointer
             position: absolute
@@ -977,42 +1269,46 @@ $colour4: #8a89ba
                 border-right: 5px solid transparent
                 @include opacity()
 
+        .oe_searchview_search
+            @include text-to-icon("r", #a3a3a3)
+            @include box-shadow(none)
+            @include radius(0)
+            position: absolute
+            left: 3px
+            top: 1px
+            padding: 0
+            border: none
+            background: transparent
+
         .oe_searchview_facets
             min-height: 22px
-            &:before
-                color: #ccc
-                font-family: "mnmliconsRegular"
-                content: "r"
-                font-size: 130%
-                display: inline
-                position: relative
-                left: 6px
-                top: 2px
-                color: #a3a3a3
-                padding-right: 4px
+            margin-left: 15px
             *
                 vertical-align: top
                 display: inline-block
                 line-height: 17px
-            .oe_searchview_input, .oe_searchview_facet
+            .oe_searchview_facet
                 height: 18px
                 margin: 1px 0
                 font-size: 11px
                 &:focus
                     outline: none
             .oe_searchview_input
-                padding: 0 3px
+                padding: 0 0 0 6px
+                font-size: 12px
+                height: 16px
+                margin-top: 3px
+                &:focus
+                    outline: none
             .oe_searchview_facet
                 position: relative
                 cursor: pointer
-                border: 1px solid $facets-border
-                @include radius(3px)
-                background: #8786b7
+                padding: 0
                 -webkit-font-smoothing: auto
                 // spacing for opera, FF
                 &:focus
-                    border-color: $facets-border-selected
-                    @include box-shadow(0 0 3px 1px $facets-border-selected)
+                    border-color: $tag-border-selected
+                    @include box-shadow(0 0 3px 1px $tag-border-selected)
                 .oe_facet_values
                     background: #f0f0fa
                     @include radius(0 3px 3px 0)
@@ -1025,8 +1321,9 @@ $colour4: #8a89ba
                 .oe_facet_category.oe_i
                     font-size: 16px
                 .oe_facet_value
-                    border-left: 1px solid $facets-border
+                    border-left: 1px solid $tag-border
                     text-shadow: 0 1px 1px white
+                    color: #4C4C4C
                     &:last-child
                         padding-right: 16px
                 .oe_facet_remove
@@ -1037,6 +1334,7 @@ $colour4: #8a89ba
                     line-height: 8px
                     width: 12px
                     height: 12px
+                    padding-top: 1px
                     text-align: center
                     font-weight: bold
                     cursor: pointer
@@ -1052,7 +1350,7 @@ $colour4: #8a89ba
 
         .oe_searchview_drawer
             position: absolute
-            z-index: 1
+            z-index: 100
             // detach drawer from field slightly
             margin-top: 4px
             top: 100%
@@ -1060,7 +1358,7 @@ $colour4: #8a89ba
             background-color: white
             min-width: 100%
             display: none
-            border: 1px solid #afafb6
+            border: 1px solid $tag-border
             text-align: left
             @include radius(4px)
             @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
@@ -1097,7 +1395,7 @@ $colour4: #8a89ba
                 display: table
                 width: 100%
                 > div
-                    @include unscrew-box
+                    @include box-sizing(border)
                     display: table-cell
                     width: 50%
                 ul
@@ -1123,13 +1421,13 @@ $colour4: #8a89ba
                     // after oe_selected so background color is not overridden
                     &:hover
                         background-color: $hover-background
-                form
-                    margin-left: 12px
-                    p
-                        margin: 4px 0
-                        line-height: 18px
-                    button
-                        margin: 0 0 8px 0
+            form
+                margin-left: 12px
+                p
+                    margin: 4px 0
+                    line-height: 18px
+                button
+                    margin: 0 0 8px 0
             .oe_searchview_custom
                 padding: 0 8px 8px 8px
                 form
@@ -1145,6 +1443,11 @@ $colour4: #8a89ba
                         position: absolute
                         top: 0
                         right: 5px
+            .oe_searchview_dashboard
+                form
+                    display: none
+                    margin-top: 2px
+
             .oe_searchview_advanced
                 form
                     display: none
@@ -1172,13 +1475,12 @@ $colour4: #8a89ba
                     display: block
 
             // delete buttons
-            .oe_searchview_custom_delete
-                position: absolute
-                left: 4px
-                top: 3px
             .oe_searchview_custom_delete, .searchview_extended_delete_prop
+                display: inline-block
                 width: 12px
                 height: 12px
+                line-height: 12px
+                padding: 1px
                 color: #8786b7
                 line-height: 8px
                 text-align: center
@@ -1190,172 +1492,185 @@ $colour4: #8a89ba
                     background: #8786b7
                     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.4)
                     @include radius(2px)
+            .oe_searchview_custom_delete
+                display: none
+                position: absolute
+                bottom: 1px
+                right: 4px
+            .oe_searchview_custom_private, .oe_searchview_custom_public
+                &:hover
+                    .oe_searchview_custom_delete
+                        display: inline-block
+            .oe_searchview_custom_public:after
+                content: ","
+                font-family: "entypoRegular" !important
+                font-size: 22px
+                font-weight: 300 !important
+                margin: 0 0 0 4px
+                padding: 0
+
+
     // }}}
     // Views Common {{{
     .oe_view_nocontent
-        > img
-            float: left
-            margin: 1.5em
-        > div
-            // don't encroach on my arrow
-            overflow: hidden
-            padding: 35px 0px 0px 0px
-            max-width: 700px
-            font-size: 125%
-    .oe_view_topbar
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px
+        padding: 15px
+        margin-top: 0
+        color: #777777
+        font-size: 125%
+        max-width: 700px
+        .oe_view_nocontent_create
+            background: transparent url(/web/static/src/img/view_empty_arrow.png) no-repeat 7px 0
+            margin-top: 0
+            padding-top: 35px
+            min-height: 28px
+            color: #4c4c4c
+        > p
+            padding-left: 95px
+        .oe_empty_custom_dashboard
+            background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0
+            margin-top: -15px
+            padding: 100px 0 0 137px
+            min-height: 327px
+            margin-left: -15px
+
     // }}}
-    // FormView.body {{{
+    // FormView.base and dynamic tags {{{
     .oe_formview
         background: white
-    .oe_form_header
-        padding: 8px
+    .oe_form_dropdown_section
+        position: relative
+        display: inline-block
     .oe_form_invalid
         input, select, textarea
             background-color: #F66 !important
             border: 1px solid #D00 !important
-    .oe_form_button_save_dirty
-        color: white
-        background: #dc5f59
-        background: -moz-linear-gradient(#dc5f59, #b33630)
-        background: -webkit-gradient(linear, left top, left bottom, from(#dc5f59), to(#b33630))
-        background: -webkit-linear-gradient(#dc5f59, #b33630)
-        -moz-box-shadow: none
-        -webkit-box-shadow: none
-        -box-shadow: none
-        font-weight: bold
-        &:hover
-            background: #ED6F6A
-    // }}}
-    // FormView.customdivs {{{
-    .oe_form header
-        position: relative
-        border-bottom: 1px solid #cacaca
-        @include vertical-gradient(#fcfcfc, #dedede)
-        padding: 0 8px
-        line-height: 30px 
-        button
-            font-size: 12px 
-            float: left
-            height: 24px !important
-            line-height: 24px 
-            vertical-align: top
-            padding: 0 10px 
-            margin: 3px 4px 3px 0
-            span.i
-                line-height: 20px 
-                height: 24px 
-        ul
-            height: 30px
-            padding: 0
-            margin: 0
-            text-shadow: 0 1px 1px white
-            border-left: 1px solid #cacaca
-            border-right: 1px solid #cacaca
-            li   
-                padding: 0
-                margin: 0
-                float: left 
-                vertical-align: top
-                border-right: 1px solid #cacaca
-                height: 30px 
-                padding: 0 12px 
-                &:first-child
-                    border-left: 1px solid #cacaca
-                a    
-                    color: #4c4c4c
-                    &:hover
-                        color: black
-        .oe_form_steps
-            display: inline-block
-            float: right
-            img
-                margin: 0 8px
-                vertical-align: top
-            li
-                border-right: none 
-                padding: 0
-                &:first-child
-                    margin-left: 12px 
-                    border-left: none 
-                &:last-child
-                    margin-right: 12px 
-        .oe_form_steps_active
-            font-weight: bold 
-            color: #b33630
+    .oe_view_manager_current .oe_form_editable
+        .oe_highlight
+            color: #404040
+            background: none
+        button.oe_highlight
+            @include vertical-gradient(#efefef, #d8d8d8)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+        button.oe_highlight:active
+            @include vertical-gradient(#e3e3e3, #f6f6f6)
+            @include box-shadow(none)
+        button.oe_highlight:hover
+            @include vertical-gradient(#f6f6f6, #e3e3e3)
+            @include box-shadow((0 1px 2px rgba(0, 0, 0, .1), 0 1px 1px rgba(255, 255, 255, .8) inset))
+    .oe_form_invisible
+        display: none !important
     .oe_form_readonly
-        button.oe_form_button_hi
-            color: white
-            background: #DC5F59
-            background: -moz-linear-gradient(#DC5F59, #B33630)
-            background: -webkit-gradient(linear, left top, left bottom, from(#DC5F59), to(#B33630))
-            background: -webkit-linear-gradient(#DC5F59, #B33630)
-            -moz-box-shadow: none
-            -webkit-box-shadow: none
-            -box-shadow: none
-        button.oe_form_button_hi:hover
-            background: #DF6B66
-            background: -moz-linear-gradient( #DF6B66, #BF3A33)
-            background: -webkit-gradient(linear, left top, left bottom, from( #DF6B66), to( #BF3A33))
-            background: -webkit-linear-gradient( #DF6B66, #BF3A33)
-            -moz-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-            -webkit-box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
-            -box-shadow: 0 0 1px rgba(0, 0, 0, 0.2)
+        .oe_edit_only, .oe_form_field:empty
+            display: none !important
+        .oe_form .oe_form_field_date
+            width: auto
+    // Sheet and padding 
+    .oe_form_nosheet
+        margin: 16px
+        > header
+            margin: -16px -16px 0 -16px
+            padding: 0
+    .oe_form_sheetbg
+        padding: 16px 0
+    .oe_form_sheet_width
+        min-width: 650px
+        max-width: $sheet-max-width
+        margin: 0 auto
+    .oe_form_sheet
+        background: white
+        min-height: 330px
+        padding: 16px
+    // Sheet inline mode
     .oe_application
         .oe_form_sheetbg
             background: url(/web/static/src/img/form_sheetbg.png)
-            padding: 8px 0
-            border-bottom: 1px solid #ddd 
-        .oe_form_sheet_width, footer
-            min-width: 650px
-            max-width: 960px
-            margin: 0 auto
+            border-bottom: 1px solid #ddd
         .oe_form_sheet
-            padding: 18px
-            background: white
-            min-height: 330px
-            border: 1px solid #afafb6
-            @include box-shadow(0 0 10px rgba(0,0,0,0.3))
+            border: 1px solid #c8c8d3 //$tag-border
+            @include box-shadow(0 4px 20px rgba(0,0,0,0.15))
+            .ui-tabs
+                margin: 0 -16px
+            .oe_notebook_page
+                padding: 0 16px
     // }}}
-    // FormView.layout {{{
-    .oe_form_invisible
-        display: none
-    .oe_form_editable .oe_form_editable_hidden
-        display: none
-    .oe_form_readonly
-        .oe_form_readonly_hidden, .oe_form_field:empty
-            display: none
+    // FormView.custom tags and classes {{{
     .oe_form
-        .oe_form_field_text
+        header
+            position: relative
+            border-bottom: 1px solid #cacaca
+            padding-left: 2px
+            @include vertical-gradient(#fcfcfc, #dedede)
+            > span
+                margin-left: 4px
+            ul
+                display: inline-block
+                float: right
+            .oe_form_button
+                margin: 3px 2px 1px
+            .oe_tags
+                margin: 5px 0 0 5px
+                width: 400px
+                padding-bottom: 0
+        div.oe_chatter
+            min-width: 650px
+            max-width: $sheet-max-width
+            margin: 0 auto
+            padding: 16px 0 48px
+        .oe_grey
+            color: #aaa
+            max-width: 650px
+            margin: 0 0 10px 0
+        div.oe_form_configuration
+            p, ul, ol
+                color: #aaa
+                max-width: 650px
+            label
+                min-width: 150px
+            .oe_form_group_cell_label
+                padding: 1px 0
+            .oe_form_group_cell div div
+                padding: 1px 0
+        .oe_subtotal_footer
+            width: 1% !important
+            td.oe_form_group_cell
+                text-align: right
+                padding: 0 !important
+            td.oe_form_group_cell_label
+                border-right: none
+            .oe_subtotal_footer_separator
+                width: 108px
+                border-top: 1px solid #cacaca
+                margin-top: 4px
+                padding-top: 4px
+                font-weight: bold
+                font-size: 18px
+            label:after
+                content: ":"
+            label.oe_subtotal_footer_separator
+                font-weight: bold !important
+                padding: 2px 11px 2px 0px !important
+            label.oe_form_label_help
+                font-weight: normal
+
+    // }}}
+    // FormView.group {{{
+    .oe_form
+        .oe_form_button
+            margin: 2px
+        td.oe_form_group_cell_label
+            border-right: 1px solid #ddd
+            padding: 2px 0px
+            label
+                line-height: 18px
+                display: block
+                min-width: 140px
+        td.oe_form_group_cell + .oe_form_group_cell
+            padding: 2px 0 2px 8px
+        .oe_form_group
             width: 100%
-
-        .oe_form_field_char input,
-        .oe_form_field_text textarea,
-        .oe_form_field_url input,
-        .oe_form_field_selection select
-            width: inherit
-
-        .oe_form_field_float input
-            width: 100px
-
-        h1 .oe_form_field_float input
-            width: 140px
-
-        h2 .oe_form_field_float input
-            width: 120px
-
-        h1, h2, h3, h4, h5, h6
-            margin: 0 0 4px 0
-            input
-                height: inherit !important
-                font-size: inherit
-    .oe_form_nosheet > *:not(.oe_form_topbar)
-        margin-left: 10px !important
-        margin-right: 10px !important
-
+            margin: 9px 0 9px 0
+            .oe_form_group_cell.oe_group_right
+                padding-left: 20px
     // }}}
     // FormView.label {{{
     .oe_form
@@ -1371,57 +1686,73 @@ $colour4: #8a89ba
                 top: -4px
                 padding: 0 2px
     // }}}
+    // FormView.separator {{{
+    .oe_horizontal_border
+        border-bottom: 1px solid black
+    .oe_horizontal_separator
+        font-weight: bold
+        font-size: 20px
+        margin: 15px 0px 10px 0px
+        color: $section-title-color
+    .oe_horizontal_separator:empty
+        height: 5px
+    .oe_vertical_separator
+        border-left: 1px solid #666
+        padding: 0 4px 0 4px
+    // }}}
+    // FormView.progressbar {{{
+    .oe_form_field_progressbar
+        display: inline-block
+        min-width: 70px
+    .oe_form_field_progressbar.ui-progressbar
+        height: 22px
+        font-size: 10px
+        @include box-sizing(border)
+        border: 1px solid #999
+        @include radius(3px)
+        background: white
+        min-width: 50px
+        span
+            position: absolute
+            margin-left: 10px
+            font-weight: bold
+        .ui-widget-header
+            background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+    // }}}
     // FormView.fields {{{
     .oe_form
-        .oe_form_field_text textarea
-            resize: vertical
+        .oe_form_field_text
+            width: 100%
+        .oe_form_field_char input,
+        .oe_form_field_url input,
+        .oe_form_field_email input,
+        .oe_form_field_text textarea,
+        .oe_form_field_selection select
+            width: 100%
+        .oe_form_field_text.oe_inline, .oe_form_field_text.oe_inline > textarea
+            width: 500px
+        h1, h2, h3, h4, h5, h6
+            margin: 0 0 4px 0
+            input
+                height: inherit !important
+                font-size: inherit
         .oe_form_field
             width: 100%
             display: inline-block
             padding: 2px 2px 2px 0px
-            line-height: 18px
             input
                 margin: 0px
-
-        .oe_form_field_integer
-            width: 180px
-        .oe_form_field_float
-            width: 180px
-        .oe_form_field_date
-            width: 7em
-        .oe_form_field_datetime
-            width: 11em
-        .oe_form_inline
-            width: auto
-
-        input[type="text"],
-        input[type="password"],
-        input[type="file"],
-        select
+        input[type="text"], input[type="password"], input[type="file"], select
             height: 22px
             padding-top: 2px
-        input[type="text"],
-        input[type="password"],
-        input[type="file"],
-        select,
-        textarea
-            -moz-box-sizing: border-box
-            -webkit-box-sizing: border-box
-            -ms-box-sizing: border-box
-            box-sizing: border-box
-            padding: 0 2px
-            border: 1px solid #999
-            -moz-border-radius: 3px
-            -webkit-border-radius: 3px
-            border-radius: 3px
+        input[type="text"], input[type="password"], input[type="file"], select, textarea
+            @include box-sizing(border)
             background: white
-            min-width: 70px
+            min-width: 60px
             color: #1f1f1f
-        input[readonly],
-        select[readonly],
-        textarea[readonly],
-        input[disabled],
-        select[disabled]
+        textarea
+            height: 32px
+        input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
         textarea[disabled]
@@ -1430,19 +1761,6 @@ $colour4: #8a89ba
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
-        .oe_form_field_many2one input,
-        .oe_form_field_binary input,
-        .oe_form_field_binary input,
-        .oe_form_field_email input,
-        .oe_form_field_url input
-            border-right: none
-            -webkit-border-top-right-radius: 0px
-            -webkit-border-bottom-right-radius: 0px
-            -moz-border-radius-topright: 0px
-            -moz-border-radius-bottomright: 0px
-            border-top-right-radius: 0px
-            border-bottom-right-radius: 0px
-        .oe_form_field_email button img,
         .oe_form_field_url button img
             vertical-align: top
         .oe_form_field_date,
@@ -1450,26 +1768,7 @@ $colour4: #8a89ba
             white-space: nowrap
         .oe_form_field_boolean
             padding-top: 4px
-        .oe_form_field_many2manytags
-            .text-wrap
-                width: 100% !important
-                textarea
-                    width: 100% !important
-            .oe_form_field_many2manytags_box
-                border-radius: 2px
-                box-sizing: border-box
-                position: relative
-                float: left
-                border: 1px solid #9DACCC
-                background: #E2E6F0
-                color: black
-                padding: 0px 3px 0px 3px
-                margin: 0 2px 2px 0
-                height: 16px
-                font: 11px "lucida grande", tahoma, verdana, arial, sans-serif
-            .text-core .text-wrap .text-dropdown .text-list .text-suggestion em
-                font-style: italic
-                text-decoration: none
+            width: auto
         .oe_datepicker_container
             display: none
         .oe_datepicker_root
@@ -1492,90 +1791,62 @@ $colour4: #8a89ba
             filter: alpha(opacity=50)
             right: 5px
             top: 3px
-        .oe_form_group_cell .oe_kanban_view
-            // Hack due to absolute positioning of kanban view messing with o2m
-            position: static
+        .oe_form_field_with_button.oe_no_button > .oe_button
+            display: none
+        .oe_form_field_with_button:not(.oe_no_button)
+            > .oe_button
+                float: right
+                @include radius(0)
+                border-bottom-left-radius: 0px
+                height: 22px
         .oe_form_field_with_button
             input
                 width: 100%
-            > .oe_button
-                float: right
-                -webkit-border-top-left-radius: 0px
-                -webkit-border-bottom-left-radius: 0px
-                -moz-border-radius-topleft: 0px
-                -moz-border-radius-bottomleft: 0px
-                border-top-left-radius: 0px
-                border-bottom-left-radius: 0px
-                height: 22px
             > div
                 position: relative
                 overflow: hidden
-
-        .oe_form_title
-            width: 55%
-        .oe_form_title:after
-            content: "."
-            display: block
-            height: 0
-            clear: both
-            visibility: hidden
-        .oe_form_button_box
-            width: 200px
-            text-align: center
-
-        .oe_form_group
-            margin: 5px 0px 5px 0px
-
-        .oe_form_group_cell .oe_kanban_view
-            // Hack due to absolute positioning of kanban view messing with o2m
-            position: static
-
+        .oe_form_field_html
+            position: relative
+            width: 600px
+            margin-left: 130px
+            margin-top: 32px 
+            margin-bottom: 32px
+            text-align: justify
+            
+    .oe_form_editable
+        .oe_form
+            .oe_form_field_integer
+                width: 6em !important
+            .oe_form_field_float
+                width: 7em !important
+            .oe_form_field_date
+                width: 7.5em !important
+            .oe_form_field_datetime
+                width: 11.5em !important
     // }}}
-    // FormView.buttons {{{
-    .oe_form
-        .oe_form_button.oe_button
-            height: 22px
-            white-space: nowrap
-            span
-                position: relative
-                vertical-align: top
-        .oe_form_button > img
-            vertical-align: -3px
-            padding: 0 2px
-    // From FP:    .oe_form_group_cell > .oe_form_button.oe_button
-    // From FP:        display: block
-    // From FP:        white-space: nowrap
-    // From FP:        min-width: 100%
-    // From FP:        width: 100%
-
-    // }}}
-    // FormView.binaryfile {{{
+    // FormView.fields_binary {{{
     /* http://www.quirksmode.org/dom/inputfile.html
      * http://stackoverflow.com/questions/2855589/replace-input-type-file-by-an-image
      */
-    .oe_form
-        .oe-binary-file-set
-            overflow: hidden
-            position: relative
-            display: inline-block
-            width: 45px
-            height: 30px
-        input.oe-binary-file
+    .oe_hidden_input_file
+        // Position: relative is used for the hidden input[type=file]
+        // Do not remove it anymore !
+        position: relative
+        input.oe_form_binary_file
             z-index: 0
             line-height: 0
             font-size: 12px
             position: absolute
-            // Should be adjusted for all browsers
             top: 1px
-            right: 10px
+            left: 0
+            right: 0
             opacity: 0
             filter: alpha(opacity = 0)
             -ms-filter: "alpha(opacity=0)"
             margin: 0
             padding: 0
+    .oe_form
         .oe_form_field_image
-            > img
-                min-width: 100px
             padding: 0
             position: relative
             display: inline-block
@@ -1584,202 +1855,271 @@ $colour4: #8a89ba
             .oe_form_field_image_controls
                 position: absolute
                 top: 1px
-                padding: 3px 0 0 0
-                margin: 0 1px
-                @include opacity(0.7)
-                width: 99%
+                padding: 4px
+                width: 100%
+                display: none
                 text-align: center
-                background: url(/web/static/src/img/form_sheetbg.png)
-                border-bottom: 1px dotted black
-                -moz-box-sizing: border-box
-                -webkit-box-sizing: border-box
-                -ms-box-sizing: border-box
-                box-sizing: border-box
+                color: #eee
+                background: rgba(37,37,37,0.9)
+                @include radius(3px 3px 0 0)
+                @include box-sizing(border)
             &:hover .oe_form_field_image_controls
-                @include opacity(1)
+                display: block
     // }}}
-    // FormView.separator {{{
-    .oe_horizontal_border
-        border-bottom: 1px solid black
-    .oe_horizontal_separator
-        font-weight: bold
-        font-size: 20px
-        margin: 20px 0px 10px 0px
-        color: #aab
-    .oe_horizontal_separator:empty
-        height: 5px
-    .oe_vertical_separator
-        border-left: 1px solid #666
-        padding: 0 4px 0 4px
+    // FormView.many2one {{{
+    .oe_form_field_many2one
+        td:first-child
+            position: relative
+        span.oe_m2o_drop_down_button
+            position: absolute
+            top: 2px
+            right: 0px
+        .oe_m2o_cm_button
+            line-height: 14px
+            float: right
+            padding-left: 2px
+    &.ui-autocomplete
+        li.oe_m2o_dropdown_option a
+            font-style: italic
+            padding-left: 2em
+        li:not(.oe_m2o_dropdown_option) + li.oe_m2o_dropdown_option
+            margin-top: 10px
     // }}}
-    // FormView.notebook {{{
-    .oe_form_notebook
-        margin: 8px 0
-        padding: 0 8px
-        list-style: none
-        zoom: 1
-    .oe_form_notebook:before, .oe_form_notebook:after
-        display: table
-        content: ""
-        zoom: 1
-    .oe_form_notebook:after
-        clear: both
-    .oe_form_notebook > li
-        float: left
-    .oe_form_notebook > li > a
-        display: block
-        color: #4c4c4c
-    .oe_form_notebook
-        border-color: #ddd
-        border-style: solid
-        border-width: 0 0 1px
-    .oe_form_notebook > li
-        position: relative
-        margin-bottom: -1px
-    .oe_form_notebook > li > a
-        padding: 0 12px
-        margin-right: 2px
-        line-height: 30px
-        border: 1px solid transparent
-        @include radius(4px 4px 0 0)
-    .oe_form_notebook > li > a:hover
-        text-decoration: none
-        background-color: #eee
-        border-color: #eee #eee #ddd
-    .oe_form_notebook > li.ui-state-active > a, .oe_form_notebook > li.ui-state-active > a:hover
-        background-color: #ffffff
-        border: 1px solid #ddd
-        border-bottom-color: transparent
-        cursor: default
-    .oe_form_notebook_page
-        padding: 0
-    div.ui-tabs
-        padding: 3px 0px 3px 0px
-    .ui-tabs-hide
-        display: none
-
-    // }}}
-    // FormView.progressbar {{{
-    .oe_form
-        .oe_form_field_progressbar
+    // FormView.fieldstatus {{{
+    ul.oe_form_status, ul.oe_form_status_clickable
+        display: inline-block
+        margin: 0
+        padding: 0 18px 0 0
+        li 
             display: inline-block
-            min-width: 70px
-        .oe_form_field_progressbar.ui-progressbar
-            height: 22px
-            font-size: 10px
-            -moz-box-sizing: border-box
-            -webkit-box-sizing: border-box
-            -ms-box-sizing: border-box
-            box-sizing: border-box
-            border: 1px solid #999
-            -moz-border-radius: 3px
-            -webkit-border-radius: 3px
-            border-radius: 3px
-            background: white
-            min-width: 50px
-
-            span
-                position: absolute
-                margin-left: 10px
-                font-weight: bold
-
-            .ui-widget-header
-                background: #cccccc url(/web/static/lib/jquery.ui/css/smoothness/images/ui-bg_highlight-soft_75_cccccc_1x100.png) 50% 50% repeat-x
+            list-style-type: none
+            // It is probably a bad idea to modify this margin
+            margin: 0 -18px 0 0
+            padding: 0
+            @include vertical-gradient(#fcfcfc, #dedede)
+            &:first-child .label
+                border-left: 1px solid #cacaca
+                padding-left: 14px
+            &:last-child
+                border-right: 1px solid #cacaca
+                .label
+                    padding-right: 14px
+                .arrow
+                    display: none
+            .label
+                color: #4c4c4c
+                text-shadow: 0 1px 1px #fcfcfc, 0 -1px 1px #dedede
+                padding: 7px
+                display: inline-block
+                padding-left: 24px
+                margin: 0
+                position: relative
+            .arrow
+                width: 17px
+                display: inline-block
+                vertical-align: top
+                overflow: hidden
+                margin-left: -5px
+                span 
+                    position: relative
+                    width: 24px
+                    height: 24px
+                    display: inline-block
+                    margin-left: -12px
+                    margin-top: 3px
+                    box-shadow: -1px 1px 2px rgba(255,255,255,0.2), inset -1px 1px 1px rgba(0,0,0,0.2)
+                    @include skew-gradient(#fcfcfc, #dedede)
+                    @include radius(3px)
+                    @include transform(rotate(45deg))
+        li.oe_active
+            @include vertical-gradient(#729fcf, #3465a4)
+            .arrow span 
+                @include skew-gradient(#729fcf, #3465a4)
+            .label
+                color: white
+                text-shadow: 0 1px 1px #729fcf, 0 -1px 1px #3465a4
+    ul.oe_form_status_clickable
+        li
+            cursor: pointer
+            &:hover 
+                @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+                .label
+                    text-shadow: 0 -1px 1px #fcfcfc, 0 1px 1px #dedede
+                .arrow span 
+                    @include vertical-gradient(darken(#fcfcfc, 8%), darken(#dedede, 8%))
+            .label
+                color: $link-color
+        li.oe_active
+            &:hover 
+                @include vertical-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
+                .label
+                    text-shadow: 0 -1px 1px #729fcf, 0 1px 1px #3465a4
+                .arrow span 
+                    @include skew-gradient(darken(#729fcf, 10%), darken(#3465a4, 10%))
     // }}}
-    // FormView.viewmanager {{{
-    .oe_form
-        .oe_view_manager_header2
-            td
-                padding: 0px 8px
-                line-height: 16px
-                .oe_i
-                    font-size: 13px
-                .oe_pager_group
-                    height: auto
+    // FormView.one2many {{{
+    .oe_form .oe_form_field_one2many > .oe_view_manager
+        .oe_list_pager_single_page
+            display: none
+    .oe_form_field_one2many,.oe_form_field_many2many
+        // TODO: oe_form_field_one2many_list?
+        > .oe_view_manager
+            .oe_list_pager_single_page
+                display: none !important
+        .oe_form_field_one2many_list_row_add
+            font-weight: bold
+        .oe_list_content
+            > thead
+                border-bottom: 1px
+            > tbody
+                tr:nth-child(odd)
+                    background: transparent
+        .oe_list .oe_list_edit_row_save
+            background: url(/web/static/src/img/iconset-b-remove.png) 50% 50% no-repeat
+            &:before
+                visibility: hidden
+
+        &> .oe_view_manager
+            .oe_header_row_top
+                display: none
+            .oe_view_manager_header2
+                td
+                    padding: 0px 8px
                     line-height: 16px
-                    li
+                    .oe_i
+                        font-size: 13px
+                    .oe_pager_group
                         height: auto
                         line-height: 16px
-    .oe-select-create-popup-view-form > .oe_formview > .oe_form_pager
-        display: none
+                        li
+                            height: auto
+                            line-height: 16px
+        .oe_list_buttons.oe_editing .oe_list_save
+            // keep "save row" button hidden in o2m
+            visibility: hidden
+    .oe_form_editable
+        .oe_list_editable
+            .oe_list_content
+                td.oe_required
+                    background-color: #d2d2ff
+                td.oe_readonly
+                    background-color: #eee
 
+    $row-height: 27px
+    .oe_list_editable
+        .oe_list_content
+            td.oe_list_field_cell
+                padding: 4px 6px 3px 6px
+    .oe_list.oe_list_editable
+        td.oe_list_record_delete
+            position: absolute
+    .oe_list.oe_list_editable.oe_editing
+        .oe_m2o_drop_down_button
+            top: 5px
+        .oe_m2o_cm_button
+            display: none
+        .oe_form_field
+            input, textarea
+                height: $row-height
+            input, textarea
+                @include radius(0)
+                border: 1px solid #aaf
+                margin: 0
+            &.oe_form_field_float,&.oe_form_view_integer
+                input
+                    text-align: right
+                    width: 100%
+            &.oe_form_field_datetime,&.oe_form_field_date
+                > span
+                    width: 100%
+                input.oe_datepicker_master
+                    width: 100% !important
+            .oe_form_field_float,.oe_form_view_integer,&.oe_form_field_datetime,&.oe_form_field_date
+                min-width: 0 !important
+                max-width: none !important
     // }}}
-    // FormView.classes for openerp views {{{
-    .oe_form
-        td.oe_form_group_cell_label
-            border-right: 1px solid #ddd
-            padding: 2px 0px 2px 0px
-            label
-                line-height: 18px
-                display: block
-                min-width: 120px
-        td.oe_form_group_cell + .oe_form_group_cell
-            padding-left: 8px
-        .oe_form_subtotal_footer
-            width: auto
-            float: right
-            td.oe_form_group_cell
-                text-align: right
-                padding: 0
-            td.oe_form_group_cell_label
-                border: none
-            .oe_form_field
-                width: auto !important
-            .oe_form_subtotal_footer_separator
-                border-top: 1px solid #cacaca
-                font-size: 120%
-                font-weight: bold
-            label.oe_form_subtotal_footer_separator
-                font-weight: bold !important
-                padding: 2px 8px 2px 0px !important
+    // FormView.many2many {{{
+    .oe_form .oe_form_field_many2many > .oe_list
+        .oe_list_pager_single_page
+            display: none
     // }}}
     // ListView {{{
-    .oe-listview-content
+    .oe_list_buttons
+        .oe_alternative
+            visibility: hidden
+        .oe_list_save, .oe_list_discard
+            display: none
+        &.oe_editing
+            .oe_list_add
+                display: none
+            .oe_list_save
+                display: inline-block
+            .oe_list_discard
+                display: inline
+            .oe_alternative
+                visibility: visible
+
+    .oe_list
+        position: relative
+        .oe_form
+            .oe_form_nosheet
+                margin: 0 // FIXME: either class or border should not be by default
+                padding: 0
+                border: none
+            .oe_form_field
+                width: auto
+                position: absolute
+                margin: 0 !important // dammit
+                padding: 0
+        .oe_list_content .oe_group_header
+            @include vertical-gradient(#fcfcfc, #dedede)
+
+    .oe_list_content
         width: 100%
+        td:first-child, th:first-child
+            &:after
+                border-width: 0
+        td.oe_number
+            text-align: right !important
+            max-width: 100px
         > thead
             border-bottom: 2px solid #cacaca
             background: #eee
             vertical-align: top
-            td, th
-                padding: 3px 6px
-                line-height: 18px
-            th:after
-                content: ""
-                float: right
-                margin-top: 7px
-                border-width: 0 4px 4px
-                border-style: solid
-                border-color: #000 transparent
-                visibility: hidden
-            th.sortup:after
-                visibility: visible
-                @include opacity(0.6)
-            th.sortdown:after
-                border-bottom: none
-                border-left: 4px solid transparent
-                border-right: 4px solid transparent
-                border-top: 4px solid #000
-                visibility: visible
-                @include box-shadow(none)
-                @include opacity(0.6)
-            // TODO mit
-            //th:hover:after
-            //    border-bottom: none
-            //    border-left: 4px solid transparent
-            //    border-right: 4px solid transparent
-            //    border-top: 4px solid #000
-            //    visibility: visible
-            //    @include box-shadow(none)
-            //    @include opacity(0.6)
+            th
+                position: relative
+        td, th
+            padding: 3px 6px
+            line-height: 18px
+        th:after
+            position: absolute
+            right: 6px
+            content: ""
+            margin-top: 7px
+            border-width: 0 4px 4px
+            border-style: solid
+            border-color: #000 transparent
+            visibility: hidden
+        th.sortup:after
+            visibility: visible
+            @include opacity(0.6)
+        th.sortdown:after
+            border-bottom: none
+            border-left: 4px solid transparent
+            border-right: 4px solid transparent
+            border-top: 4px solid #000
+            visibility: visible
+            @include box-shadow(none)
+            @include opacity(0.6)
         > tbody
             cursor: pointer
-            background: white
             > tr
+                height: $row-height
                 border-top: 1px solid #ddd
-                > td.oe-field-cell
+                > td.oe_list_field_cell
                     padding: 3px 6px
+                    white-space: pre-line
                 > td, > th
-                    line-height: 18px
                     > button
                         border: none
                         background: transparent
@@ -1789,46 +2129,93 @@ $colour4: #8a89ba
                     width: 17px
                     &:after
                         border-width: 0
-                > td.oe_number
-                    text-align: right !important
             > tr:nth-child(odd)
                 background-color: #f0f0fa
                 @include vertical-gradient(#f0f0fa, #eeeef6)
+
         > tfoot
             border-top: 2px solid #cacaca
             border-bottom: 1px solid #cacaca
             background: #eee
             font-weight: bold
 
-        > tbody tr:hover td, tbody tr:hover th
-            @include vertical-gradient(#eee, #dedede)
 
         .numeric
             text-align: right
             width: 82px
             input
                 text-align: right
+        th.oe_list_header_handle
+            font-size: 1px
+            overflow: hidden
+            text-indent: -9001px
+        td.oe_list_field_handle
+            width: 1em
+            padding: 0 !important
+            cursor: ns-resize
+            .oe_list_handle
+                @include text-to-entypo-icon("}",#E0E0E0,18px)
+                margin-right: 7px
+
+    .oe_list_cannot_edit
+        .oe_list_header_handle, .oe_list_field_handle
+            display: none !important
+            padding: 0 !important
+    .oe_list_cannot_delete
+        .oe_list_record_delete
+            display: none !important
+
     // }}}
-    // Translation {{{
-    .oe_trad_field.touched
-        border: 1px solid green !important
-    // }}}
-    // Tooltips {{{
-    &.oe_tooltip
-        font-size: 12px
-        .oe_tooltip_string
-            color: #FD5
+    // Tree view {{{
+    .tree_header
+        background-color: #f0f0f0
+        border-bottom: 1px solid #cacaca
+        color: #4c4c4c
+        padding: 5px
+        height: 25px
+        button
+            float: right
+            height: 27px
+            margin-right: 5px
+    .oe-treeview-table
+        width: 100%
+        background-color: white
+        border-spacing: 0
+        color: #4c4c4c
+        th
+            padding: 10px
             font-weight: bold
-            font-size: 13px
-        .oe_tooltip_help
-            white-space: pre-wrap
-        .oe_tooltip_technical
-            padding: 0 0 4px 0
-            margin: 5px 0 0 15px
-            li
-                list-style: circle
-        .oe_tooltip_technical_title
-            font-weight: bold
+            background-color: #f0f0f0
+            border-bottom: 2px solid #cacaca
+
+        td
+            cursor: pointer
+            vertical-align: middle
+            text-align: left
+            vertical-align: middle
+            height: 20px
+            padding-left: 4px
+            padding-right: 4px
+            border-right: 1px solid #e7e7e7
+
+        td.oe_number
+            text-align: right !important
+        tr
+            border-bottom: 1px solid #d6d6d6
+            &:hover
+                background-color: #e7e7e7
+        span
+            font-size: 90%
+            font-weight: normal
+            white-space: nowrap
+            display: block
+        .treeview-tr.oe-treeview-first
+            background: transparent url(/web/static/src/img/expand.gif) 0 50% no-repeat
+        .oe_open .treeview-tr.oe-treeview-first
+            background-image: url(/web/static/src/img/collapse.gif)
+        .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
+            margin-left: 16px
+
     // }}}
     // Debugging stuff {{{
     .oe_layout_debugging
@@ -1847,7 +2234,6 @@ $colour4: #8a89ba
             float: right
         .oe_form_group_row_incomplete.oe_form_group_row_newline > td:last-child:after
             content: "[newline]"
-
     .oe_debug_view
         float: left
     .oe_debug_view_log
@@ -1865,26 +2251,7 @@ $colour4: #8a89ba
         float: right
         color: #333
     // }}}
-//view editor
-.openerp
-    .oe_view_editor
-        width: 100%
-        border-collapse: collapse
-        margin-left: -12px
-        width: 100%
-        background-color: white
-        border-spacing: 0
-        td
-            text-align: center
-            white-space: nowrap
-            border: 1px solid #D8D8D8
-            cursor: pointer
-            font-size: 90%
-    .oe_view_editor_field td
-        border: 0px !important
-    .oe_view_editor tr:hover
-        background-color: #ecebf2
-
+// Kitten Mode {{{
 .kitten-mode-activated
     background-image: url(http://placekitten.com/g/1365/769)
     background-size: cover
@@ -1892,16 +2259,39 @@ $colour4: #8a89ba
     >*
         opacity: 0.70
 
-// Transitional overrides for old styles {{{
-.openerp
-    .oe_form_field_many2one
-        td:first-child
-            position: relative
-        span.oe-m2o-drop-down-button
-            position: absolute
-            top: 3px
-            right: 2px
 // }}}
+
+// The jQuery-ui overlay and Autocomplete are outside the .openerp div, please don't add indentation !!!
+div.ui-widget-overlay
+    background: black
+    @include opacity(0.3)
+
+.ui-widget
+    font-family: "Lucida Grande", Helvetica, Verdana, Arial, sans-serif
+    color: #4c4c4c
+    font-size: 13px
+
+.ui-menu
+    padding: 2px 0
+    @include box-shadow(0 1px 4px rgba(0,0,0,0.3))
+    margin-top: 4px
+    border: 1px solid $tag-border
+    .ui-menu-item
+        width: 100%
+        padding: 0
+        a
+            padding: 1px 16px 
+        a.ui-corner-all
+            @include radius(0)
+        a.ui-state-active
+            background: #f0f0fa
+    .ui-menu-item a.ui-state-hover, .ui-menu-item a.ui-state-active
+        background: $tag-bg-dark
+        //color: #4c4c4c
+        //@include vertical-gradient(#f0f0fa, #eeeef6)
+
+.ui-corner-all
+    @include radius(3px)
 
 // au BufWritePost,FileWritePost *.sass :!sass --style expanded --line-numbers <afile> > "%:p:r.css"
 // vim:tabstop=4:shiftwidth=4:softtabstop=4:fdm=marker:

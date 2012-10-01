@@ -1,5 +1,14 @@
+.oe_view_manager_view_calendar {
+    position: relative;
+}
 .oe_calendar_table {
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
     border-top: 3px solid #eee;
+    width:100%;
+    overflow: hidden;
 }
 .oe_calendar {
     background-color:#eee;
@@ -37,14 +46,6 @@
     -moz-user-select:-moz-none;
 }
 
-.openerp .dhx_cal_navline{
-    height:20px; 
-    position:absolute;
-    z-index:1;
-    width:750px;
-    color:#2F3A48;
-    background-color:#eee;
-}
 .openerp .dhx_cal_navline div{
     top:2px;
     white-space:nowrap;

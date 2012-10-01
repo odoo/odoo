@@ -7,6 +7,7 @@ import cgi
 import contextlib
 import functools
 import logging
+import mimetypes
 import os
 import pprint
 import sys
@@ -28,6 +29,7 @@ import werkzeug.wsgi
 from . import nonliterals
 from . import session
 from . import openerplib
+import urlparse
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -329,40 +331,41 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
-# OpenERP Web werkzeug Session Managment wraped using with
+# OpenERP Web Controller registration with a metaclass
+#----------------------------------------------------------
+addons_module = {}
+addons_manifest = {}
+controllers_class = []
+controllers_object = {}
+controllers_path = {}
+
+class ControllerType(type):
+    def __init__(cls, name, bases, attrs):
+        super(ControllerType, cls).__init__(name, bases, attrs)
+        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+
+class Controller(object):
+    __metaclass__ = ControllerType
+
+#----------------------------------------------------------
+# OpenERP Web Session context manager
 #----------------------------------------------------------
 STORES = {}
-SESSION_TIMEOUT = 7 * 24 * 60 * 60      # FIXME make it configurable ?
-SESSION_COUNTER = 0
 
 @contextlib.contextmanager
-def session_context(request, storage_path, session_cookie='sessionid'):
-    global SESSION_COUNTER
+def session_context(request, storage_path, session_cookie='httpsessionid'):
     session_store, session_lock = STORES.get(storage_path, (None, None))
     if not session_store:
-        session_store = werkzeug.contrib.sessions.FilesystemSessionStore(
-            storage_path)
+        session_store = werkzeug.contrib.sessions.FilesystemSessionStore( storage_path)
         session_lock = threading.Lock()
         STORES[storage_path] = session_store, session_lock
 
     sid = request.cookies.get(session_cookie)
     with session_lock:
-
-        SESSION_COUNTER += 1
-        if SESSION_COUNTER % 100 == 0:
-            SESSION_COUNTER = 0
-            for s in session_store.list():
-                ss = session_store.get(s)
-                t = ss.get('timestamp')
-                if not t or t + SESSION_TIMEOUT < time.time():
-                    _logger.debug('deleting http session %s', s)
-                    session_store.delete(ss)
-
         if sid:
             request.session = session_store.get(sid)
         else:
             request.session = session_store.new()
-        request.session['timestamp'] = time.time()
 
     try:
         yield request.session
@@ -379,7 +382,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                     and not value.jsonp_requests
                     # FIXME do not use a fixed value
                     and value._creation_time + (60*5) < time.time()):
-                _logger.debug('remove OpenERP session %s', key)
+                _logger.debug('remove session %s', key)
                 removed_sessions.add(key)
                 del request.session[key]
 
@@ -396,7 +399,7 @@ def session_context(request, storage_path, session_cookie='sessionid'):
                 # note that domains_store and contexts_store are append-only (we
                 # only ever add items to them), so we can just update one with the
                 # other to get the right result, if we want to merge the
-                # ``context`` dict we'll need something smarter    
+                # ``context`` dict we'll need something smarter
                 in_store = session_store.get(sid)
                 for k, v in request.session.iteritems():
                     stored = in_store.get(k)
@@ -416,21 +419,33 @@ def session_context(request, storage_path, session_cookie='sessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web Module/Controller Loading and URL Routing
+# OpenERP Web WSGI Application
 #----------------------------------------------------------
-addons_module = {}
-addons_manifest = {}
-controllers_class = []
-controllers_object = {}
-controllers_path = {}
+# Add potentially missing (older ubuntu) font mime types
+mimetypes.add_type('application/font-woff', '.woff')
+mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
+mimetypes.add_type('application/x-font-ttf', '.ttf')
+class DisableCacheMiddleware(object):
+    def __init__(self, app):
+        self.app = app
+    def __call__(self, environ, start_response):
+        def start_wrapped(status, headers):
+            referer = environ.get('HTTP_REFERER', '')
+            parsed = urlparse.urlparse(referer)
+            debug = parsed.query.count('debug') >= 1
 
-class ControllerType(type):
-    def __init__(cls, name, bases, attrs):
-        super(ControllerType, cls).__init__(name, bases, attrs)
-        controllers_class.append(("%s.%s" % (cls.__module__, cls.__name__), cls))
+            new_headers = []
+            unwanted_keys = ['Last-Modified']
+            if debug:
+                new_headers = [('Cache-Control', 'no-cache')]
+                unwanted_keys += ['Expires', 'Etag', 'Cache-Control']
 
-class Controller(object):
-    __metaclass__ = ControllerType
+            for k, v in headers:
+                if k not in unwanted_keys:
+                    new_headers.append((k, v))
+
+            start_response(status, new_headers)
+        return self.app(environ, start_wrapped)
 
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
@@ -451,24 +466,23 @@ class Root(object):
                       only used in case the list of databases is requested
                       by the server, will be filtered by this pattern
     """
-    def __init__(self, options, openerp_addons_namespace=True):
-        self.root = '/web/webclient/home'
+    def __init__(self, options):
         self.config = options
 
         if not hasattr(self.config, 'connector'):
             if self.config.backend == 'local':
-                self.config.connector = LocalConnector()
+                self.config.connector = session.LocalConnector()
             else:
                 self.config.connector = openerplib.get_connector(
                     hostname=self.config.server_host, port=self.config.server_port)
 
-        self.session_cookie = 'sessionid'
+        self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
-        static_dirs = self._load_addons(openerp_addons_namespace)
+        static_dirs = self._load_addons()
         if options.serve_static:
-            self.dispatch = werkzeug.wsgi.SharedDataMiddleware(
-                self.dispatch, static_dirs)
+            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+            self.dispatch = DisableCacheMiddleware(app)
 
         if options.session_storage:
             if not os.path.exists(options.session_storage):
@@ -492,20 +506,12 @@ class Root(object):
         request.parameter_storage_class = werkzeug.datastructures.ImmutableDict
         request.app = self
 
-        if request.path == '/':
-            params = urllib.urlencode(request.args)
-            return werkzeug.utils.redirect(self.root + '?' + params, 301)(
-                environ, start_response)
-        elif request.path == '/mobile':
-            return werkzeug.utils.redirect(
-                '/web_mobile/static/src/web_mobile.html', 301)(environ, start_response)
-
         handler = self.find_handler(*(request.path.split('/')[1:]))
 
         if not handler:
             response = werkzeug.exceptions.NotFound()
         else:
-            with session_context(request, self.session_storage, self.session_cookie) as session:
+            with session_context(request, self.session_storage, self.httpsession_cookie) as session:
                 result = handler( request, self.config)
 
                 if isinstance(result, basestring):
@@ -515,11 +521,11 @@ class Root(object):
                     response = result
 
                 if hasattr(response, 'set_cookie'):
-                    response.set_cookie(self.session_cookie, session.sid)
+                    response.set_cookie(self.httpsession_cookie, session.sid)
 
         return response(environ, start_response)
 
-    def _load_addons(self, openerp_addons_namespace=True):
+    def _load_addons(self):
         """
         Loads all addons at the specified addons path, returns a mapping of
         static URLs to the corresponding directories
@@ -534,7 +540,7 @@ class Root(object):
                         manifest = ast.literal_eval(open(manifest_path).read())
                         manifest['addons_path'] = addons_path
                         _logger.debug("Loading %s", module)
-                        if openerp_addons_namespace:
+                        if 'openerp.addons' in sys.modules:
                             m = __import__('openerp.addons.' + module)
                         else:
                             m = __import__(module)
@@ -564,65 +570,13 @@ class Root(object):
             while ps:
                 c = controllers_path.get(ps)
                 if c:
-                    m = getattr(c, meth)
-                    if getattr(m, 'exposed', False):
+                    m = getattr(c, meth, None)
+                    if m and getattr(m, 'exposed', False):
                         _logger.debug("Dispatching to %s %s %s", ps, c, meth)
                         return m
                 ps, _slash, meth = ps.rpartition('/')
+                if not ps and meth:
+                    ps = '/'
         return None
 
-class LibException(Exception):
-    """ Base of all client lib exceptions """
-    def __init__(self,code=None,message=None):
-        self.code = code
-        self.message = message
-
-class ApplicationError(LibException):
-    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
-
-class Warning(LibException):
-    """ maps to code: 2, server side: openerp.exceptions.Warning"""
-
-class AccessError(LibException):
-    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
-
-class AccessDenied(LibException):
-    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
-
-
-class LocalConnector(openerplib.Connector):
-    """
-    A type of connector that uses the XMLRPC protocol.
-    """
-    PROTOCOL = 'local'
-
-    def __init__(self):
-        pass
-
-    def send(self, service_name, method, *args):
-        import openerp
-        import traceback
-        import xmlrpclib
-        try:
-            result = openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except Exception,e:
-        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            if isinstance(e, openerp.osv.osv.except_osv):
-                fault = xmlrpclib.Fault('warning -- ' + e.name + '\n\n' + str(e.value), '')
-            elif isinstance(e, openerp.exceptions.Warning):
-                fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessError):
-                fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
-            elif isinstance(e, openerp.exceptions.AccessDenied):
-                fault = xmlrpclib.Fault('AccessDenied', str(e))
-            elif isinstance(e, openerp.exceptions.DeferredException):
-                info = e.traceback
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-            else:
-                info = sys.exc_info()
-                formatted_info = "".join(traceback.format_exception(*info))
-                fault = xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-            raise fault
-        return result
-
+# vim:et:ts=4:sw=4:
