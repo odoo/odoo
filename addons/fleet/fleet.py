@@ -2,6 +2,7 @@ from itertools import chain
 from osv import osv, fields
 import time
 import tools
+import datetime
 
 
 class fleet_vehicle_model_type(osv.Model):
@@ -184,6 +185,37 @@ class fleet_vehicle(osv.Model):
         res = self.get_odometer(cr, uid, ids, context=context)
         return dict(res)
 
+    def str_to_date(self,strdate):
+        return datetime.datetime(int(strdate[:4]),int(strdate[5:7]),int(strdate[8:]))
+
+    def get_overdue_insurance_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+        if context is None:
+            context={}
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+        for record in reads:
+            insurances = self.pool.get('fleet.vehicle.log.insurance').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            overdue=0
+            if (len(insurances) > 0):
+                for element in insurances:
+                    current_date_str=time.strftime('%Y-%m-%d')
+                    due_time_str=self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,element,context=context).expiration_date
+                    
+                    current_date=self.str_to_date(current_date_str)
+                    due_time=self.str_to_date(due_time_str)
+     
+                    diff_time=int((due_time-current_date).days)
+                    if diff_time<0:
+                        overdue = overdue +1;
+                    else:
+                        break
+                res.append((record.id,overdue))
+            else:
+                res.append((record.id,0))
+        return dict(res)
+
     def get_next_insurance_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
         if context is None:
             context={}
@@ -193,10 +225,23 @@ class fleet_vehicle(osv.Model):
         res=[]
         for record in reads:
             insurances = self.pool.get('fleet.vehicle.log.insurance').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            due_soon=0
             if (len(insurances) > 0):
-                res.append((record.id,self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,insurances[0],context=context).expiration_date))
+                for element in insurances:
+                    current_date_str=time.strftime('%Y-%m-%d')
+                    due_time_str=self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,element,context=context).expiration_date
+                    
+                    current_date=self.str_to_date(current_date_str)
+                    due_time=self.str_to_date(due_time_str)
+     
+                    diff_time=int((due_time-current_date).days)
+                    if diff_time<15 and diff_time>=0:
+                        due_soon = due_soon +1;
+                    if diff_time>15:
+                        break
+                res.append((record.id,due_soon))
             else:
-                res.append((record.id,None))
+                res.append((record.id,0))
         return dict(res)
 
     def get_next_service_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
@@ -250,14 +295,18 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'next_insurance_date' : fields.function(get_next_insurance_reminder,type="date",string='Next Insurance Due Date',store=False),
+        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=False),
+        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=False),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
+
         }
 
     _defaults = {
         'doors' : 5,
         'odometer_unit' : 'Kilometers',
     }
+
+
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
 

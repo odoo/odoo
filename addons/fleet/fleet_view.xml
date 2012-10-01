@@ -184,7 +184,8 @@
                     <field name="acquisition_date" />
                     <field name="state"/>
                     <field name="odometer" />
-                    <field name="next_insurance_date" />
+                    <field name="insurance_renewal_due_soon" />
+                    <field name="insurance_renewal_overdue" />
                     <field name="next_service_date" />
                 </tree>
             </field>
@@ -224,7 +225,8 @@
                     <field name="odometer_unit" />
                     <field name="image" />
                     <field name="tag_ids" />
-                    <field name="next_insurance_date" />
+                    <field name="insurance_renewal_due_soon" />
+                    <field name="insurance_renewal_overdue" />
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -258,7 +260,10 @@
                                             <t t_if="record.odometer_unit.raw_value"><field name="odometer_unit" /></t>
                                         </li>
                                         <li>
-                                            <t t-if="record.next_insurance_date.raw_value">Insurance renewal due soon</t>
+                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Insurance renewal<br/>- <field name="insurance_renewal_due_soon" />  due soon</t>
+                                        </li>
+                                        <li>
+                                            <t t-if="record.insurance_renewal_overdue.raw_value">- <field name="insurance_renewal_overdue" /> overdue</t>
                                         </li>
                                     </ul>
 
