@@ -287,7 +287,6 @@
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
 
-
         <record model='ir.ui.view' id='fleet_vehicle_log_insurance_form'>
             <field name="name">fleet.vehicle.log_insurance.form</field>
             <field name="model">fleet.vehicle.log.insurance</field>
@@ -386,9 +385,9 @@
            <field name="type">graph</field>
            <field name="arch" type="xml">
                 <graph string="Odometer value per month">
-                    <field name="month" />
+                    <field name="date" />
                     <field name="vehicle_id" group="True" /> 
-                    <field name="value" operator="+"/>
+                    <field name="value" />
                 </graph>
             </field>
         </record>
@@ -453,7 +452,6 @@
                     <field name="unit" />         
                     <field name="inv_ref" />
                     <field name="vendor_id" />
-                    <field name="month" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -463,8 +461,8 @@
            <field name="model">fleet.vehicle.log.fuel</field>
            <field name="type">graph</field>
            <field name="arch" type="xml">
-                <graph string="Odometer value per month">
-                    <field name="month" />
+                <graph string="Total Fuel amount per month">
+                    <field name="date" />
                     <field name="vehicle_id" group="True" /> 
                     <field name="amount" operator="+"/>
                 </graph>
@@ -540,7 +538,7 @@
            <field name="type">graph</field>
            <field name="arch" type="xml">
                 <graph string="Services total amount per month">
-                    <field name="month" />
+                    <field name="date" />
                     <field name="vehicle_id" group="True" /> 
                     <field name="amount" operator="+"/>
                 </graph>

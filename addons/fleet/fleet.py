@@ -297,31 +297,15 @@ class fleet_vehicle_odometer(osv.Model):
     def _vehicle_log_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
-
-    def get_month(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        if not ids:
-            return []
-        months = ['January','February','March','April','May','June','July','August','September','October','November','December']
-        reads = self.browse(cr, uid, ids, context=context)
-        res = []
-        for record in reads:
-            res.append((record.id,months[int(record.date.split('-')[1])-1]))
-        return res
-
-    def _vehicle_log_month_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.get_month(cr, uid, ids, context=context)
-        return dict(res)
         
     _columns = {
         'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
         'date' : fields.date('Execution Date'),
-        'value' : fields.float('Odometer Value'),
+        'value' : fields.float('Odometer Value',group_operator="max"),
         'unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
-        'month' : fields.function(_vehicle_log_month_get_fnc,string="Month", type="char",size=32, store=True)
+        
     }
     _defaults = {
         'date' : time.strftime('%Y-%m-%d')
