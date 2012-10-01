@@ -29,6 +29,7 @@ class account_analytic_journal_report(osv.osv_memory):
     _columns = {
         'date1': fields.date('Start of period', required=True),
         'date2': fields.date('End of period', required=True),
+        'analytic_account_journal_id': fields.many2many('account.analytic.journal', 'account_analytic_journal_name', 'journal_line_id', 'journal_print_id', 'Analytic Journals', required=True),
     }
 
     _defaults = {
@@ -40,8 +41,15 @@ class account_analytic_journal_report(osv.osv_memory):
         if context is None:
             context = {}
         data = self.read(cr, uid, ids)[0]
+        ids_list = []
+        if context.get('active_id',False):
+            ids_list.append(context.get('active_id',False))
+        else:
+            record = self.browse(cr,uid,ids[0],context=context)
+            for analytic_record in record.analytic_account_journal_id:
+                ids_list.append(analytic_record.id)
         datas = {
-             'ids': context.get('active_ids',[]),
+             'ids': ids_list,
              'model': 'account.analytic.journal',
              'form': data
                  }
@@ -50,6 +58,14 @@ class account_analytic_journal_report(osv.osv_memory):
             'report_name': 'account.analytic.journal',
             'datas': datas,
             }
+        
+    def default_get(self, cr, uid, fields, context=None):
+        if context is None:
+            context = {}
+        res = super(account_analytic_journal_report, self).default_get(cr, uid, fields, context=context)
+        if 'analytic_account_journal_id' in fields:
+            res.update({'analytic_account_journal_id': context.get('active_ids',[])})
+        return res
 
 account_analytic_journal_report()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
