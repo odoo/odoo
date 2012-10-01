@@ -21,7 +21,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             this.on("change:sheets", this, this.update_sheets);
             this.res_o2m_drop = new instance.web.DropMisordered();
             this.render_drop = new instance.web.DropMisordered();
-            this.description_line = _t("No description");
+            this.description_line = _t("/");
         },
         query_sheets: function() {
             var self = this;
