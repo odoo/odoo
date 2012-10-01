@@ -42,7 +42,6 @@ and can check logs.
     'demo': ['audittrail_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0062572348749',
     'images': ['images/audittrail1.jpeg','images/audittrail2.jpeg','images/audittrail3.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

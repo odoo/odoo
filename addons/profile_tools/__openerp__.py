@@ -38,7 +38,6 @@ modules like share, lunch, pad, idea, survey and subscription.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00557100228403879621',
     'images': ['images/config_extra_Hidden.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

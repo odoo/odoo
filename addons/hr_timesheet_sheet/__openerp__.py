@@ -64,7 +64,6 @@ The validation can be configured in the company:
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0073297700829',
     'application': True,
     'js': ['static/src/js/timesheet.js',],
     'css': ['static/src/css/timesheet.css',],

@@ -350,7 +350,7 @@ class account_asset_depreciation_line(osv.osv):
         'amount': fields.float('Depreciation Amount', required=True),
         'remaining_value': fields.float('Amount to Depreciate', required=True),
         'depreciated_value': fields.float('Amount Already Depreciated', required=True),
-        'depreciation_date': fields.char('Depreciation Date', size=64, select=1),
+        'depreciation_date': fields.date('Depreciation Date', select=1),
         'move_id': fields.many2one('account.move', 'Depreciation Entry'),
         'move_check': fields.function(_get_move_check, method=True, type='boolean', string='Posted', store=True)
     }
@@ -368,7 +368,7 @@ class account_asset_depreciation_line(osv.osv):
         for line in self.browse(cr, uid, ids, context=context):
             if currency_obj.is_zero(cr, uid, line.asset_id.currency_id, line.remaining_value):
                 can_close = True
-            depreciation_date = line.asset_id.prorata and line.asset_id.purchase_date or time.strftime('%Y-%m-%d')
+            depreciation_date = time.strftime('%Y-%m-%d')
             period_ids = period_obj.find(cr, uid, depreciation_date, context=context)
             company_currency = line.asset_id.company_id.currency_id.id
             current_currency = line.asset_id.currency_id.id

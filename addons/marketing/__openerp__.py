@@ -42,7 +42,6 @@ Contains the installer for marketing-related modules.
     'demo': ['marketing_demo.xml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '00598574977629228189',
     'images': ['images/config_marketing.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

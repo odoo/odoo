@@ -243,7 +243,6 @@ Remarks:
     'test': ['test/stock_planning.yml'],
     'auto_install': False,
     'installable': True,
-    'certificate' : '00872589676639788061',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

@@ -38,7 +38,6 @@ modules like base_report_designer and base_report_creator.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00764037194670093149',
     'images': ['images/config_reporting_Hidden.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
