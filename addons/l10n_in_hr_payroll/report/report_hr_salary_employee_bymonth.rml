@@ -284,7 +284,7 @@
             <para style="terp_tblheader_General_Right">[[ formatLang(t[12]) or removeParentNode('para')]] [[company.currency_id.symbol]]</para>
           </td>
           <td>
-            <para style="terp_tblheader_General_Right">[[ formatLang(get_total()) ]] [[company.currency_id.symbol]]</para>
+            <para style="terp_tblheader_General_Right">[[ formatLang(get_total(), currency_obj = company.currency_id)]]</para>
           </td>
         </tr>
       </blockTable>

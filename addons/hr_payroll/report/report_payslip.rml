@@ -293,7 +293,7 @@
             <para style="P4">[[ formatLang(p.amount) ]]</para>
           </td>
           <td>
-            <para style="P5">[[ formatLang(p.total) ]] [[o.company_id and o.company_id.currency_id.symbol or '']]</para>
+            <para style="P5">[[ formatLang(p.total, currency_obj = o.company_id and o.company_id.currency_id)]]</para>
           </td>
         </tr>
       </blockTable>

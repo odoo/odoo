@@ -183,10 +183,10 @@
           </para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ formatLang(get_net_total_starting(user)[1]) ]] [[company.currency_id.symbol]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang(get_net_total_starting(user)[1], currency_obj = company.currency_id)]]</u></para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Right"><u>[[ formatLang(get_net_total(user)) ]] [[company.currency_id.symbol]]</u></para>
+          <para style="terp_tblheader_General_Right"><u>[[ formatLang(get_net_total(user), currency_obj = company.currency_id)]]</u></para>
         </td>
       </tr>
     </blockTable>
@@ -236,7 +236,7 @@
               </para>
             </td>
             <td>
-              <para style="terp_default_Right_9">[[ formatLang(line_ids['amount']) ]] [[company.currency_id.symbol]]</para>
+              <para style="terp_default_Right_9">[[ formatLang(line_ids['amount'], currency_obj = company.currency_id)]]</para>
             </td>
           </tr>
         </blockTable>
