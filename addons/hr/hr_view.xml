@@ -336,16 +336,18 @@
                         <field name="state" widget="statusbar" statusbar_visible="recruit,open"/>
                     </header>
                     <sheet>
-                        <label for="name" class="oe_edit_only"/>
-                        <h1>
-                            <field name="name" class="oe_inline"/>
-                        </h1>
-                        <label for="department_id" class="oe_edit_only"/>
-                        <h2>
-                            <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                            <field name="department_id" class="oe_inline"/>
-                            <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
-                        </h2>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1><field name="name" class="oe_inline"/></h1>
+                        </div>
+                        <div name="Department">
+                            <label for="department_id" class="oe_edit_only"/>
+                            <h1>
+                                <label class="oe_inline" string="(" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                                <field name="department_id" class="oe_inline"/>
+                                <label class="oe_inline" string=")" attrs="{'invisible': [('department_id', '=', False)]}"/>
+                            </h1>
+                        </div>
                         <group>
                             <group>
                                 <field name="no_of_employee" groups="base.group_user"/>
