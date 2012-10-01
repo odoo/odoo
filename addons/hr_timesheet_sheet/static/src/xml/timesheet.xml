@@ -2,8 +2,26 @@
 
 <templates>
     <t t-name="hr_timesheet_sheet.WeeklyTimesheet">
-        <div>
-            Yoh!
+        <div class="oe_timesheet_weekly">
+            <table>
+                <tr>
+                    <th> </th>
+                    <th t-foreach="widget.dates" t-as="date">
+                        <t t-esc="date.toString('ddd')"/><br />
+                        <t t-esc="date.toString('MMM d')"/>
+                    </th>
+                    <th>Total</th>
+                </tr>
+                <tr t-foreach="widget.accounts" t-as="account">
+                    <td><t t-esc="widget.account_names[account.account]"/></td>
+                    <t t-set="day_count" t-value="0"/>
+                    <td t-foreach="account.days" t-as="day">
+                        <input t-att-data-account="account.account" t-att-data-day-count="day_count" type="text"/>
+                        <t t-set="day_count" t-value="day_count + 1"/>
+                    </td>
+                    <td t-att-data-account-total="account.account"> </td>
+                </tr>
+            </table>
         </div>
     </t>
 </templates>

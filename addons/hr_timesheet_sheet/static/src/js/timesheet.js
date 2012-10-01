@@ -20,6 +20,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             });
             this.on("change:sheets", this, this.update_sheets);
             this.res_o2m_drop = new instance.web.DropMisordered();
+            this.render_drop = new instance.web.DropMisordered();
             this.description_line = _t("No description");
         },
         query_sheets: function() {
@@ -65,17 +66,21 @@ openerp.hr_timesheet_sheet = function(instance) {
                 start = start.clone().addDays(1);
             }
             // group by account
-            self.accounts = _(this.get("sheets")).chain().map(function(el) {
+            self.accounts = _(this.get("sheets")).chain()
+            .map(function(el) {
                 // much simpler to use only the id in all cases
                 if (typeof(el.account_id) === "object")
                     el.account_id = el.account_id[0];
-            }).groupBy("account_id")
+                return el;
+            })
+            .groupBy("account_id")
             .map(function(lines, account_id) {
                 // group by days
                 account_id = account_id === "false" ? false :  Number(account_id);
                 var index = _.groupBy(lines, "date");
                 var days = _.map(self.dates, function(date) {
                     var day = {day: date, lines: index[instance.web.date_to_str(date)] || []};
+                    // add line where we will insert/remove hours
                     var to_add = _.find(day.lines, function(line) { return line.name === self.description_line });
                     if (to_add) {
                         day.lines = _.without(to_add);
@@ -85,17 +90,38 @@ openerp.hr_timesheet_sheet = function(instance) {
                             name: self.description_line,
                             unit_amount: 0,
                             date: instance.web.date_to_str(date),
-                            account_id: k === "false" ? false :  Number(account_id),
+                            account_id: account_id,
                         });
                     }
+                    return day;
                 });
                 return {account: account_id, days: days};
             }).sortBy(function(account) {
                 return account.account;
             }).value();
 
-            debugger;
-            //TODO: handle the account_id name_get problem !
+            // we need the name_get of the analytic accounts
+            return this.res_o2m_drop.add(new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(self.accounts, "account")])
+                .pipe(function(result) {
+                self.account_names = {};
+                _.each(result, function(el) {
+                    self.account_names[el[0]] = el[1];
+                });
+                //real rendering
+                self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
+                _.each(self.accounts, function(account) {
+                    var total = 0;
+                    _.each(_.range(account.days.length), function(day_count) {
+                        var line_total = 0;
+                        _.each(account.days[day_count].lines, function(line) {
+                            line_total += line.unit_amount;
+                        });
+                        self.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]').val(line_total);
+                        total += line_total;
+                    });
+                    self.$('[data-account-total="' + account.account + '"]').html(total);
+                });
+            }));
         },
     });
 
