@@ -30,6 +30,7 @@ class mail_group(osv.Model):
         group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
     _name = 'mail.group'
+    _mail_autothread = False
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
