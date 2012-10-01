@@ -157,7 +157,7 @@ class mail_group(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
-            self._subscribe_users(cr, uid, ids, vals.get('group_ids'), context=context)
+            self._subscribe_users(cr, uid, ids, context=context)
         return result
 
     def action_follow(self, cr, uid, ids, context=None):
