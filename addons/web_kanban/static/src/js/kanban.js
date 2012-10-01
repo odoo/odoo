@@ -309,8 +309,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
                     });
+                    ui.placeholder.height(ui.item.height());
+                },
+                revert: 150,
+                beforeStop: function(event,ui){
+                    console.log('beforeStop:',ui);
                 },
                 stop: function(event, ui) {
+                    console.log('stop:',ui);
                     var record = ui.item.data('widget');
                     var old_index = self.currently_dragging.index;
                     var new_index = ui.item.index();
