@@ -619,6 +619,16 @@ class test_m2o(ImporterCase):
             for index, id in enumerate([integer_id1, integer_id2, integer_id1])])
         self.assertIs(result['ids'], False)
 
+    @mute_logger('openerp.sql_db')
+    def test_fail_id_mistype(self):
+        result = self.import_(['value/.id'], [["foo"]])
+
+        self.assertEqual(result['messages'], [
+            message(u"Invalid database id 'foo' for the field 'unknown'",
+                    moreinfo=moreaction('export.integer'))
+        ])
+        self.assertIs(result['ids'], False)
+
     def test_sub_field(self):
         """ Does not implicitly create the record, does not warn that you can't
         import m2o subfields (at all)...

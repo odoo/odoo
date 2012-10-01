@@ -1335,7 +1335,15 @@ class BaseModel(object):
                 self._extract_records(cr, uid, fields, data,
                                       context=context, log=messages.append),
                 context=context, log=messages.append):
-            cr.execute('SAVEPOINT model_load_save')
+            try:
+                cr.execute('SAVEPOINT model_load_save')
+            except psycopg2.InternalError, e:
+                # broken transaction, exit and hope the source error was
+                # already logged
+                if not any(message['type'] == 'error' for message in messages):
+                    messages.append(dict(info, type='error',message=
+                        u"Unknown database error: '%s'" % e))
+                break
             try:
                 ids.append(ModelData._update(cr, uid, self._name,
                      current_module, record, mode=mode, xml_id=xid,
@@ -1349,7 +1357,7 @@ class BaseModel(object):
                 # avoid broken transaction) and keep going
                 cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
                 messages.append(dict(
-                    info, type="error",
+                    info, type='error',
                     **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
         if any(message['type'] == 'error' for message in messages):
             cr.execute('ROLLBACK TO SAVEPOINT model_load')

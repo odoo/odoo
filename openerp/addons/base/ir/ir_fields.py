@@ -2,6 +2,7 @@
 import functools
 import operator
 import itertools
+import psycopg2
 from openerp.osv import orm, fields
 from openerp.tools.translate import _
 
@@ -179,14 +180,27 @@ class ir_fields_converter(orm.Model):
         if context is None: context = {}
         id = None
         warnings = []
+        extras = {'moreinfo': {
+            'type': 'ir.actions.act_window', 'target': 'new',
+            'res_model': column._obj, 'view_mode': 'tree,form',
+            'view_type': 'form',
+            'views': [(False, 'tree', (False, 'form'))],
+            'help': _(u"See all possible values")
+        }}
         RelatedModel = self.pool[column._obj]
         if subfield == '.id':
             field_type = _(u"database id")
             try: tentative_id = int(value)
             except ValueError: tentative_id = value
-            if RelatedModel.search(cr, uid, [('id', '=', tentative_id)],
-                                   context=context):
-                id = tentative_id
+            try:
+                if RelatedModel.search(cr, uid, [('id', '=', tentative_id)],
+                                       context=context):
+                    id = tentative_id
+            except psycopg2.DataError:
+                # type error
+                raise ValueError(
+                    _(u"Invalid database id '%s' for the field '%%(field)s'") % value,
+                    extras)
         elif subfield == 'id':
             field_type = _(u"external id")
             if '.' in value:
@@ -217,17 +231,7 @@ class ir_fields_converter(orm.Model):
         if id is None:
             raise ValueError(
                 _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-                % {'field_type': field_type, 'value': value}, {
-                    'moreinfo': {
-                        'type': 'ir.actions.act_window',
-                        'target': 'new',
-                        'res_model': column._obj,
-                        'view_mode': 'tree,form',
-                        'view_type': 'form',
-                        'views': [(False, 'tree', (False, 'form'))],
-                        'help': _(u"See all possible values")
-                    }
-                })
+                % {'field_type': field_type, 'value': value}, extras)
         return id, field_type, warnings
 
     def _referencing_subfield(self, record):
