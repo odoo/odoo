@@ -349,85 +349,6 @@ instance.web.Model = instance.web.Class.extend({
     },
 });
 
-instance.web.Traverser = instance.web.Class.extend({
-    /**
-     * @constructs instance.web.Traverser
-     * @extends instance.web.Class
-     *
-     * @param {instance.web.Model} model instance this traverser is bound to
-     */
-    init: function (model) {
-        this._model = model;
-        this._index = 0;
-    },
-
-    /**
-     * Gets and sets the current index
-     *
-     * @param {Number} [idx]
-     * @returns {Number} current index
-     */
-    index: function (idx) {
-        if (idx) { this._index = idx; }
-        return this._index;
-    },
-    /**
-     * Returns the model this traverser is currently bound to
-     *
-     * @returns {openerp.web.Model}
-     */
-    model: function () {
-        return this._model;
-    },
-    /**
-     * Fetches the size of the backing model's match
-     *
-     * @returns {Deferred<Number>} deferred count
-     */
-    size: function () {
-        return this._model.query().count();
-    },
-
-    /**
-     * Record at the current index for the collection, fails if there is no
-     * record at the current index.
-     *
-     * @returns {Deferred<>}
-     */
-    current: function (fields) {
-        return this._model.query(fields).first().pipe(function (record) {
-            if (record == null) {
-                return $.Deferred()
-                    .reject('No record at index' + this._index)
-                    .promise();
-            }
-            return record;
-        });
-    },
-    next: function (fields) {
-        var self = this;
-        this._index++;
-        return this.size().pipe(function (s) {
-            if (self._index >= s) {
-                self._index = 0;
-            }
-            return self.current(fields);
-        });
-    },
-    previous: function (fields) {
-        var self = this;
-        this._index--;
-        if (this._index < 0) {
-            return this.size().pipe(function (s) {
-                self._index = s-1;
-                return self.current(fields);
-            });
-        }
-        return this.current(fields);
-    }
-
-});
-
 instance.web.DataGroup =  instance.web.CallbackEnabled.extend({
     /**
      * Management interface between views and grouped collections of OpenERP
@@ -513,8 +434,7 @@ instance.web.StaticDataGroup = instance.web.DataGroup.extend({
 
 instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     /**
-     * DateaManagement interface between views and the collection of selected
-     * OpenERP records (represents the view's state?)
+     * Collection of OpenERP records, used to share records and the current selection between views.
      *
      * @constructs instance.web.DataSet
      * @extends instance.web.CallbackEnabled
@@ -631,8 +551,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * Creates a new record in db
      *
      * @param {Object} data field values to set on the new record
-     * @param {Function} callback function called with operation result
-     * @param {Function} error_callback function called in case of creation error
      * @returns {$.Deferred}
      */
     create: function(data) {
@@ -655,8 +573,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * Deletes an existing record from the database
      *
      * @param {Number|String} ids identifier of the record to delete
-     * @param {Function} callback function called with operation result
-     * @param {Function} error_callback function called in case of deletion error
      */
     unlink: function(ids) {
         return this._model.call('unlink', [ids], {context: this._model.context()});
@@ -680,8 +596,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Array} [args]
      * @param {Number} [domain_index] index of a domain to evaluate in the args array
      * @param {Number} [context_index] index of a context to evaluate in the args array
-     * @param {Function} callback
-     * @param {Function} error_callback
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index) {
@@ -698,8 +612,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      *
      * @param {String} method
      * @param {Array} [args]
-     * @param {Function} callback
-     * @param {Function} error_callback
      * @returns {$.Deferred}
      */
     call_button: function (method, args) {
@@ -709,7 +621,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * Fetches the "readable name" for records, based on intrinsic rules
      *
      * @param {Array} ids
-     * @param {Function} callback
      * @returns {$.Deferred}
      */
     name_get: function(ids) {
@@ -735,7 +646,6 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
     },
     /**
      * @param name
-     * @param callback
      */
     name_create: function(name) {
         return this._model.call('name_create', [name], {context: this._model.context()});
@@ -795,6 +705,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
         });
     },
 });
+
 instance.web.DataSetStatic =  instance.web.DataSet.extend({
     init: function(parent, model, context, ids) {
         this._super(parent, model, context);
@@ -825,6 +736,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
     }
 });
+
 instance.web.DataSetSearch =  instance.web.DataSet.extend({
     /**
      * @constructs instance.web.DataSetSearch
@@ -893,6 +805,7 @@ instance.web.DataSetSearch =  instance.web.DataSet.extend({
         return this._super();
     }
 });
+
 instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     virtual_id_prefix: "one2many_v_id_",
     debug_mode: true,
@@ -964,7 +877,8 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.cache = [];
         this.delete_all = false;
     },
-    on_change: function() {},
+    on_change: function() {
+    },
     read_ids: function (ids, fields, options) {
         var self = this;
         var to_get = [];
