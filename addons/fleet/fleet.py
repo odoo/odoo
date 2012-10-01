@@ -231,7 +231,7 @@ class fleet_vehicle(osv.Model):
         'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
-        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', domain='[]'),
+        'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
