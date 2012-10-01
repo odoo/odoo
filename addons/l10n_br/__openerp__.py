@@ -75,7 +75,6 @@ for online use of 'private modules'.""",
         'l10n_br_view.xml',
                 ],
     'installable': True,
-    'certificate' : '001280994939126801405',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

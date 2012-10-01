@@ -42,7 +42,6 @@ This module generates the Technical Guides of selected modules in Restructured T
     ],
     'demo': [],
     'installable': True,
-    'certificate': '001288481437217734509',
     'images': ['images/base_module_doc_rst1.jpeg'],
 }
 

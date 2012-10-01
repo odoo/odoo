@@ -80,7 +80,9 @@
                         </h1>
                         <label for="partner_ids" class="oe_edit_only"/>
                         <h2>
-                            <field name="partner_ids" widget="many2many_tags"/>
+                            <field name="partner_ids" widget="many2many_tags"
+                                context="{'force_email':True}"
+                                on_change="onchange_partner_ids(partner_ids)"/>
                         </h2>
                     </div>
                     <notebook>
@@ -88,11 +90,12 @@
                         <group>
                             <group>
                                 <field name="date" string="Starting at"/>
-                                <label for="duration" attrs="{'invisible': [('allday','=',True)]}"/>
-                                <div attrs="{'invisible': [('allday','=',True)]}">
+                                <label for="duration"/>
+                                <div>
                                     <field name="duration" widget="float_time"
                                         on_change="onchange_dates(date,duration,False,allday)"
-                                        class="oe_inline"/> hours
+                                        class="oe_inline" attrs="{'invisible': [('allday','=',True)]}"/>
+                                    <label string="hours" attrs="{'invisible': [('allday','=',True)]}"/>
                                     (<field name="allday" on_change="onchange_dates(date,False,False,allday)" class="oe_inline"/>
                                     <label for="allday" string="All Day?"/>)
                                 </div>
@@ -165,34 +168,28 @@
                             </group>
                         </group>
                     </page>
-                    <page string="Invitation Detail">
-                        <button string="Invite People"
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            type="action"
-                            attrs="{'readonly': [('state', '=', 'done')]}"
-                            context="{'model' : 'crm.meeting', 'attendee_field':'attendee_ids'}" colspan="2"/>
+                    <!--
+                        Temporarily removing invitation feature as the implementation
+                        was not clean. Invitation should be trigerred automatically
+                        based on partner_ids.
+                    -->
+                    <page string="Invitations">
                         <field name="attendee_ids" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
-                                <field name="sent_by_uid" string="From"/>
-                                <field name="user_id" string="To"/>
+                                <field name="partner_id"/>
                                 <field name="email" string="Mail To"/>
-                                <field name="role" />
                                 <field name="state" />
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
                                     string="Uncertain" type="object"
+                                    icon="terp-crm"
                                     />
                                 <button name="do_accept" string="Accept"
                                     states="needs-action,tentative,declined"
-                                    type="object" />
+                                    type="object" icon="gtk-apply"/>
                                 <button name="do_decline" string="Decline"
                                     states="needs-action,tentative,accepted"
-                                    type="object" />
-                                <button
-                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                    string="Delegate" type="action"
-                                    states="needs-action,tentative,declined,accepted"
-                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
+                                    type="object" icon="gtk-cancel"/>
                             </tree>
                             <form string="Invitation details" version="7.0">
                                 <header>
@@ -205,10 +202,6 @@
                                     <button name="do_decline" type="object"
                                         states="needs-action,tentative,accepted"
                                         string="Decline" />
-                                    <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" type="action"
-                                        states="needs-action,tentative,declined,accepted"
-                                        string="Delegate" 
-                                        context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}" />
                                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
                                 </header>
                                 <group>
@@ -219,6 +212,7 @@
                                         <field name="role" />
                                     </group>
                                     <group>
+                                        <field name="partner_id"/>
                                         <field name="user_id"/>
                                     </group>
                                 </group>
@@ -229,6 +223,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
+                    <field name="message_is_follower" invisible="1"/>
                     <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
@@ -307,7 +302,7 @@
           <p class="oe_view_nocontent_create">
             Click to schedule a new meeting. 
           </p><p>
-            The agenda is shared between employees and fully integrated with
+            The calendar is shared between employees and fully integrated with
             other applications such as the employee holidays or the business
             opportunities.
           </p>
@@ -339,10 +334,10 @@
     </record>
 
     <menuitem id="menu_crm_meeting" parent="base.menu_sales" sequence="8"
-        name="Agenda" action="action_crm_meeting"/>
+        name="Calendar" action="action_crm_meeting"/>
 
-    <menuitem name="Agenda"
-        id="mail_menu_agenda" parent="mail.mail_my_stuff"
+    <menuitem name="Calendar"
+        id="mail_menu_calendar" parent="mail.mail_my_stuff"
         sequence="10" action="action_crm_meeting"/>
 
     </data>

@@ -31,7 +31,7 @@ import decimal_precision as dp
 from tools.translate import _
 from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-
+import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -227,7 +227,7 @@ class account_account(osv.osv):
         while pos < len(args):
 
             if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', str(args[pos][2].replace('%', ''))+'%')
+                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
             if args[pos][0] == 'journal_id':
                 if not args[pos][2]:
                     del args[pos]
@@ -682,7 +682,7 @@ class account_journal_view(osv.osv):
     _name = "account.journal.view"
     _description = "Journal View"
     _columns = {
-        'name': fields.char('Journal View', size=64, required=True),
+        'name': fields.char('Journal View', size=64, required=True, translate=True),
         'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
     }
     _order = "name"
@@ -1908,7 +1908,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Tax Code',size=32),
+        'description': fields.char('Tax Code'),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
@@ -2518,7 +2518,7 @@ class account_account_template(osv.osv):
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
-        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
@@ -2535,20 +2535,6 @@ class account_account_template(osv.osv):
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
     ]
-
-    def create(self, cr, uid, vals, context=None):
-        if 'parent_id' in vals:
-            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
-            if parent and parent[0]['type'] != 'view':
-                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
-        return super(account_account_template, self).create(cr, uid, vals, context=context)
-
-    def write(self, cr, uid, ids, vals, context=None):
-        if 'parent_id' in vals:
-            parent = self.read(cr, uid, [vals['parent_id']], ['type'])
-            if parent and parent[0]['type'] != 'view':
-                raise osv.except_osv(_('Warning!'), _("You may only select a parent account of type 'View'."))
-        return super(account_account_template, self).write(cr, uid, ids, vals, context=context)
 
     def name_get(self, cr, uid, ids, context=None):
         if not ids:
@@ -2828,7 +2814,7 @@ class account_tax_template(osv.osv):
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
-        'description': fields.char('Internal Name', size=32),
+        'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }
