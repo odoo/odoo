@@ -93,6 +93,7 @@ class sale_report(osv.osv):
                             left join product_template t on (p.product_tmpl_id=t.id)
                     left join product_uom u on (u.id=l.product_uom)
                     left join product_uom u2 on (u2.id=t.uom_id)
+                where l.product_id is not null
                 group by
                     l.product_id,
                     l.product_uom_qty,

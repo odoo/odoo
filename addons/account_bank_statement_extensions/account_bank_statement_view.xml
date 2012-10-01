@@ -76,7 +76,7 @@
           <field name="ref" readonly="1"/>
           <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
           <field name="type" on_change="onchange_type(partner_id, type)"/>
-          <field name="account_id" domain="[('journal_id','=',parent.journal_id)]"/>
+          <field name="account_id" domain="[('journal_id','=',journal_id)]"/>
           <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
           <field name="amount" readonly="1" sum="Total Amount"/>
           <field name="globalisation_id" string="Glob. Id"/>
@@ -100,7 +100,7 @@
               <field name="ref" readonly="0"/>
               <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
               <field name="type" on_change="onchange_type(partner_id, type)"/>
-              <field domain="[('journal_id', '=', parent.journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
+              <field domain="[('journal_id', '=', journal_id), ('type', '&lt;&gt;', 'view')]" name="account_id"/>
               <field name="analytic_account_id" groups="analytic.group_analytic_accounting" domain="[('company_id', '=', parent.company_id), ('type', '&lt;&gt;', 'view')]"/>
               <field name="amount"/>
               <field name="globalisation_id"/>

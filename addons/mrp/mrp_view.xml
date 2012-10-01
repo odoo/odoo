@@ -13,7 +13,7 @@
             parent="base.menu_mrp_root"
             sequence="1"/>
 
-        <menuitem name="Master Data"
+        <menuitem name="Products"
             id="menu_mrp_bom"
             parent="base.menu_mrp_root"
             sequence="5"/>
@@ -409,8 +409,9 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                         <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
-                         <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_is_follower" invisible="1"/>
+                        <field name="message_ids" colspan="4" widget="mail_thread" nolabel="1"/>
+                        <field name="message_follower_ids" widget="mail_followers"/>
                     </div>
                 </form>
             </field>
@@ -513,7 +514,15 @@
               </p>
             </field>
         </record>
-
+        
+        <record id="product_supply_method_produce" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="res_model">product.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'search_default_filter_supply_method_produce' : 1}</field>
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+        </record>
         <!-- BOM menus -->
 
         <menuitem
@@ -521,6 +530,10 @@
             id="menu_mrp_bom_form_action"
             parent="menu_mrp_bom"
             sequence="10"/>
+       <menuitem name="Products" 
+            id="menu_mrp_product_form" 
+            action="product_supply_method_produce"
+            parent="menu_mrp_bom"/>
         <menuitem
             action="mrp_bom_form_action2"
             id="menu_mrp_bom_form_action2"
@@ -532,9 +545,7 @@
             <field name="name">Bill of Materials Structure</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.bom</field>
-            <field name="domain">[('id','in',active_ids)]</field>
-            <field name="view_type">tree</field>
-            <field name="view_mode">tree</field>
+            <field name="domain">[('bom_id', '=',active_ids)]</field>
             <field name="view_id" ref="mrp_bom_tree_view"/>
         </record>
         <record id="ir_BOM_structure" model="ir.values">
@@ -644,7 +655,7 @@
                             <field name="date_planned"/>
                         </group>
                         <group>
-                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)"/>
+                            <field name="bom_id" domain="[('product_id','=',product_id)]" context="{'default_product_id': product_id}" on_change="bom_id_change(bom_id)" required="1"/>
                             <field name="routing_id" class="oe_inline" groups="mrp.group_mrp_routings"/>
                             <field name="user_id"/>
                             <field name="origin"/>
@@ -663,7 +674,7 @@
                                             <field name="product_id"/>
                                             <field name="product_qty"  string="Quantity"/>
                                             <field name="product_uom" string="Unit of Measure" groups="product.group_uom"/>
-                                            <field name="prodlot_id" groups="stock.group_production_lot"/>
+                                            <field name="prodlot_id" groups="stock.group_production_lot" context="{'product_id': product_id}"/>
                                             <field name="state" invisible="1"/>
                                             <button name="%(stock.move_consume)d"
                                                 string="Consume Products" type="action"
@@ -787,6 +798,7 @@
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
+                    <field name="message_is_follower" invisible="1"/>
                     <field name="message_ids" widget="mail_thread"/>
                     <field name="message_follower_ids" widget="mail_followers"/>
                 </div>

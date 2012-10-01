@@ -19,9 +19,10 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
-from tools.translate import _
+
 
 class ir_ui_menu(osv.osv):
     """ Override of ir.ui.menu class. When adding mail_thread module, each
@@ -38,13 +39,14 @@ class ir_ui_menu(osv.osv):
 
     def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
         """ Override to take off menu entries (mail.group) the user is not
-            following. """
+            following. Access are done using SUPERUSER_ID to avoid access
+            rights issues for an internal back-end algorithm. """
         ids = super(ir_ui_menu, self).search(cr, uid, args, offset=0, limit=None, order=order, context=context, count=False)
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         follower_obj = self.pool.get('mail.followers')
         for menu in self.browse(cr, uid, ids, context=context):
             if menu.mail_group_id:
-                sub_ids = follower_obj.search(cr, uid, [
+                sub_ids = follower_obj.search(cr, SUPERUSER_ID, [
                     ('partner_id', '=', partner_id), ('res_model', '=', 'mail.group'),
                     ('res_id', '=', menu.mail_group_id.id)
                     ], context=context)
