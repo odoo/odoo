@@ -76,6 +76,8 @@ class fleet_vehicle_model_brand(osv.Model):
     _name = 'fleet.vehicle.model.brand'
     _description = 'Brand model of the vehicle'
 
+    _order = 'name asc'
+
     def _get_image(self, cr, uid, ids, name, args, context=None):
         result = dict.fromkeys(ids, False)
         for obj in self.browse(cr, uid, ids, context=context):
