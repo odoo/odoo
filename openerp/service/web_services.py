@@ -54,7 +54,16 @@ from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 
-RPC_VERSION_1 = {'server_version': '6.1', 'protocol_version': 1}
+RPC_VERSION_1 = {
+    'openerp': {
+        'version': release.version,
+        'version_info': release.version_info,
+        'serie': release.serie,
+    },
+    'protocol': {
+        'version': 1
+    },
+}
 
 # This should be moved to openerp.modules.db, along side initialize().
 def _initialize_db(serv, id, db_name, demo, lang, user_password):
