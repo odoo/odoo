@@ -619,7 +619,7 @@ class sale_order_line(osv.osv):
         warning_msgs = res_packing.get('warning') and res_packing['warning']['message'] or ''
         product_obj = product_obj.browse(cr, uid, product, context=context)
         res['value']['delay'] = (product_obj.sale_delay or 0.0)
-        res['value']['type'] = product_obj.type
+        res['value']['type'] = product_obj.procure_method
 
         #check if product is available, and if not: raise an error
         uom2 = False
