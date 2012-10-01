@@ -351,7 +351,7 @@ openerp.mail = function(session) {
             this.bind_events();
             this.create_thread();
 
-            this.parent_thread.on_insert_message();
+            this.parent_thread.when_insert_message();
         },
 
         /**
@@ -385,10 +385,7 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var message=this.get_object_of_bind_event(event);
             if(message){
-                if($(event.srcElement).hasClass("oe_full_reply")){
-                    message.thread.instantiate_composition_form({'show_header_compose':true});
-                }
-                message.thread.$('div.oe_mail_thread_action:first').toggle();
+                message.thread.on_compose_message(true, false);
             }
         },
 
@@ -396,18 +393,8 @@ openerp.mail = function(session) {
             event.stopPropagation();
             var message=this.get_object_of_bind_event(event);
             if(message){
-                if($(event.srcElement).hasClass("oe_full_reply")){
-                    message.thread.instantiate_composition_form({'show_header_compose':true});
-                }
-                if (!message.thread.compose_message_widget) return true;
-                message.thread.compose_message_widget.refresh({
-                    'default_composition_mode': 'reply',
-                    'default_parent_id': message.id,
-                    'default_content_subtype': 'html'} );
-
-                message.thread.$('div.oe_mail_thread_action:first').toggle();
+                message.thread.on_compose_message(true, true);
             }
-
         },
 
         expender: function(){
@@ -456,11 +443,11 @@ openerp.mail = function(session) {
             if(options.fadeTime) {
                 self.$el.fadeOut(options.fadeTime, function(){
                     self.destroy();
-                    self.parent_thread.on_message_destroy();
+                    self.parent_thread.when_message_destroy();
                 });
             } else {
                 self.destroy();
-                self.parent_thread.on_message_destroy();
+                self.parent_thread.when_message_destroy();
             }
 
             for(var i in this.thread.messages){
@@ -688,7 +675,6 @@ openerp.mail = function(session) {
         * in the composition form. */
         do_action: function(action, on_close) {
             var self=this;
-            //self.$('.oe_mail_msg_content textarea').val("");
             self.instantiate_composition_form();
             self.message_fetch();
             return this._super(action, on_close);
@@ -712,7 +698,7 @@ openerp.mail = function(session) {
             this.$el.on('click', 'a.oe_mail_fetch_more', this.do_message_fetch_more);
             // event: writing in basic textarea of composition form (quick reply)
             // event: onblur for hide 'Reply'
-            this.$('textarea.oe_mail_compose_textarea:first')
+            this.$('.oe_mail_compose_textarea:first textarea')
                 .keyup(function (event) {
                     var charCode = (event.which) ? event.which : window.event.keyCode;
                     if (event.shiftKey && charCode == 13) { this.value = this.value+"\n"; }
@@ -736,13 +722,13 @@ openerp.mail = function(session) {
         /* this method is call when we insert a message in the thread
         *  and object is create and started
         */
-        on_insert_message: function(){
+        when_insert_message: function(){
             this.display_expandable();
         },
 
         /* this method is call when we destroy a message of the thread
         */
-        on_message_destroy: function(){
+        when_message_destroy: function(){
             this.display_expandable();
         },
 
@@ -797,7 +783,6 @@ openerp.mail = function(session) {
         *       @param {boolean} show_header_compose, force to instantiate form
         */
         instantiate_composition_form: function(context) {
-
             // add message composition form view
             if ((!context || !context.show_header_compose) &&
                 (!this.options.thread.show_header_compose || !this.options.thread.use_composer ||
@@ -816,6 +801,22 @@ openerp.mail = function(session) {
                 composition_node.empty();
                 return this.compose_message_widget.appendTo(composition_node);
             }
+        },
+
+        /* this function is launch when a user click on "Reply" button
+        */
+        on_compose_message: function(full_reply, by_mail){
+            if(full_reply){
+                this.instantiate_composition_form({'show_header_compose':true});
+            }
+            if(by_mail){
+                if (!this.compose_message_widget) return true;
+                this.compose_message_widget.refresh({
+                    'default_composition_mode': 'reply',
+                    'default_parent_id': message.id,
+                    'default_content_subtype': 'html'} );
+            }
+            this.$('div.oe_mail_thread_action:first').toggle();
         },
 
         refresh: function (action_context) {
@@ -851,6 +852,8 @@ openerp.mail = function(session) {
          */
         message_fetch: function (initial_mode, additional_domain, additional_context) {
             var self = this;
+
+            console.log("message_fetch", self);
 
             // initial mode: try to use message_data or message_ids
             if (initial_mode && this.options.thread.message_data) {
@@ -987,7 +990,6 @@ openerp.mail = function(session) {
                     return thread.message_fetch(false, this.fetch_more_domain, this.fetch_more_context);
             }
         },
-
 
         get_object_of_bind_event: function(event){
             var source = $(event.srcElement).parents('[data-msg_id]:first');

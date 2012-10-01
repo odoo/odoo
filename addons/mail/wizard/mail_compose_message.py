@@ -257,7 +257,7 @@ class mail_compose_message(osv.TransientModel):
         if context.get('mail_action_wizard_close'):
             return {'type': 'ir.actions.act_window_close'}
         else:
-            return False
+            return {}
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
         """ Generate an email from the template for given (wizard.model, res_id)

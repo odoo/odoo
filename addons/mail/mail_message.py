@@ -305,12 +305,15 @@ class mail_message(osv.Model):
 
         # don't read the message display by .js, in context message_loaded list
         if context and context.get('message_loaded'):
-            domain += [['id','not in',context.get('message_loaded')]];
+            domain += [ ['id','not in',context.get('message_loaded')] ];
 
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
+            # if the user can read a message, he can read all the thread
+            ids = ids + self.search(cr, SUPERUSER_ID, [['parent_id','in',ids]], None, limit=limit)
+
         messages = self.browse(cr, uid, ids, context=context)
         add_expandable = (len(messages) >= limit)
 
@@ -473,9 +476,6 @@ class mail_message(osv.Model):
         """ Add the related record followers to the destination partner_ids.
             Call mail_notification.notify to manage the email sending
         """
-
-        print "notification ?"
-
         message = self.browse(cr, uid, newid, context=context)
         partners_to_notify = set([])
         # message has no subtype_id: pure log message -> no partners, no one notified
