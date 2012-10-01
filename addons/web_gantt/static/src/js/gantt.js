@@ -206,9 +206,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
-        this.dataset.write(itask.id, data).then(function() {
-            console.log("task edited");
-        });
+        this.dataset.write(itask.id, data);
     },
     on_task_display: function(task) {
         var self = this;

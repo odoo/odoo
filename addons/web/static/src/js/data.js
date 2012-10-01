@@ -648,12 +648,11 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback function called in case of write error
      * @returns {$.Deferred}
      */
-    write: function (id, data, options, callback, error_callback) {
+    write: function (id, data, options) {
         options = options || {};
         return this._model.call('write',
             [[id], data], {context: this._model.context(options.context)})
-                .pipe(function (r) { return {result: r}})
-                    .then(callback, error_callback);
+                .pipe(function (r) { return {result: r}});
     },
     /**
      * Deletes an existing record from the database
@@ -918,7 +917,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.cache.push(cached);
         return $.Deferred().resolve({result: cached.id}).promise();
     },
-    write: function (id, data, options, callback) {
+    write: function (id, data, options) {
         var self = this;
         var record = _.detect(this.to_create, function(x) {return x.id === id;});
         record = record || _.detect(this.to_write, function(x) {return x.id === id;});
@@ -944,9 +943,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         $.extend(cached.values, record.values);
         if (dirty)
             this.on_change();
-        var to_return = $.Deferred().then(callback);
-        to_return.resolve({result: true});
-        return to_return.promise();
+        return $.Deferred().resolve({result: true}).promise();
     },
     unlink: function(ids, callback, error_callback) {
         var self = this;
@@ -1092,9 +1089,9 @@ instance.web.ProxyDataSet = instance.web.DataSetSearch.extend({
             return this._super.apply(this, arguments);
         }
     },
-    write: function (id, data, options, callback, error_callback) {
+    write: function (id, data, options) {
         if (this.write_function) {
-            return this.write_function(id, data, options, this._super).then(callback, error_callback);
+            return this.write_function(id, data, options, this._super);
         } else {
             return this._super.apply(this, arguments);
         }

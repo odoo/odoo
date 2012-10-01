@@ -775,7 +775,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                     convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                     arch.arch = convert_to_utf;
-                    this.dataset.write(this.one_object.clicked_tr_view[0] ,{"arch":convert_to_utf}, function(r) {});
+                    this.dataset.write(this.one_object.clicked_tr_view[0] ,{"arch":convert_to_utf});
                 } else {
                     this.dataset.unlink([this.one_object.clicked_tr_view[0]]);
                 }

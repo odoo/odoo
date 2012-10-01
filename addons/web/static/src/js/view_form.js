@@ -3531,6 +3531,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             .bind('remove', this.proxy("changed_records"));
     },
     start: function () {
+        console.log("one many list view");
         var ret = this._super();
         this.$el
             .off('mousedown.handleButtons')
@@ -3598,8 +3599,9 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
+            
             write_function: function(id, data) {
-                return self.o2m.dataset.write(id, data, {}, function(r) {
+                return self.o2m.dataset.write(id, data, {}).then(function() {
                     self.o2m.reload_current_view();
                 });
             },
