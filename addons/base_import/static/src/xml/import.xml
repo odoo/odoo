@@ -6,10 +6,11 @@
                    t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
             <h2>Upload your file</h2>
-            <p>Select the <a href="#" class="oe_import_csv">.CSV</a>
+            <p>Select the <a
+                    href="http://en.wikipedia.org/wiki/Comma-separated_values"
+                    class="oe_import_csv">.CSV</a>
             file to import. If you need a sample importable file, you
-            can use <a href="#" class="oe_import_export">the export
-            tool</a> to generate one.</p>
+            can use the export tool to generate one.</p>
             <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
             <input type="file" id-attf-id="file_#{_id}"
                    name="file" class="oe_import_file"/>
