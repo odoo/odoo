@@ -24,8 +24,9 @@ import openerp
 import tools
 
 from email.header import decode_header
+from openerp import SUPERUSER_ID
 from operator import itemgetter
-from osv import osv, fields
+from osv import osv, orm, fields
 from tools.translate import _
 
 _logger = logging.getLogger(__name__)
@@ -62,14 +63,14 @@ class mail_message(osv.Model):
                 continue
             try:
                 result[message.id] = self._shorten_name(self.pool.get(message.model).name_get(cr, uid, [message.res_id], context=context)[0][1])
-            except openerp.exceptions.AccessDenied, e:
+            except (orm.except_orm, osv.except_osv):
                 pass
         return result
 
     def _get_unread(self, cr, uid, ids, name, arg, context=None):
         """ Compute if the message is unread by the current user. """
         res = dict((id, {'unread': False}) for id in ids)
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
             ('partner_id', 'in', [partner_id]),
@@ -87,7 +88,7 @@ class mail_message(osv.Model):
             read_cond = '(read = false or read is null)'
         else:
             read_cond = 'read = true'
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         cr.execute("SELECT message_id FROM mail_notification "\
                         "WHERE partner_id = %%s AND %s" % read_cond,
                     (partner_id,))
@@ -140,7 +141,8 @@ class mail_message(osv.Model):
         return []
 
     def _get_default_author(self, cr, uid, context=None):
-        return self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        # remove context to avoid possible hack in browse with superadmin using context keys that could trigger a specific behavior
+        return self.pool.get('res.users').browse(cr, SUPERUSER_ID, uid, context=None).partner_id.id
 
     _defaults = {
         'type': 'email',
@@ -154,16 +156,17 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     def vote_toggle(self, cr, uid, ids, user_ids=None, context=None):
-        ''' Toggles voting '''
+        ''' Toggles voting. Done as SUPERUSER_ID because of write access on
+            mail.message not always granted. '''
         if not user_ids:
             user_ids = [uid]
         for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
             for user_id in user_ids:
                 has_voted = user_id in message.get('vote_user_ids')
                 if not has_voted:
-                    self.write(cr, uid, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(4, user_id)]}, context=context)
                 else:
-                    self.write(cr, uid, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
+                    self.write(cr, SUPERUSER_ID, message.get('id'), {'vote_user_ids': [(3, user_id)]}, context=context)
         return True
 
     #------------------------------------------------------
@@ -171,17 +174,31 @@ class mail_message(osv.Model):
     #------------------------------------------------------
 
     def _message_dict_get(self, cr, uid, msg, context=None):
-        """ Return a dict representation of the message browse record. """
+        """ Return a dict representation of the message browse record. A read
+            is performed to because of access rights issues (reading many2one
+            fields allow to have the foreign record name without having
+            to check external access rights).
+        """
         has_voted = False
-        vote_ids = self.pool.get('res.users').name_get(cr, uid, [user.id for user in msg.vote_user_ids], context=context)
+        vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
             if vote[0] == uid:
                 has_voted = True
                 break
-        attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
-        author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
-        author_user_id = self.pool.get('res.users').name_get(cr, uid, [msg.author_id.user_ids[0].id], context=context)[0]
-        partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+        try:
+            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
+        except (orm.except_orm, osv.except_osv):
+            attachment_ids = []
+        try:
+            author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
+            is_author = uid in msg.author_id.user_ids
+        except (orm.except_orm, osv.except_osv):
+            author_id = False
+            is_author = False
+        try:
+            partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+        except (orm.except_orm, osv.except_osv):
+            partner_ids = []
         return {
             'id': msg.id,
             'type': msg.type,
@@ -193,7 +210,7 @@ class mail_message(osv.Model):
             'subject': msg.subject,
             'date': msg.date,
             'author_id': author_id,
-            'author_user_id': author_user_id,
+            'is_author': is_author,
             'partner_ids': partner_ids,
             'child_ids': [],
             'vote_user_ids': vote_ids,
@@ -246,7 +263,7 @@ class mail_message(osv.Model):
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
-            ids = self.search(cr, uid, domain, context=context, limit=limit)
+            ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
         messages = self.browse(cr, uid, ids, context=context)
 
         result = []
@@ -294,41 +311,99 @@ class mail_message(osv.Model):
             cr.execute("""CREATE INDEX mail_message_model_res_id_idx ON mail_message (model, res_id)""")
 
     def check_access_rule(self, cr, uid, ids, operation, context=None):
-        """ mail.message access rule check
-            - message received (a notification exists) -> ok
-            - check rules of related document if exists
-            - fallback on normal mail.message check """
+        """ Access rules of mail.message:
+            - read: if
+                - notification exist (I receive pushed message) OR
+                - author_id = pid (I am the author) OR
+                - I can read the related document if res_model, res_id
+                - Otherwise: raise
+            - create: if
+                - I am in the document message_follower_ids OR
+                - I can write on the related document if res_model, res_id
+                - Otherwise: raise
+            - write: if
+                - I can write on the related document if res_model, res_id
+                - Otherwise: raise
+            - unlink: if
+                - I can write on the related document if res_model, res_id
+                - Otherwise: raise
+        """
+        if uid == SUPERUSER_ID:
+            return
         if isinstance(ids, (int, long)):
             ids = [ids]
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=None)['partner_id'][0]
 
-        # check messages for which you have a notification
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        not_obj = self.pool.get('mail.notification')
-        not_ids = not_obj.search(cr, uid, [
-            ('partner_id', '=', partner_id),
-            ('message_id', 'in', ids),
-        ], context=context)
-        notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, uid, not_ids, context=context)
-            if notification.message_id.id in ids]
-
-        # check messages linked to an existing document
+        # Read mail_message.ids to have their values
         model_record_ids = {}
-        document_ids = []
-        cr.execute('SELECT DISTINCT id, model, res_id FROM mail_message WHERE id = ANY (%s)', (ids,))
-        for id, rmod, rid in cr.fetchall():
-            if not (rmod and rid):
-                continue
-            document_ids.append(id)
-            model_record_ids.setdefault(rmod, set()).add(rid)
+        message_values = dict.fromkeys(ids)
+        cr.execute('SELECT DISTINCT id, model, res_id, author_id FROM "%s" WHERE id = ANY (%%s)' % self._table, (ids,))
+        for id, rmod, rid, author_id in cr.fetchall():
+            message_values[id] = {'res_model': rmod, 'res_id': rid, 'author_id': author_id}
+            if rmod:
+                model_record_ids.setdefault(rmod, set()).add(rid)
+
+        # Read: Check for received notifications -> could become an ir.rule, but not till we do not have a many2one variable field
+        if operation == 'read':
+            not_obj = self.pool.get('mail.notification')
+            not_ids = not_obj.search(cr, SUPERUSER_ID, [
+                ('partner_id', '=', partner_id),
+                ('message_id', 'in', ids),
+            ], context=context)
+            notified_ids = [notification.message_id.id for notification in not_obj.browse(cr, SUPERUSER_ID, not_ids, context=context)]
+        else:
+            notified_ids = []
+        # Read: Check messages you are author -> could become an ir.rule, but not till we do not have a many2one variable field
+        if operation == 'read':
+            author_ids = [mid for mid, message in message_values.iteritems()
+                if message.get('author_id') and message.get('author_id') == partner_id]
+        else:
+            author_ids = []
+
+        # Create: Check message_follower_ids
+        if operation == 'create':
+            doc_follower_ids = []
+            for model, mids in model_record_ids.items():
+                fol_obj = self.pool.get('mail.followers')
+                fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
+                    ('res_model', '=', model),
+                    ('res_id', 'in', list(mids)),
+                    ('partner_id', '=', partner_id),
+                    ], context=context)
+                fol_mids = [follower.res_id for follower in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context)]
+                doc_follower_ids += [mid for mid, message in message_values.iteritems()
+                    if message.get('res_model') == model and message.get('res_id') in fol_mids]
+        else:
+            doc_follower_ids = []
+
+        # Calculate remaining ids, and related model/res_ids
+        model_record_ids = {}
+        other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids))
+        for id in other_ids:
+            if message_values[id]['res_model']:
+                model_record_ids.setdefault(message_values[id]['res_model'], set()).add(message_values[id]['res_id'])
+
+        # CRUD: Access rights related to the document
+        document_related_ids = []
         for model, mids in model_record_ids.items():
             model_obj = self.pool.get(model)
             mids = model_obj.exists(cr, uid, mids)
-            model_obj.check_access_rights(cr, uid, operation)
-            model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            if operation in ['create', 'write', 'unlink']:
+                model_obj.check_access_rights(cr, uid, 'write')
+                model_obj.check_access_rule(cr, uid, mids, 'write', context=context)
+            else:
+                model_obj.check_access_rights(cr, uid, operation)
+                model_obj.check_access_rule(cr, uid, mids, operation, context=context)
+            document_related_ids += [mid for mid, message in message_values.iteritems()
+                if message.get('res_model') == model and message.get('res_id') in mids]
 
-        # fall back on classic operation for other ids
-        other_ids = set(ids).difference(set(notified_ids), set(document_ids))
-        super(mail_message, self).check_access_rule(cr, uid, other_ids, operation, context=None)
+        # Calculate remaining ids: if not void, raise an error
+        other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids), set(document_related_ids))
+        if not other_ids:
+            return
+        raise orm.except_orm(_('Access Denied'),
+                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
+                            (self._description, operation))
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
@@ -336,6 +411,13 @@ class mail_message(osv.Model):
         newid = super(mail_message, self).create(cr, uid, values, context)
         self.notify(cr, uid, newid, context=context)
         return newid
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        """ Override to explicitely call check_access_rule, that is not called
+            by the ORM. It instead directly fetches ir.rules and apply them. """
+        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        self.check_access_rule(cr, uid, ids, 'read', context=context)
+        return res
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
@@ -360,12 +442,14 @@ class mail_message(osv.Model):
             partners_to_notify |= set(partner.id for partner in message.partner_ids)
         # add all followers and set add them in partner_ids
         if message.model and message.res_id:
-            record = self.pool.get(message.model).browse(cr, uid, message.res_id, context=context)
+            record = self.pool.get(message.model).browse(cr, SUPERUSER_ID, message.res_id, context=context)
             extra_notified = set(partner.id for partner in record.message_follower_ids)
             missing_notified = extra_notified - partners_to_notify
             if missing_notified:
-                message.write({'partner_ids': [(4, p_id) for p_id in missing_notified]})
+                self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified
+        # # remove uid from partners
+        self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, uid)]}, context=context)
         self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

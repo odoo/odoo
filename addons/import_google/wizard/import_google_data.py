@@ -104,7 +104,7 @@ class synchronize_google(osv.osv_memory):
     _columns = {
         'customer': fields.boolean('Customer', help="Check this box to set newly created partner as Customer."),
         'supplier': fields.boolean('Supplier', help="Check this box to set newly created partner as Supplier."),
-        'group_name': fields.selection(_get_group, "Group Name",help="Choose which group to import, By default it takes all."),
+        'group_name': fields.selection(_get_group, "Group Name", help="Choose which group to import, By default it takes all."),
         'calendar_name': fields.selection(_get_calendars, "Calendar Name"),
      }
 

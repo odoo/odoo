@@ -65,6 +65,7 @@ class stock_partial_picking_line(osv.TransientModel):
 
 class stock_partial_picking(osv.osv_memory):
     _name = "stock.partial.picking"
+    _rec_name = 'picking_id'
     _description = "Partial Picking Processing Wizard"
 
     def _hide_tracking(self, cursor, user, ids, name, arg, context=None):
