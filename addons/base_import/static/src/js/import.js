@@ -318,7 +318,7 @@ openerp.base_import = function (instance) {
             // display 1-indexed.
             var offset = 1;
             // offset more if header
-            if (this.import_options().header) { offset += 1; }
+            if (this.import_options().headers) { offset += 1; }
 
             this.$el.addClass('oe_import_error');
             this.$('.oe_import_error_report').html(
