@@ -101,7 +101,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             }).value();
 
             // we need the name_get of the analytic accounts
-            return this.res_o2m_drop.add(new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(self.accounts, "account")])
+            this.render_drop.add(new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(self.accounts, "account")]))
                 .pipe(function(result) {
                 self.account_names = {};
                 _.each(result, function(el) {
@@ -121,7 +121,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                     });
                     self.$('[data-account-total="' + account.account + '"]').html(total);
                 });
-            }));
+            });
         },
     });
 
