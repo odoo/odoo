@@ -862,7 +862,7 @@
             <field name="arch" type="xml">
                 <form string="Point of Sale Session" version="7.0">
                     <header>
-                        <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
+                        <button name="open_cb" type="object" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
                         <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
                             class="oe_highlight"/>
                         <button name="cashbox_control" type="workflow" string="End of Session"
@@ -890,14 +890,14 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
-                                <field name="config_id" attrs="{'invisible' : [('config_id', '&lt;&gt;', False)]}"/>
+                                <field name="config_id" attrs="{'invisible' : [('config_id', '!=', False)]}"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
                                 <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
-                            <group string="Opening Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', 'in', ('opening_control', 'opened', 'closing_control')), ('cash_control', '=', True), ('state', '!=', 'closed')]  }">
+                            <group string="Opening Cash Control" attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -906,8 +906,7 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Closing Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', '=', 'closing_control'), ('cash_control', '=', True), ('state', '!=',
-                                'closed')]  }" >
+                            <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
                                 <field name="details_ids" nolabel="1" colspan="2">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -917,7 +916,7 @@
                                 </field>
                             </group>
 
-                            <div attrs="{'invisible' : [('state', 'not in', ('opening_control', 'closing_control', 'closed'))]}">
+                            <div attrs="{'invisible' : [('cash_control', '=', False)]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -934,7 +933,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', 'not in', ('closed', 'closing_control'))]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', '=', 'opening_control')]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>

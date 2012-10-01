@@ -348,6 +348,29 @@ class pos_session(osv.osv):
                 statement.unlink(context=context)
         return True
 
+
+    def open_cb(self, cr, uid, ids, context=None):
+        """
+        call the Point Of Sale interface and set the pos.session to 'opened' (in progress)
+        """
+        if context is None:
+            context = dict()
+
+        if isinstance(ids, (int, long)):
+            ids = [ids]
+
+        this_record = self.browse(cr, uid, ids[0], context=context)
+        this_record._workflow_signal('open')
+
+        context.update(active_id=this_record.id)
+
+        return {
+            'type' : 'ir.actions.client',
+            'name' : _('Start Point Of Sale'),
+            'tag' : 'pos.ui',
+            'context' : context,
+        }
+
     def wkf_action_open(self, cr, uid, ids, context=None):
         # second browse because we need to refetch the data from the DB for cash_register_id
         for record in self.browse(cr, uid, ids, context=context):
