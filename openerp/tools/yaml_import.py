@@ -313,14 +313,13 @@ class YamlInterpreter(object):
             #context = self.get_context(record, self.eval_context)
             #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             context = record.context
-            fields_view_get_result = False
+            view_info = False
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
-                fields_view_get_result = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
-                view_id = etree.fromstring(fields_view_get_result['arch'].encode('utf-8'))
+                view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
-            record_dict = self._create_record(model, fields, view_id, default=default, fields_view_get=fields_view_get_result)
+            record_dict = self._create_record(model, fields, view_info, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
@@ -328,7 +327,8 @@ class YamlInterpreter(object):
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view=False, parent={}, default=True, fields_view_get=None):
+    def _create_record(self, model, fields, view_info=False, parent={}, default=True):
+        view = view_info and etree.fromstring(view_info['arch'].encode('utf-8')) or False
         if view is not False:
             defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
             fg = model.fields_get(self.cr, SUPERUSER_ID, context=self.context)
@@ -357,17 +357,15 @@ class YamlInterpreter(object):
                 field_name = el.attrib['name']
                 assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                 if field_name in fields:
-                    view2 = None
+                    one2many_form_view = None
                     # if the form view is not inline, we call fields_view_get
                     if (view is not False) and (fg[field_name]['type']=='one2many'):
-                        tmp = fields_view_get['fields'][field_name]['views']
-                        if tmp.has_key('form'):
-                            view2 = tmp.get('form')
-                        if not view2:
-                            view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
-                        view2 = etree.fromstring(view2['arch'].encode('utf-8'))
+                        one2many_form_view = view_info['fields'][field_name]['views'].get('form')
+                        if not one2many_form_view:
+                            one2many_form_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
 
-                    field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default, fields_view_get=fields_view_get)
+                    view_info = one2many_form_view or view_info
+                    field_value = self._eval_field(model, field_name, fields[field_name], view_info, parent=record_dict, default=default)
                     record_dict[field_name] = field_value
                     #if (field_name in defaults) and defaults[field_name] == field_value:
                     #    print '*** You can remove these lines:', field_name, field_value
@@ -412,7 +410,7 @@ class YamlInterpreter(object):
         for field_name, expression in fields.items():
             if field_name in record_dict:
                 continue
-            field_value = self._eval_field(model, field_name, expression, default=False, fields_view_get=fields_view_get)
+            field_value = self._eval_field(model, field_name, expression, default=False)
             record_dict[field_name] = field_value
 
         return record_dict
@@ -443,7 +441,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view=False, parent={}, default=True, fields_view_get=None):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
             column = model._columns[field_name]
@@ -464,7 +462,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view, parent, default=default, fields_view_get=fields_view_get)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]
