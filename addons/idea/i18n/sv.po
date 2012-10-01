@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-06-27 11:28+0000\n"
-"Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
+"PO-Revision-Date: 2012-09-26 08:49+0000\n"
+"Last-Translator: Mikael Akerberg <mikael.akerberg@dermanord.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:48+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-27 05:01+0000\n"
+"X-Generator: Launchpad (build 16033)\n"
 
 #. module: idea
 #: help:idea.category,visibility:0
@@ -24,7 +24,7 @@ msgstr "Om \"Sant\" kommer skaparen av denna idé att vara synlig för andra"
 #. module: idea
 #: view:idea.idea:0
 msgid "By States"
-msgstr ""
+msgstr "Genom Status"
 
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_select
@@ -77,7 +77,7 @@ msgstr "Godtagna idéer"
 #: code:addons/idea/wizard/idea_post_vote.py:94
 #, python-format
 msgid "Idea must be in 'Open' state before vote for that idea."
-msgstr ""
+msgstr "Idén måste vara status \"Öppen\" innan man kan rösta för den idén."
 
 #. module: idea
 #: view:report.vote:0
@@ -157,7 +157,7 @@ msgstr "Väldigt dålig"
 #. module: idea
 #: view:idea.vote:0
 msgid "Ideas vote"
-msgstr ""
+msgstr "Idéröster"
 
 #. module: idea
 #: view:report.vote:0
@@ -169,17 +169,17 @@ msgstr "# Rader"
 #: code:addons/idea/wizard/idea_post_vote.py:91
 #, python-format
 msgid "You can not give Vote for this idea more than %s times"
-msgstr ""
+msgstr "Du kan inte rösta på denna idé mer än %s gånger"
 
 #. module: idea
 #: view:idea.category:0
 msgid "Ideas Categories"
-msgstr ""
+msgstr "Idékategori"
 
 #. module: idea
 #: help:idea.idea,description:0
 msgid "Content of the idea"
-msgstr ""
+msgstr "Innebörden av idén"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_category
@@ -203,7 +203,7 @@ msgstr "Ej röstat"
 #. module: idea
 #: sql_constraint:idea.category:0
 msgid "The name of the category must be unique"
-msgstr ""
+msgstr "Namnet på idén måste vara unikt"
 
 #. module: idea
 #: model:ir.model,name:idea.model_idea_select
@@ -213,7 +213,7 @@ msgstr "välj idé"
 #. module: idea
 #: view:idea.stat:0
 msgid "stat"
-msgstr ""
+msgstr "status"
 
 #. module: idea
 #: field:idea.category,child_ids:0
@@ -250,7 +250,7 @@ msgstr "Bra"
 #. module: idea
 #: help:idea.idea,open_date:0
 msgid "Date when an idea opened"
-msgstr ""
+msgstr "Datum när en idé öppnades"
 
 #. module: idea
 #: view:idea.idea:0
@@ -264,16 +264,19 @@ msgid ""
 " It is             opened by the user, the state is 'Opened'.            \n"
 "If the idea is accepted, the state is 'Accepted'."
 msgstr ""
+"När idén skaps blir statusen \"Utkast\".\n"
+"Om idén öppnas av användaren, blir statusen \"Öppen\".\n"
+"Om idén accepteras blir statusen\"Godkänd\"."
 
 #. module: idea
 #: view:idea.idea:0
 msgid "New Ideas"
-msgstr ""
+msgstr "Nya idéer"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote created last month"
-msgstr ""
+msgstr "Idéröster skapade förra månaden"
 
 #. module: idea
 #: field:idea.category,visibility:0
@@ -284,7 +287,7 @@ msgstr "Öppna idé"
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote created in current month"
-msgstr ""
+msgstr "Idéröster skapade denna månad"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -308,7 +311,7 @@ msgstr "Kategorier"
 #. module: idea
 #: view:idea.category:0
 msgid "Parent Category"
-msgstr ""
+msgstr "Överordnad kategori"
 
 #. module: idea
 #: field:idea.idea,open_date:0
@@ -335,7 +338,7 @@ msgstr "Maximalt antal röster per användare"
 #. module: idea
 #: view:idea.vote.stat:0
 msgid "vote_stat of ideas"
-msgstr ""
+msgstr "röststatus för idéer"
 
 #. module: idea
 #: field:idea.comment,content:0
@@ -396,12 +399,12 @@ msgstr "Öppnad"
 #. module: idea
 #: model:ir.actions.act_window,name:idea.action_idea_vote
 msgid "Idea's Votes"
-msgstr ""
+msgstr "Idéers röster"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "By Idea Category"
-msgstr ""
+msgstr "Genom idékategori"
 
 #. module: idea
 #: view:idea.idea:0
@@ -412,7 +415,7 @@ msgstr "Ny idé"
 #: model:ir.actions.act_window,name:idea.action_idea_category_tree
 #: model:ir.ui.menu,name:idea.menu_idea_category_tree
 msgid "Ideas by Categories"
-msgstr ""
+msgstr "Idéer genom kategori"
 
 #. module: idea
 #: selection:report.vote,idea_state:0
@@ -446,7 +449,7 @@ msgstr "Användarnamn"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_vote_stat
 msgid "Idea Votes Statistics"
-msgstr ""
+msgstr "Idérörster Statistik"
 
 #. module: idea
 #: field:idea.comment,user_id:0
@@ -500,12 +503,12 @@ msgstr "Summering"
 #. module: idea
 #: field:idea.idea,name:0
 msgid "Idea Summary"
-msgstr ""
+msgstr "idéSammanfattning"
 
 #. module: idea
 #: view:idea.post.vote:0
 msgid "Post"
-msgstr ""
+msgstr "Post"
 
 #. module: idea
 #: view:idea.idea:0
@@ -533,12 +536,12 @@ msgstr "Ge röst"
 #. module: idea
 #: help:idea.idea,vote_limit:0
 msgid "Set to one if  you require only one Vote per user"
-msgstr ""
+msgstr "Ställ in på 1 om du bara behöver en röst per användare"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "By Creators"
-msgstr ""
+msgstr "Genom Skapare"
 
 #. module: idea
 #: view:idea.post.vote:0
@@ -559,12 +562,12 @@ msgstr "öppna"
 #: view:idea.idea:0
 #: view:report.vote:0
 msgid "In Progress"
-msgstr ""
+msgstr "Pågår"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote Analysis"
-msgstr ""
+msgstr "Idéröstanalys"
 
 #. module: idea
 #: view:idea.idea:0
@@ -578,18 +581,18 @@ msgstr "Idéer"
 #. module: idea
 #: model:ir.model,name:idea.model_idea_post_vote
 msgid "Post vote"
-msgstr ""
+msgstr "Posta röst"
 
 #. module: idea
 #: field:idea.vote.stat,score:0
 #: field:report.vote,score:0
 msgid "Score"
-msgstr ""
+msgstr "Poäng"
 
 #. module: idea
 #: view:idea.idea:0
 msgid "Votes Statistics"
-msgstr ""
+msgstr "Statistik röster"
 
 #. module: idea
 #: view:idea.vote:0
@@ -617,7 +620,7 @@ msgstr "Nekad"
 #. module: idea
 #: view:idea.vote:0
 msgid "Vote date"
-msgstr ""
+msgstr "Datum röstning"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -627,17 +630,17 @@ msgstr "Februari"
 #. module: idea
 #: field:idea.category,complete_name:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: idea
 #: field:idea.vote.stat,nbr:0
 msgid "Number of Votes"
-msgstr ""
+msgstr "Antal röster"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Month-1"
-msgstr ""
+msgstr "Månad-1"
 
 #. module: idea
 #: selection:report.vote,month:0
@@ -647,27 +650,27 @@ msgstr "April"
 #. module: idea
 #: field:idea.idea,count_comments:0
 msgid "Count of comments"
-msgstr ""
+msgstr "Räkna kommentarer"
 
 #. module: idea
 #: field:idea.vote,score:0
 msgid "Vote Status"
-msgstr ""
+msgstr "Röstningsstatus"
 
 #. module: idea
 #: view:report.vote:0
 msgid "Idea Vote created in current year"
-msgstr ""
+msgstr "Idéröster skapade innevarande år"
 
 #. module: idea
 #: field:idea.idea,vote_avg:0
 msgid "Average Score"
-msgstr ""
+msgstr "Medelpoäng"
 
 #. module: idea
 #: constraint:idea.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "Fel! Du kan inte skapa rekursiva kategorier"
 
 #. module: idea
 #: field:idea.comment,idea_id:0
@@ -689,7 +692,7 @@ msgstr "Acceptera"
 #. module: idea
 #: field:idea.post.vote,vote:0
 msgid "Post Vote"
-msgstr ""
+msgstr "Posta röst"
 
 #. module: idea
 #: view:report.vote:0
@@ -701,9 +704,9 @@ msgstr "År"
 #: code:addons/idea/idea.py:274
 #, python-format
 msgid "You can not vote on a Draft/Accepted/Cancelled ideas."
-msgstr ""
+msgstr "Du kan inte rösta på ett Utkast/Godkänt/Inställd idé."
 
 #. module: idea
 #: view:idea.select:0
 msgid "Select Idea for Vote"
-msgstr ""
+msgstr "Välj idé att rösta på"
