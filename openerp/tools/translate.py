@@ -520,14 +520,10 @@ def trans_parse_rml(de):
             if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
                 continue
             string_list = [s.replace('\n', ' ').strip() for s in re.split('\[\[.+?\]\]', m.text)]
-            string_list2 = [s.replace('\n', ' ').replace('translate(', '')[:-1].strip('"\'') for s in re.findall('translate\(.+?\)', m.text)]
             for s in string_list:
                 if s:
                     res.append(s.encode("utf8"))
-            for s in string_list2:
-                if s:
-                    res.append(s.encode("utf8"))
-        res.extend(trans_parse_rml(n))
+            res.extend(trans_parse_rml(n))
     return res
 
 def trans_parse_view(de):
