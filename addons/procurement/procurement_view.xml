@@ -303,8 +303,9 @@
                     <button string="Request Procurement" name="%(act_make_procurement)d" type="action"/>
                     <button string="Orderpoints" name="%(product_open_orderpoint)d" type="action"/>
                 </xpath>
-                <xpath expr="//field[@name='supply_method']" position="before">
-                    <field name="procure_method" groups="base.group_user"/> 
+                <xpath expr="//field[@name='cost_method']" position="before">
+                    <field name="procure_method" groups="base.group_user"/>
+                    <field name="supply_method" groups="base.group_user"/> 
                 </xpath>
                 <xpath expr="//group[@name='procurement_help']" position="inside">
                 <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
@@ -331,6 +332,16 @@
                 </xpath>
             </field>
         </record>
-
+        <record model="ir.ui.view" id="product_template_form_view_procurement">
+            <field name="name">product.template.procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                </xpath>
+            </field>
+        </record>
     </data>
 </openerp>

@@ -32,6 +32,19 @@ import decimal_precision as dp
 #     then wizard for picking lists & move
 #
 
+class product_template(osv.osv):
+    _inherit="product.template"
+    _columns = {
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
+    }
+    _defaults = {
+        'procure_method': lambda *a: 'make_to_stock',
+        'supply_method': lambda *a: 'buy',
+    }
+product_template()
+
 class mrp_property_group(osv.osv):
     """
     Group of mrp properties.
@@ -627,14 +640,8 @@ class product_product(osv.osv):
     _inherit="product.product"
     _columns = {
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
-        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
-        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
-    }
-    _defaults = {
-        'procure_method': lambda *a: 'make_to_stock',
     }
 
 
 product_product()
-
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

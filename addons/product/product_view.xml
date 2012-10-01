@@ -105,7 +105,6 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group>
-                                        <field name="supply_method" groups="base.group_user" invisible="1"/>
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
@@ -718,7 +717,6 @@
                             </group>
                             <group string="Procurement">
                                 <field name="type"/>
-                                <field name="supply_method"/>
                             </group>
 
                             <group string="Base Prices">
