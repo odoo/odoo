@@ -39,6 +39,7 @@
         'base_setup',
         'base_status',
         'product',
+        'procurement'
         'analytic',
         'board',
         'mail',
