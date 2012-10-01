@@ -3531,7 +3531,6 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
             .bind('remove', this.proxy("changed_records"));
     },
     start: function () {
-        console.log("one many list view");
         var ret = this._super();
         this.$el
             .off('mousedown.handleButtons')
