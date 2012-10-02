@@ -3,7 +3,7 @@ openerp.hr_timesheet_sheet = function(instance) {
     var QWeb = instance.web.qweb;
     var _t = instance.web._t;
 
-    instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.form.FormWidget.extend({
+    instance.hr_timesheet_sheet.WeeklyTimesheet = instance.web.form.FormWidget.extend(instance.web.form.ReinitializeWidgetMixin, {
         init: function() {
             this._super.apply(this, arguments);
             this.set({
@@ -50,13 +50,12 @@ openerp.hr_timesheet_sheet = function(instance) {
         },
         start: function() {
             var self = this;
-            self.on("change:sheets", self, self.render);
-            self.on("change:date_to", self, self.render);
-            self.on("change:date_from", self, self.render);
-            self.on("change:user_id", self, self.render);
-            self.render();
+            self.on("change:sheets", self, self.initialize_content);
+            self.on("change:date_to", self, self.initialize_content);
+            self.on("change:date_from", self, self.initialize_content);
+            self.on("change:user_id", self, self.initialize_content);
         },
-        render: function() {
+        initialize_content: function() {
             var self = this;
             if (self.setting)
                 return;
@@ -139,27 +138,31 @@ openerp.hr_timesheet_sheet = function(instance) {
             self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
             _.each(self.accounts, function(account) {
                 _.each(_.range(account.days.length), function(day_count) {
-                    self.get_case(account, day_count).val(self.sum_case(account, day_count)).change(function() {
-                        var num = Number($(this).val());
-                        if (isNaN(num)) {
-                            $(this).val(self.sum_case(account, day_count));
-                        } else {
-                            account.days[day_count].lines[0].unit_amount += num - self.sum_case(account, day_count);
-                            self.get_total(account).html(self.sum_total(account));
-                            self.sync();
-                        }
-                    });
+                    if (!self.get('effective_readonly')) {
+                        self.get_box(account, day_count).val(self.sum_box(account, day_count)).change(function() {
+                            var num = Number($(this).val());
+                            if (isNaN(num)) {
+                                $(this).val(self.sum_box(account, day_count));
+                            } else {
+                                account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
+                                self.get_total(account).html(self.sum_total(account));
+                                self.sync();
+                            }
+                        });
+                    } else {
+                        self.get_box(account, day_count).html(self.sum_box(account, day_count));
+                    }
                 });
                 self.get_total(account).html(self.sum_total(account));
             });
         },
-        get_case: function(account, day_count) {
+        get_box: function(account, day_count) {
             return this.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]');
         },
         get_total: function(account) {
             return this.$('[data-account-total="' + account.account + '"]');
         },
-        sum_case: function(account, day_count) {
+        sum_box: function(account, day_count) {
             var line_total = 0;
             _.each(account.days[day_count].lines, function(line) {
                 line_total += line.unit_amount;
