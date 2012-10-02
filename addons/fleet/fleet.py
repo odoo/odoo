@@ -264,7 +264,8 @@ class fleet_vehicle(osv.Model):
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
-    _order = 'insurance_renewal_overdue desc, insurance_renewal_due_soon desc'
+    #_order = 'insurance_renewal_overdue desc, insurance_renewal_due_soon desc'
+    _order= 'name asc'
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -297,8 +298,8 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=True),
-        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=True),
+        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=False),
+        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=False),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
 
         'car_value': fields.float('Car value', help='Value of the bought vehicle'),

@@ -207,7 +207,7 @@
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" version="7.0">
+                <tree string="Vehicle" version="7.0" colors="orange:insurance_renewal_due_soon>0 and insurance_renewal_overdue==0;red:insurance_renewal_overdue>0">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver" />
@@ -215,9 +215,9 @@
                     <field name="acquisition_date" />
                     <field name="state"/>
                     <field name="odometer" />
-                    <field name="insurance_renewal_due_soon" />
-                    <field name="insurance_renewal_overdue" />
-                    <field name="next_service_date" />
+                    <field name="insurance_renewal_due_soon" invisible="1"/>
+                    <field name="insurance_renewal_overdue" invisible="1"/>
+                    <field name="next_service_date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -277,23 +277,18 @@
                                             <t t-if="record.location.raw_value"><field name="location"/></t>
                                         </li>
                                         <li>
-                                            <t t_if="record.state.raw_value"><field name="state" /></t>
-                                        </li>
-                                        <li>
-                                            <t t_if="record.odometer.raw_value"><field name="odometer" /></t>
-                                            <t t_if="record.odometer_unit.raw_value"><field name="odometer_unit" /></t>
-                                        </li>
-                                        <li>
-                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Insurance renewal<br/>-<a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a"> <field name="insurance_renewal_due_soon" />  due soon</a></t>
-                                        </li>
-                                        <li>
-                                            <t t-if="record.insurance_renewal_overdue.raw_value">- <a> <field name="insurance_renewal_overdue" /> overdue </a></t>
-                                        </li>
-                                        <li>
-                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Service Alert<br/>- <field name="insurance_renewal_due_soon" />  due soon</t>
-                                        </li>
-                                        <li>
-                                            <t t-if="record.insurance_renewal_overdue.raw_value">- <field name="insurance_renewal_overdue" /> overdue</t>
+                                            <t t-if="record.insurance_renewal_due_soon.raw_value > 0 and record.insurance_renewal_overdue.raw_value lte 0">
+                                                 <a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
+                                                        Alert Insurance Renewal
+                                                </a>
+                                            </t>
+
+                                            <t t-if="record.insurance_renewal_overdue.raw_value > 0">
+                                                <a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
+                                                        Alert Insurance Renewal
+                                                </a>
+                                            </t>
+                                            
                                         </li>
                                     </ul>
 
@@ -623,7 +618,13 @@
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
 
-        
+        <record id="vehicle_insurance_pending" model="fleet.insurance.state">
+            <field name="name">In Progress</field>
+        </record>
+
+        <record id="vehicle_insurance_over" model="fleet.insurance.state">
+            <field name="name">Terminated</field>
+        </record>
 <!--    
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>
