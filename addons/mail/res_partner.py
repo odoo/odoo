@@ -25,6 +25,7 @@ class res_partner_mail(osv.Model):
     """ Update partner to add a field about notification preferences """
     _name = "res.partner"
     _inherit = ['res.partner', 'mail.thread']
+    _mail_autothread = False
 
     _columns = {
         'notification_email_send': fields.selection([

@@ -451,7 +451,7 @@ class mail_message(osv.Model):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
             values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s' % values)
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self.notify(cr, uid, newid, context=context)
+        self._notify(cr, 1, newid, context=context)
         return newid
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
@@ -473,7 +473,7 @@ class mail_message(osv.Model):
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids.
             Call mail_notification.notify to manage the email sending
         """
@@ -502,13 +502,10 @@ class mail_message(osv.Model):
         # unless remove myself author
         if ((message.model=="res.partner" and message.res_id==message.author_id.id)):
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
-            # add myself if this message have a parent message and I recive parent message
-            # ! subtype_id: pure log message => do this in read_message
-            # or (message.parent_id and self.pool.get('mail.notification').search(cr, uid, [('partner_id','=',message.author_id.id),('message_id','=',message.parent_id)])):
         else:
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
 
-        self.pool.get('mail.notification').notify(cr, uid, list(partners_to_notify), newid, context=context)
+        self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
         """Overridden to avoid duplicating fields that are unique to each email"""

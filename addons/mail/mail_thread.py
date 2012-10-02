@@ -117,6 +117,7 @@ class mail_thread(osv.AbstractModel):
     '''
     _name = 'mail.thread'
     _description = 'Email Thread'
+    _mail_autothread = True
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         """ Computes:
@@ -661,7 +662,7 @@ class mail_thread(osv.AbstractModel):
 
 
         #auto link messages for same id and object
-        if model != 'res.partner' and thread_id:
+        if self._mail_autothread and thread_id:
             message_ids = messages.search(cr, uid, ['&',('res_id', '=', thread_id),('model','=',model)], context=context)
             if len(message_ids):
                 parent_id = min(message_ids)

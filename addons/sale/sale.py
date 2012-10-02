@@ -654,7 +654,7 @@ class sale_order(osv.osv):
             self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> set to <b>Done</b>") % (obj.partner_id.name), context=context)
 
     def invoice_paid_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="sale_subtype_paid", context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="mt_sale_paid", context=context)
 
     def invoice_send_note(self, cr, uid, ids, invoice_id, context=None):
         for order in self.browse(cr, uid, ids, context=context):
