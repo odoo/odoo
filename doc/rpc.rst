@@ -137,7 +137,7 @@ around and use them differently/add new specifications on them.
                                       asked of the server. Grouping
                                       can actually be an array or
                                       varargs.
-       :rtype: Deferred<Array<openerp.web.Group>> | null
+       :rtype: Deferred<Array<openerp.web.QueryGroup>> | null
 
     The second set of methods is the "mutator" methods, they create a
     **new** :js:class:`~openerp.web.Query` object with the relevant
@@ -189,7 +189,7 @@ in that they're recursive, and level n+1 relies on data provided
 directly by the grouping at level n. As a result, while ``read_group``
 works it's not a very intuitive API.
 
-OpenERP Web 6.2 eschews direct calls to ``read_group`` in favor of
+OpenERP Web 7.0 eschews direct calls to ``read_group`` in favor of
 calling a method of :js:class:`~openerp.web.Query`, `much in the way
 it is one in SQLAlchemy
 <http://docs.sqlalchemy.org/en/latest/orm/query.html#sqlalchemy.orm.query.Query.group_by>`_ [#]_:
@@ -238,7 +238,7 @@ regular query for records):
       });
 
 The result of a (successful) :js:func:`~openerp.web.Query.group_by` is
-an array of :js:class:`~openerp.web.data.Group`.
+an array of :js:class:`~openerp.web.QueryGroup`.
 
 Low-level API: RPC calls to Python side
 ---------------------------------------

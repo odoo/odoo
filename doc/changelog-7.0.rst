@@ -1,4 +1,4 @@
-API changes from OpenERP Web 6.1 to 6.2
+API changes from OpenERP Web 6.1 to 7.0
 =======================================
 
 DataSet -> Model
@@ -85,7 +85,7 @@ DataGroup -> also Model
 -----------------------
 
 Alongside the deprecation of ``DataSet`` for
-:js:class:`~openerp.web.Model`, OpenERP Web 6.2 also deprecates
+:js:class:`~openerp.web.Model`, OpenERP Web 7.0 also deprecates
 ``DataGroup`` and its subtypes in favor of a single method on
 :js:class:`~openerp.web.Query`:
 :js:func:`~openerp.web.Query.group_by`.

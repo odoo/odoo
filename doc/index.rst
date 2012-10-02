@@ -11,7 +11,7 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
-    changelog-6.2
+    changelog-7.0
 
     async
     rpc
