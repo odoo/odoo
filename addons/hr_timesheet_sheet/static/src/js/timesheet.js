@@ -99,7 +99,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                         // add line where we will insert/remove hours
                         var to_add = _.find(day.lines, function(line) { return line.name === self.description_line });
                         if (to_add) {
-                            day.lines = _.without(to_add);
+                            day.lines = _.without(day.lines, to_add);
                             day.lines.unshift(to_add);
                         } else {
                             day.lines.unshift(_.extend(_.clone(default_get), {
