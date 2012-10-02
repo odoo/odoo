@@ -1831,24 +1831,19 @@ gg==
         <field name="sequence">1</field>
       </record>
 
-      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
-        <field name="name">Inactive</field>
+      <record id="vehicle_state_active" model="fleet.vehicle.state">
+        <field name="name">Active</field>
         <field name="sequence">2</field>
       </record>
 
-      <record id="vehicle_state_active" model="fleet.vehicle.state">
-        <field name="name">Active</field>
+      <record id="vehicle_state_inactive" model="fleet.vehicle.state">
+        <field name="name">Inactive</field>
         <field name="sequence">3</field>
-      </record>
-
-      <record id="vehicle_state_out" model="fleet.vehicle.state">
-        <field name="name">Out of order</field>
-        <field name="sequence">4</field>
       </record>
 
       <record id="vehicle_state_sold" model="fleet.vehicle.state">
         <field name="name">Sold</field>
-        <field name="sequence">5</field>
+        <field name="sequence">4</field>
       </record>
 
       <record id="vehicle_insurance_pending" model="fleet.insurance.state">
@@ -2136,32 +2131,381 @@ gg==
           <field name="name">Windshield Wiper(s) Replacement</field>
       </record>
 
-      <record id="log_service_1" model="fleet.vehicle.log.services">
-          <field name="vehicle_id" ref="vehicle_1" />
-          <field name="purchaser_id" ref="base.res_partner_2" />
-          <field name="vendor_id">5</field>
-          <field name="date" eval="time.strftime('%Y-%m-%d 16:00:00')" />
-          <field name="amount">500.0</field>
-          <field name="service_ids" eval="[(6,0,[ref('type_service_53')])]" />
-          <field name="inv_ref">4574.2321</field>
-          <field name="value">1000</field>
-          <field name="unit">kilometers</field>
-          <field name="notes">Usual car maintenance</field>
-      </record>
-
        <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
           <field name="purchaser_id" ref="base.res_partner_2" />
           <field name="vehicle_id" ref="vehicle_1" />
           <field name="vendor_id">6</field>
-          <field name="date" eval="time.strftime('%Y-%m-%d 2:00:00')" />
-          <field name="liter">20</field>
-          <field name="price_per_liter">1.4</field>
-          <field name="amount">28</field>
-          <field name="service_ids" eval="[(6,0,[ref('type_service_34')])]" />
+          <field name="date">2012-01-01</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">52</field>
           <field name="inv_ref">67458</field>
-          <field name="value">400</field>
-          <field name="unit">kilometers</field>
-          <field name="notes">Trip to Paris</field>
+          <field name="value">0</field>
+          <field name="notes">First refueling</field>
       </record>
+
+      <record id="log_fuel_2" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-02-11</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">65</field>
+          <field name="inv_ref">455812</field>
+          <field name="value">658</field>
+          <field name="notes">Second refueling of the car</field>
+      </record>
+
+       <record id="log_fuel_3" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-03-23</field>
+          <field name="liter">45</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">59.4</field>
+          <field name="inv_ref">45199877</field>
+          <field name="value">1360</field>
+          <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_fuel_4" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-5</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">72.6</field>
+          <field name="inv_ref">654</field>
+          <field name="value">2044</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_5" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-25</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">54</field>
+          <field name="inv_ref">55488</field>
+          <field name="value">2756</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_6" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-05-15</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="value">3410</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_7" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-06-11</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="value">3750</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_8" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-02</field>
+          <field name="liter">47.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">64.53</field>
+          <field name="inv_ref">15151</field>
+          <field name="value">4115</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_9" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-28</field>
+          <field name="liter">25</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">33.75</field>
+          <field name="inv_ref">874195</field>
+          <field name="value">4750</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+       <record id="log_fuel_10" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-08-17</field>
+          <field name="liter">51.2</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">69.12</field>
+          <field name="inv_ref">4431</field>
+          <field name="value">5171</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_11" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-09-11</field>
+          <field name="liter">45.36</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">61.236</field>
+          <field name="inv_ref">11234</field>
+          <field name="value">5873</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_12" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-10-06</field>
+          <field name="liter">53.4</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">73.158</field>
+          <field name="inv_ref">798846</field>
+          <field name="value">6571</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_13" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-11-02</field>
+          <field name="liter">48.5</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">66.445</field>
+          <field name="inv_ref">7954</field>
+          <field name="value">7292</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_14" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-12-02</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">49</field>
+          <field name="inv_ref">545</field>
+          <field name="value">7981</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_15" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-01-01</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">52</field>
+          <field name="inv_ref">67458</field>
+          <field name="value">0</field>
+          <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_fuel_16" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-02-11</field>
+          <field name="liter">50</field>
+          <field name="price_per_liter">1.3</field>
+          <field name="amount">65</field>
+          <field name="inv_ref">455812</field>
+          <field name="value">658</field>
+          <field name="notes">Second refueling of the car</field>
+      </record>
+
+       <record id="log_fuel_17" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-03-23</field>
+          <field name="liter">45</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">59.4</field>
+          <field name="inv_ref">45199877</field>
+          <field name="value">1360</field>
+          <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_fuel_18" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-5</field>
+          <field name="liter">55</field>
+          <field name="price_per_liter">1.32</field>
+          <field name="amount">72.6</field>
+          <field name="inv_ref">654</field>
+          <field name="value">2044</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_19" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-04-25</field>
+          <field name="liter">40</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">54</field>
+          <field name="inv_ref">55488</field>
+          <field name="value">2756</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_20" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-05-15</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="value">3410</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_21" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-06-11</field>
+          <field name="liter">55.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">75.33</field>
+          <field name="inv_ref">4952</field>
+          <field name="value">3750</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_22" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-02</field>
+          <field name="liter">47.8</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">64.53</field>
+          <field name="inv_ref">15151</field>
+          <field name="value">4115</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_23" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-07-28</field>
+          <field name="liter">25</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">33.75</field>
+          <field name="inv_ref">874195</field>
+          <field name="value">4750</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+       <record id="log_fuel_24" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-08-17</field>
+          <field name="liter">51.2</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">69.12</field>
+          <field name="inv_ref">4431</field>
+          <field name="value">5171</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_25" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-09-11</field>
+          <field name="liter">45.36</field>
+          <field name="price_per_liter">1.35</field>
+          <field name="amount">61.236</field>
+          <field name="inv_ref">11234</field>
+          <field name="value">5873</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_26" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-10-06</field>
+          <field name="liter">53.4</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">73.158</field>
+          <field name="inv_ref">798846</field>
+          <field name="value">6571</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_27" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-11-02</field>
+          <field name="liter">48.5</field>
+          <field name="price_per_liter">1.37</field>
+          <field name="amount">66.445</field>
+          <field name="inv_ref">7954</field>
+          <field name="value">7292</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_fuel_28" model="fleet.vehicle.log.fuel">
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="vendor_id">6</field>
+          <field name="date">2012-12-02</field>
+          <field name="liter">35</field>
+          <field name="price_per_liter">1.4</field>
+          <field name="amount">49</field>
+          <field name="inv_ref">545</field>
+          <field name="value">7981</field>
+          <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_service_1" model="fleet.vehicle.log.services">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="purchaser_id" ref="base.res_partner_2" />
+          <field name="vendor_id">5</field>
+          <field name="date">2012-10-01</field>
+          <field name="amount">500.0</field>
+          <field name="service_ids" eval="[(6,0,[ref('type_service_53')])]" />
+          <field name="inv_ref">4574.2321</field>
+          <field name="value">1000</field>
+          <field name="notes">Usual car maintenance</field>
+      </record>
+
     </data>
 </openerp>

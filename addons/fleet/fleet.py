@@ -176,7 +176,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='date desc')
+            odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='value desc')
             if len(odometers) > 0:
                 res.append((record.id,self.pool.get('fleet.vehicle.odometer').browse(cr, uid, odometers[0], context=context).value))
             else :
@@ -282,7 +282,7 @@ class fleet_vehicle(osv.Model):
         'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
-        'tag_ids' :fields.many2many('fleet.vehicle.tag','vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
+        'tag_ids' :fields.many2many('fleet.vehicle.tag','fleet_vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
         'odometer' : fields.function(_vehicle_odometer_get_fnc, type="float", string='Odometer', store=False),
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=False),
@@ -462,7 +462,7 @@ class fleet_vehicle_log_services(osv.Model):
         #'name' : fields.char('Name',size=64),
         'date' :fields.date('Service Date',help='Date when the service will be/has been performed'),
         'amount' :fields.float('Cost', help="Total cost of the service"),
-        'service_ids' :fields.many2many('fleet.service.type','vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
+        'service_ids' :fields.many2many('fleet.service.type','fleet_vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
