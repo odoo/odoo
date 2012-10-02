@@ -277,7 +277,6 @@ class fleet_vehicle(osv.Model):
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
         'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
-        'acquisition_price' : fields.integer('Price', help='Price of the bought vehicle'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ),
         'location' : fields.char('Location',size=32, help='Location of the vehicle (garage, ...)'),
@@ -302,7 +301,8 @@ class fleet_vehicle(osv.Model):
         'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=True),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
 
-
+        'car_value': fields.float('Car value', help='Value of the bought vehicle'),
+        'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
         }
 
     _defaults = {
@@ -378,7 +378,20 @@ class fleet_vehicle_odometer(osv.Model):
     def _vehicle_log_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
         res = self.name_get(cr, uid, ids, context=context)
         return dict(res)
-        
+    
+    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
+
+        if not vehicle_id:
+            return {}
+
+        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+
+        return {
+            'value' : {
+                'unit' : odometer_unit,
+            }
+        }
+
     _columns = {
         'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
@@ -395,6 +408,19 @@ class fleet_vehicle_odometer(osv.Model):
 class fleet_vehicle_log_fuel(osv.Model):
 
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
+
+    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
+
+        if not vehicle_id:
+            return {}
+
+        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+
+        return {
+            'value' : {
+                'unit' : odometer_unit,
+            }
+        }
 
     def on_change_liter(self, cr, uid, ids, liter, price_per_liter, amount, context=None):
 
@@ -451,6 +477,19 @@ class fleet_vehicle_log_fuel(osv.Model):
 
 class fleet_vehicle_log_services(osv.Model):
 
+    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
+
+        if not vehicle_id:
+            return {}
+
+        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+
+        return {
+            'value' : {
+                'unit' : odometer_unit,
+            }
+        }
+
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}    
 
     _name = 'fleet.vehicle.log.services'
@@ -484,6 +523,19 @@ class fleet_insurance_state(osv.Model):
 
 class fleet_vehicle_log_insurance(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
+
+    def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
+
+        if not vehicle_id:
+            return {}
+
+        odometer_unit = self.pool.get('fleet.vehicle').browse(cr, uid, vehicle_id, context=context).odometer_unit
+
+        return {
+            'value' : {
+                'unit' : odometer_unit,
+            }
+        }
 
     def compute_next_year_date(self, strdate):
         nextyear=int(strdate[:4])+1

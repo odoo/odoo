@@ -177,7 +177,8 @@
                                     <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                                 <field name="acquisition_date" />
-                                <field name="acquisition_price" />
+                                <field name="car_value" />
+                                <field name="leasing_value" />
                             </group>
                         </group>
                         <group col="2">
@@ -356,7 +357,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Insurance details">
-                                    <field name="vehicle_id" />
+                                    <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                                     <field name="insurance_type" />
                                     <field name="start_date" on_change="on_change_start_date(start_date)"/>
                                     <field name="expiration_date" />
@@ -365,8 +366,10 @@
                         </group>
                         <group col="2">
                             <group string="Odometer details">
-                                <field name="value" />
-                                <field name="unit" />
+                                <div>
+                                    <field name="value" class="oe_inline"/>
+                                    <field name="unit" class="oe_inline"/>
+                                </div>
                             </group>
                             <group string="Additional details">
                                 <field name="date" />
@@ -416,9 +419,11 @@
                 <form string="Odometer Logs" version="7.0">
                     <sheet>
                         <group>
-                            <field name="vehicle_id" />
-                            <field name="value" />
-                            <field name="unit" />
+                            <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                            <div>
+                                <field name="value" class="oe_inline"/>
+                                <field name="unit" class="oe_inline"/>
+                            </div>
                             <field name="date" />
                         </group>
                     </sheet>
@@ -431,7 +436,7 @@
             <field name="model">fleet.vehicle.odometer</field>
             <field name="arch" type="xml">
                 <tree string="Odometer Logs" version="7.0" editable="bottom">
-                    <field name="vehicle_id" />
+                    <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                     <field name="value" />
                     <field name="unit" />
                     <field name="date" />
@@ -469,7 +474,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Vehicle Details">
-                                <field name="vehicle_id"/>
+                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                             </group>
                             <group string="Refueling Details">
                                 <field name="liter" on_change="on_change_liter(liter,price_per_liter,amount)"/>
@@ -479,8 +484,10 @@
                         </group>
                         <group col="2">
                             <group string="Odometer Details">
-                                <field name="value" />
-                                <field name="unit" />
+                                <div>
+                                    <field name="value" class="oe_inline"/>
+                                    <field name="unit" class="oe_inline"/>
+                                </div>
                             </group>
                             <group string="Additional Details">
                                 <field name="date" />
@@ -547,7 +554,7 @@
                     <sheet>
                         <group col="2">
                             <group string="Vehicle Details">
-                                <field name="vehicle_id" />
+                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                             </group>
                             <group string="Services Details">
                                 <field name="service_ids" widget="many2many_tags"/>
@@ -556,8 +563,10 @@
                         </group>
                         <group col="2">
                             <group string="Odometer Details">
-                                <field name="value" />
-                                <field name="unit" />
+                                <div>
+                                    <field name="value" class="oe_inline"/>
+                                    <field name="unit" class="oe_inline"/>
+                                </div>
                             </group>
                             <group string="Additional Details">
                                 <field name="date" />
