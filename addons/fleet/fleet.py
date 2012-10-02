@@ -302,6 +302,7 @@ class fleet_vehicle(osv.Model):
         'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=True),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
 
+
         }
 
     _defaults = {
@@ -333,25 +334,21 @@ class fleet_vehicle(osv.Model):
         return vehicle_id
 
     def write(self, cr, uid, ids, vals, context=None):
+        changes = []
+        if 'driver' in vals:
+            value = self.pool.get('res.partner').browse(cr,uid,vals['driver'],context=context).name
+            changes.append('Driver: from \'' + self.browse(cr, uid, ids, context)[0].driver.name + '\' to \'' + value+'\'')
+        if 'state' in vals:
+            value = self.pool.get('fleet.vehicle.state').browse(cr,uid,vals['state'],context=context).name
+            changes.append('State: from \'' + self.browse(cr, uid, ids, context)[0].state.name + '\' to \'' + value+'\'')
+        if 'license_plate' in vals:
+            changes.append('License Plate: from \'' + self.browse(cr, uid, ids, context)[0].license_plate + '\' to \'' + vals['license_plate']+'\'')   
+       
         vehicle_id = super(fleet_vehicle,self).write(cr, uid, ids, vals, context)
+
         try:
-            changes = []
-            for key,value in vals.items():
-                if key in ['license_plate','driver','state']:
-                    if key == 'driver':
-                        value = self.pool.get('res.partner').browse(cr,uid,value,context=context).name
-                    if key == 'state':
-                        value = self.pool.get('fleet.vehicle.state').browse(cr,uid,value,context=context).name
-                    if key == 'driver':
-                        key = 'Driver'
-                    elif key == 'license_plate':
-                        key = 'License Plate'
-                    elif key =='state':
-                        key = 'State'
-                    changes.append(key + ' to \'' + value+'\'')
             if len(changes) > 0:
-                self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ ", ".join(changes), context=context)
-                #self.message_post(cr, uid, [vehicle_id], body='Vehicle edited. Changes : '+ ','.join(chain(*str(changes.items()))), context=context)
+                self.message_post(cr, uid, [self.browse(cr, uid, ids, context)[0].id], body=", ".join(changes), context=context)
         except Exception as e:
             print e
             pass
