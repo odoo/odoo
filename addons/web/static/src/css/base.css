@@ -2212,16 +2212,12 @@
   min-width: 60px;
   color: #1f1f1f;
 }
-.openerp .oe_form textarea {
-  height: 32px;
-}
 .openerp .oe_form input[readonly], .openerp .oe_form select[readonly], .openerp .oe_form textarea[readonly], .openerp .oe_form input[disabled], .openerp .oe_form select[disabled] {
   background: #e5e5e5 !important;
   color: #666666;
 }
 .openerp .oe_form textarea[disabled] {
   border: none;
-  border-left: 8px solid #eeeeee;
   padding-left: 8px;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -2229,6 +2225,9 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
+}
+.openerp .oe_form textarea.oe_inline[disabled] {
+  border-left: 8px solid #eeeeee;
 }
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
