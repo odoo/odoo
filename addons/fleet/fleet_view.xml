@@ -165,9 +165,9 @@
                         </div> 
                         <group col ="2">
                             <group string="General Properties">
-                                <field name="vin_sn" />
                                 <field name="driver" />
                                 <field name="location" />
+                                <field name="vin_sn" />
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group string="Additional Properties">
@@ -226,16 +226,9 @@
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
                 <search string="All vehicles">
-                    <field name="name" filter_domain="[('name','ilike',self)]" string="All vehicles"/>
-                    <field name="name" filter_domain="[('license_plate','ilike',self), ]" string="License plate"/>
-                    <field name="name" filter_domain="[('model_id','ilike',self), ]" string="Model"/>
-                    <field name="name" filter_domain="[('driver','ilike',self)]" string="Driver"/>
-                    <field name="name" filter_domain="[('state','ilike',self)]" string="State"/>
-                    <field name="name" filter_domain="[('location','ilike',self)]" string="Location"/>
-                    <field name="name" filter_domain="[('tag_ids','ilike',self)]" string="Tags"/>
-                    <field name="name" filter_domain="[('color','ilike',self)]" string="Color"/>
-                    <field name="name" filter_domain="[('doors','=',self)]" string="Doors"/>
-                    <field name="name" filter_domain="[('vin_sn','ilike',self)]" string="Serial number"/>
+                    <field name="name" filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" string="Vehicle"/>
+                    <field name="driver"/>
+                    <field name="tag_ids"/>
                </search>
             </field>
         </record>
