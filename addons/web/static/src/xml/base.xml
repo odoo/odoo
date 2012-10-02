@@ -1485,6 +1485,7 @@
 </div>
 <t t-name="SearchView.extended_search.proposition">
     <li>
+        <span class="searchview_extended_prop_or">or</span>
         <select class="searchview_extended_prop_field">
             <t t-foreach="widget.attrs.fields" t-as="field">
                 <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"
