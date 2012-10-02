@@ -6,15 +6,5 @@
             id="purchase_default_set"
             model="ir.values"
             name="set"/>
-
-        <!-- mail: subtypes -->
-        <record id="mail.mt_requisition_new" model="mail.message.subtype">
-            <field name="name">new</field>
-            <field name="res_model">purchase.requisition</field>
-        </record>
-        <record id="mail.mt_requisition_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">purchase.requisition</field>
-        </record>
     </data>
 </openerp>

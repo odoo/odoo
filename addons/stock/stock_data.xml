@@ -166,19 +166,5 @@ watch your stock valuation, and track production lots upstream and downstream (b
             <field name="lot_stock_id" ref="stock_location_stock"/>
             <field name="lot_output_id" ref="stock_location_output"/>
         </record>
-
-        <!-- Mail: mail.message.subtype -->
-        <record id="mail.mt_stock_new" model="mail.message.subtype">
-            <field name="name">created</field>
-            <field name="res_model">stock.picking.in</field>
-        </record>
-        <record id="mail.mt_stock_delivered" model="mail.message.subtype">
-            <field name="name">delivered</field>
-            <field name="res_model">stock.picking.out</field>
-        </record>
-        <record id="mail.mt_stock_received" model="mail.message.subtype">
-            <field name="name">received</field>
-            <field name="res_model">stock.picking.in</field>
-        </record>
     </data>
 </openerp>

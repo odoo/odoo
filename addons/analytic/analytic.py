@@ -285,7 +285,7 @@ class account_analytic_account(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
-                subtype="mt_account_new", context=context)
+                subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()
 

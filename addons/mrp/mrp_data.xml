@@ -27,21 +27,5 @@ From the Manufacturing Settings, you can choose to compute production schedules 
             <field name="number_increment">1</field>
         </record>
 
-        <!-- mail: subtypes -->
-        <record id="mail.mt_mrp_order_new" model="mail.message.subtype">
-            <field name="name">created</field>
-            <field name="res_model">mrp.production</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_mrp_order_canceled" model="mail.message.subtype">
-            <field name="name">canceled</field>
-            <field name="res_model">mrp.production</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_mrp_order_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">mrp.production</field>
-            <field name="default" eval="False"/>
-        </record>
     </data>
 </openerp>

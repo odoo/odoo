@@ -14,7 +14,7 @@
                 </tree>
             </field>
         </record>
-        
+
         <record model="ir.ui.view" id="view_mail_message_subtype_form">
             <field name="name">mail.message.subtype.form</field>
             <field name="model">mail.message.subtype</field>
@@ -30,14 +30,13 @@
                 </form>
             </field>
         </record>
-        
+
         <record model="ir.actions.act_window" id="action_view_message_subtype">
             <field name="name">Subtypes</field>
             <field name="res_model">mail.message.subtype</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
-        
         <menuitem name="Subtypes" id="menu_message_subtype" parent="base.menu_email" action="action_view_message_subtype"/>
 
     </data>

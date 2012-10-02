@@ -119,7 +119,6 @@ Dashboard for CRM will include:
         'test/ui/crm_demo.yml',
         'test/ui/duplicate_lead.yml',
         'test/ui/delete_lead.yml',
-        'test/process/crm_message_subtype.yml',
     ],
     'installable': True,
     'application': True,

@@ -49,18 +49,5 @@ You can also manage purchase requisitions, see also the Purchase Settings.</fiel
             model="ir.values"
             name="set"/>
         
-        <record id="mail.mt_purchase_new" model="mail.message.subtype">
-            <field name="name">created</field>
-            <field name="res_model">purchase.order</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_purchase_paid" model="mail.message.subtype">
-            <field name="name">paid</field>
-            <field name="res_model">purchase.order</field>
-        </record>
-        <record id="mail.mt_purchase_received" model="mail.message.subtype">
-            <field name="name">received</field>
-            <field name="res_model">purchase.order</field>
-        </record>
     </data>
 </openerp>

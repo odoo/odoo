@@ -462,18 +462,13 @@ You can automatically receive job application though an email gateway, see the H
     </record>
 
     <!-- mail: subtypes -->
-    <record id="mail.mt_recruitment_new" model="mail.message.subtype">
-        <field name="name">new</field>
-        <field name="res_model">hr.applicant</field>
+    <record id="mt_hired" model="mail.message.subtype">
+        <field name="name">Employee Hired</field>
+        <field name="res_model">hr.job</field>
     </record>
-    <record id="mail.mt_recruitment_hired" model="mail.message.subtype">
-        <field name="name">hired</field>
-        <field name="res_model">hr.applicant</field>
-    </record>
-    <record id="mail.mt_recruitment_refused" model="mail.message.subtype">
-        <field name="name">refused</field>
-        <field name="res_model">hr.applicant</field>
-        <field name="default" eval="False"/>
+    <record id="mt_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.job</field>
     </record>
 </data>
 </openerp>

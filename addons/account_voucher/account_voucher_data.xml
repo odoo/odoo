@@ -16,18 +16,10 @@
         </record>
 
         <!-- mail: subtypes -->
-        <record id="mail.mt_voucher_new" model="mail.message.subtype">
-            <field name="name">created</field>
+        <record id="mt_voucher" model="mail.message.subtype">
+            <field name="name">Status Change</field>
             <field name="res_model">account.voucher</field>
         </record>
-        <record id="mail.mt_voucher_post" model="mail.message.subtype">
-            <field name="name">post</field>
-            <field name="res_model">account.voucher</field>
-        </record>
-        <record id="mail.mt_voucher_reconciled" model="mail.message.subtype">
-            <field name="name">reconciled</field>
-            <field name="res_model">account.voucher</field>
-            <field name="default" eval="False"/>
-        </record>
+
     </data>
 </openerp>

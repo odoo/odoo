@@ -632,7 +632,6 @@ class mail_thread(osv.AbstractModel):
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
             (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id"
-
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
@@ -651,15 +650,16 @@ class mail_thread(osv.AbstractModel):
             attachment_ids.append((0, 0, data_attach))
 
         # get subtype
-        if subtype:
-            ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'mail', subtype)
-            subtype_id = ref and ref[1] or False
-        else:
-            subtype_id = False
+        if not subtype:
+            subtype = 'mail.mt_comment'
+        s = subtype.split('.')
+        if len(s)==1:
+            s = ('mail', s[0])
+        ref = self.pool.get('ir.model.data').get_object_reference(cr, uid, s[0], s[1])
+        subtype_id = ref and ref[1] or False
 
         model = context.get('thread_model', self._name) if thread_id else False
         messages = self.pool.get('mail.message')
-
 
         #auto link messages for same id and object
         if self._mail_autothread and thread_id:
