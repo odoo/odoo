@@ -422,7 +422,7 @@ class mrp_production(osv.osv):
                 pass
         return result
 
-    def action_compute(self, cr, uid, ids, properties=[], context=None):
+    def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product and planned date of work order.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.

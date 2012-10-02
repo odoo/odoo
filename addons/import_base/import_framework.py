@@ -227,7 +227,7 @@ class import_framework(Thread):
         return map
 
 
-    def _fields_mapp(self,dict_sugar, openerp_dict, table):
+    def _fields_mapp(self, dict_sugar, openerp_dict, table):
         """
             call all the mapper and transform data
             to be compatible with import_data

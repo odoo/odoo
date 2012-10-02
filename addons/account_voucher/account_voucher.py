@@ -849,7 +849,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def _sel_context(self, cr, uid, voucher_id,context=None):
+    def _sel_context(self, cr, uid, voucher_id, context=None):
         """
         Select the context to use accordingly if it needs to be multicurrency or not.
 
@@ -1275,7 +1275,9 @@ class account_voucher(osv.osv):
                 self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'number': False,
