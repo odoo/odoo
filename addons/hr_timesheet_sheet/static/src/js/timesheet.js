@@ -147,6 +147,8 @@ openerp.hr_timesheet_sheet = function(instance) {
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
                                 self.get_total(account).html(self.sum_total(account));
+                                self.get_day_total(day_count).html(self.sum_day_total(day_count));
+                                self.get_super_total().html(self.sum_super_total());
                                 self.sync();
                             }
                         });
@@ -156,12 +158,22 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
                 self.get_total(account).html(self.sum_total(account));
             });
+            _.each(_.range(self.dates.length), function(day_count) {
+                self.get_day_total(day_count).html(self.sum_day_total(day_count));
+            });
+            self.get_super_total().html(self.sum_super_total());
         },
         get_box: function(account, day_count) {
             return this.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]');
         },
         get_total: function(account) {
             return this.$('[data-account-total="' + account.account + '"]');
+        },
+        get_day_total: function(day_count) {
+            return this.$('[data-day-total="' + day_count + '"]');
+        },
+        get_super_total: function() {
+            return this.$('.oe_timesheet_weekly_supertotal');
         },
         sum_box: function(account, day_count) {
             var line_total = 0;
@@ -176,6 +188,23 @@ openerp.hr_timesheet_sheet = function(instance) {
                 _.each(day.lines, function(line) {
                     total += line.unit_amount;
                 });
+            });
+            return total;
+        },
+        sum_day_total: function(day_count) {
+            var total = 0;
+            _.each(this.accounts, function(account) {
+                _.each(account.days[day_count].lines, function(line) {
+                    total += line.unit_amount;
+                });
+            });
+            return total;
+        },
+        sum_super_total: function(account) {
+            var self = this;
+            var total = 0;
+            _.each(self.accounts, function(account) {
+                total += self.sum_total(account);
             });
             return total;
         },
@@ -197,6 +226,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                                     tmp[k] = v[0];
                                 }
                             });
+                            // we have to remove some keys, because analytic lines are shitty
                             _.each(_.keys(tmp), function(key) {
                                 if (auth_keys[key] === undefined) {
                                     tmp[key] = undefined;

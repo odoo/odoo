@@ -6,11 +6,11 @@
             <table>
                 <tr>
                     <th> </th>
-                    <th t-foreach="widget.dates" t-as="date">
+                    <th t-foreach="widget.dates" t-as="date" class="oe_timesheet_weekly_date_head">
                         <t t-esc="date.toString('ddd')"/><br />
                         <t t-esc="date.toString('MMM d')"/>
                     </th>
-                    <th>TOTAL</th>
+                    <th class="oe_timesheet_weekly_date_head">TOTAL</th>
                 </tr>
                 <tr t-foreach="widget.accounts" t-as="account">
                     <td class="oe_timesheet_weekly_account"><t t-esc="widget.account_names[account.account]"/></td>
@@ -23,6 +23,21 @@
                         <t t-set="day_count" t-value="day_count + 1"/>
                     </td>
                     <td t-att-data-account-total="account.account"> </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="oe_timesheet_weekly_adding_tot">
+                            <div class="oe_timesheet_weekly_adding"><button>Add Row</button></div>
+                            <div class="oe_timesheet_weekly_tottot"><span>TOTAL</span></div>
+                        </div>
+                    </td>
+                    <t t-set="day_count" t-value="0"/>
+                    <t t-foreach="widget.dates" t-as="date">
+                        <td class="oe_timesheet_weekly_box" t-att-data-day-total="day_count">
+                        </td>
+                        <t t-set="day_count" t-value="day_count + 1"/>
+                    </t>
+                    <td class="oe_timesheet_weekly_supertotal"> </td>
                 </tr>
             </table>
         </div>

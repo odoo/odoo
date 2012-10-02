@@ -1,25 +1,34 @@
 
-.oe_timesheet_weekly table {
+.openerp .oe_timesheet_weekly {
+    overflow-x: auto;
+}
+
+.openerp .oe_timesheet_weekly table {
     width: 100%;
 }
 
-.oe_timesheet_weekly th {
+.openerp .oe_timesheet_weekly th {
     text-align: right;
     color: #069;
     font-family: 'Helvetica Neue', Arial, Verdana, 'Nimbus Sans L', sans-serif;
     font-size: 10px;
 }
 
-.oe_timesheet_weekly td {
+.openerp .oe_timesheet_weekly th.oe_timesheet_weekly_date_head {
+    width: 60px;
+}
+
+.openerp .oe_timesheet_weekly td {
     text-align: right;
     vertical-align: middle;
 }
 
-.oe_timesheet_weekly .oe_timesheet_weekly_account {
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_account {
     text-align: left;
+    padding-right: 30px;
 }
 
-.oe_timesheet_weekly td input {
+.openerp .oe_timesheet_weekly td input {
     border: 1px solid #CCC;
     padding: 5px 2px !important;
     color: #666 !important;
@@ -30,11 +39,25 @@
     min-width: 0 !important;
 }
 
-.oe_timesheet_weekly td .oe_timesheet_weekly_box {
+.openerp .oe_timesheet_weekly td .oe_timesheet_weekly_box {
     padding: 5px 2px !important;
     color: #666 !important;
     font-size: 14px;
     font-weight: bold;
     width: 38px;
     display: inline-block;
+}
+
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_adding_tot {
+    display: table;
+    width: 100%;
+}
+
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_adding {
+    display: table-cell;
+    text-align: left;
+}
+
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_tottot {
+    display: table-cell;
 }
