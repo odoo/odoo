@@ -22,6 +22,8 @@ Contents:
     list-view
     form-notes
 
+    templates
+
 Indices and tables
 ==================
 
