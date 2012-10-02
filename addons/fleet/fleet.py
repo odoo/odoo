@@ -241,6 +241,7 @@ class fleet_vehicle(osv.Model):
                         due_soon = due_soon +1;
                     if diff_time>15:
                         break
+
                 res.append((record.id,due_soon))
             else:
                 res.append((record.id,0))
@@ -263,7 +264,7 @@ class fleet_vehicle(osv.Model):
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
-
+    _order = 'insurance_renewal_overdue desc, insurance_renewal_due_soon desc'
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -297,15 +298,15 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=False),
-        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=False),
+        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=True),
+        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=True),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
 
         }
 
     _defaults = {
         'doors' : 5,
-        'odometer_unit' : 'Kilometers',
+        'odometer_unit' : 'kilometers',
     }
 
 

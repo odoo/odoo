@@ -261,7 +261,7 @@
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
                                 <a type="open" href="#" class="oe_kanban_action oe_kanban_action_a">
-                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)" class="oe_employee_picture"/>
+                                    <img t-att-src="kanban_image('fleet.vehicle', 'image_small', record.id.value)"/>
                                 </a>
                                 <div class="oe_kanban_details">
                                     <h4 class="oe_partner_heading">
@@ -290,7 +290,13 @@
                                             <t t_if="record.odometer_unit.raw_value"><field name="odometer_unit" /></t>
                                         </li>
                                         <li>
-                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Insurance renewal<br/>- <field name="insurance_renewal_due_soon" />  due soon</t>
+                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Insurance renewal<br/>-<a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a"> <field name="insurance_renewal_due_soon" />  due soon</a></t>
+                                        </li>
+                                        <li>
+                                            <t t-if="record.insurance_renewal_overdue.raw_value">- <a> <field name="insurance_renewal_overdue" /> overdue </a></t>
+                                        </li>
+                                        <li>
+                                            <t t-if="record.insurance_renewal_due_soon.raw_value">Service Alert<br/>- <field name="insurance_renewal_due_soon" />  due soon</t>
                                         </li>
                                         <li>
                                             <t t-if="record.insurance_renewal_overdue.raw_value">- <field name="insurance_renewal_overdue" /> overdue</t>
@@ -301,9 +307,7 @@
                                 </div>
                                 
                             </div>
-                            <script>
-                            $('.oe_picture').load(function() { if($(this).width() > $(this).height()) { $(this).addClass('oe_employee_picture_wide') } });
-                        </script>
+                            
                         </t>
                     </templates>
                 </kanban>
