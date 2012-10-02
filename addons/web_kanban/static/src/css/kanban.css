@@ -159,15 +159,24 @@
   padding: 10px;
 }
 .openerp .oe_kanban_view .oe_kanban_quick_create input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
   outline: none;
-  border: none;
+  border: 1px solid transparent;
+  display: block;
+  margin-bottom: 8px;
+  font-size: 13px;
+  width: 100%;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
   -box-shadow: none;
-  display: block;
-  margin: 0 0 8px 0;
-  font-size: 13px;
-  width: 100%;
+}
+.openerp .oe_kanban_view .oe_kanban_quick_create input:focus {
+  border: 1px solid #a6a6fe;
+  -moz-box-shadow: 0px 0px 7px rgba(0, 133, 255, 0.3) inset;
+  -webkit-box-shadow: 0px 0px 7px rgba(0, 133, 255, 0.3) inset;
+  -box-shadow: 0px 0px 7px rgba(0, 133, 255, 0.3) inset;
 }
 .openerp .oe_kanban_view .oe_kanban_vignette {
   padding: 8px;
@@ -200,7 +209,7 @@
 }
 .openerp .oe_kanban_view .oe_kanban_details .oe_tag {
   display: inline-block;
-  margin: 0 0 2px 0;
+  margin: 0 2px 2px 0;
 }
 .openerp .oe_kanban_view .oe_kanban_record {
   position: relative;

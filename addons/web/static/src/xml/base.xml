@@ -2,6 +2,12 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
+<t t-name="ui.Header">
+    <header>
+        <t t-raw="__content__"/>
+    </header>
+</t>
+
 <t t-name="EmptyComponent">
     <div></div>
 </t>
@@ -314,7 +320,7 @@
 <t t-name="Menu">
     <ul class="oe_menu" t-if="widget.data">
         <li t-foreach="widget.data.data.children" t-as="menu">
-            <t t-call="Menu.secondary.link"/>
+            <t t-call="Menu.link"/>
         </li>
     </ul>
 </t>
@@ -333,7 +339,7 @@
                 <t t-esc="menu.name"/>
                 <!--
                     Shall the section be still clickable ?
-                    <t t-call="Menu.secondary.link"/>
+                    <t t-call="Menu.link"/>
                 -->
             </div>
             <t t-call="Menu.secondary.submenu"/>
@@ -343,13 +349,13 @@
 <t t-name="Menu.secondary.submenu">
     <ul t-if="menu.children.length" class="oe_secondary_submenu">
         <li t-foreach="menu.children" t-as="menu">
-            <t t-call="Menu.secondary.link"/>
+            <t t-call="Menu.link"/>
             <!--<span class="oe_menu_label">8</span>-->
             <t t-call="Menu.secondary.submenu"/>
         </li>
     </ul>
 </t>
-<t t-name="Menu.secondary.link">
+<t t-name="Menu.link">
     <a t-attf-href="#menu_id=#{menu.id}&amp;action=#{menu.action ? menu.action.split(',')[1] : ''}"
         t-att-class="menu.children.length ? 'oe_menu_toggler' : 'oe_menu_leaf'"
         t-att-data-menu="menu.id"
@@ -577,7 +583,7 @@
             <tr>
                 <th t-foreach="fields_view" t-as="field"
                     t-if="!field.attrs.modifiers.tree_invisible">
-                    <t t-esc="fields[field.attrs.name].string" />
+                    <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
                 </th>
             </tr>
         </thead>
@@ -592,7 +598,7 @@
     <t t-set="children" t-value="record[children_field]"/>
     <t t-set="class" t-value="children and children.length ? 'treeview-tr' : 'treeview-td'"/>
     <t t-set="rank" t-value="'oe-treeview-first'"/>
-    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + 19*(level-1) + 'px;'"/>
+    <t t-set="style" t-value="'background-position: ' + 19*(level-1) + 'px; padding-left: ' + (4 + 19*(level-1)) + 'px;'"/>
 
     <td t-foreach="fields_view" t-as="field"
         t-if="!field.attrs.modifiers.tree_invisible"
@@ -650,11 +656,9 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <div name="oe_list_add_div">
-            <button type="button" class="oe_button oe_list_add oe_highlight">
-                <t t-esc="widget.options.addable"/>
-            </button>
-        </div>
+        <button type="button" class="oe_button oe_list_add oe_highlight">
+            <t t-esc="widget.options.addable"/>
+        </button>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -695,7 +699,7 @@
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="div.oe_list_add_div" t-operation="after">
+    <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
         <span class="oe_alternative">
@@ -704,6 +708,11 @@
         </span>
     </t>
 </t>
+<button t-name="ListView.row.button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
+    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+         t-att-alt="widget.string" /></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is

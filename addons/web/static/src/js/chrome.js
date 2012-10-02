@@ -234,21 +234,19 @@ instance.web.Loading = instance.web.Widget.extend({
         this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
-        var self = this;
-        this.request_call = function() {
-            self.on_rpc_event(1);
-        };
-        this.response_call = function() {
-            self.on_rpc_event(-1);
-        };
-        this.session.on_rpc_request.add_first(this.request_call);
-        this.session.on_rpc_response.add_last(this.response_call);
+        this.session.on("request", this, this.request_call);
+        this.session.on("response", this, this.response_call);
+        this.session.on("error", this, this.response_call);
     },
     destroy: function() {
-        this.session.on_rpc_request.remove(this.request_call);
-        this.session.on_rpc_response.remove(this.response_call);
         this.on_rpc_event(-this.count);
         this._super();
+    },
+    request_call: function() {
+        this.on_rpc_event(1);
+    },
+    response_call: function() {
+        this.on_rpc_event(-1);
     },
     on_rpc_event : function(increment) {
         var self = this;

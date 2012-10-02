@@ -11,7 +11,7 @@ Contents:
 .. toctree::
     :maxdepth: 1
 
-    changelog-6.2
+    changelog-7.0
 
     async
     rpc
@@ -22,19 +22,7 @@ Contents:
     list-view
     form-notes
 
-Older stuff
------------
-
-.. toctree::
-   :maxdepth: 2
-
-   getting-started
-   production
-   widgets
-   addons
-   development
-   project
-   old-version
+    templates
 
 Indices and tables
 ==================

@@ -13,6 +13,7 @@ instance.web.form = {};
  * Properties:
  *     - display_invalid_fields : if true, all fields where is_valid() return true should
  *     be displayed as invalid.
+ *     - actual_mode : the current mode of the field manager. Can be "view", "edit" or "create".
  * Events:
  *     - view_content_has_changed : when the values of the fields have changed. When
  *     this event is triggered all fields should reprocess their modifiers.
@@ -31,14 +32,18 @@ instance.web.form.FieldManagerMixin = {
      */
     get_field: function(field_name) {},
     /**
-     * Returns true when the view is in create mode.
-     */
-    is_create_mode: function() {},
-    /**
      * Returns the current value of a field present in the view. See the get_value() method
      * method in FieldInterface for further information.
      */
     get_field_value: function(field_name) {},
+    /**
+    Gives new values for the fields contained in the view. The new values could not be setted
+    right after the call to this method. Setting new values can trigger on_changes.
+
+    @param (dict) values A dictonnary with key = field name and value = new value.
+    @return (Deferred) Is resolved after all the values are setted.
+    */
+    set_values: function(values) {},
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
@@ -83,6 +88,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.default_focus_button = null;
         this.fields_registry = instance.web.form.widgets;
         this.tags_registry = instance.web.form.tags;
+        this.widgets_registry = instance.web.form.custom_widgets;
         this.has_been_loaded = $.Deferred();
         this.translatable_fields = [];
         _.defaults(this.options, {
@@ -134,6 +140,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         this.rendering_engine.set_fields_registry(this.fields_registry);
         this.rendering_engine.set_tags_registry(this.tags_registry);
+        this.rendering_engine.set_widgets_registry(this.widgets_registry);
         if (!this.extract_qweb_template(data)) {
             this.rendering_engine.set_fields_view(data);
             var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
@@ -180,6 +187,14 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 instance.web.bus.trigger('click', e);
             }
         });
+        //bounce effect on red button when click on statusbar.
+        this.$el.find(".oe_form_field_status:not(.oe_form_status_clickable)").on('click', function (e) {
+            if((self.get("actual_mode") == "view")) { 
+                var $button = self.$el.find(".oe_highlight:not(.oe_form_invisible)").css({'float':'left','clear':'none'});
+                $button.effect('bounce', {distance:18, times: 5}, 150);
+                e.stopPropagation();
+            }
+         });
 
         return $.when();
     },
@@ -588,24 +603,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     on_processed_onchange: function(result, processed) {
         try {
         if (result.value) {
-            for (var f in result.value) {
-                if (!result.value.hasOwnProperty(f)) { continue; }
-                var field = this.fields[f];
-                // If field is not defined in the view, just ignore it
-                if (field) {
-                    var value_ = result.value[f];
-                    if (field.get_value() != value_) {
-                        field._inhibit_on_change_flag = true;
-                        field.set_value(value_);
-                        field._inhibit_on_change_flag = false;
-                        field._dirty_flag = true;
-                        if (!_.contains(processed, field.name)) {
-                            this.do_onchange(field, processed);
-                        }
-                    }
-                }
-            }
-            this.on_form_changed();
+            this._internal_set_values(result.value, processed);
         }
         if (!_.isEmpty(result.warning)) {
             instance.web.dialog($(QWeb.render("CrashManager.warning", result.warning)), {
@@ -635,6 +633,33 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             instance.webclient.crashmanager.on_javascript_exception(e);
             return $.Deferred().reject();
         }
+    },
+    _internal_set_values: function(values, exclude) {
+        exclude = exclude || [];
+        for (var f in values) {
+            if (!values.hasOwnProperty(f)) { continue; }
+            var field = this.fields[f];
+            // If field is not defined in the view, just ignore it
+            if (field) {
+                var value_ = values[f];
+                if (field.get_value() != value_) {
+                    field._inhibit_on_change_flag = true;
+                    field.set_value(value_);
+                    field._inhibit_on_change_flag = false;
+                    field._dirty_flag = true;
+                    if (!_.contains(exclude, field.name)) {
+                        this.do_onchange(field, exclude);
+                    }
+                }
+            }
+        }
+        this.on_form_changed();
+    },
+    set_values: function(values) {
+        var self = this;
+        return this.on_change_mutex.exec(function() {
+            self._internal_set_values(values);
+        });
     },
     /**
      * Ask the view to switch to view mode if possible. The view may not do it
@@ -676,17 +701,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.$buttons.find('.oe_form_buttons_edit').hide();
             self.$buttons.find('.oe_form_buttons_view').show();
             self.$sidebar.show();
-            _.each(this.fields,function(field){
-                field.set({"force_readonly": true});
-            });
         } else {
             self.$el.removeClass('oe_form_readonly').addClass('oe_form_editable');
             self.$buttons.find('.oe_form_buttons_edit').show();
             self.$buttons.find('.oe_form_buttons_view').hide();
             self.$sidebar.hide();
-            _.each(this.fields,function(field){
-                field.set({"force_readonly": false});
-            });
             this.autofocus();
         }
     },
@@ -862,7 +881,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Object} r result of the write function.
      */
     on_saved: function(r) {
-        if (!r.result) {
+        if (!r) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
@@ -885,11 +904,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * at the beginning of the dataset instead of the end
      */
     on_created: function(r, prepend_on_create) {
-        if (!r.result) {
+        if (!r) {
             // should not happen in the server, but may happen for internal purpose
             return $.Deferred().reject();
         } else {
-            this.datarecord.id = r.result;
+            this.datarecord.id = r;
             if (!prepend_on_create) {
                 this.dataset.alter_ids(this.dataset.ids.concat([this.datarecord.id]));
                 this.dataset.index = this.dataset.ids.length - 1;
@@ -996,7 +1015,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                         || field.get('invisible')
                         || field.get("readonly")
                         || field.field.type === 'one2many'
-                        || field.field.type === 'many2many') {
+                        || field.field.type === 'many2many'
+                        || field.field.type === 'binary') {
                     return false;
                 }
                 var displayed = value;
@@ -1086,9 +1106,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     get_field: function(field_name) {
         return this.fields_view.fields[field_name];
     },
-    is_create_mode: function() {
-        return this.get("actual_mode") === "create";
-    },
     get_field_value: function(field_name) {
         return this.fields[field_name].get_value();
     },
@@ -1125,6 +1142,9 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     set_fields_registry: function(fields_registry) {
         this.fields_registry = fields_registry;
     },
+    set_widgets_registry: function(widgets_registry) {
+        this.widgets_registry = widgets_registry;
+    },
     // Backward compatibility tools, current default version: v6.1
     process_version: function() {
         if (this.version < 7.0) {
@@ -1149,6 +1169,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         this.fields_to_init = [];
         this.tags_to_init = [];
+        this.widgets_to_init = [];
         this.labels = {};
         this.process(this.$form);
 
@@ -1175,6 +1196,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
             var obj = self.tags_registry.get_object(tag_name);
+            var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
+            w.replace($elem);
+        });
+        _.each(this.widgets_to_init, function($elem) {
+            var widget_type = $elem.attr("type");
+            var obj = self.widgets_registry.get_object(widget_type);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
             w.replace($elem);
         });
@@ -1219,6 +1246,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             $tag.removeAttr("modifiers");
             return $tag;
         }
+    },
+    process_widget: function($widget) {
+        this.widgets_to_init.push($widget);
+        return $widget;
     },
     process_sheet: function($sheet) {
         var $new_sheet = this.render_element('FormRenderingSheet', $sheet.getAttributes());
@@ -1646,22 +1677,42 @@ instance.web.form.InvisibilityChanger = instance.web.Class.extend(instance.web.P
     },
 });
 
+/**
+    Base class for all fields, custom widgets and buttons to be displayed in the form view.
+
+    Properties:
+        - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
+        the values of the "readonly" property and the "mode" property on the field manager.
+*/
 instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.InvisibilityChangerMixin, {
     /**
      * @constructs instance.web.form.FormWidget
      * @extends instance.web.Widget
      *
-     * @param view
+     * @param field_manager
      * @param node
      */
-    init: function(view, node) {
-        this._super(view);
-        this.view = view;
+    init: function(field_manager, node) {
+        this._super(field_manager);
+        this.view = field_manager;
+        this.field_manager = field_manager;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
-        instance.web.form.InvisibilityChangerMixin.init.call(this, view, this.modifiers.invisible);
+        instance.web.form.InvisibilityChangerMixin.init.call(this, this.field_manager, this.modifiers.invisible);
 
-        this.view.on("view_content_has_changed", this, this.process_modifiers);
+        this.field_manager.on("view_content_has_changed", this, this.process_modifiers);
+
+        this.set({required: this.modifiers['required'] === true});
+        // some events to make the property "effective_readonly" sync automatically with "readonly" and
+        // "mode" on field_manager
+        var self = this;
+        this.set({"readonly": this.modifiers['readonly'] === true});
+        var test_effective_readonly = function() {
+            self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
+        };
+        this.on("change:readonly", this, test_effective_readonly);
+        this.field_manager.on("change:actual_mode", this, test_effective_readonly);
+        test_effective_readonly.call(this);
     },
     renderElement: function() {
         this._super();
@@ -1771,8 +1822,8 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 
 instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
     template: 'WidgetButton',
-    init: function(view, node) {
-        this._super(view, node);
+    init: function(field_manager, node) {
+        this._super(field_manager, node);
         this.force_disabled = false;
         this.string = (this.node.attrs.string || '').replace(/_/g, '');
         if (JSON.parse(this.node.attrs.default_focus || "0")) {
@@ -1857,10 +1908,6 @@ instance.web.form.WidgetButton = instance.web.form.FormWidget.extend({
 /**
  * Interface to be implemented by fields.
  *
- * Properties:
- *     - readonly: boolean. If set to true the field should appear in readonly mode.
- *     - force_readonly: boolean, When it is true, the field should always appear
- *      in read only mode, no matter what the value of the "readonly" property can be.
  * Events:
  *     - changed_value: triggered when the value of the field has changed. This can be due
  *      to a user interaction or a call to set_value().
@@ -1937,8 +1984,6 @@ instance.web.form.FieldInterface = {
  * Abstract class for classes implementing FieldInterface.
  *
  * Properties:
- *     - effective_readonly: when it is true, the widget is displayed as readonly. Vary depending
- *      the values of the "readonly" property and the "force_readonly" property on the field manager.
  *     - value: useful property to hold the value of the field. By default, set_value() and get_value()
  *     set and retrieve the value property. Changing the value property also triggers automatically
  *     a 'changed_value' event that inform the view to trigger on_changes.
@@ -1955,25 +2000,13 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     init: function(field_manager, node) {
         var self = this
         this._super(field_manager, node);
-        this.field_manager = field_manager;
         this.name = this.node.attrs.name;
         this.field = this.field_manager.get_field(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
         this.options = JSON.parse(this.node.attrs.options || '{}');
         this.set({'value': false});
-        this.set({required: this.modifiers['required'] === true});
 
-        // some events to make the property "effective_readonly" sync automatically with "readonly" and
-        // "force_readonly"
-        this.set({"readonly": this.modifiers['readonly'] === true});
-        this.set({"force_readonly": false});
-        var test_effective_readonly = function() {
-            self.set({"effective_readonly": self.get("readonly") || !!self.get("force_readonly")});
-        };
-        this.on("change:readonly", this, test_effective_readonly);
-        this.on("change:force_readonly", this, test_effective_readonly);
-        test_effective_readonly.call(this);
         this.on("change:value", this, function() {
             this.trigger('changed_value');
             this._check_css_flags();
@@ -2030,7 +2063,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     },
     _check_css_flags: function() {
         if (this.field.translate) {
-            this.$el.find('.oe_field_translate').toggle(!this.field_manager.is_create_mode());
+            this.$el.find('.oe_field_translate').toggle(this.field_manager.get('actual_mode') !== "create");
         }
         if (!this.disable_utility_classes) {
             if (this.field_manager.get('display_invalid_fields')) {
@@ -2054,10 +2087,10 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
 });
 
 /**
- * A mixin to apply on any field that has to completely re-render when its readonly state
+ * A mixin to apply on any FormWidget that has to completely re-render when its readonly state
  * switch.
  */
-instance.web.form.ReinitializeFieldMixin =  {
+instance.web.form.ReinitializeWidgetMixin =  {
     /**
      * Default implementation of start(), use it or call explicitly initialize_field().
      */
@@ -2070,10 +2103,8 @@ instance.web.form.ReinitializeFieldMixin =  {
             this.destroy_content();
             this.renderElement();
             this.initialize_content();
-            this.render_value();
         });
         this.initialize_content();
-        this.render_value();
     },
     /**
      * Called to destroy anything that could have been created previously, called before a
@@ -2084,11 +2115,25 @@ instance.web.form.ReinitializeFieldMixin =  {
      * Called to initialize the content.
      */
     initialize_content: function() {},
+};
+
+/**
+ * A mixin to apply on any field that has to completely re-render when its readonly state
+ * switch.
+ */
+instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
+    initialize_field: function() {
+        instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
+        this.on("change:effective_readonly", this, function() {
+            this.render_value();
+        });
+        this.render_value();
+    },
     /**
      * Called to render the value. Should also be explicitly called at the end of a set_value().
      */
     render_value: function() {},
-};
+});
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
     template: 'FieldChar',
@@ -2670,7 +2715,7 @@ instance.web.form.CompletionFieldMixin = {
                 values.push({
                     label: _t("Search More..."),
                     action: function() {
-                        dataset.name_search(search_val, self.build_domain(), 'ilike', false, function(data) {
+                        dataset.name_search(search_val, self.build_domain(), 'ilike', false).then(function(data) {
                             self._search_create_popup("search", data);
                         });
                     },
@@ -2711,7 +2756,7 @@ instance.web.form.CompletionFieldMixin = {
         };
         if (self.options.quick_create === undefined || self.options.quick_create) {
             new instance.web.DataSet(this, this.field.relation, self.build_context())
-                .name_create(name, function(data) {
+                .name_create(name).then(function(data) {
                     self.add_id(data[0]);
                 }).fail(function(error, event) {
                     event.preventDefault();
@@ -2996,7 +3041,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         }
         if (! no_recurse) {
             var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
-            dataset.name_get([self.get("value")], function(data) {
+            dataset.name_get([self.get("value")]).then(function(data) {
                 self.display_value["" + self.get("value")] = data[0][1];
                 self.render_value(true);
             });
@@ -3007,7 +3052,9 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.$input.val(str.split("\n")[0]);
             this.current_display = this.$input.val();
-            this.$('.oe_m2o_cm_button').css({'visibility': this.is_false() ? 'hidden' : 'visible'});
+            if(this.is_false()){
+                this.$('.oe_m2o_cm_button').css({'display':'none'});
+            }
         } else {
             var lines = _.escape(str).split("\n");
             var link = "";
@@ -3437,7 +3484,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             title: _t("Open: ") + self.o2m.string,
             create_function: function(data) {
                 return self.o2m.dataset.create(data).then(function(r) {
-                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                    self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                     self.o2m.dataset.on_change();
                 });
             },
@@ -3527,7 +3574,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                     alternative_form_view: self.o2m.field.views ? self.o2m.field.views["form"] : undefined,
                     create_function: function(data, callback, error_callback) {
                         return self.o2m.dataset.create(data).then(function(r) {
-                            self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r.result]));
+                            self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
                             self.o2m.dataset.on_change();
                         }).then(callback, error_callback);
                     },
@@ -3552,7 +3599,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
             write_function: function(id, data) {
-                return self.o2m.dataset.write(id, data, {}, function(r) {
+                return self.o2m.dataset.write(id, data, {}).then(function() {
                     self.o2m.reload_current_view();
                 });
             },
@@ -4505,10 +4552,10 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     initialize_content: function() {
         var self = this;
         this.selection = new instance.web.form.FieldSelection(this, { attrs: {
-            name: 'selection'
+            name: 'selection',
+            modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.selection.view = this.view;
-        this.selection.set({force_readonly: this.get('effective_readonly')});
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.setElement(this.$(".oe_form_view_reference_selection"));
         this.selection.renderElement();
@@ -4518,10 +4565,10 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('blurred', null, function () {self.trigger('blurred')});
 
         this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
-            name: 'm2o'
+            name: 'm2o',
+            modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.view = this.view;
-        this.m2o.set({force_readonly: this.get("effective_readonly")});
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.setElement(this.$(".oe_form_view_reference_m2o"));
         this.m2o.renderElement();
@@ -4826,7 +4873,10 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     get_selection: function() {
         var self = this;
         if (this.field.type == "many2one") {
-            var domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            var domain = [];
+            if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
+                domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+            }
             var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
             ds.read_slice(['name'], {}).done( function (records) {
                 for(var i = 0; i < records.length; i++) {
@@ -4921,6 +4971,9 @@ instance.web.form.widgets = new instance.web.Registry({
  */
 instance.web.form.tags = new instance.web.Registry({
     'button' : 'instance.web.form.WidgetButton',
+});
+
+instance.web.form.custom_widgets = new instance.web.Registry({
 });
 
 };

@@ -972,6 +972,11 @@ instance.web.Registry = instance.web.Class.extend({
 });
 
 instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
+    triggers: {
+        'request': 'Request sent',
+        'response': 'Response received',
+        'error': 'HTTP Error response or timeout received',
+    },
     /**
      * @constructs instance.web.JsonRPC
      * @extends instance.web.CallbackEnabled
@@ -1310,12 +1315,12 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             id: _.uniqueId('r')
         };
         var deferred = $.Deferred();
-        this.on_rpc_request();
+        this.trigger('request', url, payload);
         var aborter = params.aborter;
         delete params.aborter;
         var request = this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
-                self.on_rpc_response();
+                self.trigger('response', response);
                 if (!response.error) {
                     if (url.url === '/web/session/eval_domain_and_context') {
                         self.test_eval(params, response.result);
@@ -1328,7 +1333,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 }
             },
             function(jqXHR, textStatus, errorThrown) {
-                self.on_rpc_response();
+                self.trigger('error');
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
@@ -1435,10 +1440,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             $form.after($iframe);
             return deferred;
         }
-    },
-    on_rpc_request: function() {
-    },
-    on_rpc_response: function() {
     },
     on_rpc_error: function(error) {
     },
