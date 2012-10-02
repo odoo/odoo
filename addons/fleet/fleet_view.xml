@@ -116,8 +116,9 @@
             <field name="model">fleet.vehicle.state</field>
             <field name="arch" type="xml">
                 <tree string="State" version="7.0" editable="bottom">
+                    <field name="sequence" widget="handler" invisible="1"/>
                     <field name="name" />
-                    <field name="sequence" />
+                    
                 </tree>
             </field>
         </record>
