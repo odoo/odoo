@@ -72,8 +72,7 @@
   <story>
     <para style="terp_default_8">[[ repeatIn(objects,'o') ]]</para>
     <para style="terp_header_Centre">[[o.user_id.company_id.name]]</para>
-    <para style="terp_default_Centre_9">[[ address and address.street ]], [[ address and address.zip ]] [[ address and address.city ]]</para>
-    <para style="terp_default_Centre_9">[[ address and address.country_id.name ]]</para>
+    <para style="terp_default_Centre_9">[[ address and display_address(address)]]</para>
     <para style="terp_default_Centre_9">Tel : [[ address and address.phone ]]</para>
     <para style="terp_default_Centre_9">User : [[ o.user_id.name ]]</para>
     <para style="terp_default_Centre_9">Shop : [[ o.shop_id.name ]]</para>
