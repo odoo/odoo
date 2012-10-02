@@ -32,11 +32,11 @@
                         </div>
                     </td>
                     <t t-set="day_count" t-value="0"/>
-                    <t t-foreach="widget.dates" t-as="date">
-                        <td class="oe_timesheet_weekly_box" t-att-data-day-total="day_count">
-                        </td>
+                    <td t-foreach="widget.dates" t-as="date">
+                        <span class="oe_timesheet_weekly_box" t-att-data-day-total="day_count">
+                        </span>
                         <t t-set="day_count" t-value="day_count + 1"/>
-                    </t>
+                    </td>
                     <td class="oe_timesheet_weekly_supertotal"> </td>
                 </tr>
             </table>
