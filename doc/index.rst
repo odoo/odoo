@@ -22,20 +22,6 @@ Contents:
     list-view
     form-notes
 
-Older stuff
------------
-
-.. toctree::
-   :maxdepth: 2
-
-   getting-started
-   production
-   widgets
-   addons
-   development
-   project
-   old-version
-
 Indices and tables
 ==================
 
