@@ -359,9 +359,6 @@ class base_stage(object):
         """
         return ''
 
-    def find_subtype(self, cr, uid, ids, name, context=None):
-        return "mail.mt_comment"
-
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Send a notification when the stage changes. This method has
             to be overriden, because each document will have its particular
@@ -373,22 +370,19 @@ class base_stage(object):
     def case_open_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>opened</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_subtype(cr, uid, ids, context=context)
-            self.message_post(cr, uid, [id], body=msg, subtype=xml_id, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>closed</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_subtype(cr, uid, ids, context=context)
-            self.message_post(cr, uid, [id], body=msg, subtype=xml_id, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
             msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
-            xml_id = self.find_subtype(cr, uid, ids, context=context)
-            self.message_post(cr, uid, [id], body=msg, subtype=xml_id, context=context)
+            self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 
     def case_pending_send_note(self, cr, uid, ids, context=None):

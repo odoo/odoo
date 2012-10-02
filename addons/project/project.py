@@ -1099,7 +1099,8 @@ class task(base_stage, osv.osv):
         task_record = self.browse(cr, uid, task_id, context=context)
         if task_record.project_id:
             project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [task_id], project_follower_ids, context=context)
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids, 
+                context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id

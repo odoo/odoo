@@ -706,7 +706,7 @@ class mail_thread(osv.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if not user_ids:
-            user_ids = [uid]
+            return False
         partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, subtype_ids=subtype_ids, context=context)
 
@@ -719,8 +719,8 @@ class mail_thread(osv.AbstractModel):
             subtype_ids = subtype_obj.search(cr, uid, [('default', '=', True), '|', ('res_model', '=', self._name), ('res_model', '=', False)], context=context)
         # update the subscriptions
         fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        fol_ids = fol_obj.search(cr, 1, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
+        fol_obj.write(cr, 1, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
         return True
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
