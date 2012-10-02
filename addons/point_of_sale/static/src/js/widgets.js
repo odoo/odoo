@@ -712,7 +712,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             });
             this.$('.button.set_weight').click(function(){
                 var kg = Number(self.$('input.weight').val());
-                if(!Number.isNaN(kg)){
+                if(!isNaN(kg)){
                     self.pos.proxy.debug_set_weight(kg);
                 }
             });
