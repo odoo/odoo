@@ -137,6 +137,15 @@ class res_partner(osv.Model):
 class res_users(osv.Model):
     _inherit = 'res.users'
 
+    def _get_state(self, cr, uid, ids, name, arg, context=None):
+        return dict((user.id, 'new' if not user.login_date else 'reset' if user.signup_token else 'active')
+                    for user in self.browse(cr, uid, ids, context))
+
+    _columns = {
+        'state': fields.function(_get_state, string='State', type='selection',
+                    selection=[('new', 'New'), ('active', 'Active'), ('reset', 'Resetting Password')]),
+    }
+
     def signup(self, cr, uid, values, token=None, context=None):
         """ signup a user, to either:
             - create a new user (no token), or
