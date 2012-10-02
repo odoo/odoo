@@ -48,7 +48,8 @@ openerp.hr_timesheet_sheet = function(instance) {
                 self.updating = false;
             });
         },
-        start: function() {
+        initialize_field: function() {
+            instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
             var self = this;
             self.on("change:sheets", self, self.initialize_content);
             self.on("change:date_to", self, self.initialize_content);
