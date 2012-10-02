@@ -45,6 +45,7 @@ Key Features
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
         'event_view.xml',
+        'event_data.xml',
         'report/report_event_registration_view.xml',
         'board_association_view.xml',
         'res_partner_view.xml',

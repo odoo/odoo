@@ -360,8 +360,10 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_('State set to open'), context=context)
-        return self.write(cr, uid, ids, {'state': 'open'}, context=context)
+        for reg in self.browse(cr, uid, ids, context=context or {}):
+            self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
+        self.message_post(cr, uid, ids, body=_('Registration confirmed.'), context=context)
+        return self.write(cr, uid, ids, {'state': 'open'},context=context)
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(event_registration, self).create(cr, uid, vals, context)
@@ -392,7 +394,7 @@ class event_registration(osv.osv):
                 self.write(cr, uid, ids, values)
                 self.message_post(cr, uid, ids, body=_('State set to Done'), context=context)
             else:
-                raise osv.except_osv(_('Error!'),_("You must wait for the starting day of the event to do this action.") )
+                raise osv.except_osv(_('Error!'), _("You must wait for the starting day of the event to do this action."))
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):

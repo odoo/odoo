@@ -49,6 +49,7 @@ Main Features
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'mail_message_subtype.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
         'mail_mail_view.xml',

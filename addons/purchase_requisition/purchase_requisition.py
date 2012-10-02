@@ -92,13 +92,13 @@ class purchase_requisition(osv.osv):
 
     def in_progress_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
-    
+
     def reset_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
-     
+
     def done_to_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
-        
+
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
