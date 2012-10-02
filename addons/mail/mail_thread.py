@@ -720,7 +720,7 @@ class mail_thread(osv.AbstractModel):
         # update the subscriptions
         fol_obj = self.pool.get('mail.followers')
         fol_ids = fol_obj.search(cr, 1, [('res_model', '=', self._name), ('res_id', 'in', ids), ('partner_id', 'in', partner_ids)], context=context)
-        fol_obj.write(cr, uid, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
+        fol_obj.write(cr, 1, fol_ids, {'subtype_ids': [(6, 0, subtype_ids)]}, context=context)
         return True
 
     def message_unsubscribe_users(self, cr, uid, ids, user_ids=None, context=None):
