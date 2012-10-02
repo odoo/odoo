@@ -159,11 +159,7 @@
         </td>
         <td>
           <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.name or '']]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.street or '']]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.street2 or removeParentNode('para')]]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.zip or '']] [[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.city or '']]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.state and o.mode.bank_id.bank.state.name or removeParentNode('para') ]]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.country and o.mode.bank_id.bank.country.name or '']]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and display_address(o.mode.bank_id.bank)]]</para>
         </td>
       </tr>
     </blockTable>
