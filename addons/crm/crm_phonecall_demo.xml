@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
-    <!-- 
-        ((((((((((( Demo Cases ))))))))))) 
-    -->
+
+        <!--  Demo Cases  -->
         <record id="crm_phonecall_1" model="crm.phonecall">
             <field eval="time.strftime('%Y-%m-04 10:45:36')" name="date"/>
             <field name="partner_id" ref="base.res_partner_11"/>
@@ -47,7 +46,7 @@
             <field eval="time.strftime('%Y-%m-21 14:10:23')" name="date"/>
             <field eval="'3'" name="priority"/>
             <field name="user_id" ref="base.user_root"/>
-            <field name="name">Wanted information about pricing of Laptops</field>
+            <field name="name">Wanted information about pricing of laptops</field>
             <field name="state">done</field>
             <field name="partner_phone">(077) 582-4035</field>
             <field name="partner_mobile">(077) 341-3591</field>
@@ -79,6 +78,7 @@
             <field eval="time.strftime('%Y-%m-28 14:15:30')" name="date"/>
             <field name="categ_id" ref="crm.categ_phone2"/>
             <field eval="8.56" name="duration"/>
-        </record>    
+        </record>
+
     </data>
 </openerp>

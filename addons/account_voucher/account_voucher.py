@@ -32,11 +32,11 @@ class res_company(osv.osv):
     _columns = {
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Income Currency Rate",
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Expense Currency Rate",
+            string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
     }
 
@@ -782,9 +782,16 @@ class account_voucher(osv.osv):
             vals[key].update(res[key])
         return vals
 
+    def button_proforma_voucher(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService("workflow")
+        for vid in ids:
+            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        return {'type': 'ir.actions.act_window_close'}
+
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -950,11 +957,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False

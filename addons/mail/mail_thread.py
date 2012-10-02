@@ -30,6 +30,7 @@ import xmlrpclib
 
 from email.message import Message
 from mail_message import decode
+from openerp import SUPERUSER_ID
 from osv import osv, fields
 from tools.safe_eval import safe_eval as eval
 
@@ -118,26 +119,27 @@ class mail_thread(osv.AbstractModel):
 
     def _get_message_data(self, cr, uid, ids, name, args, context=None):
         res = dict((id, dict(message_unread=False, message_summary='')) for id in ids)
-        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
 
+        # search for unread messages, by reading directly mail.notification, as SUPERUSER
         notif_obj = self.pool.get('mail.notification')
-        notif_ids = notif_obj.search(cr, uid, [
+        notif_ids = notif_obj.search(cr, SUPERUSER_ID, [
             ('partner_id.user_ids', 'in', [uid]),
             ('message_id.res_id', 'in', ids),
             ('message_id.model', '=', self._name),
             ('read', '=', False)
         ], context=context)
-        for notif in notif_obj.browse(cr, uid, notif_ids, context=context):
+        for notif in notif_obj.browse(cr, SUPERUSER_ID, notif_ids, context=context):
             res[notif.message_id.res_id]['message_unread'] = True
 
-        for thread in self.browse(cr, uid, ids, context=context):
-            cls = res[thread.id]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
-            res[thread.id]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread.message_comment_ids), len(thread.message_follower_ids))
-            res[thread.id]['message_is_follower'] = user.partner_id.id in [follower.id for follower in thread.message_follower_ids]
+        for thread in self.read(cr, uid, ids, ['message_follower_ids', 'message_comment_ids', 'message_ids'], context=context):
+            cls = res[thread['id']]['message_unread'] and ' class="oe_kanban_mail_new"' or ''
+            res[thread['id']]['message_summary'] = "<span%s><span class='oe_e'>9</span> %d</span> <span><span class='oe_e'>+</span> %d</span>" % (cls, len(thread['message_comment_ids']), len(thread['message_follower_ids']))
+            res[thread['id']]['message_is_follower'] = partner_id in thread['message_follower_ids']
         return res
 
     def _search_unread(self, cr, uid, obj=None, name=None, domain=None, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        partner_id = self.pool.get('res.users').read(cr, uid, uid, ['partner_id'], context=context)['partner_id'][0]
         res = {}
         notif_obj = self.pool.get('mail.notification')
         notif_ids = notif_obj.search(cr, uid, [
@@ -195,6 +197,13 @@ class mail_thread(osv.AbstractModel):
         fol_ids = fol_obj.search(cr, uid, [('res_model', '=', self._name), ('res_id', 'in', ids)], context=context)
         fol_obj.unlink(cr, uid, fol_ids, context=context)
         return super(mail_thread, self).unlink(cr, uid, ids, context=context)
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        default['message_ids'] = []
+        default['message_comment_ids'] = []
+        default['message_follower_ids'] = []
+        return super(mail_thread, self).copy(cr, uid, id, default=default, context=context)
 
     #------------------------------------------------------
     # mail.message wrappers and tools
@@ -620,7 +629,7 @@ class mail_thread(osv.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, subscribe uid instead. """
         if not user_ids: user_ids = [uid]
-        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        partner_ids = [user['partner_id'][0] for user in self.pool.get('res.users').read(cr, uid, user_ids, ['partner_id'], context=context)]
         return self.message_subscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_subscribe(self, cr, uid, ids, partner_ids, context=None):
@@ -631,7 +640,7 @@ class mail_thread(osv.AbstractModel):
         """ Wrapper on message_subscribe, using users. If user_ids is not
             provided, unsubscribe uid instead. """
         if not user_ids: user_ids = [uid]
-        partner_ids = [user.partner_id.id for user in self.pool.get('res.users').browse(cr, uid, user_ids, context=context)]
+        partner_ids = [user['partner_id'][0] for user in self.pool.get('res.users').read(cr, uid, user_ids, ['partner_id'], context=context)]
         return self.message_unsubscribe(cr, uid, ids, partner_ids, context=context)
 
     def message_unsubscribe(self, cr, uid, ids, partner_ids, context=None):

@@ -364,6 +364,10 @@ class project_issue(base_stage, osv.osv):
         logged_fields = ['stage_id', 'state', 'message_ids']
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
+        if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
+
         return super(project_issue, self).write(cr, uid, ids, vals, context)
 
     def onchange_task_id(self, cr, uid, ids, task_id, context=None):
@@ -381,6 +385,10 @@ class project_issue(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
+        project_id = self.browse(cr, uid, obj_id, context=context).project_id
+        if project_id:
+            followers = [follower.id for follower in project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
