@@ -114,8 +114,8 @@
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
                 <t t-if="!widget.options.thread.display_on_flat">
-                    <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
-                    <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and !widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
+                    <li t-if="widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
+                    <li t-if="!widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
                     <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_e">)</a></li>
                     <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_e" title="Reply by mail">)</a></li>
                 </t>

@@ -303,44 +303,45 @@ class mail_message(osv.Model):
             :return list: list of trees of messages
         """
 
+        message_loaded = context and context.get('message_loaded') or [0]
+
         # don't read the message display by .js, in context message_loaded list
         if context and context.get('message_loaded'):
-            domain += [ ['id','not in',context.get('message_loaded')] ];
+            domain += [ ['id','not in',message_loaded] ];
 
         limit = limit or self._message_read_limit
         context = context or {}
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
             # if the user can read a message, he can read all the thread
-            ids = ids + self.search(cr, SUPERUSER_ID, [['parent_id','in',ids]], None, limit=limit)
+            ids = ids + self.search(cr, SUPERUSER_ID, [['parent_id','in',ids],['id','not in',message_loaded]], None, limit=limit)
 
         messages = self.browse(cr, uid, ids, context=context)
         add_expandable = (len(messages) >= limit)
 
         # key: ID, value: record
-        tree = {}
+        tree = []
         result = []
         for msg in messages:
-            record = self._message_dict_get(cr, uid, msg, context=context)
-            while msg.parent_id and msg.parent_id.id != parent_id:
-                if msg.parent_id.id in tree:
-                    record_parent = tree[msg.parent_id.id]
-                else:
-                    record_parent = self._message_dict_get(cr, uid, msg.parent_id, context=context)
-                    if msg.parent_id.parent_id:
-                        tree[msg.parent_id.id] = record_parent
-                if record['id'] not in [x['id'] for x in record_parent['child_ids']]:
-                    record_parent['child_ids'].append(record)
-                record = record_parent
-                msg = msg.parent_id
             # if not in record and not in message_loded list
-            if msg.id not in tree and not(context and context.get('message_loaded') and msg.id in context.get('message_loaded')) :
+            if msg.id not in tree and msg.id not in message_loaded :
+                record = self._message_dict_get(cr, uid, msg, context=context)
+                tree.append(msg.id)
                 result.append(record)
-                tree[msg.id] = record
+
+            while msg.parent_id and msg.parent_id.id != parent_id:
+                parent_id = msg.parent_id.id
+                if msg.parent_id.id not in tree:
+                    msg = msg.parent_id
+                    tree.append(msg.id)
+                    # if not in record and not in message_loded list
+                    if msg.id not in message_loaded :
+                        record = self._message_dict_get(cr, uid, msg, context=context)
+                        result.append(record)
 
         # Flatten the result
-        result2 = self.message_read_tree_flatten(cr, uid, None, result, [], level, context=context, limit=limit, add_expandable=add_expandable)
-        return result2
+        #result2 = self.message_read_tree_flatten(cr, uid, None, result, [], level, context=context, limit=limit, add_expandable=add_expandable)
+        return result
 
     #------------------------------------------------------
     # Email api
