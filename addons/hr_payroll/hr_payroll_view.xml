@@ -234,7 +234,7 @@
                         </h2>
                     </div>
                     <group col="4">
-                        <field name="contract_id" domain="[('employee_id','=',employee_id)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)" context="{'default_employee_id': employee_id}"/>
+                        <field name="contract_id" domain="[('employee_id','=',employee_id),('date_start','&lt;=',date_to),'|',('date_end','&gt;=',date_from),('date_end','=',False)]" on_change="onchange_contract_id(date_from, date_to, employee_id, contract_id)" context="{'default_employee_id': employee_id}"/>
                         <field name="number"/>
                         <field name="struct_id" attrs="{'required':[('contract_id','&lt;&gt;',False)]}"/>
                         <field name="name"/>
@@ -369,14 +369,16 @@
             <field name="view_id" ref="view_hr_payslip_tree"/>
             <field name="search_view_id" ref="view_hr_payslip_filter"/>
         </record>
-        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll" groups="base.group_hr_user"/>
-        <act_window name="Payslips"
-                    context="{'search_default_employee_id': [active_id], 'default_employee_id': active_id}"
-                    res_model="hr.payslip"
-                    src_model="hr.employee"
-                    view_id ="view_hr_payslip_tree"
-                    id="act_hr_employee_payslip_list"
-                    groups="base.group_hr_manager"/>
+
+        <menuitem action="action_view_hr_payslip_form" id="menu_department_tree" parent="menu_hr_root_payroll" groups="base.group_hr_user"/>        
+
+        <record id="act_hr_employee_payslip_list" model="ir.actions.act_window">
+            <field name="res_model">hr.payslip</field>
+            <field name="name">Payslips</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_employee_id': [active_id], 'default_employee_id': active_id}</field>
+        </record>
 
         <!-- Employee View -->
         <record id="payroll_hr_employee_view_form" model="ir.ui.view">

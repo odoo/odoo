@@ -253,7 +253,6 @@ class sale_order(osv.osv):
         assert mode in ('finished', 'canceled'), _("invalid mode for test_state")
         finished = True
         canceled = False
-        notcanceled = False
         write_done_ids = []
         write_cancel_ids = []
         for order in self.browse(cr, uid, ids, context={}):
@@ -268,8 +267,6 @@ class sale_order(osv.osv):
                         canceled = True
                         if line.state != 'exception':
                             write_cancel_ids.append(line.id)
-                    else:
-                        notcanceled = True
         if write_done_ids:
             self.pool.get('sale.order.line').write(cr, uid, write_done_ids, {'state': 'done'})
         if write_cancel_ids:
@@ -278,9 +275,6 @@ class sale_order(osv.osv):
         if mode == 'finished':
             return finished
         elif mode == 'canceled':
-            return canceled
-            if notcanceled:
-                return False
             return canceled
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, move_id, date_planned, context=None):

@@ -64,7 +64,6 @@ You can define the different phases of interviews and easily rate the applicant 
     'test': ['test/recruitment_process.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '001073437025460275621',
     'application': True,
 }
 

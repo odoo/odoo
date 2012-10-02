@@ -323,7 +323,7 @@ class project(osv.osv):
         default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
-            default['name'] = proj.name + _(' (copy)')
+            default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
@@ -344,7 +344,7 @@ class project(osv.osv):
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             context.update({'copy':True})
             new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name': proj.name +_(' (copy)'),
+                                    'name':_("%s (copy)") % (proj.name),
                                     'state':'open',
                                     'date_start':new_date_start,
                                     'date':new_date_end,
@@ -509,6 +509,8 @@ def Project():
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
+        if vals.get('partner_id', False):
+            vals['type'] = 'contract'
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
         self.create_send_note(cr, uid, [project_id], context=context)
@@ -690,11 +692,10 @@ class task(base_stage, osv.osv):
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
-        default['stage_id'] = False
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                new_name = _("%s (copy)")%default.get('name','')
+                new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
 
@@ -768,7 +769,7 @@ class task(base_stage, osv.osv):
             }),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -1100,6 +1101,10 @@ class task(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
+        project_id = self.browse(cr, uid, task_id, context=context).project_id
+        if project_id:
+            followers = [follower.id for follower in project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [task_id], followers, context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
@@ -1109,6 +1114,9 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')

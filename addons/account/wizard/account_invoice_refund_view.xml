@@ -7,19 +7,40 @@
             <field name="model">account.invoice.refund</field>
             <field name="arch" type="xml">
                 <form string="Credit Note" version="7.0">
-                    <separator string="Credit Note Options"/>
-                    <group col="4">
-                         <field name="description"/>
-                         <field name="journal_id" widget='selection'/>
-                         <field name="date"/>
-                         <field name="period"/>
-                         <field name="filter_refund"/>
+                    <group>
+                         <group colspan="2">
+                             <label for="filter_refund"/>
+                             <div>
+                                 <field name="filter_refund" class="oe_inline"/>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','refund')]}" class="oe_grey">
+                                    You will be able to edit and validate this
+                                    credit note directly or keep it draft,
+                                    waiting for the document to be issued by
+                                    your supplier/customer.
+                                 </p>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','cancel')]}" class="oe_grey">
+                                    Use this option if you want to cancel an invoice you should not
+                                    have issued. The credit note will be created, validated and reconciled
+                                    with the invoice. You will not be able to modify the credit note.
+                                 </p>
+                                 <p attrs="{'invisible':[('filter_refund','&lt;&gt;','modify')]}" class="oe_grey">
+                                    Use this option if you want to cancel an invoice and create a new
+                                    one. The credit note will be created, validated and reconciled
+                                    with the current invoice. A new, draft, invoice will be created 
+                                    so that you can edit it.
+                                 </p>
+                             </div>
+                         </group>
+                         <group>
+                             <field name="description"/>
+                             <field name="journal_id" widget='selection'/>
+                         </group><group>
+                             <field name="date"/>
+                             <field name="period"/>
+                         </group>
                     </group>
-                    <label string="Modify Invoice: Cancels the current invoice and creates a new copy of it ready for editing."/>
-                    <label string="Credit Note: Creates the credit note, ready for editing."/>
-                    <label string="Cancel Invoice: Creates the credit note, validate and reconcile it to cancel the current invoice."/>
                     <footer>
-                        <button string='Refund' name="invoice_refund" type="object" class="oe_highlight"/>
+                        <button string='Create Credit Note' name="invoice_refund" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel"/>
                     </footer>
@@ -28,7 +49,7 @@
         </record>
 
         <record id="action_account_invoice_refund" model="ir.actions.act_window">
-            <field name="name">Refund</field>
+            <field name="name">Refund Invoice</field>
             <field name="res_model">account.invoice.refund</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>

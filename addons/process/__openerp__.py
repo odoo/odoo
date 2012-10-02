@@ -43,7 +43,6 @@ This module shows the basic processes involved in the selected modules and in th
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0055447636669',
     'images': ['images/process_nodes.jpeg','images/process_transitions.jpeg', 'images/processes.jpeg'],
     'js': [
         'static/src/js/process.js'

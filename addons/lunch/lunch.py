@@ -21,142 +21,232 @@
 
 from osv import osv, fields
 
-class lunch_order(osv.Model):
-	""" lunch order """
-	_name = 'lunch.order'
-	_description = 'Lunch Order'
+class lunch_category(osv.osv):
+    """ Lunch category """
 
-	def _price_get(self,cr,uid,ids,name,arg,context=None):
-		orders = self.browse(cr,uid,ids,context=context)
-		result={}
-		for order in orders:
-			value = 0.0
-			for product in order.products:
-				value+=product.product.price
-				result[order.id]=value
-		return result
+    _name = 'lunch.category'
+    _description = "Category"
 
-	def onchange_price(self,cr,uid,ids,products,context=None):
-		res = {'value':{'total':0.0}}
-		if products:
-			tot = 0.0
-			for prod in products:
-				#price = self.pool.get('lunch.product').read(cr, uid, prod, ['price'])['price']
-				#tot += price
-				res = {'value':{'total':2.0}}
-		#	prods = self.pool.get('lunch.order.line').read(cr,uid,products,['price'])['price']
-		#	res = {'value':{'total': self._price_get(cr,uid,ids,products,context),}}
-		return res
-		
-	def confirm(self,cr,uid,ids,order,context=None):
-		cashmove_ref = self.pool.get('lunch.cashmove')
-		for order in self.browse(cr,uid,ids,context=context):
-			if order.state == 'confirmed':
-				continue
-			new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id,'amount':-order.total,'description':'Order','order_id':order.id,} )
-			self.write(cr,uid,[order.id],{'cashmove': new_id, 'state':'confirmed'})
-		return {}
-
-	_columns = {
-		'user_id' : fields.many2one('res.users','User Name',required=True,readonly=True),
-		'date': fields.date('Date', readonly=True),
-		'products' : fields.one2many('lunch.order.line','order_id','Products'),
-		'total' : fields.function(_price_get, string="Total",store=True),
-		'state': fields.selection([('new', 'New'), ('saved', 'Saved'),('confirmed','Confirmed'), ('cancelled','Cancelled')], \
-        	'Status', readonly=True, select=True),
-		'cashmove' : fields.one2many('lunch.cashmove','order_id','Cash Move')
-	}
-
-	_defaults = {
-        'user_id': lambda self, cr, uid, context: uid,
-        'date': fields.date.context_today,
-        'state': lambda self, cr, uid, context: 'new',
+    _columns = {
+        'name': fields.char('Name', required=True, size=50),
     }
+    _order = 'name'
 
-class lunch_order_line(osv.Model): #define each product that will be in one ORDER.
-	""" lunch order line """
-	_name = 'lunch.order.line'
-	_description = 'lunch order line'
+lunch_category()
 
-	def _price_get(self,cr,uid,ids,name,arg,context=None):
-		orderLines = self.browse(cr,uid,ids,context=context)
-		result={}
-		for orderLine in orderLines:
-			result[orderLine.id]=orderLine.product.price
-		return result
 
-	def onchange_price(self,cr,uid,ids,product,context=None):
-		if product:
-			price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
-        	return {'value': {'price': price}}
-		return {'value': {'price': 0.0}} 
+class lunch_product(osv.osv):
+    """ Lunch Product """
 
-	_columns = {
-		'date' : fields.related('order_id','date',type='date', string="Date", readonly=True),
-		'supplier' : fields.related('product','supplier',type='many2one',relation='res.partner',string="Supplier",readonly=True),
-		'user_id' : fields.related('order_id', 'user_id', type='many2one', relation='res.users', string='User', readonly=True),
-		'product' : fields.many2one('lunch.product','Product',required=True), #one offer can have more than one product and one product can be in more than one offer.
-		'note' : fields.text('Note',size=256,required=False),
-		'order_id' : fields.many2one('lunch.order','Order',required=True,ondelete='cascade'),
-		'price' : fields.function(_price_get, string="Price",store=True),
-	}
+    _name = 'lunch.product'
+    _description = "Lunch Product"
 
-class lunch_product(osv.Model):
-	""" lunch product """
-	_name = 'lunch.product'
-	_description = 'lunch product'
-	_columns = {
-		'name' : fields.char('Product',required=True, size=64),
-		'category_id': fields.many2one('lunch.product.category', 'Category'),
-		'description': fields.text('Description', size=256, required=False),
+    _columns = {
+        'name': fields.char('Name', size=50, required=True),
+        'category_id': fields.many2one('lunch.category', 'Category'),
+        'description': fields.text('Description', size=128, required=False),
         'price': fields.float('Price', digits=(16,2)),
-        'active': fields.boolean('Active'), #If this product isn't offered anymore, the active boolean is set to false. This will allow to keep trace of previous orders and cashmoves.
-        'supplier' : fields.many2one('res.partner','Supplier'), 
-	}
-
-class lunch_product_category(osv.Model):
-	""" lunch product category """
-	_name = 'lunch.product.category'
-	_description = 'lunch product category'
-	_columns = {
-		'name' : fields.char('Category', required=True, size=64), #such as PIZZA, SANDWICH, PASTA, CHINESE, BURGER, ...
-	}
-
-class lunch_cashmove(osv.Model):
-	""" lunch cashmove => order or payment """
-	_name = 'lunch.cashmove'
-	_description = 'lunch description'
-	_columns = {
-		'user_id' : fields.many2one('res.users','User Name',required=True),
-		'date' : fields.date('Date', required=True),
-		'amount' : fields.float('Amount', required=True), #depending on the kind of cashmove, the amount will be positive or negative
-		'description' : fields.text('Description',size=256), #the description can be an order or a payment
-		'order_id' : fields.many2one('lunch.order','Order',required=False, ondelete='cascade'),
-		'orderOrPayment' : fields.selection([('order','Order'),('payment','Payment')],'Is an order or a Payment'),
-	}
-	_defaults = {
-        'user_id': lambda self, cr, uid, context: uid,
-        'date': fields.date.context_today,
-        'orderOrPayment': lambda self, cr, uid, context: 'payment',
+        'active': fields.boolean('Active'),
     }
 
+    _defaults = {
+        'active': lambda *a : True,
+    }
 
-class lunch_alert(osv.Model):
-	""" lunch alert """
-	_name = 'lunch.alert'
-	_description = 'lunch alert'
-	_columns = {
-		'message' : fields.text('Message',size=256, required=True),
-		'active' : fields.boolean('Active'),
-		'day' : fields.selection([('specific','Specific day'), ('week','Every Week'), ('days','Every Day')], 'Recurrency'),
-		'specific' : fields.date('Day'),
-		'monday' : fields.boolean('Monday'),
-		'tuesday' : fields.boolean('Tuesday'),
-		'wednesday' : fields.boolean('Wednesday'),
-		'thursday' : fields.boolean('Thursday'),
-		'friday' : fields.boolean('Friday'),
-		'saturday' : fields.boolean('Saturday'),
-		'sunday' :  fields.boolean('Sunday'),
-		'from' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'Between',required=True), #defines from when (hours) the alert will be displayed
-		'to' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'and',required=True), # to when (hours) the alert will be disabled
-	}
+lunch_product()
+
+
+class lunch_cashbox(osv.osv):
+    """ cashbox for Lunch """
+
+    _name = 'lunch.cashbox'
+    _description = "Cashbox for Lunch "
+
+
+    def amount_available(self, cr, uid, ids, field_name, arg, context=None):
+
+        """ count available amount
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of create menu’s IDs
+        @param context: A standard dictionary for contextual values """
+
+        cr.execute("SELECT box,sum(amount) from lunch_cashmove where active = 't' group by box")
+        amount = dict(cr.fetchall())
+        for i in ids:
+            amount.setdefault(i, 0)
+        return amount
+
+    _columns = {
+        'manager': fields.many2one('res.users', 'Manager'),
+        'name': fields.char('Name', size=30, required=True, unique = True),
+        'sum_remain': fields.function(amount_available, string='Total Remaining'),
+    }
+
+lunch_cashbox()
+
+
+class lunch_cashmove(osv.osv):
+    """ Move cash """
+
+    _name = 'lunch.cashmove'
+    _description = "Cash Move"
+
+    _columns = {
+        'name': fields.char('Description', size=128),
+        'user_cashmove': fields.many2one('res.users', 'User Name', required=True),
+        'amount': fields.float('Amount', digits=(16, 2)),
+        'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, required=True),
+        'active': fields.boolean('Active'),
+        'create_date': fields.datetime('Creation Date', readonly=True),
+    }
+
+    _defaults = {
+        'active': lambda *a: True,
+    }
+
+lunch_cashmove()
+
+
+class lunch_order(osv.osv):
+    """ Apply lunch order """
+
+    _name = 'lunch.order'
+    _description = "Lunch Order"
+    _rec_name = "user_id"
+
+    def _price_get(self, cr, uid, ids, name, args, context=None):
+
+        """ Get Price of Product
+         @param cr: the current row, from the database cursor,
+         @param uid: the current user’s ID for security checks,
+         @param ids: List of Lunch order’s IDs
+         @param context: A standard dictionary for contextual values """
+
+        res = {}
+        for price in self.browse(cr, uid, ids, context=context):
+            res[price.id] = price.product.price
+        return res
+
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User Name', required=True, \
+            readonly=True, states={'draft':[('readonly', False)]}),
+        'product': fields.many2one('lunch.product', 'Product', required=True, \
+            readonly=True, states={'draft':[('readonly', False)]}, change_default=True),
+        'date': fields.date('Date', readonly=True, states={'draft':[('readonly', False)]}),
+        'cashmove': fields.many2one('lunch.cashmove', 'Cash Move' , readonly=True),
+        'descript': fields.char('Comment', readonly=True, size=250, \
+            states = {'draft':[('readonly', False)]}),
+        'state': fields.selection([('draft', 'New'), ('confirmed', 'Confirmed'), ], \
+            'Status', readonly=True, select=True),
+        'price': fields.function(_price_get, string="Price"),
+        'category': fields.many2one('lunch.category','Category'),
+    }
+
+    _defaults = {
+        'user_id': lambda self, cr, uid, context: uid,
+        'date': fields.date.context_today,
+        'state': lambda self, cr, uid, context: 'draft',
+    }
+
+    def confirm(self, cr, uid, ids, box, context=None):
+
+        """ confirm order
+        @param cr: the current row, from the database cursor,
+        @param uid: the current user’s ID for security checks,
+        @param ids: List of confirm order’s IDs
+        @param context: A standard dictionary for contextual values """
+
+        cashmove_ref = self.pool.get('lunch.cashmove')
+        for order in self.browse(cr, uid, ids, context=context):
+            if order.state == 'confirmed':
+                continue
+            new_id = cashmove_ref.create(cr, uid, {'name': order.product.name+' order',
+                            'amount':-order.product.price,
+                            'user_cashmove':order.user_id.id,
+                            'box':box,
+                            'active':True,
+                            })
+            self.write(cr, uid, [order.id], {'cashmove': new_id, 'state': 'confirmed'})
+        return {}
+
+    def lunch_order_cancel(self, cr, uid, ids, context=None):
+
+        """" cancel order
+         @param cr: the current row, from the database cursor,
+         @param uid: the current user’s ID for security checks,
+         @param ids: List of create menu’s IDs
+         @param context: A standard dictionary for contextual values """
+
+        orders = self.browse(cr, uid, ids, context=context)
+        for order in orders:
+            if not order.cashmove:
+                continue
+        if order.cashmove.id:
+            self.pool.get('lunch.cashmove').unlink(cr, uid, [order.cashmove.id])
+        self.write(cr, uid, ids, {'state':'draft'})
+        return {}
+
+    def onchange_product(self, cr, uid, ids, product):
+
+        """ Get price for Product
+         @param cr: the current row, from the database cursor,
+         @param uid: the current user’s ID for security checks,
+         @param ids: List of create menu’s IDs
+         @product: Product To Ordered """
+
+        if not product:
+            return {'value': {'price': 0.0}}
+        price = self.pool.get('lunch.product').read(cr, uid, product, ['price'])['price']
+        categ_id = self.pool.get('lunch.product').browse(cr, uid, product).category_id.id
+        return {'value': {'price': price,'category':categ_id}}
+
+lunch_order()
+
+
+class report_lunch_amount(osv.osv):
+    """ Lunch Amount Report """
+
+    _name = 'report.lunch.amount'
+    _description = "Amount available by user and box"
+    _auto = False
+    _rec_name = "user_id"
+
+    _columns = {
+        'user_id': fields.many2one('res.users', 'User Name', readonly=True),
+        'amount': fields.float('Amount', readonly=True, digits=(16, 2)),
+        'box': fields.many2one('lunch.cashbox', 'Box Name', size=30, readonly=True),
+        'year': fields.char('Year', size=4, readonly=True),
+        'month':fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
+            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'day': fields.char('Day', size=128, readonly=True),
+        'date': fields.date('Created Date', readonly=True),
+    }
+
+    def init(self, cr):
+
+        """ @param cr: the current row, from the database cursor"""
+
+        cr.execute("""
+            create or replace view report_lunch_amount as (
+                select
+                    min(lc.id) as id,
+                    to_date(to_char(lc.create_date, 'dd-MM-YYYY'),'dd-MM-YYYY') as date,
+                    to_char(lc.create_date, 'YYYY') as year,
+                    to_char(lc.create_date, 'MM') as month,
+                    to_char(lc.create_date, 'YYYY-MM-DD') as day,
+                    lc.user_cashmove as user_id,
+                    sum(amount) as amount,
+                    lc.box as box
+                from
+                    lunch_cashmove lc
+                where
+                    active = 't'
+                group by lc.user_cashmove, lc.box, lc.create_date
+                )""")
+
+report_lunch_amount()
+
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+

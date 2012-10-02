@@ -1,282 +1,390 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-    	<!--Menu and Title-->
-    	<menuitem id='menu_lunch' name='Lunch' />
-    	<menuitem name="Lunch Menu" parent="menu_lunch" id="menu_lunch_title" sequence="55" />
-    	<menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="55" />
-    	<menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="55" />
-    	
+          <menuitem name="Lunch Order" parent="base.menu_tools"
+              id="menu_lunch" sequence="1" />
 
-        <!--View Search for Supplier (res.partner)-->
-        <record model="ir.ui.view" id="supplier_search_view">
-            <field name="name">Search</field>
-            <field name="model">res.partner</field>
-            <field name="type">search</field>
+          <menuitem name="Reporting" parent="base.menu_tools"
+              id="base.menu_lunch_reporting" sequence="6" groups="base.group_tool_manager"/>
+
+          <menuitem name="Lunch"
+              parent="base.menu_reporting"
+              id="menu_lunch_reporting_order" sequence="55" />
+
+          <menuitem name="Configuration" parent="base.menu_tools"
+              id="base.menu_lunch_survey_root" sequence="20" groups="base.group_tool_manager"/>
+
+          <menuitem name="Lunch" parent="base.menu_lunch_survey_root"
+              id="menu_lunch_category_root_configuration" sequence="1" />
+
+<!-- Lunch order Form view -->
+
+          <record model="ir.ui.view" id="view_lunch_order_form">
+            <field name="name">Order</field>
+            <field name="model">lunch.order</field>
             <field name="arch" type="xml">
-                <search string="Search">
-                    <filter name="supplier_lunch" domain="[('supplier_lunch','=',True)]" string="Lunch suppliers" icon="terp-partner"/>
-                    <field name='name'/>
+                <form string="Lunch Order" version="7.0">
+                <header>
+                    <button name="%(action_lunch_order_confirm)d" string="Confirm Order" type="action" states="draft" class="oe_highlight"/>
+                    <button name="%(action_lunch_order_cancel)d" string="Cancel Order" type="action" states="confirmed" />
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed"/>
+                </header>
+                <sheet string="Order">
+                    <group>
+                        <group>
+                            <field name="product" on_change="onchange_product(product)"/>
+                            <field name="descript"/>
+                            <field name="price"/>
+                            <field name="category"/>
+                        </group>
+                        <group>
+                            <field name="user_id"/>
+                            <field name="cashmove"/>
+                            <field name="date"/>
+                        </group>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+<!-- Lunch order Tree view -->
+
+        <record model="ir.ui.view" id="view_lunch_order_tree">
+            <field name="name">Order</field>
+            <field name="model">lunch.order</field>
+            <field name="arch" type="xml">
+                <tree colors="blue:state == 'draft';black:state == 'confirmed'" string="Order">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="product"/>
+                    <field name="descript"/>
+                    <field name="category"/>
+                    <field name="price" sum="Total price"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+<!-- Lunch order Search view -->
+
+        <record id="view_lunch_order_filter" model="ir.ui.view">
+            <field name="name">lunch.order.list.select</field>
+            <field name="model">lunch.order</field>
+            <field name="arch" type="xml">
+                <search string="Search Lunch Order">
+                    <field name="date"/>
+                    <filter icon="terp-check" string="To Confirm" domain="[('state','=','draft')]"/>
+                    <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=',('confirmed'))]"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Category" icon="terp-stock_symbol-selection" domain="[]"  context="{'group_by':'category'}"/>
+                    </group>
                 </search>
             </field>
         </record>
 
-    	<!--Action for Your Orders-->
-		<record model="ir.actions.act_window" id="action_lunch_order_form">
-            <field name="name">Your Orders</field>
-            <field name="res_model">lunch.order</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem name="Your Orders" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" />
+<!-- Lunch order Action -->
 
-        <!--Action for Lunch cashmoves-->
+        <record model="ir.actions.act_window" id="action_lunch_order_form">
+                <field name="name">Lunch Orders</field>
+                <field name="res_model">lunch.order</field>
+                <field name="view_mode">tree,form</field>
+                <field name="search_view_id" ref="view_lunch_order_filter"/>
+                <field name="context">{"search_default_Today":1}</field>
+        </record>
+
+        <menuitem name="Lunch Orders" parent="menu_lunch"
+            id="menu_lunch_order_form" action="action_lunch_order_form" />
+
+<!--  Cash Box Form view  -->
+
+        <record model="ir.ui.view" id="view_lunch_cashbox_form">
+            <field name="name">Cashboxes</field>
+            <field name="model">lunch.cashbox</field>
+            <field name="arch" type="xml">
+                <form string="Cashboxes" version="7.0">
+                    <group colspan="4">
+                        <field name="name"/>
+                        <field name="manager"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+<!--  Cash Box Tree view  -->
+
+        <record model="ir.ui.view" id="view_lunch_cashbox_tree">
+            <field name="name">Cashboxes</field>
+            <field name="model">lunch.cashbox</field>
+            <field name="arch" type="xml">
+                <tree string="Cashboxes" colors="red:sum_remain&lt;=0">
+                    <field name="name"/>
+                    <field name="manager"/>
+                    <field name="sum_remain"/>
+                </tree>
+            </field>
+        </record>
+
+<!--  Cash Box Action  -->
+
+        <record model="ir.actions.act_window" id="action_lunch_cashbox_form">
+                <field name="name"> Cashboxes </field>
+                <field name="res_model">lunch.cashbox</field>
+        </record>
+
+        <menuitem name="Cashboxes"
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_cashbox_form"
+            action="action_lunch_cashbox_form" />
+
+<!-- Cash Move Form view  -->
+
+        <record model="ir.ui.view" id="view_lunch_cashmove_form">
+            <field name="name">CashMove</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <form string="CashMove" version="7.0">
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="user_cashmove"/>
+                            <field name="amount"/>
+                            <field name="box"/>
+                            <field name="create_date"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+<!-- Cash Move Tree view  -->
+
+        <record model="ir.ui.view" id="view_lunch_cashmove_tree">
+            <field name="name">CashMove</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <tree string="CashMove" editable="top">
+                    <field name="create_date"/>
+                    <field name="box"/>
+                    <field name="name" required="1"/>
+                    <field name="user_cashmove"/>
+                    <field name="amount" sum="Total amount"/>
+                </tree>
+            </field>
+        </record>
+
+<!--  Cash Move Search View  -->
+
+        <record id="view_lunch_cashmove_filter" model="ir.ui.view">
+            <field name="name">lunch.cashmove.list.select</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="arch" type="xml">
+                <search string="Search CashMove">
+                    <field name="create_date"/>
+                    <field name="user_cashmove"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="User" icon="terp-personal" domain="[]"  context="{'group_by':'user_cashmove'}"/>
+                        <filter string="Box" icon="terp-dolar" domain="[]"  context="{'group_by':'box'}"/>
+                        <filter string="Date" icon="terp-go-today" domain="[]"  context="{'group_by':'create_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+<!-- Cash Move Action  -->
+
         <record model="ir.actions.act_window" id="action_lunch_cashmove_form">
-            <field name="name">Your Account</field>
-            <field name="res_model">lunch.cashmove</field>
-            <field name="view_mode">tree</field>
+                <field name="name">Cash Moves</field>
+                <field name="res_model">lunch.cashmove</field>
+                <field name="search_view_id" ref="view_lunch_cashmove_filter"/>
+                <field name="context">{"search_default_Today":1}</field>
         </record>
-        <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="menu_lunch_cashmove_form" action="action_lunch_cashmove_form" />
 
-        <!--Action for Administrate Orders group by supplier-->
-        <record model="ir.actions.act_window" id="action_lunch_order_by_supplier_form">
-            <field name="name">Orders by Supplier</field>
-            <field name="res_model">lunch.order.line</field>
-            <field name="view_mode">tree</field>
+        <menuitem name="Cash Moves" parent="menu_lunch"
+            id="menu_lunch_cashmove_form"
+            action="action_lunch_cashmove_form" />
+
+<!-- Lunch Category Form view  -->
+
+        <record model="ir.ui.view" id="view_lunch_category_form">
+            <field name="name"> Category of product </field>
+            <field name="model">lunch.category</field>
+            <field name="arch" type="xml">
+                <form string="Category" version="7.0">
+                    <group>
+                        <field name="name"/>
+                    </group>
+                </form>
+            </field>
         </record>
-        <menuitem name="Orders by Supplier" parent="menu_lunch_admin" id="menu_lunch_order_by_supplier_form" action="action_lunch_order_by_supplier_form" />
 
-        <!--Action for Control Accounts-->
-        <record model="ir.actions.act_window" id="action_lunch_control_accounts">
-            <field name="name">Control Accounts</field>
-            <field name="res_model">lunch.cashmove</field>
-            <field name="view_mode">tree,form</field>
+<!-- Lunch Category Tree view  -->
+
+        <record model="ir.ui.view" id="view_lunch_category_tree">
+            <field name="name">Category</field>
+            <field name="model">lunch.category</field>
+            <field name="arch" type="xml">
+                <tree string="Order">
+                    <field name="name"/>
+                </tree>
+            </field>
         </record>
-        <menuitem name="Control Accounts" parent="menu_lunch_admin" id="menu_lunch_control_accounts" action="action_lunch_control_accounts" />
 
+<!-- Lunch Category Action  -->
 
-        <!--Action for Payment cashmove-->
-        <record model="ir.actions.act_window" id="action_lunch_cashmove">
-            <field name="name">Register Cash Moves</field>
-            <field name="res_model">lunch.cashmove</field>
-            <field name="view_mode">form</field>
+        <record model="ir.actions.act_window" id="action_lunch_category_form">
+            <field name="name"> Product Categories </field>
+            <field name="res_model">lunch.category</field>
         </record>
-        <menuitem name="Register Cash Moves" parent="menu_lunch_admin" id="menu_lunch_cashmove" action="action_lunch_cashmove" />
 
-        <!--Action for control Supplier-->
-        <record model="ir.actions.act_window" id="action_lunch_control_suppliers">
-            <field name="name">Control Suppliers</field>
-            <field name="res_model">res.partner</field>
-            <field name="view_mode">tree,form</field>
-            <field name="search_view_id" ref="supplier_search_view"/>
-            <field name="context">{'search_default_supplier_lunch':1}</field> 
-        </record>
-        <menuitem name="Control Suppliers" parent="menu_lunch_admin" id="menu_lunch_control_suppliers" action="action_lunch_control_suppliers" />
+<!-- Lunch Product Form view  -->
 
-        <!--Action for Products-->
-        <record model="ir.actions.act_window" id="action_lunch_products">
+        <record model="ir.ui.view" id="view_lunch_product_form">
             <field name="name">Products</field>
-            <field name="res_model">lunch.product</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem name="Products" parent="menu_lunch_config" id="menu_lunch_products" action="action_lunch_products" />
-
-        <!--Action for Product categories-->
-		<record model="ir.actions.act_window" id="action_lunch_product_categories">
-            <field name="name">Product Categories</field>
-            <field name="res_model">lunch.product.category</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem name="Product Categories" parent="menu_lunch_config" id="menu_lunch_product_categories" action="action_lunch_product_categories" />
-
-        <!--Action for Alert-->
-        <record model="ir.actions.act_window" id="action_lunch_alert">
-            <field name="name">Alerts</field>
-            <field name="res_model">lunch.alert</field>
-            <field name="view_mode">tree,form</field>
-        </record>
-        <menuitem name="Alerts" parent="menu_lunch_config" id="menu_lunch_alert" action="action_lunch_alert" />
-
-        <!--View for Order lines-->
-        <record model="ir.ui.view" id="orders_order_lines_tree_view">
-            <field name="name">Order lines Tree</field>
-            <field name="model">lunch.order.line</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Order lines Tree">
-                    <field name='date'/>
-                    <field name='user_id'/>
-                    <field name='supplier'/> 
-                    <field name='product'/>                             
-                    <field name='note'/>
-                    <field name='price' sum="Total"/>
-                </tree>
-            </field>
-        </record>
-
-        <!--View for Your orders-->
-        <record model="ir.ui.view" id="orders_tree_view">
-            <field name="name">Orders Tree</field>
-            <field name="model">lunch.order</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="Orders Tree">
-                    <field name="date"/>
-                    <field name="products"/>
-                    <field name="total" sum="Total"/>
-                </tree>
-            </field>
-        </record>
-       
-        <record model="ir.ui.view" id="orders_form_view">
-			<field name="name">Orders Form</field>
-			<field name="model">lunch.order</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Orders Form">
-					<group colspan="2" col="2">
-						<field name='state' invisible="1"/>
-						<field name="user_id"/>
-						<field name="date"/>
-					</group>
-					<group colspan="2" col="2">
-					</group>
-					<separator string="Products" colspan="4"/>					
-
-					<separator string="Your Order" colspan="4"/>
-					<field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
-						<tree string="List" editable="bottom">
-							<field name="product" colspan="2" on_change="onchange_price(product)"/>
-							<field name="note" />
-							<field name="price"/>
-						</tree>
-					</field>
-					<field name="total"/>
-				</form>
-			</field>
-		</record>
-
-        <!--View for Products-->
-        <record model="ir.ui.view" id="products_tree_view">
-            <field name="name">Products Tree</field>
             <field name="model">lunch.product</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
-                <tree string="Products Tree">
+                <form string="Products" version="7.0">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="category_id"/>
+                                <field name="price" />
+                            </group>
+                            <group>
+                                <field name="active"/>
+                            </group>
+                            <field name="description" placeholder="Add a description" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+<!-- Lunch Product Tree view  -->
+
+        <record model="ir.ui.view" id="view_lunch_product_tree">
+            <field name="name">Products</field>
+            <field name="model">lunch.product</field>
+            <field name="arch" type="xml">
+                <tree string="Products">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="supplier"/>
-                    <field name="description"/>
                     <field name="price"/>
-                    <field name="active"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="products_form_view">
-            <field name="name">Products Form</field>
-            <field name="model">lunch.product</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="Products Form">
-                    <group colspan="2" col="2">
-                        <field name='name'/>
-                        <field name='category_id'/>
-                        <field name='supplier'/>
-                        <field name='price'/>
-                        <field name='active'/>
-                    </group>
-                    <group colspan="2" col="2">
-                    </group>
-                    <field name='description'/>
-                </form>
-            </field>
-        </record>
-
-        <!--view for cashmove-->
-        <record model="ir.ui.view" id="casmove_tree_view">
-            <field name="name">cashmove tree</field>
-            <field name="model">lunch.cashmove</field>
-            <field name="type">tree</field>
-            <field name="arch" type="xml">
-                <tree string="cashmove tree">
-                    <field name="user_id"/>
                     <field name="description"/>
-                    <field name="amount"/>
                 </tree>
             </field>
         </record>
 
-        <record model="ir.ui.view" id="casmove_form_view">
-            <field name="name">cashmove form</field>
-            <field name="model">lunch.cashmove</field>
-            <field name="type">form</field>
+<!-- Lunch Product Search view  -->
+
+        <record model="ir.ui.view" id="view_lunch_product_search">
+            <field name="name">Products</field>
+            <field name="model">lunch.product</field>
             <field name="arch" type="xml">
-                <form string="cashmove form">
-                    <group colspan="2" col="2">
+                <search string="Products">
+                    <field name="name" string="Product"/>
+                    <field name="price"/>
+                    <field name="category_id"/>
+                </search>
+            </field>
+        </record>
+
+<!-- Lunch Product Action  -->
+
+        <record model="ir.actions.act_window" id="action_lunch_product_form">
+            <field name="name">Products</field>
+            <field name="res_model">lunch.product</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_lunch_product_tree"/>
+            <field name="search_view_id" ref="view_lunch_product_search"/>
+        </record>
+
+        <menuitem name="Products"
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_product_form" action="action_lunch_product_form"
+            sequence="2" />
+
+        <menuitem name="Product Categories"
+            parent="menu_lunch_category_root_configuration"
+            id="menu_lunch_category_form"
+            action="action_lunch_category_form" sequence="1" />
+
+
+<!-- Lunch Amount Tree view -->
+
+        <record model="ir.ui.view" id="view_report_lunch_amount_tree">
+            <field name="name">Lunch amount</field>
+            <field name="model">report.lunch.amount</field>
+            <field name="arch" type="xml">
+                <tree string="Box Amount by User">
+                    <field name="date" invisible="1"/>
+                    <field name="year" invisible="1"/>
+                    <field name="day" invisible="1"/>
+                    <field name="month" invisible="1"/>
+                    <field name="box"/>
+                    <field name="user_id"/>
+                    <field name="amount" sum="Total box" />
+                </tree>
+            </field>
+        </record>
+
+<!-- Lunch Amount Form view -->
+
+        <record model="ir.ui.view" id="view_report_lunch_amount_form">
+            <field name="name">Lunch amount</field>
+            <field name="model">report.lunch.amount</field>
+            <field name="arch" type="xml">
+                <form string="Box Amount by User" version="7.0">
+                 <sheet>
+                    <group col="4">
                         <field name="user_id"/>
-                        <field name="date"/>
+                        <field name="box"/>
                         <field name="amount"/>
                     </group>
-                     <group colspan="2" col="2">
-                    </group>
-                    <field name="description"/>
+                 </sheet>   
                 </form>
             </field>
         </record>
 
-        <!--view for alerts-->
-        <record model="ir.ui.view" id="alert_tree_view">
-            <field name="name">alert tree</field>
-            <field name="model">lunch.alert</field>
-            <field name="type">tree</field>
+<!-- Lunch Amount Search view -->
+
+        <record model="ir.ui.view" id="view_report_lunch_amount_search">
+            <field name="name">Lunch amount</field>
+            <field name="model">report.lunch.amount</field>
             <field name="arch" type="xml">
-                <tree string="alert tree">
-                    <field name="message"/>
-                    <field name="active"/>
-                </tree>
+                <search string="Box Amount by User">
+                    <field name="date"/>
+                    <field name="box"/>
+                    <field name="amount"/>
+                    <field name="user_id"/>
+                    <group expand="0" string="Group By...">
+                        <filter string="Box" icon="terp-dolar" context="{'group_by':'box'}"/>
+                    </group>
+                </search>
             </field>
         </record>
 
-         <record model="ir.ui.view" id="alert_form_view">
-            <field name="name">alert tree</field>
-            <field name="model">lunch.alert</field>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <form string="alert tree">
-                    <separator string="Schedule Date" colspan="4"/>
-                        <group col="2" colspan="2">
-                            <field name="day"/>
-                            <field name="specific" attrs="{'invisible': [('day','!=','specific')]}"/>
-                        </group>
-                        <group col="2" colspan="2">
-                        </group>
-                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
-                            <field name="monday"/>
-                            <field name="tuesday"/>
-                            <field name="wednesday"/>
-                            <field name="thursday"/>
-                        </group>
-                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
-                            <field name="friday"/>
-                            <field name="saturday"/>
-                            <field name="sunday"/>
-                        </group>
-                    <separator string="Schedule Hour" colspan="4"/>
-                    <group col="2" colspan="2">
-                        <field name='from'/>
-                        <field name='to'/>
-                    </group>
-                    <group col="2" colspan="2">
-                    </group>
-                    <separator string="Alert Informations" colspan="4"/>
-                     <group col="2" colspan="2">
-                        <field name='active'/>
-                        <field name='message'/>
-                    </group>
-                    <group col="2" colspan="2">
-                    </group>
-                </form>
-            </field>
+<!-- Lunch Amount Action -->
+
+        <record model="ir.actions.act_window" id="action_report_lunch_amount_tree">
+            <field name="name">Cash Position by User</field>
+            <field name="res_model">report.lunch.amount</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="context">{'search_default_year': 1,"search_default_month":1}</field>
+            <field name="search_view_id" ref="view_report_lunch_amount_search"/>
         </record>
+
+        <menuitem name="Cash Position by User"
+            parent="menu_lunch_reporting_order"
+            action="action_report_lunch_amount_tree"
+            id="menu_lunch_report_amount_tree" />
+
     </data>
 </openerp>
+
+

@@ -98,7 +98,6 @@ Dashboard / Reports for Warehouse Management will include:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0055421559965',
     'css': [ 'static/src/css/stock.css' ],
 }
 

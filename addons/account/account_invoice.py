@@ -508,8 +508,10 @@ class account_invoice(osv.osv):
         if journal_id:
             journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
             currency_id = journal.currency and journal.currency.id or journal.company_id.currency_id.id
+            company_id = journal.company_id.id
             result = {'value': {
                     'currency_id': currency_id,
+                    'company_id': company_id,
                     }
                 }
         return result
@@ -1371,7 +1373,10 @@ class account_invoice_line(osv.osv):
         'partner_id': fields.related('invoice_id','partner_id',type='many2one',relation='res.partner',string='Partner',store=True)
     }
 
-    def _default_account_id(self, cr, uid, ids, context=None):
+    def _default_account_id(self, cr, uid, context=None):
+        # XXX this gets the default account for the user's company,
+        # it should get the default account for the invoice's company
+        # however, the invoice's company does not reach this point
         prop = self.pool.get('ir.property').get(cr, uid, 'property_account_income_categ', 'product.category', context=context)
         return prop and prop.id or False
 
@@ -1401,7 +1406,7 @@ class account_invoice_line(osv.osv):
             context = {}
         company_id = company_id if company_id != None else context.get('company_id',False)
         context = dict(context)
-        context.update({'company_id': company_id})
+        context.update({'company_id': company_id, 'force_company': company_id})
         if not partner_id:
             raise osv.except_osv(_('No Partner Defined !'),_("You must first select a partner !") )
         if not product:
@@ -1556,16 +1561,19 @@ class account_invoice_line(osv.osv):
     def onchange_account_id(self, cr, uid, ids, product_id, partner_id, inv_type, fposition_id, account_id):
         if not account_id:
             return {}
-        taxes = self.pool.get('account.account').browse(cr, uid, account_id).tax_ids
+        unique_tax_ids = []
         fpos = fposition_id and self.pool.get('account.fiscal.position').browse(cr, uid, fposition_id) or False
-        tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
-
-        product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
-                                                       partner_id=partner_id, fposition_id=fposition_id)
-        unique_tax_ids = set(tax_ids)
-        if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
-            unique_tax_ids |= set(product_change_result['value']['invoice_line_tax_id'])
-        return {'value':{'invoice_line_tax_id': list(unique_tax_ids)}}
+        account = self.pool.get('account.account').browse(cr, uid, account_id)
+        if not product_id:
+            taxes = account.tax_ids
+            unique_tax_ids = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, taxes)
+        else:
+            product_change_result = self.product_id_change(cr, uid, ids, product_id, False, type=inv_type,
+                partner_id=partner_id, fposition_id=fposition_id,
+                company_id=account.company_id.id)
+            if product_change_result and 'value' in product_change_result and 'invoice_line_tax_id' in product_change_result['value']:
+                unique_tax_ids = product_change_result['value']['invoice_line_tax_id']
+        return {'value':{'invoice_line_tax_id': unique_tax_ids}}
 
 account_invoice_line()
 
@@ -1650,14 +1658,13 @@ class account_invoice_tax(osv.osv):
 
         for line in inv.invoice_line:
             for tax in tax_obj.compute_all(cr, uid, line.invoice_line_tax_id, (line.price_unit* (1-(line.discount or 0.0)/100.0)), line.quantity, line.product_id, inv.partner_id)['taxes']:
-                tax['price_unit'] = cur_obj.round(cr, uid, cur, tax['price_unit'])
                 val={}
                 val['invoice_id'] = inv.id
                 val['name'] = tax['name']
                 val['amount'] = tax['amount']
                 val['manual'] = False
                 val['sequence'] = tax['sequence']
-                val['base'] = tax['price_unit'] * line['quantity']
+                val['base'] = cur_obj.round(cr, uid, cur, tax['price_unit'] * line['quantity'])
 
                 if inv.type in ('out_invoice','in_invoice'):
                     val['base_code_id'] = tax['base_code_id']
