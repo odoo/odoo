@@ -203,8 +203,49 @@ def module_installed(req):
     sorted_modules = module_topological_sort(modules)
     return sorted_modules
 
+def module_installed_bypass_session(dbname):
+    loadable = openerpweb.addons_manifest.keys()
+    modules = {}
+    try:
+        import openerp.modules.registry
+        registry = openerp.modules.registry.RegistryManager.get(dbname)
+        with registry.cursor() as cr:
+            m = registry.get('ir.module.module')
+            # TODO The following code should move to ir.module.module.list_installed_modules()
+            domain = [('state','=','installed'), ('name','in', loadable)]
+            ids = m.search(cr, 1, [('state','=','installed'), ('name','in', loadable)])
+            for module in m.read(cr, 1, ids, ['name', 'dependencies_id']):
+                modules[module['name']] = []
+                deps = module.get('dependencies_id')
+                if deps:
+                    deps_read = registry.get('ir.module.module.dependency').read(cr, 1, deps, ['name'])
+                    dependencies = [i['name'] for i in deps_read]
+                    modules[module['name']] = dependencies
+    except Exception,e:
+        pass
+    sorted_modules = module_topological_sort(modules)
+    return sorted_modules
+
 def module_boot(req):
     return [m for m in req.config.server_wide_modules if m in openerpweb.addons_manifest]
+    # TODO the following will be enabled once we separate the module code and translation loading
+    serverside = []
+    dbside = []
+    for i in req.config.server_wide_modules:
+        if i in openerpweb.addons_manifest:
+            serverside.append(i)
+    # if only one db load every module at boot
+    dbs = []
+    try:
+        dbs = db_list(req)
+    except xmlrpclib.Fault:
+        # ignore access denied
+        pass
+    if len(dbs) == 1:
+        dbside = module_installed_bypass_session(dbs[0])
+        dbside = [i for i in dbside if i not in serverside]
+    addons = serverside + dbside
+    return addons
 
 def concat_xml(file_list):
     """Concatenate xml files
