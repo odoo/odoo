@@ -335,7 +335,7 @@ class YamlInterpreter(object):
         else:
             defaults = {}
             fg = {}
-        record_dict = {}
+        record_dict = defaults.copy()
         fields = fields or {}
 
         def process_val(key, val):
@@ -368,9 +368,6 @@ class YamlInterpreter(object):
                     record_dict[field_name] = field_value
                     #if (field_name in defaults) and defaults[field_name] == field_value:
                     #    print '*** You can remove these lines:', field_name, field_value
-                elif (field_name in defaults):
-                    if (field_name not in record_dict):
-                        record_dict[field_name] = process_val(field_name, defaults[field_name])
                 else:
                     continue
 
