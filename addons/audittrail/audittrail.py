@@ -353,7 +353,7 @@ class audittrail_objects_proxy(object_proxy):
 
     def prepare_audittrail_log_line(self, cr, uid, pool, model, resource_id, method, old_values, new_values, field_list=None):
         """
-        This function compares the old data (i.e before the method was executed) and the new data 
+        This function compares the old data (i.e before the method was executed) and the new data
         (after the method was executed) and returns a structure with all the needed information to
         log those differences.
 
@@ -377,7 +377,7 @@ class audittrail_objects_proxy(object_proxy):
                 (model.id, resource_id): []
               }
 
-        The reason why the structure returned is build as above is because when modifying an existing 
+        The reason why the structure returned is build as above is because when modifying an existing
         record, we may have to log a change done in a x2many field of that object
         """
         if field_list is None:
@@ -439,6 +439,8 @@ class audittrail_objects_proxy(object_proxy):
             on specific fields only.
         :return: True
         """
+        if field_list is None:
+            field_list = []
         # loop on all the given ids
         for res_id in res_ids:
             # compare old and new values and get audittrail log lines accordingly

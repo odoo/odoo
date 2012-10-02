@@ -595,7 +595,7 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, None, context=None, done_list=None, local=False):
+    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
         if default is None:
             default = {}
         else:
@@ -2281,9 +2281,10 @@ class account_model(osv.osv):
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s: To Specify Year \n%(month)s: To Specify Month \n%(date)s: Current Date\n\ne.g. My model on %(date)s'),
     }
-    def generate(self, cr, uid, ids, datas=None, context=None):
-        if datas is None:
-            datas = {}
+
+    def generate(self, cr, uid, ids, data=None, context=None):
+        if data is None:
+            data = {}
         move_ids = []
         entry = {}
         account_move_obj = self.pool.get('account.move')
@@ -2294,8 +2295,8 @@ class account_model(osv.osv):
         if context is None:
             context = {}
 
-        if datas.get('date', False):
-            context.update({'date': datas['date']})
+        if data.get('date', False):
+            context.update({'date': data['date']})
 
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
@@ -2481,10 +2482,10 @@ class account_subscription_line(osv.osv):
         all_moves = []
         obj_model = self.pool.get('account.model')
         for line in self.browse(cr, uid, ids, context=context):
-            datas = {
+            data = {
                 'date': line.date,
             }
-            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], datas, context)
+            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], data, context)
             tocheck[line.subscription_id.id] = True
             self.write(cr, uid, [line.id], {'move_id':move_ids[0]})
             all_moves.extend(move_ids)

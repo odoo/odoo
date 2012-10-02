@@ -312,8 +312,9 @@ class project(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
+        if default is None:
+            default = {}
 
-        default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
         default['tasks'] = []

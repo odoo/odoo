@@ -15,6 +15,8 @@ def get(object, level=3, ending=None, ending_excl=None, recur=None, root=''):
 	    ending = []
 	if ending_excl is None:
 	    ending_excl = []
+	if recur is None:
+	    recur = []
 	res = sock.execute('terp', 3, 'admin', 'account.invoice', 'fields_get')
 	key = res.keys()
 	key.sort()

@@ -616,6 +616,8 @@ class mrp_production(osv.osv):
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
+        if properties is None:
+            properties = []
         results = []
         bom_obj = self.pool.get('mrp.bom')
         uom_obj = self.pool.get('product.uom')
@@ -834,7 +836,7 @@ class mrp_production(osv.osv):
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.hour,
                         'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-                        
+
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -851,7 +853,7 @@ class mrp_production(osv.osv):
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.cycle,
                         'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-                        
+
                     } )
         return amount
 

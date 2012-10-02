@@ -262,7 +262,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
             # Can be None if len(strFilterSubName) <= 0
             return filename
 
-    def _MakePropertyValue(self, cName="", uValue=u"" ):
+    def _MakePropertyValue(self, cName="", uValue=u""):
        oPropertyValue = createUnoStruct( "com.sun.star.beans.PropertyValue" )
        if cName:
           oPropertyValue.Name = cName

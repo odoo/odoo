@@ -52,6 +52,8 @@ class account_analytic_line(osv.osv):
         invoices = []
         if context is None:
             context = {}
+        if data is None:
+            data = {}
 
         account_ids = {}
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
@@ -86,14 +88,14 @@ class account_analytic_line(osv.osv):
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            
+
             context2 = context.copy()
             context2['lang'] = partner.lang
-            # set company_id in context, so the correct default journal will be selected 
+            # set company_id in context, so the correct default journal will be selected
             context2['force_company'] = curr_invoice['company_id']
-            # set force_company in context so the correct product properties are selected (eg. income account) 
+            # set force_company in context so the correct product properties are selected (eg. income account)
             context2['company_id'] = curr_invoice['company_id']
-            
+
             last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
             invoices.append(last_invoice)
 
