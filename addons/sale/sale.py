@@ -1200,8 +1200,8 @@ class sale_order_line(osv.osv):
         product_obj = self.pool.get('product.product')
         context = dict(context, lang=lang, partner_id=partner_id)
         if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+            lang = partner_obj.browse(cr, uid, partner_id, context=context).lang
+        context_partner = dict(context, lang=lang)
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1217,20 +1217,20 @@ class sale_order_line(osv.osv):
 
         uom2 = False
         if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
+            uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
             if product_obj.uom_id.category_id.id != uom2.category_id.id or not context.get('uom_change',False):
                 uom = False
                 uom2 = False
         if uos:
             if product_obj.uos_id:
-                uos2 = product_uom_obj.browse(cr, uid, uos)
+                uos2 = product_uom_obj.browse(cr, uid, uos, context=context)
                 if product_obj.uos_id.category_id.id != uos2.category_id.id:
                     uos = False
             else:
                 uos = False
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position, context=context) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
@@ -1288,10 +1288,10 @@ class sale_order_line(osv.osv):
             warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        })[pricelist]
+                    product, qty or 1.0, partner_id, dict(context,
+                        uom=uom or result.get('product_uom'),
+                        date=date_order,
+                        ))[pricelist]
             if price is False:
                 warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
