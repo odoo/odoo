@@ -364,8 +364,7 @@ class YamlInterpreter(object):
                         if not one2many_form_view:
                             one2many_form_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
 
-                    view_info = one2many_form_view or view_info
-                    field_value = self._eval_field(model, field_name, fields[field_name], view_info, parent=record_dict, default=default)
+                    field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
                     record_dict[field_name] = field_value
                     #if (field_name in defaults) and defaults[field_name] == field_value:
                     #    print '*** You can remove these lines:', field_name, field_value
