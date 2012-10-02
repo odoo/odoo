@@ -314,14 +314,14 @@ class mail_message(osv.Model):
         if not ids:
             ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
             # if the user can read a message, he can read all the thread
-            ids = ids + self.search(cr, SUPERUSER_ID, [['parent_id','in',ids],['id','not in',message_loaded]], None, limit=limit)
 
         messages = self.browse(cr, uid, ids, context=context)
-        add_expandable = (len(messages) >= limit)
+
 
         # key: ID, value: record
         tree = []
         result = []
+        record = None
         for msg in messages:
             # if not in record and not in message_loded list
             if msg.id not in tree and msg.id not in message_loaded :
@@ -339,8 +339,57 @@ class mail_message(osv.Model):
                         record = self._message_dict_get(cr, uid, msg, context=context)
                         result.append(record)
 
-        # Flatten the result
-        #result2 = self.message_read_tree_flatten(cr, uid, None, result, [], level, context=context, limit=limit, add_expandable=add_expandable)
+        result = sorted(result, key=lambda k: k['id'])
+
+        # expandable for not show message
+        for id_msg in tree:
+            # get all childs
+            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',id_msg],['id','not in',message_loaded]], None, limit=limit)
+            # group childs not read
+            id_min=None
+            id_max=None
+            nb=0
+            for not_loaded_id in not_loaded_ids:
+                if not_loaded_id not in tree:
+                    nb+=1
+                    if id_min==None or id_min>not_loaded_id:
+                        id_min=not_loaded_id
+                    if id_max==None or id_max<not_loaded_id:
+                        id_max=not_loaded_id
+                else:
+                    if nb>0:
+                        result.append({
+                            'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',id_msg]],
+                            'nb_messages': nb,
+                            'type': 'expandable', 
+                            'parent_id': id_msg,
+                            'id':  id_min
+                        })
+                    nb=0
+            if nb>0:
+                result.append({
+                    'domain': [['id','>=',id_min],['parent_id','=',id_msg]],
+                    'nb_messages': nb,
+                    'type': 'expandable', 
+                    'parent_id': id_msg, 
+                    'id':  id_min
+                })
+
+        # expandable for limit max
+        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded]], context=context, limit=1)
+        if len(ids) > 0:
+            result.append(
+            {
+                'domain': domain,
+                'nb_messages': 0,
+                'type': 'expandable', 
+                'parent_id': parent_id, 
+                'id': -1
+            });
+
+
+        result = sorted(result, key=lambda k: k['id'])
+
         return result
 
     #------------------------------------------------------

@@ -101,14 +101,10 @@
         <ul class="oe_mail_thread_display">
             <!-- contains the threads -->
         </ul>
-        <!-- expandable message layout -->
-        <div class="oe_mail_msg_more_message" style="display:none;">
-            <a class="oe_mail_fetch_more">Load more messages ...</a>
-        </div>
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}" t-attf-data-msg_model="{widget.model}" t-attf-data-msg_id="{widget.id}">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}" t-attf-data-msg_id="{widget.id}">
         <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
@@ -116,10 +112,10 @@
                 <t t-if="!widget.options.thread.display_on_flat">
                     <li t-if="widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
                     <li t-if="!widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
-                    <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_e">)</a></li>
+                    <li t-if="widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_e">)</a></li>
                     <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_e" title="Reply by mail">)</a></li>
                 </t>
-                <t t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and (widget.options.message.show_reply || widget.options.message.show_reply_by_email || (widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email')">
+                <t t-if="(widget.options.message.show_reply || widget.options.message.show_reply_by_email || (widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email')">
                     <li>
                         <span class="oe_dropdown_toggle">
                             <a class="oe_e" title="More options">í</a>
@@ -129,8 +125,8 @@
                                 <li t-if="display['show_hide']">
                                     <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{widget.subtype}'>Hide '<t t-esc="widget.subtype"/>' for this document</a>
                                 </li> -->
-                                <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_full_reply">Full reply</a></li>
-                                <li t-if="widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_full_reply" title="Reply by mail">Full reply</a></li>
+                                <li t-if="widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_full_reply">Full reply</a></li>
+                                <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_full_reply" title="Reply by mail">Full reply</a></li>
                                 <li t-if="widget.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{widget.id}" >Details</a></li>
                             </ul>
                         </span>
@@ -161,7 +157,7 @@
                     </ul>
                     <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
-                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and widget.options.thread._parents.length&lt;=widget.options.thread.thread_level">
+                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.model!='res.partner'">
                             <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
                         </t>
                         <t t-raw="widget.body"/>
@@ -175,6 +171,16 @@
         </div>
         <div class="oe_thread_placeholder"></div>
     </li>
+
+    <!-- expandable message layout -->
+    <li t-name="mail.thread.expandable" t-attf-class="oe_mail oe_mail_thread_msg oe_mail_unread" t-attf-data-thread_id="{widget.id}">
+        <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
+            <div class="oe_mail_msg_content oe_mail_msg_more_message">
+                <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> not display)</span>...</a>
+            </div>
+        </div>
+    </li>
+
     <!--
         mail.thread.message.attachments template
         Template used to display attachments in a mail.message
