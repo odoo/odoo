@@ -1425,7 +1425,7 @@ class stock_picking(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(obj.type)), subtype="mt_stock_new", context=context)
+            self.message_post(cr, uid, [obj.id], body=_("%s has been <b>created</b>.") % (self._get_document_type(cr, uid, obj, context=context)), subtype="mt_stock_new", context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
