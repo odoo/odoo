@@ -159,7 +159,7 @@
                             <field name="tag_ids" widget="many2many_tags" />
                         </div>
                         <div class="oe_right oe_button_box">
-                            <button name="act_show_log_insurance" type="object" string="Insurances" help="show the insurance for this vehicle" />
+                            <button name="act_show_log_contract" type="object" string="Contracts" help="show the contract for this vehicle" />
                             <button name="act_show_log_fuel" type="object" string="Fuel Logs" help="show the fuel logs for this vehicle" /> 
                             <button name="act_show_log_services" type="object" string="Services Logs" help="show the services logs for this vehicle" />
                         </div> 
@@ -207,7 +207,7 @@
             <field name="name">fleet.vehicle.tree</field>
             <field name="model">fleet.vehicle</field>
             <field name="arch" type="xml">
-                <tree string="Vehicle" version="7.0" colors="orange:insurance_renewal_due_soon>0 and insurance_renewal_overdue==0;red:insurance_renewal_overdue>0">
+                <tree string="Vehicle" version="7.0" colors="orange:contract_renewal_due_soon>0 and contract_renewal_overdue==0;red:contract_renewal_overdue>0">
                     <field name="license_plate" />
                     <field name="model_id" />
                     <field name="driver" />
@@ -215,8 +215,8 @@
                     <field name="acquisition_date" />
                     <field name="state"/>
                     <field name="odometer" />
-                    <field name="insurance_renewal_due_soon" invisible="1"/>
-                    <field name="insurance_renewal_overdue" invisible="1"/>
+                    <field name="contract_renewal_due_soon" invisible="1"/>
+                    <field name="contract_renewal_overdue" invisible="1"/>
                     <field name="next_service_date" invisible="1"/>
                 </tree>
             </field>
@@ -249,8 +249,8 @@
                     <field name="odometer_unit" />
                     <field name="image" />
                     <field name="tag_ids" />
-                    <field name="insurance_renewal_due_soon" />
-                    <field name="insurance_renewal_overdue" />
+                    <field name="contract_renewal_due_soon" />
+                    <field name="contract_renewal_overdue" />
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_vignette oe_semantic_html_override">
@@ -277,15 +277,15 @@
                                             <t t-if="record.location.raw_value"><field name="location"/></t>
                                         </li>
                                         <li>
-                                            <t t-if="record.insurance_renewal_due_soon.raw_value > 0 and record.insurance_renewal_overdue.raw_value lte 0">
-                                                 <a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
-                                                        Alert Insurance Renewal
+                                            <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
+                                                 <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
+                                                        Alert Contract Renewal
                                                 </a>
                                             </t>
 
-                                            <t t-if="record.insurance_renewal_overdue.raw_value > 0">
-                                                <a data-type="object" data-name="act_show_log_insurance" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
-                                                        Alert Insurance Renewal
+                                            <t t-if="record.contract_renewal_overdue.raw_value > 0">
+                                                <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
+                                                        Alert Contract Renewal
                                                 </a>
                                             </t>
                                             
@@ -323,9 +323,9 @@
 
         <act_window
             context="{'default_vehicle_id': active_id}"
-            id="act_show_log_insurance"
-            name="Insurance"
-            res_model="fleet.vehicle.log.insurance"
+            id="act_show_log_contract"
+            name="Contract"
+            res_model="fleet.vehicle.log.contract"
             src_model="fleet.vehicle"
             view_mode="tree,form"
             view_type="form"/>
@@ -341,22 +341,27 @@
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
         <menuitem action="fleet_vehicle_act" parent="fleet_vehicles" id="fleet_vehicle_menu" />
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_form'>
-            <field name="name">fleet.vehicle.log_insurance.form</field>
-            <field name="model">fleet.vehicle.log.insurance</field>
+        <record model='ir.ui.view' id='fleet_vehicle_log_contract_form'>
+            <field name="name">fleet.vehicle.log_contract.form</field>
+            <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <form string="Insurance logs" version="7.0">
+                <form string="Contract logs" version="7.0">
                     <header>
                         <field name="state" widget="statusbar" clickable="True" />
                     </header>
                     <sheet>
-                        <group col="2">
-                            <group string="Insurance details">
-                                    <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                    <field name="insurance_type" />
-                                    <field name="start_date" on_change="on_change_start_date(start_date)"/>
-                                    <field name="expiration_date" />
-                                    <field name="price" />
+                        <group string="Contract details" col="2">
+                            <group >
+                                <field name="contract_type" />
+                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="price" />
+                                <field name="insurer_id" />
+                            </group>
+                            <group>
+                                <field name="date" />
+                                <field name="start_date" on_change="on_change_start_date(start_date)"/>
+                                <field name="expiration_date" />
+                                <field name="ins_ref" />
                             </group>
                         </group>
                         <group col="2">
@@ -366,11 +371,7 @@
                                     <field name="unit" class="oe_inline"/>
                                 </div>
                             </group>
-                            <group string="Additional details">
-                                <field name="date" />
-                                <field name="insurer_id" />
-                                <field name="ins_ref" />
-                            </group>
+                            <group></group>
                         </group>
                         <group string="Terms and Conditions"></group>
                         <field name="notes" />
@@ -379,13 +380,13 @@
             </field>
         </record>
 
-        <record model='ir.ui.view' id='fleet_vehicle_log_insurance_tree'>
-            <field name="name">fleet.vehicle.log.insurance.tree</field>
-            <field name="model">fleet.vehicle.log.insurance</field>
+        <record model='ir.ui.view' id='fleet_vehicle_log_contract_tree'>
+            <field name="name">fleet.vehicle.log.contract.tree</field>
+            <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Insurance logs" version="7.0">
+                <tree string="Contract logs" version="7.0">
                     <field name="vehicle_id" />
-                    <field name="insurance_type" />
+                    <field name="contract_type" />
                     <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
@@ -398,14 +399,14 @@
             </field>
         </record>
 
-        <record model='ir.actions.act_window' id='fleet_vehicle_log_insurance_act'>
-            <field name="name">Vehicles Insurances</field>
-            <field name="res_model">fleet.vehicle.log.insurance</field>
+        <record model='ir.actions.act_window' id='fleet_vehicle_log_contract_act'>
+            <field name="name">Vehicles Contracts</field>
+            <field name="res_model">fleet.vehicle.log.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
         </record>
 
-        <menuitem action="fleet_vehicle_log_insurance_act" parent="fleet_vehicles" id="fleet_vehicle_log_insurance_menu" />
+        <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" />
 
        <record model='ir.ui.view' id='fleet_vehicle_odometer_form'>
             <field name="name">fleet.vehicle.odometer.form</field>

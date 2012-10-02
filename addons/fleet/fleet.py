@@ -146,11 +146,11 @@ class fleet_vehicle(osv.Model):
         res['domain']=[('vehicle_id','=', ids[0])]
         return res
 
-    def act_show_log_insurance(self, cr, uid, ids, context=None):
+    def act_show_log_contract(self, cr, uid, ids, context=None):
         """ This opens log view to view and add new log for this vehicle
-            @return: the insurance log view
+            @return: the contract log view
         """
-        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_insurance', context)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(cr, uid ,'fleet','act_show_log_contract', context)
         res['context'] = {
             'default_vehicle_id': ids[0]
         }
@@ -190,7 +190,7 @@ class fleet_vehicle(osv.Model):
     def str_to_date(self,strdate):
         return datetime.datetime(int(strdate[:4]),int(strdate[5:7]),int(strdate[8:]))
 
-    def get_overdue_insurance_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+    def get_overdue_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
         if context is None:
             context={}
         if not ids:
@@ -198,12 +198,12 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            insurances = self.pool.get('fleet.vehicle.log.insurance').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
             overdue=0
-            if (len(insurances) > 0):
-                for element in insurances:
+            if (len(contracts) > 0):
+                for element in contracts:
                     current_date_str=time.strftime('%Y-%m-%d')
-                    due_time_str=self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,element,context=context).expiration_date
+                    due_time_str=self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,element,context=context).expiration_date
                     
                     current_date=self.str_to_date(current_date_str)
                     due_time=self.str_to_date(due_time_str)
@@ -218,7 +218,7 @@ class fleet_vehicle(osv.Model):
                 res.append((record.id,0))
         return dict(res)
 
-    def get_next_insurance_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+    def get_next_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
         if context is None:
             context={}
         if not ids:
@@ -226,12 +226,12 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            insurances = self.pool.get('fleet.vehicle.log.insurance').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
             due_soon=0
-            if (len(insurances) > 0):
-                for element in insurances:
+            if (len(contracts) > 0):
+                for element in contracts:
                     current_date_str=time.strftime('%Y-%m-%d')
-                    due_time_str=self.pool.get('fleet.vehicle.log.insurance').browse(cr,uid,element,context=context).expiration_date
+                    due_time_str=self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,element,context=context).expiration_date
                     
                     current_date=self.str_to_date(current_date_str)
                     due_time=self.str_to_date(due_time_str)
@@ -264,7 +264,7 @@ class fleet_vehicle(osv.Model):
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
-    #_order = 'insurance_renewal_overdue desc, insurance_renewal_due_soon desc'
+    #_order = 'contract_renewal_overdue desc, contract_renewal_due_soon desc'
     _order= 'name asc'
     _columns = {
         'name' : fields.function(_vehicle_name_get_fnc, type="char", string='Name', store=True),
@@ -276,7 +276,7 @@ class fleet_vehicle(osv.Model):
         'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Other Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
-        'log_insurances' : fields.one2many('fleet.vehicle.log.insurance','vehicle_id', 'Insurances'),
+        'log_contracts' : fields.one2many('fleet.vehicle.log.contract','vehicle_id', 'Contracts'),
         'acquisition_date' : fields.date('Acquisition Date', required=False, help='Date when the vehicle has been bought'),
         'color' : fields.char('Color',size=32, help='Color of the vehicle'),
         'state': fields.many2one('fleet.vehicle.state', 'State', help='Current state of the vehicle', ),
@@ -298,8 +298,8 @@ class fleet_vehicle(osv.Model):
         'image_medium': fields.related('model_id','image_medium',type="binary",string="Logo",store=False),
         'image_small': fields.related('model_id','image_small',type="binary",string="Logo",store=False),
 
-        'insurance_renewal_due_soon' : fields.function(get_next_insurance_reminder,type="integer",string='Insurance Renewal Due Soon',store=False),
-        'insurance_renewal_overdue' : fields.function(get_overdue_insurance_reminder,type="integer",string='Insurance Renewal Overdue',store=False),
+        'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contract Renewal Due Soon',store=False),
+        'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contract Renewal Overdue',store=False),
         'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
 
         'car_value': fields.float('Car value', help='Value of the bought vehicle'),
@@ -396,7 +396,7 @@ class fleet_vehicle_odometer(osv.Model):
     _columns = {
         'name' : fields.function(_vehicle_log_name_get_fnc, type="char", string='Name', store=True),
 
-        'date' : fields.date('Execution Date'),
+        'date' : fields.date('Purchase Date'),
         'value' : fields.float('Odometer Value',group_operator="max"),
         'unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
         'vehicle_id' : fields.many2one('fleet.vehicle', 'Vehicle', required=True),
@@ -510,19 +510,19 @@ class fleet_vehicle_log_services(osv.Model):
         'date' : time.strftime('%Y-%m-%d'),
     }
 
-class fleet_insurance_type(osv.Model):
-    _name = 'fleet.insurance.type'
+class fleet_contract_type(osv.Model):
+    _name = 'fleet.contract.type'
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
     }
 
-class fleet_insurance_state(osv.Model):
-    _name = 'fleet.insurance.state'
+class fleet_contract_state(osv.Model):
+    _name = 'fleet.contract.state'
     _columns = {
-        'name':fields.char('Insurance Status',size=32),
+        'name':fields.char('Contract Status',size=32),
     }
 
-class fleet_vehicle_log_insurance(osv.Model):
+class fleet_vehicle_log_contract(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
@@ -549,20 +549,20 @@ class fleet_vehicle_log_insurance(osv.Model):
         else:
             return {}
 
-    _name = 'fleet.vehicle.log.insurance'
+    _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
     _columns = {
 
         #'name' : fields.char('Name',size=64),
 
-        'insurance_type' : fields.many2one('fleet.insurance.type', 'Type', required=False, help='Type of the insurance'),
-        'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the insurance begins'),
-        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the insurance expirates (by default, one year after begin date)'),
-        'price' : fields.float('Price', help="Cost of the insurance for the specified period"),
+        'contract_type' : fields.many2one('fleet.contract.type', 'Type', required=False, help='Type of the contract'),
+        'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
+        'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
+        'price' : fields.float('Price', help="Cost of the contract for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
-        'ins_ref' : fields.char('Insurance Reference', size=64),
-        'state' : fields.many2one('fleet.insurance.state', 'Insurance Status', help='Choose wheter the insurance is still valid or not'),
+        'ins_ref' : fields.char('Contract Reference', size=64),
+        'state' : fields.many2one('fleet.contract.state', 'Contract Status', help='Choose wheter the contract is still valid or not'),
         'notes' : fields.text('Terms and Conditions'),
     }
     _defaults = {
