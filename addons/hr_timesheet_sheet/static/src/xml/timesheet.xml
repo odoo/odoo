@@ -10,7 +10,7 @@
                         <t t-esc="date.toString('ddd')"/><br />
                         <t t-esc="date.toString('MMM d')"/>
                     </th>
-                    <th>Total</th>
+                    <th>TOTAL</th>
                 </tr>
                 <tr t-foreach="widget.accounts" t-as="account">
                     <td class="oe_timesheet_weekly_account"><t t-esc="widget.account_names[account.account]"/></td>
