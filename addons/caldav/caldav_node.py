@@ -43,7 +43,7 @@ class node_calendar_collection(nodes.node_dir):
     DAV_M_NS = dict_merge2(nodes.node_dir.DAV_M_NS,
             { "http://calendarserver.org/ns/" : '_get_dav', } )
 
-    def _file_get(self,cr, nodename=False):
+    def _file_get(self, cr, nodename=False):
         return []
 
     def _child_get(self, cr, name=False, parent_id=False, domain=None):
@@ -100,7 +100,7 @@ class node_calendar_res_col(nodes.node_res_obj):
     DAV_M_NS = dict_merge2(nodes.node_res_obj.DAV_M_NS,
             { "http://calendarserver.org/ns/" : '_get_dav', } )
 
-    def _file_get(self,cr, nodename=False):
+    def _file_get(self, cr, nodename=False):
         return []
 
     def _child_get(self, cr, name=False, parent_id=False, domain=None):
@@ -181,7 +181,7 @@ class node_calendar(nodes.node_class):
 
     http_options = { 'DAV': ['calendar-access'] }
 
-    def __init__(self,path, parent, context, calendar):
+    def __init__(self, path, parent, context, calendar):
         super(node_calendar,self).__init__(path, parent,context)
         self.calendar_id = calendar.id
         self.mimetype = 'application/x-directory'
@@ -271,7 +271,7 @@ class node_calendar(nodes.node_class):
     def children(self, cr, domain=None):
         return self._child_get(cr, domain=domain)
 
-    def child(self,cr, name, domain=None):
+    def child(self, cr, name, domain=None):
         res = self._child_get(cr, name, domain=domain)
         if res:
             return res[0]
@@ -353,16 +353,16 @@ class node_calendar(nodes.node_class):
         return None
 
 
-    def set_data(self, cr, data, fil_obj = None):
+    def set_data(self, cr, data, fil_obj=None):
         uid = self.context.uid
         calendar_obj = self.context._dirobj.pool.get('basic.calendar')
         res = calendar_obj.import_cal(cr, uid, data, self.calendar_id)
         return res
 
-    def get_data_len(self, cr, fil_obj = None):
+    def get_data_len(self, cr, fil_obj=None):
         return self.content_length
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'calendar-%d' % (self.calendar_id,)
 
     def rmcol(self, cr):
@@ -441,7 +441,7 @@ class res_node_calendar(nodes.node_class):
 
     http_options = { 'DAV': ['calendar-access'] }
 
-    def __init__(self,path, parent, context, res_obj, res_model=None, res_id=None):
+    def __init__(self, path, parent, context, res_obj, res_model=None, res_id=None):
         super(res_node_calendar,self).__init__(path, parent, context)
         self.mimetype = 'text/calendar'
         self.create_date = parent.create_date
@@ -474,10 +474,10 @@ class res_node_calendar(nodes.node_class):
     def _get_caldav_calendar_data(self, cr):
         return self.get_data(cr)
 
-    def get_data_len(self, cr, fil_obj = None):
+    def get_data_len(self, cr, fil_obj=None):
         return self.content_length
 
-    def set_data(self, cr, data, fil_obj = None):
+    def set_data(self, cr, data, fil_obj=None):
         uid = self.context.uid
         context = self.context.context.copy()
         context.update(self.dctx)
@@ -486,7 +486,7 @@ class res_node_calendar(nodes.node_class):
         res =  calendar_obj.import_cal(cr, uid, data, self.calendar_id, context=context)
         return res
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         res = False
         if self.model and self.res_id:
             res = '%s_%d' % (self.model, self.res_id)

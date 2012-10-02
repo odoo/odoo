@@ -225,7 +225,7 @@ class task(osv.osv):
 
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context=None):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if vals.get('project_id',False) or vals.get('name',False):

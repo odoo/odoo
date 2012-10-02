@@ -38,13 +38,13 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
                 'get_net_total_starting':self._get_net_total_starting,
         })
 
-    def _get_user(self,line_ids):
+    def _get_user(self, line_ids):
         sql = "select name from res_users where id = %d"%(line_ids['create_uid'])
         self.cr.execute(sql)
         user = self.cr.fetchone()
         return user[0]
 
-    def _get_data(self,user):
+    def _get_data(self, user):
         data = {}
         sql = """ SELECT abs.journal_id,abs.id,abs.date,abs.closing_date,abs.name as statement,aj.name as journal,ap.name as period,ru.name as user,rc.name as company,
                        abs.state,abs.balance_end_real FROM account_bank_statement as abs
@@ -57,7 +57,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         data = self.cr.dictfetchall()
         return data
 
-    def _get_lines(self,statement):
+    def _get_lines(self, statement):
         data = {}
         sql = """ select absl.* from account_bank_statement_line as absl, account_bank_statement as abs
                            where absl.statement_id = abs.id and abs.id = %d"""%(statement['id'])
@@ -65,7 +65,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         data = self.cr.dictfetchall()
         return data
 
-    def _get_bal(self,data):
+    def _get_bal(self, data):
         res = {}
         sql =""" select sum(pieces*number) as bal from account_cashbox_line where starting_id = %d """%(data['id'])
         self.cr.execute(sql)
@@ -75,7 +75,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         else:
             return False
 
-    def _get_sub_total(self,user,data,date):
+    def _get_sub_total(self, user, data, date):
         res={}
         self.cr.execute(""" select sum(absl.amount) from account_bank_statement as abs
                             LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id
@@ -90,7 +90,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         else:
             return False
 
-    def _get_partner(self,statement):
+    def _get_partner(self, statement):
         res = {}
         if statement['pos_statement_id']:
             sql =""" select rp.name  from account_bank_statement_line as absl,res_partner as rp
@@ -102,7 +102,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         else:
             return 0.00
 
-    def _get_net_total_starting(self,user):
+    def _get_net_total_starting(self, user):
         lst = []
         res={}
         total_ending_bal = 0.0
@@ -124,7 +124,7 @@ class all_closed_cashbox_of_the_day(report_sxw.rml_parse):
         lst.append(total_starting_bal)
         return lst
 
-    def _get_net_total(self,user):
+    def _get_net_total(self, user):
         res={}
         sql = """select sum(absl.amount) as net_total from account_bank_statement as abs
                     LEFT JOIN account_bank_statement_line as absl ON abs.id = absl.statement_id

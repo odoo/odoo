@@ -207,7 +207,7 @@ class purchase_requisition_line(osv.osv):
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id

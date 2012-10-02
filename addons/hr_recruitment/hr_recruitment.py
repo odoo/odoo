@@ -243,7 +243,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def onchange_job(self,cr, uid, ids, job, context=None):
+    def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
         if job:
@@ -494,7 +494,6 @@ class hr_applicant(base_stage, osv.Model):
         message = _("Applicant has been <b>created</b>.")
         return self.message_post(cr, uid, ids, body=message, context=context)
 
-
 class hr_job(osv.osv):
     _inherit = "hr.job"
     _name = "hr.job"
@@ -505,7 +504,6 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
-
     _defaults = {
         'alias_domain': False, # always hide alias during creation
     }
@@ -548,12 +546,12 @@ class hr_job(osv.osv):
         datas['model'] = 'survey.print'
         context.update({'response_id': [0], 'response_no': 0,})
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'context' : context,
-                'nodestroy':True,
-            }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.form',
+            'datas': datas,
+            'context' : context,
+            'nodestroy':True,
+        }
 
 class applicant_category(osv.osv):
     """ Category of applicant """

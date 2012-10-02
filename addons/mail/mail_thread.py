@@ -590,7 +590,7 @@ class mail_thread(osv.AbstractModel):
         context = context or {}
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int,long)) or \
-            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id" 
+            (isinstance(thread_id, (list, tuple)) and len(thread_id) == 1), "Invalid thread_id"
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
@@ -618,7 +618,7 @@ class mail_thread(osv.AbstractModel):
             'parent_id': parent_id,
             'attachment_ids': attachment_ids,
         })
-        for x in ('from', 'to', 'cc'): values.pop(x, None) # Avoid warnings 
+        for x in ('from', 'to', 'cc'): values.pop(x, None) # Avoid warnings
         return self.pool.get('mail.message').create(cr, uid, values, context=context)
 
     #------------------------------------------------------

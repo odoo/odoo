@@ -253,7 +253,7 @@ class sugar_import(import_framework):
             val['datas_fname'] = Filename
         return val    
     
-    def get_history_mapping(self): 
+    def get_history_mapping(self):
         return { 
                 'model' : 'ir.attachment',
                 'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD, self.TABLE_OPPORTUNITY, self.TABLE_MEETING, self.TABLE_CALL, self.TABLE_EMAIL],
@@ -301,7 +301,7 @@ class sugar_import(import_framework):
         val['email_from'] = partner_email
         return val
     
-    def get_crm_claim_mapping(self): 
+    def get_crm_claim_mapping(self):
         return { 
                 'model' : 'crm.claim',
                 'dependencies' : [self.TABLE_USER, self.TABLE_ACCOUNT, self.TABLE_CONTACT, self.TABLE_LEAD],
@@ -602,7 +602,7 @@ class sugar_import(import_framework):
                     partner_contact_email = address.email
         return partner_contact_id, partner_contact_email
 
-    def import_opp(self, val):    
+    def import_opp(self, val):
         partner_contact_id, partner_contact_email = self.import_opportunity_contact(val)
         val['partner_address_id/id'] = partner_contact_id
         val['email_from'] = partner_contact_email

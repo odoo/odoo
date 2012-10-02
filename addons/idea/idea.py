@@ -39,6 +39,7 @@ class idea_category(osv.osv):
         ('name', 'unique(name)', 'The name of the category must be unique' )
     ]
     _order = 'name asc'
+
 idea_category()
 
 class idea_idea(osv.osv):
@@ -65,24 +66,24 @@ class idea_idea(osv.osv):
     }
     _order = 'name asc'
 
-    def idea_cancel(self, cr, uid, ids, context={}):
+    def idea_cancel(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'state': 'cancel' })
         self.message_post(cr, uid, ids, body=_('Idea canceled.'), context=context)
         return True
 
-    def idea_open(self, cr, uid, ids, context={}):
+    def idea_open(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, { 'state': 'open'})
         self.message_post(cr, uid, ids, body=_('Idea accepted.'), context=context)
         return True
 
-    def idea_close(self, cr, uid, ids, context={}):
+    def idea_close(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_('Idea done.'), context=context)
         self.write(cr, uid, ids, { 'state': 'close' })
         return True
 
-    def idea_draft(self, cr, uid, ids, context={}):
+    def idea_draft(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_('Idea reset to draft.'), context=context)
         self.write(cr, uid, ids, { 'state': 'draft' })
         return True
-idea_idea()
 
+idea_idea()

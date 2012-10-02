@@ -127,7 +127,7 @@ class base_module_record_objects(osv.osv_memory):
     _name = 'base.module.record.objects'
     _description = "Base Module Record Objects"
                 
-    def inter_call(self,cr,uid,data,context=None):
+    def inter_call(self, cr, uid, data, context=None):
         res=base_module_save._create_module(self, cr, uid, data, context)
         mod_obj = self.pool.get('ir.model.data')
         model_data_ids = mod_obj.search(cr, uid,[('model', '=', 'ir.ui.view'), ('name', '=', 'module_create_form_view')], context=context)
