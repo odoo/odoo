@@ -9,7 +9,7 @@
 #    Domsense srl
 #    Albatos srl
 #
-#    Copyright (C) 2011
+#    Copyright (C) 2011-2012
 #    Associazione OpenERP Italia (<http://www.openerp-italia.org>)
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -28,23 +28,20 @@
 ##############################################################################
 
 {
-    "name" : "Italy - Accounting",
-    "version" : "0.1",
-    "depends" : ['base_vat','account_chart','base_iban'],
-    "author" : "OpenERP Italian Community",
-    "description": """
+    'name': 'Italy - Accounting',
+    'version': '0.1',
+    'depends': ['base_vat','account_chart','base_iban'],
+    'author': 'OpenERP Italian Community',
+    'description': """
 Piano dei conti italiano di un'impresa generica.
 ================================================
 
 Italian accounting chart and localization.
     """,
-    "license": "AGPL-3",
-    "category" : "Localization/Account Charts",
+    'license': 'AGPL-3',
+    'category': 'Localization/Account Charts',
     'website': 'http://www.openerp-italia.org/',
-    'init_xml': [
-        ],
-    'update_xml': [
-        'data/account.account.type.csv',
+    'data': [
         'data/account.account.template.csv',
         'data/account.tax.code.template.csv',
         'account_chart.xml',
@@ -52,10 +49,8 @@ Italian accounting chart and localization.
         'data/account.fiscal.position.template.csv',
         'l10n_chart_it_generic.xml',
         ],
-    'demo_xml': [
-        ],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00926677190009155165',
     'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
 }

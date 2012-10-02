@@ -33,7 +33,7 @@ class asset_asset_report(osv.osv):
         'asset_id': fields.many2one('account.asset.asset', string='Asset', readonly=True),
         'asset_category_id': fields.many2one('account.asset.category',string='Asset category'),
         'partner_id': fields.many2one('res.partner', 'Partner', readonly=True),
-        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'State', readonly=True),
+        'state': fields.selection([('draft','Draft'),('open','Running'),('close','Close')], 'Status', readonly=True),
         'depreciation_value': fields.float('Amount of Depreciation Lines', readonly=True),
         'move_check': fields.boolean('Posted', readonly=True),
         'nbr': fields.integer('# of Depreciation Lines', readonly=True),
@@ -50,7 +50,7 @@ class asset_asset_report(osv.osv):
                 select 
                     min(dl.id) as id,
                     dl.name as name,
-                    to_date(dl.depreciation_date, 'YYYY-MM-DD') as depreciation_date,
+                    dl.depreciation_date as depreciation_date,
                     a.purchase_date as purchase_date,
                     (CASE WHEN (select min(d.id) from account_asset_depreciation_line as d
                                 left join account_asset_asset as ac ON (ac.id=d.asset_id)
@@ -77,7 +77,7 @@ class asset_asset_report(osv.osv):
                 from account_asset_depreciation_line dl
                     left join account_asset_asset a on (dl.asset_id=a.id)
                 group by 
-                    dl.amount,dl.asset_id,to_date(dl.depreciation_date, 'YYYY-MM-DD'),dl.name,
+                    dl.amount,dl.asset_id,dl.depreciation_date,dl.name,
                     a.purchase_date, dl.move_check, a.state, a.category_id, a.partner_id, a.company_id,
                     a.purchase_value, a.id, a.salvage_value
         )""")

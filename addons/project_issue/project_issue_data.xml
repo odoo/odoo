@@ -8,13 +8,13 @@
         <record model="crm.case.categ" id="bug_categ">
             <field name="name">Maintenance</field>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>         
+            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>
         </record>    
 
         <record model="crm.case.categ" id="feature_request_categ">
             <field name="name">Feature Requests</field>
             <field name="section_id" ref="crm.section_sales_department"/>
-            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>        
+            <field name="object_id" search="[('model','=','project.issue')]" model="ir.model"/>
         </record>
 
         <!-- Case type_id -->
@@ -29,6 +29,17 @@
 
         <record model="project.issue.version" id="type3">
             <field name="name">v3.0</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Issue Tracker application installed!</field>
+            <field name="body">Manage the issues you might face in a project, such as bugs in a system, client complaints or material breakdowns.
+You can record issues, assign them to a responsible person, and keep track of their status as they evolve over time.
+Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</field>
         </record>
 
     </data>

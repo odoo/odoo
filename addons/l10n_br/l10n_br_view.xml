@@ -1,80 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data>
-	
-		<record model="ir.ui.view" id="view_l10n_br_cst_template_form">
-			<field name="name">l10n_br.cst.form</field>
-			<field name="model">l10n_br_account.cst.template</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Tax Situation Code Template">
-					<field name="code" select="1"/>
-					<field name="name" select="1"/>
-					<field name="tax_code_template_id" select="2"/>
-				</form>
-			</field>
-		</record>
+    <data>
+    
+        <record model="ir.ui.view" id="view_l10n_br_cst_template_form">
+            <field name="name">l10n_br.cst.form</field>
+            <field name="model">l10n_br_account.cst.template</field>
+            <field name="arch" type="xml">
+                <form string="Tax Situation Code Template" version="7.0">
+                    <group col="4">
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="tax_code_template_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="view_l10n_br_cst_template_tree">
-			<field name="name">l10n_br.cst.tree</field>
-			<field name="model">l10n_br_account.cst.template</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Tax Situation Code Template">
-					<field name="code" select="1"/>
-					<field name="name" select="1"/>
-					<field name="tax_code_template_id" select="2"/>
-				</tree>
-			</field>
-		</record>
-		
-		<record model="ir.actions.act_window" id="action_l10n_br_cst_template_form">
-			<field name="name">Tax Situation Code Template</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">l10n_br_account.cst.template</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="view_l10n_br_cst_template_tree"/>
-		</record>
-			
-		<record model="ir.ui.view" id="view_l10n_br_cst_form">
-			<field name="name">l10n_br.cst.form</field>
-			<field name="model">l10n_br_account.cst</field>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<form string="Tax Situation Code">
-					<field name="code" select="1"/>
-					<field name="name" select="1"/>
-					<field name="tax_code_id" select="2"/>
-				</form>
-			</field>
-		</record>
+        <record model="ir.ui.view" id="view_l10n_br_cst_template_tree">
+            <field name="name">l10n_br.cst.tree</field>
+            <field name="model">l10n_br_account.cst.template</field>
+            <field name="arch" type="xml">
+                <tree string="Tax Situation Code Template">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="tax_code_template_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_l10n_br_cst_template_form">
+            <field name="name">Tax Situation Code Template</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_account.cst.template</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_l10n_br_cst_template_tree"/>
+        </record>
+            
+        <record model="ir.ui.view" id="view_l10n_br_cst_form">
+            <field name="name">l10n_br.cst.form</field>
+            <field name="model">l10n_br_account.cst</field>
+            <field name="arch" type="xml">
+                <form string="Tax Situation Code" version="7.0">
+                    <group col="4">
+                        <field name="code"/>
+                        <field name="name"/>
+                        <field name="tax_code_id"/>
+                    </group>
+                </form>
+            </field>
+        </record>
 
-		<record model="ir.ui.view" id="view_l10n_br_cst_tree">
-			<field name="name">l10n_br.cst.tree</field>
-			<field name="model">l10n_br_account.cst</field>
-			<field name="type">tree</field>
-			<field name="arch" type="xml">
-				<tree string="Tax Situation Code">
-					<field name="code" select="1"/>
-					<field name="name" select="1"/>
-					<field name="tax_code_id" select="2"/>
-				</tree>
-			</field>
-		</record>
-		
-		<record model="ir.actions.act_window" id="action_l10n_br_cst_form">
-			<field name="name">Tax Situation Code</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">l10n_br_account.cst</field>
-			<field name="view_mode">tree,form</field>
-			<field name="view_type">form</field>
-			<field name="view_id" ref="view_l10n_br_cst_tree"/>
-		</record>
-		
-		<menuitem name="Tax Situation Code Template" id="menu_action_l10n_br_cst_template" sequence="99" parent="account.account_template_taxes" action="action_l10n_br_cst_template_form"/>
-		
-		<menuitem name="Tax Situation Code" id="menu_action_l10n_br_cst" parent="account.next_id_27" sequence="99" action="action_l10n_br_cst_form"/>
-		
-	</data>
+        <record model="ir.ui.view" id="view_l10n_br_cst_tree">
+            <field name="name">l10n_br.cst.tree</field>
+            <field name="model">l10n_br_account.cst</field>
+            <field name="arch" type="xml">
+                <tree string="Tax Situation Code">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="tax_code_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_l10n_br_cst_form">
+            <field name="name">Tax Situation Code</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">l10n_br_account.cst</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="view_l10n_br_cst_tree"/>
+        </record>
+        
+        <menuitem name="Tax Situation Code Template" id="menu_action_l10n_br_cst_template" sequence="99" parent="account.account_template_taxes" action="action_l10n_br_cst_template_form"/>
+        
+        <menuitem name="Tax Situation Code" id="menu_action_l10n_br_cst" parent="account.next_id_27" sequence="99" action="action_l10n_br_cst_form" groups="base.group_no_one"/>
+        
+    </data>
 </openerp>

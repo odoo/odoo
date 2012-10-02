@@ -5,12 +5,36 @@
     <record model="ir.ui.view" id="purchase_order_line_form_inherit">
         <field name="name">purchase.order.line.form.inherit</field>
         <field name="model">purchase.order.line</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="purchase.purchase_order_line_form"/>
         <field name="arch" type="xml">
             <field name="account_analytic_id" position="replace">
-                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]" groups="base.group_extended"/>
+                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
             </field>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="purchase_order_form_analytic_inherit">
+        <field name="name">purchase.order.form.analytic.inherit</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="arch" type="xml">
+            <field name="account_analytic_id" position="replace">
+                <field name="analytics_id" domain="[('plan_id','&lt;&gt;',False)]"/>
+            </field>
+        </field>
+    </record>
+
+    <!-- inherited view to make the purchase order lines list in the form non-editable
+             for the members of some usability groups -->
+    <record id="view_purchase_order_form_editable_list" model="ir.ui.view">
+        <field name="name">purchase.order.form.editable.list</field>
+        <field name="model">purchase.order</field>
+        <field name="inherit_id" ref="purchase.purchase_order_form"/>
+        <field name="groups_id" eval="[(6, 0, [ref('product.group_uom'), ref('purchase.group_analytic_accounting')])]"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_line']/tree" position="attributes">
+                <attribute name="editable"/>
+            </xpath>
         </field>
     </record>
 

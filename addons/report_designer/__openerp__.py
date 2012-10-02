@@ -21,13 +21,12 @@
 
 
 {
-    "name" : "Report Designer",
-    "version" : "1.0",
-    "depends" : ["base", "base_setup"],
-    "author" : "OpenERP SA",
-    "complexity" : "expert",
-    "category": "Tools",
-    "description": """
+    'name' : 'Report Designer',
+    'version' : '1.0',
+    'depends' : ['base', 'base_setup'],
+    'author' : 'OpenERP SA',
+    'category': 'Tools',
+    'description': """
 Installer for reporting Hidden.
 ===============================
 
@@ -35,14 +34,10 @@ Makes the Reporting Hidden Configuration available from where you can install
 modules like base_report_designer and base_report_creator.
     """,
     'website': 'http://www.openerp.com',
-    'init_xml': [],
-    'update_xml': [
-        'security/ir.model.access.csv',
-    ],
-    'demo_xml': [],
+    'data': ['security/ir.model.access.csv'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00764037194670093149',
     'images': ['images/config_reporting_Hidden.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

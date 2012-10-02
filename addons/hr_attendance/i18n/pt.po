@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2010-11-27 14:39+0000\n"
-"Last-Translator: OpenERP Administrators <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:49+0000\n"
+"Last-Translator: Daniel Reis (SECURITAS SA) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:46+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:27+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr_attendance
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_time_tracking
@@ -42,8 +42,7 @@ msgid ""
 "You did not sign out the last time. Please enter the date and time you "
 "signed out."
 msgstr ""
-"Você não registou a saída da última vez. Por favor indique a hora em que "
-"saiu."
+"Não registou a saída da última vez. Por favor indique a hora em que saiu."
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -64,7 +63,7 @@ msgstr "Imprimir Relatório de Desvio de Pontualidade"
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:161
 #, python-format
 msgid "The sign-out date must be in the past"
-msgstr "A data de saída tem de ser passada"
+msgstr "A data de sign out tem de ser passada"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -78,10 +77,9 @@ msgid ""
 "Sign in/Sign out actions. You can also link this feature to an attendance "
 "device using OpenERP's web service features."
 msgstr ""
-"A funcionalidade de registo do tempo destina-se a gerir as presenças a "
-"partir dos registos de entrada e saída do serviço. Pode interligar esta "
-"funcionalidade com um aparelho de recolha de marcações de ponto usando as "
-"capacidade de web services do Open ERP."
+"A funcionalidade Time Tracking pretende gerir a assiduidade do funcionário "
+"ações Sign in/Sign out. Também pode vincular este recurso a um dispositivo "
+"de assiduidade utilizando recursos OpenERP de serviços web."
 
 #. module: hr_attendance
 #: view:hr.action.reason:0
@@ -102,13 +100,13 @@ msgstr "Presente"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out_ask
 msgid "Ask for Sign In Out"
-msgstr "Perguntar por Entradas e Saídas"
+msgstr "Perguntar por Sign In Out"
 
 #. module: hr_attendance
 #: field:hr.attendance,action_desc:0
 #: model:ir.model,name:hr_attendance.model_hr_action_reason
 msgid "Action Reason"
-msgstr "Razão da Acção"
+msgstr "Razão da Ação"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -131,7 +129,7 @@ msgstr "Pontualidade por Mês"
 #: field:hr.sign.in.out,name:0
 #: field:hr.sign.in.out.ask,name:0
 msgid "Employees name"
-msgstr "Nomes dos funcionários"
+msgstr "Nome de Funcionários"
 
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.open_view_attendance_reason
@@ -164,13 +162,13 @@ msgstr "Aviso"
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:174
 #, python-format
 msgid "The Sign-in date must be in the past"
-msgstr "A data de entrada deve estar no passado"
+msgstr "A data de Sign In deve estar no passado"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:167
 #, python-format
 msgid "A sign-in must be right after a sign-out !"
-msgstr "A entrada deve estar depois da saída !"
+msgstr "A sign in deve estar depois do sign out !"
 
 #. module: hr_attendance
 #: field:hr.employee,state:0
@@ -198,12 +196,13 @@ msgstr "Procura de Presenças"
 #. module: hr_attendance
 #: model:ir.actions.act_window,name:hr_attendance.action_hr_attendance_week
 msgid "Attendances By Week"
-msgstr ""
+msgstr "Presenças por Semana"
 
 #. module: hr_attendance
 #: constraint:hr.attendance:0
 msgid "Error: Sign in (resp. Sign out) must follow Sign out (resp. Sign in)"
-msgstr "Erro: Entrada (Saída) deve ser seguida de Saída (Entrada)"
+msgstr ""
+"Erro: Sign In (resp. Sign Out) deve ser seguida de Sign Out(resp. Sign In)"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -262,26 +261,27 @@ msgstr "Mês"
 #. module: hr_attendance
 #: field:hr.action.reason,action_type:0
 msgid "Action Type"
-msgstr ""
+msgstr "Tipo de Ação"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
 msgid ""
 "(*) A negative delay means that the employee worked more than encoded."
 msgstr ""
-"(*) Um atraso negativo indica que o empregado trabalhou mais horas que o "
+"(*) Um atraso negativo indica que o funcionário trabalhou mais horas que o "
 "previsto"
 
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "My Attendance"
-msgstr ""
+msgstr "Os meus Atendimentos"
 
 #. module: hr_attendance
 #: help:hr.attendance,action_desc:0
 msgid ""
 "Specifies the reason for Signing In/Signing Out in case of extra hours."
-msgstr "Especifique as razões de Entrada/Saída no caso de horas extras."
+msgstr ""
+"Especifique as razões de Signing In/Signing Out no caso de horas extras."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_month
@@ -291,7 +291,7 @@ msgstr "Imprimir Relatório Mensal de Pontualidade"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_sign_in_out
 msgid "Sign In Sign Out"
-msgstr "Entrada Saída"
+msgstr "Sign In/Sign Out"
 
 #. module: hr_attendance
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:105
@@ -302,7 +302,7 @@ msgstr "Entrada Saída"
 #: model:ir.ui.menu,name:hr_attendance.menu_hr_attendance_sigh_in_out
 #, python-format
 msgid "Sign in / Sign out"
-msgstr "Entrada / Saída"
+msgstr "Sign in / Sign out"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -312,7 +312,7 @@ msgstr "hr.sign.out.ask"
 #. module: hr_attendance
 #: view:hr.attendance.week:0
 msgid "Print Attendance Report Weekly"
-msgstr ""
+msgstr "Imprimir Relatórios de Atendimentos Semanais"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -323,7 +323,7 @@ msgstr "Agosto"
 #: code:addons/hr_attendance/wizard/hr_attendance_sign_in_out.py:179
 #, python-format
 msgid "A sign-out must be right after a sign-in !"
-msgstr "O registo de uma saída deve ser depois de uma entrada!"
+msgstr "O sign Out deve ser depois de sign In!"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -333,7 +333,7 @@ msgstr "Junho"
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_error
 msgid "Print Error Attendance Report"
-msgstr "Imprimir Relatório de Desvios de Pontualidade"
+msgstr "Imprimir Relatório de erros de Assiduidade"
 
 #. module: hr_attendance
 #: field:hr.attendance,name:0
@@ -348,7 +348,7 @@ msgstr "Novembro"
 #. module: hr_attendance
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr "Erro! Não pode criar hierarquias de funcionários com recursividade."
+msgstr "Erro ! Não pode criar uma Hierarquia recursiva de Funcionários."
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -365,7 +365,7 @@ msgstr "Janeiro"
 #: view:hr.sign.in.out:0
 #: view:hr.sign.in.out.ask:0
 msgid "Sign in"
-msgstr "Entrada"
+msgstr "Sign In"
 
 #. module: hr_attendance
 #: view:hr.attendance.error:0
@@ -374,7 +374,7 @@ msgstr "Análise de informação"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
-msgid "Sign-Out Entry must follow Sign-In."
+msgid "Sign-out Entry Must Follow Sign-in."
 msgstr "Um registo de saída deve ser seguida de um de entrada."
 
 #. module: hr_attendance
@@ -386,7 +386,7 @@ msgstr "Erros de presenças"
 #: field:hr.attendance,action:0
 #: selection:hr.attendance,action:0
 msgid "Action"
-msgstr "Acção"
+msgstr "Ação"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out:0
@@ -396,14 +396,15 @@ msgid ""
 "tool. If each employee has been linked to a system user, then they can "
 "encode their time with this action button."
 msgstr ""
-"Se pretende que os seus colaboradores registem a entrada e saída do serviço, "
-"pode fazê-lo usando este botão para efetuar esse registo. Para isso, cada "
-"funcionário deve estar associado ao respectivo utilizador da aplicação."
+"Se precisar da equipa para entrar quando chegam ao trabalho e sair novamente "
+"no final do dia, OpenERP permite-lhe gerir isto com esta ferramenta. Se cada "
+"funcionário tem sido associada a um utilizador do sistema, então eles podem "
+"codificar o seu tempo com este botão de ação."
 
 #. module: hr_attendance
 #: model:ir.model,name:hr_attendance.model_hr_attendance_week
 msgid "Print Week Attendance Report"
-msgstr "Imprimir Relatório Semanal de Pontualidade"
+msgstr "Imprimir Relatório Semanal de Assiduidade"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,emp_id:0
@@ -423,7 +424,7 @@ msgstr "Cancelar"
 #. module: hr_attendance
 #: help:hr.action.reason,name:0
 msgid "Specifies the reason for Signing In/Signing Out."
-msgstr "Especificar tipos de Entradas/Saídas"
+msgstr "Especificar tipos de Signing In/Signing Out"
 
 #. module: hr_attendance
 #: report:report.hr.timesheet.attendance.error:0
@@ -436,7 +437,7 @@ msgstr ""
 #. module: hr_attendance
 #: view:hr.attendance.month:0
 msgid "Print Attendance Report Monthly"
-msgstr "Imprimir Relatório de Pontualidade Mensalmente"
+msgstr "Imprimir Relatório de assiduidade Mensalmente"
 
 #. module: hr_attendance
 #: selection:hr.action.reason,action_type:0
@@ -463,8 +464,8 @@ msgid ""
 "You tried to %s with a date anterior to another event !\n"
 "Try to contact the administrator to correct attendances."
 msgstr ""
-"Você tentou %s com uma data anterior a outro evento!\n"
-"Contacte o administrador para corrigir as entradas."
+"Tentou %s com uma data anterior a outro evento!\n"
+"Contate o administrador para corrigir as entradas."
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -492,7 +493,7 @@ msgstr "Maio"
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
 msgid "Your last sign in"
-msgstr "A sua última entrada"
+msgstr "A Sua Última sign in"
 
 #. module: hr_attendance
 #: selection:hr.attendance,action:0
@@ -508,15 +509,15 @@ msgid ""
 "has been linked to a system user, then they can encode their time with this "
 "action button."
 msgstr ""
-"Registar entrada / saída. Nalgumas organizações, o pessoal deve registar "
-"entrada quando se apsresentam ao serviço e depois registar saída no filnal "
-"da jornada de trabalho. Se os funcionários estiverem associados a um "
-"utilizador da aplicação, então podem fazê-lo usando este botão."
+"Sign in / Sign out. Nalgumas empresas, o pessoal tem que assinar quando "
+"chegam ao trabalho e assinar novamente no final do dia. Se cada funcionário "
+"for associado a um utilizador do sistema, então podem codificar o seu tempo "
+"com este botão de ação."
 
 #. module: hr_attendance
 #: field:hr.attendance,employee_id:0
 msgid "Employee's Name"
-msgstr "Nome do funcionário"
+msgstr "Nome do Funcionário"
 
 #. module: hr_attendance
 #: selection:hr.employee,state:0
@@ -531,12 +532,12 @@ msgstr "Fevereiro"
 #. module: hr_attendance
 #: view:hr.attendance:0
 msgid "Employee attendances"
-msgstr "Presenças do empregado"
+msgstr "Assiduidade do funcionário"
 
 #. module: hr_attendance
 #: field:hr.sign.in.out,state:0
 msgid "Current state"
-msgstr "Estado Actual"
+msgstr "Estado Atual"
 
 #. module: hr_attendance
 #: selection:hr.attendance.month,month:0
@@ -552,7 +553,7 @@ msgstr "Abaixo deste atraso, o erro é considerado voluntário"
 #: code:addons/hr_attendance/wizard/hr_attendance_error.py:49
 #, python-format
 msgid "No records found for your selection!"
-msgstr "Não foram encontrados registos para a sua selecção!"
+msgstr "Não foram encontrados registos para a sua seleção!"
 
 #. module: hr_attendance
 #: view:hr.sign.in.out.ask:0
@@ -560,8 +561,8 @@ msgid ""
 "You did not sign in the last time. Please enter the date and time you signed "
 "in."
 msgstr ""
-"Você não registou a entrada. Por favor registe a data e hora da última "
-"entrada agora."
+"Não registou a entrada. Por favor registe a data e hora da última entrada "
+"agora."
 
 #. module: hr_attendance
 #: field:hr.attendance.month,year:0
@@ -587,9 +588,6 @@ msgstr "hr.sign.in.out.ask"
 
 #~ msgid "My Attendances"
 #~ msgstr "A Minha Pontualidade"
-
-#~ msgid "Attendances Of Employees"
-#~ msgstr "Pontualidade de Empregados"
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -669,10 +667,16 @@ msgstr "hr.sign.in.out.ask"
 #~ msgid "Employee ID"
 #~ msgstr "ID do funcionário"
 
+#~ msgid "Invalid model name in the action definition."
+#~ msgstr "Nome de modelo inválido na definição da ação"
+
+#~ msgid "You are now ready to sign in or out of the attendance follow up"
+#~ msgstr "Você já pode marcar entradas ou saídas no registo de presenças"
+
 #~ msgid ""
 #~ "Error ! You cannot select a department for which the employee is the manager."
 #~ msgstr ""
-#~ "Erro ! Não pode seleccionar um departamento cujo gestor é o funcionário."
+#~ "Erro ! Não pode seleccionar um departamento cujo funcionário é o gestor."
 
 #~ msgid ""
 #~ "\n"
@@ -682,14 +686,13 @@ msgstr "hr.sign.in.out.ask"
 #~ "       "
 #~ msgstr ""
 #~ "\n"
-#~ "    Este módulo destina-se à gestão da pontualidade e assiduidade dos "
-#~ "funcionários.\n"
-#~ "    Mantém um registo de presenças baseado nos registos de entrada e saída\n"
-#~ "    efetuados por estes.\n"
+#~ "    Este módulo tem como objectivo gerir a assiduidade do funcionário.\n"
+#~ "    Mantém a conta das assiduidades dos funcionários sobre a base das\n"
+#~ "    acções(Sign in/Sign out) realizadas por eles.\n"
 #~ "       "
 
-#~ msgid "Invalid model name in the action definition."
-#~ msgstr "Nome de modelo inválido na definição da ação"
+#~ msgid "Attendances Of Employees"
+#~ msgstr "Assiduidade de funcionários"
 
-#~ msgid "You are now ready to sign in or out of the attendance follow up"
-#~ msgstr "Você já pode marcar entradas ou saídas no registo de presenças"
+#~ msgid "Sign-Out Entry must follow Sign-In."
+#~ msgstr "Um registo de saída deve ser seguida de um de Sign In."

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-01-28 21:11+0000\n"
+"PO-Revision-Date: 2012-05-10 17:27+0000\n"
 "Last-Translator: Goran Kliska <gkliska@gmail.com>\n"
 "Language-Team: <>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:42+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 "Language: hr\n"
 
 #. module: hr
@@ -195,8 +195,9 @@ msgstr "Žensko"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
-msgstr "Ukupan broj potrebnih zaposlenika za taj posao"
+msgid ""
+"Expected number of employees for this job position after new recruitment."
+msgstr ""
 
 #. module: hr
 #: model:ir.ui.menu,name:hr.menu_open_view_attendance_reason_new_config
@@ -247,8 +248,8 @@ msgstr "Ostali podaci"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "Poslovna el. pošta"
+msgid "Work Email"
+msgstr "Poslovni Email"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -288,8 +289,8 @@ msgstr "Kategorije"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Očekivano djelatnika"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -417,12 +418,6 @@ msgid "Working Address"
 msgstr "Poslovna adresa"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Nadzorna ploča upravitelja HR"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Podređeni odjeli"
@@ -435,7 +430,7 @@ msgstr "Status"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
+msgid "Categories Structure"
 msgstr "Struktura kategorija"
 
 #. module: hr
@@ -465,7 +460,7 @@ msgstr "Pogreška ! Ne možete kreirati rekurzivnu hijerarhiju djelatnika."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr "Podređena hijerarhija"
 
 #. module: hr
@@ -715,8 +710,13 @@ msgstr "Podređeni djelatnici"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
-msgstr "Broj djelatnika"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
+msgstr ""
 
 #~ msgid ""
 #~ "The Object name must start with x_ and not contain any special character !"
@@ -743,9 +743,6 @@ msgstr "Broj djelatnika"
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Kontakt Djelatnika"
-
-#~ msgid "Work Email"
-#~ msgstr "Poslovni Email"
 
 #~ msgid "Group name"
 #~ msgstr "Ime Grupe"
@@ -840,6 +837,9 @@ msgstr "Broj djelatnika"
 #~ msgid "New Employee"
 #~ msgstr "Novi Djelatnik"
 
+#~ msgid "Work E-mail"
+#~ msgstr "Poslovna el. pošta"
+
 #~ msgid "Simplifies the management of employee's attendances."
 #~ msgstr "Pojednostavljuje upravljanje podacima prisustva djelatnika"
 
@@ -898,6 +898,9 @@ msgstr "Broj djelatnika"
 #~ "Moguće je povećati mogućnosti aplikacije ljudskih resursa instalacijom "
 #~ "nekoliko funkcionalnosti povezanih sa odjelom ljudskih resursa."
 
+#~ msgid "Expected Employees"
+#~ msgstr "Očekivano djelatnika"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Tijek konfiguracije"
 
@@ -916,6 +919,12 @@ msgstr "Broj djelatnika"
 
 #~ msgid "Recruitment Process"
 #~ msgstr "Postupak regrutiranja"
+
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Nadzorna ploča upravitelja HR"
+
+#~ msgid "Categories structure"
+#~ msgstr "Struktura kategorija"
 
 #~ msgid "Holidays / Leaves Management"
 #~ msgstr "Upravljanje praznicima / odsustvima"
@@ -989,3 +998,12 @@ msgstr "Broj djelatnika"
 
 #~ msgid "Configure"
 #~ msgstr "Promijeni postavke"
+
+#~ msgid "Required number of employees in total for that job."
+#~ msgstr "Ukupan broj potrebnih zaposlenika za taj posao"
+
+#~ msgid "Subordonate Hierarchy"
+#~ msgstr "Podređena hijerarhija"
+
+#~ msgid "Number of Employees"
+#~ msgstr "Broj djelatnika"

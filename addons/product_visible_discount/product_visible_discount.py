@@ -47,7 +47,6 @@ class sale_order_line(osv.osv):
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
             product_obj = self.pool.get('product.product')
-            template_obj = self.pool.get('product.template')
             field_name = 'list_price'
 
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
@@ -57,9 +56,7 @@ class sale_order_line(osv.osv):
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
-            product_tmpl_id = product.product_tmpl_id.id
-
-            product_read = template_obj.read(cr, uid, product_tmpl_id, [field_name], context)
+            product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
 
             factor = 1.0
             if uom and uom != product.uom_id.id:
@@ -103,14 +100,13 @@ sale_order_line()
 class account_invoice_line(osv.osv):
     _inherit = "account.invoice.line"
 
-    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, address_invoice_id=False, currency_id=False, context=None, company_id=None):
-        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit, address_invoice_id, currency_id, context=context, company_id=company_id)
+    def product_id_change(self, cr, uid, ids, product, uom, qty=0, name='', type='out_invoice', partner_id=False, fposition_id=False, price_unit=False, currency_id=False, context=None, company_id=None):
+        res = super(account_invoice_line, self).product_id_change(cr, uid, ids, product, uom, qty, name, type, partner_id, fposition_id, price_unit,currency_id, context=context, company_id=company_id)
 
         def get_real_price(res_dict, product_id, qty, uom, pricelist):
             item_obj = self.pool.get('product.pricelist.item')
             price_type_obj = self.pool.get('product.price.type')
             product_obj = self.pool.get('product.product')
-            template_obj = self.pool.get('product.template')
             field_name = 'list_price'
 
             if res_dict.get('item_id',False) and res_dict['item_id'].get(pricelist,False):
@@ -120,9 +116,7 @@ class account_invoice_line(osv.osv):
                     field_name = price_type_obj.browse(cr, uid, item_base).field
 
             product = product_obj.browse(cr, uid, product_id, context)
-            product_tmpl_id = product.product_tmpl_id.id
-
-            product_read = template_obj.read(cr, uid, product_tmpl_id, [field_name], context)
+            product_read = product_obj.read(cr, uid, product_id, [field_name], context=context)
 
             factor = 1.0
             if uom and uom != product.uom_id.id:

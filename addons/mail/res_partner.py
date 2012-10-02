@@ -19,16 +19,27 @@
 #
 ##############################################################################
 
-from osv import osv
-from osv import fields
+from osv import osv, fields
 
-class res_partner(osv.osv):
-    """ Inherits partner and adds CRM information in the partner form """
-    _inherit = 'res.partner'
+class res_partner_mail(osv.Model):
+    """ Update partner to add a field about notification preferences """
+    _name = "res.partner"
+    _inherit = ['res.partner', 'mail.thread']
+
     _columns = {
-        'emails': fields.one2many('mail.message', 'partner_id', 'Emails', readonly=True, domain=[('email_from','!=',False)]),
+        'notification_email_send': fields.selection([
+            ('all', 'All feeds'),
+            ('comment', 'Comments and Emails'),
+            ('email', 'Emails only'),
+            ('none', 'Never')
+            ], 'Receive Feeds by Email', required=True,
+            help="Choose in which case you want to receive an email when you "\
+                  "receive new feeds."),
     }
 
-res_partner()
+    _defaults = {
+        'notification_email_send': lambda *args: 'comment'
+    }
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

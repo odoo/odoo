@@ -7,12 +7,11 @@
     partner_mobile: '9963214587'
     job_id: hr.job_developer
     stage_id: stage_job1
-    name: 'Salesman'
+    name: 'Salesperson'
     partner_phone: '1236547890'
 
 -
   !record {model: hr.applicant, id: hr_case_traineemca0}:
-    partner_address_id: base.res_partner_address_14
     date: !eval time.strftime('%Y-%m-10 18:15:00')
     type_id: degree_bac5
     priority: '3'
@@ -53,6 +52,7 @@
     partner_name: 'John Bruno'
     state: 'done'
     job_id: hr.job_developer
+    color: 5
     stage_id: stage_job5
     name: 'Marketing Job'
 -
@@ -70,7 +70,6 @@
     partner_phone: '33968745'
 -
   !record {model: hr.applicant, id: hr_case_traineemca1}:
-    partner_address_id: base.res_partner_address_14
     date: !eval time.strftime('%Y-%m-12 17:49:19')
     type_id: degree_bac5
     partner_name: 'Tina Augustie'
@@ -83,7 +82,6 @@
 
 -
   !record {model: hr.applicant, id: hr_case_programmer}:
-    partner_address_id: base.res_partner_address_14
     date: !eval time.strftime('%Y-%m-12 17:49:19')
     type_id: degree_bac5
     partner_name: 'Shane Williams'
@@ -100,10 +98,12 @@
   !record {model: hr.applicant, id: hr_case_advertisement}:
     date: !eval time.strftime('%Y-%m-26 17:39:42')
     type_id: degree_licenced
-    partner_id: base.res_partner_11
     partner_name: 'David Armstrong'
     job_id: hr.job_developer
     stage_id: stage_job2
+    color: 4
     name: 'Advertisement'
     salary_expected: 11000.0
-
+-
+  !record {model: hr.job, id: hr.job_developer}:
+    survey_id: hr_recruitment.survey_job_0

@@ -35,14 +35,13 @@ class hr_recruitment_partner_create(osv.osv_memory):
             context = {}
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             if case.partner_id:
-                raise osv.except_osv(_('Error !'),
-                    _('A partner is already defined on this job request.'))
+                raise osv.except_osv(_('Error!'),
+                    _('A contact is already defined on this job request.'))
         pass
 
     def make_order(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         partner_obj = self.pool.get('res.partner')
-        contact_obj = self.pool.get('res.partner.address')
         case_obj = self.pool.get('hr.applicant')
 
         if context is None:
@@ -54,23 +53,18 @@ class hr_recruitment_partner_create(osv.osv_memory):
         for case in case_obj.browse(cr, uid, context['active_ids'], context=context):
             partner_id = partner_obj.search(cr, uid, [('name', '=', case.partner_name or case.name)], context=context)
             if partner_id:
-                raise osv.except_osv(_('Error !'),_('A partner is already existing with the same name.'))
+                raise osv.except_osv(_('Error!'),_('A contact is already existing with the same name.'))
             partner_id = partner_obj.create(cr, uid, {
                 'name': case.partner_name or case.name,
                 'user_id': case.user_id.id,
                 'comment': case.description,
-            }, context=context)
-            contact_id = contact_obj.create(cr, uid, {
-                'partner_id': partner_id,
-                'name': case.partner_name,
                 'phone': case.partner_phone,
                 'mobile': case.partner_mobile,
                 'email': case.email_from
             }, context=context)
 
-            case_obj.write(cr, uid, case.id, {
+            case_obj.write(cr, uid, [case.id], {
                 'partner_id': partner_id,
-                'partner_address_id': contact_id
             }, context=context)
         if data['close']:
             case_obj.case_close(cr, uid, context['active_ids'])

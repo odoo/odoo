@@ -4,18 +4,17 @@
         <record id="view_calendar_event_import" model="ir.ui.view">
             <field name="name">calendar.event.import.form</field>
             <field name="model">calendar.event.import</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Import ICS">
+                <form string="Import ICS" version="7.0">
                     <group colspan="4" >
-                         <separator string="Select ICS file"/>
+                         <separator string="Select ICS File"/>
                          <field name="file_path" colspan="4" width="500" nolabel="1"/>
                     </group>
-                        <separator string="" colspan="4" />
-                    <group colspan="4" col="6">
-                        <button  icon="gtk-cancel" special="cancel" string="_Cancel"/>
-                        <button  icon="gtk-ok"  name="process_imp_ics"  string="_Import" type="object"/>
-                   </group>
+                    <footer>
+                        <button name="process_imp_ics"  string="_Import" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                </form>
             </field>
         </record>
@@ -23,16 +22,11 @@
         <record id="view_calendar_event_import_display" model="ir.ui.view">
             <field name="name">calendar.event.import.form.display</field>
             <field name="model">calendar.event.import</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Import Message">
                     <group colspan="4" >
                           <field name="msg" colspan="4" width="300" nolabel="1"/>
                     </group>
-                        <separator string="" colspan="4" />
-                    <group colspan="4">
-                        <button  icon="gtk-ok" special="cancel" string="Ok"/>
-                   </group>
                </form>
             </field>
         </record>
@@ -42,6 +36,5 @@
             res_model="calendar.event.import" src_model="basic.calendar"
             view_id="view_calendar_event_import"
             view_mode="form" target="new" view_type="form" />
-        
     </data>
 </openerp>

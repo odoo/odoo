@@ -4,16 +4,14 @@
         <record model="ir.ui.view" id="view_account_journal_pos_user_form">
             <field name="name">POS Journal</field>
             <field name="model">account.journal</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_account_journal_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//notebook[last()]" position="inside">
                     <page string="Point of Sale">
-                        <group col="6" colspan="4">
-                            <separator colspan="6" string="Extended Configuration"/>
+                        <group col="4" colspan="4">
                             <field name="journal_user"/>
-                            <field name="auto_cash"/>
-                            <field name="check_dtls"/>
+                            <field name="amount_authorized_diff"/>
+                            <field name="self_checkout_payment_method" />
                         </group>
                     </page>
                 </xpath>
@@ -23,23 +21,16 @@
         <record id="view_pos_open_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group>
-                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
-                        <field name="journal_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Cash Statement"/>
+                    <field name="date"/>
+                    <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
-                        <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
-                        <separator orientation="vertical"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -48,24 +39,17 @@
         <record id="view_pos_confirm_cash_statement_filter" model="ir.ui.view">
             <field name="name">account.bank.statement.inherit2</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Cash Statements">
-                    <group>
-                        <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
-                        <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
-                        <separator orientation="vertical"/>
-                        <field name="date"/>
-                        <field name="name"/>
-                        <field name="journal_id"/>
-                    </group>
-                    <newline/>
+                    <field name="name" string="Cash Statement"/>
+                    <field name="date"/>
+                    <filter string="Open" domain="[('state','=','open')]" icon="terp-document-new" name="open"/>
+                    <filter string="Closed" domain="[('state','=','confirm')]" icon="terp-camera_test"/>
+                    <field name="journal_id"/>
                     <group expand="0" string="Group By...">
                         <filter string="Journal" context="{'group_by': 'journal_id'}" icon="terp-folder-orange"/>
-                        <separator orientation="vertical"/>
                         <filter string="Period" context="{'group_by': 'period_id'}" icon="terp-go-month"/>
-                        <separator orientation="vertical"/>
-                        <filter string="State" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
+                        <filter string="Status" context="{'group_by': 'state'}" icon="terp-stock_effects-object-colorize"/>
                     </group>
                 </search>
             </field>
@@ -97,11 +81,10 @@
         <record id="view_cash_statement_pos_tree" model="ir.ui.view">
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="account.view_cash_statement_tree"/>
             <field name="arch" type="xml">
                 <field name="journal_id" position="after">
-                    <field name="user_id"/>
+                    <field name="user_id" string="Responsible"/>
                 </field>
             </field>
         </record>
@@ -128,35 +111,5 @@
             <field name="view_id" ref="account.view_bank_statement_form2"/>
             <field name="act_window_id" ref="action_new_bank_statement_all_tree"/>
         </record>
-
-        <menuitem name="Cash Register Management" parent="point_of_sale.menu_point_root"
-            id="menu_point_open_config" sequence="10"/>
-        <menuitem
-            name="Open Cash Registers" parent="menu_point_open_config"
-            string="Open Cash Registers"
-            action="action_pos_open_statement"
-            id="menu_open_statement" sequence="1" />
-
-        <menuitem
-            name="Close Cash Registers" parent="menu_point_open_config"
-            string="Close Cash Registers"
-            action="action_pos_close_statement"
-            id="menu_close_statement" sequence="2" />
-
-        <menuitem
-            parent="menu_point_open_config"
-            action="action_pos_confirm"
-            id="menu_wizard_pos_confirm" sequence="8" />
-
-
-        <menuitem
-            name="List of Cash Registers"
-            parent="menu_point_open_config"
-            action="action_new_bank_statement_all_tree"
-            id="menu_all_menu_all_register"
-            sequence="4"
-        />
-
-
     </data>
 </openerp>

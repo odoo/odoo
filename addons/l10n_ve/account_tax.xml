@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data noupdate="1">
-	<record id="tax1" model="account.tax.template">
-		<field name="chart_template_id" ref="ve_chart_template"/>
-		<field name="name">IVA (12.0%)</field>
-		<field name="amount">0.120000</field>
-		<field name="type">percent</field>
-		<field name="account_collected_id" ref="chart2150"/>
-		<field name="account_paid_id" ref="chart2150"/>
-		<field name="base_code_id" ref="vat_code_base_due"/>
-		<field name="tax_code_id" ref="vat_code_due_tva"/>
-		<field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-		<field name="ref_tax_code_id" ref="vat_code_payable"/>
-	</record>
-	<record id="tax2" model="account.tax.template">
-		<field name="chart_template_id" ref="ve_chart_template"/>
-		<field name="name">IVA reducido (8.0%)</field>
-		<field name="amount">0.080000</field>
-		<field name="type">percent</field>
-		<field name="account_collected_id" ref="chart2151"/>
-		<field name="account_paid_id" ref="chart2151"/>
-		<field name="base_code_id" ref="vat_code_base_due"/>
-		<field name="tax_code_id" ref="vat_code_due_tva"/>
-		<field name="ref_base_code_id" ref="vat_code_receivable_net"/>
-		<field name="ref_tax_code_id" ref="vat_code_payable"/>
-	</record>
+    <record id="tax1" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template"/>
+        <field name="name">IVA (12.0%)</field>
+        <field name="amount">0.120000</field>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="chart2150"/>
+        <field name="account_paid_id" ref="chart2150"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
+        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
+    <record id="tax2" model="account.tax.template">
+        <field name="chart_template_id" ref="ve_chart_template"/>
+        <field name="name">IVA reducido (8.0%)</field>
+        <field name="amount">0.080000</field>
+        <field name="type">percent</field>
+        <field name="account_collected_id" ref="chart2151"/>
+        <field name="account_paid_id" ref="chart2151"/>
+        <field name="base_code_id" ref="vat_code_base_due"/>
+        <field name="tax_code_id" ref="vat_code_due_tva"/>
+        <field name="ref_base_code_id" ref="vat_code_receivable_net"/>
+        <field name="ref_tax_code_id" ref="vat_code_payable"/>
+    </record>
 </data>
 </openerp>

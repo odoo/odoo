@@ -36,7 +36,7 @@ class resource_calendar(osv.osv):
         'name' : fields.char("Name", size=64, required=True),
         'company_id' : fields.many2one('res.company', 'Company', required=False),
         'attendance_ids' : fields.one2many('resource.calendar.attendance', 'calendar_id', 'Working Time'),
-        'manager' : fields.many2one('res.users', 'Workgroup manager'),
+        'manager' : fields.many2one('res.users', 'Workgroup Manager'),
     }
     _defaults = {
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.calendar', context=context)
@@ -45,24 +45,24 @@ class resource_calendar(osv.osv):
     def working_hours_on_day(self, cr, uid, resource_calendar_id, day, context=None):
         """Calculates the  Working Total Hours based on Resource Calendar and
         given working day (datetime object).
-        
+
         @param resource_calendar_id: resource.calendar browse record
         @param day: datetime object
-        
+
         @return: returns the working hours (as float) men should work on the given day if is in the attendance_ids of the resource_calendar_id (i.e if that day is a working day), returns 0.0 otherwise
         """
         res = 0.0
         for working_day in resource_calendar_id.attendance_ids:
             if (int(working_day.dayofweek) + 1) == day.isoweekday():
                 res += working_day.hour_to - working_day.hour_from
-        return res 
+        return res
 
     def _get_leaves(self, cr, uid, id, resource):
-        """Private Method to Calculate resource Leaves days 
-        
+        """Private Method to Calculate resource Leaves days
+
         @param id: resource calendar id
-        @param resource: resource id for which leaves will ew calculated 
-        
+        @param resource: resource id for which leaves will ew calculated
+
         @return : returns the list of dates, where resource on leave in
                   resource.calendar.leaves object (e.g.['%Y-%m-%d', '%Y-%m-%d'])
         """
@@ -85,9 +85,9 @@ class resource_calendar(osv.osv):
         """
         Calculates the working Schedule from supplied from date to till hours
         will be satisfied  based or resource calendar id. If resource is also
-        given then it will consider the resource leave also and than will 
+        given then it will consider the resource leave also and than will
         calculates resource working schedule
-        
+
         @param dt_from: datetime object, start of working scheduled
         @param hours: float, total number working  hours needed scheduled from
                       start date
@@ -187,29 +187,29 @@ class resource_calendar(osv.osv):
 
     def interval_get(self, cr, uid, id, dt_from, hours, resource=False, byday=True):
         """Calculates Resource Working Internal Timing Based on Resource Calendar.
-        
+
         @param dt_from: start resource schedule calculation.
         @param hours : total number of working hours to be scheduled.
-        @param resource: optional resource id, If supplied it will take care of 
+        @param resource: optional resource id, If supplied it will take care of
                          resource leave while scheduling.
         @param byday: boolean flag bit enforce day wise scheduling
-        
+
         @return :  list of scheduled working timing  based on resource calendar.
         """
         res = self.interval_get_multi(cr, uid, [(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)], resource, byday)[(dt_from.strftime('%Y-%m-%d %H:%M:%S'), hours, id)]
         return res
 
     def interval_hours_get(self, cr, uid, id, dt_from, dt_to, resource=False):
-        """ Calculates the Total Working hours based on given start_date to 
-        end_date, If resource id is supplied that it will consider the source 
+        """ Calculates the Total Working hours based on given start_date to
+        end_date, If resource id is supplied that it will consider the source
         leaves also in calculating the hours.
-        
+
         @param dt_from : date start to calculate hours
         @param dt_end : date end to calculate hours
         @param resource: optional resource id, If given resource leave will be
-                         considered. 
-        
-        @return : Total number of working hours based dt_from and dt_end and 
+                         considered.
+
+        @return : Total number of working hours based dt_from and dt_end and
                   resource if supplied.
         """
         if not id:
@@ -257,18 +257,18 @@ resource_calendar()
 class resource_calendar_attendance(osv.osv):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
-    
+
     _columns = {
         'name' : fields.char("Name", size=64, required=True),
-        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of week', required=True, select=True),
-        'date_from' : fields.date('Starting date'),
-        'hour_from' : fields.float('Work from', size=8, required=True, help="Working time will start from", select=True),
-        'hour_to' : fields.float("Work to", size=8, required=True, help="Working time will end at"),
+        'dayofweek': fields.selection([('0','Monday'),('1','Tuesday'),('2','Wednesday'),('3','Thursday'),('4','Friday'),('5','Saturday'),('6','Sunday')], 'Day of Week', required=True, select=True),
+        'date_from' : fields.date('Starting Date'),
+        'hour_from' : fields.float('Work from', required=True, help="Start and End time of working.", select=True),
+        'hour_to' : fields.float("Work to", required=True),
         'calendar_id' : fields.many2one("resource.calendar", "Resource's Calendar", required=True),
     }
-    
+
     _order = 'dayofweek, hour_from'
-    
+
     _defaults = {
         'dayofweek' : '0'
     }
@@ -292,7 +292,7 @@ class resource_resource(osv.osv):
         'company_id' : fields.many2one('res.company', 'Company'),
         'resource_type': fields.selection([('user','Human'),('material','Material')], 'Resource Type', required=True),
         'user_id' : fields.many2one('res.users', 'User', help='Related user name for the resource to manage its access.'),
-        'time_efficiency' : fields.float('Efficiency factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficency of 200%, then his load will only be 50%."),
+        'time_efficiency' : fields.float('Efficiency Factor', size=8, required=True, help="This field depict the efficiency of the resource to complete tasks. e.g  resource put alone on a phase of 5 days with 5 tasks assigned to him, will show a load of 100% for this phase by default, but if we put a efficiency of 200%, then his load will only be 50%."),
         'calendar_id' : fields.many2one("resource.calendar", "Working Time", help="Define the schedule of resource"),
     }
     _defaults = {
@@ -302,12 +302,12 @@ class resource_resource(osv.osv):
         'company_id': lambda self, cr, uid, context: self.pool.get('res.company')._company_default_get(cr, uid, 'resource.resource', context=context)
     }
 
-    
+
     def copy(self, cr, uid, id, default=None, context=None):
         if default is None:
             default = {}
         if not default.get('name', False):
-            default['name'] = self.browse(cr, uid, id, context=context).name + _(' (copy)')
+            default.update(name=_('%s (copy)') % (self.browse(cr, uid, id, context=context).name))
         return super(resource_resource, self).copy(cr, uid, id, default, context)
 
     def generate_resources(self, cr, uid, user_ids, calendar_id, context=None):
@@ -368,7 +368,7 @@ class resource_resource(osv.osv):
         """
         if not calendar_id:
             # Calendar is not specified: working days: 24/7
-            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'), 
+            return [('fri', '8:0-12:0','13:0-17:0'), ('thu', '8:0-12:0','13:0-17:0'), ('wed', '8:0-12:0','13:0-17:0'),
                    ('mon', '8:0-12:0','13:0-17:0'), ('tue', '8:0-12:0','13:0-17:0')]
         resource_attendance_pool = self.pool.get('resource.calendar.attendance')
         time_range = "8:00-8:00"
@@ -421,7 +421,7 @@ class resource_calendar_leaves(osv.osv):
     _columns = {
         'name' : fields.char("Name", size=64),
         'company_id' : fields.related('calendar_id','company_id',type='many2one',relation='res.company',string="Company", store=True, readonly=True),
-        'calendar_id' : fields.many2one("resource.calendar", "Working time"),
+        'calendar_id' : fields.many2one("resource.calendar", "Working Time"),
         'date_from' : fields.datetime('Start Date', required=True),
         'date_to' : fields.datetime('End Date', required=True),
         'resource_id' : fields.many2one("resource.resource", "Resource", help="If empty, this is a generic holiday for the company. If a resource is set, the holiday/leave is only for this resource"),

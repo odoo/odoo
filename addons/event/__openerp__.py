@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 ##############################################################################
 #
@@ -24,24 +25,22 @@
     'name': 'Events Organisation',
     'version': '0.1',
     'category': 'Tools',
-    'complexity': "easy",
+    'summary': 'Trainings, Conferences, Meetings, Exhibitions, Registrations',
     'description': """
 Organization and management of Events.
 ======================================
 
-This module allows you
-    * to manage your events and their registrations
-    * to use emails to automatically confirm and send acknowledgements for any registration to an event
-    * ...
+The event module allows you to efficiently organise events and all related tasks: planification, registration tracking,
+attendances, etc.
 
-Note that:
-    - You can define new types of events in
-        Association / Configuration / Types of Events
+Key Features
+------------
+* Manage your Events and Registrations
+* Use emails to automatically confirm and send acknowledgements for any event registration
 """,
     'author': 'OpenERP SA',
-    'depends': ['email_template'],
-    'init_xml': [],
-    'update_xml': [
+    'depends': ['base_setup', 'board', 'email_template', 'google_map'],
+    'data': [
         'security/event_security.xml',
         'security/ir.model.access.csv',
         'wizard/event_confirm_view.xml',
@@ -51,8 +50,9 @@ Note that:
         'res_partner_view.xml',
         'email_template.xml',
     ],
-    'demo_xml': ['event_demo.xml'],
+    'demo': ['event_demo.xml'],
     'test': ['test/process/event_draft2done.yml'],
+    'css': ['static/src/css/event.css'],
     'installable': True,
     'application': True,
     'auto_install': False,

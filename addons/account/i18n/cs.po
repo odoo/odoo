@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-01-11 11:01+0000\n"
+"PO-Revision-Date: 2012-06-20 16:14+0000\n"
 "Last-Translator: Jiří Hajda <robie@centrum.cz>\n"
 "Language-Team: Czech <openerp-i18n-czech@lists.launchpad.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:18+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:09+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: account
@@ -182,11 +182,6 @@ msgstr "Zdroj účtu"
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
 msgstr "Všechny analytické záznamy"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "Faktury vytvořené v posledních 15 dnech"
 
 #. module: account
 #: field:accounting.report,label_filter:0
@@ -437,7 +432,7 @@ msgstr "Celkový kredit"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-msgid "Open For Unreconciliation"
+msgid "Open for Unreconciliation"
 msgstr "Otevřít pro zrušení likvidace"
 
 #. module: account
@@ -692,18 +687,6 @@ msgstr "Období knihy"
 #, python-format
 msgid "To reconcile the entries company should be the same for all entries"
 msgstr "Při likvidaci záznamů by u všech měla být stejná firma"
-
-#. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "Pohledávky"
 
 #. module: account
 #: constraint:account.move.line:0
@@ -1585,7 +1568,7 @@ msgstr "Nezdaněné"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
-msgid "Go to next partner"
+msgid "Go to Next Partner"
 msgstr "Jít na dalšího partnera"
 
 #. module: account
@@ -1678,11 +1661,6 @@ msgstr ""
 #: view:account.invoice:0
 msgid "Responsible"
 msgstr "Odopovědné"
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "Prodeje dle typu účtu"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -2753,13 +2731,6 @@ msgid "Configure Your Chart of Accounts"
 msgstr "Nastavit vaši účtovou osnovu"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "Prodeje dle účtu"
-
-#. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
 msgstr "Průvodce vytvoří opakující se účetní položky"
@@ -2790,7 +2761,7 @@ msgstr ""
 #: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
-msgid "Tax codes"
+msgid "Tax Codes"
 msgstr "Daňové kódy"
 
 #. module: account
@@ -3145,8 +3116,8 @@ msgstr "Šablony účtové osnovy"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "Generovat účtovou osnovu z šablony osnovy"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
@@ -4281,7 +4252,7 @@ msgstr ""
 
 #. module: account
 #: view:report.account.receivable:0
-msgid "Accounts by type"
+msgid "Accounts by Type"
 msgstr "Účty podle typu"
 
 #. module: account
@@ -4323,7 +4294,7 @@ msgstr "res_config_contents"
 
 #. module: account
 #: view:account.unreconcile:0
-msgid "Unreconciliate transactions"
+msgid "Unreconciliate Transactions"
 msgstr "Nevyrovnané transakce"
 
 #. module: account
@@ -4517,7 +4488,7 @@ msgstr "Datum operace"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
-msgid "Unreconciliation transactions"
+msgid "Unreconciliation Transactions"
 msgstr "Nezlikvidované transakce"
 
 #. module: account
@@ -4646,7 +4617,7 @@ msgstr "Placeno"
 
 #. module: account
 #: view:account.period.close:0
-msgid "Are you sure ?"
+msgid "Are you sure?"
 msgstr "Jste si jisti?"
 
 #. module: account
@@ -5033,7 +5004,7 @@ msgstr "Daňový účet"
 
 #. module: account
 #: view:account.automatic.reconcile:0
-msgid "Reconciliation result"
+msgid "Reconciliation Result"
 msgstr "Výsledek vyrovnání"
 
 #. module: account
@@ -5991,7 +5962,7 @@ msgstr "Prodejní daň(%)"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
-msgid "Create an Account based on this template"
+msgid "Create an Account Based on this Template"
 msgstr "Vytvořit účet založený na šabloně"
 
 #. module: account
@@ -6301,11 +6272,6 @@ msgstr "Zadejte počáteční datum !"
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
 msgstr "Dobropis dodavatele"
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "Nástěnka"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -6856,11 +6822,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "Příjmové účty"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "Odkaz na dokumenty, které generovaly tento výkaz faktury."
@@ -7076,7 +7037,7 @@ msgstr "Nadřazená šablona účtu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr "Instalovat vaši účtovou osnovu"
 
 #. module: account
@@ -7932,7 +7893,7 @@ msgstr "Převrácený analytický zůstatek -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
-msgid "Open for bank reconciliation"
+msgid "Open for Bank Reconciliation"
 msgstr "Otevřeno pro bankovní vyrovnání"
 
 #. module: account
@@ -8106,7 +8067,7 @@ msgstr ""
 
 #. module: account
 #: view:account.tax.template:0
-msgid "Compute Code for Taxes included prices"
+msgid "Compute Code for Taxes Included Prices"
 msgstr ""
 
 #. module: account
@@ -8741,7 +8702,7 @@ msgstr ""
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
-msgid "Cost Ledger for period"
+msgid "Cost Ledger for Period"
 msgstr "Kniha nákladových účtu za období"
 
 #. module: account
@@ -9187,7 +9148,7 @@ msgstr ""
 
 #. module: account
 #: view:account.move.line.reconcile:0
-msgid "Reconciliation transactions"
+msgid "Reconciliation Transactions"
 msgstr "Vyrovnávací transakce"
 
 #. module: account
@@ -9290,7 +9251,7 @@ msgstr "Do data"
 
 #. module: account
 #: view:account.move.journal:0
-msgid "Standard entries"
+msgid "Standard Entries"
 msgstr "Standartní položky"
 
 #. module: account
@@ -10201,7 +10162,7 @@ msgstr ""
 
 #. module: account
 #: view:account.payment.term:0
-msgid "Description On Invoices"
+msgid "Description on Invoices"
 msgstr "Popis na fakturách"
 
 #. module: account
@@ -10600,11 +10561,17 @@ msgstr ""
 #~ msgid "Bank account owner"
 #~ msgstr "Majitel bankovního účtu"
 
+#~ msgid "Standard entries"
+#~ msgstr "Standartní položky"
+
 #~ msgid "Open for unreconciliation"
 #~ msgstr "Open za nevyrovnání(Open for unreconciliation)"
 
 #~ msgid "OK"
 #~ msgstr "OK(OK)"
+
+#~ msgid "Are you sure ?"
+#~ msgstr "Jste si jisti?"
 
 #~ msgid "Select Message"
 #~ msgstr "Zvolte zprávu"
@@ -10632,6 +10599,9 @@ msgstr ""
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Špatný název modelu v definici akce"
+
+#~ msgid "Reconciliation result"
+#~ msgstr "Výsledek vyrovnání"
 
 #~ msgid "Account Code"
 #~ msgstr "Kód účtu"
@@ -10742,6 +10712,9 @@ msgstr ""
 #~ msgid "Period from :"
 #~ msgstr "Období od:"
 
+#~ msgid "Tax codes"
+#~ msgstr "Daňové kódy"
+
 #~ msgid "New Analytic Account"
 #~ msgstr "Nový analitickiý účet"
 
@@ -10819,6 +10792,12 @@ msgstr ""
 #~ msgid "Tax Code Test"
 #~ msgstr "Test kódu daně"
 
+#~ msgid "Go to next partner"
+#~ msgstr "Jít na dalšího partnera"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "Prodeje dle typu účtu"
+
 #~ msgid "Include initial balances"
 #~ msgstr "Včetně počátečních zůstatků"
 
@@ -10856,9 +10835,6 @@ msgstr ""
 #~ msgid " Journal"
 #~ msgstr " Deník"
 
-#~ msgid "Error ! You can not create recursive categories."
-#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní kategorii."
-
 #, python-format
 #~ msgid ""
 #~ "You cannot modify company of this journal as its related record exist in "
@@ -10866,6 +10842,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Nemůžete změnit společnost tohoto deníku, protože vztažené záznamy existují "
 #~ "v řádcích položek"
+
+#~ msgid "Sales by Account"
+#~ msgstr "Prodeje dle účtu"
 
 #~ msgid "Reference Number"
 #~ msgstr "Referenční číslo"
@@ -10902,6 +10881,9 @@ msgstr ""
 
 #~ msgid "  day of the month: 0"
 #~ msgstr "  den v měsíci: 0"
+
+#~ msgid "Accounts by type"
+#~ msgstr "Účty podle typu"
 
 #~ msgid "Account Balance -"
 #~ msgstr "Zůstatek účtu -"
@@ -10968,12 +10950,18 @@ msgstr ""
 #~ msgid "Refund Type"
 #~ msgstr "Typ úhrady"
 
+#~ msgid "Dashboard"
+#~ msgstr "Nástěnka"
+
 #~ msgid "Account Profit And Loss Report"
 #~ msgstr "Výkaz účtu zisku a ztrát"
 
 #, python-format
 #~ msgid "Currnt currency is not confirured properly !"
 #~ msgstr "Aktuální měna není správně nastavena !"
+
+#~ msgid "Income Accounts"
+#~ msgstr "Příjmové účty"
 
 #~ msgid "9"
 #~ msgstr "9"
@@ -10996,6 +10984,9 @@ msgstr ""
 #~ msgid "Year :"
 #~ msgstr "Roky :"
 
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "Otevřeno pro bankovní vyrovnání"
+
 #~ msgid "Bank and Cash Accounts"
 #~ msgstr "Bankovní a hotovostní účty"
 
@@ -11012,6 +11003,9 @@ msgstr ""
 
 #~ msgid "Reference Type"
 #~ msgstr "Typ odkazu"
+
+#~ msgid "Cost Ledger for period"
+#~ msgstr "Kniha nákladových účtu za období"
 
 #~ msgid "Configure Your Accounting Application"
 #~ msgstr "Nastavit vaši účetní aplikaci"
@@ -11031,6 +11025,9 @@ msgstr ""
 
 #~ msgid "Modify"
 #~ msgstr "Upravit"
+
+#~ msgid "Reconciliation transactions"
+#~ msgstr "Vyrovnávací transakce"
 
 #~ msgid "Chart of account"
 #~ msgstr "Diagram účtů"
@@ -11071,6 +11068,9 @@ msgstr ""
 #~ msgid "You cannot remove an account which has account entries!. "
 #~ msgstr "Nemůžete odebrat účet, který má účetní položky!. "
 
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "Generovat účtovou osnovu z šablony osnovy"
+
 #~ msgid "Accounting Chart Configuration"
 #~ msgstr "Nastavení osnovy účetnictví"
 
@@ -11091,6 +11091,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Výkaz zisku a ztráty Vám dá přehled o zisku či ztrátě společnosti v jediném "
 #~ "dokumentu"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "Faktury vytvořené v posledních 15 dnech"
 
 #~ msgid ""
 #~ "The sequence field is used to order the resources from lower sequences to "
@@ -11120,12 +11123,19 @@ msgstr ""
 #~ msgid "Calculated Balance"
 #~ msgstr "Vypočtený zůstatek"
 
+#~ msgid "Open For Unreconciliation"
+#~ msgstr "Otevřít pro zrušení likvidace"
+
 #, python-format
 #~ msgid "CashBox Balance is not matching with Calculated Balance !"
 #~ msgstr "Stav pokladny neodpovídá vypočtenému zůstatku!"
 
 #~ msgid "closing balance entered by the cashbox verifier"
 #~ msgstr "konečný zůstatek zadaný ověřovatelem pokladny"
+
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "Pohledávky"
 
 #, python-format
 #~ msgid "The statement balance is incorrect !\n"
@@ -11152,6 +11162,9 @@ msgstr ""
 #~ msgstr ""
 #~ "Nemůžete provést tuto úpravu na potvrzeném záznamu ! Prosíme berte na "
 #~ "vědomí, že můžete změnit jen některé nedůležité pole !"
+
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "Nezlikvidované transakce"
 
 #~ msgid ""
 #~ "Example: at 14 net days 2 percents, remaining amount at 30 days end of month."
@@ -11202,6 +11215,9 @@ msgstr ""
 #~ msgid "Unable to find a valid period !"
 #~ msgstr "Nelze najít platné období !"
 
+#~ msgid "Unreconciliate transactions"
+#~ msgstr "Nevyrovnané transakce"
+
 #~ msgid "Consider reconciled entries"
 #~ msgstr "Uvažte vyrovnané záznamy"
 
@@ -11237,6 +11253,9 @@ msgstr ""
 #~ "The code will be used to generate the numbers of the journal entries of this "
 #~ "journal."
 #~ msgstr "Kód bude použit pro generování čísel záznamů knihy této knihy."
+
+#~ msgid "Create an Account based on this template"
+#~ msgstr "Vytvořit účet založený na šabloně"
 
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "Společnost musí být stejná pro její vztažené účty a období."
@@ -11328,6 +11347,9 @@ msgstr ""
 #~ msgid "Sale Tax(%)"
 #~ msgstr "Prodejní daň(%)"
 
+#~ msgid "Install your Chart of Accounts"
+#~ msgstr "Instalovat vaši účtovou osnovu"
+
 #~ msgid ""
 #~ "Bank Account Number, Company bank account if Invoice is customer or supplier "
 #~ "refund, otherwise Partner bank account number."
@@ -11335,5 +11357,11 @@ msgstr ""
 #~ "Číslo bankovního účtu, Bankovní účet společnosti, pokud faktura je dobropis "
 #~ "zákazníka nebo dodavatele, jinak číslo bankovního účtu partnera."
 
+#~ msgid "Description On Invoices"
+#~ msgstr "Popis na fakturách"
+
 #~ msgid "The date of your Journal Entry is not in the defined period!"
 #~ msgstr "Datum vaší položky deníku není v zadaném období!"
+
+#~ msgid "Error ! You can not create recursive categories."
+#~ msgstr "Chyba ! Nemůžete vytvořit rekurzivní kategorie."

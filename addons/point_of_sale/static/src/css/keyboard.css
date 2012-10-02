@@ -1,0 +1,146 @@
+/* Onscreen Keyboard http://net.tutsplus.com/tutorials/javascript-ajax/creating-a-keyboard-with-css-and-jquery/ */
+
+.point-of-sale .keyboard_frame{
+    display: none;
+    position:absolute;
+    left:    0;
+    bottom:  0px;
+    margin:  0;
+    padding: 0;
+    padding-top: 15px;
+    width: 100%;
+    height: 0px;    /* 235px, animated via jquery */
+	background-color: #BBB;
+    overflow:hidden;
+    -webkit-box-shadow: 0px 0px 10px rgba(0,0,0, 0.3);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    z-index:10000;
+
+}
+.point-of-sale .keyboard_frame .close_button{
+    height:40px;
+    width:60px;
+    text-align:center;
+    background-color: #DDD;
+    font-size: 12px;
+    line-height:40px;
+    border: 1px solid #CCC;
+	-webkit-border-radius: 5px;
+    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
+    position:absolute;
+    top:0;
+    right:15px;
+	cursor: pointer;
+}
+.point-of-sale .keyboard li {
+	float: left;
+	text-align: center;
+	background-color: #fff;
+	border: 1px solid #f0f0f0;
+    top:0;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+    -webkit-box-shadow: 0px 2px 5px rgba(0,0,0, 0.2);
+    -webkit-transition-property: top, background-color;
+    -webkit-transition-duration: 0.2s;
+    -webkit-transition-timing-function: linear;
+}
+.point-of-sale .keyboard li:hover {
+	position: relative;
+	top: 2px;
+	left: 0px;
+	border-color: #ddd;
+    background-color:#e5e5e5;
+	cursor: pointer;
+    -webkit-transition-property: top, background-color;
+    -webkit-transition-duration: 0.1s;
+    -webkit-transition-timing-function: ease-out;
+}
+.point-of-sale .uppercase {
+	text-transform: uppercase;
+}
+.point-of-sale .on {
+	display: none;
+}
+.point-of-sale .firstitem{
+	clear: left;
+}
+.point-of-sale .keyboard .lastitem {
+	margin-right: 0 !important;
+}
+
+/* ---- full sized keyboard ---- */
+
+.point-of-sale .full_keyboard {
+    list-style: none;
+    font-size: 14px;
+    width: 685px;
+    height: 100%;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.point-of-sale .full_keyboard li{
+	margin: 0 5px 5px 0 !important;
+	width: 40px;
+	height: 40px;
+	line-height: 40px;
+}
+.point-of-sale .full_keyboard .tab, .point-of-sale .full_keyboard .delete {
+	width: 70px;
+}
+.point-of-sale .full_keyboard .capslock {
+	width: 80px;
+}
+.point-of-sale .full_keyboard .return {
+	width: 77px;
+}
+.point-of-sale .full_keyboard .left-shift {
+	width: 95px;
+}
+.point-of-sale .full_keyboard .right-shift {
+	width: 109px;
+}
+.point-of-sale .full_keyboard .space {
+	clear: left;
+	width: 673px;
+}
+
+/* ---- simplified keyboard ---- */
+
+.point-of-sale .simple_keyboard {
+    list-style: none;
+    font-size: 16px;
+    width: 555px;
+    height: 220px;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+.point-of-sale .simple_keyboard li{
+    margin: 0 5px 5px 0 !important;
+    width: 49px;
+    height: 49px;
+    line-height: 49px;
+}
+.point-of-sale .simple_keyboard .firstitem.row_asdf{
+    margin-left:25px !important;
+}
+.point-of-sale .simple_keyboard .firstitem.row_zxcv{
+    margin-left:55px !important;
+}
+.point-of-sale .simple_keyboard .delete{
+    width: 103px;
+}
+.point-of-sale .simple_keyboard .return{
+    width: 103px;
+}
+.point-of-sale .simple_keyboard .space{
+    width:273px;
+}
+.point-of-sale .simple_keyboard .numlock{
+    width:103px;
+}

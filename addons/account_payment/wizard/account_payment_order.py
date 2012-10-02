@@ -46,6 +46,7 @@ class payment_order_create(osv.osv_memory):
     }
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if not context: context = {}
         res = super(payment_order_create, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context and 'line_ids' in context:
             doc = etree.XML(res['arch'])
@@ -87,7 +88,7 @@ class payment_order_create(osv.osv_memory):
                     'partner_id': line.partner_id and line.partner_id.id or False,
                     'communication': line.ref or '/',
                     'date': date_to_pay,
-                    'currency': line.invoice and line.invoice.currency_id.id or False,
+                    'currency': (line.invoice and line.invoice.currency_id.id) or line.journal_id.currency.id or line.journal_id.company_id.currency_id.id,
                 }, context=context)
         return {'type': 'ir.actions.act_window_close'}
 

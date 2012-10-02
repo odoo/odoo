@@ -7,8 +7,7 @@
             id="act_stock_product_location_open"
             name="Stock by Location"
             res_model="stock.location"
-            src_model="product.product"
-            groups="base.group_extended"/>
+            src_model="product.product"/>
 
         <act_window
             domain="[('tracking_id', '=', active_id)]"
@@ -20,7 +19,6 @@
         <record model="ir.ui.view" id="report_stock_lines_date_tree">
             <field name="name">report.stock.lines.date.tree</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Dates of Inventories">
                     <field name="product_id"/>
@@ -32,19 +30,14 @@
         <record model="ir.ui.view" id="report_stock_lines_date_search">
             <field name="name">report.stock.lines.date.search</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Dates of Inventories">
-                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable"
-                        domain="[('product_id.type','=', 'product')]"/>
-                    <filter icon="terp-accessories-archiver" string="Consumable"
-                        domain="[('product_id.type','=', 'consu')]"/>
-                    <separator orientation="vertical"/>
-                    <filter icon="terp-accessories-archiver-minus" string="Non Inv"
-                        domain="[('date','=', False)]"/>
-                    <separator orientation="vertical"/>
-                    <field name="product_id"/>
                     <field name="date"/>
+                    <filter icon="terp-accessories-archiver" name="stockable" string="Stockable" domain="[('product_id.type','=', 'product')]"/>
+                    <filter icon="terp-accessories-archiver" string="Consumable" domain="[('product_id.type','=', 'consu')]"/>
+                    <separator/>
+                    <filter icon="terp-accessories-archiver-minus" string="Non Inv" domain="[('date','=', False)]"/>
+                    <field name="product_id"/>
                 </search>
             </field>
         </record>
@@ -52,11 +45,12 @@
         <record model="ir.ui.view" id="report_stock_lines_date_form">
             <field name="name">report.stock.lines.date.form</field>
             <field name="model">report.stock.lines.date</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Dates of Inventories">
-                    <field name="product_id"/>
-                    <field name="date"/>
+                <form string="Dates of Inventories" version="7.0">
+                    <group>
+                        <field name="product_id"/>
+                        <field name="date"/>
+                    </group>
                 </form>
             </field>
         </record>
@@ -75,7 +69,6 @@
         <record id="view_location_graph" model="ir.ui.view">
             <field name="name">stock.location.graph</field>
             <field name="model">stock.location</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Stock Location">
                     <field name="complete_name"/>

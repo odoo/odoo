@@ -45,9 +45,8 @@ class report_rappel(report_sxw.rml_parse):
 
     def _adr_get(self, stat_line, type):
         res_partner = pooler.get_pool(self.cr.dbname).get('res.partner')
-        res_partner_address = pooler.get_pool(self.cr.dbname).get('res.partner.address')
         adr = res_partner.address_get(self.cr, self.uid, [stat_line.partner_id.id], [type])[type]
-        return adr and res_partner_address.read(self.cr, self.uid, [adr]) or [{}]
+        return adr and res_partner.read(self.cr, self.uid, [adr]) or [{}]
 
     def _lines_get(self, stat_by_partner_line):
         pool = pooler.get_pool(self.cr.dbname)

@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 00:35+0000\n"
-"PO-Revision-Date: 2012-02-13 13:33+0000\n"
-"Last-Translator: kifcaliph <Unknown>\n"
+"PO-Revision-Date: 2012-05-10 17:34+0000\n"
+"Last-Translator: Raphael Collet (OpenERP) <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-14 05:43+0000\n"
-"X-Generator: Launchpad (build 14781)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:08+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -38,6 +38,8 @@ msgid ""
 "Determine the display order in the report 'Accounting \\ Reporting \\ "
 "Generic Reporting \\ Taxes \\ Taxes Report'"
 msgstr ""
+"تحديد عرض الترتيب في التقرير ’المحاسبة/تقارير/الإبلاغ العام/الضرائب/تقرير "
+"الضرائب’"
 
 #. module: account
 #: view:account.move.reconcile:0
@@ -55,7 +57,7 @@ msgstr "إحصائيات الحساب"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma/Open/Paid Invoices"
-msgstr ""
+msgstr "الفواتير المبدئية/المفتوحة/المدفوعة"
 
 #. module: account
 #: field:report.invoice.created,residual:0
@@ -81,7 +83,7 @@ msgstr "تعريف فروع"
 #: code:addons/account/account_bank_statement.py:302
 #, python-format
 msgid "Journal item \"%s\" is not valid."
-msgstr "عنصر يومية غير صحيح \"%s\"."
+msgstr "بند اليومية \"%s\" غير صحيح."
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -118,12 +120,14 @@ msgid ""
 "Configuration error! The currency chosen should be shared by the default "
 "accounts too."
 msgstr ""
+"خطأ في الإعدادات! يجب أن تكون العملة المختارة مشتركة للحسابات الإفتراضية "
+"أيضأً."
 
 #. module: account
 #: report:account.invoice:0
 #: field:account.invoice.line,origin:0
 msgid "Origin"
-msgstr "الاصل"
+msgstr "المصدر"
 
 #. module: account
 #: view:account.account:0
@@ -182,11 +186,6 @@ msgid "All Analytic Entries"
 msgstr "كل القيود التحليلية"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
-msgid "Invoices Created Within Past 15 Days"
-msgstr "الفواتير التي تم أنشاءها خلال 15 يوما الماضية"
-
-#. module: account
 #: field:accounting.report,label_filter:0
 msgid "Column Label"
 msgstr "عمود الأسماء"
@@ -195,7 +194,7 @@ msgstr "عمود الأسماء"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr "يومية: %s"
+msgstr "دفتر اليومية: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -242,7 +241,7 @@ msgstr "فاتورة '%s' ستدفع علي الأجزاء التالية: %s%s 
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "السجلات المحاسبية ستكون مدخلات للموازنة"
+msgstr "سيتم استخدام القيود المحاسبية أثناء التسوية."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -253,7 +252,7 @@ msgstr "تقارير دولة بلجيكا"
 #: code:addons/account/account_move_line.py:1200
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr "لايمكن اضافة/تعديل البيانات في سجل مقفل"
+msgstr "لايمكن اضافة أو تعديل البيانات في دفتر يومية مقفل."
 
 #. module: account
 #: help:account.account,user_type:0
@@ -262,6 +261,8 @@ msgid ""
 "legal reports, and set the rules to close a fiscal year and generate opening "
 "entries."
 msgstr ""
+"يستخدم نوع الحساب لغرض الاستعلام، لتوليد تقارير قانونية خاصة ببلد معين, "
+"ولتحديد قواعد إنهاء عام مالي و توليد إدخالات افتتاحية."
 
 #. module: account
 #: report:account.overdue:0
@@ -312,8 +313,7 @@ msgid ""
 "Installs localized accounting charts to match as closely as possible the "
 "accounting needs of your company based on your country."
 msgstr ""
-"تثبيت مخططات المحاسبة المترجمة لتتوافق بأكبر قدر ممكن إلى المحاسبة التي "
-"تحتاجها شركتك على أساس بلدتك."
+"يقوم بتثبيت دليل محاسبي متوافق مع احتياجات مؤسستك حسب قوانين وأنظمة بلدك."
 
 #. module: account
 #: code:addons/account/wizard/account_move_journal.py:63
@@ -347,11 +347,13 @@ msgid ""
 "leave the automatic formatting, it will be computed based on the financial "
 "reports hierarchy (auto-computed field 'level')."
 msgstr ""
+"يمكنك هنا إعداد التنسيق الذى ترىد ان يظهر به هذا السجل. إذا تركت التنسيق "
+"الآلي, سيتم تعيينه آلياً بناءً على هيكل التقارير المالية."
 
 #. module: account
 #: view:account.installer:0
 msgid "Configure"
-msgstr "إضبط"
+msgstr "إعداد"
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -376,7 +378,7 @@ msgstr ""
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on an account of type view."
-msgstr ""
+msgstr "لا يمكنك إنشاء عناصر يومية علي حساب من نوع ’عرض’."
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_template
@@ -433,7 +435,7 @@ msgstr "إجمالي الدائن"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
-msgid "Open For Unreconciliation"
+msgid "Open for Unreconciliation"
 msgstr "مفتوح لإلغاء التسوية"
 
 #. module: account
@@ -447,7 +449,7 @@ msgstr "قالب مخطط"
 #. module: account
 #: help:account.model.line,amount_currency:0
 msgid "The amount expressed in an optional other currency."
-msgstr "أعرب الكمية بعملات اخرى اختيارية."
+msgstr "قيمة المبلغ بعملة اختيارية أخرى."
 
 #. module: account
 #: field:accounting.report,enable_filter:0
@@ -515,7 +517,7 @@ msgstr "تأكيد الفوراتير المختارة"
 #. module: account
 #: field:account.addtmpl.wizard,cparent_id:0
 msgid "Parent target"
-msgstr "الهدف الاساس"
+msgstr "الهدف الرئيسي"
 
 #. module: account
 #: field:account.bank.statement,account_id:0
@@ -543,12 +545,12 @@ msgstr "اختر مخططات الحسابات"
 #. module: account
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "اسم الشركة يجب أن يكون فريداً"
 
 #. module: account
 #: model:ir.model,name:account.model_account_invoice_refund
 msgid "Invoice Refund"
-msgstr "استرجاع فاتورة"
+msgstr "استرداد فاتورة"
 
 #. module: account
 #: report:account.overdue:0
@@ -647,7 +649,7 @@ msgstr "المسلسل الرئيسي لابد أن يختلف من الحالي
 #: code:addons/account/account_move_line.py:1251
 #, python-format
 msgid "No period found or more than one period found for the given date."
-msgstr ""
+msgstr "لا توجد نقطة فاصلة في التاريخ أو توجد أكثر من نقطة."
 
 #. module: account
 #: field:account.invoice.tax,tax_amount:0
@@ -689,23 +691,13 @@ msgid "To reconcile the entries company should be the same for all entries"
 msgstr "الشركة يجب ان تكون واحدة لجميع المدخلات حتى يمكن تسويتها"
 
 #. module: account
-#: view:account.account:0
-#: selection:account.aged.trial.balance,result_selection:0
-#: selection:account.common.partner.report,result_selection:0
-#: selection:account.partner.balance,result_selection:0
-#: selection:account.partner.ledger,result_selection:0
-#: code:addons/account/report/account_partner_balance.py:297
-#: model:ir.actions.act_window,name:account.action_aged_receivable
-#, python-format
-msgid "Receivable Accounts"
-msgstr "حسابات مدينة"
-
-#. module: account
 #: constraint:account.move.line:0
 msgid ""
 "The date of your Journal Entry is not in the defined period! You should "
 "change the date or remove this constraint from the journal."
 msgstr ""
+"تاريخ قيد اليومية غير معرف الفترة! يجب تغيير التاريخ أو إزالة هذا الشرط من "
+"اليومية."
 
 #. module: account
 #: model:ir.model,name:account.model_account_report_general_ledger
@@ -735,12 +727,12 @@ msgstr "شركاء تم تسويتهم اليوم"
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Sale journal in this year"
-msgstr ""
+msgstr "يومية المبيعات لهذه السنة"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children with hierarchy"
-msgstr ""
+msgstr "عرض الفرعي و المرتبة"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -763,7 +755,7 @@ msgstr "قيود تحليلية في سطور"
 #. module: account
 #: field:account.invoice.refund,filter_refund:0
 msgid "Refund Method"
-msgstr ""
+msgstr "طريقة إعادة المال"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:38
@@ -774,7 +766,7 @@ msgstr "يمكن تغيير العملة في مسودة الفتورة"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_report
 msgid "Financial Report"
-msgstr ""
+msgstr "التقرير المالي"
 
 #. module: account
 #: view:account.analytic.journal:0
@@ -798,6 +790,8 @@ msgid ""
 "Taxes are missing!\n"
 "Click on compute button."
 msgstr ""
+"الضرائب ناقصة!\n"
+"اضغط على زر الحساب"
 
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
@@ -812,7 +806,7 @@ msgstr "مرجع الشريك لهذه الفاتورة"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Supplier Invoices And Refunds"
-msgstr ""
+msgstr "فواتير المورد و المردودات المالية"
 
 #. module: account
 #: view:account.move.line.unreconcile.select:0
@@ -820,12 +814,12 @@ msgstr ""
 #: view:account.unreconcile.reconcile:0
 #: model:ir.model,name:account.model_account_move_line_unreconcile_select
 msgid "Unreconciliation"
-msgstr "عكس التسوية"
+msgstr "إلغاء التسوية"
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "At 14 net days 2 percent, remaining amount at 30 days end of month."
-msgstr ""
+msgstr "عند 14 يوم صافي 2%، والمبلغ المتبقي عند 30 يوم نهاية الشهر"
 
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_journal_report
@@ -850,6 +844,9 @@ msgid ""
 "or Loss you'd realized if those transactions were ended today. Only for "
 "accounts having a secondary currency set."
 msgstr ""
+"عند القيام بعمليات متعددة العملات، قد تكسب أو تخسر قليلاً بسبب التغيرات في "
+"سعر الصرف. توفر لك هذه القائمة توقعات بالمكسب أو الخسارة اللتان كنت ستحققهما "
+"في حالة إتمام هذه العمليات اليوم (للحسابات التي لها عملة ثانوية فقط)."
 
 #. module: account
 #: selection:account.entries.report,month:0
@@ -894,7 +891,7 @@ msgstr "أحسب/حساب"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Cancel: refund invoice and reconcile"
-msgstr ""
+msgstr "إلغاء: رد الفاتورة و تسويتها"
 
 #. module: account
 #: field:account.cashbox.line,pieces:0
@@ -931,6 +928,8 @@ msgid ""
 "You cannot validate this journal entry because account \"%s\" does not "
 "belong to chart of accounts \"%s\"!"
 msgstr ""
+"لا يمكنك التحقق من صحة قيد اليومية لأن الحساب \"%s\" لاينتمى إلى الدليل "
+"المحاسبي \"%s\"!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:835
@@ -939,6 +938,7 @@ msgid ""
 "This account does not allow reconciliation! You should update the account "
 "definition to change this."
 msgstr ""
+"هذا الحساب لا يسمح بالتسوية! يجب أن تقوم بتحديث تعريف الحساب لتغيير ذلك."
 
 #. module: account
 #: view:account.invoice:0
@@ -1009,7 +1009,7 @@ msgstr ""
 #: code:addons/account/account.py:2596
 #, python-format
 msgid "I can not locate a parent code for the template account!"
-msgstr ""
+msgstr "لا أستطيع تحديد النرميز الأصلي للحساب النموذجي!"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1085,6 +1085,7 @@ msgid ""
 "You cannot change the type of account from '%s' to '%s' type as it contains "
 "journal items!"
 msgstr ""
+"لا يمكنك تغيير نوع الحساب من نوع '%s' إلى نوع '%s'  لأنه يحتوي على سجلات!"
 
 #. module: account
 #: field:account.report.general.ledger,sortby:0
@@ -1110,7 +1111,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You have to provide an account for the write off/exchange difference entry !"
-msgstr ""
+msgstr "لابد من توفير حساب لإدخال تخفيض/ سعر التحويل!"
 
 #. module: account
 #: view:account.tax:0
@@ -1149,7 +1150,7 @@ msgstr "تكوين المدخلات قبل:"
 #. module: account
 #: view:account.move.line:0
 msgid "Unbalanced Journal Items"
-msgstr ""
+msgstr "قيود دفتر اليومية غير متوازنة"
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_bank
@@ -1175,6 +1176,8 @@ msgid ""
 "Total amount (in Secondary currency) for transactions held in secondary "
 "currency for this account."
 msgstr ""
+"المبلغ الإجمالي (بالعملة الثانوية) للعمليات التي أجريت باستخدام  العملة "
+"الثانوية لهذا الحساب."
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1190,7 +1193,7 @@ msgstr "مركزية الدين"
 #. module: account
 #: view:report.account_type.sales:0
 msgid "All Months Sales by type"
-msgstr ""
+msgstr "مبيعات جميع الأشهر حسب نوعها"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree2
@@ -1218,12 +1221,12 @@ msgstr "الغاء الفواتير"
 #. module: account
 #: help:account.journal,code:0
 msgid "The code will be displayed on reports."
-msgstr ""
+msgstr "سيتم عرض الرمز في التقارير."
 
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Purchases"
-msgstr ""
+msgstr "الضرائب المستخدمة في المشتريات"
 
 #. module: account
 #: field:account.invoice.tax,tax_code_id:0
@@ -1255,6 +1258,8 @@ msgid ""
 "You can not use this general account in this journal, check the tab 'Entry "
 "Controls' on the related journal !"
 msgstr ""
+"لا  يمكنك استخدام هذا الحساب العام في دفتر اليومية هذا. تحقق من شريط \"ضوابط "
+"الإدخال\" في دفتر اليومية."
 
 #. module: account
 #: field:account.move.line.reconcile,trans_nbr:0
@@ -1290,7 +1295,7 @@ msgstr "أخرى"
 #. module: account
 #: view:account.subscription:0
 msgid "Draft Subscription"
-msgstr ""
+msgstr "اشتركات المسودة"
 
 #. module: account
 #: view:account.account:0
@@ -1364,7 +1369,7 @@ msgstr "اختر بداية و نهاية للفترة"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitandloss0
 msgid "Profit and Loss"
-msgstr ""
+msgstr "الأرباح و الخسائر"
 
 #. module: account
 #: model:ir.model,name:account.model_account_account_template
@@ -1517,7 +1522,7 @@ msgstr "عدد القيود "
 msgid ""
 "By unchecking the active field, you may hide a fiscal position without "
 "deleting it."
-msgstr ""
+msgstr "عند إلغاء اختيار حقل \"نشط\"، يمكنك إخفاء الوضع المالي دون حذفه."
 
 #. module: account
 #: model:ir.model,name:account.model_temp_range
@@ -1584,7 +1589,7 @@ msgstr "معفي من الضريبة"
 
 #. module: account
 #: view:account.partner.reconcile.process:0
-msgid "Go to next partner"
+msgid "Go to Next Partner"
 msgstr "ذهاب للشريك التالي"
 
 #. module: account
@@ -1595,7 +1600,7 @@ msgstr "بحث كشوف حساب المصرف"
 #. module: account
 #: view:account.move.line:0
 msgid "Unposted Journal Items"
-msgstr ""
+msgstr "قيود دفتر اليومية غير المسجلة"
 
 #. module: account
 #: view:account.chart.template:0
@@ -1679,11 +1684,6 @@ msgid "Responsible"
 msgstr "مسئول"
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_type_sales_tree_all
-msgid "Sales by Account Type"
-msgstr "المبيعات حسب نوع الحساب"
-
-#. module: account
 #: view:account.invoice.refund:0
 msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
@@ -1732,7 +1732,7 @@ msgstr ""
 #. module: account
 #: view:account.analytic.account:0
 msgid "Pending Accounts"
-msgstr ""
+msgstr "حسابات معلقة"
 
 #. module: account
 #: view:account.tax.template:0
@@ -1881,7 +1881,7 @@ msgstr "خطأ! لا يمكنك إنشاء شركات متداخلة (شركات
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_journal_sale_purchase
 msgid "Sale/Purchase Journal"
-msgstr ""
+msgstr "دفتر يومية المبيعات والمشتريات"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -1923,6 +1923,8 @@ msgid ""
 "will be added, Loss : Amount will be deducted.), as calculated in Profit & "
 "Loss Report"
 msgstr ""
+"يستخدم هذا الحساب لتحويل الربح والخسارة (في حالة الربح: سيتم إضافة المبلغ، "
+"الخسارة: سيتم خصم المبلغ)، حسب تقرير الأرباح والخسائر"
 
 #. module: account
 #: model:process.node,note:account.process_node_reconciliation0
@@ -1965,7 +1967,7 @@ msgstr "إذا تم إختيار \"صحيح\" فلن تقبل قيد بتاري�
 #: code:addons/account/account_invoice.py:73
 #, python-format
 msgid "You must define an analytic journal of type '%s'!"
-msgstr ""
+msgstr "يجب تعريف دفتر يومية تحليلي من نوع '%s'!"
 
 #. module: account
 #: field:account.installer,config_logo:0
@@ -1980,11 +1982,13 @@ msgid ""
 "currency. You should remove the secondary currency on the account or select "
 "a multi-currency view on the journal."
 msgstr ""
+"الحساب المحدد لقيد اليومية يجبرك علي توفير عملة ثانوية. يجب إزالة العملة "
+"الثانوية على الحساب أو تحديد طريقة عرض العملات في اليومية."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_financial_report_tree
 msgid "Makes a generic system to draw financial reports easily."
-msgstr ""
+msgstr "ينشئ نظاماً عاماً لاستخلاص التقارير المالية بسهولة."
 
 #. module: account
 #: view:account.invoice:0
@@ -2003,12 +2007,12 @@ msgstr ""
 #. module: account
 #: view:account.analytic.line:0
 msgid "Analytic Journal Items related to a sale journal."
-msgstr ""
+msgstr "قيود دفتر اليومية التحليلي المتعلقة بدفتر يومية المبيعات."
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Italic Text (smaller)"
-msgstr ""
+msgstr "نص مائل (أصغر)"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -2026,7 +2030,7 @@ msgstr "مسودّة"
 #. module: account
 #: report:account.journal.period.print.sale.purchase:0
 msgid "VAT Declaration"
-msgstr ""
+msgstr "إعلان ضريبة القيمة المضافة"
 
 #. module: account
 #: field:account.move.reconcile,line_partial_ids:0
@@ -2096,7 +2100,7 @@ msgstr ""
 #: code:addons/account/account_bank_statement.py:357
 #, python-format
 msgid "You have to assign an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "لديك تعيين تحليل اليومية علي'%s' دفتر اليومية"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2126,6 +2130,10 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
+"استخدم هذا النموذج ليميز العلامات بتأثيرات خاصة في OpenERP: لا يمكن للعرض ان "
+"يحتوي على مدخلات, التدعيم هو حسابات يمكن ان تشمل على حسابات فرعية لتدعيمات "
+"الشركة المتعددة, الدفع/الاستقبال لكل حسابات الشركاء (دين/حسابية الائتمان), "
+"مغلق للحاسبات المنخفضة القيمة."
 
 #. module: account
 #: view:account.chart.template:0
@@ -2140,6 +2148,8 @@ msgid ""
 "Put a sequence in the journal definition for automatic numbering or create a "
 "sequence manually for this piece."
 msgstr ""
+"لم يتم التمكن من إنشاء تسلسل تلقائي لهذه القطعة!\n"
+"ضع تسلسل في تعريف السجل للترقيم التلقائي أو أنشيئ التسلسل يدويا لهذه القطعة."
 
 #. module: account
 #: code:addons/account/account.py:787
@@ -2147,12 +2157,12 @@ msgstr ""
 msgid ""
 "You can not modify the company of this journal as its related record exist "
 "in journal items"
-msgstr ""
+msgstr "لا يمكن تعديل الشركه المتسجله في المجله والموجوده في البنود اليوميه"
 
 #. module: account
 #: report:account.invoice:0
 msgid "Customer Code"
-msgstr ""
+msgstr "رمز العميل"
 
 #. module: account
 #: view:account.installer:0
@@ -2187,7 +2197,7 @@ msgstr "وصف"
 #: code:addons/account/account.py:3119
 #, python-format
 msgid "ECNJ"
-msgstr ""
+msgstr "ECNJ"
 
 #. module: account
 #: view:account.subscription:0
@@ -2211,7 +2221,7 @@ msgstr "لا يوجد دفتر يومية للمبيعات أو المشتريا
 #. module: account
 #: constraint:res.partner.bank:0
 msgid "The RIB and/or IBAN is not valid"
-msgstr ""
+msgstr "رقم الحساب RIB أو IBAN غير صحيح"
 
 #. module: account
 #: view:product.category:0
@@ -2299,7 +2309,7 @@ msgstr "اتركه فارغ لجميع السنوات المالية المفت�
 #. module: account
 #: field:account.invoice.report,account_line_id:0
 msgid "Account Line"
-msgstr ""
+msgstr "سطر الحساب"
 
 #. module: account
 #: code:addons/account/account.py:1468
@@ -2316,6 +2326,8 @@ msgid ""
 "'Setup Your Bank Accounts' tool that will automatically create the accounts "
 "and journals for you."
 msgstr ""
+"إعداد يوميات المحاسبة. لحسابات البنوك، ينصح بإستخدام قسم \"إعداد حسابات "
+"البنك\" فهذا سينتج الحسابات و اليوميات تلقائياً."
 
 #. module: account
 #: model:ir.model,name:account.model_account_move
@@ -2325,7 +2337,7 @@ msgstr "قيد الحساب"
 #. module: account
 #: constraint:res.partner:0
 msgid "Error ! You cannot create recursive associated members."
-msgstr ""
+msgstr "خطأ ! لا يمكنك إنشاء أعضاء مرتبطين و متداخلين."
 
 #. module: account
 #: field:account.sequence.fiscalyear,sequence_main_id:0
@@ -2339,6 +2351,7 @@ msgid ""
 "In order to delete a bank statement, you must first cancel it to delete "
 "related journal items."
 msgstr ""
+"لكي يتم مسح كشف حساب بنكي, عليك أولا إلغائه لمسح البنود المتعلفة في السجل"
 
 #. module: account
 #: field:account.invoice,payment_term:0
@@ -2424,7 +2437,7 @@ msgstr ""
 #: model:account.payment.term,name:account.account_payment_term_advance
 #: model:account.payment.term,note:account.account_payment_term_advance
 msgid "30% Advance End 30 Days"
-msgstr ""
+msgstr "30% مقدما لنهاية 30 يوم"
 
 #. module: account
 #: view:account.entries.report:0
@@ -2460,6 +2473,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"تطبع هذه القائمة إعلان ضريبة القيمة المضافة على أساس الفواتير أو المدفوعات. "
+"حدد واحد أو عدة فترات من السنة المالية. يتم إنشاء المعلومات المطلوبة "
+"تلقائيًا للحصول على الإقرار الضريبي من قبل OpenERP من الفواتير (أو دفعات، في "
+"بعض البلدان). ويتم تحديث هذه البيانات في الوقت الحقيقي. وهذا مفيد جدا لأنه "
+"يتيح لك المعاينة في أي وقت للضرائب التي مدينون لكم في بداية ونهاية الشهر "
+"الجاري أو الربع."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
@@ -2495,7 +2514,7 @@ msgstr "إدخالات نماذج الحسابات"
 #: code:addons/account/account.py:3117
 #, python-format
 msgid "EXJ"
-msgstr ""
+msgstr "EXJ"
 
 #. module: account
 #: field:product.template,supplier_taxes_id:0
@@ -2552,7 +2571,7 @@ msgstr "هذا التقرير يعطي لمحة عامة عن وضع  يومية
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_writeoff
 msgid "Account move line reconcile (writeoff)"
-msgstr ""
+msgstr "سطر حركة حساب التسوية (إلغاء)"
 
 #. module: account
 #: model:account.account.type,name:account.account_type_tax
@@ -2648,7 +2667,7 @@ msgstr "يمكن للحساب أن يكون رمز رئيسي للضريبة أ�
 #. module: account
 #: sql_constraint:account.model.line:0
 msgid "Wrong credit or debit value in model, they must be positive!"
-msgstr ""
+msgstr "خطا في قيمة حساب المدين/الدائن في النموذج,يجب ان يكونوا ايجابيين"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -2683,7 +2702,7 @@ msgstr "تواريخ"
 #. module: account
 #: field:account.chart.template,parent_id:0
 msgid "Parent Chart Template"
-msgstr ""
+msgstr "قالب المخطط الرئيسي"
 
 #. module: account
 #: field:account.tax,parent_id:0
@@ -2695,7 +2714,7 @@ msgstr "حساب الضرائب الرئيسي"
 #: code:addons/account/wizard/account_change_currency.py:59
 #, python-format
 msgid "New currency is not configured properly !"
-msgstr ""
+msgstr "لم يتم تكوين العملة الجديدة بشكل صحيح"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -2722,7 +2741,7 @@ msgstr "قيود المحاسبة"
 #. module: account
 #: field:account.invoice,reference_type:0
 msgid "Communication Type"
-msgstr ""
+msgstr "نوع الاتصال"
 
 #. module: account
 #: field:account.invoice.line,discount:0
@@ -2752,14 +2771,7 @@ msgstr "الإعدادات المالية للشركة الجديدة"
 #. module: account
 #: view:account.installer:0
 msgid "Configure Your Chart of Accounts"
-msgstr ""
-
-#. module: account
-#: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
-#: view:report.account.sales:0
-#: view:report.account_type.sales:0
-msgid "Sales by Account"
-msgstr "المبيعات بعرض الحسابات"
+msgstr "تكوين مخططاتك الحسابية"
 
 #. module: account
 #: view:account.use.model:0
@@ -2786,19 +2798,19 @@ msgstr "عليك بتعريف يومية تحليلية في يومية '%s' !"
 msgid ""
 "You need an Opening journal with centralisation checked to set the initial "
 "balance!"
-msgstr ""
+msgstr "انت تحتاج ليوميه إفتتاحية شاملة علامة المركزيه لضبط الرصيد المبدئي!"
 
 #. module: account
 #: view:account.invoice.tax:0
 #: model:ir.actions.act_window,name:account.action_tax_code_list
 #: model:ir.ui.menu,name:account.menu_action_tax_code_list
-msgid "Tax codes"
+msgid "Tax Codes"
 msgstr "رموز الضريبة"
 
 #. module: account
 #: view:account.account:0
 msgid "Unrealized Gains and losses"
-msgstr ""
+msgstr "الأرباح و الخسائر الغير محققة"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_customer
@@ -2884,7 +2896,7 @@ msgstr "مبلغ الرمز الرئيسي"
 msgid ""
 "You can not delete an invoice which is open or paid. We suggest you to "
 "refund it instead."
-msgstr ""
+msgstr "لا يمكنك حذف فاتورة مفتوحة او تم دفعها. يمكنك القيام بعملية رد."
 
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax:0
@@ -2895,7 +2907,7 @@ msgstr "ضريبة البيع الإفتراضية"
 #: code:addons/account/account_invoice.py:1013
 #, python-format
 msgid "Invoice  '%s' is validated."
-msgstr ""
+msgstr "يتم التحقق من صحة الفاتورة '%s'"
 
 #. module: account
 #: help:account.model.line,date_maturity:0
@@ -2938,6 +2950,8 @@ msgid ""
 "Tax base different!\n"
 "Click on compute to update the tax base."
 msgstr ""
+"القاعده الضريبيه مختلفه!\n"
+"انقر علي الحساب لتحديث القاعده الضريبيه."
 
 #. module: account
 #: field:account.partner.ledger,page_split:0
@@ -2986,7 +3000,7 @@ msgstr "عملة الفاتورة"
 #: field:accounting.report,account_report_id:0
 #: model:ir.ui.menu,name:account.menu_account_financial_reports_tree
 msgid "Account Reports"
-msgstr ""
+msgstr "تقارير الحساب"
 
 #. module: account
 #: field:account.payment.term,line_ids:0
@@ -3011,7 +3025,7 @@ msgstr "قائمة قالب الضريبة"
 #. module: account
 #: model:ir.ui.menu,name:account.menu_account_print_sale_purchase_journal
 msgid "Sale/Purchase Journals"
-msgstr ""
+msgstr "بيع/شراء الدفاتر اليومية"
 
 #. module: account
 #: help:account.account,currency_mode:0
@@ -3022,6 +3036,11 @@ msgid ""
 "software system you may have to use the rate at date. Incoming transactions "
 "always use the rate at date."
 msgstr ""
+"سيحدد هذا كيف تم حساب معدل العملة الحالية للمعاملات الخارجة. في معظم البلاد "
+"المنهج القانوني هو \"متوسط\" لكن قليل من أنظمة البرنامج فقط قادة "
+"لادارتها.\r\n"
+"فلذلك اذا قمت بلبتوريد من نظام برنامج اخر قد تستخدم المعدل عند التاريخ. "
+"تستخدم المعاملات القادمة المعدل عند التاريخ."
 
 #. module: account
 #: help:account.chart.template,code_digits:0
@@ -3048,7 +3067,7 @@ msgstr "دائماً"
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "Month-1"
-msgstr ""
+msgstr "شهر-1"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3085,7 +3104,7 @@ msgstr "عرض"
 #: code:addons/account/account_bank.py:90
 #, python-format
 msgid "BNK"
-msgstr ""
+msgstr "بنك"
 
 #. module: account
 #: field:account.move.line,analytic_lines:0
@@ -3095,7 +3114,7 @@ msgstr "سطور تحليلية"
 #. module: account
 #: view:account.invoice:0
 msgid "Proforma Invoices"
-msgstr ""
+msgstr "الفواتير المفترضة"
 
 #. module: account
 #: model:process.node,name:account.process_node_electronicfile0
@@ -3110,7 +3129,7 @@ msgstr "دين العميل"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Day of the Month: 0"
-msgstr ""
+msgstr "  يوم من الشهر"
 
 #. module: account
 #: view:account.subscription:0
@@ -3151,13 +3170,13 @@ msgstr "قوالب شجرة الحسابات"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_wizard_multi_chart
-msgid "Generate Chart of Accounts from a Chart Template"
-msgstr "إنشاء شجرة حسابات من قالب"
+msgid "Set Your Accounting Options"
+msgstr ""
 
 #. module: account
 #: view:report.account.sales:0
 msgid "This months' Sales by type"
-msgstr ""
+msgstr "هذه شهور المبيعات وفقا لنوع"
 
 #. module: account
 #: model:ir.model,name:account.model_account_unreconcile_reconcile
@@ -3167,7 +3186,7 @@ msgstr "حساب التسوية / إلغاءها"
 #. module: account
 #: sql_constraint:account.tax:0
 msgid "The description must be unique per company!"
-msgstr ""
+msgstr "وصف لكل شركة يجب ان تكون فريد!"
 
 #. module: account
 #: help:account.account.type,close_method:0
@@ -3182,6 +3201,15 @@ msgid ""
 " 'Unreconciled' will copy only the journal items that were unreconciled on "
 "the first day of the new fiscal year."
 msgstr ""
+"عيين هنا الطريقة التي سيتم استخدامها لإنشاء  نهاية إدخالات دفتر اليومية "
+"للسنة لكل الحسابات من هذا النوع.\n"
+"\n"
+"'لا شيء' يعني لا يوجد شيئًا لتفعله.\n"
+"\"الرصيد\"سيستخدم بشكل عام لحسابات النقدية.\n"
+"\"تفاصيل\"ستنسخ كل بند من بنود اليومية القائمة من العام السابق، حتى ذلك  "
+"التوفيق.\n"
+"\"عدم مساواة\" ستنسخ فقط بنود اليومية التي لم تتم تسويتها في اليوم الأول من "
+"السنة المالية الجديدة."
 
 #. module: account
 #: code:addons/account/wizard/account_open_closed_fiscalyear.py:39
@@ -3260,7 +3288,7 @@ msgstr "إعداد برنامج المحاسبة"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Value amount: 0.02"
-msgstr ""
+msgstr "  قيمة الرصيد:0.02"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -3290,7 +3318,7 @@ msgstr "إغلاق الفترة"
 #. module: account
 #: field:account.financial.report,display_detail:0
 msgid "Display details"
-msgstr ""
+msgstr "عرض التقاصيل"
 
 #. module: account
 #: report:account.overdue:0
@@ -3300,7 +3328,7 @@ msgstr "ضريبة القيمة المضافة:"
 #. module: account
 #: constraint:account.invoice:0
 msgid "Invalid BBA Structured Communication !"
-msgstr ""
+msgstr "خطأ في إتصال قاعدة البيانات"
 
 #. module: account
 #: help:account.analytic.line,amount_currency:0
@@ -3332,7 +3360,7 @@ msgstr "خريطة الضريبة"
 #: code:addons/account/account_cash_statement.py:314
 #, python-format
 msgid "The closing balance should be the same than the computed balance!"
-msgstr ""
+msgstr "الرصيد الختامي ينبغي ان يكون نفس الرصيد المحسوب"
 
 #. module: account
 #: view:account.journal:0
@@ -3409,17 +3437,17 @@ msgstr ""
 #. module: account
 #: view:account.invoice.line:0
 msgid "Quantity :"
-msgstr ""
+msgstr "الكمية"
 
 #. module: account
 #: field:account.aged.trial.balance,period_length:0
 msgid "Period Length (days)"
-msgstr ""
+msgstr "طول الفترة (أيام)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_print_sale_purchase_journal
 msgid "Print Sale/Purchase Journal"
-msgstr ""
+msgstr "طيع البيع/الشراء اليومية"
 
 #. module: account
 #: field:account.invoice.report,state:0
@@ -3446,12 +3474,12 @@ msgstr "تقرير المبيعات حسب نوع الحساب"
 #. module: account
 #: view:account.move.line:0
 msgid "Unreconciled Journal Items"
-msgstr ""
+msgstr "بنود يوميه لم تتم تسويتها"
 
 #. module: account
 #: sql_constraint:res.currency:0
 msgid "The currency code must be unique per company!"
-msgstr ""
+msgstr "رمز العملة يجب ان يكون فريدا لكل شركة"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3467,6 +3495,10 @@ msgid ""
 "amount greater than the total invoiced amount. The latest line of your "
 "payment term must be of type 'balance' to avoid rounding issues."
 msgstr ""
+"لا يمكن انشاء الفاتوره !\n"
+"شروط الدفع من المحتمل أن تكون غير مضبوطه لانه يعطي الكميه المحسوبه اكبر من "
+"المبلغ الاجمالي في الفاتوره. أخر سطر من شروط الدفع يجب ان يكون من نوع \" "
+"المتوازن\" لتجنب مشاكل تقريب الأرقام."
 
 #. module: account
 #: report:account.invoice:0
@@ -3500,7 +3532,7 @@ msgstr "النظير المركزي"
 #: code:addons/account/account_move_line.py:584
 #, python-format
 msgid "You can not create journal items on a \"view\" account %s %s"
-msgstr ""
+msgstr "لا يمكن انشاء وحدات يوميه علي \"عرض \"الحساب%s%s"
 
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
@@ -3590,6 +3622,9 @@ msgid ""
 "based on partner payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"تم انشاء تاريخ الاستحقاق لخط المدخل بواسطة خط النموذج ‘%s‘ للنموذج ‘%s‘ "
+"بناءًا على شرط الدفع للشريك !\n"
+"الرجاء حدد شريك عليها!"
 
 #. module: account
 #: code:addons/account/account_move_line.py:837
@@ -3629,7 +3664,7 @@ msgstr "لا مرشحات"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Pro-forma Invoices"
-msgstr ""
+msgstr "شكل الفاتورة"
 
 #. module: account
 #: view:res.partner:0
@@ -3719,7 +3754,7 @@ msgstr "#القيود"
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
 msgid "Create a draft Refund"
-msgstr ""
+msgstr "إنشاء مشروع استرداد"
 
 #. module: account
 #: view:account.state.open:0
@@ -3744,6 +3779,8 @@ msgid ""
 "centralised counterpart box in the related journal from the configuration "
 "menu."
 msgstr ""
+"لا يمكن إنشاء فاتوره في يوميه مركزيه. قم بإلغاء التحديد علي مربع المناظره "
+"المركزيه المتعلق بقيد اليوميه من قائمة الإعدادت."
 
 #. module: account
 #: field:account.account,name:0
@@ -3767,7 +3804,7 @@ msgstr "ميزان المراجعة للحسابات المعمرة"
 #: code:addons/account/account_move_line.py:591
 #, python-format
 msgid "You can not create journal items on a closed account %s %s"
-msgstr ""
+msgstr "لا يمكن انشاء عناصر اليومية لحساب مغلق%s%s"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -3778,7 +3815,7 @@ msgstr "التاريخ الفعلي"
 #: model:ir.actions.act_window,name:account.action_bank_tree
 #: model:ir.ui.menu,name:account.menu_action_bank_tree
 msgid "Setup your Bank Accounts"
-msgstr ""
+msgstr "اعداد الحسابات المصرفية الخاصة بك"
 
 #. module: account
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
@@ -3810,6 +3847,7 @@ msgid ""
 "The fiscalyear, periods or chart of account chosen have to belong to the "
 "same company."
 msgstr ""
+"السنة المالية.الفترات او المخطط للحساب تختار علي ان تنتمي إلى نفس الشركة"
 
 #. module: account
 #: model:ir.actions.todo.category,name:account.category_accounting_configuration
@@ -3825,7 +3863,7 @@ msgstr "المحاسبة"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current year"
-msgstr ""
+msgstr "قيود اليومية مع فترة في العام الحالي"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0
@@ -3843,6 +3881,8 @@ msgid ""
 "Value of Loss or Gain due to changes in exchange rate when doing multi-"
 "currency transactions."
 msgstr ""
+"قيمة الخسارة أو الربح بسبب التغيرات في سعر الصرف عند القيام بعمليات مالية  "
+"متعددة العملات."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3922,7 +3962,7 @@ msgstr "متوسط النسبة"
 #: field:account.common.account.report,display_account:0
 #: field:account.report.general.ledger,display_account:0
 msgid "Display Accounts"
-msgstr ""
+msgstr "عرض الحسابات"
 
 #. module: account
 #: view:account.state.open:0
@@ -3963,7 +4003,7 @@ msgstr "اذا تم وضع الحقل النشط لخطأ, ستسمح لك بإ�
 #. module: account
 #: view:account.move.line:0
 msgid "Posted Journal Items"
-msgstr ""
+msgstr "نشر عناصر اليومية"
 
 #. module: account
 #: view:account.tax.template:0
@@ -3978,12 +4018,12 @@ msgstr "مسودة المدخلات"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Day of the Month= -1"
-msgstr ""
+msgstr "  يوم في الشهر = -١"
 
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Number of Days: 30"
-msgstr ""
+msgstr "  عدد الأيام: ٣٠"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -3994,7 +4034,7 @@ msgstr "إختصار"
 #. module: account
 #: constraint:account.fiscalyear:0
 msgid "Error! The start date of the fiscal year must be before his end date."
-msgstr ""
+msgstr "خطأ! يجب أن يكون تاريخ بدء السنة المالية يكون قبل تاريخ نهايتها"
 
 #. module: account
 #: view:account.account:0
@@ -4102,7 +4142,7 @@ msgstr ""
 #. module: account
 #: field:res.company,paypal_account:0
 msgid "Paypal Account"
-msgstr ""
+msgstr "حساب باي بال"
 
 #. module: account
 #: field:account.invoice.report,uom_name:0
@@ -4130,7 +4170,7 @@ msgstr "حساب المتأخرات"
 #: code:addons/account/account.py:184
 #, python-format
 msgid "Balance Sheet (Liability account)"
-msgstr ""
+msgstr "الميزانية العامة (حسابات الخصوم)"
 
 #. module: account
 #: help:account.invoice,date_invoice:0
@@ -4226,7 +4266,7 @@ msgstr "المعالجة الدورية"
 #. module: account
 #: constraint:account.analytic.line:0
 msgid "You can not create analytic line on view account."
-msgstr ""
+msgstr "لا يمكنك إنشاء سطر تحليلي في حساب للعرض."
 
 #. module: account
 #: help:account.move.line,state:0
@@ -4255,7 +4295,7 @@ msgstr "خريطة الحساب"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Main Title 1 (bold, underlined)"
-msgstr ""
+msgstr "العنوان الرئيسي(سميك,تحته خط)"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -4276,7 +4316,7 @@ msgstr "إحصائيات الفواتير"
 #. module: account
 #: field:account.account,exchange_rate:0
 msgid "Exchange Rate"
-msgstr ""
+msgstr "سعر الصرف"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderreconcilation0
@@ -4291,7 +4331,7 @@ msgstr "تسوية المبالغ المعدومة"
 
 #. module: account
 #: view:report.account.receivable:0
-msgid "Accounts by type"
+msgid "Accounts by Type"
 msgstr "الحسابات حسب النوع"
 
 #. module: account
@@ -4309,7 +4349,7 @@ msgstr "غير مطبق"
 #. module: account
 #: field:account.chart.template,visible:0
 msgid "Can be Visible?"
-msgstr ""
+msgstr "هل تكون واضحة؟"
 
 #. module: account
 #: model:ir.model,name:account.model_account_journal_select
@@ -4324,7 +4364,7 @@ msgstr "أوراق دائنة"
 #. module: account
 #: sql_constraint:account.period:0
 msgid "The name of the period must be unique per company!"
-msgstr ""
+msgstr "اسم الفترة يجب ان يكون فريد لكل شركة"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
@@ -4333,7 +4373,7 @@ msgstr "res_config_contents"
 
 #. module: account
 #: view:account.unreconcile:0
-msgid "Unreconciliate transactions"
+msgid "Unreconciliate Transactions"
 msgstr "إلغاء تسوية المعاملات"
 
 #. module: account
@@ -4354,14 +4394,14 @@ msgstr "إنشاء قيد من النماذج"
 #: field:account.account,reconcile:0
 #: field:account.account.template,reconcile:0
 msgid "Allow Reconciliation"
-msgstr "سماح بالتسوية"
+msgstr "السماح بالتسوية"
 
 #. module: account
 #: code:addons/account/account.py:1077
 #, python-format
 msgid ""
 "You can not modify company of this period as some journal items exists."
-msgstr ""
+msgstr "لا يمكنك تعديل الشركة لهذه الفترة حيث ان بعض عناصر اليومية موجودة"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -4382,7 +4422,7 @@ msgstr "السعر شامل الضريبة"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_cost_ledger_journal_report
 msgid "Account Analytic Cost Ledger For Journal Report"
-msgstr ""
+msgstr "يقدردفتر حساب للتكلفة التحليلية للحساب للتقرير اليومي"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_model_form
@@ -4394,7 +4434,7 @@ msgstr "نماذج التكرارات"
 #: code:addons/account/account_move_line.py:1251
 #, python-format
 msgid "Encoding error"
-msgstr ""
+msgstr "خطا الترميز"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -4466,7 +4506,7 @@ msgstr "لإستخدام حساب الدخل اتركه فارغ"
 #: code:addons/account/account.py:3299
 #, python-format
 msgid "Purchase Tax %.2f%%"
-msgstr ""
+msgstr "ضريبة الشراء %0.2f%%"
 
 #. module: account
 #: view:account.subscription.generate:0
@@ -4514,6 +4554,8 @@ msgid ""
 "the account \"%s - %s\". Clear the secondary currency field of the account "
 "definition if you want to accept all currencies."
 msgstr ""
+"لا يمكن أن تنشأ هذه الخطوة مع عملة مختلفة عن العملة الثانوية من حساب \"%s - "
+"%s\". مسح حقل العملة الثانوية للتعريف حساب إذا كنت ترغب في قبول جميع العملات."
 
 #. module: account
 #: selection:account.bank.statement,state:0
@@ -4527,7 +4569,7 @@ msgstr "تاريخ العملية"
 
 #. module: account
 #: view:account.unreconcile.reconcile:0
-msgid "Unreconciliation transactions"
+msgid "Unreconciliation Transactions"
 msgstr "إلغاء تسوية المعاملات"
 
 #. module: account
@@ -4570,6 +4612,7 @@ msgstr ""
 #: model:email.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.number or 'n/a' })"
 msgstr ""
+"$(الموضوع-معرف_الشركة.الاسم)الفاتورة$(المرجع$(الموضوع.الرقم او 'n/a'))"
 
 #. module: account
 #: help:res.partner,last_reconciliation_date:0
@@ -4597,7 +4640,7 @@ msgstr "الفواتير"
 #. module: account
 #: view:account.invoice:0
 msgid "My invoices"
-msgstr ""
+msgstr "الفواتير"
 
 #. module: account
 #: selection:account.bank.accounts.wizard,account_type:0
@@ -4620,7 +4663,7 @@ msgstr "مفوتر"
 #. module: account
 #: view:account.move:0
 msgid "Posted Journal Entries"
-msgstr ""
+msgstr "نشر قيود اليومية"
 
 #. module: account
 #: view:account.use.model:0
@@ -4658,7 +4701,7 @@ msgstr "مدفوع"
 
 #. module: account
 #: view:account.period.close:0
-msgid "Are you sure ?"
+msgid "Are you sure?"
 msgstr "هل أنت متأكد؟"
 
 #. module: account
@@ -4683,12 +4726,12 @@ msgstr ""
 #: code:addons/account/account.py:923
 #, python-format
 msgid "Opening Period"
-msgstr ""
+msgstr "افتتاح الفترة"
 
 #. module: account
 #: view:account.move:0
 msgid "Journal Entries to Review"
-msgstr ""
+msgstr "لاستعراض قيود اليومية"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -4780,11 +4823,13 @@ msgid ""
 "To print an analytics (or costs) journal for a given period. The report give "
 "code, move name, account number, general amount and analytic amount."
 msgstr ""
+"لطباعةيومية التحليلات (أو التكاليف) لفترة معينة. يعطي التقرير كود واسم هذه "
+"الخطوة، ورقم الحساب، مبلغ عامة والكمية التحليلية."
 
 #. module: account
 #: sql_constraint:account.invoice:0
 msgid "Invoice Number must be unique per Company!"
-msgstr ""
+msgstr "رقم الفاتورة يجب أن يكون فريداً داخل المشأة !"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_receivable_graph
@@ -4827,7 +4872,7 @@ msgstr "حركات"
 #. module: account
 #: view:report.hr.timesheet.invoice.journal:0
 msgid "Sale journal in this month"
-msgstr ""
+msgstr "مبيع اليومية لهذا الشهر"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_vat_declaration
@@ -4848,7 +4893,7 @@ msgstr "للغلق"
 #. module: account
 #: field:account.treasury.report,date:0
 msgid "Beginning of Period Date"
-msgstr ""
+msgstr "بداية تاريخ الفترة"
 
 #. module: account
 #: code:addons/account/account.py:1351
@@ -4932,7 +4977,7 @@ msgstr "تحركات الهدف"
 #: model:account.payment.term,name:account.account_payment_term_net
 #: model:account.payment.term,note:account.account_payment_term_net
 msgid "30 Net Days"
-msgstr ""
+msgstr "صافي ٣٠ يوم"
 
 #. module: account
 #: field:account.subscription,period_type:0
@@ -4981,7 +5026,7 @@ msgstr ""
 #: field:account.financial.report,children_ids:0
 #: model:ir.model,name:account.model_account_financial_report
 msgid "Account Report"
-msgstr ""
+msgstr "تقرير الحساب"
 
 #. module: account
 #: field:account.journal.column,name:0
@@ -5044,7 +5089,7 @@ msgstr "حساب الضرائب"
 
 #. module: account
 #: view:account.automatic.reconcile:0
-msgid "Reconciliation result"
+msgid "Reconciliation Result"
 msgstr "نتيجة التسوية"
 
 #. module: account
@@ -5201,7 +5246,7 @@ msgstr "إحصائيات القيود التحليلية"
 #. module: account
 #: field:wizard.multi.charts.accounts,bank_accounts_id:0
 msgid "Cash and Banks"
-msgstr ""
+msgstr "النقدية و البنوك"
 
 #. module: account
 #: model:ir.model,name:account.model_account_installer
@@ -5219,6 +5264,8 @@ msgid ""
 "Number of days to add before computation of the day of month.If Date=15/01, "
 "Number of Days=22, Day of Month=-1, then the due date is 28/02."
 msgstr ""
+"عدد الأيام لإضافتها قبل حساب يوم من الشهر، اذا كان التاريخ =01/15,وعدد "
+"الأيام = 22، يوم من شهر = -1، ثم تاريخ الاستحقاق هو 28/02."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -5265,7 +5312,7 @@ msgstr "محاسبة تحليلية"
 #: field:account.partner.ledger,initial_balance:0
 #: field:account.report.general.ledger,initial_balance:0
 msgid "Include Initial Balances"
-msgstr ""
+msgstr "نشمل الارصدة الابتدائية"
 
 #. module: account
 #: selection:account.invoice,type:0
@@ -5278,7 +5325,7 @@ msgstr "رد مال للعميل"
 #: constraint:account.move:0
 msgid ""
 "You can not create more than one move per period on centralized journal"
-msgstr ""
+msgstr "لا يمكنك إنشاء أكثر من حركة لكل فترة في يومية مركزية"
 
 #. module: account
 #: field:account.tax,ref_tax_sign:0
@@ -5296,7 +5343,7 @@ msgstr "أُنشأ تقرير الفواتير في خلال اخر 15 يومً�
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Number of Days: 14"
-msgstr ""
+msgstr "  عدد الايام:14"
 
 #. module: account
 #: field:account.fiscalyear,end_journal_period_id:0
@@ -5319,7 +5366,7 @@ msgstr "خطأ في الإعدادات!"
 #. module: account
 #: field:account.payment.term.line,value_amount:0
 msgid "Amount To Pay"
-msgstr ""
+msgstr "المبلغ للدفع"
 
 #. module: account
 #: help:account.partner.reconcile.process,to_reconcile:0
@@ -5360,7 +5407,7 @@ msgstr "تغيير العملة"
 #. module: account
 #: view:account.invoice:0
 msgid "This action will erase taxes"
-msgstr ""
+msgstr "هذا الفعل سوف يمحو الضرائب"
 
 #. module: account
 #: model:process.node,note:account.process_node_accountingentries0
@@ -5383,7 +5430,7 @@ msgstr "حسابات تحليلية"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer Invoices And Refunds"
-msgstr ""
+msgstr "فواتير العملاء، والمبالغ المستردة"
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -5429,12 +5476,12 @@ msgstr "رقم (حركة)"
 #. module: account
 #: view:analytic.entries.report:0
 msgid "Analytic Entries during last 7 days"
-msgstr ""
+msgstr "قيود تحليلية خلال اخر 7 أيام"
 
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Normal Text"
-msgstr ""
+msgstr "نص عادي"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -5480,6 +5527,10 @@ msgid ""
 "impossible any new entry record. Close a fiscal year when you need to "
 "finalize your end of year results definitive "
 msgstr ""
+"إذا توجب تسجيل أية إدخالات إضافية في السنة المالية، يمكنك إغلاقه من هنا. "
+"فإنه سيتم اغلاق جميع الفترات المفتوحة في هذا العام من شأنها أن تجعل من "
+"المستحيل تسجيل اي دخول جديد. اغلق السنة المالية عند الحاجة لوضع اللمسات "
+"الأخيرة لنتائج العام النهائي الخاص بك. "
 
 #. module: account
 #: field:account.central.journal,amount_currency:0
@@ -5499,7 +5550,7 @@ msgstr "فتح صندو النقدية"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Automatic formatting"
-msgstr ""
+msgstr "تنسيق تلقائي"
 
 #. module: account
 #: code:addons/account/account.py:963
@@ -5508,6 +5559,8 @@ msgid ""
 "No fiscal year defined for this date !\n"
 "Please create one from the configuration of the accounting menu."
 msgstr ""
+"لا يوجد سنة مالية  محددة بهذا التاريخ.الرجاء انشاء واحدة من تكوين في قائمة "
+"المحاسبة"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -5589,7 +5642,7 @@ msgstr "حسابات فرعية"
 #: code:addons/account/account_move_line.py:1214
 #, python-format
 msgid "Move name (id): %s (%s)"
-msgstr ""
+msgstr "نقل اسم(معرف):%s(%s)"
 
 #. module: account
 #: view:account.move.line.reconcile:0
@@ -5767,12 +5820,12 @@ msgstr "ترشيح بـ"
 #: code:addons/account/account.py:2256
 #, python-format
 msgid "You have a wrong expression \"%(...)s\" in your model !"
-msgstr ""
+msgstr "لديك تعبير خاطئ\"%(...)s\"في نموذجك"
 
 #. module: account
 #: field:account.bank.statement.line,date:0
 msgid "Entry Date"
-msgstr ""
+msgstr "ادخال الناريخ"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1155
@@ -5790,14 +5843,14 @@ msgstr "المدخلات ليست من نفس الحساب او تم تسويت�
 #. module: account
 #: help:account.bank.statement,balance_end:0
 msgid "Balance as calculated based on Starting Balance and transaction lines"
-msgstr ""
+msgstr "الرصيد محسوب علي اساس بدايه الرصيد و المعاملات الحسابيه التي تمت"
 
 #. module: account
 #: code:addons/account/wizard/account_change_currency.py:64
 #: code:addons/account/wizard/account_change_currency.py:70
 #, python-format
 msgid "Current currency is not configured properly !"
-msgstr ""
+msgstr "العملة الحالية غير معرفة بشكل صحيح"
 
 #. module: account
 #: field:account.tax,account_collected_id:0
@@ -5833,7 +5886,7 @@ msgstr "فترة  : %s"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_review_financial_journals_installer
 msgid "Review your Financial Journals"
-msgstr ""
+msgstr "مراجعه القيود اليوميه الماليه الخاصه بك"
 
 #. module: account
 #: help:account.tax,name:0
@@ -5867,7 +5920,7 @@ msgstr "رد للعملاء"
 #. module: account
 #: field:account.account,foreign_balance:0
 msgid "Foreign Balance"
-msgstr ""
+msgstr "رصيد اجنبي"
 
 #. module: account
 #: field:account.journal.period,name:0
@@ -5903,7 +5956,7 @@ msgstr ""
 #. module: account
 #: view:account.subscription:0
 msgid "Running Subscription"
-msgstr ""
+msgstr "إشتراك مفعلة"
 
 #. module: account
 #: report:account.invoice:0
@@ -5929,13 +5982,15 @@ msgid ""
 "You can not define children to an account with internal type different of "
 "\"View\"! "
 msgstr ""
+"خطأ في الإعدادات!\n"
+"لا يمكنك تحديد فرع لحساب مع نوع داخلي مختلف من \"عرض\"! "
 
 #. module: account
 #: help:res.partner.bank,journal_id:0
 msgid ""
 "This journal will be created automatically for this bank account when you "
 "save the record"
-msgstr ""
+msgstr "دفتر اليومية سوف ينشا تلقائيا لهذا الحساب البنكي عند حفظ هذا السجل"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -5956,6 +6011,10 @@ msgid ""
 "line of the expense account. OpenERP will propose to you automatically the "
 "Tax related to this account and the counterpart \"Account Payable\"."
 msgstr ""
+"ويمكن استخدام هذا العرض من قبل المحاسبين من أجل تسجيلالقيود سريعًا في "
+"OpenERP. إذا كنت تريد تسجيل فاتورة المورد، ابدأ من خلال تسجيل خط لحساب "
+"المصاريف. وسيقترح OpenERPعليكم تلقائيا الضريبة المتعلقة بهذا الحساب ونظيره "
+"\"حساب المدفوعات\"."
 
 #. module: account
 #: field:account.entries.report,date_created:0
@@ -6009,11 +6068,11 @@ msgstr "هذا نموذج لقيود حسابات تكرارية"
 #. module: account
 #: field:wizard.multi.charts.accounts,sale_tax_rate:0
 msgid "Sales Tax(%)"
-msgstr ""
+msgstr "ضريبة المبيعات(%)"
 
 #. module: account
 #: view:account.addtmpl.wizard:0
-msgid "Create an Account based on this template"
+msgid "Create an Account Based on this Template"
 msgstr "انشأ حساب مبنيًا على هذا القالب"
 
 #. module: account
@@ -6056,12 +6115,12 @@ msgstr "الشركات"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Open and Paid Invoices"
-msgstr ""
+msgstr "فتح ودفع الفواتير"
 
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "Display children flat"
-msgstr ""
+msgstr "عرض الفرع الثابت"
 
 #. module: account
 #: code:addons/account/account.py:629
@@ -6069,7 +6128,7 @@ msgstr ""
 msgid ""
 "You can not remove/desactivate an account which is set on a customer or "
 "supplier."
-msgstr ""
+msgstr "لا يمكنك إزالة / إلغاء حساب الذي تم تعيينه كأحد العملاء أو الموردين."
 
 #. module: account
 #: help:account.fiscalyear.close.state,fy_id:0
@@ -6149,12 +6208,12 @@ msgstr "إلغاء"
 #: model:account.account.type,name:account.data_account_type_receivable
 #: selection:account.entries.report,type:0
 msgid "Receivable"
-msgstr "المدينون"
+msgstr "الدائنون"
 
 #. module: account
 #: constraint:account.move.line:0
 msgid "Company must be the same for its related account and period."
-msgstr ""
+msgstr "يجب ان تكون الشركة هي نفسها لها الصلة بحسابها و فترتها."
 
 #. module: account
 #: view:account.invoice:0
@@ -6184,7 +6243,7 @@ msgstr "صندوق نقدية"
 #. module: account
 #: model:account.account.type,name:account.account_type_cash_equity
 msgid "Equity"
-msgstr ""
+msgstr "الأسهم"
 
 #. module: account
 #: selection:account.tax,type:0
@@ -6205,7 +6264,7 @@ msgstr "طاقة"
 #: code:addons/account/account.py:3368
 #, python-format
 msgid "Cannot generate an unused journal code."
-msgstr ""
+msgstr "لا يمكن انشاء رمز قيد يوميه غير مستخدم"
 
 #. module: account
 #: view:project.account.analytic.line:0
@@ -6296,6 +6355,9 @@ msgid ""
 "the tool search to analyse information about analytic entries generated in "
 "the system."
 msgstr ""
+"من العرض هذا، يكون تحليلا للقيود التحليلية المختلفة الخاص بعد حساب تحليلي "
+"قمت بتعريفه مطابق لحاجة عملك. استخدام أداة البحث لتحليل المعلومات عن القيود "
+"التحليلية الموجودة في النظام."
 
 #. module: account
 #: sql_constraint:account.journal:0
@@ -6313,7 +6375,7 @@ msgstr "إنشاء إختياري"
 msgid ""
 "You cannot change the owner company of an account that already contains "
 "journal items."
-msgstr ""
+msgstr "لا يمكنك تغيير شركة مالكة لحساب يحتوي بالفعل علي عناصر يومية."
 
 #. module: account
 #: code:addons/account/wizard/account_report_aged_partner_balance.py:58
@@ -6328,11 +6390,6 @@ msgstr "أدخل تاريخ البدء !"
 #: selection:report.invoice.created,type:0
 msgid "Supplier Refund"
 msgstr "رد للمورد"
-
-#. module: account
-#: model:ir.ui.menu,name:account.menu_dashboard_acc
-msgid "Dashboard"
-msgstr "اللوحة الرئيسية"
 
 #. module: account
 #: field:account.bank.statement,move_line_ids:0
@@ -6375,7 +6432,7 @@ msgstr "للقراءة فقط"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Valuation: Balance"
-msgstr ""
+msgstr "  تقييم: الميزانية"
 
 #. module: account
 #: field:account.invoice.line,uos_id:0
@@ -6392,7 +6449,7 @@ msgstr "يجب ان تكون النسبة المئوية لأجل الدفع م�
 #. module: account
 #: field:account.installer,has_default_company:0
 msgid "Has Default Company"
-msgstr ""
+msgstr "لديه شركة افتراضية"
 
 #. module: account
 #: model:ir.model,name:account.model_account_sequence_fiscalyear
@@ -6414,7 +6471,7 @@ msgstr "يومية تحليلية"
 #: code:addons/account/account.py:622
 #, python-format
 msgid "You can not desactivate an account that contains some journal items."
-msgstr ""
+msgstr "لا يمكنك الغاء حساب يحتوي علي بعض عناصر اليومية"
 
 #. module: account
 #: view:account.entries.report:0
@@ -6470,7 +6527,7 @@ msgstr "إحصائيات  القيود التحليلية"
 #: code:addons/account/account.py:624
 #, python-format
 msgid "You can not remove an account containing journal items."
-msgstr ""
+msgstr "لا يمكنك حذف حساب يحتوي علي عناصر اليومية."
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:145
@@ -6487,7 +6544,7 @@ msgstr "إنشاء قيد يومية تكرارية يدوياً في يومية
 #. module: account
 #: help:res.partner.bank,currency_id:0
 msgid "Currency of the related account journal."
-msgstr ""
+msgstr "العملة لها علاقة بحساب اليومية."
 
 #. module: account
 #: code:addons/account/account.py:1563
@@ -6506,13 +6563,18 @@ msgid ""
 "account. From this view, you can create and manage the account types you "
 "need for your company."
 msgstr ""
+"يتم استخدام نوع حساب لتحديد كيفية استخدام حساب في كل مجلة. أسلوب التأجيل من "
+"نوع حساب يحدد عملية لإغلاق سنوي. تقارير مثل الميزانية العمومية وتقرير "
+"الأرباح والخسائر استخدام فئة (ربح / خسارة أو الميزانية العمومية). على سبيل "
+"المثال، يمكن ربط نوع الحساب إلى حساب الأصول، وحساب المصروفات أو حساب الدفع. "
+"من وجهة النظر هذه، يمكنك إنشاء وإدارة أنواع الحسابات التي تحتاجها لشركتك."
 
 #. module: account
 #: selection:account.account.type,report_type:0
 #: code:addons/account/account.py:183
 #, python-format
 msgid "Balance Sheet (Asset account)"
-msgstr ""
+msgstr "الميزانية العمومية(حساب الاصول)"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_bank_reconcile_tree
@@ -6579,7 +6641,7 @@ msgstr "كود بايثون"
 #. module: account
 #: view:account.entries.report:0
 msgid "Journal Entries with period in current period"
-msgstr ""
+msgstr "قيود اليومية  بفترات خاصة الفترة الحالية"
 
 #. module: account
 #: help:account.journal,update_posted:0
@@ -6605,7 +6667,7 @@ msgstr "إنشاء قيد"
 #: code:addons/account/account.py:182
 #, python-format
 msgid "Profit & Loss (Expense account)"
-msgstr ""
+msgstr "الأرباح و الخسائر (حساب المصاريف)"
 
 #. module: account
 #: code:addons/account/account.py:622
@@ -6641,7 +6703,7 @@ msgstr "خطأ !"
 #. module: account
 #: field:account.financial.report,style_overwrite:0
 msgid "Financial Report Style"
-msgstr ""
+msgstr "هيئة التقرير المالي"
 
 #. module: account
 #: selection:account.financial.report,sign:0
@@ -6665,7 +6727,7 @@ msgstr "مطبوع"
 #: code:addons/account/account_move_line.py:591
 #, python-format
 msgid "Error :"
-msgstr ""
+msgstr "خطأ :"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -6686,6 +6748,10 @@ msgid ""
 "reconcile in a series of accounts. It finds entries for each partner where "
 "the amounts correspond."
 msgstr ""
+"للحصول على فاتورة باعتبارها مدفوعة، لا بد من التوفيق بين إدخالات الفاتورة مع "
+"نظرائهم، وعادة ما المدفوعات. مع وظيفة المصالحة التلقائي، OpenERP يجعل البحث "
+"الخاصة بها لمقالات التوفيق في سلسلة من الحسابات. وجدت مقالات لكل شريك حيث "
+"المبالغ تتوافق."
 
 #. module: account
 #: view:account.move:0
@@ -6740,6 +6806,8 @@ msgid ""
 "This report is an analysis done by a partner. It is a PDF report containing "
 "one line per partner representing the cumulative credit balance"
 msgstr ""
+"هذا التقرير هو تحليل قامت به الشريك. وهو تقرير PDF التي تحتوي على سطر واحد "
+"لكل شريك يمثل رصيد تراكمي"
 
 #. module: account
 #: code:addons/account/wizard/account_validate_account_move.py:61
@@ -6825,6 +6893,8 @@ msgid ""
 "allowing you to quickly check the balance of each of your accounts in a "
 "single report"
 msgstr ""
+"هذا التقرير يسمح لك طباعة أو إنشاء pdf من ميزان المراجعة الخاص بك مما يسمح "
+"لك لتتحقق من الموازنة سريعًا  لكل من حساباتك في تقرير واحد"
 
 #. module: account
 #: help:account.move,to_check:0
@@ -6839,7 +6909,7 @@ msgstr ""
 #: field:account.chart.template,complete_tax_set:0
 #: field:wizard.multi.charts.accounts,complete_tax_set:0
 msgid "Complete Set of Taxes"
-msgstr ""
+msgstr "مجموعة كاملة من الضرائب"
 
 #. module: account
 #: view:account.chart.template:0
@@ -6858,6 +6928,9 @@ msgid ""
 "Please define BIC/Swift code on bank for bank type IBAN Account to make "
 "valid payments"
 msgstr ""
+"\n"
+"رجاءً حدد كود البنك (BIC/Swift) لحسابات البنوك من نوع IBAN وذلك لإجراء "
+"عمليات مقبولة."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6886,11 +6959,6 @@ msgid ""
 msgstr ""
 
 #. module: account
-#: model:ir.actions.act_window,name:account.action_aged_income
-msgid "Income Accounts"
-msgstr "حسابات الدخل"
-
-#. module: account
 #: help:report.invoice.created,origin:0
 msgid "Reference of the document that generated this invoice report."
 msgstr "مرجع الوثيقة التي انتجت تقرير الفاتورة هذا."
@@ -6904,7 +6972,7 @@ msgstr "رموز الفرعي"
 #. module: account
 #: view:account.tax.template:0
 msgid "Taxes used in Sales"
-msgstr ""
+msgstr "الضرائب المستخدمة في المبيعات"
 
 #. module: account
 #: code:addons/account/account_invoice.py:495
@@ -6967,6 +7035,11 @@ msgid ""
 "you request an interval of 30 days OpenERP generates an analysis of "
 "creditors for the past month, past two months, and so on. "
 msgstr ""
+"الذين تتراوح أعمارهم بين الرصيد الشريك هو تقرير أكثر تفصيلا من المستحقات "
+"الخاصة بك عن طريق فترات. عند فتح هذا التقرير، OpenERP يسأل عن اسم الشركة، "
+"للفترة المالية وحجم الفاصل الزمني ليتم تحليلها (بالأيام). OpenERP ثم يحسب "
+"جدول رصيد دائن من قبل فترة. حتى إذا طلبت فاصل لمدة 30 يوما OpenERP يولد "
+"تحليلا للدائنين خلال الشهر الماضي، خلال الشهرين الماضيين، وهكذا. "
 
 #. module: account
 #: field:account.invoice,origin:0
@@ -6978,7 +7051,7 @@ msgstr "مستند المصدر"
 #: code:addons/account/account.py:1432
 #, python-format
 msgid "You can not delete a posted journal entry \"%s\"!"
-msgstr ""
+msgstr "لا يمكنك إزالة قيد يومية مرحل \"%s\" !"
 
 #. module: account
 #: selection:account.partner.ledger,filter:0
@@ -6996,7 +7069,7 @@ msgstr "تسوية القوائم"
 #. module: account
 #: model:ir.model,name:account.model_accounting_report
 msgid "Accounting Report"
-msgstr ""
+msgstr "تقارير محاسبية"
 
 #. module: account
 #: report:account.invoice:0
@@ -7006,7 +7079,7 @@ msgstr "ضرائب:"
 #. module: account
 #: help:account.tax,amount:0
 msgid "For taxes of type percentage, enter % ratio between 0-1."
-msgstr "من اجل الضرائب للنسبة المئوية للنوع, ادخل نسبة %بين 0-1."
+msgstr "للضرائب من نوع نسبة مئوية، ادخل نسبة % بين ٠‎ - ١."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_subscription_form
@@ -7016,11 +7089,14 @@ msgid ""
 "an agreement with a customer or a supplier. With Define Recurring Entries, "
 "you can create such entries to automate the postings in the system."
 msgstr ""
+"إدخال متكرر هو دخول المتنوعة التي تحدث على أساس متكرر من تاريخ محدد، أي "
+"المقابلة على توقيع عقد أو اتفاق مع عميل أو مورد. مع تحديد مدخلات متكررة، "
+"يمكنك إنشاء مداخل للتسجيل آليًا في هذا النظام."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_report_tree_hierarchy
 msgid "Financial Reports Hierarchy"
-msgstr ""
+msgstr "التسلسل الهرمي للتقارير المالية"
 
 #. module: account
 #: field:account.entries.report,product_uom_id:0
@@ -7037,6 +7113,10 @@ msgid ""
 "basis. You can enter the coins that are in your cash box, and then post "
 "entries when money comes in or goes out of the cash box."
 msgstr ""
+"يسمح لك سجل النقد لإدارة مدخلات  النقدية في اليوميات النقدية الخاصة بك. توفر "
+"هذه الميزة وسيلة سهلة لمتابعة المدفوعات النقدية على أساس يومي. يمكنك إدخال "
+"القطع النقدية التي هي في صندوق النقد، ثم تسجيل المدخلات عندما يأتي المال أو "
+"يذهب في الخروج من مربع النقدية."
 
 #. module: account
 #: help:account.invoice.refund,date:0
@@ -7050,7 +7130,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_invoice_partner_relation
 msgid "Monthly Turnover"
-msgstr "رأس مال شهري"
+msgstr "دورة الشهر"
 
 #. module: account
 #: view:account.move:0
@@ -7091,7 +7171,7 @@ msgstr ""
 #. module: account
 #: field:account.chart.template,property_account_expense_opening:0
 msgid "Opening Entries Expense Account"
-msgstr ""
+msgstr "قتح قيود حساب المصروف"
 
 #. module: account
 #: code:addons/account/account_move_line.py:999
@@ -7106,7 +7186,7 @@ msgstr "قالب حساب رئيسي"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_configuration_installer
-msgid "Install your Chart of Accounts"
+msgid "Configure your Chart of Accounts"
 msgstr ""
 
 #. module: account
@@ -7134,12 +7214,12 @@ msgstr ""
 #. module: account
 #: view:account.entries.report:0
 msgid "Posted entries"
-msgstr ""
+msgstr "قيود مرحلة"
 
 #. module: account
 #: help:account.payment.term.line,value_amount:0
 msgid "For percent enter a ratio between 0-1."
-msgstr ""
+msgstr "للنسبة أدخل كسر بين رقمي ٠ - ١."
 
 #. module: account
 #: report:account.invoice:0
@@ -7152,7 +7232,7 @@ msgstr "تاريخ الفاتورة"
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by year of Invoice Date"
-msgstr ""
+msgstr "تجميع حسب السنة لتاريخ الفاتورة"
 
 #. module: account
 #: help:res.partner,credit:0
@@ -7213,7 +7293,7 @@ msgstr "ضريبة المشتريات الإفتراضية"
 #. module: account
 #: field:account.chart.template,property_account_income_opening:0
 msgid "Opening Entries Income Account"
-msgstr ""
+msgstr "فتح قيود حساب الدخل"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -7239,7 +7319,7 @@ msgstr "ينبغي عليك اختيار الفترات التي تمتد الى
 #. module: account
 #: model:ir.actions.act_window,name:account.action_review_payment_terms_installer
 msgid "Review your Payment Terms"
-msgstr ""
+msgstr "معاينة شروط الدفع"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -7254,7 +7334,7 @@ msgstr "إنشاء قيود"
 #. module: account
 #: view:res.partner:0
 msgid "Information About the Bank"
-msgstr ""
+msgstr "معلومات عن البنك"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_reporting
@@ -7325,7 +7405,7 @@ msgstr "استخدم النموذج"
 #: code:addons/account/account.py:429
 #, python-format
 msgid "Unable to adapt the initial balance (negative value)!"
-msgstr ""
+msgstr "لم يتم قبول الرصيد الإفتتاحي (قيمة سالبة)!"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_purchase
@@ -7335,6 +7415,10 @@ msgid ""
 "line of the expense account, OpenERP will propose to you automatically the "
 "Tax related to this account and the counter-part \"Account Payable\"."
 msgstr ""
+"ويستخدم هذا العرض من قبل المحاسبين من أجل تسجيل المدخلات على نطاق واسع في "
+"OpenERP. إذا كنت تريد تسجيل فاتورة المورد، ابدأ من خلال تسجيل خط لحساب "
+"النفقات، وسوف يقترح OpenERP عليكم تلقائيا الضريبة المتعلقة بهذا الحساب حساب "
+"جزء \"حساب المدفوعات\"."
 
 #. module: account
 #: view:account.invoice.line:0
@@ -7392,7 +7476,7 @@ msgstr "عادي"
 #: model:ir.actions.act_window,name:account.action_email_templates
 #: model:ir.ui.menu,name:account.menu_email_templates
 msgid "Email Templates"
-msgstr ""
+msgstr "قوالب البريد الإلكتروني"
 
 #. module: account
 #: view:account.move.line:0
@@ -7427,12 +7511,12 @@ msgstr ""
 #. module: account
 #: model:ir.ui.menu,name:account.menu_multi_currency
 msgid "Multi-Currencies"
-msgstr ""
+msgstr "متعدد العملة"
 
 #. module: account
 #: field:account.model.line,date_maturity:0
 msgid "Maturity Date"
-msgstr ""
+msgstr "تاريخ الاستحقاق"
 
 #. module: account
 #: code:addons/account/account_move_line.py:1302
@@ -7467,7 +7551,7 @@ msgstr "لا يوجد رقم للقطعة !"
 #: view:account.financial.report:0
 #: model:ir.ui.menu,name:account.menu_account_report_tree_hierarchy
 msgid "Account Reports Hierarchy"
-msgstr ""
+msgstr "المسلسل الهرمي لتقارير الحسابات"
 
 #. module: account
 #: help:account.account.template,chart_template_id:0
@@ -7482,7 +7566,7 @@ msgstr ""
 #. module: account
 #: view:account.move:0
 msgid "Unposted Journal Entries"
-msgstr ""
+msgstr "قيود يومية غير مرحلة"
 
 #. module: account
 #: view:product.product:0
@@ -7511,7 +7595,7 @@ msgstr "إلى"
 #: code:addons/account/account.py:1518
 #, python-format
 msgid "Currency Adjustment"
-msgstr ""
+msgstr "تعديل العملة"
 
 #. module: account
 #: field:account.fiscalyear.close,fy_id:0
@@ -7530,6 +7614,8 @@ msgstr "إلغاء الفواتير المختارة"
 msgid ""
 "This field is used to generate legal reports: profit and loss, balance sheet."
 msgstr ""
+"يستخدم هذا الحقل لإعداد التقارير القانونية: الأرباح و الخسائر و الميزانية "
+"العمومية."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_review_payment_terms_installer
@@ -7657,17 +7743,17 @@ msgstr "مسلسل"
 #. module: account
 #: constraint:product.category:0
 msgid "Error ! You cannot create recursive categories."
-msgstr ""
+msgstr "خطأ ! لا يمكن إنشاء فئات متداخلة."
 
 #. module: account
 #: help:account.model.line,quantity:0
 msgid "The optional quantity on entries."
-msgstr ""
+msgstr "كمية اختيارية للقيود."
 
 #. module: account
 #: view:account.financial.report:0
 msgid "Parent Report"
-msgstr ""
+msgstr "تقرير رئيسي"
 
 #. module: account
 #: view:account.state.open:0
@@ -7698,6 +7784,10 @@ msgid ""
 "in which they will appear. Then you can create a new journal and link your "
 "view to it."
 msgstr ""
+"هنا يمكنك تخصيص عرض يومية قائمة أو إنشاء طريقة عرض جديدة. تعلاض اليومية "
+"تحديد الطريقة التي يمكن أن تسجل المدخلات في اليومية الخاصة بك. حدد الحقول "
+"التي تريدها أن تظهر في اليومية وتحديد التسلسل التي سوف تظهر. ثم يمكنك إنشاء "
+"يومية جديدة وربط العرض الخاص بك إليه."
 
 #. module: account
 #: model:account.account.type,name:account.data_account_type_asset
@@ -7712,7 +7802,7 @@ msgstr "    ٧ أيام    "
 #. module: account
 #: field:account.bank.statement,balance_end:0
 msgid "Computed Balance"
-msgstr ""
+msgstr "ميزانية محسوبة"
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -7748,6 +7838,9 @@ msgid ""
 "to the higher ones. The order is important if you have a tax with several "
 "tax children. In this case, the evaluation order is important."
 msgstr ""
+"يتم استخدام حقل التسلسل لترتيب خطوط الضرائب من أدنى المتواليات إلى أعلى. "
+"الترتيب مهم إذا كان لديك ضريبة من الضرائب التي لديها اساس عدة. في هذه "
+"الحالة، من المهم ترتيب التقييم."
 
 #. module: account
 #: model:ir.model,name:account.model_account_cashbox_line
@@ -7837,7 +7930,7 @@ msgstr "اختر عملة للفاتورة"
 #, python-format
 msgid ""
 "The bank account defined on the selected chart of accounts hasn't a code."
-msgstr ""
+msgstr "حساب المصرف المعرف في الدليل المحاسبي المحدد ليس لديه رمز."
 
 #. module: account
 #: code:addons/account/wizard/account_invoice_refund.py:108
@@ -7967,7 +8060,7 @@ msgstr "رصيد تحليلي معكوس -"
 
 #. module: account
 #: view:account.move.bank.reconcile:0
-msgid "Open for bank reconciliation"
+msgid "Open for Bank Reconciliation"
 msgstr "فتح للتسوية البنكية"
 
 #. module: account
@@ -7979,7 +8072,7 @@ msgstr "قيود تحليلية"
 #. module: account
 #: view:report.account_type.sales:0
 msgid "This Months Sales by type"
-msgstr ""
+msgstr "مبيعات هذه الشهور وفقا للنوع"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -8031,13 +8124,15 @@ msgid ""
 "will see the taxes with codes related to your legal statement according to "
 "your country."
 msgstr ""
+"ويستخدم الرسم البياني للضرائب لإنشاء البيان الضريبي الدوري الخاص بك. سترى "
+"الضرائب مع اكواد تتعلق بالبيان القانوني وفقاً لبلدكم."
 
 #. module: account
 #: code:addons/account/account_invoice.py:428
 #, python-format
 msgid ""
 "Can not find a chart of accounts for this company, you should create one."
-msgstr ""
+msgstr "لم نستطع ايجاد اي دليل محاسبي لحسابات هذه الشركة، يجب انشاء واحدة."
 
 #. module: account
 #: view:account.invoice:0
@@ -8068,12 +8163,12 @@ msgstr "للضرائب ادخل النسبة % بين 0 و 1."
 #. module: account
 #: view:account.analytic.account:0
 msgid "Current Accounts"
-msgstr ""
+msgstr "الحسابات الحالية"
 
 #. module: account
 #: view:account.invoice.report:0
 msgid "Group by Invoice Date"
-msgstr ""
+msgstr "رتب حسب تاريخ الفاتورة"
 
 #. module: account
 #: view:account.invoice.refund:0
@@ -8114,6 +8209,8 @@ msgid ""
 "Total amount (in Company currency) for transactions held in secondary "
 "currency for this account."
 msgstr ""
+"المبلغ الاجمالي (بعملة الشركة) للعمليات المالية التي عقدت بالعملة الثانوية "
+"لهذا الحساب."
 
 #. module: account
 #: report:account.invoice:0
@@ -8139,7 +8236,7 @@ msgstr "سيُستخدم فترة الدفع هذا بدلاً من الفترة
 
 #. module: account
 #: view:account.tax.template:0
-msgid "Compute Code for Taxes included prices"
+msgid "Compute Code for Taxes Included Prices"
 msgstr "احسب الكود للضرائب مشتملة على القيم"
 
 #. module: account
@@ -8158,7 +8255,7 @@ msgstr "حساب التصنيف الوارد"
 #. module: account
 #: field:account.account,adjusted_balance:0
 msgid "Adjusted Balance"
-msgstr ""
+msgstr "الرصيد المعدل"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_template_form
@@ -8179,7 +8276,7 @@ msgstr "المبلغ الاساسي/الضريبة"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Valuation: Percent"
-msgstr ""
+msgstr "  تقييم: النسبة المئوية"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree3
@@ -8189,6 +8286,9 @@ msgid ""
 "can easily generate refunds and reconcile them directly from the invoice "
 "form."
 msgstr ""
+"مع المسترد من العملاء يمكنك إدارة ملاحظات الائتمان للعملاء. والمبلغ المسترد "
+"عبارة عن وثيقة تُعتمد الفاتورة كليا أو جزئيا. يمكنك بسهولة انشاء المبالغ "
+"المستردة والتوفيق بينهما مباشرة من نموذج فاتورة."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_vat_declaration
@@ -8200,6 +8300,12 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"تطبع هذه القائمة إعلان ضريبة القيمة المضافة على أساس الفواتير أو المدفوعات. "
+"يمكنك اختيار واحد أو عدة فترات من السنة المالية. يتم إنشاؤها تلقائيا "
+"المعلومات المطلوبة للحصول على الإقرار الضريبي من قبل OpenERP من الفواتير (أو "
+"دفعات، في بعض البلدان). ويتم تحديث هذه البيانات في الوقت الحقيقي. وهذا مفيد "
+"جدا لأنه يتيح لك معاينة في أي وقت من الضرائب التي مدينون لكم في بداية ونهاية "
+"الشهر الجاري أو الربع."
 
 #. module: account
 #: report:account.invoice:0
@@ -8239,7 +8345,7 @@ msgstr "الدفع"
 #: field:account.bank.statement,balance_end_real:0
 #: field:account.treasury.report,ending_balance:0
 msgid "Ending Balance"
-msgstr ""
+msgstr "رصيد ختامي"
 
 #. module: account
 #: help:account.move.line,blocked:0
@@ -8270,7 +8376,7 @@ msgstr "تقرير مشترك للحساب"
 #: view:account.invoice.report:0
 #: view:analytic.entries.report:0
 msgid "current month"
-msgstr ""
+msgstr "الشهر الجاري"
 
 #. module: account
 #: code:addons/account/account.py:1052
@@ -8279,6 +8385,8 @@ msgid ""
 "No period defined for this date: %s !\n"
 "Please create one."
 msgstr ""
+"لايوجد فترة معرفةلهذا التاريخ:%s!\n"
+"قم بإنشاء واحدة."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
@@ -8306,7 +8414,7 @@ msgstr "أنواع الحساب"
 #. module: account
 #: view:account.payment.term.line:0
 msgid "  Value amount: n.a"
-msgstr ""
+msgstr "  قيمة المبلغ: غير معروف"
 
 #. module: account
 #: view:account.automatic.reconcile:0
@@ -8367,6 +8475,9 @@ msgid ""
 "sales orders or deliveries. You should only confirm them before sending them "
 "to your customers."
 msgstr ""
+"مع فواتير العملاء يمكنك إنشاء وإدارة المبيعات الفواتير الصادرة للعملاء. "
+"ويمكن أيضا لـOpenERP انشاء فواتير مشروع تلقائيا من أوامر البيع أو التسليم. "
+"يجب أن تؤكد فقط لهم قبل ارسالهم الى الزبائن."
 
 #. module: account
 #: code:addons/account/wizard/account_period_close.py:51
@@ -8391,7 +8502,7 @@ msgstr "يستخدم حساب الشريك لهذه الفاتورة."
 #: code:addons/account/account.py:3296
 #, python-format
 msgid "Tax %.2f%%"
-msgstr ""
+msgstr "ضرائب  %.2f%%"
 
 #. module: account
 #: view:account.analytic.account:0
@@ -8570,12 +8681,12 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Smallest Text"
-msgstr ""
+msgstr "أصغر نص"
 
 #. module: account
 #: model:res.groups,name:account.group_account_invoice
 msgid "Invoicing & Payments"
-msgstr ""
+msgstr "الفواتير و المدفوعات"
 
 #. module: account
 #: help:account.invoice,internal_number:0
@@ -8676,6 +8787,11 @@ msgid ""
 "would be referred to as FY 2011. You are not obliged to follow the actual "
 "calendar year."
 msgstr ""
+"عرف السنه المالية للشركة وفقا لاحتياجاتك. السنة المالية هي فترة في النهاية "
+"التي تتم حسابات الشركة عن (عادة 12 شهرا). ويشار عادة إلى السنة المالية في "
+"الموعد الذي تنتهي. على سبيل المثال، إذا كان في السنة المالية للشركة تنتهي 30 "
+"نوفمبر 2011، ثم كل شيء بين 1 ديسمبر 2010 و 30 نوفمبر، سوف يحال 2011 إلى "
+"السنة المالية 2011. ليست ملزمة لمتابعة السنة الميلادية الفعلية."
 
 #. module: account
 #: view:account.entries.report:0
@@ -8692,7 +8808,7 @@ msgstr "عنوان جهة الإتصال"
 #: code:addons/account/account.py:2256
 #, python-format
 msgid "Wrong model !"
-msgstr ""
+msgstr "نموذج خاطئ !"
 
 #. module: account
 #: field:account.invoice.refund,period:0
@@ -8746,6 +8862,8 @@ msgid ""
 "will be added, Loss: Amount will be deducted.), Which is calculated from "
 "Profilt & Loss Report"
 msgstr ""
+"ويستخدم هذا الحساب لتحويل الربح / الخسارة (إذا كان الربح: سيتم إضافة المبلغ، "
+"الخسارة: سيتم خصم المبلغ.)، والذي يحسب من تقرير الربح والخسارة"
 
 #. module: account
 #: code:addons/account/account_invoice.py:808
@@ -8759,16 +8877,16 @@ msgstr ""
 #: view:account.move.line:0
 #: field:account.move.line,narration:0
 msgid "Internal Note"
-msgstr ""
+msgstr "ملاحظة داخلية"
 
 #. module: account
 #: view:report.account.sales:0
 msgid "This year's Sales by type"
-msgstr ""
+msgstr "مبيعات هذه السنة وفقا للنوع"
 
 #. module: account
 #: view:account.analytic.cost.ledger.journal.report:0
-msgid "Cost Ledger for period"
+msgid "Cost Ledger for Period"
 msgstr "أستاذ التكاليف لفترة"
 
 #. module: account
@@ -8798,6 +8916,8 @@ msgid ""
 "the amount of this case into its parent. For example, set 1/-1 if you want "
 "to add/substract it."
 msgstr ""
+"هنا يمكنك تحديد المعامل التي سيتم استخدامها عند توطيد كمية من هذه الحالة في "
+"الأصل. على سبيل المثال، وضع 1/-1 إذا كنت ترغب في إضافة / طرح ذلك."
 
 #. module: account
 #: view:account.invoice:0
@@ -8815,7 +8935,7 @@ msgstr "سطور القيود"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_financial_accounts_installer
 msgid "Review your Financial Accounts"
-msgstr ""
+msgstr "معاينة حساباتك المالية"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_journal_button
@@ -8896,13 +9016,13 @@ msgstr "عزيزي سيدي / سيدتي،"
 #. module: account
 #: field:account.vat.declaration,display_detail:0
 msgid "Display Detail"
-msgstr ""
+msgstr "عرض التفاصيل"
 
 #. module: account
 #: code:addons/account/account.py:3118
 #, python-format
 msgid "SCNJ"
-msgstr ""
+msgstr "SCNJ"
 
 #. module: account
 #: model:process.transition,note:account.process_transition_analyticinvoice0
@@ -8921,6 +9041,9 @@ msgid ""
 "in which order. You can create your own view for a faster encoding in each "
 "journal."
 msgstr ""
+"يعطي العرض المستخدم عند كتابة أو تصفح مدخلات في هذه اليومية.  يبين العرض  "
+"OpenERP الحقول التي يجب أن يكون مرئيا، المطلوب أو للقراءة فقط، والتي في "
+"النظام. يمكنك انشاء وجهة نظرك الخاصة لأسرع ترميز في كل يومية."
 
 #. module: account
 #: field:account.period,date_stop:0
@@ -8937,7 +9060,7 @@ msgstr "نهاية الفترة"
 #: model:ir.actions.act_window,name:account.action_account_report_pl
 #: model:ir.ui.menu,name:account.menu_account_reports
 msgid "Financial Reports"
-msgstr ""
+msgstr "تقارير مالية"
 
 #. module: account
 #: report:account.account.balance:0
@@ -9021,7 +9144,7 @@ msgstr "مستند:  كشف حساب عميل"
 #. module: account
 #: field:account.account.type,report_type:0
 msgid "P&L / BS Category"
-msgstr ""
+msgstr "فئة P&L / BS"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_invoice_tree4
@@ -9031,6 +9154,9 @@ msgid ""
 "partially. You can easily generate refunds and reconcile them directly from "
 "the invoice form."
 msgstr ""
+"مع المسترد من المورد يمكنك إدارة مذكرات الائتمان التي تتلقاها من الموردين "
+"الخاصين بك. والمبلغ عبارة عن وثيقة التي تعتمد الفاتورة كليا أو جزئيا. يمكنك "
+"انشاء المبالغ المستردة بسهولة والتوفيق بينهما مباشرة من شكل فاتورة."
 
 #. module: account
 #: view:account.account.template:0
@@ -9115,7 +9241,7 @@ msgstr "الدليل"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Contract Data"
-msgstr ""
+msgstr "بيانات العقد"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_moves_sale
@@ -9126,6 +9252,11 @@ msgid ""
 "the income account. OpenERP will propose to you automatically the Tax "
 "related to this account and the counter-part \"Account receivable\"."
 msgstr ""
+"ويستخدم هذا العرض من قبل المحاسبين من أجل تسجيل المدخلات على نطاق واسع في "
+"OpenERP. إذا كنت تريد أن تسجل فاتورة العملاء، واختيار يومية وفترة في شريط "
+"أدوات البحث. ثم، تبدأ من خلال تسجيل دخول خط لحساب الإيرادات. سيقترح  OpenERP "
+" عليكم تلقائيا الضريبة المتعلقة بهذا الحساب وحساب جزء \"المستحق من "
+"الحسابات\"."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_reconcile.py:152
@@ -9148,6 +9279,10 @@ msgid ""
 "closed or left open depending on your company's activities over a specific "
 "period."
 msgstr ""
+"يمكنك هنا تحديد فترة مالية، فترة من الزمن في السنة المالية للشركة. الفترة "
+"المحاسبية عادة هي الشهر أو ربع. وهو يقابل عادة إلى فترات من الاقرار الضريبي. "
+"إنشاء وإدارة فترات من هنا ويقرر ما إذا كان يجب إغلاق الفترة أو ترك الباب "
+"مفتوحا تبعا لأنشطة الشركة خلال فترة محددة."
 
 #. module: account
 #: report:account.third_party_ledger:0
@@ -9180,7 +9315,7 @@ msgstr "لا يمكنك تغيير الضريبة, يجب عليك ازالة و
 #. module: account
 #: view:analytic.entries.report:0
 msgid "Analytic Entries of last 365 days"
-msgstr ""
+msgstr "قيود تحليلية لآخر ٣٦٥ يوم"
 
 #. module: account
 #: report:account.central.journal:0
@@ -9213,7 +9348,7 @@ msgstr "ستحدد حساب البنك في تحديد اليومية للتسو
 
 #. module: account
 #: view:account.move.line.reconcile:0
-msgid "Reconciliation transactions"
+msgid "Reconciliation Transactions"
 msgstr "معاملات التسوية"
 
 #. module: account
@@ -9238,7 +9373,7 @@ msgstr "يجب ان يكون لليومية نظير مركزي بدون تخط�
 #. module: account
 #: view:account.invoice.report:0
 msgid "Customer And Supplier Invoices"
-msgstr ""
+msgstr "فواتير العميل و المورد"
 
 #. module: account
 #: model:process.node,note:account.process_node_paymententries0
@@ -9314,7 +9449,7 @@ msgstr "تاريخ الإستحقاق"
 
 #. module: account
 #: view:account.move.journal:0
-msgid "Standard entries"
+msgid "Standard Entries"
 msgstr "القيود المعيارية"
 
 #. module: account
@@ -9415,6 +9550,12 @@ msgid ""
 "open period. Close a period when you do not want to record new entries and "
 "want to lock this period for tax related calculation."
 msgstr ""
+"والفترة هي الفترة المالية من الوقت خلال السنة المالية التي يجب أن تسجل "
+"القيود المحاسبية للمحاسبة الأنشطة ذات الصلة. الفترة الشهرية هي القاعدة ولكن "
+"اعتمادا على بلدانكم أو احتياجات الشركة، يجب أيضا ان يكون هناك فترات ربع "
+"سنوية. إغلاق فترة سيجعل من المستحيل تسجيل القيود المحاسبية الجديدة ينبغي،  "
+"كل القيود الجديدة تتم في الفترة التالية المفتوحة. إغلاق الفترة عندما لا تريد "
+"تسجيل قيود جديدة ونريد ان قفل هذه الفترة لحساب الضريبية ذات الصلة."
 
 #. module: account
 #: view:account.analytic.account:0
@@ -9522,7 +9663,7 @@ msgstr ""
 #: code:addons/account/account.py:181
 #, python-format
 msgid "Profit & Loss (Income account)"
-msgstr ""
+msgstr "الأرباح و الخسائر(حساب الدخل)"
 
 #. module: account
 #: constraint:account.account:0
@@ -9545,6 +9686,9 @@ msgid ""
 "payment term!\n"
 "Please define partner on it!"
 msgstr ""
+"وأنشأ تاريخ الاستحقاق من خط الدخول المُنتجة بواسطة خط نموذج ‘%s‘ بناءًا على "
+"مدى الدفع للشريك!\n"
+"يرجى تحديد الشريك على ذلك!"
 
 #. module: account
 #: field:account.cashbox.line,number:0
@@ -9621,7 +9765,7 @@ msgstr "أبريل/ نيسان"
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_profitloss_toreport0
 msgid "Profit (Loss) to report"
-msgstr ""
+msgstr "تقرير للربح (الخسارة) المقدم"
 
 #. module: account
 #: view:account.move.line.reconcile.select:0
@@ -9645,7 +9789,7 @@ msgstr ""
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 2 (bold)"
-msgstr ""
+msgstr "عنوان ٢ (سميك)"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree2
@@ -9676,6 +9820,8 @@ msgid ""
 "and is the process of transferring debit and credit amounts from a journal "
 "of original entry to a ledger book."
 msgstr ""
+"ويسمى أيضا التحقق من صحة عملية إدخالات دفتر اليومية \"دفتر نشر\" و هي عملية "
+"تحويل مبالغ الخصم والائتمان من اليومية من الدخول الأصلي لكتاب الأستاذ."
 
 #. module: account
 #: help:account.bank.statement,state:0
@@ -9803,7 +9949,7 @@ msgstr "مسلسل السنوات المالية"
 #. module: account
 #: selection:account.financial.report,display_detail:0
 msgid "No detail"
-msgstr ""
+msgstr "لا تفاصيل"
 
 #. module: account
 #: code:addons/account/account_analytic_line.py:102
@@ -9814,14 +9960,14 @@ msgstr "لا يوجد حساب دخل معرّف لهذا المنتج: \"%s\" (
 #. module: account
 #: constraint:account.move.line:0
 msgid "You can not create journal items on closed account."
-msgstr ""
+msgstr "لا يمنك إنشاء عناصر يومية في حساب مغلق."
 
 #. module: account
 #: field:account.account,unrealized_gain_loss:0
 #: model:ir.actions.act_window,name:account.action_account_gain_loss
 #: model:ir.ui.menu,name:account.menu_unrealized_gains_losses
 msgid "Unrealized Gain or Loss"
-msgstr ""
+msgstr "مكاسب أو خسائر غير محققة"
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -9834,12 +9980,12 @@ msgstr "حالات"
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_edi_invoice
 msgid "Auto-email confirmed invoices"
-msgstr ""
+msgstr "رسائل لتأكيد الفواتير"
 
 #. module: account
 #: field:account.invoice,check_total:0
 msgid "Verification Total"
-msgstr ""
+msgstr "إجمالي المحقق"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -9927,6 +10073,8 @@ msgid ""
 "reconciliation process today. The current partner is counted as already "
 "processed."
 msgstr ""
+"يصور هذا الرقم العدد الإجمالي للشركاء التي ذهبت خلال  عملية المصالحة اليوم. "
+"يتم حساب الشريك الحالي كما هو مجهز مسبقا."
 
 #. module: account
 #: view:account.fiscalyear:0
@@ -9962,7 +10110,7 @@ msgstr "حسابات فارغة؟ "
 #. module: account
 #: constraint:account.bank.statement:0
 msgid "The journal and period chosen have to belong to the same company."
-msgstr ""
+msgstr "يجب أن يكون اليومية و الفترة مرتبطين لشركة واحدة."
 
 #. module: account
 #: view:account.invoice:0
@@ -9986,11 +10134,13 @@ msgid ""
 "This account will be used to value outgoing stock for the current product "
 "category using cost price"
 msgstr ""
+"وسيتم استخدام هذا الحساب لقيمة الأسهم الصادرة لفئة من فئات المنتجات الحالية "
+"باستخدام سعر التكلفة"
 
 #. module: account
 #: view:wizard.multi.charts.accounts:0
 msgid "Generate Your Chart of Accounts from a Chart Template"
-msgstr ""
+msgstr "انشاء دليل الحسابات من قالب للدليل"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_invoice_report_all
@@ -10061,7 +10211,7 @@ msgstr "مدين"
 #. module: account
 #: selection:account.financial.report,style_overwrite:0
 msgid "Title 3 (bold, smaller)"
-msgstr ""
+msgstr "عنوان ٣ (سميك، أصغر)"
 
 #. module: account
 #: field:account.invoice,invoice_line:0
@@ -10076,7 +10226,7 @@ msgstr "خطأ ! لا يمكنك انشاء قوالب الحاسب العودي
 #. module: account
 #: selection:account.print.journal,sort_selection:0
 msgid "Journal Entry Number"
-msgstr ""
+msgstr "رقم قيد اليومية"
 
 #. module: account
 #: view:account.subscription:0
@@ -10231,7 +10381,7 @@ msgstr ""
 
 #. module: account
 #: view:account.payment.term:0
-msgid "Description On Invoices"
+msgid "Description on Invoices"
 msgstr ""
 
 #. module: account
@@ -10649,6 +10799,9 @@ msgstr ""
 #~ msgstr ""
 #~ "سيتم استخدام هذا الحساب لتقييم المؤن الواردة بالنسبة لفئة المنتج الحالي"
 
+#~ msgid "Reconciliation result"
+#~ msgstr "نتيجة التسوية"
+
 #~ msgid "Journal Voucher"
 #~ msgstr "قسيمة الدفتر"
 
@@ -10678,6 +10831,9 @@ msgstr ""
 
 #~ msgid "Accounting Entries-"
 #~ msgstr "المدخلات المحاسبية -"
+
+#~ msgid "Invoices Created Within Past 15 Days"
+#~ msgstr "الفواتير التي تم أنشاءها خلال 15 يوما الماضية"
 
 #~ msgid "Negative"
 #~ msgstr "سالب"
@@ -10721,6 +10877,9 @@ msgstr ""
 
 #~ msgid "Move line select"
 #~ msgstr "تحريك السطر المختار"
+
+#~ msgid "Open For Unreconciliation"
+#~ msgstr "مفتوح لإلغاء التسوية"
 
 #, python-format
 #~ msgid "CashBox Balance is not matching with Calculated Balance !"
@@ -10774,8 +10933,14 @@ msgstr ""
 #~ "Check this if the user is allowed to reconcile entries in this account."
 #~ msgstr "علم علي هذه لو أن هذا المستخدم لتسوية قيود هذا الحساب."
 
+#~ msgid "Sales by Account"
+#~ msgstr "المبيعات بعرض الحسابات"
+
 #~ msgid "Reference Number"
 #~ msgstr "رقم المرجع"
+
+#~ msgid "Tax codes"
+#~ msgstr "رموز الضريبة"
 
 #~ msgid "Total :"
 #~ msgstr "المجموع:"
@@ -10796,10 +10961,19 @@ msgstr ""
 #~ msgid "You cannot remove an account which has account entries!. "
 #~ msgstr "لا يمكنك حذف حساب مستدخدم في قيود يومية!. "
 
+#~ msgid "Unreconciliation transactions"
+#~ msgstr "إلغاء تسوية المعاملات"
+
 #~ msgid ""
 #~ "Wrong credit or debit value in model (Credit + Debit Must Be greater \"0\")!"
 #~ msgstr ""
 #~ "قيمة دائنة أو مدينة خاطئة في النموذج (دائن + مدين يجب أن يكون أكبر من صفر)!"
+
+#~ msgid "Go to next partner"
+#~ msgstr "ذهاب للشريك التالي"
+
+#~ msgid "Sales by Account Type"
+#~ msgstr "المبيعات حسب نوع الحساب"
 
 #, python-format
 #~ msgid "You have to provide an account for the write off entry !"
@@ -10820,6 +10994,9 @@ msgstr ""
 
 #~ msgid "Error ! You can not create recursive categories."
 #~ msgstr "خطأ! لا يمكنك إنشاء فئات متداخلة."
+
+#~ msgid "Generate Chart of Accounts from a Chart Template"
+#~ msgstr "إنشاء شجرة حسابات من قالب"
 
 #, python-format
 #~ msgid "Cannot delete invoice(s) that are already opened or paid !"
@@ -10845,9 +11022,15 @@ msgstr ""
 #~ msgid "Voucher No"
 #~ msgstr "رقم المستند"
 
+#~ msgid "Accounts by type"
+#~ msgstr "الحسابات حسب النوع"
+
 #, python-format
 #~ msgid "Invoice "
 #~ msgstr "فاتورة "
+
+#~ msgid "Are you sure ?"
+#~ msgstr "هل أنت متأكد؟"
 
 #~ msgid "Balance Sheet (Assets Accounts)"
 #~ msgstr "الميزانية العمومية (حسابات الأصول)"
@@ -10941,6 +11124,10 @@ msgstr ""
 #~ msgid "Aged Receivables"
 #~ msgstr "الديون المشكوك في تحصيلها"
 
+#, python-format
+#~ msgid "Receivable Accounts"
+#~ msgstr "حسابات مدينة"
+
 #~ msgid "Net Profit"
 #~ msgstr "صافي الربح"
 
@@ -10959,8 +11146,14 @@ msgstr ""
 #~ msgid "Suppliers Payment Management"
 #~ msgstr "إدارة مدفوعات الموردين"
 
+#~ msgid "Standard entries"
+#~ msgstr "القيود المعيارية"
+
 #~ msgid "Chart of account"
 #~ msgstr "شجرة الحساب"
+
+#~ msgid "Reconciliation transactions"
+#~ msgstr "معاملات التسوية"
 
 #~ msgid "Modify"
 #~ msgstr "تعديل"
@@ -11006,6 +11199,9 @@ msgstr ""
 
 #~ msgid "Multiple Analytic Plans"
 #~ msgstr "خطط تحليلية متعددة"
+
+#~ msgid "Cost Ledger for period"
+#~ msgstr "أستاذ التكاليف لفترة"
 
 #~ msgid "Reference Type"
 #~ msgstr "نوع المرجع"
@@ -11060,6 +11256,9 @@ msgstr ""
 #~ msgid "7"
 #~ msgstr "٧"
 
+#~ msgid "Dashboard"
+#~ msgstr "اللوحة الرئيسية"
+
 #, python-format
 #~ msgid "Unable to find a valid period !"
 #~ msgstr "غير قادر على العثور على فترة صالحة!"
@@ -11084,6 +11283,9 @@ msgstr ""
 #~ msgid "Wrong credit or debit value in model (Credit Or Debit Must Be \"0\")!"
 #~ msgstr ""
 #~ "خطأ دائن أو مدين كقيمة في النموذج (قيمة الدائن أو المدين يجب أن تكون \"0\")!"
+
+#~ msgid "Unreconciliate transactions"
+#~ msgstr "إلغاء تسوية المعاملات"
 
 #~ msgid "Error! The duration of the Fiscal Year is invalid. "
 #~ msgstr "خطأ! مدة السنة المالية غير صالحة. "
@@ -11110,6 +11312,9 @@ msgstr ""
 
 #~ msgid "Account Profit And Loss Report"
 #~ msgstr "تقرير حساب الأرباح و الخسائر"
+
+#~ msgid "Income Accounts"
+#~ msgstr "حسابات الدخل"
 
 #~ msgid "Period length (days)"
 #~ msgstr "مدة الفتر (أيام)"
@@ -11269,6 +11474,9 @@ msgstr ""
 #~ msgid "Configure Your Accounting Chart"
 #~ msgstr "قم بتكوين جدول المحاسبة الخاصة بك"
 
+#~ msgid "Create an Account based on this template"
+#~ msgstr "انشأ حساب مبنيًا على هذا القالب"
+
 #~ msgid "Company must be same for its related account and period."
 #~ msgstr "يجب ان تكون الشركة نفس الفترة والحساب المرتبط."
 
@@ -11317,8 +11525,14 @@ msgstr ""
 #~ "ويساعدك على انشاء خطابات تذكير عن الفواتير الغير المسددة، بما في ذلك مستويات "
 #~ "متعددة من التذكير وتفصيلها لكل سياسة من سياسات الشيك."
 
+#~ msgid "Open for bank reconciliation"
+#~ msgstr "فتح للتسوية البنكية"
+
 #~ msgid "Add extra Accounting functionalities to the ones already installed."
 #~ msgstr "إضافة وظائف المحاسبة اضافية لتلك المثبتة مسبقا."
+
+#~ msgid "Compute Code for Taxes included prices"
+#~ msgstr "احسب الكود للضرائب مشتملة على القيم"
 
 #~ msgid "Accounting and Financial Management"
 #~ msgstr "إدارة  الملية والمحاسبة"
@@ -11367,3 +11581,152 @@ msgstr ""
 #, python-format
 #~ msgid "Cannot locate parent code for template account!"
 #~ msgstr "لا يمكن وضع كود الاصل لحاسب القالب!"
+
+#~ msgid ""
+#~ "All manually created new journal entry are usually in the state 'Unposted', "
+#~ "but you can set the option to skip that state on the related journal. In "
+#~ "that case, they will be behave as journal entries automatically created by "
+#~ "the system on document validation (invoices, bank statements...) and will be "
+#~ "created in 'Posted' state."
+#~ msgstr ""
+#~ "كل ما انشيء يدويًا لمخل اليومية الجديدة عادةً في حالة‘غير مسجل‘, لكن يمكنك "
+#~ "وضع اختيار لتخطي تلك الحالة على اليومية المتعلقة. في حالة, سيكون كمدخلات "
+#~ "يومية تلقائية أُنشأت بواسطة النظام في التحقق من الوثيقة (الفواتير, نصاريح "
+#~ "البنك...) وستُنشأ في حالة ‘مسجل‘."
+
+#~ msgid ""
+#~ "The normal chart of accounts has a structure defined by the legal "
+#~ "requirement of the country. The analytic chart of account structure should "
+#~ "reflect your own business needs in term of costs/revenues reporting. They "
+#~ "are usually structured by contracts, projects, products or departements. "
+#~ "Most of the OpenERP operations (invoices, timesheets, expenses, etc) "
+#~ "generate analytic entries on the related account."
+#~ msgstr ""
+#~ "على الرسم البياني العادي للحسابات لديها هيكل المعرَفة من قبل الشرط القانوني "
+#~ "للبلد. وينبغي على الرسم البياني التحليلي لهيكل الحساب تعكس احتياجات العمل "
+#~ "الخاصة بك في فترة من التكاليف / الإيرادات التقارير. وتنظم عادة من قبل، وعقود "
+#~ "المنتجات والمشاريع أو المقاطعات. معظم العمليات OpenERP (الفواتير، والجداول "
+#~ "الزمنية، والنفقات، وغيرها) توليد مدخلات تحليلية على حساب ذات الصلة."
+
+#~ msgid ""
+#~ "Account Voucher module includes all the basic requirements of Voucher "
+#~ "Entries for Bank, Cash, Sales, Purchase, Expenses, Contra, etc... "
+#~ msgstr ""
+#~ "وحدة قسيمة الحساب تشمل جميع المتطلبات الأساسية لمدخلات القسيمة للنقد، بنك، "
+#~ "المبيعات، المشتريات، والمصروفات، كونترا، الخ ... "
+
+#~ msgid ""
+#~ "Financial and accounting module that covers:\n"
+#~ "    General accountings\n"
+#~ "    Cost / Analytic accounting\n"
+#~ "    Third party accounting\n"
+#~ "    Taxes management\n"
+#~ "    Budgets\n"
+#~ "    Customer and Supplier Invoices\n"
+#~ "    Bank statements\n"
+#~ "    Reconciliation process by partner\n"
+#~ "    Creates a dashboard for accountants that includes:\n"
+#~ "    * List of uninvoiced quotations\n"
+#~ "    * Graph of aged receivables\n"
+#~ "    * Graph of aged incomes\n"
+#~ "\n"
+#~ "The processes like maintaining of general ledger is done through the defined "
+#~ "financial Journals (entry move line or\n"
+#~ "grouping is maintained through journal) for a particular financial year and "
+#~ "for preparation of vouchers there is a\n"
+#~ "module named account_voucher.\n"
+#~ "    "
+#~ msgstr ""
+#~ "وحدة المالية والمحاسبية التي تغطي:\n"
+#~ "عام المحاسبيات\n"
+#~ "التكلفة / المحاسبة التحليلية\n"
+#~ "طرف ثالث المحاسبة\n"
+#~ "إدارة الضرائب\n"
+#~ "الميزانيات\n"
+#~ "العملاء والموردين الفواتير\n"
+#~ "البيانات المصرفية\n"
+#~ "عملية المصالحة من قبل شريك\n"
+#~ "ينشيء لوحة أجهزة القياس للمحاسبين تشمل ما يلي:\n"
+#~ "* لائحة الأسعار لما دون الفواتير\n"
+#~ "* الرسم البياني لمستحقات المسنين\n"
+#~ "* الرسم البياني لدخل المسنين\n"
+#~ "\n"
+#~ "تتم عمليات مثل الحفاظ على دفتر الأستاذ العام من خلال اليومية المالية المحددة "
+#~ "(دخول خط التحرك أو\n"
+#~ "يتم الاحتفاظ بالتجميع من خلال اليومية) لسنة مالية معينة وإعداد القسائم هل "
+#~ "هناك\n"
+#~ "وحدة اسمها حساب_قسيمة.\n"
+#~ "    "
+
+#~ msgid ""
+#~ "This Account is used for transferring Profit/Loss(If It is Profit: Amount "
+#~ "will be added, Loss : Amount will be deducted.), Which is calculated from "
+#~ "Profit & Loss Report"
+#~ msgstr ""
+#~ "ويستخدم هذا الحساب لتحويل الربح / الخسارة (إذا كان الربح: سيتم إضافة المبلغ، "
+#~ "الخسارة: سيتم خصم المبلغ.)، والذي يحسب من تقرير الربح والخسارة"
+
+#~ msgid ""
+#~ "Select 'Sale' for Sale journal to be used at the time of making invoice. "
+#~ "Select 'Purchase' for Purchase Journal to be used at the time of approving "
+#~ "purchase order. Select 'Cash' to be used at the time of making payment. "
+#~ "Select 'General' for miscellaneous operations. Select 'Opening/Closing "
+#~ "Situation' to be used at the time of new fiscal year creation or end of year "
+#~ "entries generation."
+#~ msgstr ""
+#~ "لاستخدامها حدد 'بيع' ليومية البيع في وقت عمل الفاتورة. حدد \"شراء\" لشراء "
+#~ "يومية لاستخدامها في وقت الموافقة على طلب الشراء. حدد \"النقدية\" لاستخدامها "
+#~ "في وقت القيام بالدفع. حدد \"عام\" لعمليات متنوعة. حدد \"فتح / إغلاق الحالة\" "
+#~ "ليتم استخدامها في ذلك الوقت من انشاء او نهاية السنة المالية الجديدة لمنشأ "
+#~ "مدخلات السنة."
+
+#~ msgid ""
+#~ " * The 'Draft' state is used when a user is encoding a new and unconfirmed "
+#~ "Invoice.             \n"
+#~ "* The 'Pro-forma' when invoice is in Pro-forma state,invoice does not have "
+#~ "an invoice number.             \n"
+#~ "* The 'Open' state is used when user create invoice,a invoice number is "
+#~ "generated.Its in open state till user does not pay invoice.             \n"
+#~ "* The 'Paid' state is set automatically when invoice is paid.            \n"
+#~ "* The 'Cancelled' state is used when user cancel invoice."
+#~ msgstr ""
+#~ " * وتستخدم الحالة \"السحب\" عندما يقوم المستخدم بترميز فاتورة جديدة وغير "
+#~ "مؤكدة.\n"
+#~ "* إن \"الشكلية\" عندما الفاتورة في حالة الفاتورة الشكلية، والفاتورة ليس لها "
+#~ "رقم فاتورة..\n"
+#~ "* يتم استخدام حالة 'فتح'  عند انشاء فاتورة المستخدم، ورقم الفاتورة أُنشيء. "
+#~ "وهي في حالة فتح حتى لا يدفع المستخدم الفاتورة.\n"
+#~ "* تم تعيين الحالة \"مدفوعة\" تلقائيا عندما يتم دفع الفاتورة.\n"
+#~ "* يتم استخدام الحالة \"ملغاة\" عندما يقوم المستخدم بإلغاء الفاتورة."
+
+#~ msgid ""
+#~ "This Account is used for transfering Profit/Loss (Profit: Amount will be "
+#~ "added, Loss: Amount will be duducted), which is calculated from Profilt & "
+#~ "Loss Report"
+#~ msgstr ""
+#~ "ويستخدم هذا الحساب لنقل الربح / الخسارة (الربح: سيتم إضافة المبلغ، الخسارة: "
+#~ "سيتم خصم المبلغ)، والذي يحسب من تقرير الربح والخسارة"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot validate a non-balanced entry !\n"
+#~ "Make sure you have configured Payment Term properly !\n"
+#~ "It should contain atleast one Payment Term Line with type \"Balance\" !"
+#~ msgstr ""
+#~ "لا يمكنك التحقق من صحة الدخول الغير متوازن!\n"
+#~ "تأكد بأنك قمت بتكوين الدفع الآجل بشكل صحيح!\n"
+#~ "يجب أن تحتوي على الاقل الدفع الآجل خط واحد مع علامة \"توازن\"!"
+
+#, python-format
+#~ msgid ""
+#~ "Can not create an automatic sequence for this piece !\n"
+#~ "\n"
+#~ "Put a sequence in the journal definition for automatic numbering or create a "
+#~ "sequence manually for this piece."
+#~ msgstr ""
+#~ "لا يمكن إنشاء تسلسل تلقائي لهذه الجزئية!\n"
+#~ "\n"
+#~ "ضع تسلسل في تعريف اليومية للترقيم التلقائي أو خلق سلسلة يدويا لهذه الجزئية."
+
+#~ msgid "Install your Chart of Accounts"
+#~ msgstr "تنصيب دليلك المحاسبي"

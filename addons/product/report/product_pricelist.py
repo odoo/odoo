@@ -24,6 +24,7 @@ from report import report_sxw
 from osv import osv
 import pooler
 from tools.translate import _
+
 class product_pricelist(report_sxw.rml_parse):
     def __init__(self, cr, uid, name, context):
         super(product_pricelist, self).__init__(cr, uid, name, context=context)
@@ -112,7 +113,7 @@ class product_pricelist(report_sxw.rml_parse):
         return res
 
     def _get_price(self, pricelist_id, product_id, qty):
-        sale_price_digits = self.get_digits(dp='Sale Price')
+        sale_price_digits = self.get_digits(dp='Product Price')
         pool = pooler.get_pool(self.cr.dbname)
         price_dict = pool.get('product.pricelist').price_get(self.cr, self.uid, [pricelist_id], product_id, qty, context=self.localcontext)
         if price_dict[pricelist_id]:
@@ -123,5 +124,5 @@ class product_pricelist(report_sxw.rml_parse):
         return price
 
 report_sxw.report_sxw('report.product.pricelist','product.product','addons/product/report/product_pricelist.rml',parser=product_pricelist)
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
+# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

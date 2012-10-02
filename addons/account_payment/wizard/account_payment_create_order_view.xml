@@ -2,39 +2,36 @@
 <openerp>
     <data>
 
-		<record id="view_create_payment_order" model="ir.ui.view">
+        <record id="view_create_payment_order" model="ir.ui.view">
             <field name="name">payment.order.create.form</field>
             <field name="model">payment.order.create</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-			<form string="Search Payment lines">
-                <group col="4" colspan="6">
+            <form string="Search Payment lines" version="7.0">
+                <group>
                     <field name="duedate" />
                 </group>
-                <separator colspan="4"/>
-                <group col="2" colspan="4">
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="search_entries" string="Search" colspan="1" type="object" icon="gtk-execute"/>
-                </group>
+                <footer>
+                    <button name="search_entries" string="Search" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel"/>
+                </footer>
             </form>
             </field>
         </record>
 
-		<record id="view_create_payment_order_lines" model="ir.ui.view">
+        <record id="view_create_payment_order_lines" model="ir.ui.view">
             <field name="name">payment.order.create.form</field>
             <field name="model">payment.order.create</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-                <form string="Search Payment lines">
-                    <group col="4" colspan="6">
-                        <separator colspan="4" string="Entries"/>
-                        <field name="entries" nolabel="1"/>
+                <form string="Search Payment lines" version="7.0">
+                    <group string="Entries">
+                        <field name="entries"/>
                     </group>
-                    <separator colspan="4"/>
-                    <group col="2" colspan="4">
-                        <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                        <button name="create_payment" string="_Add to payment order" colspan="1" type="object" icon="gtk-execute"/>
-                    </group>
+                    <footer>
+                        <button name="create_payment" string="_Add to payment order" type="object" class="oe_highlight"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
                 </form>
             </field>
         </record>
@@ -49,5 +46,5 @@
             <field name="target">new</field>
         </record>
 
-	</data>
+    </data>
 </openerp>

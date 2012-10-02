@@ -21,9 +21,6 @@
 
 from osv import fields,osv,orm
 
-import crm_operators
-
-
 class crm_segmentation(osv.osv):
     '''
         A segmentation is a tool to automatically assign categories on partners.
@@ -45,25 +42,11 @@ added to partners that match the segmentation criterions after computation.'),
         'partner_id': fields.integer('Max Partner ID processed'),
         'segmentation_line': fields.one2many('crm.segmentation.line', \
                             'segmentation_id', 'Criteria', required=True),
-        'som_interval': fields.integer('Days per Periode', help="A period is the average number of days between two cycle of sale or purchase for this segmentation.\
-                 \nIt's mainly used to detect if a partner has not purchased or buy for a too long time, \
-                 \nso we suppose that his state of mind has decreased because he probably bought goods to another supplier. \
-                 \nUse this functionality for recurring businesses."),
-        'som_interval_max': fields.integer('Max Interval', help="The computation is made on all events that occured during this interval, the past X periods."),
-        'som_interval_decrease': fields.float('Decrease (0>1)', help="If the "\
-                            "partner has not purchased (or bought) during a "\
-                            "period, decrease the state of mind by this factor. It\'s a multiplication"),
-        'som_interval_default': fields.float('Default (0=None)', help="Default \
-state of mind for period preceeding the 'Max Interval' computation. \
-This is the starting state of mind by default if the partner has no event."),
         'sales_purchase_active': fields.boolean('Use The Sales Purchase Rules', help='Check if you want to use this tab as part of the segmentation rule. If not checked, the criteria beneath will be ignored')
     }
     _defaults = {
         'partner_id': lambda *a: 0,
         'state': lambda *a: 'not running',
-        'som_interval_max': lambda *a: 3,
-        'som_interval_decrease': lambda *a: 0.8,
-        'som_interval_default': lambda *a: 0.5
     }
 
     def process_continue(self, cr, uid, ids, start=False):
@@ -78,7 +61,7 @@ This is the starting state of mind by default if the partner has no event."),
         for categ in categs:
             if start:
                 if categ['exclusif']:
-                    cr.execute('delete from res_partner_category_rel \
+                    cr.execute('delete from res_partner_res_partner_category_rel \
                             where category_id=%s', (categ['categ_id'][0],))
 
             id = categ['id']
@@ -98,7 +81,7 @@ This is the starting state of mind by default if the partner has no event."),
                     partners.remove(pid)
 
             for partner_id in partners:
-                cr.execute('insert into res_partner_category_rel (category_id,partner_id) \
+                cr.execute('insert into res_partner_res_partner_category_rel (category_id,partner_id) \
                         values (%s,%s)', (categ['categ_id'][0], partner_id))
 
             self.write(cr, uid, [id], {'state':'not running', 'partner_id':0})
@@ -132,7 +115,7 @@ class crm_segmentation_line(osv.osv):
     _columns = {
         'name': fields.char('Rule Name', size=64, required=True),
         'segmentation_id': fields.many2one('crm.segmentation', 'Segmentation'),
-        'expr_name': fields.selection([('sale','Sale Amount'),('som','State of Mind'),\
+        'expr_name': fields.selection([('sale','Sale Amount'),
                         ('purchase','Purchase Amount')], 'Control Variable', size=64, required=True),
         'expr_operator': fields.selection([('<','<'),('=','='),('>','>')], 'Operator', required=True),
         'expr_value': fields.float('Value', required=True),
@@ -157,12 +140,7 @@ class crm_segmentation_line(osv.osv):
         for l in lst:
             cr.execute('select * from ir_module_module where name=%s and state=%s', ('account','installed'))
             if cr.fetchone():
-                if l['expr_name']=='som':
-                    datas = self.pool.get('crm.segmentation').read(cr, uid, [l['segmentation_id'][0]],
-                            ['som','som_interval','som_interval_max',\
-                             'som_interval_default', 'som_interval_decrease'])
-                    value = crm_operators.som(cr, uid, partner_id, datas[0])
-                elif l['expr_name']=='sale':
+                if l['expr_name']=='sale':
                     cr.execute('SELECT SUM(l.price_unit * l.quantity) ' \
                             'FROM account_invoice_line l, account_invoice i ' \
                             'WHERE (l.invoice_id = i.id) ' \

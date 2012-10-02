@@ -34,7 +34,8 @@ class account_vat_declaration(osv.osv_memory):
     }
 
     def _get_tax(self, cr, uid, context=None):
-        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        taxes = self.pool.get('account.tax.code').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
         return taxes and taxes[0] or False
 
     _defaults = {

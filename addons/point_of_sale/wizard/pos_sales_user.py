@@ -30,7 +30,7 @@ class pos_sale_user(osv.osv_memory):
     _columns = {
         'date_start': fields.date('Date Start', required=True),
         'date_end': fields.date('Date End', required=True),
-        'user_id': fields.many2many('res.users', 'sale_user_rel', 'user_id', 'uid', 'Salesman'),
+        'user_id': fields.many2many('res.users', 'sale_user_rel', 'user_id', 'uid', 'Salesperson'),
     }
 
     def print_report(self, cr, uid, ids, context=None):

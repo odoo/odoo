@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
         <record model="ir.actions.act_window" id="action_hr_evaluation_interview_board">
             <field name="name">Interview Requests</field>
             <field name="res_model">hr.evaluation.interview</field>
@@ -14,11 +15,10 @@
             <field name="name">board.hr.evaluation.form</field>
             <field name="model">board.board</field>
             <field name="inherit_id" ref="hr.board_hr_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <xpath expr="/form/board/column[1]" position="inside">
-                <action name="%(action_hr_evaluation_interview_board)d" string="Interview Requests"/>
-            </xpath>
+                <xpath expr="/form/board/column[2]" position="inside">
+                    <action name="%(action_hr_evaluation_interview_board)d" string="Interview Requests"/>
+                </xpath>
             </field>
         </record>
 

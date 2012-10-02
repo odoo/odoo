@@ -46,9 +46,9 @@ class report_custom(report_int):
         partner = user.company_id.partner_id
         result['info_name'] = user.company_id.name
         result['info_vatnum'] = partner.vat
-        if partner.address:
-            result['info_address'] = partner.address[0].street
-            result['info_address2'] = (partner.address[0].zip or '') + ' ' + (partner.address[0].city or '')
+        if partner:
+            result['info_address'] = partner.street
+            result['info_address2'] = (partner.zip or '') + ' ' + (partner.city or '')
         try:
             tmp_file = tempfile.mkstemp(".pdf")[1]
             try:

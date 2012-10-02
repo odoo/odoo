@@ -3,31 +3,31 @@
 # Portions of this file are under the following copyright and license:
 #
 #
-#   Copyright (c) 2003-2004 Danny Brewer 
-#   d29583@groovegarden.com 
-# 
-#   This library is free software; you can redistribute it and/or 
-#   modify it under the terms of the GNU Lesser General Public 
-#   License as published by the Free Software Foundation; either 
-#   version 2.1 of the License, or (at your option) any later version. 
-# 
-#   This library is distributed in the hope that it will be useful, 
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of 
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
-#   Lesser General Public License for more details. 
-# 
-#   You should have received a copy of the GNU Lesser General Public 
-#   License along with this library; if not, write to the Free Software 
-#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA 
-# 
-#   See:  http://www.gnu.org/licenses/lgpl.html 
+#   Copyright (c) 2003-2004 Danny Brewer
+#   d29583@groovegarden.com
 #
-# 
+#   This library is free software; you can redistribute it and/or
+#   modify it under the terms of the GNU Lesser General Public
+#   License as published by the Free Software Foundation; either
+#   version 2.1 of the License, or (at your option) any later version.
+#
+#   This library is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#   Lesser General Public License for more details.
+#
+#   You should have received a copy of the GNU Lesser General Public
+#   License along with this library; if not, write to the Free Software
+#   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307 USA
+#
+#   See:  http://www.gnu.org/licenses/lgpl.html
+#
+#
 # and other portions are under the following copyright and license:
 #
 #
 #    OpenERP, Open Source Management Solution>..
-#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>). 
+#    Copyright (C) 2004-2010 OpenERP SA (<http://openerp.com>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as published by
@@ -65,8 +65,6 @@ if __name__<>'package':
     database="report"
     uid = 3
 
-#
-#
 class SendtoServer(unohelper.Base, XJobExecutor):
     Kind = {
         'PDF' : 'pdf',
@@ -93,7 +91,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
 
         self.ids = self.sock.execute(database, uid, self.password, 'ir.module.module', 'search', [('name','=','base_report_designer'),('state', '=', 'installed')])
         if not len(self.ids):
-            ErrorDialog("Please Install base_report_designer module", "", "Module Uninstalled Error")
+            ErrorDialog("Please install base_report_designer module.", "", "Module Uninstalled Error!")
             exit(1)
 
         report_name = ""
@@ -172,8 +170,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
                             }
                         res = self.sock.execute(database, uid, self.password, 'ir.values' , 'create',rec )
                     else :
-                        ErrorDialog(" Report Name is all ready given !!!\n\n\n Please specify other Name","","Report Name")
-                        self.logobj.log_write('SendToServer',LOG_WARNING, ':Report name all ready given DB %s' % (database))
+                        ErrorDialog("This name is already used for another report.\nPlease try with another name.", "", "Error!")
+                        self.logobj.log_write('SendToServer',LOG_WARNING, ': report name already used DB %s' % (database))
                         self.win.endExecute()
                 except Exception,e:
                     import traceback,sys
@@ -205,8 +203,8 @@ class SendtoServer(unohelper.Base, XJobExecutor):
             self.logobj.log_write('SendToServer',LOG_INFO, ':Report %s successfully send using %s'%(params['name'],database))
             self.win.endExecute()
         else:
-            ErrorDialog("Either Report Name or Technical Name is blank !!!\nPlease specify appropriate Name","","Blank Field ERROR")
-            self.logobj.log_write('SendToServer',LOG_WARNING, ':Either Report Name or Technical Name is blank')
+            ErrorDialog("Either report name or technical name is empty.\nPlease specify an appropriate name.", "", "Error!")
+            self.logobj.log_write('SendToServer',LOG_WARNING, ': either report name or technical name is empty.')
             self.win.endExecute()
 
     def getID(self):

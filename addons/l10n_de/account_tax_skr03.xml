@@ -1,368 +1,368 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-	<data noupdate="True">  
-		<record model="account.tax.code.template" id="tax_code_USTVA_skr03">
-			<field name="name">Steuerkonten Umsatzsteuer SKR03 (Deutschland)</field>
-			<field name="code">USTVA</field>
-		</record>
-		<record model="account.tax.code.template" id="tax_code_B_skr03">
-			<field name="name">Bemessungsgrundlage</field>
-			<field name="code">B</field>
-			<field name="parent_id" ref="tax_code_USTVA_skr03"/>
-		</record>
-		<record model="account.tax.code.template" id="tax_code_83_skr03">
-			<field name="name">Verbleib. Umssatzst.-Vorausz. / Verbl. Übersch. - b. d. Betrag ein Minusz. voranstellen</field>
-			<field name="code">83</field>
-			<field name="parent_id" ref="tax_code_USTVA_skr03"/>
-		</record>
-		<record model="account.tax.code.template" id="tax_code_39_skr03">
-			<field name="name">Anrechn. (Abzug) d. festg. Sondervorausz. für Dauerfristverl. (nur auszuf. i. d. l. Voranm. d. Best. zeitr., i.d.R. Dezember)</field>
-			<field name="code">39</field>
-			<field name="parent_id" ref="tax_code_83_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_VST_skr03">
-			<field name="name">Abziehbare Vorsteuerbeträge</field>
-			<field name="code">VST</field>
-			<field name="parent_id" ref="tax_code_83_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_U_skr03">
-			<field name="name">Umsatzsteuer</field>
-			<field name="code">U</field>
-			<field name="parent_id" ref="tax_code_83_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BV_skr03">
-			<field name="name">Vorsteuer (dient lediglich der Verprobung)</field>
-			<field name="code">BV</field>
-			<field name="parent_id" ref="tax_code_B_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BU_skr03">
-			<field name="name">Umsatzsteuer</field>
-			<field name="code">BU</field>
-			<field name="parent_id" ref="tax_code_B_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BRV_skr03">
-			<field name="name">Rech. v.a. Unt. (§15 Ab.1 S.1 Nr.1), Leistg. i.S. §13a Ab.1 Nr.6 (§ 15 Ab.1 S.1 Nr.5) und i.g. Dreiecksgeschäfte (§25b Ab. 5)</field>
-			<field name="code">BRV</field>
-			<field name="parent_id" ref="tax_code_BV_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BAUS_skr03">
-			<field name="name">Einfuhren</field>
-			<field name="code">BAUS</field>
-			<field name="parent_id" ref="tax_code_BV_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_AST_skr03">
-			<field name="name">Andere Steuerbeträge</field>
-			<field name="code">AST</field>
-			<field name="parent_id" ref="tax_code_83_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_69_skr03">
-			<field name="name">In Rechn. unr. od. unber. ausg. (§14c) sow. Steuern, n. §4 Nr. 4a S. 1 B. a S. 2, §6a Ab. 4 S. 2, §17 Ab. 1 S. 6 o. §25b Ab. 2 gesch. werden</field>
-			<field name="code">69</field>
-			<field name="parent_id" ref="tax_code_AST_skr03"/>
-		</record>
-		<record model="account.tax.code.template" id="tax_code_67_skr03">
-			<field name="name">Vorsteuerb. a. Leist. i. S. d. § 13b Abs. 1 UStG (§ 15 Abs. 1 Satz 1 Nr. 4 UStG)</field>
-		</record>
-		<record model="account.tax.code.template" id="tax_code_66_skr03">
-			<field name="name">Vorsteuerb. a. Rechn. v. and. Untern. (§ 15 Abs. 1 S. 1 Nr. 1), a. Leist. i. S. d. § 13a Ab. 1 Nr. 6 (§ 15 Abs. 1 Satz 1 Nr. 5) u. a. i.g.Dreiecksgesch. (§ 25b Abs. 5 UStG)</field>
-			<field name="code">66</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_64_skr03">
-			<field name="name">Berichtigung des Vorsteuerabzugs (§ 15a UStG)</field>
-			<field name="code">64</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_63_skr03">
-			<field name="name">Vorsteuerbetr., die nach allgemeinen Durchschnittssätzen berechnet sind (§§ 23 und 23a UStG)</field>
-			<field name="code">63</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_62_skr03">
-			<field name="name">Entrichtete Einfuhrumsatzsteuer (§ 15 Abs. 1 Satz 1 Nr. 2 UStG)</field>
-			<field name="code">62</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_61_skr03">
-			<field name="name">Vorsteuerbetr. a. d. innergem. von Gegenständen (§ 15 Abs. 1 Satz 1 Nr. 3 UStG)</field>
-			<field name="code">61</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_59_skr03">
-			<field name="name">Vst. abz. f. i.g. Lief. neuer Fahrzeuge außerh. e. Unternehmens (§ 2a) sow. v. Kleinunt. i. S. d.  § 19 Ab. 1 (§ 15 Abs. 4a)</field>
-			<field name="code">59</field>
-			<field name="parent_id" ref="tax_code_VST_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ39_skr03">
-			<field name="name">Ergänzende Angaben zu Umsätzen </field>
-			<field name="code">UZ39</field>
-			<field name="parent_id" ref="tax_code_U_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ33_skr03">
-			<field name="name">Innergemeinschaftliche Erwerbe</field>
-			<field name="code">UZ33</field>
-			<field name="parent_id" ref="tax_code_U_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ19_skr03">
-			<field name="name">Lieferungen und sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
-			<field name="code">UZ19</field>
-			<field name="parent_id" ref="tax_code_U_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ46_skr03">
-			<field name="name">Umsätze, f. d. als Leistungsempf. die Steuer n. § 13b Abs. 2 UStG geschuld. wird</field>
-			<field name="code">BZ46</field>
-			<field name="parent_id" ref="tax_code_BU_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ39_skr03">
-			<field name="name">Ergänzende Angaben zu Umsätzen</field>
-			<field name="code">BZ39</field>
-			<field name="parent_id" ref="tax_code_BU_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ33_skr03">
-			<field name="name">Innergemeinschaftliche Erwerbe</field>
-			<field name="code">BZ33</field>
-			<field name="parent_id" ref="tax_code_BU_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ19_skr03">
-			<field name="name">Lieferungen u. sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
-			<field name="code">BZ19</field>
-			<field name="parent_id" ref="tax_code_BU_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BRV7_skr03">
-			<field name="name">L+L zum Steuersatz von 7 %</field>
-			<field name="code">BRV7</field>
-			<field name="parent_id" ref="tax_code_BRV_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BRV19_skr03">
-			<field name="name">L+L zum Steuersatz von 19 %</field>
-			<field name="code">BRV19</field>
-			<field name="parent_id" ref="tax_code_BRV_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BAUS7_skr03">
-			<field name="name">zum Steuersatz von 7 %</field>
-			<field name="code">BAUS7</field>
-			<field name="parent_id" ref="tax_code_BAUS_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BAUS19_skr03">
-			<field name="name">zum Steuersatz von 19 %</field>
-			<field name="code">BAUS19</field>
-			<field name="parent_id" ref="tax_code_BAUS_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_84_skr03">
-			<field name="name">Bauleistung. e. i. Inland ans. Untern. (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
-			<field name="code">84</field>
-			<field name="parent_id" ref="tax_code_BZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_73_skr03">
-			<field name="name">Liefer. sicherungsübereig. Gegenst. u. Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
-			<field name="code">73</field>
-			<field name="parent_id" ref="tax_code_BZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_60_skr03">
-			<field name="name">Steuerpfl. Umsätze i. S. d. § 13b Abs. 1 Satz 1 Nr. 1 bis 5 UStG, für d. der Leistungsempf. d. Steuer schuldet</field>
-			<field name="code">60</field>
-			<field name="parent_id" ref="tax_code_BZ39_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_52_skr03">
-			<field name="name">Leistungen e. i. Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
-			<field name="code">52</field>
-			<field name="parent_id" ref="tax_code_BZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_45_skr03">
-			<field name="name">Nicht steuerbare Umsätze (Leistungsort nicht im Inland)</field>
-			<field name="code">45</field>
-			<field name="parent_id" ref="tax_code_BZ39_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_42_skr03">
-			<field name="name">Lieferungen d. erst. Abnehmers b. innergemeinsch. Dreiecksgeschäften (§ 25b Abs. 2 UStG)</field>
-			<field name="code">42</field>
-			<field name="parent_id" ref="tax_code_BZ39_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ46_skr03">
-			<field name="name">Umsätze, f. d. a. Leistungsempf. d. Steuer n. § 13b Abs. 2 UStG geschuldet wird</field>
-			<field name="code">UZ46</field>
-			<field name="parent_id" ref="tax_code_UZ39_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ35_skr03">
-			<field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
-			<field name="code">UZ35</field>
-			<field name="parent_id" ref="tax_code_UZ33_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ26_skr03">
-			<field name="name">Steuerpfl. Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
-			<field name="code">UZ26</field>
-			<field name="parent_id" ref="tax_code_UZ19_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ35_skr03">
-			<field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
-			<field name="code">BZ35</field>
-			<field name="parent_id" ref="tax_code_BZ33_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ34_skr03">
-			<field name="name">Steuerfreie innergemeinschaftliche Erwerbe</field>
-			<field name="code">BZ34</field>
-			<field name="parent_id" ref="tax_code_BZ33_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ26_skr03">
-			<field name="name">Steuerpflichtige Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
-			<field name="code">BZ26</field>
-			<field name="parent_id" ref="tax_code_BZ19_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ24_skr03">
-			<field name="name">Steuerfreie Umsätze ohne Vorsteuerabzug</field>
-			<field name="code">BZ24</field>
-			<field name="parent_id" ref="tax_code_BZ19_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ20_skr03">
-			<field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
-			<field name="code">BZ20</field>
-			<field name="parent_id" ref="tax_code_BZ19_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_98_skr03">
-			<field name="name">zu anderen Steuersätzen</field>
-			<field name="code">98</field>
-			<field name="parent_id" ref="tax_code_UZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_96_skr03">
-			<field name="name">neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allg. Steuersatz</field>
-			<field name="code">96</field>
-			<field name="parent_id" ref="tax_code_UZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_95_skr03">
-			<field name="name">zu anderen Steuersätzen</field>
-			<field name="code">95</field>
-			<field name="parent_id" ref="tax_code_BZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_94_skr03">
-			<field name="name">neue Fahrzeuge v. Lieferern ohne USt-IdNr. z. allg. Steuersatz</field>
-			<field name="code">94</field>
-			<field name="parent_id" ref="tax_code_BZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_931_skr03">
-			<field name="name">zum Steuersatz von 7%</field>
-			<field name="code">931</field>
-			<field name="parent_id" ref="tax_code_UZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_93_skr03">
-			<field name="name">zum Steuersatz von 7%</field>
-			<field name="code">93</field>
-			<field name="parent_id" ref="tax_code_BZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_91_skr03">
-			<field name="name">Erwerbe nach § 4b UStG</field>
-			<field name="code">91</field>
-			<field name="parent_id" ref="tax_code_BZ34_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_891_skr03">
-			<field name="name">zum Steuersatz von 19 %</field>
-			<field name="code">891</field>
-			<field name="parent_id" ref="tax_code_UZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_89_skr03">
-			<field name="name">zum Steuersatz von 19 %</field>
-			<field name="code">89</field>
-			<field name="parent_id" ref="tax_code_BZ35_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_861_skr03">
-			<field name="name">zum Steuersatz von 7%</field>
-			<field name="code">861</field>
-			<field name="parent_id" ref="tax_code_UZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_86_skr03">
-			<field name="name">zum Steuersatz von 7%</field>
-			<field name="code">86</field>
-			<field name="parent_id" ref="tax_code_BZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_85_skr03">
-			<field name="name">Bauleistungen e. i. Inland ans. Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
-			<field name="code">85</field>
-			<field name="parent_id" ref="tax_code_UZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_811_skr03">
-			<field name="name">zum Steuersatz von 19 %</field>
-			<field name="code">811</field>
-			<field name="parent_id" ref="tax_code_UZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_81_skr03">
-			<field name="name">zum Steuersatz von 19 %</field>
-			<field name="code">81</field>
-			<field name="parent_id" ref="tax_code_BZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_74_skr03">
-			<field name="name">Lief. sicherungsüb. Gegenst. und Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
-			<field name="code">74</field>
-			<field name="parent_id" ref="tax_code_UZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_65_skr03">
-			<field name="name">Steuer inf. Wechsels d. Besteuerungsform sow. Nachsteuer a. verst. Anzahl. u. ä. wg. Steuersatzänderung</field>
-			<field name="code">65</field>
-			<field name="parent_id" ref="tax_code_UZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_53_skr03">
-			<field name="name">Leistungen eines im Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
-			<field name="code">53</field>
-			<field name="parent_id" ref="tax_code_UZ46_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_49_skr03">
-			<field name="name">neuer Fahrzeuge außerhalb eines Unternehmens (§ 2a UStG)</field>
-			<field name="code">49</field>
-			<field name="parent_id" ref="tax_code_BZ20_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_48_skr03">
-			<field name="name">Umsätze nach § 4 Nr. 8 bis 28 UStG</field>
-			<field name="code">48</field>
-			<field name="parent_id" ref="tax_code_BZ24_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_44_skr03">
-			<field name="name">neuer Fahrzeuge an Abnehmer ohne USt-IdNr</field>
-			<field name="code">44</field>
-			<field name="parent_id" ref="tax_code_BZ20_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_43_skr03">
-			<field name="name">Weitere steuerf. Umsätze m. Vorsteuerabz. (z.B. Ausfuhrlief., Umsätze nach § 4 Nr. 2 bis 7 UStG)</field>
-			<field name="code">43</field>
-			<field name="parent_id" ref="tax_code_BZ20_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_41_skr03">
-			<field name="name">Innergemeinsch. Lieferungen (§ 4 Nr. 1 Buchst. b UStG) an Abnehmer mit USt-IdNr</field>
-			<field name="code">41</field>
-			<field name="parent_id" ref="tax_code_BZ20_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_36_skr03">
-			<field name="name">zu anderen Steuersätzen</field>
-			<field name="code">36</field>
-			<field name="parent_id" ref="tax_code_UZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_35_skr03">
-			<field name="name">zu anderen Steuersätzen</field>
-			<field name="code">35</field>
-			<field name="parent_id" ref="tax_code_BZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_UZ30_skr03">
-			<field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
-			<field name="code">UZ30</field>
-			<field name="parent_id" ref="tax_code_UZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_BZ30_skr03">
-			<field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
-			<field name="code">BZ30</field>
-			<field name="parent_id" ref="tax_code_BZ26_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_80_skr03">
-			<field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
-			<field name="code">80</field>
-			<field name="parent_id" ref="tax_code_UZ30_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_77_skr03">
-			<field name="name">Lieferungen in das übrige Gemeinschaftsgebiet an Abnehmer mit Ust-IdNr.</field>
-			<field name="code">77</field>
-			<field name="parent_id" ref="tax_code_BZ30_skr03"/>
-			</record>
-		<record model="account.tax.code.template" id="tax_code_76_skr03">
-			<field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
-			<field name="code">76</field>
-			<field name="parent_id" ref="tax_code_BZ30_skr03"/>
-			</record>
+    <data noupdate="True">  
+        <record model="account.tax.code.template" id="tax_code_USTVA_skr03">
+            <field name="name">Steuerkonten Umsatzsteuer SKR03 (Deutschland)</field>
+            <field name="code">USTVA</field>
+        </record>
+        <record model="account.tax.code.template" id="tax_code_B_skr03">
+            <field name="name">Bemessungsgrundlage</field>
+            <field name="code">B</field>
+            <field name="parent_id" ref="tax_code_USTVA_skr03"/>
+        </record>
+        <record model="account.tax.code.template" id="tax_code_83_skr03">
+            <field name="name">Verbleib. Umssatzst.-Vorausz. / Verbl. Übersch. - b. d. Betrag ein Minusz. voranstellen</field>
+            <field name="code">83</field>
+            <field name="parent_id" ref="tax_code_USTVA_skr03"/>
+        </record>
+        <record model="account.tax.code.template" id="tax_code_39_skr03">
+            <field name="name">Anrechn. (Abzug) d. festg. Sondervorausz. für Dauerfristverl. (nur auszuf. i. d. l. Voranm. d. Best. zeitr., i.d.R. Dezember)</field>
+            <field name="code">39</field>
+            <field name="parent_id" ref="tax_code_83_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_VST_skr03">
+            <field name="name">Abziehbare Vorsteuerbeträge</field>
+            <field name="code">VST</field>
+            <field name="parent_id" ref="tax_code_83_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_U_skr03">
+            <field name="name">Umsatzsteuer</field>
+            <field name="code">U</field>
+            <field name="parent_id" ref="tax_code_83_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BV_skr03">
+            <field name="name">Vorsteuer (dient lediglich der Verprobung)</field>
+            <field name="code">BV</field>
+            <field name="parent_id" ref="tax_code_B_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BU_skr03">
+            <field name="name">Umsatzsteuer</field>
+            <field name="code">BU</field>
+            <field name="parent_id" ref="tax_code_B_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BRV_skr03">
+            <field name="name">Rech. v.a. Unt. (§15 Ab.1 S.1 Nr.1), Leistg. i.S. §13a Ab.1 Nr.6 (§ 15 Ab.1 S.1 Nr.5) und i.g. Dreiecksgeschäfte (§25b Ab. 5)</field>
+            <field name="code">BRV</field>
+            <field name="parent_id" ref="tax_code_BV_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BAUS_skr03">
+            <field name="name">Einfuhren</field>
+            <field name="code">BAUS</field>
+            <field name="parent_id" ref="tax_code_BV_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_AST_skr03">
+            <field name="name">Andere Steuerbeträge</field>
+            <field name="code">AST</field>
+            <field name="parent_id" ref="tax_code_83_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_69_skr03">
+            <field name="name">In Rechn. unr. od. unber. ausg. (§14c) sow. Steuern, n. §4 Nr. 4a S. 1 B. a S. 2, §6a Ab. 4 S. 2, §17 Ab. 1 S. 6 o. §25b Ab. 2 gesch. werden</field>
+            <field name="code">69</field>
+            <field name="parent_id" ref="tax_code_AST_skr03"/>
+        </record>
+        <record model="account.tax.code.template" id="tax_code_67_skr03">
+            <field name="name">Vorsteuerb. a. Leist. i. S. d. § 13b Abs. 1 UStG (§ 15 Abs. 1 Satz 1 Nr. 4 UStG)</field>
+        </record>
+        <record model="account.tax.code.template" id="tax_code_66_skr03">
+            <field name="name">Vorsteuerb. a. Rechn. v. and. Untern. (§ 15 Abs. 1 S. 1 Nr. 1), a. Leist. i. S. d. § 13a Ab. 1 Nr. 6 (§ 15 Abs. 1 Satz 1 Nr. 5) u. a. i.g.Dreiecksgesch. (§ 25b Abs. 5 UStG)</field>
+            <field name="code">66</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_64_skr03">
+            <field name="name">Berichtigung des Vorsteuerabzugs (§ 15a UStG)</field>
+            <field name="code">64</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_63_skr03">
+            <field name="name">Vorsteuerbetr., die nach allgemeinen Durchschnittssätzen berechnet sind (§§ 23 und 23a UStG)</field>
+            <field name="code">63</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_62_skr03">
+            <field name="name">Entrichtete Einfuhrumsatzsteuer (§ 15 Abs. 1 Satz 1 Nr. 2 UStG)</field>
+            <field name="code">62</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_61_skr03">
+            <field name="name">Vorsteuerbetr. a. d. innergem. von Gegenständen (§ 15 Abs. 1 Satz 1 Nr. 3 UStG)</field>
+            <field name="code">61</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_59_skr03">
+            <field name="name">Vst. abz. f. i.g. Lief. neuer Fahrzeuge außerh. e. Unternehmens (§ 2a) sow. v. Kleinunt. i. S. d.  § 19 Ab. 1 (§ 15 Abs. 4a)</field>
+            <field name="code">59</field>
+            <field name="parent_id" ref="tax_code_VST_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ39_skr03">
+            <field name="name">Ergänzende Angaben zu Umsätzen </field>
+            <field name="code">UZ39</field>
+            <field name="parent_id" ref="tax_code_U_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ33_skr03">
+            <field name="name">Innergemeinschaftliche Erwerbe</field>
+            <field name="code">UZ33</field>
+            <field name="parent_id" ref="tax_code_U_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ19_skr03">
+            <field name="name">Lieferungen und sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
+            <field name="code">UZ19</field>
+            <field name="parent_id" ref="tax_code_U_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ46_skr03">
+            <field name="name">Umsätze, f. d. als Leistungsempf. die Steuer n. § 13b Abs. 2 UStG geschuld. wird</field>
+            <field name="code">BZ46</field>
+            <field name="parent_id" ref="tax_code_BU_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ39_skr03">
+            <field name="name">Ergänzende Angaben zu Umsätzen</field>
+            <field name="code">BZ39</field>
+            <field name="parent_id" ref="tax_code_BU_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ33_skr03">
+            <field name="name">Innergemeinschaftliche Erwerbe</field>
+            <field name="code">BZ33</field>
+            <field name="parent_id" ref="tax_code_BU_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ19_skr03">
+            <field name="name">Lieferungen u. sonst. Leistungen (einschl. unentgeltl. Wertabgaben)</field>
+            <field name="code">BZ19</field>
+            <field name="parent_id" ref="tax_code_BU_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BRV7_skr03">
+            <field name="name">L+L zum Steuersatz von 7 %</field>
+            <field name="code">BRV7</field>
+            <field name="parent_id" ref="tax_code_BRV_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BRV19_skr03">
+            <field name="name">L+L zum Steuersatz von 19 %</field>
+            <field name="code">BRV19</field>
+            <field name="parent_id" ref="tax_code_BRV_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BAUS7_skr03">
+            <field name="name">zum Steuersatz von 7 %</field>
+            <field name="code">BAUS7</field>
+            <field name="parent_id" ref="tax_code_BAUS_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BAUS19_skr03">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="code">BAUS19</field>
+            <field name="parent_id" ref="tax_code_BAUS_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_84_skr03">
+            <field name="name">Bauleistung. e. i. Inland ans. Untern. (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
+            <field name="code">84</field>
+            <field name="parent_id" ref="tax_code_BZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_73_skr03">
+            <field name="name">Liefer. sicherungsübereig. Gegenst. u. Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
+            <field name="code">73</field>
+            <field name="parent_id" ref="tax_code_BZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_60_skr03">
+            <field name="name">Steuerpfl. Umsätze i. S. d. § 13b Abs. 1 Satz 1 Nr. 1 bis 5 UStG, für d. der Leistungsempf. d. Steuer schuldet</field>
+            <field name="code">60</field>
+            <field name="parent_id" ref="tax_code_BZ39_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_52_skr03">
+            <field name="name">Leistungen e. i. Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
+            <field name="code">52</field>
+            <field name="parent_id" ref="tax_code_BZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_45_skr03">
+            <field name="name">Nicht steuerbare Umsätze (Leistungsort nicht im Inland)</field>
+            <field name="code">45</field>
+            <field name="parent_id" ref="tax_code_BZ39_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_42_skr03">
+            <field name="name">Lieferungen d. erst. Abnehmers b. innergemeinsch. Dreiecksgeschäften (§ 25b Abs. 2 UStG)</field>
+            <field name="code">42</field>
+            <field name="parent_id" ref="tax_code_BZ39_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ46_skr03">
+            <field name="name">Umsätze, f. d. a. Leistungsempf. d. Steuer n. § 13b Abs. 2 UStG geschuldet wird</field>
+            <field name="code">UZ46</field>
+            <field name="parent_id" ref="tax_code_UZ39_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ35_skr03">
+            <field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+            <field name="code">UZ35</field>
+            <field name="parent_id" ref="tax_code_UZ33_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ26_skr03">
+            <field name="name">Steuerpfl. Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
+            <field name="code">UZ26</field>
+            <field name="parent_id" ref="tax_code_UZ19_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ35_skr03">
+            <field name="name">Steuerpflichtige innergemeinschaftliche Erwerbe</field>
+            <field name="code">BZ35</field>
+            <field name="parent_id" ref="tax_code_BZ33_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ34_skr03">
+            <field name="name">Steuerfreie innergemeinschaftliche Erwerbe</field>
+            <field name="code">BZ34</field>
+            <field name="parent_id" ref="tax_code_BZ33_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ26_skr03">
+            <field name="name">Steuerpflichtige Umsätze (Lief. u. sonst. Leist. einschl. unentgeltl. Wertabgaben)</field>
+            <field name="code">BZ26</field>
+            <field name="parent_id" ref="tax_code_BZ19_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ24_skr03">
+            <field name="name">Steuerfreie Umsätze ohne Vorsteuerabzug</field>
+            <field name="code">BZ24</field>
+            <field name="parent_id" ref="tax_code_BZ19_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ20_skr03">
+            <field name="name">Steuerfreie Umsätze mit Vorsteuerabzug</field>
+            <field name="code">BZ20</field>
+            <field name="parent_id" ref="tax_code_BZ19_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_98_skr03">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="code">98</field>
+            <field name="parent_id" ref="tax_code_UZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_96_skr03">
+            <field name="name">neuer Fahrzeuge von Lieferern ohne USt-IdNr. zum allg. Steuersatz</field>
+            <field name="code">96</field>
+            <field name="parent_id" ref="tax_code_UZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_95_skr03">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="code">95</field>
+            <field name="parent_id" ref="tax_code_BZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_94_skr03">
+            <field name="name">neue Fahrzeuge v. Lieferern ohne USt-IdNr. z. allg. Steuersatz</field>
+            <field name="code">94</field>
+            <field name="parent_id" ref="tax_code_BZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_931_skr03">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="code">931</field>
+            <field name="parent_id" ref="tax_code_UZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_93_skr03">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="code">93</field>
+            <field name="parent_id" ref="tax_code_BZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_91_skr03">
+            <field name="name">Erwerbe nach § 4b UStG</field>
+            <field name="code">91</field>
+            <field name="parent_id" ref="tax_code_BZ34_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_891_skr03">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="code">891</field>
+            <field name="parent_id" ref="tax_code_UZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_89_skr03">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="code">89</field>
+            <field name="parent_id" ref="tax_code_BZ35_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_861_skr03">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="code">861</field>
+            <field name="parent_id" ref="tax_code_UZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_86_skr03">
+            <field name="name">zum Steuersatz von 7%</field>
+            <field name="code">86</field>
+            <field name="parent_id" ref="tax_code_BZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_85_skr03">
+            <field name="name">Bauleistungen e. i. Inland ans. Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 4 UStG)</field>
+            <field name="code">85</field>
+            <field name="parent_id" ref="tax_code_UZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_811_skr03">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="code">811</field>
+            <field name="parent_id" ref="tax_code_UZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_81_skr03">
+            <field name="name">zum Steuersatz von 19 %</field>
+            <field name="code">81</field>
+            <field name="parent_id" ref="tax_code_BZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_74_skr03">
+            <field name="name">Lief. sicherungsüb. Gegenst. und Umsätze, d. u. d. GrEStG fallen (§ 13b Abs. 1 Satz 1 Nr. 2 und 3 UStG)</field>
+            <field name="code">74</field>
+            <field name="parent_id" ref="tax_code_UZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_65_skr03">
+            <field name="name">Steuer inf. Wechsels d. Besteuerungsform sow. Nachsteuer a. verst. Anzahl. u. ä. wg. Steuersatzänderung</field>
+            <field name="code">65</field>
+            <field name="parent_id" ref="tax_code_UZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_53_skr03">
+            <field name="name">Leistungen eines im Ausland ansässigen Unternehmers (§ 13b Abs. 1 Satz 1 Nr. 1 und 5 UStG)</field>
+            <field name="code">53</field>
+            <field name="parent_id" ref="tax_code_UZ46_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_49_skr03">
+            <field name="name">neuer Fahrzeuge außerhalb eines Unternehmens (§ 2a UStG)</field>
+            <field name="code">49</field>
+            <field name="parent_id" ref="tax_code_BZ20_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_48_skr03">
+            <field name="name">Umsätze nach § 4 Nr. 8 bis 28 UStG</field>
+            <field name="code">48</field>
+            <field name="parent_id" ref="tax_code_BZ24_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_44_skr03">
+            <field name="name">neuer Fahrzeuge an Abnehmer ohne USt-IdNr</field>
+            <field name="code">44</field>
+            <field name="parent_id" ref="tax_code_BZ20_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_43_skr03">
+            <field name="name">Weitere steuerf. Umsätze m. Vorsteuerabz. (z.B. Ausfuhrlief., Umsätze nach § 4 Nr. 2 bis 7 UStG)</field>
+            <field name="code">43</field>
+            <field name="parent_id" ref="tax_code_BZ20_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_41_skr03">
+            <field name="name">Innergemeinsch. Lieferungen (§ 4 Nr. 1 Buchst. b UStG) an Abnehmer mit USt-IdNr</field>
+            <field name="code">41</field>
+            <field name="parent_id" ref="tax_code_BZ20_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_36_skr03">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="code">36</field>
+            <field name="parent_id" ref="tax_code_UZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_35_skr03">
+            <field name="name">zu anderen Steuersätzen</field>
+            <field name="code">35</field>
+            <field name="parent_id" ref="tax_code_BZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_UZ30_skr03">
+            <field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
+            <field name="code">UZ30</field>
+            <field name="parent_id" ref="tax_code_UZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_BZ30_skr03">
+            <field name="name">Umsätze land- und forstwirtschaftlicher Betrieb nach § 24 UStG</field>
+            <field name="code">BZ30</field>
+            <field name="parent_id" ref="tax_code_BZ26_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_80_skr03">
+            <field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
+            <field name="code">80</field>
+            <field name="parent_id" ref="tax_code_UZ30_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_77_skr03">
+            <field name="name">Lieferungen in das übrige Gemeinschaftsgebiet an Abnehmer mit Ust-IdNr.</field>
+            <field name="code">77</field>
+            <field name="parent_id" ref="tax_code_BZ30_skr03"/>
+            </record>
+        <record model="account.tax.code.template" id="tax_code_76_skr03">
+            <field name="name">Umsätze, f. d. e. Steuer n. § 24 UStG zu entrichten ist (Sägewerkserz., Getränke und alkohol. Flüssigk., z.B. Wein)</field>
+            <field name="code">76</field>
+            <field name="parent_id" ref="tax_code_BZ30_skr03"/>
+            </record>
 
    </data>
 </openerp>

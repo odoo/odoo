@@ -4,6 +4,7 @@
 
     <record id="group_account_payment" model="res.groups">
         <field name="name">Accounting / Payments</field>
+        <field name="users" eval="[(4, ref('base.user_root'))]"/>
     </record>
     <record id="account.group_account_invoice" model="res.groups">
         <field name="implied_ids" eval="[(4, ref('group_account_payment'))]"/>

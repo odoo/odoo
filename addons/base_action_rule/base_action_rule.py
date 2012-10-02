@@ -24,6 +24,7 @@ from tools.translate import _
 from datetime import datetime
 from datetime import timedelta
 from tools.safe_eval import safe_eval
+from tools import ustr
 import pooler
 import re
 import time
@@ -36,7 +37,7 @@ def get_datetime(date_field):
     date_split = date_field.split(' ')
     if len(date_split) == 1:
         date_field = date_split[0] + " 00:00:00"
-   
+
     return datetime.strptime(date_field[:19], '%Y-%m-%d %H:%M:%S')
 
 
@@ -94,7 +95,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_user_id':  fields.many2one('res.users', 'Responsible'),
         'trg_partner_id': fields.many2one('res.partner', 'Partner'),
         'trg_partner_categ_id': fields.many2one('res.partner.category', 'Partner Category'),
-        'trg_state_from': fields.selection(_state_get, 'State', size=16),
+        'trg_state_from': fields.selection(_state_get, 'Status', size=16),
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
 
         'act_method': fields.char('Call Object Method', size=64),
@@ -184,7 +185,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
                 self.post_action(cr, uid, [new_id], model, context=context)
             return new_id
         return wrapper
-    
+
     def _write(self, old_write, model, context=None):
         """
         Return a wrapper around `old_write` calling both `old_write` and
@@ -291,7 +292,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
             'object_description': hasattr(obj, 'description') and obj.description or False,
             'object_user': hasattr(obj, 'user_id') and (obj.user_id and obj.user_id.name) or '/',
             'object_user_email': hasattr(obj, 'user_id') and (obj.user_id and \
-                                     obj.user_id.user_email) or '/',
+                                     obj.user_id.email) or '/',
             'object_user_phone': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and \
                                      obj.partner_address_id.phone) or '/',
             'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/',
@@ -301,33 +302,27 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return self.format_body(body % data)
 
     def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
-        """ send email
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param email: pass the emails
-            @param emailfrom: Pass name the email From else False
-            @param context: A standard dictionary for contextual values """
-
         if not emailfrom:
-            emailfrom = tools.config.get('email_from', False)
-
-        if context is None:
-            context = {}
-
-        mail_message = self.pool.get('mail.message')
+            emailfrom = tools.config.get('email_from')
         body = self.format_mail(obj, body)
-        if not emailfrom:
-            if hasattr(obj, 'user_id') and obj.user_id and obj.user_id.user_email:
-                emailfrom = obj.user_id.user_email
-
-        name = '[%d] %s' % (obj.id, tools.ustr(obj.name))
+        if not emailfrom and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
+            emailfrom = obj.user_id.email
         emailfrom = tools.ustr(emailfrom)
         reply_to = emailfrom
         if not emailfrom:
             raise osv.except_osv(_('Error!'),
-                    _("No E-Mail ID Found for your Company address!"))
-        return mail_message.schedule_with_attach(cr, uid, emailfrom, emails, name, body, model='base.action.rule', reply_to=reply_to, res_id=obj.id)
+                                 _("Missing default email address or missing email on responsible user"))
+        return self.pool.get('mail.mail').create(cr, uid,
+                {   'email_from': emailfrom,
+                    'email_to': emails.join(','),
+                    'reply_to': reply_to,
+                    'state': 'outgoing',
+                    'subject': '[%d] %s' % (obj.id, tools.ustr(obj.name)),
+                    'body_html': '<pre>%s</pre>' % body,
+                    'res_id': obj.id,
+                    'model': obj._table_name,
+                    'auto_delete': True
+                }, context=context)
 
 
     def do_check(self, cr, uid, action, obj, context=None):
@@ -369,8 +364,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         reg_name = action.regex_name
         result_name = True
         if reg_name:
-            ptrn = re.compile(str(reg_name))
-            _result = ptrn.search(str(obj.name))
+            ptrn = re.compile(ustr(reg_name))
+            _result = ptrn.search(ustr(obj.name))
             if not _result:
                 result_name = False
         regex_n = not reg_name or result_name
@@ -418,7 +413,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         emails = []
         if hasattr(obj, 'user_id') and action.act_mail_to_user:
             if obj.user_id:
-                emails.append(obj.user_id.user_email)
+                emails.append(obj.user_id.email)
 
         if action.act_mail_to_watchers:
             emails += (action.act_email_cc or '').split(',')
@@ -437,11 +432,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
         if len(emails) and action.act_mail_body:
             emails = list(set(emails))
             email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
-
-            def to_email(text):
-                return re.findall(r'([^ ,<@]+@[^> ,]+)', text or '')
-            emails = to_email(','.join(filter(None, emails)))
-            email_froms = to_email(email_from)
+            emails = tools.email_split(','.join(filter(None, emails)))
+            email_froms = tools.email_split(email_from)
             if email_froms:
                 self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
         return True
@@ -489,7 +481,7 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return True
 
     _constraints = [
-        (_check_mail, 'Error: The mail is not well formated', ['act_mail_body']),
+        (_check_mail, 'Error ! The mail is not well formated.', ['act_mail_body']),
     ]
 
 base_action_rule()

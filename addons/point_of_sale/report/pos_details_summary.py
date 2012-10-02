@@ -69,13 +69,6 @@ class pos_details_summary(report_sxw.rml_parse):
                                     0.0 )
 
     def _get_payments(self, objects):
-#        gift_journal_id = None
-#        if ignore_gift:
-#            config_journal_ids = self.pool.get("pos.config.journal").search(self.cr, self.uid, [('code', '=', 'GIFT')])
-#            if len(config_journal_ids):
-#                config_journal = self.pool.get("pos.config.journal").browse(self.cr, self.uid, config_journal_ids, {})[0]
-#                gift_journal_id = config_journal.journal_id.id
-
         result = {}
         for obj in objects:
             for statement in obj.statement_ids:

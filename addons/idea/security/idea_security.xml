@@ -6,11 +6,6 @@
         <field name="name">User</field>
         <field name="category_id" ref="base.module_category_tools"/>
     </record>
-    <record model="res.groups" id="base.group_tool_manager">
-        <field name="name">Manager</field>
-        <field name="category_id" ref="base.module_category_tools"/>
-        <field name="implied_ids" eval="[(4, ref('base.group_tool_user'))]"/>
-    </record>
 
 </data>
 </openerp>

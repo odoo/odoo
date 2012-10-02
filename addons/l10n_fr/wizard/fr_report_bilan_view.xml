@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <openerp>
     <data>
 
         <record id="bilan_report_view" model="ir.ui.view">
             <field name="name">Bilan Report</field>
             <field name="model">account.bilan.report</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            	<form string="Bilan Report">
-	               <field name="fiscalyear_id"/>
-	               <separator colspan="4"/>
-                    <group colspan="4" col="6">
-                        <button special="cancel" string="Cancel" icon="gtk-cancel"/>
-                        <button name="print_bilan_report" string="Print" type="object" icon="gtk-ok"/>
-                    </group>
-	             </form>
+                <form string="Bilan Report" version="7.0">
+                   <group>
+                        <field name="fiscalyear_id"/>
+                   </group>
+                   <footer>
+                        <button name="print_bilan_report" string="Print" type="object" class="oe_highlight"  />
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel" />
+                   </footer>
+                 </form>
             </field>
         </record>
 

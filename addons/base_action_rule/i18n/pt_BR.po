@@ -8,14 +8,15 @@ msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2011-01-21 15:26+0000\n"
-"Last-Translator: Emerson <Unknown>\n"
+"PO-Revision-Date: 2012-07-28 14:59+0000\n"
+"Last-Translator: Fábio Martinelli - http://zupy.com.br "
+"<webmaster@guaru.net>\n"
 "Language-Team: Brazilian Portuguese <pt_BR@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 07:05+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:39+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_user:0
@@ -38,7 +39,7 @@ msgstr "Categoria do Parceiro"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_watchers:0
 msgid "Mail to Watchers (CC)"
-msgstr ""
+msgstr "Email para Observadores (CC)"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_to:0
@@ -53,12 +54,12 @@ msgstr "Objeto"
 #. module: base_action_rule
 #: field:base.action.rule,act_mail_to_email:0
 msgid "Mail to these Emails"
-msgstr ""
+msgstr "Enviar para estes Emails"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_state:0
 msgid "Set State to"
-msgstr ""
+msgstr "Mudar Situação para"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_email_from:0
@@ -121,7 +122,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Partner"
-msgstr ""
+msgstr "Condições no Modelo de Parceiro"
 
 #. module: base_action_rule
 #: selection:base.action.rule,trg_date_type:0
@@ -145,8 +146,8 @@ msgstr "Lembretes por Email"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
-msgid "Special Keywords to Be Used in The Body"
-msgstr ""
+msgid "Special Keywords to be Used in the Body"
+msgstr "Palavras Chave especiais para ser Usadas no Corpo"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_state_from:0
@@ -161,16 +162,21 @@ msgid ""
 "specific sales team, or an opportunity which still has status pending after "
 "14 days might trigger an automatic reminder email."
 msgstr ""
+"Use ações automatizadas para disparar automaticamente as ações para várias "
+"telas. Exemplo: um prospecto criado por um usuário específico pode ser "
+"definido automaticamente para uma equipe de vendas específica, ou uma "
+"oportunidade que ainda está pendente após 14 dias pode enviar um e-mail de "
+"lembrete automáticamente."
 
 #. module: base_action_rule
 #: help:base.action.rule,act_mail_to_email:0
 msgid "Email-id of the persons whom mail is to be sent"
-msgstr ""
+msgstr "Email das pessoas para quem o email será enviado"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Action Rule"
-msgstr ""
+msgstr "Ações Automáticas"
 
 #. module: base_action_rule
 #: view:base.action.rule:0
@@ -200,7 +206,7 @@ msgstr "%(object_id)s = Objeto ID"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Delay After Trigger Date"
-msgstr ""
+msgstr "Atraso depois da Data de Disparo"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_attach:0
@@ -318,6 +324,9 @@ msgid ""
 "need a delay before the trigger date, like sending a reminder 15 minutes "
 "before a meeting."
 msgstr ""
+"Atraso depois da Data de Disparo, você pode colocar um número negativo. Se "
+"você precisar de um atraso antes da data de disparo, como o envio de um "
+"lembrete 15 minutos antes de uma reunião."
 
 #. module: base_action_rule
 #: field:base.action.rule,active:0
@@ -327,8 +336,8 @@ msgstr "Ativo"
 #. module: base_action_rule
 #: code:addons/base_action_rule/base_action_rule.py:329
 #, python-format
-msgid "No E-Mail ID Found for your Company address!"
-msgstr "Nenhum ID de Email foi encontrado para o endereço da empresa!"
+msgid "No Email ID Found for your Company address!"
+msgstr "Email não encontrado para o endereço de sua Empresa!"
 
 #. module: base_action_rule
 #: field:base.action.rule,act_remind_user:0
@@ -449,7 +458,7 @@ msgstr "Adionar Em Cópia (CC)"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Model Fields"
-msgstr ""
+msgstr "Condições no Campo de Modelo"
 
 #. module: base_action_rule
 #: model:ir.actions.act_window,name:base_action_rule.base_action_rule_act
@@ -465,7 +474,7 @@ msgstr "Ação de Servidor"
 #. module: base_action_rule
 #: field:base.action.rule,regex_name:0
 msgid "Regex on Resource Name"
-msgstr ""
+msgstr "Regex no Nome do Recurso"
 
 #. module: base_action_rule
 #: help:base.action.rule,act_remind_attach:0
@@ -479,7 +488,7 @@ msgstr ""
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on Timing"
-msgstr ""
+msgstr "Condições de Tempo"
 
 #. module: base_action_rule
 #: field:base.action.rule,sequence:0
@@ -497,11 +506,13 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the rule "
 "without removing it."
 msgstr ""
+"Se o campo ativo é definido como False, ele permitirá que você esconda a "
+"regra sem removê-lo."
 
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "%(object_user)s = Responsible name"
-msgstr ""
+msgstr "%(object_user)s = Nome do Responsável"
 
 #. module: base_action_rule
 #: field:base.action.rule,create_date:0
@@ -511,13 +522,20 @@ msgstr "Criar Data"
 #. module: base_action_rule
 #: view:base.action.rule:0
 msgid "Conditions on States"
-msgstr ""
+msgstr "Condições nas Situações"
 
 #. module: base_action_rule
 #: field:base.action.rule,trg_date_type:0
 msgid "Trigger Date"
 msgstr "Data de Disparo"
 
+#, python-format
+#~ msgid "No E-Mail ID Found for your Company address!"
+#~ msgstr "Nenhum ID de Email foi encontrado para o endereço da empresa!"
+
 #~ msgid "This module allows to implement action rules for any object."
 #~ msgstr ""
 #~ "Este módulo permite implementar regras de ações para qualquer objeto."
+
+#~ msgid "Special Keywords to Be Used in The Body"
+#~ msgstr "Palavras-chave especiais a serem utilizadas no corpo"

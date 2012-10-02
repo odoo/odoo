@@ -54,7 +54,7 @@ class event_moodle(osv.osv):
         """
         moodle_config_wiz_ids = self.search(cr, uid, [], context=context)
         if not moodle_config_wiz_ids:
-            raise osv.except_osv(('Error!'),("Configure your moodle connexion before"))
+            raise osv.except_osv(_('Error!'),_("First configure your moodle connection."))
         return moodle_config_wiz_ids[0]
 
     def make_url(self, cr, uid, ids, context=None):
@@ -101,6 +101,8 @@ class event_moodle(osv.osv):
         """
         #connect to moodle
         url = self.browse(cr, uid, id, context=context).url
+        if not url:
+            raise osv.except_osv(_('Error!'),_("You must configure your moodle connection."))
         sock = xmlrpclib.ServerProxy(url)
         return sock.core_course_create_courses(courses)
 
@@ -132,7 +134,7 @@ class event_moodle(osv.osv):
         """
         if email:
             if (email.count('@') != 1 and email.count('.') < 1):
-                raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong") % (email))
+                raise osv.except_osv(_('Error!'),_("Your email '%s' is wrong.") % (email))
 
     def make_username(self, username, response_courses):
         """
@@ -177,7 +179,7 @@ class event_event(osv.osv):
                 'shortname': '',
                 'startdate': date,
                 'summary': event.note,
-                'categoryid':1, #the category hardcoded is 'Miscelleanous'
+                'categoryid':1, #the category hardcoded is 'Miscellaneous'
                 }]
             #create a course in moodle and keep the id
             response_courses = moodle_pool.create_moodle_courses(cr, uid, moodle_config_wiz_id, dic_courses, context=context)

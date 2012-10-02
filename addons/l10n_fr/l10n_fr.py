@@ -29,7 +29,6 @@ class l10n_fr_report(osv.osv):
         'name': fields.char('Name', size=128),
         'line_ids': fields.one2many('l10n.fr.line', 'report_id', 'Lines'),
     }
-
     _sql_constraints = [
         ('code_uniq', 'unique (code)','The code report must be unique !')
     ]

@@ -2,34 +2,28 @@
 <openerp>
     <data>
 
-    	<record id="view_project_gtd_empty" model="ir.ui.view">
+        <record id="view_project_gtd_empty" model="ir.ui.view">
             <field name="name">Empty Timebox</field>
             <field name="model">project.timebox.empty</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-              	<form string="Empty Timebox">
-              		<group width="345" height="70">
-              			<label string="Timebox Empty Process Completed Successfully." />
-              			    <newline/>
-              			    <separator colspan="4"/>
-		            		<button icon="gtk-ok" special="cancel" string="_Ok" colspan="1"/><label colspan="1"/>
-		          	</group>
-			  	</form>
+                <form string="Empty Timebox" version="7.0">
+                    <label string="Timebox Empty Process Completed Successfully." />
+                </form>
             </field>
-		</record>
+        </record>
 
-		<record id="action_project_gtd_empty" model="ir.actions.act_window">
-	           <field name="name">Empty Timebox</field>
-	           <field name="type">ir.actions.act_window</field>
-	           <field name="res_model">project.timebox.empty</field>
-	           <field name="view_type">form</field>
-	           <field name="view_mode">form</field>
-	           <field name="view_id" ref="view_project_gtd_empty"/>
-		       <field name="context">{'record_id' : active_id}</field>
-	           <field name="target">new</field>
-    	</record>
+        <record id="action_project_gtd_empty" model="ir.actions.act_window">
+               <field name="name">Empty Timebox</field>
+               <field name="type">ir.actions.act_window</field>
+               <field name="res_model">project.timebox.empty</field>
+               <field name="view_type">form</field>
+               <field name="view_mode">form</field>
+               <field name="view_id" ref="view_project_gtd_empty"/>
+               <field name="context">{'record_id' : active_id}</field>
+               <field name="target">new</field>
+        </record>
 
-    	<record model="ir.values" id="project_gtd_empty_values">
+        <record model="ir.values" id="project_gtd_empty_values">
             <field name="model_id" ref="model_project_gtd_timebox" />
             <field name="name">Empty Timebox</field>
             <field name="key2">client_action_multi</field>

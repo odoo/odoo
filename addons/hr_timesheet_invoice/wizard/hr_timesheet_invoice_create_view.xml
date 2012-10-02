@@ -5,29 +5,28 @@
         <record id="view_hr_timesheet_invoice_create" model="ir.ui.view">
             <field name="name">hr.timesheet.invoice.create.form</field>
             <field name="model">hr.timesheet.invoice.create</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-            <form string="Create Invoice">
-                <notebook colspan="4">
+            <form string="Create Invoice" version="7.0">
+                <notebook>
                     <page string="Billing Data">
-                       <group col="4" colspan="4">
-                           <separator string="Do you want to show details of work in invoice ?" colspan="4"/>
-                                <field name="date"/>
-                                <field name="time"/>
-                                <field name="name"/>
-                                <field name="price" groups="base.group_extended"/>
-                           </group>
-                        <group col="2" colspan="4" groups="base.group_extended">
-                            <separator string="Force to use a specific product" colspan="4"/>
-                            <field name="product"/>
-                        </group>
+                       <group>
+                       <group string="Do you want to show details of work in invoice?">
+                           <field name="date"/>
+                           <field name="time"/>
+                           <field name="name"/>
+                           <field name="price"/>
+                       </group>
+                       <group  string="Force to use a specific product">
+                           <field name="product"/>
+                       </group>
+                       </group>
                     </page>
                 </notebook>
-                <separator colspan="4"/>
-                <group col="2" colspan="4">
-                    <button special="cancel"  string="Cancel" icon='gtk-cancel'/>
-                    <button name="do_create" string="Create Invoices" colspan="1" type="object" icon="terp-gtk-go-back-rtl"/>
-                </group>
+                <footer>
+                    <button name="do_create" string="Create Invoices" type="object" class="oe_highlight"/>
+                    or
+                    <button string="Cancel" class="oe_link" special="cancel" />
+                </footer>
             </form>
             </field>
         </record>

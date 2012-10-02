@@ -1,7 +1,7 @@
 -
   In Order to test process of Recruitment,
 -
-  Applicant interested in job position. so He send resume by email.
+  An applicant is interested in the job position. So he sends a resume by email.
 -
   !python {model: mail.thread}: |
     import addons
@@ -9,39 +9,47 @@
     request_message = request_file.read()
     self.message_process(cr, uid, 'hr.applicant', request_message)
 -
-  After getting the mail, I check details of new applicant.
+  After getting the mail, I check the details of the new applicant.
 -
   !python {model: hr.applicant}: |
     applicant_ids = self.search(cr, uid, [('email_from','=', 'Mr. Richard Anderson <Richard_Anderson@yahoo.com>')])
     assert applicant_ids, "Applicant is not created after getting the mail"
     applicant = self.browse(cr, uid, applicant_ids[0], context=context)
     resume_ids = self.pool.get('ir.attachment').search(cr, uid, [('datas_fname','=','resume.doc'),('res_model','=',self._name),('res_id','=',applicant.id)])
-    assert applicant.name == "Application for the post of Jr.application Programmer.", "Subject does not match"
-    assert applicant.state == "draft"
-    assert len(resume_ids), "Resume does not attached."
+    assert applicant.name == "Application for the post of Jr.application Programmer.", "Applicant name does not match."
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job1'), "Stage should be 'Initial qualification' and is '%s'." % (applicant.stage_id.name)
+    assert applicant.state == "draft", "Applicant state should be 'draft'."
+    assert len(resume_ids), "Resume is not attached."
 -
-  I refuse applicant for the Recruitment.
+  I refuse the applicant (hr_case_programmer)
 -
   !python {model: hr.applicant}: |
-    self.case_close(cr, uid, [ref("hr_case_programmer")])
+    self.case_cancel(cr, uid, [ref("hr_case_programmer")])
 -
-  I open applicant for the Recruitment. 
+  I check the details of the refused applicant.
+-
+  !python {model: hr.applicant}: |
+    applicant = self.browse(cr, uid, ref("hr_case_programmer"), context=context)
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job6'), "Stage should be 'Refused' and is %s." % (applicant.stage_id.name)
+    assert applicant.state == 'cancel', "Applicant is not in 'cancel' state."
+-
+  I reset and re-open the previously refused applicant.
 -
   !python {model: hr.applicant}: |
     self.case_reset(cr, uid, [ref("hr_case_programmer")])
     self.case_open(cr, uid, [ref("hr_case_programmer")])
 -
+  I check the details of the re-opened applicant.
+-
+  !python {model: hr.applicant}: |
+    applicant = self.browse(cr, uid, ref("hr_case_programmer"), context=context)
+    assert applicant.stage_id.id == ref('hr_recruitment.stage_job2'), "Stage should be 'First interview' and is '%s'." % (applicant.stage_id.name)
+    assert applicant.state == "open", "Applicant state should be 'open'."
+-
   I assign the Job position to the applicant
 -
   !python {model: hr.applicant}: |
     self.write(cr, uid, [ref('hr_case_programmer')], {'job_id':ref('hr.job_developer')})
--
-  I start communication with applicant, first schedule phonecall.
--
-  !python {model: hr.recruitment.job2phonecall}: |
-     context.update({'active_model': 'hr.applicant', 'active_id': ref("hr_case_programmer"), 'active_ids': [ref("hr_case_programmer")], 'survey_id': ref("survey_job_0")})
-     id = self.create(cr, uid, {}, context=context)
-     self.make_phonecall(cr, uid, [id], context=context)
 -
   I schedule meeting with applicant for interview.
 -
@@ -91,7 +99,7 @@
 -
   I check that applicant is "Hired".
 -
-  !assert {model: hr.applicant, id: hr_case_programmer}:
+  !assert {model: hr.applicant, id: hr_case_programmer, string: Applicant state is done}:
     - state == 'done'
 -
   I do not give employment to the hired the applicant.

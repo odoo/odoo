@@ -28,22 +28,31 @@
 This module shows the basic processes involved in the selected modules and in the sequence they occur.
 ======================================================================================================
 
-Note: This applies to the modules containing modulename_process_xml
-e.g product/process/product_process_xml
+**Note:** This applies to the modules containing modulename_process.xml.
+
+**e.g.** product/process/product_process.xml.
 
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['base'],
-    'init_xml': [],
-    'update_xml': [
-       'security/ir.model.access.csv',
-       'process_view.xml'
+    'data': [
+        'security/ir.model.access.csv',
+        'process_view.xml'
     ],
-    'demo_xml': [],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0055447636669',
     'images': ['images/process_nodes.jpeg','images/process_transitions.jpeg', 'images/processes.jpeg'],
+    'js': [
+        'static/src/js/process.js'
+    ],
+    'css': [
+        'static/src/css/process.css'
+    ],
+    'qweb': [
+        'static/src/xml/*.xml'
+    ],
+    'auto_install': True
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

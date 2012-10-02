@@ -193,7 +193,7 @@
           </para>
         </td>
       </tr>
-    </blockTable>    
+    </blockTable>
     <blockTable colWidths="550.0" rowHeights="10" style="Table5">
             <tr>
               <td>
@@ -215,7 +215,7 @@
               <td>
                 <para style="P9"></para>
               </td>
-            </tr>          
+            </tr>
             <tr>
               <td>
                 <para style="P9"></para>
@@ -237,10 +237,10 @@
               </td>
               <td>
                 <para style="P15">[[ voucher.partner_id.name ]]</para>
-                <para style="P15">[[ voucher.partner_id.address and voucher.partner_id.address[0] and voucher.partner_id.address[0].street or removeParentNode('para') ]]</para>
-                <para style="P15">[[ voucher.partner_id.address and voucher.partner_id.address[0] and voucher.partner_id.address[0].street2 or removeParentNode('para') ]]</para>
-                <para style="P15">[[ get_zip_line(voucher.partner_id.address) ]] </para>
-                <para style="P15">[[ voucher.partner_id.address[0].country_id.name]]</para>                
+                <para style="P15">[[ voucher.partner_id.street or removeParentNode('para') ]]</para>
+                <para style="P15">[[ voucher.partner_id.street2 or removeParentNode('para') ]]</para>
+                <para style="P15">[[ get_zip_line(voucher.partner_id) ]] </para>
+                <para style="P15">[[ voucher.partner_id.country_id.name]]</para>
               </td>
             </tr>
           </blockTable>
@@ -254,11 +254,11 @@
               <td>
                 <para style="P3">
                   <font color="white"> </font>
-                </para>                    
+                </para>
                 <!--para style="P15">[[ voucher.name ]]</para-->
               </td>
             </tr>
-          </blockTable>          
+          </blockTable>
           <para style="P3">
             <font color="white"> </font>
           </para>

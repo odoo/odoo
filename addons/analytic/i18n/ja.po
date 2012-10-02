@@ -1,0 +1,284 @@
+# Japanese translation for openobject-addons
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the openobject-addons package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: openobject-addons\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-02-08 00:35+0000\n"
+"PO-Revision-Date: 2012-06-08 23:38+0000\n"
+"Last-Translator: Akira Hiyama <Unknown>\n"
+"Language-Team: Japanese <ja@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:34+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
+
+#. module: analytic
+#: field:account.analytic.account,child_ids:0
+msgid "Child Accounts"
+msgstr "子アカウント"
+
+#. module: analytic
+#: field:account.analytic.account,name:0
+msgid "Account Name"
+msgstr "アカウント名"
+
+#. module: analytic
+#: help:account.analytic.line,unit_amount:0
+msgid "Specifies the amount of quantity to count."
+msgstr "数えた数量の指定"
+
+#. module: analytic
+#: field:account.analytic.account,state:0
+msgid "State"
+msgstr "状態"
+
+#. module: analytic
+#: field:account.analytic.account,user_id:0
+msgid "Account Manager"
+msgstr "会計マネジャ"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Closed"
+msgstr "閉じた"
+
+#. module: analytic
+#: field:account.analytic.account,debit:0
+msgid "Debit"
+msgstr "借方"
+
+#. module: analytic
+#: help:account.analytic.account,state:0
+msgid ""
+"* When an account is created its in 'Draft' state.                           "
+"       \n"
+"* If any associated partner is there, it can be in 'Open' state.             "
+"                     \n"
+"* If any pending balance is there it can be in 'Pending'.                    "
+"               \n"
+"* And finally when all the transactions are over, it can be in 'Close' "
+"state.                                   \n"
+"* The project can be in either if the states 'Template' and 'Running'.\n"
+" If it is template then we can make projects based on the template projects. "
+"If its in 'Running' state it is a normal project.                            "
+"     \n"
+" If it is to be reviewed then the state is 'Pending'.\n"
+" When the project is completed the state is set to 'Done'."
+msgstr ""
+"・ アカウントが作成されると、それはドラフト状態です。\n"
+"・ 関連するパートナがいると、それは開く状態になります。\n"
+"・ 保留中残高が存在すると、それは保留中状態になります。\n"
+"・ 最終的に全ての取引が終了すると、それは閉じる状態になります。\n"
+"・ プロジェクトの状態はテンプレートや実行中にもなります。\n"
+"　テンプレートであれば、そこでテンプレートプロジェクトを元にしたプロジェクトを作成できます。それが実行中状態であれば、それは通常プロジェクトです。\n"
+"　それがレビューされると、保留中状態になります。\n"
+"　プロジェクトが完了した時に、完了状態にセットされます。"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "New"
+msgstr "新規"
+
+#. module: analytic
+#: field:account.analytic.account,type:0
+msgid "Account Type"
+msgstr "アカウントタイプ"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Pending"
+msgstr "保留中"
+
+#. module: analytic
+#: model:ir.model,name:analytic.model_account_analytic_line
+msgid "Analytic Line"
+msgstr "分析行"
+
+#. module: analytic
+#: field:account.analytic.account,description:0
+#: field:account.analytic.line,name:0
+msgid "Description"
+msgstr "詳細"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "Normal"
+msgstr "通常"
+
+#. module: analytic
+#: field:account.analytic.account,company_id:0
+#: field:account.analytic.line,company_id:0
+msgid "Company"
+msgstr "会社"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid ""
+"If you set a company, the currency selected has to be the same as it's "
+"currency. \n"
+"You can remove the company belonging, and thus change the currency, only on "
+"analytic account of type 'view'. This can be really usefull for "
+"consolidation purposes of several companies charts with different "
+"currencies, for example."
+msgstr ""
+"会社を設定した場合、選択した通貨は会社の通貨と同じである必要があります。\n"
+"タイプがビューである分析アカウント上でのみ、所属会社を削除して通貨を変更することができます。これは例えば、異なる通貨である複数の会社チャートを連結する目的"
+"のために非常に役立ちます。"
+
+#. module: analytic
+#: field:account.analytic.line,user_id:0
+msgid "User"
+msgstr "ユーザ"
+
+#. module: analytic
+#: field:account.analytic.account,parent_id:0
+msgid "Parent Analytic Account"
+msgstr "パートナ分析アカウント"
+
+#. module: analytic
+#: field:account.analytic.line,date:0
+msgid "Date"
+msgstr "日付"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Template"
+msgstr "テンプレート"
+
+#. module: analytic
+#: field:account.analytic.account,quantity:0
+#: field:account.analytic.line,unit_amount:0
+msgid "Quantity"
+msgstr "数量"
+
+#. module: analytic
+#: help:account.analytic.line,amount:0
+msgid ""
+"Calculated by multiplying the quantity and the price given in the Product's "
+"cost price. Always expressed in the company main currency."
+msgstr "数量と製品の原価価格を乗算して計算されます。いつも会社の主な通貨で表現されます。"
+
+#. module: analytic
+#: field:account.analytic.account,child_complete_ids:0
+msgid "Account Hierarchy"
+msgstr "アカウント階層"
+
+#. module: analytic
+#: help:account.analytic.account,quantity_max:0
+msgid "Sets the higher limit of time to work on the contract."
+msgstr "契約上の動作上限時間を設定して下さい。"
+
+#. module: analytic
+#: field:account.analytic.account,credit:0
+msgid "Credit"
+msgstr "貸方"
+
+#. module: analytic
+#: field:account.analytic.line,amount:0
+msgid "Amount"
+msgstr "金額"
+
+#. module: analytic
+#: field:account.analytic.account,contact_id:0
+msgid "Contact"
+msgstr "連絡先"
+
+#. module: analytic
+#: field:account.analytic.account,code:0
+msgid "Code/Reference"
+msgstr "コード / 参照"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Cancelled"
+msgstr "キャンセル済"
+
+#. module: analytic
+#: code:addons/analytic/analytic.py:138
+#, python-format
+msgid "Error !"
+msgstr "エラー"
+
+#. module: analytic
+#: field:account.analytic.account,balance:0
+msgid "Balance"
+msgstr "残高"
+
+#. module: analytic
+#: constraint:account.analytic.account:0
+msgid "Error! You can not create recursive analytic accounts."
+msgstr "エラー。再帰的な分析アカウントを作ることはできません。"
+
+#. module: analytic
+#: help:account.analytic.account,type:0
+msgid ""
+"If you select the View Type, it means you won't allow to create journal "
+"entries using that account."
+msgstr "ビュータイプを選択した場合、このアカウントを使って仕訳帳エントリーは作ることができません。"
+
+#. module: analytic
+#: field:account.analytic.account,date:0
+msgid "Date End"
+msgstr "終了日"
+
+#. module: analytic
+#: field:account.analytic.account,quantity_max:0
+msgid "Maximum Time"
+msgstr "上限時間"
+
+#. module: analytic
+#: model:res.groups,name:analytic.group_analytic_accounting
+msgid "Analytic Accounting"
+msgstr "分析会計"
+
+#. module: analytic
+#: field:account.analytic.account,complete_name:0
+msgid "Full Account Name"
+msgstr "フルアカウント名"
+
+#. module: analytic
+#: field:account.analytic.line,account_id:0
+#: model:ir.model,name:analytic.model_account_analytic_account
+msgid "Analytic Account"
+msgstr "分析アカウント"
+
+#. module: analytic
+#: field:account.analytic.account,currency_id:0
+msgid "Currency"
+msgstr "通貨"
+
+#. module: analytic
+#: constraint:account.analytic.line:0
+msgid "You can not create analytic line on view account."
+msgstr "ビューアカウントでは分析行を作ることはできません。"
+
+#. module: analytic
+#: selection:account.analytic.account,type:0
+msgid "View"
+msgstr "ビュー"
+
+#. module: analytic
+#: field:account.analytic.account,partner_id:0
+msgid "Partner"
+msgstr "パートナ"
+
+#. module: analytic
+#: field:account.analytic.account,date_start:0
+msgid "Date Start"
+msgstr "開始日"
+
+#. module: analytic
+#: selection:account.analytic.account,state:0
+msgid "Open"
+msgstr "開く"
+
+#. module: analytic
+#: field:account.analytic.account,line_ids:0
+msgid "Analytic Entries"
+msgstr "分析エントリー"

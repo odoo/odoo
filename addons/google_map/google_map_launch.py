@@ -22,11 +22,10 @@ from osv import osv
 
 class launch_map(osv.osv):
 
-    _inherit = "res.partner.address"
+    _inherit = "res.partner"
 
     def open_map(self, cr, uid, ids, context=None):
-        address_obj= self.pool.get('res.partner.address')
-        partner = address_obj.browse(cr, uid, ids, context=context)[0]
+        partner = self.browse(cr, uid, ids, context=context)[0]
         url="http://maps.google.com/maps?oi=map&q="
         if partner.street:
             url+=partner.street.replace(' ','+')
@@ -39,9 +38,9 @@ class launch_map(osv.osv):
         if partner.zip:
             url+='+'+partner.zip.replace(' ','+')
         return {
-        'type': 'ir.actions.act_url',
-        'url':url,
-        'target': 'new'
+            'type': 'ir.actions.act_url',
+            'url':url,
+            'target': 'new'
         }
 
 launch_map()

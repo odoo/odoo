@@ -21,11 +21,10 @@
         name: Precision Test
         type: out_invoice
         partner_id: base.res_partner_2
-        address_invoice_id: base.res_partner_address_1
         account_id: account.a_recv
         date_invoice: !eval time.strftime('%Y-%m-%d')
         invoice_line:
-            - product_id: product.product_product_pc1
+            - product_id: product.product_product_3
               quantity: &qty 11.11
               account_id: account.a_sale
               uos_id: product.product_uom_unit

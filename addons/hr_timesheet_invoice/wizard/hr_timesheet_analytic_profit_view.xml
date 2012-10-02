@@ -2,28 +2,31 @@
 <openerp>
     <data>
 
-		<record id="view_hr_timesheet_analytic_profit" model="ir.ui.view">
+        <record id="view_hr_timesheet_analytic_profit" model="ir.ui.view">
             <field name="name">Timesheet Profit</field>
             <field name="model">hr.timesheet.analytic.profit</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
-				<form string="Timesheet Profit">
-					<group height="420" width="370">
-						<group col="4" colspan="4">
-							<field name="date_from"/>
-							<field name="date_to"/>
-                            <separator string="Journals" colspan="4"/>
-							<field name="journal_ids" colspan="4" nolabel="1"/>
-                            <separator string="Users" colspan="4"/>
-							<field name="employee_ids" colspan="4" nolabel="1"/>
-						</group>
-						<separator colspan="4"/>
-						<group col="2" colspan="4">
-							<button special="cancel" string="Cancel" icon="gtk-cancel"/>
-							<button name="print_report" string="Print" colspan="1" type="object" icon="gtk-print"/>
-						</group>
-					</group>
-				</form>
+                <form string="Timesheet Profit" version="7.0">
+                   <sheet>
+                       <group> 
+                           <label for="date_from" string="Duration" />
+                           <div>
+                               <field name="date_from" nolabel="1" class="oe_inline" />
+                               - <field name="date_to" nolabel="1" class="oe_inline"/>
+                           </div>
+                       </group>
+                       <group>
+                           <separator string="Journals" colspan="4"/>
+                           <field name="journal_ids" colspan="4" nolabel="1"/>
+                           <separator string="Users" colspan="4"/>
+                           <field name="employee_ids" colspan="4" nolabel="1"/>
+                       </group>
+                   </sheet>
+                   <footer>
+                        <button name="print_report" string="Print" colspan="1" type="object" class="oe_highlight"/> or
+                        <button special="cancel" string="Cancel" class="oe_link"/>
+                   </footer>
+               </form>
             </field>
         </record>
 
@@ -36,9 +39,9 @@
             <field name="target">new</field>
         </record>
 
-       	<menuitem action="action_hr_timesheet_analytic_profit"
-        	id="menu_hr_timesheet_analytic_profit"
-        	parent="hr_timesheet.menu_hr_reporting_timesheet" groups="base.group_extended" icon="STOCK_PRINT"/>
+           <menuitem action="action_hr_timesheet_analytic_profit"
+            id="menu_hr_timesheet_analytic_profit"
+            parent="hr.menu_hr_reporting_timesheet" sequence="3" icon="STOCK_PRINT"/>
 
-	</data>
+    </data>
 </openerp>

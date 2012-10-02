@@ -24,7 +24,6 @@
     'name': 'Warning Messages and Alerts',
     'version': '1.0',
     'category': 'Tools',
-    'complexity': "easy",
     'description': """
 Module to trigger warnings in OpenERP objects.
 ==============================================
@@ -34,11 +33,10 @@ picking and invoice. The message is triggered by the form's onchange event.
     """,
     'author': 'OpenERP SA',
     'depends': ['base', 'sale', 'purchase'],
-    'update_xml': ['warning_view.xml'],
-    'demo_xml': [],
+    'data': ['warning_view.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0080334018749',
     'images': ['images/customers_warnings.jpeg','images/sale_order_warning.jpeg'],
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -4,7 +4,6 @@
     <record id="view_account_entries_report_tree" model="ir.ui.view">
         <field name="name">account.entries.report.tree</field>
         <field name="model">account.entries.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree colors="blue:move_state == 'draft';black:move_state == 'posted'" string="Entries Analysis">
                 <field name="date" invisible="1"/>
@@ -38,7 +37,6 @@
     <record id="view_account_entries_report_graph" model="ir.ui.view">
          <field name="name">account.entries.report.graph</field>
          <field name="model">account.entries.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Entries Analysis" type="bar">
                 <field name="partner_id"/>
@@ -51,7 +49,6 @@
     <record id="view_company_analysis_tree" model="ir.ui.view">
          <field name="name">account.company.analysis.tree</field>
          <field name="model">account.entries.report</field>
-         <field name="type">tree</field>
          <field name="arch" type="xml">
              <tree string="Company Analysis" >
                 <field name="user_type"/>
@@ -64,57 +61,37 @@
     <record id="view_account_entries_report_search" model="ir.ui.view">
         <field name="name">account.entries.report.search</field>
         <field name="model">account.entries.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Entries Analysis">
-                <group>
-                    <filter icon="terp-go-year" string="This F.Year"
-                            name="thisyear"
-                            context="{'year':'current_year'}"
-                            help="Journal Entries with period in current year"/>
-                    <filter icon="terp-go-month" string="This Period"
-                            name="period"
-                            context="{'period':'current_period'}"
-                            help="Journal Entries with period in current period"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
-                    <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
-                    <separator orientation="vertical"/>
-                    <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
-                    <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
-                    <separator orientation="vertical"/>
-                    <field name="account_id"/>
-                    <field name="journal_id" widget="selection"/>
-                    <field name="period_id"/>
-                </group>
-                 <newline/>
-                 <group expand="0" string="Extended Filters..." groups="base.group_extended">
+                <field name="date"/>
+                <field name="date_created"/>
+                <field name="date_maturity"/>
+                <filter icon="terp-go-year" string="This F.Year" name="thisyear" context="{'year':'current_year'}" help="Journal Entries with period in current year"/>
+                <filter icon="terp-go-month" string="This Period" name="period" context="{'period':'current_period'}" help="Journal Entries with period in current period"/>
+                <separator/>
+                <filter string="Unposted" icon="terp-document-new" domain="[('move_state','=','draft')]" help = "entries"/>
+                <filter string="Posted" icon="terp-camera_test" domain="[('move_state','=','posted')]" help = "Posted entries"/>
+                <separator/>
+                <filter string="Unreconciled" icon="terp-dolar_ok!" domain="[('reconcile_id','=',False), ('account_id.reconcile','=',True)]" help = "Unreconciled entries"/>
+                <filter string="Reconciled" icon="terp-dolar" domain="[('reconcile_id','!=',False)]" help = "Reconciled entries"/>
+                <field name="account_id"/>
+                <field name="journal_id"/>
+                <field name="period_id"/>
+                <group expand="0" string="Extended Filters...">
                     <field name="fiscalyear_id"/>
-                    <separator orientation="vertical"/>
                     <field name="product_id"/>
                     <field name="partner_id"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <field name="company_id" groups="base.group_multi_company"/>
-                    <newline/>
-                    <field name="date_created"/>
-                    <field name="date"/>
-                    <field name="date_maturity"/>
-                 </group>
-                <newline/>
+                </group>
                 <group expand="1" string="Group By...">
                     <filter string="Partner" icon="terp-partner" context="{'group_by':'partner_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':['product_id','product_uom_id'], 'quantity_visible':1}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Currency" name="group_currency" icon="terp-dolar" context="{'group_by':'currency_id', 'currency_id_visible':1, 'amount_currency_visible':1}"/>
                     <filter string="Journal" name="group_journal" icon="terp-folder-orange" context="{'group_by':'journal_id'}"/>
                     <filter string="Account" name="group_account" icon="terp-folder-green" context="{'group_by':'account_id'}"/>
-                    <separator orientation="vertical"/>
                     <filter string="Acc.Type" icon="terp-stock_symbol-selection" context="{'group_by':'user_type'}" name="usertype"/>
                     <filter string="Int.Type" icon="terp-stock_symbol-selection" context="{'group_by':'type'}"/>
-                    <separator orientation="vertical" groups="base.group_multi_company"/>
                     <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                    <separator orientation="vertical"/>
                     <filter string="Date" icon="terp-go-today" context="{'group_by':'date'}"/>
                     <filter string="Period" icon="terp-go-month" name="group_period" context="{'group_by':'period_id'}"/>
                     <filter string="Fiscal Year" icon="terp-go-year" context="{'group_by':'fiscalyear_id'}"/>
@@ -133,7 +110,7 @@
         <field name="help">From this view, have an analysis of your different financial accounts. The document shows your debit and credit taking in consideration some criteria you can choose by using the search tool.</field>
     </record>
     <menuitem action="action_account_entries_report_all" id="menu_action_account_entries_report_all"
-        parent="account.menu_finance_statistic_report_statement"
+        parent="account.menu_finance_reporting"
         groups="group_account_manager"
         sequence="2"/>
 </data>

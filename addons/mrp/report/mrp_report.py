@@ -30,8 +30,8 @@ class report_workcenter_load(osv.osv):
     _columns = {
         'name': fields.char('Week', size=64, required=True),
         'workcenter_id': fields.many2one('mrp.workcenter', 'Work Center', required=True),
-        'cycle': fields.float('Nbr of cycle'),
-        'hour': fields.float('Nbr of hour'),
+        'cycle': fields.float('Number of Cycles'),
+        'hour': fields.float('Number of Hours'),
     }
 
     def init(self, cr):

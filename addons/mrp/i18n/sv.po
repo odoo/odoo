@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:03+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:39+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -211,16 +211,13 @@ msgid "For purchased material"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Revision"
-
-#. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
 msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
 "the product can be purchased."
 msgstr ""
+"Skapa ett produktformulär för allt du köper eller säljer. Ange en leverantör "
+"om produkten kan köpas."
 
 #. module: mrp
 #: model:ir.ui.menu,name:mrp.next_id_77
@@ -367,6 +364,8 @@ msgid ""
 "The system creates an order (production or purchased) depending on the sold "
 "quantity and the products parameters."
 msgstr ""
+"Systemet skapar en beställning (produktion eller inköp) beroende på den "
+"sålda mängden och produktparametrarna."
 
 #. module: mrp
 #: model:process.transition,note:mrp.process_transition_stockproduction0
@@ -473,11 +472,6 @@ msgid "For Services."
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Ändringsdatum"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -537,11 +531,6 @@ msgid "Force Reservation"
 msgstr "Force Reservation"
 
 #. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Upphovsman"
-
-#. module: mrp
 #: field:report.mrp.inout,value:0
 msgid "Stock value"
 msgstr ""
@@ -583,22 +572,22 @@ msgstr ""
 #: field:mrp.production,product_uom:0
 #: field:mrp.production.product.line,product_uom:0
 msgid "Product UOM"
-msgstr "Product UOM"
+msgstr "Produktenhet"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Picking Exception"
-msgstr ""
+msgstr "Plockningsavbrott"
 
 #. module: mrp
 #: field:mrp.bom,bom_lines:0
 msgid "BoM Lines"
-msgstr "Materialliste rader"
+msgstr "Materiallisterader"
 
 #. module: mrp
 #: field:mrp.workcenter,time_start:0
 msgid "Time before prod."
-msgstr "Time before prod."
+msgstr "Tid innan prod."
 
 #. module: mrp
 #: help:mrp.routing,active:0
@@ -814,17 +803,12 @@ msgstr ""
 #: view:mrp.production:0
 #: field:mrp.production,cycle_total:0
 msgid "Total Cycles"
-msgstr "Total Cycles"
+msgstr "Totalt antal cykler"
 
 #. module: mrp
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Klar att producera"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Ändring"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1138,7 +1122,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.product_form_config_action
 msgid "Create or Import Products"
-msgstr ""
+msgstr "Skapa eller importera produkter"
 
 #. module: mrp
 #: field:report.workcenter.load,hour:0
@@ -1198,6 +1182,9 @@ msgid ""
 "maxi quantity. It's available in the Inventory management menu and "
 "configured by product."
 msgstr ""
+"Lägstlagerregeln är en automatisk anskaffningsregel baserad på en mini- och "
+"maxi kvantitet. Det är tillgängligt i lagerhanteringsmenyn och konfigureras "
+"av produkt."
 
 #. module: mrp
 #: code:addons/mrp/report/price.py:187
@@ -1283,7 +1270,7 @@ msgstr "Make to Stock"
 #. module: mrp
 #: constraint:mrp.production:0
 msgid "Order quantity cannot be negative or zero!"
-msgstr ""
+msgstr "Orderkvantitet kan inte vara negativt eller noll!"
 
 #. module: mrp
 #: model:ir.actions.act_window,help:mrp.mrp_bom_form_action
@@ -1387,11 +1374,6 @@ msgid "Work Center Loads"
 msgstr ""
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr ""
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -1413,7 +1395,7 @@ msgstr "Extra information"
 #. module: mrp
 #: model:ir.model,name:mrp.model_change_production_qty
 msgid "Change Quantity of Products"
-msgstr ""
+msgstr "Ändra antal för produkter"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_productionorder0
@@ -1624,6 +1606,11 @@ msgid ""
 "the quantity selected and it will finish the production order when total "
 "ordered quantities are produced."
 msgstr ""
+"\"Förbruka enbart\"-läget kommer bara att förbruka produkterna med markerad "
+"mängd.\n"
+"\"Förbruka och producera\"-läget kommer att förbruka samt tillverka "
+"produkter med den mängd vald och kommer att avsluta produktionsordern när "
+"totalt beställd kvantitet producerats."
 
 #. module: mrp
 #: view:mrp.production:0
@@ -1872,7 +1859,7 @@ msgstr "Anskaffningsorders"
 #. module: mrp
 #: help:mrp.bom,product_rounding:0
 msgid "Rounding applied on the product quantity."
-msgstr ""
+msgstr "Avrundning på produktantalet"
 
 #. module: mrp
 #: model:process.node,note:mrp.process_node_stock0
@@ -1895,12 +1882,6 @@ msgid "Orange Juice"
 msgstr ""
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "BoM"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -1916,17 +1897,6 @@ msgstr ""
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Väntande varor"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "last indice"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "BoM Revisions"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2018,7 +1988,7 @@ msgstr ""
 #. module: mrp
 #: field:mrp.product.produce,product_qty:0
 msgid "Select Quantity"
-msgstr ""
+msgstr "Välj kvantitet"
 
 #. module: mrp
 #: model:ir.actions.act_window,name:mrp.act_product_product_2_mrp_bom
@@ -2105,26 +2075,13 @@ msgstr ""
 #. module: mrp
 #: view:change.production.qty:0
 msgid "Change Quantity"
-msgstr ""
+msgstr "Ändra kvantitet"
 
 #. module: mrp
 #: view:change.production.qty:0
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
 msgstr "Ändra produktkvantitet"
-
-#. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Beskrivning"
 
 #. module: mrp
 #: view:board.board:0
@@ -2203,6 +2160,8 @@ msgid ""
 "Specify quantity of products to produce or buy. Report of Cost structure "
 "will be displayed base on this quantity."
 msgstr ""
+"Ange antal produkter för att producera eller köpa in. Rapporten med "
+"kostnadsstruktur baseras på denna kvantitet."
 
 #. module: mrp
 #: selection:mrp.bom,method:0
@@ -2239,6 +2198,12 @@ msgstr ""
 
 #~ msgid "Reservation"
 #~ msgstr "Reservation"
+
+#~ msgid "Author"
+#~ msgstr "Upphovsman"
+
+#~ msgid "Modification name"
+#~ msgstr "Ändring"
 
 #~ msgid "Exception"
 #~ msgstr "Undantag"
@@ -2281,6 +2246,9 @@ msgstr ""
 #~ msgid "max"
 #~ msgstr "max"
 
+#~ msgid "Modification Date"
+#~ msgstr "Ändringsdatum"
+
 #~ msgid "Waiting"
 #~ msgstr "Väntar"
 
@@ -2308,6 +2276,9 @@ msgstr ""
 #~ msgid "Close"
 #~ msgstr "Stäng"
 
+#~ msgid "Description"
+#~ msgstr "Beskrivning"
+
 #~ msgid "Ask New Products"
 #~ msgstr "Be om nya produkter"
 
@@ -2325,6 +2296,9 @@ msgstr ""
 
 #~ msgid "Paid ?"
 #~ msgstr "Betald?"
+
+#~ msgid "Revision"
+#~ msgstr "Revision"
 
 #~ msgid "Compute Stock Minimum Rules Only"
 #~ msgstr "Beräkna minsta lagersaldo regler"
@@ -2897,6 +2871,9 @@ msgstr ""
 #~ msgid "Product quantity"
 #~ msgstr "Product quantity"
 
+#~ msgid "BoM"
+#~ msgstr "BoM"
+
 #~ msgid ""
 #~ "The list of operations (list of workcenters) to produce the finished "
 #~ "product. The routing is mainly used to compute workcenter costs during "
@@ -2919,6 +2896,12 @@ msgstr ""
 
 #~ msgid "A Request for Quotation is created and sent to the supplier."
 #~ msgstr "A Request for Quotation is created and sent to the supplier."
+
+#~ msgid "last indice"
+#~ msgstr "last indice"
+
+#~ msgid "BoM Revisions"
+#~ msgstr "BoM Revisions"
 
 #~ msgid "When any procuere products, it comes into the prpcurement orders"
 #~ msgstr "When any procuere products, it comes into the prpcurement orders"

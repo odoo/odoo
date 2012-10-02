@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-02-09 06:43+0000\n"
-"X-Generator: Launchpad (build 14763)\n"
+"X-Launchpad-Export-Date: 2012-08-28 06:24+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr
 #: model:process.node,name:hr.process_node_openerpuser0
@@ -190,7 +190,8 @@ msgstr "Mujer"
 
 #. module: hr
 #: help:hr.job,expected_employees:0
-msgid "Required number of employees in total for that job."
+msgid ""
+"Expected number of employees for this job position after new recruitment."
 msgstr ""
 
 #. module: hr
@@ -242,8 +243,8 @@ msgstr "Otra información"
 
 #. module: hr
 #: field:hr.employee,work_email:0
-msgid "Work E-mail"
-msgstr "E-mail del trabajo"
+msgid "Work Email"
+msgstr "Correo-e del trabajo"
 
 #. module: hr
 #: field:hr.employee,birthday:0
@@ -283,8 +284,8 @@ msgstr "Categorías"
 
 #. module: hr
 #: field:hr.job,expected_employees:0
-msgid "Expected Employees"
-msgstr "Empleados previstos"
+msgid "Total Employees"
+msgstr ""
 
 #. module: hr
 #: selection:hr.employee,marital:0
@@ -416,12 +417,6 @@ msgid "Working Address"
 msgstr "Dirección de trabajo"
 
 #. module: hr
-#: model:ir.actions.act_window,name:hr.open_board_hr_manager
-#: model:ir.ui.menu,name:hr.menu_hr_dashboard_manager
-msgid "HR Manager Dashboard"
-msgstr "Tablero director RRHH"
-
-#. module: hr
 #: field:hr.department,child_ids:0
 msgid "Child Departments"
 msgstr "Departamentos hijos"
@@ -434,8 +429,8 @@ msgstr "Estado"
 #. module: hr
 #: model:ir.actions.act_window,name:hr.open_view_categ_tree
 #: model:ir.ui.menu,name:hr.menu_view_employee_category_tree
-msgid "Categories structure"
-msgstr "Estructura de categorías"
+msgid "Categories Structure"
+msgstr ""
 
 #. module: hr
 #: field:hr.employee,partner_id:0
@@ -464,7 +459,7 @@ msgstr "¡Error! No se puede crear una jerarquía recursiva de empleados."
 
 #. module: hr
 #: model:ir.actions.act_window,name:hr.action2
-msgid "Subordonate Hierarchy"
+msgid "Subordinate Hierarchy"
 msgstr ""
 
 #. module: hr
@@ -711,7 +706,12 @@ msgstr "Subordinados"
 
 #. module: hr
 #: field:hr.job,no_of_employee:0
-msgid "Number of Employees"
+msgid "Number of employees currently occupying this job position."
+msgstr ""
+
+#. module: hr
+#: field:hr.job,no_of_recruitment:0
+msgid "Number of new employees you expect to recruit."
 msgstr ""
 
 #~ msgid "Simplifies the management of employee's attendances."
@@ -770,12 +770,18 @@ msgstr ""
 #~ msgid "Number of employee with that job."
 #~ msgstr "Número de empleados con ese trabajo."
 
+#~ msgid "Work E-mail"
+#~ msgstr "E-mail del trabajo"
+
 #~ msgid ""
 #~ "You can enhance the base HR Application by installing few HR-related "
 #~ "functionalities."
 #~ msgstr ""
 #~ "Puede mejorar la aplicación de recursos humanos base mediante la instalación "
 #~ "de algunas funcionalidades relacionadas con RRHH."
+
+#~ msgid "Expected Employees"
+#~ msgstr "Empleados previstos"
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Progreso configuración"
@@ -796,8 +802,14 @@ msgstr ""
 #~ msgid "Recruitment Process"
 #~ msgstr "Proceso de selección"
 
+#~ msgid "HR Manager Dashboard"
+#~ msgstr "Tablero director RRHH"
+
 #~ msgid "Configure"
 #~ msgstr "Configurar"
+
+#~ msgid "Categories structure"
+#~ msgstr "Estructura de categorías"
 
 #~ msgid "Holidays / Leaves Management"
 #~ msgstr "Gestión de vacaciones / ausencias"
@@ -882,9 +894,6 @@ msgstr ""
 
 #~ msgid "Contact  of employee"
 #~ msgstr "Contacto del empleado"
-
-#~ msgid "Work Email"
-#~ msgstr "Correo-e del trabajo"
 
 #~ msgid "Group name"
 #~ msgstr "Nombre Grupo"

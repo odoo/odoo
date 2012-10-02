@@ -48,6 +48,8 @@ class ir_sequence(osv.osv):
     }
 
     def _next(self, cr, uid, seq_ids, context=None):
+        if context is None:
+            context = {}
         for seq in self.browse(cr, uid, seq_ids, context):
             for line in seq.fiscal_ids:
                 if line.fiscalyear_id.id == context.get('fiscalyear_id'):

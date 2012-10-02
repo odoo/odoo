@@ -6,7 +6,6 @@
         <record model="ir.ui.view" id="analytic_user_funct_grid_tree">
             <field name="name">analytic_user_funct_grid.tree</field>
             <field name="model">analytic.user.funct.grid</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="User's Product for this Analytic Account" editable="bottom">
                     <field name="user_id" required="1"/>
@@ -18,7 +17,6 @@
         <record model="ir.ui.view" id="analytic_user_funct_grid_form">
             <field name="name">analytic_user_funct_grid.form</field>
             <field name="model">analytic.user.funct.grid</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="User's Product for this Analytic Account">
                     <field name="user_id" required="1"/>
@@ -31,10 +29,9 @@
         <record model="ir.ui.view" id="view_account_analytic_account_form_inherit">
             <field name="name">account.analytic.account.form</field>
             <field name="model">account.analytic.account</field>
-            <field name="type">form</field>
-            <field name="inherit_id" ref="account.view_account_analytic_account_form"/>
+            <field name="inherit_id" ref="analytic.view_account_analytic_account_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page" position="after">
+                <xpath expr="//notebook/page" position="after">
                     <page string="Users/Products Rel.">
                         <field name="user_product_ids" colspan="4" nolabel="1"/>
                     </page>
@@ -46,11 +43,10 @@
         <record model="ir.ui.view" id="hr_timesheet_sheet_form_inherit">
             <field name="name">hr.timesheet.sheet.form.tree</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">form</field>
             <field name="priority" eval="18"/>
             <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='timesheet_ids']/tree/field[@name='account_id']" position="replace">
+                <xpath expr="//field[@name='timesheet_ids']/tree/field[@name='account_id']" position="replace">
                     <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)"/>
                 </xpath>
             </field>
@@ -60,11 +56,10 @@
         <record model="ir.ui.view" id="hr_timesheet_sheet_form_inherit1">
             <field name="name">hr.timesheet.sheet.form.form</field>
             <field name="model">hr_timesheet_sheet.sheet</field>
-            <field name="type">form</field>
             <field name="priority" eval="19"/>
             <field name="inherit_id" ref="hr_timesheet_sheet.hr_timesheet_sheet_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page/field[@name='timesheet_ids']/form/field[@name='account_id']" position="replace">
+                <xpath expr="//field[@name='timesheet_ids']/form/field[@name='account_id']" position="replace">
                     <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)"/>
                 </xpath>
             </field>
@@ -74,11 +69,10 @@
         <record model="ir.ui.view" id="hr_timesheet_line_form_inherit">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/notebook/page[@string='Information']/group/field[@name='account_id']" position="replace">
-                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" select="1"/>
+                <xpath expr="//field[@name='account_id']" position="replace">
+                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" />
                 </xpath>
             </field>
         </record>
@@ -86,11 +80,10 @@
         <record model="ir.ui.view" id="hr_timesheet_line_form_inherit_2">
             <field name="name">hr.analytic.timesheet.form</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_form"/>
             <field name="arch" type="xml">
-                <xpath expr="/form/group/field[@name='user_id']" position="replace">
-                    <field name="user_id" select="1" required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
+                <xpath expr="//field[@name='user_id']" position="replace">
+                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
                 </xpath>
             </field>
         </record>
@@ -98,11 +91,10 @@
         <record model="ir.ui.view" id="hr_timesheet_line_tree_inherit">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='account_id']" position="replace">
-                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" select="1"/>
+                    <field name="account_id" domain="[('type','=','normal'),('state', '&lt;&gt;', 'close')]" on_change="on_change_account_id(account_id, user_id, unit_amount)" />
                 </xpath>
             </field>
         </record>
@@ -110,11 +102,10 @@
         <record model="ir.ui.view" id="hr_timesheet_line_tree_inherit_2">
             <field name="name">hr.analytic.timesheet.tree</field>
             <field name="model">hr.analytic.timesheet</field>
-            <field name="type">tree</field>
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="/tree/field[@name='user_id']" position="replace">
-                    <field name="user_id" select="1" required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
+                    <field name="user_id"  required="1" on_change="on_change_user_id(user_id, account_id, unit_amount)"/>
                 </xpath>
             </field>
         </record>

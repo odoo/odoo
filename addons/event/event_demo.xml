@@ -32,53 +32,53 @@
         <field name="name">Concert of Bon Jovi</field>
         <field eval="time.strftime('%Y-%m-01 19:05:15')" name="date_begin"/>
         <field eval="time.strftime('%Y-%m-01 23:05:15')" name="date_end"/>
-        <field name="user_id" ref="base.user_root"/>
         <field name="register_max">500</field>
         <field name="type" ref="event_type_1"/>
     </record>
 
     <record id="event_1" model="event.event">
         <field name="name">Opera of Verdi</field>
-        <field eval="time.strftime('%Y-%m-05 18:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 21:00:00')" name="date_end"/>
+        <field eval="(DateTime.today()+ timedelta(days=1)).strftime('%Y-%m-%d 18:00:00')" name="date_begin"/>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 21:00:00')" name="date_end"/>
         <field name="type" ref="event_type_1"/>
-        <field name="user_id" ref="base.user_root"/>
         <field name="register_min">50</field>
         <field name="register_max">350</field>
     </record>
     <record id="event_2" model="event.event">
-        <field name="name">Conference on ERP Buisness</field>
-        <field eval="time.strftime('%Y-%m-05 14:00:00')" name="date_begin"/>
-        <field eval="time.strftime('%Y-%m-05 16:30:00')" name="date_end"/>
+        <field name="name">Conference on ERP Business</field>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 14:00:00')" name="date_begin"/>
+        <field eval="(DateTime.today()+ timedelta(days=2)).strftime('%Y-%m-%d 16:30:00')" name="date_end"/>
         <field name="type" ref="event_type_2"/>
         <field name="register_max">200</field>
-        <field name="user_id" ref="base.user_root"/>
     </record>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
     <function model="event.event" name="button_confirm" eval="[ref('event_2')]"/>
 
 <!-- Demo data for Event Registration-->
     <record id="reg_1_1" model="event.registration">
+        <field name="name">Agrolait</field>
+        <field name="email">s.l@agrolait.be</field>
+        <field name="phone">003281588558</field>
         <field name="event_id" ref="event_1"/>
+        <field name="partner_id" ref="base.res_partner_2"/>
         <field name="nb_register">5</field>
     </record>
 
     <record id="reg_1_2" model="event.registration">
+        <field name="name">ASUStek</field>
+        <field name="email">info@asustek.com</field>
+        <field name="phone">+ 1 64 61 04 01</field>
+        <field name="partner_id" ref="base.res_partner_1"/>
         <field name="event_id" ref="event_1"/>
         <field name="nb_register">10</field>
     </record>
 
-
-    <record id="reg_0_1" model="event.registration">
-        <field name="event_id" ref="event_0"/>
-        <field name="nb_register">6</field>
-    </record>
-
-
-
     <record id="reg_0_2" model="event.registration">
+        <field name="name">Camptocamp</field>
+        <field name="email">openerp@camptocamp.com</field>
+        <field name="phone">+41 21 619 10 04 </field>
         <field name="event_id" ref="event_2"/>
-        <field name="partner_id" ref="base.res_partner_c2c"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
         <field name="nb_register">5</field>
     </record>
 

@@ -106,11 +106,10 @@
   I create a Supplier.
 -
   !record {model: res.partner, id: res_partner_shawtrust0}:
-    address:
-      - country_id: base.in
-      - street: St James House, Vicar Lane, Sheffield
+    name: Shaw Trust
     lang: en_US
-    name: 'Shaw Trust '
+    country_id: base.in
+    street: St James House, Vicar Lane, Sheffiel
     property_account_payable: account_account_payable0
     property_account_receivable: account_account_receivable0
 -
@@ -199,7 +198,7 @@
    procurement_ids=self.search(cr, uid, [('name','=','E001')])
    assert len(procurement_ids), "Procurement order hasn't Created."
 -
-  I check the Outgoing Picking is created for source location Shop 2 and destination shop1.
+  I check the Outgoing Picking is created for source location Birmingham Shop and destination Chicago shop.
 -
   !python {model: stock.picking }: |
     from tools.translate import _

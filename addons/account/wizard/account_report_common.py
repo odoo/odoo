@@ -30,9 +30,11 @@ class account_common_report(osv.osv_memory):
     _description = "Account Common Report"
 
     def onchange_chart_id(self, cr, uid, ids, chart_account_id=False, context=None):
+        res = {}
         if chart_account_id:
             company_id = self.pool.get('account.account').browse(cr, uid, chart_account_id, context=context).company_id.id
-        return {'value': {'company_id': company_id}}
+            res['value'] = {'company_id': company_id}
+        return res
 
     _columns = {
         'chart_account_id': fields.many2one('account.account', 'Chart of Account', help='Select Charts of Accounts', required=True, domain = [('parent_id','=',False)]),
@@ -67,6 +69,7 @@ class account_common_report(osv.osv_memory):
 
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if context is None:context = {}
         res = super(account_common_report, self).fields_view_get(cr, uid, view_id=view_id, view_type=view_type, context=context, toolbar=toolbar, submenu=False)
         if context.get('active_model', False) == 'account.account' and view_id:
             doc = etree.XML(res['arch'])
@@ -110,7 +113,8 @@ class account_common_report(osv.osv_memory):
         return res
 
     def _get_account(self, cr, uid, context=None):
-        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False)], limit=1)
+        user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        accounts = self.pool.get('account.account').search(cr, uid, [('parent_id', '=', False), ('company_id', '=', user.company_id.id)], limit=1)
         return accounts and accounts[0] or False
 
     def _get_fiscalyear(self, cr, uid, context=None):
@@ -123,6 +127,7 @@ class account_common_report(osv.osv_memory):
 
     _defaults = {
             'fiscalyear_id': _get_fiscalyear,
+            'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.common.report',context=c),
             'journal_ids': _get_all_journal,
             'filter': 'filter_no',
             'chart_account_id': _get_account,
@@ -141,13 +146,13 @@ class account_common_report(osv.osv_memory):
             result['date_to'] = data['form']['date_to']
         elif data['form']['filter'] == 'filter_period':
             if not data['form']['period_from'] or not data['form']['period_to']:
-                raise osv.except_osv(_('Error'),_('Select a starting and an ending period'))
+                raise osv.except_osv(_('Error!'),_('Select a starting and an ending period.'))
             result['period_from'] = data['form']['period_from']
             result['period_to'] = data['form']['period_to']
         return result
 
     def _print_report(self, cr, uid, ids, data, context=None):
-        raise (_('Error'), _('not implemented'))
+        raise (_('Error!'), _('Not implemented.'))
 
     def check_report(self, cr, uid, ids, context=None):
         if context is None:
