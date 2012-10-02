@@ -351,7 +351,7 @@ class hr_timesheet_line(osv.osv):
 
     _columns = {
         'sheet_id': fields.function(_sheet, string='Sheet',
-            type='many2one', relation='hr_timesheet_sheet.sheet',
+            type='many2one', relation='hr_timesheet_sheet.sheet', ondelete="cascade",
             store={
                     'hr_timesheet_sheet.sheet': (_get_hr_timesheet_sheet, ['employee_id', 'date_from', 'date_to'], 10),
                     'account.analytic.line': (_get_account_analytic_line, ['user_id', 'date'], 10),

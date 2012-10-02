@@ -68,10 +68,11 @@ openerp.hr_timesheet_sheet = function(instance) {
             var dates;
             var accounts;
             var account_names;
+            var default_get;
             return this.render_drop.add(new instance.web.Model("hr.analytic.timesheet").call("default_get", [
                 ['account_id','general_account_id', 'journal_id','date','name','user_id','product_id','product_uom_id','to_invoice','amount','unit_amount'],
                 new instance.web.CompoundContext({'user_id': self.get('user_id')})]).pipe(function(result) {
-                var default_get = result;
+                default_get = result;
                 // calculating dates
                 dates = [];
                 var start = self.get("date_from");
@@ -128,6 +129,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 self.dates = dates;
                 self.accounts = accounts;
                 self.account_names = account_names;
+                self.default_get = default_get;
                 //real rendering
                 self.display_data();
             });
@@ -176,6 +178,10 @@ openerp.hr_timesheet_sheet = function(instance) {
         sync: function() {
             var self = this;
             var ops = [];
+            var auth_keys = _.extend(_.clone(self.default_get), {
+                name: true, unit_amount: true, date: true, account_id:true,
+            });
+
             _.each(self.accounts, function(account) {
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
@@ -185,6 +191,11 @@ openerp.hr_timesheet_sheet = function(instance) {
                             _.each(line, function(v, k) {
                                 if (v instanceof Array) {
                                     tmp[k] = v[0];
+                                }
+                            });
+                            _.each(_.keys(tmp), function(key) {
+                                if (auth_keys[key] === undefined) {
+                                    tmp[key] = undefined;
                                 }
                             });
                             ops.push(tmp);
