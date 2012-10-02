@@ -45,7 +45,7 @@ Main Features
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools', 'base_setup'],
+    'depends': ['base', 'base_setup'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
