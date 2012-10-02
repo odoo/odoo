@@ -159,7 +159,11 @@
         </td>
         <td>
           <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.name or '']]</para>
-          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and display_address(o.mode.bank_id.bank)]]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.street or '']]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.street2 or removeParentNode('para')]]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.zip or '']] [[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.city or '']]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.state and o.mode.bank_id.bank.state.name or removeParentNode('para') ]]</para>
+          <para style="terp_default_address">[[ o.mode and o.mode.bank_id.bank and o.mode.bank_id.bank.country and o.mode.bank_id.bank.country.name or '']]</para>
         </td>
       </tr>
     </blockTable>
@@ -252,10 +256,10 @@
             <para style="terp_default_Centre_9">[[line.date=='False' and '-' or formatLang(line.date,date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[formatLang(line.amount) or '-' ]] [[get_company_currency_symbol()]] </para>
+            <para style="terp_default_Right_9">[[formatLang(line.amount, currency_obj= user.company_id and user.company_id.currency_id) or '-' ]] </para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency) ]] [[ line.currency.symbol]] </para>
+            <para style="terp_default_Right_9">[[ formatLang(line.amount_currency, currency_obj= line.currency)]]</para>
           </td>
         </tr>
       </blockTable>
@@ -271,10 +275,10 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o)) or '' ]] [[get_company_currency_symbol()]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o), currency_obj= user.company_id and user.company_id.currency_id) or '' ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o)) or '' ]] [[get_company_currency_symbol()]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o), currency_obj= user.company_id and user.company_id.currency_id) or '' ]] </para>
         </td>
       </tr>
     </blockTable>

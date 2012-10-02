@@ -194,7 +194,7 @@
           <para style="terp_tblheader_General_Right">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(pos_payment_user_total(data['form'])) or removeParentNode('blockTable')]] [[company.currency_id.symbol]]</para>
+          <para style="terp_default_Right_9">[[ formatLang(pos_payment_user_total(data['form'], currency_obj = company.currency_id)) or removeParentNode('blockTable')]]</para>
         </td>
       </tr>
     </blockTable>

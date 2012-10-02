@@ -201,7 +201,7 @@
           <para style="terp_tblheader_Details">Net Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_total(o)) or removeParentNode('blockTable')]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9_Bold">[[ formatLang(pos_payment_total(o), currency_obj = company.currency_id) or removeParentNode('blockTable')]]</para>
         </td>
       </tr>
       </blockTable>

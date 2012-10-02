@@ -289,7 +289,7 @@
             <para style="terp_default_9">[[ p['name'] or removeParentNode('para') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ formatLang(p['amount']) or removeParentNode('tr') ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9_Bold">[[ formatLang(p['amount'], currency_obj = company.currency_id) or removeParentNode('tr') ]]</para>
           </td>
         </tr>
       </blockTable>
@@ -320,7 +320,7 @@
             <para style="terp_default_9">[[ p['name'] or removeParentNode('para') ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9_Bold">[[ formatLang(p['sum'], dp='Account') or removeParentNode('tr') ]] [[ company.currency_id.symbol ]]</para>
+            <para style="terp_default_Right_9_Bold">[[ formatLang(p['sum'], dp='Account', currency_obj = company.currency_id) or removeParentNode('tr') ]]</para>
           </td>
         </tr>
       </blockTable>

@@ -261,7 +261,7 @@
           <para style="terp_default_Bold_9">Balance :</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0))) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_tblheader_Details_Right">[[ formatLang((reduce(lambda x, y: x +(y['debit'] - y['credit']), getLines(o), 0)), currency_obj = company.currency_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_8">

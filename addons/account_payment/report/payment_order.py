@@ -32,7 +32,6 @@ class payment_order(report_sxw.rml_parse):
             'time': time,
             'get_invoice_name': self._get_invoice_name,
             'get_company_currency': self._get_company_currency,
-            'get_company_currency_symbol': self._get_company_currency_symbol,
             'get_amount_total_in_currency': self._get_amount_total_in_currency,
             'get_amount_total': self._get_amount_total,
             'get_account_name': self._get_account_name,
@@ -68,11 +67,6 @@ class payment_order(report_sxw.rml_parse):
         return total
 
     def _get_company_currency(self):
-        pool = pooler.get_pool(self.cr.dbname)
-        user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
-        return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
-
-    def _get_company_currency_symbol(self):
         pool = pooler.get_pool(self.cr.dbname)
         user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
         return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False

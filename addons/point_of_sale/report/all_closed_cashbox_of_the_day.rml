@@ -210,7 +210,7 @@
             <para style="P1"><u>[[ (get_bal(statement)) or '0.00' ]] [[company.currency_id.symbol]]</u></para>
           </td>
           <td>
-            <para style="P1"><u>[[ formatLang(get_sub_total(user,statement['journal_id'],statement['date'])) ]] [[company.currency_id.symbol]]</u></para>
+            <para style="P1"><u>[[ formatLang(get_sub_total(user,statement['journal_id'],statement['date']), currency_obj = company.currency_id )]]</u></para>
           </td>
         </tr>
       </blockTable>
