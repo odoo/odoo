@@ -28,7 +28,8 @@ openerp.hr_timesheet_sheet = function(instance) {
             if (self.updating)
                 return;
             var commands = this.field_manager.get_field_value("timesheet_ids");
-            this.res_o2m_drop.add(new instance.web.Model(this.view.model).call("resolve_2many_commands", ["timesheet_ids", commands, []]))
+            this.res_o2m_drop.add(new instance.web.Model(this.view.model).call("resolve_2many_commands", ["timesheet_ids", commands, [], 
+                    new instance.web.CompoundContext()]))
                 .then(function(result) {
                 self.querying = true;
                 self.set({sheets: result});
@@ -45,10 +46,14 @@ openerp.hr_timesheet_sheet = function(instance) {
             });
         },
         start: function() {
-            this.on("change:sheets", this, this.render);
-            this.on("change:date_to", this, this.render);
-            this.on("change:date_from", this, this.render);
-            this.render();
+            var self = this;
+            return new instance.web.Model("hr.analytic.timesheet").call("default_get", [[], new instance.web.CompoundContext()]).pipe(function(result) {
+                self.default_get = result;
+                self.on("change:sheets", self, self.render);
+                self.on("change:date_to", self, self.render);
+                self.on("change:date_from", self, self.render);
+                self.render();
+            });
         },
         render: function() {
             var self = this;
@@ -86,12 +91,12 @@ openerp.hr_timesheet_sheet = function(instance) {
                         day.lines = _.without(to_add);
                         day.lines.unshift(to_add);
                     } else {
-                        day.lines.unshift({
+                        day.lines.unshift(_.extend(_.clone(self.default_get), {
                             name: self.description_line,
                             unit_amount: 0,
                             date: instance.web.date_to_str(date),
                             account_id: account_id,
-                        });
+                        }));
                     }
                     return day;
                 });
@@ -101,7 +106,8 @@ openerp.hr_timesheet_sheet = function(instance) {
             }).value();
 
             // we need the name_get of the analytic accounts
-            this.render_drop.add(new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(self.accounts, "account")]))
+            this.render_drop.add(new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(self.accounts, "account"),
+                    new instance.web.CompoundContext()]))
                 .pipe(function(result) {
                 self.account_names = {};
                 _.each(result, function(el) {
@@ -158,9 +164,9 @@ openerp.hr_timesheet_sheet = function(instance) {
             _.each(self.accounts, function(account) {
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
-                        if (line.unit_amount != 0) {
+                        if (line.unit_amount !== 0) {
                             var tmp = _.clone(line);
-                            line.id = undefined;
+                            //line.id = undefined;
                             lst.push(tmp);
                         }
                     });
