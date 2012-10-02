@@ -617,19 +617,20 @@ class module(osv.osv):
         return res
 
     def install_from_urls(self, cr, uid, urls, context=None):
+        OPENERP = 'openerp'
         tmp = tempfile.mkdtemp()
         try:
-            for module_name in urls:
+            for module_name, url in urls.items():
+                if not url:
+                    continue    # nothing to download, local version is already the last one
                 try:
-                    content = urllib2.urlopen(urls[module_name]).read()
+                    content = urllib2.urlopen(url).read()
                 except Exception, e:
                     _logger.exception('ggr')
                     raise osv.except_osv('grrr', e)
                 else:
                     zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
-
-            OPENERP = 'openerp'
 
             for module_name in urls:
                 if module_name == OPENERP:
