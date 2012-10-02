@@ -146,9 +146,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                                 $(this).val(self.sum_box(account, day_count));
                             } else {
                                 account.days[day_count].lines[0].unit_amount += num - self.sum_box(account, day_count);
-                                self.get_total(account).html(self.sum_total(account));
-                                self.get_day_total(day_count).html(self.sum_day_total(day_count));
-                                self.get_super_total().html(self.sum_super_total());
+                                self.display_totals();
                                 self.sync();
                             }
                         });
@@ -156,12 +154,8 @@ openerp.hr_timesheet_sheet = function(instance) {
                         self.get_box(account, day_count).html(self.sum_box(account, day_count));
                     }
                 });
-                self.get_total(account).html(self.sum_total(account));
             });
-            _.each(_.range(self.dates.length), function(day_count) {
-                self.get_day_total(day_count).html(self.sum_day_total(day_count));
-            });
-            self.get_super_total().html(self.sum_super_total());
+            self.display_totals();
         },
         get_box: function(account, day_count) {
             return this.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]');
@@ -182,31 +176,24 @@ openerp.hr_timesheet_sheet = function(instance) {
             });
             return line_total;
         },
-        sum_total: function(account) {
-            var total = 0;
-            _.each(account.days, function(day) {
-                _.each(day.lines, function(line) {
-                    total += line.unit_amount;
-                });
-            });
-            return total;
-        },
-        sum_day_total: function(day_count) {
-            var total = 0;
-            _.each(this.accounts, function(account) {
-                _.each(account.days[day_count].lines, function(line) {
-                    total += line.unit_amount;
-                });
-            });
-            return total;
-        },
-        sum_super_total: function(account) {
+        display_totals: function() {
             var self = this;
-            var total = 0;
+            var day_tots = _.map(_.range(self.dates.length), function() { return 0 });
+            var super_tot = 0;
             _.each(self.accounts, function(account) {
-                total += self.sum_total(account);
+                var acc_tot = 0;
+                _.each(_.range(self.dates.length), function(day_count) {
+                    var sum = self.sum_box(account, day_count);
+                    acc_tot += sum;
+                    day_tots[day_count] += sum;
+                    super_tot += sum;
+                });
+                self.get_total(account).html(acc_tot);
             });
-            return total;
+            _.each(_.range(self.dates.length), function(day_count) {
+                self.get_day_total(day_count).html(day_tots[day_count]);
+            });
+            self.get_super_total().html(super_tot);
         },
         sync: function() {
             var self = this;
