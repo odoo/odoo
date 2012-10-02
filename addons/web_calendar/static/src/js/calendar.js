@@ -172,8 +172,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         scheduler.init(this.$el.find('.oe_calendar')[0], null, this.mode || 'month');
 
-        // Remove hard coded style attributes from dhtmlx scheduler
-        this.$el.find(".dhx_cal_navline div").removeAttr('style');
+
 
         scheduler.detachAllEvents();
         scheduler.attachEvent('onEventAdded', this.do_create_event);
@@ -184,12 +183,19 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
 
         scheduler.attachEvent('onViewChange', this.on_view_changed);
         this.refresh_scheduler();
+
+        // Remove hard coded style attributes from dhtmlx scheduler
+        this.$el.find(".dhx_cal_navline").removeAttr('style');
+        instance.web.bus.on('resize',this,function(){
+            self.$el.find(".dhx_cal_navline").removeAttr('style');
+        });
     },
     on_view_changed: function(mode, date) {
         this.$el.find('.oe_calendar').removeClass('oe_cal_day oe_cal_week oe_cal_month').addClass('oe_cal_' + mode);
         if (!date.between(this.range_start, this.range_stop)) {
             this.update_range_dates(date);
             this.do_ranged_search();
+            this.$el.find(".dhx_cal_navline div").removeAttr('style');
         }
         this.ready.resolve();
     },
@@ -299,7 +305,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     do_create_event: function(event_id, event_obj) {
         var self = this,
             data = this.get_event_data(event_obj);
-        this.dataset.create(data, function(r) {
+        this.dataset.create(data).then(function(r) {
             var id = r.result;
             self.dataset.ids.push(id);
             scheduler.changeEventId(event_id, id);
@@ -353,7 +359,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
         var self = this,
             index = this.dataset.get_id_index(event_id);
         if (index !== null) {
-            this.dataset.unlink(event_id, function() {
+            this.dataset.unlink(event_id).then(function() {
                 self.refresh_minical();
             });
         }

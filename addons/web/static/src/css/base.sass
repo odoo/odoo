@@ -476,12 +476,6 @@ $sheet-max-width: 860px
             text-decoration: none
         margin-bottom: 1px
     // }}}
-    .oe_form
-        header
-            .oe_tags
-                margin: 5px 0 0 5px
-                width: 400px
-                padding-bottom: 0
     // Tooltips {{{
     &.oe_tooltip
         font-size: 12px
@@ -605,7 +599,8 @@ $sheet-max-width: 860px
         text-indent: -99999px
         vertical-align: top
         margin-top: 8px
-        margin-left: 4px
+        //margin-left set at 3px to avoid a strange overflow
+        margin-left: 3px 
         border-left: 4px solid transparent
         border-right: 4px solid transparent
         border-top: 4px solid#404040
@@ -797,23 +792,28 @@ $sheet-max-width: 860px
         .oe_topbar, .oe_leftbar
             display: none
     // }}}
-    // WebClient.topbar {{{
+    // Top Menu {{{
+    
     .oe_topbar
         width: 100%
-        height: 31px
+        height: 32px
+        background-color: #414141
         @include vertical-gradient(#646060, #262626)
         .oe_topbar_item
             display: block
             padding: 5px 10px 7px
             line-height: 20px
             height: 20px
+            text-decoration: none
             color: #eee
             vertical-align: top
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-            &:hover
-                background: #303030
+            @include transition(all 0.2s ease-out)
+            &:hover,
+                background: rgba(0,0,0,0.2)
+                text-shadow: black 0px 0px 3px
                 color: white
-                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
 
         .oe_topbar_avatar
             width: 24px
@@ -842,6 +842,59 @@ $sheet-max-width: 860px
                 &:hover
                     @include vertical-gradient(#292929, #191919)
                     @include box-shadow(none)
+
+    // oe menu is the list of the buttons on the left side of the bar.
+    // So why aren't the buttons oe_topbar_items ? This sad state of affairs
+    // is a leftover from an uncomplete refactoring when the left and top menu
+    // were merged. You are welcome to refactor and clean this up
+    .oe_menu
+        float: left
+        padding: 0
+        margin: 0
+        font-size: 13px
+        > li
+            list-style-type: none
+            padding: 0
+            margin: 0
+            float: left
+            display: block
+            color: #eeeeee
+            > a
+                display: block
+                padding: 5px 10px 7px
+                line-height: 20px
+                height: 20px
+                text-decoration: none
+                color: #eee
+                vertical-align: top
+                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
+                @include transition(all 0.2s ease-out)
+                &:hover,
+                    background: rgba(0,0,0,0.2)
+                    text-shadow: black 0px 0px 3px
+                    color: white
+                    @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
+            > .oe_active
+                background: rgba(0,0,0,0.2)
+                text-shadow: black 0px 0px 3px
+                font-weight: bold
+                @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
+
+    .oe_user_menu
+        float: right
+        padding: 0
+        margin: 0
+        li
+            list-style-type: none
+            float: left
+        .oe_dropdown_menu
+            right: -1px
+
+    .oe_systray > div
+        float: left
+        padding: 0 4px 0 4px
+    .oe_systray
+        float: right
 
     // }}}
     // Webclient.leftbar {{{
@@ -878,78 +931,8 @@ $sheet-max-width: 860px
                 color: #c81010
                 font-style: italic
     // }}}
-    // UserMenu {{{
-    .oe_user_menu
-        float: right
-        padding: 0
-        margin: 0
-        li
-            list-style-type: none
-            float: left
-        .oe_dropdown_menu
-            right: -1px
-    // }}}
-    // About openerp {{{
-    .oe_about
-        background-color: white
-        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
-        @include radius(0 0 2px 2px)
-        a
-            color: $link-color
-            &:hover
-                text-decoration: underline
-            &:focus
-                outline: none
-        .oe_logo
-            margin-left: -6px
-        .oe_bottom
-            position: absolute
-            top: 50%
-            left: 0
-            right: 0
-            bottom: 0
-            text-shadow: 0 1px 1px #999999
-            @include vertical-gradient(#b41616, #600606)
-            color: #eee
-            padding: 0 16px
-            @include radius(0 0 2px 2px)
-            a
-                color: #eee
-    // }}}
-    // Systray {{{
-    .oe_systray > div
-        float: left
-        padding: 0 4px 0 4px
-    .oe_systray
-        float: right
-    // }}}
-    // Menu {{{
-    .oe_menu
-        float: left
-        padding: 0
-        margin: 0
-        > li
-            list-style-type: none
-            padding: 0
-            margin: 0
-            float: left
-            > a
-                display: block
-                padding: 5px 10px 7px
-                line-height: 20px
-                height: 20px
-                color: #eee
-                vertical-align: top
-                text-shadow: 0 1px 1px rgba(0,0,0,0.2)
-                &:hover
-                    background: #303030
-                    color: white
-                    @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
-            > .oe_active
-                background: #303030
-                font-weight: bold
-                color: white
-                @include box-shadow(0 1px 2px rgba(255,255,255,0.3) inset)
+    // Webclient.leftbar items {{{
+
     .oe_secondary_menu_section
         font-weight: bold
         margin-left: 8px
@@ -1028,6 +1011,34 @@ $sheet-max-width: 860px
             border-left: 4px solid transparent
             border-right: 4px solid transparent
             border-top: 4px solid #4c4c4c
+
+    // }}}
+    // About openerp {{{
+    .oe_about
+        background-color: white
+        background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAYAAAAGCAYAAADgzO9IAAAAKUlEQVQIHWO8e/fufwYsgAUkJigoiCIF5DMyoYggcUiXgNnBiGQKmAkARpcEQeriln4AAAAASUVORK5CYII=)
+        @include radius(0 0 2px 2px)
+        a
+            color: $link-color
+            &:hover
+                text-decoration: underline
+            &:focus
+                outline: none
+        .oe_logo
+            margin-left: -6px
+        .oe_bottom
+            position: absolute
+            top: 50%
+            left: 0
+            right: 0
+            bottom: 0
+            text-shadow: 0 1px 1px #999999
+            @include vertical-gradient(#b41616, #600606)
+            color: #eee
+            padding: 0 16px
+            @include radius(0 0 2px 2px)
+            a
+                color: #eee
     // }}}
     // ActionManager {{{
     .oe_application
@@ -1048,7 +1059,7 @@ $sheet-max-width: 860px
     // ViewManager common {{{
     .oe_view_manager
         .oe_view_manager_body
-            height: inherit
+            height: inherit 
         .oe_view_manager_view_kanban
             height: inherit
 
@@ -1186,7 +1197,6 @@ $sheet-max-width: 860px
     .oe_view_manager_current
         height: 100%
         > .oe_view_manager_header
-            border-top: 1px solid #cacaca
             border-bottom: 1px solid #cacaca
             @include vertical-gradient(#fcfcfc, #dedede)
             @include box-shadow((0 1px 0 rgba(255,255,255,0.4), 0 0 9px rgba(0,0,0,0.1)))
@@ -1597,6 +1607,10 @@ $sheet-max-width: 860px
                 float: right
             .oe_form_button
                 margin: 3px 2px 1px
+            .oe_tags
+                margin: 5px 0 0 5px
+                width: 400px
+                padding-bottom: 0
         div.oe_chatter
             min-width: 650px
             max-width: $sheet-max-width
@@ -1736,6 +1750,8 @@ $sheet-max-width: 860px
             background: white
             min-width: 60px
             color: #1f1f1f
+        textarea
+            height: 32px
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
@@ -2165,22 +2181,29 @@ $sheet-max-width: 860px
         width: 100%
         background-color: white
         border-spacing: 0
+        color: #4c4c4c
         th
             padding: 10px
-            color: #4c4c4c
             font-weight: bold
             background-color: #f0f0f0
             border-bottom: 2px solid #cacaca
-        .treeview-tr, .treeview-td
+
+        td
             cursor: pointer
-            border-right: 1px dotted $tag-border
-            vertical-align: top
+            vertical-align: middle
             text-align: left
-            border-bottom: 1px solid #cfcccc
-        tr:hover
-            background-color: #e0e0f8
-        .oe-number
+            vertical-align: middle
+            height: 20px
+            padding-left: 4px
+            padding-right: 4px
+            border-right: 1px solid #e7e7e7
+
+        td.oe_number
             text-align: right !important
+        tr
+            border-bottom: 1px solid #d6d6d6
+            &:hover
+                background-color: #e7e7e7
         span
             font-size: 90%
             font-weight: normal
@@ -2192,6 +2215,7 @@ $sheet-max-width: 860px
             background-image: url(/web/static/src/img/collapse.gif)
         .treeview-tr.oe-treeview-first span, .treeview-td.oe-treeview-first span
             margin-left: 16px
+
     // }}}
     // Debugging stuff {{{
     .oe_layout_debugging

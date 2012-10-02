@@ -27,6 +27,11 @@
     -webkit-box-shadow: $bsval
     -box-shadow: $bsval
 
+@mixin box-sizing($sizing: border-box)
+    -webkit-box-sizing: $sizing
+    -moz-box-sizing: $sizing
+    box-sizing: $sizing
+
 @mixin transform($transform)
     -moz-transform: $transform
     -webkit-transform: $transform
@@ -167,13 +172,17 @@
         width: 200px
         padding: 10px
     .oe_kanban_quick_create input
+        @include box-sizing(border-box)
         outline: none
-        border: none
-        @include box-shadow(none)
+        border: 1px solid transparent
         display: block
-        margin: 0 0 8px 0
+        margin-bottom: 8px
         font-size: 13px
         width: 100%
+        @include box-shadow(none)
+        &:focus
+            border: 1px solid #A6A6FE
+            @include box-shadow(0px 0px 7px rgba(0, 133, 255, 0.3) inset)
     // }}}
     // KanbanRecords {{{
     .oe_kanban_vignette
@@ -199,7 +208,7 @@
             margin: 0 0 4px 0
         .oe_tag
             display: inline-block
-            margin: 0 0 2px 0
+            margin: 0 2px 2px 0
     .oe_kanban_record
         position: relative
         display: block
