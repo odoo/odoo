@@ -577,7 +577,7 @@
             <tr>
                 <th t-foreach="fields_view" t-as="field"
                     t-if="!field.attrs.modifiers.tree_invisible">
-                    <t t-esc="fields[field.attrs.name].string" />
+                    <t t-esc="field_value.attrs.string || fields[field.attrs.name].string" />
                 </th>
             </tr>
         </thead>
@@ -650,11 +650,9 @@
 </table>
 <div t-name="ListView.buttons" class="oe_list_buttons">
     <t t-if="!widget.no_leaf and widget.options.action_buttons !== false and widget.options.addable and widget.is_action_enabled('create')">
-        <div name="oe_list_add_div">
-            <button type="button" class="oe_button oe_list_add oe_highlight">
-                <t t-esc="widget.options.addable"/>
-            </button>
-        </div>
+        <button type="button" class="oe_button oe_list_add oe_highlight">
+            <t t-esc="widget.options.addable"/>
+        </button>
     </t>
 </div>
 <t t-name="ListView.pager">
@@ -695,7 +693,7 @@
     </td>
 </tr>
 <t t-extend="ListView.buttons">
-    <t t-jquery="div.oe_list_add_div" t-operation="after">
+    <t t-jquery="button.oe_list_add" t-operation="after">
         <button class="oe_button oe_list_save oe_highlight"
                 type="button">Save</button>
         <span class="oe_alternative">
@@ -704,6 +702,11 @@
         </span>
     </t>
 </t>
+<button t-name="ListView.row.button" type="button"
+        t-att-title="widget.string" t-att-disabled="disabled || undefined"
+        t-att-class="disabled ? 'oe_list_button_disabled' : undefined"
+    ><img t-attf-src="#{prefix}/web/static/src/img/icons/#{widget.icon}.png"
+         t-att-alt="widget.string" /></button>
 <t t-extend="ListView.row">
     <!-- adds back padding to row being rendered after edition, if necessary
          (if not deletable add back padding), otherwise the row being added is

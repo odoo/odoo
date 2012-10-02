@@ -138,6 +138,9 @@ instance.web.format_value = function (value, descriptor, value_if_empty) {
             return value[1];
         case 'one2many':
         case 'many2many':
+            if (typeof value === 'string') {
+                return value;
+            }
             return _.str.sprintf(_t("(%d records)"), value.length);
         case 'datetime':
             if (typeof(value) == "string")

@@ -1,7 +1,7 @@
 Search View
 ===========
 
-OpenERP Web 6.2 implements a unified facets-based search view instead
+OpenERP Web 7.0 implements a unified facets-based search view instead
 of the previous form-like search view (composed of buttons and
 multiple fields). The goal for this change is twofold:
 
@@ -145,6 +145,40 @@ started only once (per view).
           dynamically collects, lays out and renders filters? =>
           exercises drawer thingies
 
+Converting from facet objects
++++++++++++++++++++++++++++++
+
+Ultimately, the point of the search view is to allow searching. In
+OpenERP this is done via :ref:`domains <openerpserver:domains>`. On
+the other hand, the OpenERP Web 7 search view's state is modelled
+after a collection of :js:class:`~openerp.web.search.Facet`, and each
+field of a search view may have special requirements when it comes to
+the domains it produces [#special]_.
+
+So there needs to be some way of mapping
+:js:class:`~openerp.web.search.Facet` objects to OpenERP search data.
+
+This is done via an input's
+:js:func:`~openerp.web.search.Input.get_domain` and
+:js:func:`~openerp.web.search.Input.get_context`. Each takes a
+:js:class:`~openerp.web.search.Facet` and returns whatever it's
+supposed to generate (a domain or a context, respectively). Either can
+return ``null`` if the current value does not map to a domain or
+context, and can throw an :js:class:`~openerp.web.search.Invalid`
+exception if the value is not valid at all for the field.
+
+.. note::
+
+    The :js:class:`~openerp.web.search.Facet` object can have any
+    number of values (from 1 upwards)
+
+.. note::
+
+    There is a third conversion method,
+    :js:func:`~openerp.web.search.Input.get_groupby`, which returns an
+    ``Array`` of groupby domains rather than a single context. At this
+    point, it is only implemented on (and used by) filters.
+
 Programmatic interactions: internal model
 -----------------------------------------
 
@@ -256,42 +290,8 @@ with directly by external objects or search view controls
 
         Can be of any type.
 
-Converting from facet objects
------------------------------
-
-Ultimately, the point of the search view is to allow searching. In
-OpenERP this is done via :ref:`domains <openerpserver:domains>`. On
-the other hand, the OpenERP Web 7 search view's state is modelled
-after a collection of :js:class:`~openerp.web.search.Facet`, and each
-field of a search view may have special requirements when it comes to
-the domains it produces [#special]_.
-
-So there needs to be some way of mapping
-:js:class:`~openerp.web.search.Facet` objects to OpenERP search data.
-
-This is done via an input's
-:js:func:`~openerp.web.search.Input.get_domain` and
-:js:func:`~openerp.web.search.Input.get_context`. Each takes a
-:js:class:`~openerp.web.search.Facet` and returns whatever it's
-supposed to generate (a domain or a context, respectively). Either can
-return ``null`` if the current value does not map to a domain or
-context, and can throw an :js:class:`~openerp.web.search.Invalid`
-exception if the value is not valid at all for the field.
-
-.. note::
-
-    The :js:class:`~openerp.web.search.Facet` object can have any
-    number of values (from 1 upwards)
-
-.. note::
-
-    There is a third conversion method,
-    :js:func:`~openerp.web.search.Input.get_groupby`, which returns an
-    ``Array`` of groupby domains rather than a single context. At this
-    point, it is only implemented on (and used by) filters.
-
 Field services
-++++++++++++++
+--------------
 
 :js:class:`~openerp.web.search.Field` provides a default
 implementation of :js:func:`~openerp.web.search.Input.get_domain` and
@@ -377,7 +377,7 @@ necessarily having to reimplement all of
     :js:class:`~openerp.web.search.Field`
 
 Arbitrary data storage
-++++++++++++++++++++++
+----------------------
 
 :js:class:`~openerp.web.search.Facet` and
 :js:class:`~openerp.web.search.FacetValue` objects (and structures)

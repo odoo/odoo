@@ -930,12 +930,10 @@ instance.web.Sidebar = instance.web.Widget.extend({
         var view = this.getParent();
         this.sections = [
             { 'name' : 'print', 'label' : _t('Print'), },
-            { 'name' : 'files', 'label' : _t('Attachment(s)'), },
             { 'name' : 'other', 'label' : _t('More'), }
         ];
         this.items = {
             'print' : [],
-            'files' : [],
             'other' : []
         };
         this.fileupload_id = _.uniqueId('oe_fileupload');
@@ -1217,11 +1215,11 @@ instance.web.View = instance.web.Widget.extend({
                 }
             }
             args.push(context);
-            return dataset.call_button(action_data.name, args, handler);
+            return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type=="action") {
             return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
         } else  {
-            return dataset.exec_workflow(record_id, action_data.name, handler);
+            return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
     },
     /**
