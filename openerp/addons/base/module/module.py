@@ -629,8 +629,10 @@ class module(osv.osv):
                     zipfile.ZipFile(StringIO(content)).extractall(tmp)
                     assert os.path.isdir(os.path.join(tmp, module_name))
 
+            OPENERP = 'openerp'
+
             for module_name in urls:
-                if module_name == 'base':
+                if module_name == OPENERP:
                     continue    # special case. handled below
                 module_path = modules.get_module_path(module_name, downloaded=True, display_warning=False)
                 bck = backup(module_path, False)
@@ -638,22 +640,22 @@ class module(osv.osv):
                 if bck:
                     shutil.rmtree(bck)
 
-            if urls.get('base', None):
-                # base is a special case. it containt the server and the base module.
+            if urls.get(OPENERP, None):
+                # special case. it containt the server and the base module.
                 # extract path is not the same
 
-                # TODO copy all modules in the SERVER/openerp/addons directory to the new "base" module (exceptbase itself)
-                # then replace the server by the new "base" module
                 base_path = os.path.dirname(modules.get_module_path('base'))
 
+                # copy all modules in the SERVER/openerp/addons directory to the new "openerp" module (except base itself)
                 for d in os.listdir(base_path):
                     if d != 'base' and os.path.isdir(os.path.join(base_path, d)):
-                        destdir = os.path.join(tmp, 'base', 'addons', d)    # XXX 'openerp'
+                        destdir = os.path.join(tmp, OPENERP, 'addons', d)    # XXX 'openerp' subdirectory ?
                         shutil.copytree(os.path.join(base_path, d), destdir)
 
+                # then replace the server by the new "base" module
                 server_dir = openerp.tools.config['root_path']      # XXX or dirname()
                 bck = backup(server_dir)
-                shutil.move(os.path.join(tmp, 'base'), server_dir)
+                shutil.move(os.path.join(tmp, OPENERP), server_dir)
                 #if bck:
                 #    shutil.rmtree(bck)
 
