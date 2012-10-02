@@ -703,9 +703,11 @@ class purchase_order_line(osv.osv):
         """
         onchange handler of product_uom.
         """
+        if context is None:
+            context = {}
+        context = dict(context, uom_change=True)
         if not uom_id:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}}
-        context.update(uom_change=True)
         return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
             partner_id, date_order=date_order, fiscal_position_id=fiscal_position_id, date_planned=date_planned,
             name=name, price_unit=price_unit, notes=notes, context=context)
@@ -763,15 +765,13 @@ class purchase_order_line(osv.osv):
 
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
-        if not uom_id:
+        if not uom_id or not context.get('uom_change'):
             uom_id = product_uom_po_id
-            
-        if not context.get('uom_change'):
-            uom_id = product.uom_id.id
+        
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
             res['warning'] = {'title': _('Warning'), 'message': _('Selected UOM does not belong to the same category as the product UOM')}
             uom_id = product_uom_po_id
-        
+
         res['value'].update({'product_uom': uom_id})
 
         # - determine product_qty and date_planned based on seller info
