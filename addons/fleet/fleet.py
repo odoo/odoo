@@ -550,7 +550,7 @@ class fleet_vehicle_log_insurance(osv.Model):
             return {}
 
     _name = 'fleet.vehicle.log.insurance'
-    _order='expiration_date'
+    _order='state,expiration_date'
     _columns = {
 
         #'name' : fields.char('Name',size=64),
