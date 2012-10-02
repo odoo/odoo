@@ -193,7 +193,7 @@ class mail_message(osv.Model):
             attachment_ids = []
         try:
             author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
-            is_author = uid in msg.author_id.user_ids
+            is_author = uid == msg.author_id.user_ids[0].id
         except (orm.except_orm, osv.except_osv):
             author_id = False
             is_author = False
@@ -215,8 +215,6 @@ class mail_message(osv.Model):
             'author_id': author_id,
             'is_author': is_author,
             'partner_ids': partner_ids,
-            'child_ids': [],
-            'child_nbr': child_nbr,
             'parent_id': msg.parent_id and msg.parent_id.id or False,
             'vote_user_ids': vote_ids,
             'has_voted': has_voted,
@@ -311,18 +309,20 @@ class mail_message(osv.Model):
 
         limit = limit or self._message_read_limit
         context = context or {}
-        if not ids:
-            ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
-            # if the user can read a message, he can read all the thread
 
-        messages = self.browse(cr, uid, ids, context=context)
-
-
-        # key: ID, value: record
         tree = []
         result = []
         record = None
-        for msg in messages:
+
+        # select ids
+        if ids:
+            for msg in self.browse(cr, uid, ids, context=context):
+                result.append(self._message_dict_get(cr, uid, msg, context=context))
+            return result
+
+        # key: ID, value: record
+        ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
+        for msg in self.browse(cr, uid, ids, context=context):
             # if not in record and not in message_loded list
             if msg.id not in tree and msg.id not in message_loaded :
                 record = self._message_dict_get(cr, uid, msg, context=context)
@@ -341,10 +341,12 @@ class mail_message(osv.Model):
 
         result = sorted(result, key=lambda k: k['id'])
 
+
+        tree_not = []   
         # expandable for not show message
         for id_msg in tree:
             # get all childs
-            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',id_msg],['id','not in',message_loaded]], None, limit=limit)
+            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',id_msg],['id','not in',message_loaded]], None, limit=1000)
             # group childs not read
             id_min=None
             id_max=None
@@ -356,6 +358,7 @@ class mail_message(osv.Model):
                         id_min=not_loaded_id
                     if id_max==None or id_max<not_loaded_id:
                         id_max=not_loaded_id
+                    tree_not.append(not_loaded_id)
                 else:
                     if nb>0:
                         result.append({
@@ -375,8 +378,9 @@ class mail_message(osv.Model):
                     'id':  id_min
                 })
 
+
         # expandable for limit max
-        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded]], context=context, limit=1)
+        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded+tree+tree_not]], context=context, limit=1)
         if len(ids) > 0:
             result.append(
             {

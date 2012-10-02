@@ -109,12 +109,10 @@
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
-                <t t-if="!widget.options.thread.display_on_flat">
-                    <li t-if="widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
-                    <li t-if="!widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
-                    <li t-if="widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_e">)</a></li>
-                    <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_e" title="Reply by mail">)</a></li>
-                </t>
+                <li t-if="!widget.options.thread.display_on_flat and widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
+                <li t-if="!widget.options.thread.display_on_flat and !widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
+                <li t-if="!widget.options.message.show_reply_by_email" title="Reply"><a class="oe_reply oe_e">)</a></li>
+                <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_e" title="Reply by mail">)</a></li>
                 <t t-if="(widget.options.message.show_reply || widget.options.message.show_reply_by_email || (widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email')">
                     <li>
                         <span class="oe_dropdown_toggle">
@@ -176,7 +174,7 @@
     <li t-name="mail.thread.expandable" t-attf-class="oe_mail oe_mail_thread_msg oe_mail_unread" t-attf-data-thread_id="{widget.id}">
         <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
             <div class="oe_mail_msg_content oe_mail_msg_more_message">
-                <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> not display)</span>...</a>
+                <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> messages not display)</span>...</a>
             </div>
         </div>
     </li>
