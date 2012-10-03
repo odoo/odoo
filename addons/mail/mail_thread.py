@@ -627,6 +627,7 @@ class mail_thread(osv.AbstractModel):
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
+
         context = context or {}
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
@@ -678,13 +679,6 @@ class mail_thread(osv.AbstractModel):
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
         })
-
-        # if the parent is private, the message must be private
-        if parent_id:
-            msg = messages.browse(cr, uid, parent_id, context=context)
-            if msg.is_private:
-                values["is_private"] = msg.is_private
-
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)

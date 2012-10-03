@@ -87,15 +87,8 @@
         <record id="action_mail_inbox_feeds" model="ir.actions.client">
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('is_private','=',True),('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'default_is_private':True} }&quot;"/>
-        </record>
-
-        <record id="action_mail_wall_feeds" model="ir.actions.client">
-            <field name="name">Wall</field>
-            <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('is_private','=',False),('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'default_is_private':False} }&quot;"/>
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
+                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">

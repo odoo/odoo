@@ -219,6 +219,7 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
+        print '**', context
         active_ids = context.get('active_ids')
 
         for wizard in self.browse(cr, uid, ids, context=context):
