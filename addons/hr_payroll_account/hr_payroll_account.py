@@ -36,7 +36,7 @@ class hr_payslip(osv.osv):
 
     _columns = {
         'period_id': fields.many2one('account.period', 'Force Period',states={'draft': [('readonly', False)]}, readonly=True, domain=[('state','<>','done')], help="Keep empty to use the period of the validation(Payslip) date."),
-        'journal_id': fields.many2one('account.journal', 'Expense Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
+        'journal_id': fields.many2one('account.journal', 'Salary Journal',states={'draft': [('readonly', False)]}, readonly=True, required=True),
         'move_id': fields.many2one('account.move', 'Accounting Entry', readonly=True),
     }
 
@@ -215,7 +215,7 @@ class hr_payslip_run(osv.osv):
     _inherit = 'hr.payslip.run'
     _description = 'Payslip Run'
     _columns = {
-        'journal_id': fields.many2one('account.journal', 'Expense Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
+        'journal_id': fields.many2one('account.journal', 'Salary Journal', states={'draft': [('readonly', False)]}, readonly=True, required=True),
     }
 
     def _get_default_journal(self, cr, uid, context=None):
