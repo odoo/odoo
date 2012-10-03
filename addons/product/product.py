@@ -350,7 +350,6 @@ class product_template(osv.osv):
         'standard_price': lambda *a: 0.0,
         'sale_ok': lambda *a: 1,
         'produce_delay': lambda *a: 1,
-        'purchase_ok': lambda *a: 1,
         'uom_id': _get_uom_id,
         'uom_po_id': _get_uom_id,
         'uos_coeff' : lambda *a: 1.0,
