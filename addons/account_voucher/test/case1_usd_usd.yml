@@ -216,6 +216,10 @@
             assert move_line.credit == 63.00, "Debtor account has wrong entry."
         elif move_line.amount_currency == 10.00:
             assert move_line.debit == 9.00, "Writeoff amount is wrong."
+        elif move_line.amount_currency == 240.00:
+            assert move_line.debit == 216.00, "Bank entry is wrong."
+        else:
+            assert False, "Unrecognized journal entry"
 -
   I check the residual amount of Invoice1, should be 20 in amount_currency
 -
@@ -237,7 +241,7 @@
 -
   On the first April, I create the second voucher of payment with values 45 USD, journal USD, 
 -
-  !record {model: account.voucher, id: account_voucher_2_case1}:
+  !record {model: account.voucher, id: account_voucher_2_case1, view: view_vendor_receipt_form}:
     account_id: account.cash
     amount: 45.0
     company_id: base.main_company
@@ -323,8 +327,16 @@
             assert move_line.debit == 4.75, "Writeoff amount is wrong."
         elif move_line.debit == 11.5 and move_line.account_id.reconcile:
             assert move_line.amount_currency == 0.0 and move_line.reconcile_id.id == reconcile_a, "Exchange difference entry for the invoice of 100$ is wrong"
+        elif move_line.credit == 11.5:
+            assert move_line.amount_currency == 0.0
         elif move_line.debit == 31.0 and move_line.account_id.reconcile:
             assert move_line.amount_currency == 0.0 and move_line.reconcile_id.id == reconcile_b, "Exchange difference entry for the invoice of 200$ is wrong"
+        elif move_line.credit == 31.0:
+            assert move_line.amount_currency == 0.0
+        elif move_line.amount_currency == 45.00:
+            assert move_line.debit == 42.75, "Bank entry is wrong."
+        else:
+            assert False, "Unrecognized journal entry"
 -
   I check the residual amount of Invoice1, should be 0 in residual currency and 0 in amount_residual and paid
 -

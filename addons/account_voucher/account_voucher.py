@@ -667,6 +667,7 @@ class account_voucher(osv.osv):
 
         #voucher line creation
         for line in account_move_lines:
+
             if _remove_noise_in_o2m():
                 continue
 
@@ -1183,6 +1184,7 @@ class account_voucher(osv.osv):
                 account_id = voucher_brw.partner_id.property_account_receivable.id
             else:
                 account_id = voucher_brw.partner_id.property_account_payable.id
+            sign = voucher_brw.type == 'payment' and -1 or 1
             move_line = {
                 'name': write_off_name or name,
                 'account_id': account_id,
@@ -1191,7 +1193,7 @@ class account_voucher(osv.osv):
                 'date': voucher_brw.date,
                 'credit': diff > 0 and diff or 0.0,
                 'debit': diff < 0 and -diff or 0.0,
-                'amount_currency': company_currency <> current_currency and voucher_brw.writeoff_amount or False,
+                'amount_currency': company_currency <> current_currency and (sign * -1 * voucher_brw.writeoff_amount) or False,
                 'currency_id': company_currency <> current_currency and current_currency or False,
                 'analytic_account_id': voucher_brw.analytic_id and voucher_brw.analytic_id.id or False,
             }
