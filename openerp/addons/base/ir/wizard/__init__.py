@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 ##############################################################################
-#
+#    
 #    OpenERP, Open Source Management Solution
 #    Copyright (C) 2004-2009 Tiny SPRL (<http://tiny.be>).
 #
@@ -15,31 +15,9 @@
 #    GNU Affero General Public License for more details.
 #
 #    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#    along with this program.  If not, see <http://www.gnu.org/licenses/>.     
 #
 ##############################################################################
-
-import ir_model
-import ir_model_constraint
-import ir_model_relation
-import ir_sequence
-import ir_needaction
-import ir_ui_menu
-import ir_ui_view
-import ir_default
-import ir_actions
-import ir_attachment
-import ir_cron
-import ir_filters
-import ir_values
-import ir_translation
-import ir_exports
-import workflow
-import ir_rule
-import wizard
-import ir_config_parameter
-import osv_memory_autovacuum
-import ir_mail_server
-
+import wizard_menu
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 
