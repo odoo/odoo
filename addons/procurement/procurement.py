@@ -649,8 +649,8 @@ class product_template(osv.osv):
         'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
     }
     _defaults = {
-        'procure_method': lambda *a: 'make_to_stock',
-        'supply_method': lambda *a: 'buy',
+        'procure_method': 'make_to_stock',
+        'supply_method': 'buy',
     }
 product_template()
 

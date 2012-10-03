@@ -1102,7 +1102,7 @@ class product_template(osv.osv):
                 'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
             }
     _defaults = {
-             'purchase_ok': lambda *a: 1,
+             'purchase_ok': 1,
             }
 
 product_template()
