@@ -304,7 +304,7 @@ class account_bank_statement(osv.osv):
             'date': st_line.date,
             'ref': st_line.ref,
             'move_id': move_id,
-            'partner_id': partner_id,
+            'partner_id': par_id,
             'account_id': acc_id,
             'credit': credit,
             'debit': debit,
@@ -430,7 +430,7 @@ class account_bank_statement(osv.osv):
                     'name': st_number,
                     'balance_end_real': st.balance_end
             }, context=context)
-            self.message_append_note(cr, uid, [st.id], body=_('Statement %s is confirmed, journal items are created.') % (st_number,), context=context)
+            self.message_post(cr, uid, [st.id], body=_('Statement %s confirmed, journal items were created.') % (st_number,), context=context)
         return self.write(cr, uid, ids, {'state':'confirm'}, context=context)
 
     def button_cancel(self, cr, uid, ids, context=None):
@@ -447,14 +447,18 @@ class account_bank_statement(osv.osv):
         return self.write(cr, uid, done, {'state':'draft'}, context=context)
 
     def _compute_balance_end_real(self, cr, uid, journal_id, context=None):
-        cr.execute('SELECT balance_end_real \
-                FROM account_bank_statement \
-                WHERE journal_id = %s AND NOT state = %s \
-                ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
-        res = cr.fetchone()
+        res = False
+        if journal_id:
+            cr.execute('SELECT balance_end_real \
+                    FROM account_bank_statement \
+                    WHERE journal_id = %s AND NOT state = %s \
+                    ORDER BY date DESC,id DESC LIMIT 1', (journal_id, 'draft'))
+            res = cr.fetchone()
         return res and res[0] or 0.0
 
     def onchange_journal_id(self, cr, uid, statement_id, journal_id, context=None):
+        if not journal_id:
+            return {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
 
         journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['default_debit_account_id', 'company_id'], context=context)

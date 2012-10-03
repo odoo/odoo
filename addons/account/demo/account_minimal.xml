@@ -19,7 +19,6 @@
         <record id="chart0" model="account.account">
             <field name="code">X0</field>
             <field name="name">Chart For Automated Tests</field>
-            <field eval="0" name="parent_id"/>
             <field name="type">view</field>
             <field name="user_type" ref="data_account_type_view"/>
         </record>
@@ -122,6 +121,14 @@
             <field ref="cas" name="parent_id"/>
             <field name="type">other</field>
             <field name="user_type" ref="data_account_type_income"/>
+        </record>
+        <record id="usd_bnk" model="account.account">
+            <field name="code">X11007</field>
+            <field name="name">USD Bank Account - (test)</field>
+            <field ref="cas" name="parent_id"/>
+            <field name="type">liquidity</field>
+            <field name="user_type" ref="data_account_type_asset"/>
+            <field name="currency_id" ref="base.USD"/>
         </record>
 
         <record model="account.account" id="liabilities_view">
@@ -361,8 +368,8 @@
             <field name="type">bank</field>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_bank_journal"/>
-            <field model="account.account" name="default_debit_account_id" ref="cash"/>
-            <field model="account.account" name="default_credit_account_id" ref="cash"/>
+            <field model="account.account" name="default_debit_account_id" ref="bnk"/>
+            <field model="account.account" name="default_credit_account_id" ref="bnk"/>
             <field name="analytic_journal_id" ref="sit"/>
             <field name="user_id" ref="base.user_root"/>
         </record>
@@ -383,9 +390,14 @@
             <field name="type">cash</field>
             <field name="profit_account_id" model="account.account" ref="rsa" />
             <field name="loss_account_id" model="account.account" ref="rsa" />
-            <field name="internal_account_id" model="account.account" ref="chart0" />
+            <field name="internal_account_id" model="account.account" ref="rsa" />
             <field name="with_last_closing_balance" eval="True" />
-            <field name="cash_control" eval="True" />
+            <!--
+                 Usually, cash payment methods requires a control at opening and closing.
+                 Bot for demo data, it's better to avoid the control step so that people
+                 that test OpenERP arrive directly in the touchscreen UI.
+            -->
+            <field name="cash_control" eval="False"/>
             <field name="view_id" ref="account_journal_bank_view"/>
             <field name="sequence_id" ref="sequence_cash_journal"/>
             <field model="account.account" name="default_debit_account_id" ref="cash"/>
@@ -412,6 +424,16 @@
             <field model="account.account" name="default_credit_account_id" ref="o_expense"/>
             <field eval="True" name="centralisation"/>
             <field name="user_id" ref="base.user_root"/>
+        </record>
+
+        <record id="bank_journal_usd" model="account.journal">
+            <field name="name">USD Bank Journal - (test)</field>
+            <field name="code">TUBK</field>
+            <field name="type">bank</field>
+            <field name="view_id" ref="account_journal_bank_view"/>
+            <field model="account.account" name="default_debit_account_id" ref="usd_bnk"/>
+            <field model="account.account" name="default_credit_account_id" ref="usd_bnk"/>
+            <field name="currency" ref="base.USD"/>
         </record>
         <!--
         Product income and expense accounts, default parameters

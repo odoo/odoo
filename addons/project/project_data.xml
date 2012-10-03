@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <!-- This will set the unit of measure used in projects and tasks.-->
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
@@ -84,14 +84,52 @@
             <field name="fold" eval="True"/>
         </record>
 
-        <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Project Management has been installed</value>
-            <value>Manage multi-level projects and tasks.  You can delegate tasks, track the work done on tasks, and review your planning based on the entered data.
+        <!-- mail: subtypes -->
+        <record id="mt_project_new" model="mail.message.subtype">
+            <field name="name">New Task</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_project_closed" model="mail.message.subtype">
+            <field name="name">Task Closed</field>
+            <field name="res_model">project.project</field>
+        </record>
+        <record id="mt_project_canceled" model="mail.message.subtype">
+            <field name="name">Task Canceled</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_project_stage" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="res_model">project.task</field>
+        </record>
 
-You can manage todo lists on tasks by installing the module "Todo Lists", which supports the methodology Getting Things Done (GTD).  You can also manage issues/bugs in projects by installing the module "Issues Tracker."</value>
-        </function>
+        <record id="mt_task_new" model="mail.message.subtype">
+            <field name="name">New Task</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_closed" model="mail.message.subtype">
+            <field name="name">Task Closed</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_canceled" model="mail.message.subtype">
+            <field name="name">Task canceled</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_change" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="res_model">project.task</field>
+        </record>
+
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Project Management application installed!</field>
+            <field name="body">Manage multi-level projects and tasks.  You can delegate tasks, track task work, and review your planning.
+
+You can manage todo lists on tasks by installing the "Todo Lists" application, supporting the Getting Things Done (GTD) methodology.
+You can also manage issues/bugs in projects by installing the "Issue Tracker" application.</field>
+        </record>
     </data>
 </openerp>

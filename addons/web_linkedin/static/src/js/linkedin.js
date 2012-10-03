@@ -88,7 +88,7 @@ openerp.web_linkedin = function(instance) {
         selected_entity: function(entity) {
             var self = this;
             this.create_on_change(entity).then(function(to_change) {
-                self.view.on_processed_onchange({value:to_change});
+                self.view.set_values(to_change);
             });
         },
         create_on_change: function(entity) {
@@ -117,6 +117,8 @@ openerp.web_linkedin = function(instance) {
                         "count": 25,
                     }).result(function(result) {
                         children_def.resolve(result);
+                    }).error(function() {
+                        children_def.reject();
                     });
                 defs.push(children_def.pipe(function(result) {
                     result = _.reject(result.people.values || [], function(el) {
@@ -130,6 +132,8 @@ openerp.web_linkedin = function(instance) {
                         var p_to_change = _.toArray(arguments);
                         to_change.child_ids = p_to_change;
                     });
+                }, function() {
+                    return $.when();
                 }));
                 /* TODO
                 to_change.linkedinUrl = _.str.sprintf("http://www.linkedin.com/company/%d", entity.id);

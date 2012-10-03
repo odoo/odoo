@@ -13,7 +13,7 @@
     product_id: product.product_product_consultant
     journal_id: hr_timesheet.analytic_journal
 -
-  I create my current timesheet for employee "Quentin Paolinon".
+  I create a timesheet for employee "Quentin Paolinon".
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_deddk0}:
     date_current: !eval time.strftime('%Y-%m-%d')
@@ -23,13 +23,17 @@
     user_id: base.user_demo
     employee_id: 'hr.employee_qdp'
 -
-  Now, at the time of login, I create Attendances and perform "Sign In" action.
+  Quentin "Sign In" at around 9am.
 -
-  !python {model: hr_timesheet_sheet.sheet}: |
-    self.sign_in(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], {})
-    task_work = self.search(cr, uid, [("name","=","Quentin Paolinon")],context)[0]
-    task_ids = self.browse(cr, uid, task_work, context)
-    assert task_ids.state == "draft", "I State In Timesheet"
+  !record {model: hr.attendance, id: hr_attendance_1}:
+    action: sign_in
+    employee_id: 'hr.employee_qdp'
+    name: !eval datetime.now().strftime('%Y-%m-%d 09:%M:%S')
+-
+  I test that Quentin in signed in
+-
+  !assert {model: hr.employee, id: hr.employee_qdp}:
+    - state == 'present'
 -
   I want to check attendance and work of yesterday. I click on <- button.
 -
@@ -57,10 +61,10 @@
 -
   At the time of logout, I create attendance and perform "Sign Out".
 -
-  !record {model: hr.attendance, id: hr_attendance_1}:
+  !record {model: hr.attendance, id: hr_attendance_2}:
     action: sign_out
     employee_id: 'hr.employee_qdp'
-    name: !eval (datetime.now() + timedelta(hours=8.25)).strftime('%Y-%m-%d %H:%M:%S')
+    name: !eval datetime.now().strftime('%Y-%m-%d 17:30:00')
 -
   I create Timesheet Entry for time spend on today work.
 -
@@ -102,6 +106,11 @@
         product_id: product.product_product_consultant
         general_account_id: account.a_expense
         journal_id: hr_timesheet.analytic_journal
+-
+  I set an allowed difference of 1 hour
+-
+  !record {model: res.company, id: base.main_company}:
+    timesheet_max_difference: 1.00
 -
   I tried again to confirm the timesheet after modification.
 -

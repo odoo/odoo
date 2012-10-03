@@ -37,10 +37,12 @@ class procurement_order(osv.osv):
         """ Checks if task is done or not.
         @return: True or False.
         """
-        return all(proc.product_id.type != 'service' or (proc.task_id and proc.task_id.state in ('done', 'cancelled')) \
-                    for proc in self.browse(cr, uid, ids, context=context))
+        for p in self.browse(cr, uid, ids, context=context):
+            if (p.product_id.type=='service') and (p.procure_method=='make_to_order') and p.task_id and (p.task_id.state not in ('done', 'cancelled')):
+                return False
+        return True
 
-    def check_produce_service(self, cr, uid, procurement, context=None):    
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):
@@ -73,6 +75,7 @@ class procurement_order(osv.osv):
                 'date_deadline': procurement.date_planned,
                 'planned_hours': planned_hours,
                 'remaining_hours': planned_hours,
+                'partner_id': procurement.sale_line_id and procurement.sale_line_id.order_id.partner_id.id or False,
                 'user_id': procurement.product_id.product_manager.id,
                 'notes': procurement.note,
                 'procurement_id': procurement.id,
@@ -80,7 +83,7 @@ class procurement_order(osv.osv):
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
             },context=context)
-            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running'}, context=context)
+            self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running', 'message':'from project: task created.'}, context=context)
         self.running_send_note(cr, uid, ids, context=None)
         return task_id
 

@@ -39,6 +39,7 @@
                     <field name="default_code"/>
                     <field name="name"/>
                     <field name="categ_id" invisible="1"/>
+                    <field name="type" invisible="1"/>
                     <field name="variants" groups="product.group_product_variant"/>
                     <field name="uom_id" string="Unit of Measure" groups="product.group_uom"/>
                     <field name="qty_available"/>
@@ -104,12 +105,34 @@
                             <page string="Procurements" groups="base.group_user">
                                 <group name="procurement">
                                     <group>
-                                        <field name="procure_method" groups="base.group_user" attrs="{'invisible':[('type','=', 'service')]}"/>
+                                        <field name="procure_method" groups="base.group_user"/>
+                                        <field name="supply_method" groups="base.group_user" invisible="1"/>
                                         <field name="cost_method" groups="product.group_costing_method"/>
                                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                     </group>
-                                    <group>
-                                        <field name="uom_po_id" groups="product.group_uom"/>
+                                    <group name="procurement_help" class="oe_grey" col="1" groups="base.group_user">
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this service, nothing special will be trigered
+                                            to deliver the customer, as you set the procurement method as
+                                            'Make to Stock'.
+                                        </p>
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','product'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, OpenERP will <b>use the available
+                                            inventory</b> for the delivery order.
+                                            <br/><br/>
+                                            If there are not enough quantities available, the delivery order
+                                            will wait for new products. To fulfill the inventory, you should
+                                            create others rules like orderpoints.
+                                        </p>
+                                        <p attrs="{'invisible': [('type','&lt;&gt;','consu'),('procure_method','&lt;&gt;','make_to_stock')]}">
+                                            When you sell this product, a delivery order will be created.
+                                            OpenERP will consider that the <b>required quantities are always
+                                            available</b> as it's a consumable (as a result of this, the quantity
+                                            on hand may become negative).
+                                        </p>
+                                    </group>
+                                    <group groups="product.group_uom">
+                                        <field name="uom_po_id"/>
                                     </group>
                                 </group>
                                 <separator string="Notes for Suppliers"/>
@@ -290,9 +313,9 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.product</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
             <field name="context">{"search_default_filter_to_purchase":1}</field>
-            <field name="view_id" ref="product_product_tree_view"/>
+            <field name="view_id" ref="product_kanban_view"/>
             <field name="search_view_id" ref="product_search_form_view"/>
             <field name="help" type="html">
               <p class="oe_view_nocontent_create">
@@ -444,11 +467,15 @@
                         </group>
                         <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
+                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
+                                e.g: 1 * (reference unit) = ratio * (this unit)
+                            </p>
+                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
+                                e.g: 1 * (this unit) = ratio * (reference unit)
+                            </p>
                             <field name="rounding"/>
                             <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <label string="  e.g: 1 * (reference unit) = ratio * (this unit)" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
                             <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
-                            <label string="  e.g: 1 * (this unit) = ratio * (reference unit)" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>

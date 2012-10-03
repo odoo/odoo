@@ -9,21 +9,22 @@
             <field name="password">portal</field>
             <!-- Avoid auto-including this user in any default group -->
             <field name="groups_id" eval="[(5,)]"/>
-            <field name="partner_id" eval="ref('base.res_partner_1')"/>
+            <field name="supplier" eval="False"/>
+            <field name="customer" eval="True"/>
+            <field name="email">demo@portal.wrong.address</field>
         </record>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->
-        <record id="portal" model="res.portal">
+        <record id="group_portal" model="res.groups">
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>
 
         <!-- Company news and comments -->
         <record id="message_company_news0" model="mail.message">
-            <field name="subject">Our first company's blogpost !</field>
+            <field name="subject">Our company's first blog-post !</field>
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html"><![CDATA[Hello, and welcome to our company's portal !
+            <field name="body"><![CDATA[Hello, and welcome to our company's portal !
 
 Lorem ipsum <b>sit amet</b>, consectetur <em>adipiscing elit</em>. Pellentesque et quam sapien, in sagittis tellus.
 Praesent vel massa sed massa consequat egestas in tristique orci. Praesent iaculis libero et neque vehicula iaculis. Vivamus placerat tincidunt orci ac ornare. Proin ut dolor fringilla velit ultricies consequat. Maecenas sit amet ipsum non leo interdum imperdiet. Donec sapien mi.
@@ -32,27 +33,25 @@ Fusce tempus elit volutpat mi auctor adipiscing. Nam congue luctus suscipit. Sed
 
 Nulla turpis leo, rhoncus ut egestas sit amet, consectetur vitae urna. Mauris in dolor in sapien tempus vehicula.]]></field>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_root"/>
         </record>
 
         <record id="message_company_news0_comment0" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html"><![CDATA[Great first blogpost !  (first comment)]]></field>
+            <field name="body"><![CDATA[Great first blogpost !  (first comment)]]></field>
             <field name="parent_id" ref="message_company_news0"/>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_demo"/>
+            <field name="author_id" ref="base.res_partner_1"/>
         </record>
 
         <record id="message_company_news0_comment1" model="mail.message">
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
-            <field name="content_subtype">html</field>
-            <field name="body_html"><![CDATA[Thanks !  (second comment)]]></field>
+            <field name="body"><![CDATA[Thanks !  (second comment)]]></field>
             <field name="parent_id" ref="message_company_news0"/>
             <field name="type">comment</field>
-            <field name="user_id" ref="base.user_root"/>
+            <field name="author_id" ref="base.partner_demo"/>
         </record>
 
     </data>

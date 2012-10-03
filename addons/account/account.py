@@ -31,7 +31,7 @@ import decimal_precision as dp
 from tools.translate import _
 from tools.float_utils import float_round
 from openerp import SUPERUSER_ID
-
+import tools
 
 _logger = logging.getLogger(__name__)
 
@@ -111,7 +111,7 @@ class account_payment_term_line(osv.osv):
         'days': fields.integer('Number of Days', required=True, help="Number of days to add before computation of the day of month." \
             "If Date=15/01, Number of Days=22, Day of Month=-1, then the due date is 28/02."),
         'days2': fields.integer('Day of the Month', required=True, help="Day of the month, set -1 for the last day of the current month. If it's positive, it gives the day of the next month. Set 0 for net days (otherwise it's based on the beginning of the month)."),
-        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True),
+        'payment_id': fields.many2one('account.payment.term', 'Payment Term', required=True, select=True, ondelete='cascade'),
     }
     _defaults = {
         'value': 'balance',
@@ -181,7 +181,7 @@ class account_account_type(osv.osv):
  'Balance' will generally be used for cash accounts.
  'Detail' will copy each existing journal item of the previous year, even the reconciled ones.
  'Unreconciled' will copy only the journal items that were unreconciled on the first day of the new fiscal year."""),
-        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category',
+        'report_type': fields.function(_get_current_report_type, fnct_inv=_save_report_type, type='selection', string='P&L / BS Category', store=True,
             selection= [('none','/'),
                         ('income', _('Profit & Loss (Income account)')),
                         ('expense', _('Profit & Loss (Expense account)')),
@@ -227,7 +227,7 @@ class account_account(osv.osv):
         while pos < len(args):
 
             if args[pos][0] == 'code' and args[pos][1] in ('like', 'ilike') and args[pos][2]:
-                args[pos] = ('code', '=like', str(args[pos][2].replace('%', ''))+'%')
+                args[pos] = ('code', '=like', tools.ustr(args[pos][2].replace('%', ''))+'%')
             if args[pos][0] == 'journal_id':
                 if not args[pos][2]:
                     del args[pos]
@@ -595,13 +595,16 @@ class account_account(osv.osv):
             res.append((record['id'], name))
         return res
 
-    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
+    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
+        if default is None:
+            default = {}
+        else:
+            default = default.copy()
+        if done_list is None:
+            done_list = []
         account = self.browse(cr, uid, id, context=context)
         new_child_ids = []
-        if not default:
-            default = {}
-        default = default.copy()
-        default['code'] = (account['code'] or '') + '(copy)'
+        default.update(code=_("%s (copy)") % (account['code'] or ''))
         if not local:
             done_list = []
         if account.id in done_list:
@@ -682,7 +685,7 @@ class account_journal_view(osv.osv):
     _name = "account.journal.view"
     _description = "Journal View"
     _columns = {
-        'name': fields.char('Journal View', size=64, required=True),
+        'name': fields.char('Journal View', size=64, required=True, translate=True),
         'columns_id': fields.one2many('account.journal.column', 'view_id', 'Columns')
     }
     _order = "name"
@@ -777,14 +780,18 @@ class account_journal(osv.osv):
         (_check_currency, 'Configuration error!\nThe currency chosen should be shared by the default accounts too.', ['currency','default_debit_account_id','default_credit_account_id']),
     ]
 
-    def copy(self, cr, uid, id, default={}, context=None, done_list=[], local=False):
-        journal = self.browse(cr, uid, id, context=context)
-        if not default:
+    def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
+        if default is None:
             default = {}
-        default = default.copy()
-        default['code'] = (journal['code'] or '') + '(copy)'
-        default['name'] = (journal['name'] or '') + '(copy)'
-        default['sequence_id'] = False
+        else:
+            default = default.copy()
+        if done_list is None:
+            done_list = []
+        journal = self.browse(cr, uid, id, context=context)
+        default.update(
+            code=_("%s (copy)") % (journal['code'] or ''),
+            name=_("%s (copy)") % (journal['name'] or ''),
+            sequence_id=False)
         return super(account_journal, self).copy(cr, uid, id, default, context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -836,6 +843,10 @@ class account_journal(osv.osv):
 
         @return: Returns a list of tupples containing id, name
         """
+        if not ids:
+            return []
+        if isinstance(ids, (int, long)):
+            ids = [ids]
         result = self.browse(cr, user, ids, context=context)
         res = []
         for rs in result:
@@ -1173,7 +1184,7 @@ class account_fiscalyear(osv.osv):
         'end_journal_period_id':fields.many2one('account.journal.period','End of Year Entries Journal', readonly=True),
     }
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         default.update({
             'period_ids': [],
             'end_journal_period_id': False
@@ -1375,7 +1386,7 @@ class account_move(osv.osv):
         balance = 0.0
         for line in line_ids:
             if line[2]:
-                balance += (line[2]['debit'] or 0.00)- (line[2]['credit'] or 0.00)
+                balance += (line[2].get('debit',0.00)- (line[2].get('credit',0.00)))
         return {'value': {'balance': balance}}
 
     def write(self, cr, uid, ids, vals, context=None):
@@ -1398,7 +1409,7 @@ class account_move(osv.osv):
                 if not l[0]:
                     l[2].update({
                         'reconcile_id':False,
-                        'reconcil_partial_id':False,
+                        'reconcile_partial_id':False,
                         'analytic_lines':False,
                         'invoice':False,
                         'ref':False,
@@ -1432,9 +1443,15 @@ class account_move(osv.osv):
             result = super(account_move, self).create(cr, uid, vals, context)
         return result
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if context is None:
+            default = {}
+        else:
+            default = default.copy()
         if context is None:
             context = {}
+        else:
+            context = context.copy()
         default.update({
             'state':'draft',
             'name':'/',
@@ -1903,7 +1920,7 @@ class account_tax(osv.osv):
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Included in base amount', help="Indicates if the amount of tax must be included in the base amount for the computation of the next taxes"),
         'company_id': fields.many2one('res.company', 'Company', required=True),
-        'description': fields.char('Tax Code',size=32),
+        'description': fields.char('Tax Code'),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Application', required=True)
 
@@ -2264,7 +2281,10 @@ class account_model(osv.osv):
     _defaults = {
         'legend': lambda self, cr, uid, context:_('You can specify year, month and date in the name of the model using the following labels:\n\n%(year)s: To Specify Year \n%(month)s: To Specify Month \n%(date)s: Current Date\n\ne.g. My model on %(date)s'),
     }
-    def generate(self, cr, uid, ids, datas={}, context=None):
+
+    def generate(self, cr, uid, ids, data=None, context=None):
+        if data is None:
+            data = {}
         move_ids = []
         entry = {}
         account_move_obj = self.pool.get('account.move')
@@ -2275,8 +2295,8 @@ class account_model(osv.osv):
         if context is None:
             context = {}
 
-        if datas.get('date', False):
-            context.update({'date': datas['date']})
+        if data.get('date', False):
+            context.update({'date': data['date']})
 
         move_date = context.get('date', time.strftime('%Y-%m-%d'))
         move_date = datetime.strptime(move_date,"%Y-%m-%d")
@@ -2337,6 +2357,16 @@ class account_model(osv.osv):
                 account_move_line_obj.create(cr, uid, val, context=ctx)
 
         return move_ids
+
+    def onchange_journal_id(self, cr, uid, ids, journal_id, context=None):
+        company_id = False
+
+        if journal_id:
+            journal = self.pool.get('account.journal').browse(cr, uid, journal_id, context=context)
+            if journal.company_id.id:
+                company_id = journal.company_id.id
+
+        return {'value': {'company_id': company_id}}
 
 account_model()
 
@@ -2452,10 +2482,10 @@ class account_subscription_line(osv.osv):
         all_moves = []
         obj_model = self.pool.get('account.model')
         for line in self.browse(cr, uid, ids, context=context):
-            datas = {
+            data = {
                 'date': line.date,
             }
-            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], datas, context)
+            move_ids = obj_model.generate(cr, uid, [line.subscription_id.model_id.id], data, context)
             tocheck[line.subscription_id.id] = True
             self.write(cr, uid, [line.id], {'move_id':move_ids[0]})
             all_moves.extend(move_ids)
@@ -2503,7 +2533,7 @@ class account_account_template(osv.osv):
         'reconcile': fields.boolean('Allow Reconciliation', help="Check this option if you want the user to reconcile entries in this account."),
         'shortcut': fields.char('Shortcut', size=12),
         'note': fields.text('Note'),
-        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade'),
+        'parent_id': fields.many2one('account.account.template', 'Parent Account Template', ondelete='cascade', domain=[('type','=','view')]),
         'child_parent_ids':fields.one2many('account.account.template', 'parent_id', 'Children'),
         'tax_ids': fields.many2many('account.tax.template', 'account_account_template_tax_rel', 'account_id', 'tax_id', 'Default Taxes'),
         'nocreate': fields.boolean('Optional create', help="If checked, the new chart of accounts will not contain this by default."),
@@ -2516,20 +2546,9 @@ class account_account_template(osv.osv):
         'nocreate': False,
     }
 
-    def _check_type(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        accounts = self.browse(cr, uid, ids, context=context)
-        for account in accounts:
-            if account.parent_id and account.parent_id.type != 'view':
-                return False
-        return True
-
     _check_recursion = check_cycle
     _constraints = [
         (_check_recursion, 'Error!\nYou cannot create recursive account templates.', ['parent_id']),
-        (_check_type, 'Configuration Error!\nYou cannot define children to an account that has internal type other than  "View".', ['type']),
-
     ]
 
     def name_get(self, cr, uid, ids, context=None):
@@ -2810,7 +2829,7 @@ class account_tax_template(osv.osv):
         'ref_base_sign': fields.float('Base Code Sign', help="Usually 1 or -1."),
         'ref_tax_sign': fields.float('Tax Code Sign', help="Usually 1 or -1."),
         'include_base_amount': fields.boolean('Include in Base Amount', help="Set if the amount of tax must be included in the base amount before computing the next taxes."),
-        'description': fields.char('Internal Name', size=32),
+        'description': fields.char('Internal Name'),
         'type_tax_use': fields.selection([('sale','Sale'),('purchase','Purchase'),('all','All')], 'Tax Use In', required=True,),
         'price_include': fields.boolean('Tax Included in Price', help="Check this if the price you use on the product and invoices includes this tax."),
     }
@@ -2999,6 +3018,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
 
     _columns = {
         'company_id':fields.many2one('res.company', 'Company', required=True),
+        'currency_id': fields.many2one('res.currency', 'Currency', help="Currency as per company's country."),
         'only_one_chart_template': fields.boolean('Only One Chart Template Available'),
         'chart_template_id': fields.many2one('account.chart.template', 'Chart Template', required=True),
         'bank_accounts_id': fields.one2many('account.bank.accounts.wizard', 'bank_account_id', 'Cash and Banks', required=True),
@@ -3009,6 +3029,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         'purchase_tax_rate': fields.float('Purchase Tax(%)'),
         'complete_tax_set': fields.boolean('Complete Set of Taxes', help='This boolean helps you to choose if you want to propose to the user to encode the sales and purchase rates or use the usual m2o fields. This last choice assumes that the set of tax defined for the chosen template is complete'),
     }
+
+    def onchange_company_id(self, cr, uid, ids, company_id, context=None):
+        currency_id = False
+        if company_id:
+            currency_id = self.pool.get('res.company').browse(cr, uid, company_id, context=context).currency_id.id
+        return {'value': {'currency_id': currency_id}}
+
     def onchange_tax_rate(self, cr, uid, ids, rate=False, context=None):
         return {'value': {'purchase_tax_rate': rate or False}}
 
@@ -3039,6 +3066,13 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             res.update({'bank_accounts_id': [{'acc_name': _('Cash'), 'account_type': 'cash'},{'acc_name': _('Bank'), 'account_type': 'bank'}]})
         if 'company_id' in fields:
             res.update({'company_id': self.pool.get('res.users').browse(cr, uid, [uid], context=context)[0].company_id.id})
+        if 'currency_id' in fields:
+            company_id = res.get('company_id') or False
+            if company_id:
+                company_obj = self.pool.get('res.company')
+                country_id = company_obj.browse(cr, uid, company_id, context=context).country_id.id
+                currency_id = company_obj.on_change_country(cr, uid, company_id, country_id, context=context)['value']['currency_id']
+                res.update({'currency_id': currency_id})
 
         ids = self.pool.get('account.chart.template').search(cr, uid, [('visible', '=', True)], context=context)
         if ids:
@@ -3217,7 +3251,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
                     property_obj.create(cr, uid, vals, context=context)
         return True
 
-    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
+    def _install_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, acc_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
         '''
         This function recursively loads the template objects and create the real objects from them.
 
@@ -3235,6 +3269,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
+        if acc_ref is None:
+            acc_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if tax_code_ref is None:
+            tax_code_ref = {}
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         if template.parent_id:
             tmp1, tmp2, tmp3 = self._install_template(cr, uid, template.parent_id.id, company_id, code_digits=code_digits, acc_ref=acc_ref, taxes_ref=taxes_ref, tax_code_ref=tax_code_ref, context=context)
@@ -3247,7 +3287,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         tax_code_ref.update(tmp3)
         return acc_ref, taxes_ref, tax_code_ref
 
-    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref={}, taxes_ref={}, tax_code_ref={}, context=None):
+    def _load_template(self, cr, uid, template_id, company_id, code_digits=None, obj_wizard=None, account_ref=None, taxes_ref=None, tax_code_ref=None, context=None):
         '''
         This function generates all the objects from the templates
 
@@ -3265,6 +3305,12 @@ class wizard_multi_charts_accounts(osv.osv_memory):
             * a last identical containing the mapping of tax code templates and tax codes
         :rtype: tuple(dict, dict, dict)
         '''
+        if account_ref is None:
+            account_ref = {}
+        if taxes_ref is None:
+            taxes_ref = {}
+        if tax_code_ref is None:
+            tax_code_ref = {}
         template = self.pool.get('account.chart.template').browse(cr, uid, template_id, context=context)
         obj_tax_code_template = self.pool.get('account.tax.code.template')
         obj_acc_tax = self.pool.get('account.tax')
@@ -3343,6 +3389,7 @@ class wizard_multi_charts_accounts(osv.osv_memory):
         ir_values_obj = self.pool.get('ir.values')
         obj_wizard = self.browse(cr, uid, ids[0])
         company_id = obj_wizard.company_id.id
+        self.pool.get('res.company').write(cr, uid, [company_id], {'currency_id': obj_wizard.currency_id.id})
         # If the floats for sale/purchase rates have been filled, create templates from them
         self._create_tax_templates_from_rates(cr, uid, obj_wizard, company_id, context=context)
 

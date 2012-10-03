@@ -284,12 +284,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.click_product_action = options.click_product_action; 
         },
         // returns the url of the product thumbnail
-        get_image_url: function() {
-            return '/web/binary/image?session_id='+instance.session.session_id+'&model=product.product&field=image&id='+this.model.get('id');
-        },
         renderElement: function() {
             this._super();
-            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.get_image_url()));
+            this.$('img').replaceWith(this.pos_widget.image_cache.get_image(this.model.get_image_url()));
             var self = this;
             $("a", this.$el).click(function(e){
                 if(self.click_product_action){
@@ -667,9 +664,95 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         show: function(){ this.$el.show(); },
         hide: function(){ this.$el.hide(); },
-
     });
 
+    // The debug widget lets the user control and monitor the hardware and software status
+    // without the use of the proxy
+    module.DebugWidget = module.PosBaseWidget.extend({
+        template: "DebugWidget",
+        eans:{
+            admin_badge:  '0410100000006',
+            client_badge: '0420100000005',
+            invalid_ean:  '1232456',
+            soda_33cl:    '5449000000996',
+            oranges_kg:   '2100002031410',
+            lemon_price:  '2301000001560',
+            unknown_product: '9900000000004',
+        },
+        events:[
+            'scan_item_success',
+            'scan_item_error_unrecognized',
+            'payment_request',
+            'open_cashbox',
+            'print_receipt',
+            'print_pdf_invoice',
+            'weighting_read_kg',
+            'payment_status',
+        ],
+        minimized: false,
+        start: function(){
+            var self = this;
+
+            this.$el.draggable();
+            this.$('.toggle').click(function(){
+                var content = self.$('.content');
+                var bg      = self.$el;
+                if(!self.minimized){
+                    content.animate({'height':'0'},200);
+                }else{
+                    content.css({'height':'auto'});
+                }
+                self.minimized = !self.minimized;
+            });
+            this.$('.button.accept_payment').click(function(){
+                self.pos.proxy.debug_accept_payment();
+            });
+            this.$('.button.reject_payment').click(function(){
+                self.pos.proxy.debug_reject_payment();
+            });
+            this.$('.button.set_weight').click(function(){
+                var kg = Number(self.$('input.weight').val());
+                if(!Number.isNaN(kg)){
+                    self.pos.proxy.debug_set_weight(kg);
+                }
+            });
+            this.$('.button.custom_ean').click(function(){
+                var ean = self.pos.barcode_reader.sanitize_ean(self.$('input.ean').val() || '0');
+                self.$('input.ean').val(ean);
+                self.pos.barcode_reader.on_ean(ean);
+            });
+            _.each(this.eans, function(ean, name){
+                self.$('.button.'+name).click(function(){
+                    self.$('input.ean').val(ean);
+                    self.pos.barcode_reader.on_ean(ean);
+                });
+            });
+            _.each(this.events, function(name){
+                self.pos.proxy.add_notification(name,function(){
+                    self.$('.event.'+name).stop().clearQueue().css({'background-color':'#6CD11D'}); 
+                    self.$('.event.'+name).animate({'background-color':'#1E1E1E'},2000);
+                });
+            });
+            self.pos.proxy.add_notification('help_needed',function(){
+                self.$('.status.help_needed').addClass('on');
+            });
+            self.pos.proxy.add_notification('help_canceled',function(){
+                self.$('.status.help_needed').removeClass('on');
+            });
+            self.pos.proxy.add_notification('transaction_start',function(){
+                self.$('.status.transaction').addClass('on');
+            });
+            self.pos.proxy.add_notification('transaction_end',function(){
+                self.$('.status.transaction').removeClass('on');
+            });
+            self.pos.proxy.add_notification('weighting_start',function(){
+                self.$('.status.weighting').addClass('on');
+            });
+            self.pos.proxy.add_notification('weighting_end',function(){
+                self.$('.status.weighting').removeClass('on');
+            });
+        },
+    });
 
 // ---------- Main Point of Sale Widget ----------
 
@@ -698,6 +781,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
     });
 
+
     // The PosWidget is the main widget that contains all other widgets in the PointOfSale.
     // It is mainly composed of :
     // - a header, containing the list of orders
@@ -722,14 +806,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.leftpane_width   = '440px';
             this.cashier_controls_visible = true;
             this.image_cache = new module.ImageCache(); // for faster products image display
-
-            /*
-             //Epileptic mode
-            setInterval(function(){ 
-                $('body').css({'-webkit-filter':'hue-rotate('+Math.random()*360+'deg)' });
-            },100);
-            */
-            
         },
       
         start: function() {
@@ -758,6 +834,8 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
 
                 self.screen_selector.set_default_screen();
 
+                window.screen_selector = self.screen_selector;
+
                 self.pos.barcode_reader.connect();
 
                 instance.webclient.set_content_full_screen(true);
@@ -770,11 +848,6 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             
                 self.$('.loader').animate({opacity:0},1500,'swing',function(){self.$('.loader').hide();});
                 self.$('.loader img').hide();
-
-                if(jQuery.deparam(jQuery.param.querystring()).debug !== undefined){
-                    window.pos = self.pos;
-                    window.pos_widget = self.pos_widget;
-                }
 
             },function(){   // error when loading models data from the backend
                 self.$('.loader img').hide();
@@ -825,11 +898,14 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_popup = new module.ErrorPopupWidget(this, {});
             this.error_popup.appendTo($('.point-of-sale'));
 
-            this.error_product_popup = new module.ErrorProductNotRecognizedPopupWidget(this, {});
+            this.error_product_popup = new module.ProductErrorPopupWidget(this, {});
             this.error_product_popup.appendTo($('.point-of-sale'));
 
-            this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {});
+            this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
             this.error_session_popup.appendTo($('.point-of-sale'));
+
+            this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
+            this.choose_receipt_popup.appendTo($('.point-of-sale'));
 
             // --------  Misc ---------
 
@@ -890,12 +966,17 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
                     'error': this.error_popup,
                     'error-product': this.error_product_popup,
                     'error-session': this.error_session_popup,
+                    'choose-receipt': this.choose_receipt_popup,
                 },
                 default_client_screen: 'welcome',
                 default_cashier_screen: 'products',
                 default_mode: this.pos.iface_self_checkout ?  'client' : 'cashier',
             });
 
+            if(this.pos.debug){
+                this.debug_widget = new module.DebugWidget(this);
+                this.debug_widget.appendTo(this.$('#content'));
+            }
         },
 
         changed_pending_operations: function () {
@@ -965,9 +1046,9 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
         },
         try_close: function() {
             var self = this;
-            self.pos.flush().then(function() {
-                self.close();
-            });
+            //TODO : do the close after the flush...
+            self.pos.flush()
+            self.close();
         },
         close: function() {
             var self = this;

@@ -7,20 +7,168 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-09-20 07:29+0000\n"
 "PO-Revision-Date: 2012-05-10 17:33+0000\n"
 "Last-Translator: qdp (OpenERP) <qdp-launchpad@tinyerp.com>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:16+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-22 04:55+0000\n"
+"X-Generator: Launchpad (build 15985)\n"
 
 #. module: sale
-#: field:sale.config.picking_policy,timesheet:0
-msgid "Based on Timesheet"
-msgstr "Tuntilistan mukaan"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:215
+#, python-format
+msgid "Advance Invoice"
+msgstr "Ennakkolasku"
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_confirmquotation0
+msgid "Confirm Quotation"
+msgstr "Vahvista tarjous"
+
+#. module: sale
+#: view:board.board:0
+msgid "Sales Dashboard"
+msgstr "Myynnin työpöytä"
+
+#. module: sale
+#: model:email.template,body_html:sale.email_template_edi_sale
+msgid ""
+"\n"
+"<div style=\"font-family: 'Lucica Grande', Ubuntu, Arial, Verdana, sans-"
+"serif; font-size: 12px; color: rgb(34, 34, 34); background-color: rgb(255, "
+"255, 255); \">\n"
+"\n"
+"    <p>Hello${object.partner_id.name and ' ' or ''}${object.partner_id.name "
+"or ''},</p>\n"
+"    \n"
+"    <p>Here is your ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} from ${object.company_id.name}: </p>\n"
+"\n"
+"    <p style=\"border-left: 1px solid #8e0000; margin-left: 30px;\">\n"
+"       &nbsp;&nbsp;<strong>REFERENCES</strong><br />\n"
+"       &nbsp;&nbsp;Order number: <strong>${object.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order total: <strong>${object.amount_total} "
+"${object.pricelist_id.currency_id.name}</strong><br />\n"
+"       &nbsp;&nbsp;Order date: ${object.date_order}<br />\n"
+"       % if object.origin:\n"
+"       &nbsp;&nbsp;Order reference: ${object.origin}<br />\n"
+"       % endif\n"
+"       % if object.client_order_ref:\n"
+"       &nbsp;&nbsp;Your reference: ${object.client_order_ref}<br />\n"
+"       % endif\n"
+"       &nbsp;&nbsp;Your contact: <a href=\"mailto:${object.user_id.email or "
+"''}?subject=Order%20${object.name}\">${object.user_id.name}</a>\n"
+"    </p>\n"
+"\n"
+"    <p>\n"
+"    You can view the ${object.state in ('draft', 'sent') and 'quotation' or "
+"'order confirmation'} document, download it and pay online using the "
+"following link:\n"
+"    </p>\n"
+"            <a style=\"display:block; width: 150px; height:20px; margin-"
+"left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, "
+"sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-"
+"decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; "
+"background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat "
+"no-repeat;\"\n"
+"               href=\"${ctx.get('edi_web_url_view') or ''}\">View Order</a>\n"
+"\n"
+"    % if object.order_policy in ('prepaid','manual') and "
+"object.company_id.paypal_account and object.state not in ('draft', 'sent'):\n"
+"    <%\n"
+"    comp_name = quote(object.company_id.name)\n"
+"    order_name = quote(object.name)\n"
+"    paypal_account = quote(object.company_id.paypal_account)\n"
+"    order_amount = quote(str(object.amount_total))\n"
+"    cur_name = quote(object.pricelist_id.currency_id.name)\n"
+"    paypal_url = \"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_xclick&amp;business=%s&amp;item_name=%s%%20Order%%20%s\" \\\n"
+"       "
+"\"&amp;invoice=%s&amp;amount=%s&amp;currency_code=%s&amp;button_subtype=servi"
+"ces&amp;no_note=1\" \\\n"
+"       \"&amp;bn=OpenERP_Order_PayNow_%s\" % \\\n"
+"       "
+"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
+"e)\n"
+"    %>\n"
+"    <br/>\n"
+"    <p>It is also possible to directly pay with Paypal:</p>\n"
+"        <a style=\"margin-left: 120px;\" href=\"${paypal_url}\">\n"
+"            <img class=\"oe_edi_paypal_button\" "
+"src=\"https://www.paypal.com/en_US/i/btn/btn_paynowCC_LG.gif\"/>\n"
+"        </a>\n"
+"    % endif\n"
+"\n"
+"    <br/>\n"
+"    <p>If you have any question, do not hesitate to contact us.</p>\n"
+"    <p>Thank you for choosing ${object.company_id.name or 'us'}!</p>\n"
+"    <br/>\n"
+"    <br/>\n"
+"    <div style=\"width: 375px; margin: 0px; padding: 0px; background-color: "
+"#8E0000; border-top-left-radius: 5px 5px; border-top-right-radius: 5px 5px; "
+"background-repeat: repeat no-repeat;\">\n"
+"        <h3 style=\"margin: 0px; padding: 2px 14px; font-size: 12px; color: "
+"#FFF;\">\n"
+"            <strong style=\"text-"
+"transform:uppercase;\">${object.company_id.name}</strong></h3>\n"
+"    </div>\n"
+"    <div style=\"width: 347px; margin: 0px; padding: 5px 14px; line-height: "
+"16px; background-color: #F2F2F2;\">\n"
+"        <span style=\"color: #222; margin-bottom: 5px; display: block; \">\n"
+"        % if object.company_id.street:\n"
+"            ${object.company_id.street}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.street2:\n"
+"            ${object.company_id.street2}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.city or object.company_id.zip:\n"
+"            ${object.company_id.zip} ${object.company_id.city}<br/>\n"
+"        % endif\n"
+"        % if object.company_id.country_id:\n"
+"            ${object.company_id.state_id and ('%s, ' % "
+"object.company_id.state_id.name) or ''} ${object.company_id.country_id.name "
+"or ''}<br/>\n"
+"        % endif\n"
+"        </span>\n"
+"        % if object.company_id.phone:\n"
+"            <div style=\"margin-top: 0px; margin-right: 0px; margin-bottom: "
+"0px; margin-left: 0px; padding-top: 0px; padding-right: 0px; padding-bottom: "
+"0px; padding-left: 0px; \">\n"
+"                Phone:&nbsp; ${object.company_id.phone}\n"
+"            </div>\n"
+"        % endif\n"
+"        % if object.company_id.website:\n"
+"            <div>\n"
+"                Web :&nbsp;<a "
+"href=\"${object.company_id.website}\">${object.company_id.website}</a>\n"
+"            </div>\n"
+"        %endif\n"
+"        <p></p>\n"
+"    </div>\n"
+"</div>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree2
+#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
+msgid "Order Lines to Invoice"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,date_confirm:0
+msgid "Confirmation Date"
+msgstr "Vahvistuspvm"
+
+#. module: sale
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: view:sale.report:0
+msgid "Group By..."
+msgstr "Ryhmittely.."
 
 #. module: sale
 #: view:sale.order.line:0
@@ -32,62 +180,345 @@ msgstr ""
 "joita ei ole vielä laskutettu"
 
 #. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_salesman
-msgid "Sales by Salesman in last 90 days"
-msgstr "Myynnit Myyjittäin viimeisen 90 päivän ajalta"
+#: field:sale.order.line,address_allotment_id:0
+msgid "Allotment Partner"
+msgstr "Jakelukumppani"
 
 #. module: sale
-#: help:sale.order,picking_policy:0
-msgid ""
-"If you don't have enough stock available to deliver all at once, do you "
-"accept partial shipments or not?"
+#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
+msgid "Invoice Order"
 msgstr ""
-"Jos varastosaldo ei riitä kaikkien lähettämiseen kerrallaan, hyväksytkö "
-"osittaisen lähettämisen?"
+
+#. module: sale
+#: help:sale.config.settings,group_sale_delivery_address:0
+msgid ""
+"Allows you to specify different delivery and invoice addresses on a sale "
+"order."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:160
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:162
+#, python-format
+msgid "Advance of %s %s"
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Contract Feature"
+msgstr ""
+
+#. module: sale
+#: field:sale.report,state:0
+msgid "Order State"
+msgstr "Tilauksen vaihe"
+
+#. module: sale
+#: help:sale.config.settings,module_account_analytic_analysis:0
+msgid ""
+"Allows to define your customer contracts conditions: invoicing\n"
+"            method (fixed price, on timesheet, advance invoice), the exact "
+"pricing\n"
+"            (650€/day for a developer), the duration (one year support "
+"contract).\n"
+"            You will be able to follow the progress of the contract and "
+"invoice automatically.\n"
+"            It installs the account_analytic_analysis module."
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "UoS"
+#: view:sale.order.line:0
+msgid "To Invoice"
+msgstr "Laskutettavaa"
+
+#. module: sale
+#: view:sale.order.line:0
+#: field:sale.report,product_uom:0
+msgid "Unit of Measure"
 msgstr ""
 
 #. module: sale
-#: help:sale.order,partner_shipping_id:0
-msgid "Shipping address for current sales order."
-msgstr "Toimitusosoite tälle tilaukselle"
+#: help:sale.order,date_confirm:0
+msgid "Date on which sales order is confirmed."
+msgstr "Päivä jolloin myyntitilaus on vahvistettu"
 
 #. module: sale
-#: field:sale.advance.payment.inv,qtty:0 report:sale.order:0
-msgid "Quantity"
-msgstr "Määrä"
+#: model:ir.actions.act_window,name:sale.action_order_tree5
+#: model:ir.ui.menu,name:sale.menu_sale_quotations
+#: view:sale.order:0
+#: view:sale.report:0
+msgid "Quotations"
+msgstr "Tarjoukset"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,day:0
-msgid "Day"
-msgstr "Päivä"
+#: selection:sale.report,month:0
+msgid "March"
+msgstr "Maaliskuu"
+
+#. module: sale
+#: code:addons/sale/sale.py:558
+#, python-format
+msgid "First cancel all invoices attached to this sales order."
+msgstr ""
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Invoice the whole sale order"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,project_id:0
+msgid "Contract/Analytic Account"
+msgstr "Sopimus/Analyyttinen tili"
+
+#. module: sale
+#: field:sale.order,company_id:0
+#: field:sale.order.line,company_id:0
+#: view:sale.report:0
+#: field:sale.report,company_id:0
+#: field:sale.shop,company_id:0
+msgid "Company"
+msgstr "Yritys"
+
+#. module: sale
+#: field:sale.make.invoice,invoice_date:0
+msgid "Invoice Date"
+msgstr "Laskun päivämäärä"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_tree3
+msgid "Uninvoiced and Delivered Lines"
+msgstr "Laskuttamattomat ja toimitetut rivit"
+
+#. module: sale
+#: help:sale.advance.payment.inv,amount:0
+msgid "The amount to be invoiced in advance."
+msgstr "Ennakkoon laskutettava määrä."
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Invoice Exception"
+msgstr "Poikkeus laskutuksessa"
+
+#. module: sale
+#: view:account.config.settings:0
+msgid "0"
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Draft Quotation"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:124
+#, python-format
+msgid ""
+"You cannot make an advance on a sales order                          that is "
+"defined as 'Automatic Invoice after delivery'."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,amount_total:0
+msgid "The total amount."
+msgstr "Kokonaismäärä"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,analytic_account_id:0
+#: field:sale.shop,project_id:0
+msgid "Analytic Account"
+msgstr "Analyyttinen tili"
+
+#. module: sale
+#: field:sale.config.settings,module_sale_journal:0
+msgid "Allow batch invoicing of delivery orders through journals"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,price_subtotal:0
+msgid "Subtotal"
+msgstr "Välisumma"
+
+#. module: sale
+#: field:sale.config.settings,group_discount_per_so_line:0
+msgid "Allow setting a discount on the sale order lines"
+msgstr ""
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancelorder0
-#: view:sale.order:0
 msgid "Cancel Order"
 msgstr "Peruuta tilaus"
 
 #. module: sale
-#: code:addons/sale/sale.py:638
-#, python-format
-msgid "The quotation '%s' has been converted to a sales order."
-msgstr "Tarjous '%s' on muutettu tilaukseksi."
+#: field:sale.order.line,th_weight:0
+msgid "Weight"
+msgstr "Paino"
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Warehouse Features"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "Print Quotation"
-msgstr "Tulosta Tarjous"
+msgid "Quotation "
+msgstr ""
 
 #. module: sale
-#: code:addons/sale/wizard/sale_make_invoice.py:42
+#: field:sale.order.line,product_uom:0
+msgid "Unit of Measure "
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:148
 #, python-format
-msgid "Warning !"
-msgstr "Varoitus !"
+msgid "Incorrect Data"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:149
+#, python-format
+msgid "The value of Advance Amount must be positive."
+msgstr ""
+
+#. module: sale
+#: help:sale.advance.payment.inv,advance_payment_method:0
+msgid ""
+"Use All to create the final invoice.\n"
+"                Use Percentage to invoice a percentage of the total amount.\n"
+"                Use Fixed Price to invoice a specific amound in advance.\n"
+"                Use Some Order Lines to invoice a selection of the sale "
+"order lines."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale Order"
+msgstr "Myyntitilaus"
+
+#. module: sale
+#: field:sale.order,message_ids:0
+msgid "Messages"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "September"
+msgstr "Syyskuu"
+
+#. module: sale
+#: field:sale.order,amount_tax:0
+#: field:sale.order.line,tax_id:0
+msgid "Taxes"
+msgstr "Verot"
+
+#. module: sale
+#: field:sale.order,amount_untaxed:0
+msgid "Untaxed Amount"
+msgstr "Veroton määrä"
+
+#. module: sale
+#: field:sale.config.settings,module_project:0
+msgid "Project"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:319
+#: code:addons/sale/sale.py:459
+#: code:addons/sale/sale.py:591
+#: code:addons/sale/sale.py:765
+#: code:addons/sale/sale.py:782
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:123
+#, python-format
+msgid "Error!"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Net Total :"
+msgstr "Yhteensä veroton"
+
+#. module: sale
+#: help:sale.config.settings,module_analytic_user_function:0
+msgid ""
+"Allows you to define what is the default function of a specific user on a "
+"given account.\n"
+"                This is mostly used when a user encodes his timesheet. The "
+"values are retrieved and the fields are auto-filled.\n"
+"                But the possibility to change these values is still "
+"available.\n"
+"                This installs the module analytic_user_function."
+msgstr ""
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Cancelled"
+msgstr "Peruutettu"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sales Order Lines related to a Sales Order of mine"
+msgstr "Omiin myyntitilauksiin liittyvät myyntitilausrivit"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Quotation Sent"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_unread:0
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,amount_total:0
+#: view:sale.order.line:0
+msgid "Total"
+msgstr "Yhteensä"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_shop_form
+#: field:sale.order,shop_id:0
+#: view:sale.report:0
+#: field:sale.report,shop_id:0
+msgid "Shop"
+msgstr "Myymälä"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree2
+msgid "Sales in Exception"
+msgstr "Myydyt joissa poikkeus toimituksessa"
+
+#. module: sale
+#: field:sale.order,partner_invoice_id:0
+msgid "Invoice Address"
+msgstr "Laskutusosoite"
+
+#. module: sale
+#: help:sale.order,create_date:0
+msgid "Date on which sales order is created."
+msgstr "Päivä jolloin myyntitilaus on luotu"
+
+#. module: sale
+#: view:res.partner:0
+msgid "False"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Recreate Invoice"
+msgstr "Laskun uudelleenluonti"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create Invoices"
+msgstr "Luo laskuja"
 
 #. module: sale
 #: report:sale.order:0
@@ -95,87 +526,100 @@ msgid "Tax"
 msgstr ""
 
 #. module: sale
-#: model:process.node,note:sale.process_node_saleorderprocurement0
-msgid "Drives procurement orders for every sales order line."
-msgstr "Ohjaa hankintatilauksia jokaiselle myyntitilausriville"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,analytic_account_id:0
-#: field:sale.shop,project_id:0
-msgid "Analytic Account"
-msgstr "Analyyttinen tili"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_line_tree2
-msgid ""
-"Here is a list of each sales order line to be invoiced. You can invoice "
-"sales orders partially, by lines of sales order. You do not need this list "
-"if you invoice from the delivery orders or if you invoice sales totally."
-msgstr ""
-"Tässä on lista kaikista laskutettavista myyntitilausriveistä. Voit laskuttaa "
-"myyntitilaukset osittain, riveittäin tai myyntitilauksittain. Et tarvitse "
-"listaa, jos laskutat toimitusmääräyksistä tai jos laskutat myyntiä "
-"koontilaskuilla."
-
-#. module: sale
-#: code:addons/sale/sale.py:295
+#: code:addons/sale/sale.py:986
 #, python-format
+msgid "Invalid Action!"
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Reference Unit of Measure"
+msgstr ""
+
+#. module: sale
+#: field:sale.report,date_confirm:0
+msgid "Date Confirm"
+msgstr "Vahvistus Päivämäärä"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,nbr:0
+msgid "# of Lines"
+msgstr "Rivien lukumäärä"
+
+#. module: sale
+#: help:sale.order,message_summary:0
 msgid ""
-"In order to delete a confirmed sale order, you must cancel it before ! To "
-"cancel a sale order, you must first cancel related picking or delivery "
-"orders."
-msgstr ""
-"Poistaaksesi vahvistetun myyntitilausken sinun pitää ensin peruuttaa se! "
-"Peruuttaaksesi myyntitilauksen, sinun pitää ensin peruuttaa tähän liittyvät "
-"keräily ja lähetysmääräykset."
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleprocurement0
-msgid "Procurement Order"
+"Holds the Chatter summary (number of messages, ...). This summary is "
+"directly in html format in order to be inserted in kanban views."
 msgstr ""
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,partner_id:0
-msgid "Partner"
-msgstr "Kumppani"
+#: field:sale.config.settings,group_sale_delivery_address:0
+msgid "Allow a different address for delivery and invoicing "
+msgstr ""
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice based on deliveries"
-msgstr "Toimituksiin perustuva lasku"
+#: view:sale.report:0
+#: field:sale.report,product_uom_qty:0
+msgid "# of Qty"
+msgstr "Määrä"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Fax :"
+msgstr "Faksi:"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Order Line"
-msgstr "Tilausrivi"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_form
-msgid ""
-"Sales Orders help you manage quotations and orders from your customers. "
-"OpenERP suggests that you start by creating a quotation. Once it is "
-"confirmed, the quotation will be converted into a Sales Order. OpenERP can "
-"handle several types of products so that a sales order may trigger tasks, "
-"delivery orders, manufacturing orders, purchases and so on. Based on the "
-"configuration of the sales order, a draft invoice will be generated so that "
-"you just have to confirm it when you want to bill your customer."
+msgid "(update)"
 msgstr ""
-"Myyntitilaukset auttavat sinua hallitsemaan tarjouksia ja tilauksia "
-"asiakkailtasi. OpenERP suosittelee että aloitat luomalla tarjouksen. Kun "
-"tarjous on vahvistettu, tarjous muuttuu Tilaukseksi. OpenERP kykenee "
-"käsittelemään usean tyyppisiä tuotteita joten myyntitilaus saattaa "
-"käynnistää tehtäviä, toimituksia, tuotantotilauksia, hankitoja ja niin "
-"edelleen. Myyntitilauksen asetusten perusteella luodaan vedos laskusta, "
-"joten riittää että hyväksyt laskun kun haluat laskuttaa asiakastasi."
 
 #. module: sale
-#: help:sale.order,invoice_quantity:0
-msgid ""
-"The sale order will automatically create the invoice proposition (draft "
-"invoice). Ordered and delivered quantities may not be the same. You have to "
-"choose if you want your invoice based on ordered or shipped quantities. If "
-"the product is a service, shipped quantities means hours spent on the "
-"associated tasks."
+#: help:sale.config.settings,group_discount_per_so_line:0
+msgid "Allows you to apply some discount per sale order line."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:578
+#: model:ir.model,name:sale.model_sale_order
+#: model:process.node,name:sale.process_node_order0
+#: model:process.node,name:sale.process_node_saleorder0
+#: field:res.partner,sale_order_ids:0
+#: model:res.request.link,name:sale.req_link_sale_order
+#: view:sale.order:0
+#, python-format
+msgid "Sales Order"
+msgstr "Myyntitilaus"
+
+#. module: sale
+#: field:sale.order.line,product_uos_qty:0
+msgid "Quantity (UoS)"
+msgstr "Määrä (myyntiyksikkö)"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale Order Lines that are in 'done' state"
+msgstr "Myyntitilausrivit jotka ovat 'valmis' tilassa"
+
+#. module: sale
+#: field:sale.advance.payment.inv,amount:0
+msgid "Advance Amount"
+msgstr "Etukäteismäärä"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Confirmed"
+msgstr "Vahvistettu"
+
+#. module: sale
+#: field:sale.config.settings,module_analytic_user_function:0
+msgid "One employee can have different roles per contract"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,note:0
+msgid "Terms and conditions"
 msgstr ""
 
 #. module: sale
@@ -184,20 +628,69 @@ msgid "Default Payment Term"
 msgstr "Oletusmaksuehto"
 
 #. module: sale
-#: field:sale.config.picking_policy,deli_orders:0
-msgid "Based on Delivery Orders"
-msgstr "Perustuu toimitusmääräyksiin"
+#: model:process.transition.action,name:sale.process_transition_action_confirm0
+#: view:sale.order:0
+msgid "Confirm"
+msgstr "Vahvista"
 
 #. module: sale
-#: field:sale.config.picking_policy,time_unit:0
-msgid "Main Working Time Unit"
-msgstr "Työn pääaikayksikkö"
+#: view:sale.order:0
+msgid "Unread messages"
+msgstr ""
 
 #. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.order.line,state:0
+#: field:sale.order,partner_shipping_id:0
+msgid "Shipping Address"
+msgstr "Toimitusosoite"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale Order Lines ready to be invoiced"
+msgstr "Myyntitilausrivit valmiina laskutettaviksi"
+
+#. module: sale
+#: view:account.invoice.report:0
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_turnover_by_month
+msgid "Monthly Turnover"
+msgstr "Kuukausittainen liikevaihto"
+
+#. module: sale
 #: view:sale.report:0
-msgid "State"
-msgstr "Tila"
+#: field:sale.report,year:0
+msgid "Year"
+msgstr "Vuosi"
+
+#. module: sale
+#: field:sale.config.settings,group_uom:0
+msgid "Allow using different units of measures"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order that haven't yet been confirmed"
+msgstr "Myyntitilaus jota ei ole vielä vahvistettu"
+
+#. module: sale
+#: field:sale.order,message_unread:0
+msgid "Unread Messages"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Print"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Order N°"
+msgstr "Tilaus no."
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,order_line:0
+msgid "Order Lines"
+msgstr "Tilausrivit"
 
 #. module: sale
 #: report:sale.order:0
@@ -205,9 +698,35 @@ msgid "Disc.(%)"
 msgstr "Alennus (%)"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,price_total:0
+#: field:sale.order,name:0
+#: field:sale.order.line,order_id:0
+msgid "Order Reference"
+msgstr "Tilauksen viite"
+
+#. module: sale
+#: field:sale.order.line,invoice_lines:0
+msgid "Invoice Lines"
+msgstr "Laskurivit"
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,price_total:0
 msgid "Total Price"
 msgstr "Hinta yhteensä"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree
+msgid "Old Quotations"
+msgstr "Vanhat Tarjoukset"
+
+#. module: sale
+#: help:sale.config.settings,module_sale_journal:0
+msgid ""
+"Allows you to categorize your sales and deliveries (picking lists) between "
+"different journals,\n"
+"                and perform batch operations on journals.\n"
+"                This installs the module sale_journal."
+msgstr ""
 
 #. module: sale
 #: help:sale.make.invoice,grouped:0
@@ -215,9 +734,52 @@ msgid "Check the box to group the invoices for the same customers"
 msgstr "Ruksi laatikko ryhmitelläksesi samalle asiakkaalle menevät laskut."
 
 #. module: sale
-#: view:sale.order:0
-msgid "My Sale Orders"
-msgstr "Omat myyntitilaukset"
+#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
+#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
+msgid "Make Invoices"
+msgstr "Luo Laskuja"
+
+#. module: sale
+#: model:ir.actions.server,name:sale.actions_server_sale_order_read
+msgid "Mark read"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/res_config.py:89
+#, python-format
+msgid "Hour"
+msgstr "Tunti"
+
+#. module: sale
+#: field:res.partner,sale_order_count:0
+msgid "# of Sales Order"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,timesheet:0
+msgid ""
+"For modifying account analytic view to show important data to project "
+"manager of services companies.\n"
+"                You can also view the report of account analytic summary "
+"user-wise as well as month wise.\n"
+"                This installs the module account_analytic_analysis."
+msgstr ""
+
+#. module: sale
+#: field:sale.order,create_date:0
+msgid "Creation Date"
+msgstr "Luontipäivämäärä"
+
+#. module: sale
+#: selection:sale.order,state:0
+#: selection:sale.report,state:0
+msgid "Waiting Schedule"
+msgstr "Odottaa aikataulua"
+
+#. module: sale
+#: help:sale.order,partner_invoice_id:0
+msgid "Invoice address for current sales order."
+msgstr "Laskutusosoite nykyiselle myyntitilaukselle"
 
 #. module: sale
 #: selection:sale.order,invoice_quantity:0
@@ -226,481 +788,25 @@ msgstr "Tilatut määrät"
 
 #. module: sale
 #: view:sale.report:0
-msgid "Sales by Salesman"
-msgstr "Myyjän myynti"
+msgid "Ordered Year of the sales order"
+msgstr "Tilausvuosi myyntitilauksella"
 
 #. module: sale
-#: field:sale.order.line,move_ids:0
-msgid "Inventory Moves"
-msgstr "Varastosiirrot"
-
-#. module: sale
-#: field:sale.order,name:0 field:sale.order.line,order_id:0
-msgid "Order Reference"
-msgstr "Tilauksen viite"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Other Information"
-msgstr "Lisätiedot"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Dates"
-msgstr "Päivämäärät"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoiceafterdelivery0
-msgid ""
-"The invoice is created automatically if the shipping policy is 'Invoice from "
-"pick' or 'Invoice on order after delivery'."
-msgstr ""
-"Lasku luodaan automaattisesti jos toimitusmäärityksenä on 'laskuta "
-"keräilystä' tai 'laskuta tilauksesta toimituksen jälkeen'."
-
-#. module: sale
-#: field:sale.config.picking_policy,task_work:0
-msgid "Based on Tasks' Work"
-msgstr "Perustuu tehtävän työhön"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
-msgid "Quotations and Sales"
-msgstr "Tarjoukset ja myynnit"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_make_invoice
-msgid "Sales Make Invoice"
-msgstr "Myynti luo lasku"
-
-#. module: sale
-#: code:addons/sale/sale.py:330
-#, python-format
-msgid "Pricelist Warning!"
-msgstr "Hinnaston varoitus"
-
-#. module: sale
-#: field:sale.order.line,discount:0
-msgid "Discount (%)"
-msgstr "Alennus (%)"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
-msgid "My Quotations"
-msgstr "Omat tarjoukset"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.open_board_sales_manager
-#: model:ir.ui.menu,name:sale.menu_board_sales_manager
-msgid "Sales Manager Dashboard"
-msgstr "Myynnin Hallinnan Työtila"
-
-#. module: sale
-#: field:sale.order.line,product_packaging:0
-msgid "Packaging"
-msgstr "Paketointi"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleinvoice0
-msgid "From a sales order"
-msgstr "Myyntitilauksesta"
-
-#. module: sale
-#: field:sale.shop,name:0
-msgid "Shop Name"
-msgstr "Myymälän nimi"
-
-#. module: sale
-#: help:sale.order,order_policy:0
-msgid ""
-"The Invoice Policy is used to synchronise invoice and delivery operations.\n"
-"  - The 'Pay before delivery' choice will first generate the invoice and "
-"then generate the picking order after the payment of this invoice.\n"
-"  - The 'Deliver & Invoice on demand' will create the picking order directly "
-"and wait for the user to manually click on the 'Invoice' button to generate "
-"the draft invoice based on the sale order or the sale order lines.\n"
-"  - The 'Invoice on order after delivery' choice will generate the draft "
-"invoice based on sales order after all picking lists have been finished.\n"
-"  - The 'Invoice based on deliveries' choice is used to create an invoice "
-"during the picking process."
+#: field:sale.config.settings,module_sale_stock:0
+msgid "Sale and Warehouse Management"
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1171
-#, python-format
-msgid "No Customer Defined !"
-msgstr "Asiakasta ei ole määritetty!"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree2
-msgid "Sales in Exception"
-msgstr "Myydyt joissa poikkeus toimituksessa"
-
-#. module: sale
-#: code:addons/sale/sale.py:1158 code:addons/sale/sale.py:1277
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:70
-#, python-format
-msgid "Configuration Error !"
-msgstr "Konfiguraatio virhe !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Conditions"
-msgstr "Ehdot"
-
-#. module: sale
-#: code:addons/sale/sale.py:1034
-#, python-format
-msgid ""
-"There is no income category account defined in default Properties for "
-"Product Category or Fiscal Position is not defined !"
+#: model:ir.model,name:sale.model_sale_config_settings
+msgid "sale.config.settings"
 msgstr ""
-"Tulokategorian tiliä ei ole määritelty tuotekategorian oletusarvoissa tai "
-"taloudellista asemaa ei ole määritelty !"
 
 #. module: sale
-#: selection:sale.report,month:0
-msgid "August"
-msgstr "Elokuu"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You try to assign a lot which is not from the same product"
-msgstr "Erä ei ole samaa tuotetta"
-
-#. module: sale
-#: code:addons/sale/sale.py:655
-#, python-format
-msgid "invalid mode for test_state"
-msgstr "invalid mode for test_state"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "June"
-msgstr "Kesäkuu"
-
-#. module: sale
-#: code:addons/sale/sale.py:617
-#, python-format
-msgid "Could not cancel this sales order !"
-msgstr "Myyntitilausta ei voitu peruuttaa !"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_report
-msgid "Sales Orders Statistics"
-msgstr "Myyntitilausten Tilastot"
-
-#. module: sale
-#: help:sale.order,project_id:0
-msgid "The analytic account related to a sales order."
-msgstr "Myyntitilaukseen liitetty analyyttinen tili."
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "October"
-msgstr "Lokakuu"
-
-#. module: sale
-#: sql_constraint:stock.picking:0
-msgid "Reference must be unique per Company!"
-msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
-
-#. module: sale
-#: view:board.board:0 view:sale.order:0 view:sale.report:0
-msgid "Quotations"
-msgstr "Tarjoukset"
-
-#. module: sale
-#: help:sale.order,pricelist_id:0
-msgid "Pricelist for current sales order."
-msgstr "Tilauksessa käytettävä hinnasto."
-
-#. module: sale
+#: field:sale.advance.payment.inv,qtty:0
 #: report:sale.order:0
-msgid "TVA :"
-msgstr "ALV:"
-
-#. module: sale
-#: help:sale.order.line,delay:0
-msgid ""
-"Number of days between the order confirmation the shipping of the products "
-"to the customer"
-msgstr ""
-"Päivien määrä tilausvahvistuksesta toimituksen lähettämiseen asiakkaalle."
-
-#. module: sale
-#: report:sale.order:0
-msgid "Quotation Date"
-msgstr "Tarjouksen Päiväys"
-
-#. module: sale
-#: field:sale.order,fiscal_position:0
-msgid "Fiscal Position"
-msgstr "Taloudellinen tilanne"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 field:sale.report,product_uom:0
-msgid "UoM"
-msgstr "Mittayksikkö"
-
-#. module: sale
-#: field:sale.order.line,number_packages:0
-msgid "Number Packages"
-msgstr "Pakkauksien määrä"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "In Progress"
-msgstr "Käynnissä"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_confirmquotation0
-msgid ""
-"The salesman confirms the quotation. The state of the sales order becomes "
-"'In progress' or 'Manual in progress'."
-msgstr ""
-"Myyntimies vahvistaa tarjouksen. Myyntitilauksen tila muuttuu 'käynnissä' "
-"tai 'manuaalinen käynnissä'."
-
-#. module: sale
-#: code:addons/sale/sale.py:1074
-#, python-format
-msgid "You cannot cancel a sale order line that has already been invoiced!"
-msgstr "Et voi peruuttaa myyntitilausriviä joka on jo laskutettu"
-
-#. module: sale
-#: code:addons/sale/sale.py:1079
-#, python-format
-msgid "You must first cancel stock moves attached to this sales order line."
-msgstr ""
-"Sinun pitää ensin peruuttaa tähän myyntitilausriviin kiinnitetyt "
-"varastosiirrot."
-
-#. module: sale
-#: code:addons/sale/sale.py:1147
-#, python-format
-msgid "(n/a)"
-msgstr "(ei saatavilla)"
-
-#. module: sale
-#: help:sale.advance.payment.inv,product_id:0
-msgid ""
-"Select a product of type service which is called 'Advance Product'. You may "
-"have to create it and set it as a default value on this field."
-msgstr ""
-"Valitse palvelutyyppinen tuote jota kutsutaan 'esitutotteeksi'. Sinun pitää "
-"ehkä luoda se ja asettaa tämän kentän oletusarvoksi."
-
-#. module: sale
-#: report:sale.order:0
-msgid "Tel. :"
-msgstr "Puh.:"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:64
-#, python-format
-msgid ""
-"You cannot make an advance on a sales order                              "
-"that is defined as 'Automatic Invoice after delivery'."
-msgstr ""
-"Et voi tehdä ennakkoa myyntitilaukselle joka on määritelty 'Automaattinen "
-"lasku toimituksen jälkeen'."
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,note:0 view:sale.order.line:0
-#: field:sale.order.line,notes:0
-msgid "Notes"
-msgstr "Huomautukset"
-
-#. module: sale
-#: sql_constraint:res.company:0
-msgid "The company name must be unique !"
-msgstr "Yrityksen nimen pitää olla uniikki!"
-
-#. module: sale
-#: help:sale.order,partner_invoice_id:0
-msgid "Invoice address for current sales order."
-msgstr "Laskutusosoite nykyiselle myyntitilaukselle"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Month-1"
-msgstr "Edellinen kuukausi"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered month of the sales order"
-msgstr "Myyntitilauksen tilauskuukausi"
-
-#. module: sale
-#: code:addons/sale/sale.py:504
-#, python-format
-msgid ""
-"You cannot group sales having different currencies for the same partner."
-msgstr "Et voi ryhmitellä saman kumppanin myyntejä joilla on eri valuuttoja."
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "Toimita jokainen tuote kun saaatavilla"
-
-#. module: sale
-#: field:sale.order,invoiced_rate:0 field:sale.order.line,invoiced:0
-msgid "Invoiced"
-msgstr "Laskutettu"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_deliveryorder0
-msgid "Delivery Order"
-msgstr "Toimitusmääräys"
-
-#. module: sale
-#: field:sale.order,date_confirm:0
-msgid "Confirmation Date"
-msgstr "Vahvistuspvm"
-
-#. module: sale
-#: field:sale.order,incoterm:0
-msgid "Incoterm"
-msgstr "Incoterm"
-
-#. module: sale
-#: field:sale.order.line,address_allotment_id:0
-msgid "Allotment Partner"
-msgstr "Jakelukumppani"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "March"
-msgstr "Maaliskuu"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You can not move products from or to a location of the type view."
-msgstr "Et voi siirtää tuotteita paikkaan tai paikasta tässä näkymässä."
-
-#. module: sale
-#: field:sale.config.picking_policy,sale_orders:0
-msgid "Based on Sales Orders"
-msgstr "Perustuu myyntitilauksiin"
-
-#. module: sale
-#: help:sale.order,amount_total:0
-msgid "The total amount."
-msgstr "Kokonaismäärä"
-
-#. module: sale
-#: field:sale.order.line,price_subtotal:0
-msgid "Subtotal"
-msgstr "Välisumma"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Invoice address :"
-msgstr "Laskutusosoite:"
-
-#. module: sale
-#: field:sale.order.line,sequence:0
-msgid "Line Sequence"
-msgstr "Rivijärjestys"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleorderprocurement0
-msgid ""
-"For every sales order line, a procurement order is created to supply the "
-"sold product."
-msgstr ""
-"Jokaiselle myyntitilausriville luodaan hankintatilaus myydyn tuotteen "
-"hankkimiseksi."
-
-#. module: sale
-#: help:sale.order,incoterm:0
-msgid ""
-"Incoterm which stands for 'International Commercial terms' implies its a "
-"series of sales terms which are used in the commercial transaction."
-msgstr ""
-"Incoterm tarkoittaa 'international commercial terms' kansainväliset "
-"toimitushedot, nämä määrittelevät sarjan myyntiehtoa joita käytetään "
-"kaupankäynnissä."
-
-#. module: sale
-#: field:sale.order,partner_invoice_id:0
-msgid "Invoice Address"
-msgstr "Laskutusosoite"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Search Uninvoiced Lines"
-msgstr "Etsi Laskuttamattomia Rivejä"
-
-#. module: sale
-#: model:ir.actions.report.xml,name:sale.report_sale_order
-msgid "Quotation / Order"
-msgstr "Tarjous / Tilaus"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,nbr:0
-msgid "# of Lines"
-msgstr "Rivien lukumäärä"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_open_invoice
-msgid "Sales Open Invoice"
-msgstr "Myynti Avaa lasku"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line
-#: field:stock.move,sale_line_id:0
-msgid "Sales Order Line"
-msgstr "Myyntitilauksen Rivi"
-
-#. module: sale
-#: field:sale.shop,warehouse_id:0
-msgid "Warehouse"
-msgstr "Varasto"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Order N°"
-msgstr "Tilaus no."
-
-#. module: sale
-#: field:sale.order,order_line:0
-msgid "Order Lines"
-msgstr "Tilausrivit"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Untaxed amount"
-msgstr "Veroton määrä"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree2
-#: model:ir.ui.menu,name:sale.menu_invoicing_sales_order_lines
-msgid "Lines to Invoice"
-msgstr "Laskutettavat Rivit"
-
-#. module: sale
 #: field:sale.order.line,product_uom_qty:0
-msgid "Quantity (UoM)"
-msgstr "Määrä (mittayksikköä)"
-
-#. module: sale
-#: field:sale.order,create_date:0
-msgid "Creation Date"
-msgstr "Luontipäivämäärä"
-
-#. module: sale
-#: model:ir.ui.menu,name:sale.menu_sales_configuration_misc
-msgid "Miscellaneous"
-msgstr "Sekalaiset"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_tree3
-msgid "Uninvoiced and Delivered Lines"
-msgstr "Laskuttamattomat ja toimitetut rivit"
+msgid "Quantity"
+msgstr "Määrä"
 
 #. module: sale
 #: report:sale.order:0
@@ -713,33 +819,93 @@ msgid "My Sales"
 msgstr "Omat Myynnit"
 
 #. module: sale
-#: code:addons/sale/sale.py:295 code:addons/sale/sale.py:1074
-#: code:addons/sale/sale.py:1303
+#: code:addons/sale/sale.py:253
+#: code:addons/sale/sale.py:822
 #, python-format
 msgid "Invalid action !"
 msgstr "Virheellinen toiminto!"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Extra Info"
-msgstr "Lisätiedot"
+#: field:sale.order,fiscal_position:0
+msgid "Fiscal Position"
+msgstr "Taloudellinen tilanne"
 
 #. module: sale
-#: field:sale.order,pricelist_id:0 field:sale.report,pricelist_id:0
-#: field:sale.shop,pricelist_id:0
-msgid "Pricelist"
-msgstr "Hinnasto"
+#: selection:sale.report,month:0
+msgid "July"
+msgstr "Heinäkuu"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,product_uom_qty:0
-msgid "# of Qty"
-msgstr "Määrä"
+#: field:account.config.settings,module_sale_analytic_plans:0
+msgid "Several analytic accounts on sales"
+msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1327
+#: view:sale.config.settings:0
+msgid "Default Options"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:963
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:138
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:142
 #, python-format
-msgid "Hour"
-msgstr "Tunti"
+msgid "Configuration Error!"
+msgstr ""
+
+#. module: sale
+#: field:account.config.settings,group_analytic_account_for_sales:0
+msgid "Analytic accounting for sales"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "UoS"
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid ""
+"After clicking 'Show Lines to Invoice', select lines to invoice and create "
+"the invoice from the 'More' dropdown menu."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/edi/sale_order.py:151
+#, python-format
+msgid "EDI Pricelist (%s)"
+msgstr "EDI hinnasto (%s)"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation or sale order for this "
+"customer.\n"
+"              </p><p>\n"
+"                OpenERP will help you efficiently handle the complete sale "
+"flow:\n"
+"                quotation, sale order, delivery, invoicing and\n"
+"                payment.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each "
+"sale\n"
+"                order, and allow your customer to keep track of the "
+"evolution\n"
+"                of the sale order.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Invoicing Process"
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Quotation Date"
+msgstr "Tarjouksen Päiväys"
 
 #. module: sale
 #: view:sale.order:0
@@ -747,46 +913,215 @@ msgid "Order Date"
 msgstr "Tilauksen päivämäärä"
 
 #. module: sale
-#: view:sale.order.line:0 view:sale.report:0 field:sale.report,shipped:0
-#: field:sale.report,shipped_qty_1:0
+#: help:sale.order,order_policy:0
+msgid ""
+"This field controls how invoice and delivery operations are synchronized.\n"
+"  - With 'Before Delivery', a draft invoice is created, and it must be paid "
+"before delivery."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sales Order done"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:320
+#, python-format
+msgid "Please define sales journal for this company: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.act_res_partner_2_sale_order
+#: view:res.partner:0
+msgid "Quotations and Sales"
+msgstr "Tarjoukset ja myynnit"
+
+#. module: sale
+#: help:sale.config.settings,group_uom:0
+msgid ""
+"Allows you to select and maintain different units of measure for products."
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_res_partner
+#: view:sale.report:0
+#: field:sale.report,partner_id:0
+msgid "Partner"
+msgstr "Kumppani"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid "Create and View Invoice"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:655
+#, python-format
+msgid "Sale Order for <em>%s</em> has been <b>done</b>"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_shop_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to define a new sale shop.\n"
+"              </p><p>\n"
+"                Each quotation or sale order must be linked to a shop. The\n"
+"                shop also defines the warehouse from which the products will "
+"be\n"
+"                delivered for each particular sales.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_make_invoice
+msgid "Sales Make Invoice"
+msgstr "Myynti luo lasku"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_tree5
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation, the first step of a new sale.\n"
+"              </p><p>\n"
+"                OpenERP will help you handle efficiently the complete sale "
+"flow:\n"
+"                from the quotation to the sale order, the\n"
+"                delivery, the invoicing and the payment collection.\n"
+"              </p><p>\n"
+"                The social feature helps you organize discussions on each "
+"sale\n"
+"                order, and allow your customers to keep track of the "
+"evolution\n"
+"                of the sale order.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,discount:0
+msgid "Discount (%)"
+msgstr "Alennus (%)"
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:111
+#, python-format
+msgid ""
+"Invoice cannot be created for this Sales Order Line due to one of the "
+"following reasons:\n"
+"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
+"2.The Sales Order Line is Invoiced!"
+msgstr ""
+"Laskua ei voi luoda tälle myyntitilausriville seuraavista syistä:\n"
+"1. Myyntitilausrivin tila on joko luonnos tai peruttu!\n"
+"2. Myyntitilausrivi on laskutettu!"
+
+#. module: sale
+#: code:addons/sale/sale.py:783
+#, python-format
+msgid ""
+"There is no Fiscal Position defined or Income category account defined for "
+"default properties of Product categories."
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Sale order lines done"
+msgstr "Myyntitilausrivit valmiit"
+
+#. module: sale
+#: view:board.board:0
+#: model:ir.actions.act_window,name:sale.action_quotation_for_sale
+msgid "My Quotations"
+msgstr "Omat tarjoukset"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid "Invoice Sale Order"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "December"
+msgstr "Joulukuu"
+
+#. module: sale
+#: view:sale.config.settings:0
+msgid "Contracts Management"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
 msgid "Shipped"
 msgstr "Toimitettu"
 
 #. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree5
-msgid "All Quotations"
-msgstr "Kaikki tarjoukset"
+#: view:sale.report:0
+#: field:sale.report,month:0
+msgid "Month"
+msgstr "Kuukausi"
 
 #. module: sale
-#: view:sale.config.picking_policy:0
-msgid "Options"
-msgstr "Valinnat"
+#: model:email.template,subject:sale.email_template_edi_sale
+msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+msgstr ""
 
 #. module: sale
-#: selection:sale.report,month:0
-msgid "September"
-msgstr "Syyskuu"
+#: field:sale.order.line,sequence:0
+msgid "Sequence"
+msgstr "Sarja"
 
 #. module: sale
-#: code:addons/sale/sale.py:632
+#: code:addons/sale/sale.py:591
 #, python-format
 msgid "You cannot confirm a sale order which has no line."
 msgstr "Et voi vahvistaa myyntitilausta, jolla ei ole rivejä."
 
 #. module: sale
-#: code:addons/sale/sale.py:1259
-#, python-format
-msgid ""
-"You have to select a pricelist or a customer in the sales form !\n"
-"Please set one before choosing a product."
-msgstr ""
-"Sinun pitää valita hinnasto tai asiakas myyntilomakkeella!\n"
-"Ole hyvä ja valitse yksi ennenkuin valitset tuotteen."
+#: view:sale.order.line:0
+msgid "Uninvoiced"
+msgstr "Laskuttamaton"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,categ_id:0
+#: view:sale.report:0
+#: field:sale.report,categ_id:0
 msgid "Category of Product"
 msgstr "Tuotteen Luokka"
+
+#. module: sale
+#: code:addons/sale/sale.py:557
+#, python-format
+msgid "Cannot cancel this sales order!"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,invoice_exists:0
+msgid "It indicates that sale order has at least one invoice."
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_mail_message
+msgid "Message"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_warning:0
+msgid "Allow configuring alerts by customer or products"
+msgstr ""
+
+#. module: sale
+#: field:sale.shop,name:0
+msgid "Shop Name"
+msgstr "Myymälän nimi"
+
+#. module: sale
+#: code:addons/sale/sale.py:253
+#, python-format
+msgid ""
+"In order to delete a confirmed sale order, you must cancel it before !"
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -794,59 +1129,201 @@ msgid "Taxes :"
 msgstr "Verot:"
 
 #. module: sale
-#: view:sale.order:0
-msgid "Stock Moves"
-msgstr "Varastosiirrot"
-
-#. module: sale
-#: field:sale.order,state:0 field:sale.report,state:0
-msgid "Order State"
-msgstr "Tilauksen vaihe"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Do you really want to create the invoice(s)?"
-msgstr "Oletko varma, että haluat muodostaa laskun?"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales By Month"
-msgstr "Myynnit Kuukausittain"
-
-#. module: sale
-#: code:addons/sale/sale.py:1078
+#: code:addons/sale/sale.py:658
 #, python-format
-msgid "Could not cancel sales order line!"
-msgstr "Myyntitilauksen Riviä ei voitu peruuttaa!"
+msgid "Invoice has been <b>paid</b>."
+msgstr ""
 
 #. module: sale
-#: field:res.company,security_lead:0
-msgid "Security Days"
-msgstr "Varopäivät"
+#: model:res.groups,name:sale.group_analytic_accounting
+msgid "Analytic Accounting for Sales"
+msgstr ""
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_saleorderprocurement0
-msgid "Procurement of sold material"
-msgstr "Myydyn materiaalin hankinta"
+#: model:ir.model,name:sale.model_sale_advance_payment_inv
+msgid "Sales Advance Payment Invoice"
+msgstr "Myynnin ennakkomaksulasku"
+
+#. module: sale
+#: model:ir.actions.client,name:sale.action_client_sale_menu
+msgid "Open Sale Menu"
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,state:0
+msgid "In Progress"
+msgstr "Käynnissä"
+
+#. module: sale
+#: code:addons/sale/sale.py:867
+#, python-format
+msgid "No Customer Defined !"
+msgstr "Asiakasta ei ole määritetty!"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Create invoices"
+msgstr "Luo laskut"
+
+#. module: sale
+#: help:sale.order,invoice_quantity:0
+msgid ""
+"The sale order will automatically create the invoice proposition (draft "
+"invoice). Ordered and delivered quantities may not be the same. You have to "
+"choose if you want your invoice based on ordered or shipped quantities. If "
+"the product is a service, shipped quantities means hours spent on the "
+"associated tasks."
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:153
+#, python-format
+msgid "Advance of %s %%"
+msgstr ""
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_order_line_make_invoice
+msgid "Sale OrderLine Make_invoice"
+msgstr "Myyntiilausrivi tee lasku"
+
+#. module: sale
+#: selection:sale.order.line,state:0
+msgid "Draft"
+msgstr "Luonnos"
+
+#. module: sale
+#: field:sale.order,invoiced:0
+msgid "Paid"
+msgstr "Maksettu"
+
+#. module: sale
+#: help:sale.order.line,sequence:0
+msgid "Gives the sequence order when displaying a list of sales order lines."
+msgstr ""
+
+#. module: sale
+#: help:sale.order.line,state:0
+msgid ""
+"* The 'Draft' state is set when the related sales order in draft state.      "
+"               \n"
+"* The 'Confirmed' state is set when the related sales order is confirmed.    "
+"                 \n"
+"* The 'Exception' state is set when the related sales order is set as "
+"exception.                     \n"
+"* The 'Done' state is set when the sales order line has been picked.         "
+"            \n"
+"* The 'Cancelled' state is set when a user cancel the sales order related."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_form
+#: model:ir.ui.menu,name:sale.menu_sale_order
+#: view:sale.order:0
+msgid "Sales Orders"
+msgstr "Myyntitilaukset"
+
+#. module: sale
+#: field:sale.make.invoice,grouped:0
+msgid "Group the invoices"
+msgstr "Yhdistä laskut"
+
+#. module: sale
+#: help:sale.order,amount_tax:0
+msgid "The tax amount."
+msgstr "Veron määrä"
 
 #. module: sale
 #: view:sale.order:0
-msgid "Create Final Invoice"
-msgstr "Luo lopullinen lasku"
+#: field:sale.order,state:0
+#: view:sale.order.line:0
+#: field:sale.order.line,state:0
+#: view:sale.report:0
+msgid "Status"
+msgstr "Tila"
 
 #. module: sale
-#: field:sale.order,partner_shipping_id:0
-msgid "Shipping Address"
-msgstr "Toimitusosoite"
-
-#. module: sale
-#: help:sale.order,shipped:0
-msgid ""
-"It indicates that the sales order has been delivered. This field is updated "
-"only after the scheduler(s) have been launched."
+#: selection:sale.order,order_policy:0
+msgid "On Demand"
 msgstr ""
-"Merkitsee että myyntitilaus on toimitettu. Tämä kenttä päivitetään vasta kun "
-"ajastimet on laukaistu."
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "August"
+msgstr "Elokuu"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Sale Order "
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_saleorder0
+msgid "Drives procurement and invoicing"
+msgstr "Ohjaa hankintaa ja laskutusta"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_form
+msgid ""
+"<p class=\"oe_view_nocontent_create\">\n"
+"                Click to create a quotation that can be converted into a "
+"sale\n"
+"                order.\n"
+"              </p><p>\n"
+"                OpenERP will help you efficiently handle the complete sales "
+"flow:\n"
+"                quotation, sale order, delivery, invoicing and payment.\n"
+"              </p>\n"
+"            "
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "June"
+msgstr "Kesäkuu"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_email_templates
+msgid "Email Templates"
+msgstr "Sähköpostin mallipohjat"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Order"
+msgstr "Tilaa"
+
+#. module: sale
+#: code:addons/sale/sale.py:647
+#, python-format
+msgid "Quotation for <em>%s</em> <b>converted</b> to Sale Order of %s %s."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "we should put a config wizard for these two fields"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,message_is_follower:0
+msgid "Is a Follower"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:261
+#, python-format
+msgid "Pricelist Warning!"
+msgstr "Hinnaston varoitus"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_shop
+#: view:sale.shop:0
+msgid "Sales Shop"
+msgstr "Myymälä"
+
+#. module: sale
+#: model:ir.model,name:sale.model_sale_report
+msgid "Sales Orders Statistics"
+msgstr "Myyntitilausten Tilastot"
 
 #. module: sale
 #: field:sale.order,date_order:0
@@ -854,9 +1331,37 @@ msgid "Date"
 msgstr "Päivämäärä"
 
 #. module: sale
+#: model:ir.model,name:sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Myyntitilauksen Rivi"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "November"
+msgstr "Marraskuu"
+
+#. module: sale
 #: view:sale.report:0
 msgid "Extended Filters..."
 msgstr "Laajennetut Suotimet..."
+
+#. module: sale
+#: code:addons/sale/wizard/sale_line_invoice.py:111
+#: code:addons/sale/wizard/sale_make_invoice.py:42
+#, python-format
+msgid "Warning!"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,message_comment_ids:0
+#: help:sale.order,message_comment_ids:0
+msgid "Comments and emails"
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,product_id:0
+msgid "Advance Product"
+msgstr "Ennakkotuote"
 
 #. module: sale
 #: selection:sale.order.line,state:0
@@ -864,26 +1369,113 @@ msgid "Exception"
 msgstr "Poikkeus"
 
 #. module: sale
-#: model:ir.model,name:sale.model_res_company
-msgid "Companies"
-msgstr "Yritykset"
+#: selection:sale.report,month:0
+msgid "October"
+msgstr "Lokakuu"
 
 #. module: sale
-#: help:sale.order,state:0
+#: model:process.transition,note:sale.process_transition_invoice0
 msgid ""
-"Gives the state of the quotation or sales order. \n"
-"The exception state is automatically set when a cancel operation occurs in "
-"the invoice validation (Invoice Exception) or in the picking list process "
-"(Shipping Exception). \n"
-"The 'Waiting Schedule' state is set when the invoice is confirmed but "
-"waiting for the scheduler to run on the order date."
+"The Salesman creates an invoice manually, if the sales order shipping policy "
+"is 'Shipping and Manual in Progress'. The invoice is created automatically "
+"if the shipping policy is 'Payment before Delivery'."
+msgstr ""
+"Myyjä luo laskun käsin, jos myyntitilauksen lähetyssäännöt ovat 'toimitus ja "
+"manuaalinen käynnissä'. Lasku luodaan automaattisesti jos lähetyssääntö on "
+"'maksu ennen toimitusta'."
+
+#. module: sale
+#: help:sale.config.settings,module_sale_stock:0
+msgid ""
+"Allows you to Make Quotation, Sale Order using different Order policy and "
+"Manage Related Stock.\n"
+"                    This installs the module sale_stock."
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1272
+#: help:sale.advance.payment.inv,product_id:0
+msgid ""
+"Select a product of type service which is called 'Advance Product'.\n"
+"                You may have to create it and set it as a default value on "
+"this field."
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "January"
+msgstr "Tammikuu"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_tree4
+msgid "Sales Order in Progress"
+msgstr "Myyntitilaukset käsittelyssä"
+
+#. module: sale
+#: field:sale.order,message_summary:0
+msgid "Summary"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,timesheet:0
+msgid "Prepare invoices based on timesheets"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:651
+#, python-format
+msgid "Sale Order for <em>%s</em> <b>cancelled</b>."
+msgstr ""
+
+#. module: sale
+#: field:sale.advance.payment.inv,advance_payment_method:0
+msgid "What do you want to invoice?"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,group_sale_pricelist:0
+msgid "Use pricelists to adapt your price per customers"
+msgstr ""
+
+#. module: sale
+#: model:process.transition,note:sale.process_transition_confirmquotation0
+msgid ""
+"The salesman confirms the quotation. The state of the sales order becomes "
+"'In progress' or 'Manual in progress'."
+msgstr ""
+"Myyntimies vahvistaa tarjouksen. Myyntitilauksen tila muuttuu 'käynnissä' "
+"tai 'manuaalinen käynnissä'."
+
+#. module: sale
+#: help:sale.order,origin:0
+msgid "Reference of the document that generated this sales order request."
+msgstr "Viite dokumenttiin joka loi tämän myyntitilauspyynnön."
+
+#. module: sale
+#: code:addons/sale/sale.py:958
 #, python-format
 msgid "No valid pricelist line found ! :"
 msgstr "Ei löytynyt voimassaolevaa hinnaston riviä! :"
+
+#. module: sale
+#: help:sale.config.settings,module_warning:0
+msgid ""
+"Allow to configure warnings on products and trigger them when a user wants "
+"to sale a given product or a given customer.\n"
+"            Example: Product: this product is deprecated, do not purchase "
+"more than 5.\n"
+"            Supplier: don't forget to ask for an express delivery."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,delay:0
+msgid "Commitment Delay"
+msgstr "Sitoutumisen viive"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Confirmed sale order lines, not yet delivered"
+msgstr "Vahvistetut myyntitilausrivit, ei vielä toimitettu"
 
 #. module: sale
 #: view:sale.order:0
@@ -891,9 +1483,9 @@ msgid "History"
 msgstr "Historia"
 
 #. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Invoice on order after delivery"
-msgstr "Laskuta tilaukseta toimituksen jälkeen"
+#: field:sale.config.settings,module_sale_margin:0
+msgid "Display margins on sales orders"
+msgstr ""
 
 #. module: sale
 #: help:sale.order,invoice_ids:0
@@ -911,27 +1503,100 @@ msgid "Your Reference"
 msgstr "Viitteenne"
 
 #. module: sale
-#: help:sale.order,partner_order_id:0
-msgid ""
-"The name and address of the contact who requested the order or quotation."
-msgstr "Kontaktin nimi ja osoite, joka pyysi tilausta tai tarjousta"
-
-#. module: sale
-#: help:res.company,security_lead:0
-msgid ""
-"This is the days added to what you promise to customers for security purpose"
+#: view:sale.advance.payment.inv:0
+msgid "Show Lines to Invoice"
 msgstr ""
-"Nämä päivät lisätään asiakkaalle luvattuun aikaan toimituksen takaamiseksi."
 
 #. module: sale
+#: field:sale.report,date:0
+msgid "Date Order"
+msgstr "Tilauksen Päiväys"
+
+#. module: sale
+#: field:sale.order,pricelist_id:0
+#: field:sale.report,pricelist_id:0
+#: field:sale.shop,pricelist_id:0
+msgid "Pricelist"
+msgstr "Hinnasto"
+
+#. module: sale
+#: report:sale.order:0
+msgid "TVA :"
+msgstr "ALV:"
+
+#. module: sale
+#: code:addons/sale/sale.py:401
+#, python-format
+msgid "Customer Invoices"
+msgstr "Asiakkaan laskut"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_order0
+msgid "Confirmed sales order to invoice."
+msgstr "Laskutettavat vahvistetut myyntitilaukset."
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
+#: view:sale.order:0
 #: view:sale.order.line:0
-msgid "Qty"
-msgstr "Määrä"
+msgid "Sales Order Lines"
+msgstr "Myyntitilauksen rivit"
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.open_board_sales
+#: model:ir.ui.menu,name:sale.menu_dashboard_sales
+#: model:process.process,name:sale.process_process_salesprocess0
+#: view:res.partner:0
+#: view:sale.order:0
+#: view:sale.report:0
+msgid "Sales"
+msgstr "Myynti"
+
+#. module: sale
+#: code:addons/sale/sale.py:262
+#, python-format
+msgid ""
+"If you change the pricelist of this order (and eventually the currency), "
+"prices of existing order lines will not be updated."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+#: field:sale.report,day:0
+msgid "Day"
+msgstr "Päivä"
 
 #. module: sale
 #: view:sale.order:0
-msgid "References"
-msgstr "Viitteet"
+#: field:sale.order,invoice_ids:0
+msgid "Invoices"
+msgstr "Laskut"
+
+#. module: sale
+#: report:sale.order:0
+#: field:sale.order.line,price_unit:0
+msgid "Unit Price"
+msgstr "Yksikköhinta"
+
+#. module: sale
+#: view:sale.order:0
+#: selection:sale.order,state:0
+#: view:sale.order.line:0
+#: selection:sale.order.line,state:0
+#: selection:sale.report,state:0
+msgid "Done"
+msgstr "Valmis"
+
+#. module: sale
+#: report:sale.order:0
+msgid "Invoice address :"
+msgstr "Laskutusosoite:"
+
+#. module: sale
+#: model:process.node,name:sale.process_node_invoice0
+#: view:sale.order:0
+msgid "Invoice"
+msgstr "Lasku"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -940,12 +1605,40 @@ msgstr "Omat myyntitilausrivit"
 
 #. module: sale
 #: model:process.transition.action,name:sale.process_transition_action_cancel0
-#: model:process.transition.action,name:sale.process_transition_action_cancel1
-#: model:process.transition.action,name:sale.process_transition_action_cancel2
-#: view:sale.advance.payment.inv:0 view:sale.make.invoice:0
-#: view:sale.order.line:0 view:sale.order.line.make.invoice:0
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order:0
+#: view:sale.order.line:0
+#: view:sale.order.line.make.invoice:0
 msgid "Cancel"
 msgstr "Peruuta"
+
+#. module: sale
+#: field:sale.order,message_follower_ids:0
+msgid "Followers"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:947
+#, python-format
+msgid "No Pricelist ! : "
+msgstr "Ei hinnastoa ! : "
+
+#. module: sale
+#: model:process.node,name:sale.process_node_quotation0
+#: selection:sale.report,state:0
+msgid "Quotation"
+msgstr "Tarjous"
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Search Uninvoiced Lines"
+msgstr "Etsi Laskuttamattomia Rivejä"
+
+#. module: sale
+#: model:ir.model,name:sale.model_account_config_settings
+msgid "account.config.settings"
+msgstr ""
 
 #. module: sale
 #: sql_constraint:sale.order:0
@@ -953,555 +1646,24 @@ msgid "Order Reference must be unique per Company!"
 msgstr "Tilausviitteen tulee olla uniikki yrityskohtaisesti!"
 
 #. module: sale
-#: model:process.transition,name:sale.process_transition_invoice0
-#: model:process.transition,name:sale.process_transition_invoiceafterdelivery0
-#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
-#: view:sale.advance.payment.inv:0 view:sale.order.line:0
-msgid "Create Invoice"
-msgstr "Luo lasku"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Excluded"
-msgstr "Veroton Summa"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Order reference"
-msgstr "Tilausviite"
-
-#. module: sale
-#: view:sale.open.invoice:0
-msgid "You invoice has been successfully created!"
-msgstr "Lasku on luotu onnistuneesti!"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Partner"
-msgstr "Myynnit Kumppaneittain"
-
-#. module: sale
-#: field:sale.order,partner_order_id:0
-msgid "Ordering Contact"
-msgstr "Tilauskontakti"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_view_sale_open_invoice
-#: view:sale.open.invoice:0
-msgid "Open Invoice"
-msgstr "Avoin Lasku"
-
-#. module: sale
-#: model:ir.actions.server,name:sale.ir_actions_server_edi_sale
-msgid "Auto-email confirmed sale orders"
-msgstr "Lähetä automaattinen vahvistus myyntitilauksesta"
-
-#. module: sale
-#: code:addons/sale/sale.py:413
-#, python-format
-msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
-msgstr "Myyntipäiväkirjaa ei ole määritelty tälle yritykselle \"%s\" (id:%d)"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_forceassignation0
-msgid "Force Assignation"
-msgstr "Pakota luovutus"
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "on order"
-msgstr "tilauksesta"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoiceafterdelivery0
-msgid "Based on the shipped or on the ordered quantities."
-msgstr "Perustu joko lähetettyihin tai tilattuihin määriin"
-
-#. module: sale
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "Toimita kaikki tuotteet kerralla"
-
-#. module: sale
-#: field:sale.order,picking_ids:0
-msgid "Related Picking"
-msgstr "Liittyvä keräily"
-
-#. module: sale
-#: field:sale.config.picking_policy,name:0
-msgid "Name"
-msgstr "Nimi"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Shipping address :"
-msgstr "Toimitusosoite:"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_by_partner
-msgid "Sales per Customer in last 90 days"
-msgstr "Myynnit Asiakkaittain viimeisen 90 päivän ajalta"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_quotation0
-msgid "Draft state of sales order"
-msgstr "Myyntitilauksen luonnostila"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_deliver0
-msgid "Create Delivery Order"
-msgstr "Luo toimitusmääräin"
-
-#. module: sale
-#: code:addons/sale/sale.py:1303
-#, python-format
-msgid "Cannot delete a sales order line which is in state '%s'!"
-msgstr "Ei voida poistaa myyntitilausriviä jonka tila on '%s'!"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoS)"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Total Tax Included"
-msgstr "Verollinen Summa"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_packing0
-msgid "Create Pick List"
-msgstr "Luo Keräyslista"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered date of the sales order"
-msgstr "Myyntitilauksen tilauspäivä"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales by Product Category"
-msgstr "Myynnit Tuoteluokittain"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_confirmquotation0
-msgid "Confirm Quotation"
-msgstr "Vahvista tarjous"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:63
-#, python-format
-msgid "Error"
-msgstr "Virhe"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0 view:sale.report:0
-msgid "Group By..."
-msgstr "Ryhmittely.."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Invoice"
-msgstr "Laskun uudelleenluonti"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.outgoing_picking_list_to_invoice
-#: model:ir.ui.menu,name:sale.menu_action_picking_list_to_invoice
-msgid "Deliveries to Invoice"
-msgstr "Laskutettavat toimitukset"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Waiting Schedule"
-msgstr "Odottaa aikataulua"
-
-#. module: sale
-#: field:sale.order.line,type:0
-msgid "Procurement Method"
-msgstr "Hankintatapa"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_packinglist0
-msgid "Pick List"
-msgstr "Keräilylista"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Set to Draft"
-msgstr "Aseta luonnokseksi"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_packinglist0
-msgid "Document of the move to the output or to the customer."
-msgstr "Dokumentti siirrosta kohdepaikkaan tai asiakkalle."
-
-#. module: sale
-#: model:email.template,body_text:sale.email_template_edi_sale
+#: model:ir.actions.act_window,help:sale.action_order_line_tree2
 msgid ""
-"\n"
-"Hello${object.partner_order_id.name and ' ' or "
-"''}${object.partner_order_id.name or ''},\n"
-"\n"
-"Here is your order confirmation for ${object.partner_id.name}:\n"
-"       | Order number: *${object.name}*\n"
-"       | Order total: *${object.amount_total} "
-"${object.pricelist_id.currency_id.name}*\n"
-"       | Order date: ${object.date_order}\n"
-"       % if object.origin:\n"
-"       | Order reference: ${object.origin}\n"
-"       % endif\n"
-"       % if object.client_order_ref:\n"
-"       | Your reference: ${object.client_order_ref}<br />\n"
-"       % endif\n"
-"       | Your contact: ${object.user_id.name} ${object.user_id.user_email "
-"and '<%s>'%(object.user_id.user_email) or ''}\n"
-"\n"
-"You can view the order confirmation, download it and even pay online using "
-"the following link:\n"
-"    ${ctx.get('edi_web_url_view') or 'n/a'}\n"
-"\n"
-"% if object.order_policy in ('prepaid','manual') and "
-"object.company_id.paypal_account:\n"
-"<% \n"
-"comp_name = quote(object.company_id.name)\n"
-"order_name = quote(object.name)\n"
-"paypal_account = quote(object.company_id.paypal_account)\n"
-"order_amount = quote(str(object.amount_total))\n"
-"cur_name = quote(object.pricelist_id.currency_id.name)\n"
-"paypal_url = \"https://www.paypal.com/cgi-"
-"bin/webscr?cmd=_xclick&business=%s&item_name=%s%%20Order%%20%s&invoice=%s&amo"
-"unt=%s\" \\\n"
-"             "
-"\"&currency_code=%s&button_subtype=services&no_note=1&bn=OpenERP_Order_PayNow"
-"_%s\" % \\\n"
-"             "
-"(paypal_account,comp_name,order_name,order_name,order_amount,cur_name,cur_nam"
-"e)\n"
-"%>\n"
-"It is also possible to directly pay with Paypal:\n"
-"    ${paypal_url}\n"
-"% endif\n"
-"\n"
-"If you have any question, do not hesitate to contact us.\n"
-"\n"
-"\n"
-"Thank you for choosing ${object.company_id.name}!\n"
-"\n"
-"\n"
-"--\n"
-"${object.user_id.name} ${object.user_id.user_email and "
-"'<%s>'%(object.user_id.user_email) or ''}\n"
-"${object.company_id.name}\n"
-"% if object.company_id.street:\n"
-"${object.company_id.street or ''}\n"
-"% endif\n"
-"% if object.company_id.street2:\n"
-"${object.company_id.street2}\n"
-"% endif\n"
-"% if object.company_id.city or object.company_id.zip:\n"
-"${object.company_id.zip or ''} ${object.company_id.city or ''}\n"
-"% endif\n"
-"% if object.company_id.country_id:\n"
-"${object.company_id.state_id and ('%s, ' % object.company_id.state_id.name) "
-"or ''} ${object.company_id.country_id.name or ''}\n"
-"% endif\n"
-"% if object.company_id.phone:\n"
-"Phone: ${object.company_id.phone}\n"
-"% endif\n"
-"% if object.company_id.website:\n"
-"${object.company_id.website or ''}\n"
-"% endif\n"
+"<p>\n"
+"                Here is a list of each sales order line to be invoiced. You "
+"can\n"
+"                invoice sales orders partially, by lines of sales order. You "
+"do\n"
+"                not need this list if you invoice from the delivery orders "
+"or\n"
+"                if you invoice sales totally.\n"
+"              </p>\n"
 "            "
 msgstr ""
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_validate0
-msgid "Validate"
-msgstr "Vahvista"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Confirm Order"
-msgstr "Vahvista tilaus"
-
-#. module: sale
-#: model:process.transition,name:sale.process_transition_saleprocurement0
-msgid "Create Procurement Order"
-msgstr "Luo hankintatilaus"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,amount_tax:0
-#: field:sale.order.line,tax_id:0
-msgid "Taxes"
-msgstr "Verot"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order ready to be invoiced"
-msgstr "Myyntitilaus on valmis laskutettavaksi"
-
-#. module: sale
-#: help:sale.order,create_date:0
-msgid "Date on which sales order is created."
-msgstr "Päivä jolloin myyntitilaus on luotu"
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_move
-msgid "Stock Move"
-msgstr "Varastosiirto"
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create Invoices"
-msgstr "Luo laskuja"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current month"
-msgstr "Myyntitilaukset jotka luotu kuluvan kuukauden aikana"
-
-#. module: sale
-#: report:sale.order:0
-msgid "Fax :"
-msgstr "Faksi:"
-
-#. module: sale
-#: help:sale.order.line,type:0
-msgid ""
-"If 'on order', it triggers a procurement when the sale order is confirmed to "
-"create a task, purchase order or manufacturing order linked to this sale "
-"order line."
+#: view:sale.config.settings:0
+msgid "Product Features"
 msgstr ""
-
-#. module: sale
-#: field:sale.advance.payment.inv,amount:0
-msgid "Advance Amount"
-msgstr "Etukäteismäärä"
-
-#. module: sale
-#: field:sale.config.picking_policy,charge_delivery:0
-msgid "Do you charge the delivery?"
-msgstr "Haluatko veloittaa toimituksesta?"
-
-#. module: sale
-#: selection:sale.order,invoice_quantity:0
-msgid "Shipped Quantities"
-msgstr "Toimitetut määrät"
-
-#. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Sales Orders"
-msgstr "Lasku perustuu myyntitilauksiin"
-
-#. module: sale
-#: code:addons/sale/sale.py:331
-#, python-format
-msgid ""
-"If you change the pricelist of this order (and eventually the currency), "
-"prices of existing order lines will not be updated."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_stock_picking
-msgid "Picking List"
-msgstr "Keräilylista"
-
-#. module: sale
-#: code:addons/sale/sale.py:412 code:addons/sale/sale.py:503
-#: code:addons/sale/sale.py:632 code:addons/sale/sale.py:1016
-#: code:addons/sale/sale.py:1033
-#, python-format
-msgid "Error !"
-msgstr "Virhe!"
-
-#. module: sale
-#: code:addons/sale/sale.py:603
-#, python-format
-msgid "Could not cancel sales order !"
-msgstr "Ei voi peruuttaa myyntitilausta !"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Qty(UoM)"
-msgstr ""
-
-#. module: sale
-#: view:sale.report:0
-msgid "Ordered Year of the sales order"
-msgstr "Tilausvuosi myyntitilauksella"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "July"
-msgstr "Heinäkuu"
-
-#. module: sale
-#: field:sale.order.line,procurement_id:0
-msgid "Procurement"
-msgstr "Hankinta"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Shipping Exception"
-msgstr "Poikkeus toimituksessa"
-
-#. module: sale
-#: code:addons/sale/sale.py:1156
-#, python-format
-msgid "Picking Information ! : "
-msgstr "Keräilytiedot ! : "
-
-#. module: sale
-#: field:sale.make.invoice,grouped:0
-msgid "Group the invoices"
-msgstr "Yhdistä laskut"
-
-#. module: sale
-#: field:sale.order,order_policy:0
-msgid "Invoice Policy"
-msgstr "Läskutussäännöt"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_config_picking_policy
-#: view:sale.config.picking_policy:0
-msgid "Setup your Invoicing Method"
-msgstr "Aseta laskutustapa"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_invoice0
-msgid "To be reviewed by the accountant."
-msgstr "Kirjanpitäjän tarkistettavaksi"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Reference UoM"
-msgstr "Viitemittayksikkö"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid ""
-"This tool will help you to install the right module and configure the system "
-"according to the method you use to invoice your customers."
-msgstr ""
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order_line_make_invoice
-msgid "Sale OrderLine Make_invoice"
-msgstr "Myyntiilausrivi tee lasku"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Invoice Exception"
-msgstr "Poikkeus laskutuksessa"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleorder0
-msgid "Drives procurement and invoicing"
-msgstr "Ohjaa hankintaa ja laskutusta"
-
-#. module: sale
-#: field:sale.order,invoiced:0
-msgid "Paid"
-msgstr "Maksettu"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_report_all
-#: model:ir.ui.menu,name:sale.menu_report_product_all view:sale.report:0
-msgid "Sales Analysis"
-msgstr "Myyntianalyysi"
-
-#. module: sale
-#: code:addons/sale/sale.py:1151
-#, python-format
-msgid ""
-"You selected a quantity of %d Units.\n"
-"But it's not compatible with the selected packaging.\n"
-"Here is a proposition of quantities according to the packaging:\n"
-"EAN: %s Quantity: %s Type of ul: %s"
-msgstr ""
-
-#. module: sale
-#: view:sale.order:0
-msgid "Recreate Packing"
-msgstr "Luo pakkaus uudelleen"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,property_ids:0
-msgid "Properties"
-msgstr "Ominaisuudet"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_quotation0
-#: selection:sale.order,state:0 selection:sale.report,state:0
-msgid "Quotation"
-msgstr "Tarjous"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_invoice0
-msgid ""
-"The Salesman creates an invoice manually, if the sales order shipping policy "
-"is 'Shipping and Manual in Progress'. The invoice is created automatically "
-"if the shipping policy is 'Payment before Delivery'."
-msgstr ""
-"Myyjä luo laskun käsin, jos myyntitilauksen lähetyssäännöt ovat 'toimitus ja "
-"manuaalinen käynnissä'. Lasku luodaan automaattisesti jos lähetyssääntö on "
-"'maksu ennen toimitusta'."
-
-#. module: sale
-#: help:sale.config.picking_policy,order_policy:0
-msgid ""
-"You can generate invoices based on sales orders or based on shippings."
-msgstr "Voit luoda laskuja myyntitilausten tai toimitusten pohjalta."
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Confirmed sale order lines, not yet delivered"
-msgstr "Vahvistetut myyntitilausrivit, ei vielä toimitettu"
-
-#. module: sale
-#: code:addons/sale/sale.py:473
-#, python-format
-msgid "Customer Invoices"
-msgstr "Asiakkaan laskut"
-
-#. module: sale
-#: model:process.process,name:sale.process_process_salesprocess0
-#: view:sale.order:0 view:sale.report:0
-msgid "Sales"
-msgstr "Myynti"
-
-#. module: sale
-#: report:sale.order:0 field:sale.order.line,price_unit:0
-msgid "Unit Price"
-msgstr "Yksikköhinta"
-
-#. module: sale
-#: selection:sale.order,state:0 view:sale.order.line:0
-#: selection:sale.order.line,state:0 selection:sale.report,state:0
-msgid "Done"
-msgstr "Valmis"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_invoice0
-#: model:process.node,name:sale.process_node_invoiceafterdelivery0
-msgid "Invoice"
-msgstr "Lasku"
-
-#. module: sale
-#: code:addons/sale/sale.py:1171
-#, python-format
-msgid ""
-"You have to select a customer in the sales form !\n"
-"Please set one customer before choosing a product."
-msgstr ""
-"Sinun pitää valita asiakas myyntilomakkeella !\n"
-"Ole hyvä ja valitse yksi asiakas enennkuin valitset tuotteen"
-
-#. module: sale
-#: field:sale.order,origin:0
-msgid "Source Document"
-msgstr "Lähdedokumentti"
 
 #. module: sale
 #: view:sale.order.line:0
@@ -1509,14 +1671,57 @@ msgid "To Do"
 msgstr "Tehtävää"
 
 #. module: sale
-#: field:sale.order,picking_policy:0
-msgid "Picking Policy"
-msgstr "Keräilysäännöt"
+#: report:sale.order:0
+msgid "Shipping address :"
+msgstr "Toimitusosoite:"
 
 #. module: sale
-#: model:process.node,note:sale.process_node_deliveryorder0
-msgid "Document of the move to the customer."
-msgstr "Dokumentti siirrosta asiakkaalle"
+#: code:addons/sale/sale.py:460
+#, python-format
+msgid ""
+"You cannot group sales having different currencies for the same partner."
+msgstr "Et voi ryhmitellä saman kumppanin myyntejä joilla on eri valuuttoja."
+
+#. module: sale
+#: code:addons/sale/sale.py:663
+#, python-format
+msgid "Draft Invoice of %s %s <b>waiting for validation</b>."
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,module_account_analytic_analysis:0
+msgid "Use contracts management"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:955
+#, python-format
+msgid ""
+"Cannot find a pricelist line matching this product and quantity.\n"
+"You have to change either the product, the quantity or the pricelist."
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.act_window,name:sale.action_order_report_all
+#: model:ir.ui.menu,name:sale.menu_report_product_all
+#: view:sale.report:0
+msgid "Sales Analysis"
+msgstr "Myyntianalyysi"
+
+#. module: sale
+#: help:sale.order,pricelist_id:0
+msgid "Pricelist for current sales order."
+msgstr "Tilauksessa käytettävä hinnasto."
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_invoice0
+#: model:process.transition.action,name:sale.process_transition_action_createinvoice0
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+#: field:sale.order,order_policy:0
+#: view:sale.order.line:0
+msgid "Create Invoice"
+msgstr "Luo lasku"
 
 #. module: sale
 #: help:sale.order,amount_untaxed:0
@@ -1524,54 +1729,191 @@ msgid "The amount without tax."
 msgstr "Määrä ilman veroa."
 
 #. module: sale
-#: code:addons/sale/sale.py:604
+#: view:sale.order.line:0
+msgid "Order reference"
+msgstr "Tilausviite"
+
+#. module: sale
+#: help:sale.order,invoiced:0
+msgid "It indicates that an invoice has been paid."
+msgstr "Merkitsee että lasku on maksettu"
+
+#. module: sale
+#: code:addons/sale/sale.py:822
 #, python-format
-msgid "You must first cancel all picking attached to this sales order."
-msgstr ""
-"Sinun pitää ensin peruuttaa kaikki keräilyt jotka liittyvät tähän "
-"myyntitilaukseen."
+msgid "You cannot cancel a sale order line that has already been invoiced!"
+msgstr "Et voi peruuttaa myyntitilausriviä joka on jo laskutettu"
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_advance_payment_inv
-msgid "Sales Advance Payment Invoice"
-msgstr "Myynnin ennakkomaksulasku"
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,month:0
-msgid "Month"
-msgstr "Kuukausi"
-
-#. module: sale
-#: model:email.template,subject:sale.email_template_edi_sale
-msgid "${object.company_id.name} Order (Ref ${object.name or 'n/a' })"
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Percentage"
 msgstr ""
 
 #. module: sale
-#: view:sale.order.line:0 field:sale.order.line,product_id:0
-#: view:sale.report:0 field:sale.report,product_id:0
+#: report:sale.order:0
+#: view:sale.order:0
+#: field:sale.order,user_id:0
+#: view:sale.order.line:0
+#: field:sale.order.line,salesman_id:0
+#: view:sale.report:0
+#: field:sale.report,user_id:0
+msgid "Salesperson"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+#: field:sale.order.line,product_id:0
+#: view:sale.report:0
+#: field:sale.report,product_id:0
 msgid "Product"
 msgstr "Tuote"
 
 #. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_cancelassignation0
-msgid "Cancel Assignation"
-msgstr "Peruuta luovutus"
+#: view:sale.advance.payment.inv:0
+#: view:sale.order:0
+msgid "%"
+msgstr ""
 
 #. module: sale
-#: model:ir.model,name:sale.model_sale_config_picking_policy
-msgid "sale.config.picking_policy"
-msgstr "sale.config.picking_policy"
+#: report:sale.order:0
+msgid "Description"
+msgstr "Kuvaus"
 
 #. module: sale
-#: view:account.invoice.report:0 view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_turnover_by_month
-msgid "Monthly Turnover"
-msgstr "Kuukausittainen liikevaihto"
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:143
+#, python-format
+msgid "There is no income account defined for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "May"
+msgstr "Toukokuu"
+
+#. module: sale
+#: code:addons/sale/sale.py:766
+#, python-format
+msgid "Please define income account for this product: \"%s\" (id:%d)."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Price"
+msgstr "Hinta"
+
+#. module: sale
+#: model:ir.actions.act_window,help:sale.action_order_report_all
+msgid ""
+"This report performs analysis on your quotations and sales orders. Analysis "
+"check your sales revenues and sort it by different group criteria (salesman, "
+"partner, product, etc.) Use this report to perform analysis on sales not "
+"having invoiced yet. If you want to analyse your turnover, you should use "
+"the Invoice Analysis report in the Accounting application."
+msgstr ""
+
+#. module: sale
+#: help:sale.order,state:0
+msgid ""
+"Gives the state of the quotation or sales order. \n"
+"The exception state is automatically set when a cancel operation occurs in "
+"the invoice validation (Invoice Exception). \n"
+"The 'Waiting Schedule' state is set when the invoice is confirmed but "
+"waiting for the scheduler to run on the order date."
+msgstr ""
+
+#. module: sale
+#: report:sale.order:0
+msgid "Tel. :"
+msgstr "Puh.:"
+
+#. module: sale
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "Do you really want to create the invoice(s)?"
+msgstr "Oletko varma, että haluat muodostaa laskun?"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Other Information"
+msgstr "Lisätiedot"
+
+#. module: sale
+#: view:res.partner:0
+msgid "sale.group_delivery_invoice_address"
+msgstr ""
+
+#. module: sale
+#: view:sale.order.line:0
+msgid "Qty"
+msgstr "Määrä"
+
+#. module: sale
+#: model:process.node,note:sale.process_node_invoice0
+msgid "To be reviewed by the accountant."
+msgstr "Kirjanpitäjän tarkistettavaksi"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Send by Mail"
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_mrp_properties
+msgid "Properties on lines"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,partner_shipping_id:0
+msgid "Shipping address for current sales order."
+msgstr "Toimitusosoite tälle tilaukselle"
+
+#. module: sale
+#: selection:sale.order,state:0
+msgid "Sale to Invoice"
+msgstr ""
+
+#. module: sale
+#: model:ir.actions.report.xml,name:sale.report_sale_order
+msgid "Quotation / Order"
+msgstr "Tarjous / Tilaus"
+
+#. module: sale
+#: view:sale.order:0
+msgid "Inbox"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+#: field:sale.order,partner_id:0
+#: field:sale.order.line,order_partner_id:0
+msgid "Customer"
+msgstr "Asiakas"
+
+#. module: sale
+#: model:product.template,name:sale.advance_product_0_product_template
+msgid "Advance"
+msgstr "Ennakko"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "February"
+msgstr "Helmikuu"
 
 #. module: sale
 #: field:sale.order,invoice_quantity:0
 msgid "Invoice on"
 msgstr "Laskutetaan kun"
+
+#. module: sale
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Fixed price (deposit)"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/wizard/sale_make_invoice_advance.py:139
+#, python-format
+msgid "There is no income account defined as global property."
+msgstr ""
 
 #. module: sale
 #: report:sale.order:0
@@ -1584,31 +1926,100 @@ msgid "Product UoS"
 msgstr "Tuotteen myyntiyksikkö"
 
 #. module: sale
+#: help:account.config.settings,group_analytic_account_for_sales:0
+msgid "Allows you to specify an analytic account on sale orders."
+msgstr ""
+
+#. module: sale
+#: model:process.node,note:sale.process_node_quotation0
+msgid "Draft state of sales order"
+msgstr "Myyntitilauksen luonnostila"
+
+#. module: sale
+#: field:sale.order,origin:0
+msgid "Source Document"
+msgstr "Lähdedokumentti"
+
+#. module: sale
+#: selection:sale.report,month:0
+msgid "April"
+msgstr "Huhtikuu"
+
+#. module: sale
 #: selection:sale.report,state:0
 msgid "Manual In Progress"
 msgstr "Manuaalisessa käsittelyssä"
 
 #. module: sale
-#: field:sale.order.line,product_uom:0
-msgid "Product UoM"
-msgstr "Tuotteen mittayksikkö"
+#: model:ir.actions.server,name:sale.actions_server_sale_order_unread
+msgid "Mark unread"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:643
+#, python-format
+msgid "Quotation for <em>%s</em> <b>created</b>."
+msgstr ""
+
+#. module: sale
+#: model:res.groups,name:sale.group_delivery_invoice_address
+msgid "Addresses in Sale Orders"
+msgstr ""
+
+#. module: sale
+#: field:sale.config.settings,time_unit:0
+msgid "The default working time unit for services is"
+msgstr ""
 
 #. module: sale
 #: view:sale.order:0
-msgid "Logistic"
-msgstr "Logistinen"
+msgid "My Sale Orders"
+msgstr "Omat myyntitilaukset"
 
 #. module: sale
+#: model:res.groups,name:sale.group_invoice_so_lines
+msgid "Enable Invoicing Sale order lines"
+msgstr ""
+
+#. module: sale
+#: help:sale.order,message_ids:0
+msgid "Messages and communication history"
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
 #: view:sale.order.line:0
-msgid "Order"
-msgstr "Tilaa"
+msgid "Search Sales Order"
+msgstr "Hae myyntitilausta"
 
 #. module: sale
-#: code:addons/sale/sale.py:1017
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:71
+#: view:sale.config.settings:0
+msgid ""
+"Use contract to be able to manage your services with\n"
+"                        multiple invoicing as part of the same contract "
+"with\n"
+"                        your customer."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Ordered month of the sales order"
+msgstr "Myyntitilauksen tilauskuukausi"
+
+#. module: sale
+#: code:addons/sale/sale.py:945
 #, python-format
-msgid "There is no income account defined for this product: \"%s\" (id:%d)"
-msgstr "Tulotiliä ei ole määritelty tälle tuotteelle: \"%s\" (id:%d)"
+msgid ""
+"You have to select a pricelist or a customer in the sales form !\n"
+"Please set one before choosing a product."
+msgstr ""
+"Sinun pitää valita hinnasto tai asiakas myyntilomakkeella!\n"
+"Ole hyvä ja valitse yksi ennenkuin valitset tuotteen."
+
+#. module: sale
+#: model:process.transition,name:sale.process_transition_saleinvoice0
+msgid "From a sales order"
+msgstr "Myyntitilauksesta"
 
 #. module: sale
 #: view:sale.order:0
@@ -1625,580 +2036,55 @@ msgid ""
 msgstr ""
 
 #. module: sale
-#: code:addons/sale/sale.py:1251
+#: selection:sale.advance.payment.inv,advance_payment_method:0
+msgid "Some order lines"
+msgstr ""
+
+#. module: sale
+#: code:addons/sale/sale.py:986
 #, python-format
-msgid ""
-"You plan to sell %.2f %s but you only have %.2f %s available !\n"
-"The real stock is %.2f %s. (without reservations)"
-msgstr ""
-"Suunnitelet myyväsi %.2f %s mutta sinulla on vain %.2f %s saatavilla !\n"
-"Todellinen varasto on %.2f %s (ilman varauksia)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "States"
-msgstr "Tilat"
-
-#. module: sale
-#: view:sale.config.picking_policy:0
-msgid "res_config_contents"
-msgstr "res_config_contents"
-
-#. module: sale
-#: field:sale.order,client_order_ref:0
-msgid "Customer Reference"
-msgstr "Asiakkaan Viite"
-
-#. module: sale
-#: field:sale.order,amount_total:0 view:sale.order.line:0
-msgid "Total"
-msgstr "Yhteensä"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order.line:0
-msgid "Price"
-msgstr "Hinta"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_deliver0
-msgid ""
-"Depending on the configuration of the location Output, the move between the "
-"output area and the customer is done through the Delivery Order manually or "
-"automatically."
-msgstr ""
-"Riippuen paikan lähtöpisteen määrittelyista, siirto lähetysalueen ja "
-"asiakkaan välillä tehdään toimitusmääräimissä käsin tai automaattisest."
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Pay before delivery"
-msgstr "Maksu ennen toimitusta"
-
-#. module: sale
-#: view:board.board:0 model:ir.actions.act_window,name:sale.open_board_sales
-msgid "Sales Dashboard"
-msgstr "Myynnin työpöytä"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_sale_order_make_invoice
-#: model:ir.actions.act_window,name:sale.action_view_sale_order_line_make_invoice
-#: view:sale.order:0
-msgid "Make Invoices"
-msgstr "Luo Laskuja"
-
-#. module: sale
-#: view:sale.order:0 selection:sale.order,state:0 view:sale.order.line:0
-msgid "To Invoice"
-msgstr "Laskutettavaa"
-
-#. module: sale
-#: help:sale.order,date_confirm:0
-msgid "Date on which sales order is confirmed."
-msgstr "Päivä jolloin myyntitilaus on vahvistettu"
-
-#. module: sale
-#: field:sale.order,project_id:0
-msgid "Contract/Analytic Account"
-msgstr "Sopimus/Analyyttinen tili"
-
-#. module: sale
-#: field:sale.order,company_id:0 field:sale.order.line,company_id:0
-#: view:sale.report:0 field:sale.report,company_id:0
-#: field:sale.shop,company_id:0
-msgid "Company"
-msgstr "Yritys"
-
-#. module: sale
-#: field:sale.make.invoice,invoice_date:0
-msgid "Invoice Date"
-msgstr "Laskun päivämäärä"
-
-#. module: sale
-#: help:sale.advance.payment.inv,amount:0
-msgid "The amount to be invoiced in advance."
-msgstr "Ennakkoon laskutettava määrä."
-
-#. module: sale
-#: code:addons/sale/sale.py:1269
-#, python-format
-msgid ""
-"Couldn't find a pricelist line matching this product and quantity.\n"
-"You have to change either the product, the quantity or the pricelist."
+msgid "Cannot delete a sales order line which is in state '%s'."
 msgstr ""
 
 #. module: sale
-#: help:sale.order,picking_ids:0
-msgid ""
-"This is a list of picking that has been generated for this sales order."
-msgstr "Tämä on keräilylista joka on luotu tälle myyntitilaukselle."
-
-#. module: sale
-#: view:sale.make.invoice:0 view:sale.order.line.make.invoice:0
-msgid "Create invoices"
-msgstr "Luo laskut"
+#: help:sale.order,project_id:0
+msgid "The analytic account related to a sales order."
+msgstr "Myyntitilaukseen liitetty analyyttinen tili."
 
 #. module: sale
 #: report:sale.order:0
-msgid "Net Total :"
-msgstr "Yhteensä veroton"
-
-#. module: sale
-#: selection:sale.order,state:0 selection:sale.order.line,state:0
-#: selection:sale.report,state:0
-msgid "Cancelled"
-msgstr "Peruutettu"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sales Order Lines related to a Sales Order of mine"
-msgstr "Omiin myyntitilauksiin liittyvät myyntitilausrivit"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_shop_form
-#: model:ir.ui.menu,name:sale.menu_action_shop_form field:sale.order,shop_id:0
-#: view:sale.report:0 field:sale.report,shop_id:0
-msgid "Shop"
-msgstr "Myymälä"
-
-#. module: sale
-#: field:sale.report,date_confirm:0
-msgid "Date Confirm"
-msgstr "Vahvistus Päivämäärä"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
-#, python-format
-msgid "Warning"
-msgstr "Varoitus"
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_view_sales_by_month
-msgid "Sales by Month"
-msgstr "Myynnit Kuukausittain"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_order
-#: model:process.node,name:sale.process_node_order0
-#: model:process.node,name:sale.process_node_saleorder0
-#: model:res.request.link,name:sale.req_link_sale_order view:sale.order:0
-#: field:stock.picking,sale_id:0
-msgid "Sales Order"
-msgstr "Myyntitilaus"
-
-#. module: sale
-#: field:sale.order.line,product_uos_qty:0
-msgid "Quantity (UoS)"
-msgstr "Määrä (myyntiyksikkö)"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines that are in 'done' state"
-msgstr "Myyntitilausrivit jotka ovat 'valmis' tilassa"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_packing0
-msgid ""
-"The Pick List form is created as soon as the sales order is confirmed, in "
-"the same time as the procurement order. It represents the assignment of "
-"parts to the sales order. There is 1 pick list by sales order line which "
-"evolves with the availability of parts."
-msgstr ""
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Confirmed"
-msgstr "Vahvistettu"
-
-#. module: sale
-#: field:sale.config.picking_policy,order_policy:0
-msgid "Main Method Based On"
-msgstr "Päämetodi perustuu"
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_confirm0
-msgid "Confirm"
-msgstr "Vahvista"
-
-#. module: sale
-#: constraint:res.company:0
-msgid "Error! You can not create recursive companies."
-msgstr "Virhe! Rekursiivisiä yrityksiä ei voi luoda."
-
-#. module: sale
-#: view:board.board:0
-#: model:ir.actions.act_window,name:sale.action_sales_product_total_price
-msgid "Sales by Product's Category in last 90 days"
-msgstr "Myynnit Tuoteluokittain viimeisen 90 päivän ajalta"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order.line,invoice_lines:0
-msgid "Invoice Lines"
-msgstr "Laskurivit"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_line_product_tree
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Sales Order Lines"
-msgstr "Myyntitilauksen rivit"
-
-#. module: sale
-#: field:sale.order.line,delay:0
-msgid "Delivery Lead Time"
-msgstr "Toimitusviive"
-
-#. module: sale
-#: view:res.company:0
-msgid "Configuration"
-msgstr "Asetukset"
-
-#. module: sale
-#: code:addons/sale/edi/sale_order.py:146
-#, python-format
-msgid "EDI Pricelist (%s)"
-msgstr "EDI hinnasto (%s)"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Print Order"
-msgstr "Tulostusjärjestys"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in current year"
-msgstr "Myyntitilaukset luotu kuluvana vuonna"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_line_invoice.py:113
-#, python-format
-msgid ""
-"Invoice cannot be created for this Sales Order Line due to one of the "
-"following reasons:\n"
-"1.The state of this sales order line is either \"draft\" or \"cancel\"!\n"
-"2.The Sales Order Line is Invoiced!"
-msgstr ""
-"Laskua ei voi luoda tälle myyntitilausriville seuraavista syistä:\n"
-"1. Myyntitilausrivin tila on joko luonnos tai peruttu!\n"
-"2. Myyntitilausrivi on laskutettu!"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale order lines done"
-msgstr "Myyntitilausrivit valmiit"
-
-#. module: sale
-#: field:sale.order.line,th_weight:0
-msgid "Weight"
-msgstr "Paino"
-
-#. module: sale
-#: view:sale.open.invoice:0 view:sale.order:0 field:sale.order,invoice_ids:0
-msgid "Invoices"
-msgstr "Laskut"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "December"
-msgstr "Joulukuu"
-
-#. module: sale
-#: field:sale.config.picking_policy,config_logo:0
-msgid "Image"
-msgstr "Kuva"
-
-#. module: sale
-#: model:process.transition,note:sale.process_transition_saleprocurement0
-msgid ""
-"A procurement order is automatically created as soon as a sales order is "
-"confirmed or as the invoice is paid. It drives the purchasing and the "
-"production of products regarding to the rules and to the sales order's "
-"parameters. "
-msgstr ""
-"Hankintatilaus luodaan automaattisesti kun myyntitilaus on vahvistettu tai "
-"lasku maksettu. Se ohjaa hankintaa ja tuotantoa myyntitilausten parametrien "
-"ja sääntöjen mukaan. "
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Uninvoiced"
-msgstr "Laskuttamaton"
-
-#. module: sale
-#: report:sale.order:0 view:sale.order:0 field:sale.order,user_id:0
-#: view:sale.order.line:0 field:sale.order.line,salesman_id:0
-#: view:sale.report:0 field:sale.report,user_id:0
-msgid "Salesman"
-msgstr "Myyjä"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree
-msgid "Old Quotations"
-msgstr "Vanhat Tarjoukset"
-
-#. module: sale
-#: field:sale.order,amount_untaxed:0
-msgid "Untaxed Amount"
-msgstr "Veroton määrä"
-
-#. module: sale
-#: code:addons/sale/wizard/sale_make_invoice_advance.py:170
-#: model:ir.actions.act_window,name:sale.action_view_sale_advance_payment_inv
-#: view:sale.advance.payment.inv:0 view:sale.order:0
-#, python-format
-msgid "Advance Invoice"
-msgstr "Ennakkolasku"
-
-#. module: sale
-#: code:addons/sale/sale.py:624
-#, python-format
-msgid "The sales order '%s' has been cancelled."
-msgstr "Myyntitilaus '%s' on peruttu."
-
-#. module: sale
-#: selection:sale.order.line,state:0
-msgid "Draft"
-msgstr "Luonnos"
-
-#. module: sale
-#: help:sale.order.line,state:0
-msgid ""
-"* The 'Draft' state is set when the related sales order in draft state.      "
-"               \n"
-"* The 'Confirmed' state is set when the related sales order is confirmed.    "
-"                 \n"
-"* The 'Exception' state is set when the related sales order is set as "
-"exception.                     \n"
-"* The 'Done' state is set when the sales order line has been picked.         "
-"            \n"
-"* The 'Cancelled' state is set when a user cancel the sales order related."
-msgstr ""
-
-#. module: sale
-#: help:sale.order,amount_tax:0
-msgid "The tax amount."
-msgstr "Veron määrä"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Packings"
-msgstr "Pakkaukset"
-
-#. module: sale
-#: view:sale.order.line:0
-msgid "Sale Order Lines ready to be invoiced"
-msgstr "Myyntitilausrivit valmiina laskutettaviksi"
-
-#. module: sale
-#: view:sale.report:0
-msgid "Sales order created in last month"
-msgstr "Edellisen kuun luodut myyntitilaukset"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_email_templates
-#: model:ir.ui.menu,name:sale.menu_email_templates
-msgid "Email Templates"
-msgstr "Sähköpostin mallipohjat"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_form
-#: model:ir.ui.menu,name:sale.menu_sale_order view:sale.order:0
-msgid "Sales Orders"
-msgstr "Myyntitilaukset"
-
-#. module: sale
-#: model:ir.model,name:sale.model_sale_shop view:sale.shop:0
-msgid "Sales Shop"
-msgstr "Myymälä"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "November"
-msgstr "Marraskuu"
-
-#. module: sale
-#: field:sale.advance.payment.inv,product_id:0
-msgid "Advance Product"
-msgstr "Ennakkotuote"
-
-#. module: sale
-#: view:sale.order:0
-msgid "Compute"
-msgstr "Laske"
-
-#. module: sale
-#: code:addons/sale/sale.py:618
-#, python-format
-msgid "You must first cancel all invoices attached to this sales order."
-msgstr ""
-"Sinun pitää ensin peruuttaa kaikki laskut jotka liittyvät tähän "
-"myyntitilaukseen."
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "January"
-msgstr "Tammikuu"
-
-#. module: sale
-#: model:ir.actions.act_window,name:sale.action_order_tree4
-msgid "Sales Order in Progress"
-msgstr "Myyntitilaukset käsittelyssä"
-
-#. module: sale
-#: help:sale.order,origin:0
-msgid "Reference of the document that generated this sales order request."
-msgstr "Viite dokumenttiin joka loi tämän myyntitilauspyynnön."
-
-#. module: sale
-#: view:sale.report:0 field:sale.report,delay:0
-msgid "Commitment Delay"
-msgstr "Sitoutumisen viive"
-
-#. module: sale
-#: selection:sale.order,order_policy:0
-msgid "Deliver & invoice on demand"
-msgstr "Toimita ja laskuta pyydettäessä"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_saleprocurement0
-msgid ""
-"One Procurement order for each sales order line and for each of the "
-"components."
-msgstr ""
-"Yksi hankintatilaus jokaista myyntitilausriviä kohti ja jokaista komponettia "
-"kohti."
-
-#. module: sale
-#: model:process.transition.action,name:sale.process_transition_action_assign0
-msgid "Assign"
-msgstr "Luovuta"
-
-#. module: sale
-#: field:sale.report,date:0
-msgid "Date Order"
-msgstr "Tilauksen Päiväys"
-
-#. module: sale
-#: model:process.node,note:sale.process_node_order0
-msgid "Confirmed sales order to invoice."
-msgstr "Laskutettavat vahvistetut myyntitilaukset."
-
-#. module: sale
-#: view:sale.order:0
-msgid "Sales Order that haven't yet been confirmed"
-msgstr "Myyntitilaus jota ei ole vielä vahvistettu"
-
-#. module: sale
-#: code:addons/sale/sale.py:322
-#, python-format
-msgid "The sales order '%s' has been set in draft state."
-msgstr "Myyntitilaus '%s' on asetettu vedokseksi."
-
-#. module: sale
-#: selection:sale.order.line,type:0
-msgid "from stock"
-msgstr "varastosta"
-
-#. module: sale
-#: view:sale.open.invoice:0
-msgid "Close"
-msgstr "Sulje"
-
-#. module: sale
-#: code:addons/sale/sale.py:1261
-#, python-format
-msgid "No Pricelist ! : "
-msgstr "Ei hinnastoa ! : "
-
-#. module: sale
-#: field:sale.order,shipped:0
-msgid "Delivered"
-msgstr "Toimitettu"
-
-#. module: sale
-#: constraint:stock.move:0
-msgid "You must assign a production lot for this product"
-msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
-
-#. module: sale
-#: model:ir.actions.act_window,help:sale.action_shop_form
-msgid ""
-"If you have more than one shop reselling your company products, you can "
-"create and manage that from here. Whenever you will record a new quotation "
-"or sales order, it has to be linked to a shop. The shop also defines the "
-"warehouse from which the products will be delivered for each particular "
-"sales."
-msgstr ""
-
-#. module: sale
-#: help:sale.order,invoiced:0
-msgid "It indicates that an invoice has been paid."
-msgstr "Merkitsee että lasku on maksettu"
-
-#. module: sale
-#: report:sale.order:0 field:sale.order.line,name:0
-msgid "Description"
-msgstr "Kuvaus"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "May"
-msgstr "Toukokuu"
-
-#. module: sale
-#: view:sale.order:0 field:sale.order,partner_id:0
-#: field:sale.order.line,order_partner_id:0
-msgid "Customer"
-msgstr "Asiakas"
-
-#. module: sale
-#: model:product.template,name:sale.advance_product_0_product_template
-msgid "Advance"
-msgstr "Ennakko"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "February"
-msgstr "Helmikuu"
-
-#. module: sale
-#: selection:sale.report,month:0
-msgid "April"
-msgstr "Huhtikuu"
-
-#. module: sale
-#: view:sale.shop:0
-msgid "Accounting"
-msgstr "Kirjanpito"
-
-#. module: sale
-#: view:sale.order:0 view:sale.order.line:0
-msgid "Search Sales Order"
-msgstr "Hae myyntitilausta"
-
-#. module: sale
-#: model:process.node,name:sale.process_node_saleorderprocurement0
-msgid "Sales Order Requisition"
-msgstr "Myyntitilausehdotus"
-
-#. module: sale
-#: code:addons/sale/sale.py:1255
-#, python-format
-msgid "Not enough stock ! : "
-msgstr "Ei tarpeeksi varastoa ! : "
-
-#. module: sale
-#: report:sale.order:0 field:sale.order,payment_term:0
+#: field:sale.order,payment_term:0
 msgid "Payment Term"
 msgstr "Maksuehto"
 
 #. module: sale
-#: model:ir.actions.act_window,help:sale.action_order_report_all
+#: view:sale.order:0
+msgid "Sales Order ready to be invoiced"
+msgstr "Myyntitilaus on valmis laskutettavaksi"
+
+#. module: sale
+#: help:account.config.settings,module_sale_analytic_plans:0
+msgid "This allows install module sale_analytic_plans."
+msgstr ""
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+#: view:sale.make.invoice:0
+#: view:sale.order.line.make.invoice:0
+msgid "or"
+msgstr ""
+
+#. module: sale
+#: field:sale.order.line,name:0
+msgid "Product Description"
+msgstr ""
+
+#. module: sale
+#: help:sale.config.settings,group_sale_pricelist:0
 msgid ""
-"This report performs analysis on your quotations and sales orders. Analysis "
-"check your sales revenues and sort it by different group criteria (salesman, "
-"partner, product, etc.) Use this report to perform analysis on sales not "
-"having invoiced yet. If you want to analyse your turnover, you should use "
-"the Invoice Analysis report in the Accounting application."
+"Allows to manage different prices based on rules per category of customers.\n"
+"                Example: 10% for retailers, promotion of 5 EUR on this "
+"product, etc."
 msgstr ""
 
 #. module: sale
@@ -2207,19 +2093,61 @@ msgid "Quotation N°"
 msgstr "Tarjous no."
 
 #. module: sale
-#: field:sale.order,picked_rate:0 view:sale.report:0
+#: model:res.groups,name:sale.group_discount_per_so_line
+msgid "Discount on lines"
+msgstr ""
+
+#. module: sale
+#: field:sale.order,client_order_ref:0
+msgid "Customer Reference"
+msgstr "Asiakkaan Viite"
+
+#. module: sale
+#: view:sale.report:0
 msgid "Picked"
 msgstr "Kerätty"
 
 #. module: sale
-#: view:sale.report:0 field:sale.report,year:0
-msgid "Year"
-msgstr "Vuosi"
+#: help:sale.config.settings,module_sale_margin:0
+msgid ""
+"This adds the 'Margin' on sales order.\n"
+"                This gives the profitability by calculating the difference "
+"between the Unit Price and Cost Price.\n"
+"                This installs the module sale_margin."
+msgstr ""
 
 #. module: sale
-#: selection:sale.config.picking_policy,order_policy:0
-msgid "Invoice Based on Deliveries"
-msgstr "Lasku perustuen toimitettuihin"
+#: code:addons/sale/sale.py:867
+#, python-format
+msgid ""
+"Before choosing a product,\n"
+" select a customer in the sales form."
+msgstr ""
+
+#. module: sale
+#: view:sale.order:0
+msgid "Total Tax Included"
+msgstr "Verollinen Summa"
+
+#. module: sale
+#: field:sale.order,invoice_exists:0
+#: field:sale.order,invoiced_rate:0
+#: field:sale.order.line,invoiced:0
+msgid "Invoiced"
+msgstr "Laskutettu"
+
+#. module: sale
+#: view:sale.advance.payment.inv:0
+msgid ""
+"Select how you want to invoice this order. This\n"
+"                        will create a draft invoice that can be modified\n"
+"                        before validation."
+msgstr ""
+
+#. module: sale
+#: view:sale.report:0
+msgid "Ordered date of the sales order"
+msgstr "Myyntitilauksen tilauspäivä"
 
 #~ msgid "Steps To Deliver a Sale Order"
 #~ msgstr "Vaiheet myyntitilauksen toimittamiseksi"
@@ -2229,6 +2157,12 @@ msgstr "Lasku perustuen toimitettuihin"
 
 #~ msgid "Partial Delivery"
 #~ msgstr "Osittaistoimitus"
+
+#~ msgid "from stock"
+#~ msgstr "varastosta"
+
+#~ msgid "Delivery Order"
+#~ msgstr "Toimitusmääräys"
 
 #~ msgid "Delivery, from the warehouse to the customer."
 #~ msgstr "Toimitus varastosta asiakkaalle"
@@ -2243,10 +2177,22 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Automatic Declaration"
 #~ msgstr "Automaattinen ilmoitus"
 
+#~ msgid "Set to Draft"
+#~ msgstr "Aseta luonnokseksi"
+
+#~ msgid "Validate"
+#~ msgstr "Vahvista"
+
 #~ msgid ""
 #~ "Whenever confirm button is clicked, the draft state is moved to manual. that "
 #~ "is, quotation is moved to  sale order."
 #~ msgstr "Kun painetaan \"Vahvista\", tarjous siirretään myyntitilaukseksi."
+
+#~ msgid "Notes"
+#~ msgstr "Huomautukset"
+
+#~ msgid "Inventory Moves"
+#~ msgstr "Varastosiirrot"
 
 #~ msgid "Manual Designation"
 #~ msgstr "Käsin syötetty nimike"
@@ -2271,6 +2217,9 @@ msgstr "Lasku perustuen toimitettuihin"
 
 #~ msgid "VAT"
 #~ msgstr "ALV"
+
+#~ msgid "Extra Info"
+#~ msgstr "Lisätiedot"
 
 #~ msgid ""
 #~ "The sale order will automatically create the invoice proposition (draft "
@@ -2298,6 +2247,9 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "All Sales Order"
 #~ msgstr "Kaikki myyntitilaukset"
 
+#~ msgid "Invoice Based on Sales Orders"
+#~ msgstr "Lasku perustuu myyntitilauksiin"
+
 #, python-format
 #~ msgid ""
 #~ "You cannot make an advance on a sale order that is defined as 'Automatic "
@@ -2305,6 +2257,15 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgstr ""
 #~ "Ennakkoa ei voi tehdä myyntitilauksesta johon on määritelty \"Automaattinen "
 #~ "lasku toimituksen jälkeen\"."
+
+#~ msgid "Shipped Quantities"
+#~ msgstr "Toimitetut määrät"
+
+#~ msgid "Warehouse"
+#~ msgstr "Varasto"
+
+#~ msgid "Force Assignation"
+#~ msgstr "Pakota luovutus"
 
 #~ msgid ""
 #~ "Packing list is created when 'Assign' is being clicked after confirming the "
@@ -2319,6 +2280,13 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgstr ""
 #~ "Kun valitset toimituskäytännöksi \"Automaattinen lasku toimituksen "
 #~ "jälkeen\", lasku luodaan automaattisesti toimituksen jälkeen."
+
+#~ msgid "Untaxed amount"
+#~ msgstr "Veroton määrä"
+
+#, python-format
+#~ msgid "Error !"
+#~ msgstr "Virhe!"
 
 #~ msgid "Canceled"
 #~ msgstr "Peruutettu"
@@ -2340,8 +2308,17 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Complete Delivery"
 #~ msgstr "Kokonaistoimitus"
 
+#~ msgid "Shipping Exception"
+#~ msgstr "Poikkeus toimituksessa"
+
+#~ msgid "Confirm Order"
+#~ msgstr "Vahvista tilaus"
+
 #~ msgid "Total amount"
 #~ msgstr "Yhteensä"
+
+#~ msgid "Configuration"
+#~ msgstr "Asetukset"
 
 #~ msgid "Invoice on Order After Delivery"
 #~ msgstr "Lasku toimituksen jälkeen"
@@ -2352,17 +2329,26 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Sale Shop"
 #~ msgstr "Myymälä"
 
+#~ msgid "All Quotations"
+#~ msgstr "Kaikki tarjoukset"
+
 #~ msgid "Payment accounts"
 #~ msgstr "Maksutilit"
 
 #~ msgid "Draft Invoice"
 #~ msgstr "Laskun luonnos"
 
+#~ msgid "Procurement"
+#~ msgstr "Hankinta"
+
 #~ msgid "Sales orders"
 #~ msgstr "Myyntitilaukset"
 
 #~ msgid "Shipping Default Policy"
 #~ msgstr "Toimituksen oletuskäytäntö"
+
+#~ msgid "Order Line"
+#~ msgstr "Tilausrivi"
 
 #~ msgid "Packing Default Policy"
 #~ msgstr "Pakkauksen oletuskäytäntö"
@@ -2390,8 +2376,14 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "Tämä asetuksien vaihe asettaa oletus keräilykäytännön myyntitilausta "
 #~ "tehtäessä"
 
+#~ msgid "Salesman"
+#~ msgstr "Myyjä"
+
 #~ msgid "Uninvoiced Lines"
 #~ msgstr "Laskuttamattomat rivit"
+
+#~ msgid "Packaging"
+#~ msgstr "Paketointi"
 
 #~ msgid "Procurement Corrected"
 #~ msgstr "Hankinta korjattu"
@@ -2410,9 +2402,6 @@ msgstr "Lasku perustuen toimitettuihin"
 
 #~ msgid "Sale Procurement"
 #~ msgstr "Myynnin hankinta"
-
-#~ msgid "Status"
-#~ msgstr "Tila"
 
 #~ msgid "Packing Policy"
 #~ msgstr "Pakkauskäytäntö"
@@ -2439,17 +2428,20 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "Lasku luodaan myyntitilauksen vahvistamisen jälkeen kun painetaan \"Luo "
 #~ "lasku\". Tämä toiminto siirtää myyntitilauksen laskutukseen."
 
-#~ msgid "Sale Order"
-#~ msgstr "Myyntitilaus"
-
 #~ msgid "Draft customer invoice, to be reviewed by accountant."
 #~ msgstr "Luonnos asiakkaan laskusta tilinpitäjän tarkastettavaksi."
 
 #~ msgid "Sale Pricelists"
 #~ msgstr "Myynnin hinnastot"
 
+#~ msgid "Compute"
+#~ msgstr "Laske"
+
 #~ msgid "Direct Delivery"
 #~ msgstr "Suora toimitus"
+
+#~ msgid "Properties"
+#~ msgstr "Ominaisuudet"
 
 #~ msgid "Delivery Order Only"
 #~ msgstr "Vain toimitusmääräys"
@@ -2457,11 +2449,18 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Make Invoice"
 #~ msgstr "Luo lasku"
 
+#, python-format
+#~ msgid "Error"
+#~ msgstr "Virhe"
+
 #~ msgid "Sales order lines"
 #~ msgstr "Myyntitilauksen rivit"
 
-#~ msgid "Sequence"
-#~ msgstr "Sarja"
+#~ msgid "Assign"
+#~ msgstr "Luovuta"
+
+#~ msgid "Close"
+#~ msgstr "Sulje"
 
 #~ msgid "Packing OUT is created for stockable products."
 #~ msgstr "Pakkaus ULOS luodaan varastoitaville tuotteille."
@@ -2513,8 +2512,17 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Sales order"
 #~ msgstr "Myyntitilaus"
 
+#~ msgid "Ordering Contact"
+#~ msgstr "Tilauskontakti"
+
+#~ msgid "Incoterm"
+#~ msgstr "Incoterm"
+
 #~ msgid "Sale Order Line"
 #~ msgstr "Myyntitilausrivi"
+
+#~ msgid "Cancel Assignation"
+#~ msgstr "Peruuta luovutus"
 
 #~ msgid "Sales Management"
 #~ msgstr "Myynninhallinta"
@@ -2525,6 +2533,9 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Purchase Pricelists"
 #~ msgstr "Ostohinnastot"
 
+#~ msgid "Name"
+#~ msgstr "Nimi"
+
 #~ msgid ""
 #~ "The name and address of the contact that requested the order or quotation."
 #~ msgstr "Tilauksen tai tarjouksen pyytäneen kontaktin nimi ja osoite."
@@ -2534,6 +2545,9 @@ msgstr "Lasku perustuen toimitettuihin"
 
 #~ msgid "Make invoices"
 #~ msgstr "Luo laskut"
+
+#~ msgid "on order"
+#~ msgstr "tilauksesta"
 
 #, python-format
 #~ msgid "Cannot delete Sale Order(s) which are already confirmed !"
@@ -2551,6 +2565,15 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Payment Terms"
 #~ msgstr "Maksuehdot"
 
+#~ msgid "States"
+#~ msgstr "Tilat"
+
+#~ msgid "Stock Moves"
+#~ msgstr "Varastosiirrot"
+
+#~ msgid "Invoice Based on Deliveries"
+#~ msgstr "Lasku perustuen toimitettuihin"
+
 #~ msgid "Payment Before Delivery"
 #~ msgstr "Maksu ennen toimitusta"
 
@@ -2563,6 +2586,9 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Error: UOS must be in a different category than the UOM"
 #~ msgstr "Virhe: Myyntiyksikkö täytyy olla eri kategoriassa kuin mittayksikkö"
 
+#~ msgid "Quantity (UoM)"
+#~ msgstr "Määrä (mittayksikköä)"
+
 #~ msgid ""
 #~ "By default, Open ERP is able to manage complex routing and paths of products "
 #~ "in your warehouse and partner locations. This will configure the most common "
@@ -2574,9 +2600,16 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "yksinkertaisimmille tavoille toimittaa tuotteet asiakkaalle yhdessä tai "
 #~ "kahdessa työvaiheessa."
 
+#~ msgid "sale.config.picking_policy"
+#~ msgstr "sale.config.picking_policy"
+
 #, python-format
 #~ msgid "Could not cancel this sale order !"
 #~ msgstr "Myyntitilausta ei voitu peruuttaa!"
+
+#, python-format
+#~ msgid "invalid mode for test_state"
+#~ msgstr "invalid mode for test_state"
 
 #~ msgid ""
 #~ "This is the list of invoices that have been generated for this sale order. "
@@ -2609,6 +2642,19 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "My sales order in progress"
 #~ msgstr "Omat myyntitilaukset käsittelyssä"
 
+#~ msgid "UoM"
+#~ msgstr "Mittayksikkö"
+
+#~ msgid "Product UoM"
+#~ msgstr "Tuotteen mittayksikkö"
+
+#~ msgid ""
+#~ "If you don't have enough stock available to deliver all at once, do you "
+#~ "accept partial shipments or not?"
+#~ msgstr ""
+#~ "Jos varastosaldo ei riitä kaikkien lähettämiseen kerrallaan, hyväksytkö "
+#~ "osittaisen lähettämisen?"
+
 #~ msgid "Customer Ref"
 #~ msgstr "Asiakkaan viite"
 
@@ -2617,6 +2663,9 @@ msgstr "Lasku perustuen toimitettuihin"
 
 #~ msgid "Invalid model name in the action definition."
 #~ msgstr "Virheellinen mallin nimi toimenpiteen määrittelyssä."
+
+#~ msgid "Accounting"
+#~ msgstr "Kirjanpito"
 
 #~ msgid "Invoice from the Packing"
 #~ msgstr "Lasku pakkauksesta"
@@ -2632,6 +2681,9 @@ msgstr "Lasku perustuen toimitettuihin"
 #, python-format
 #~ msgid "You cannot cancel a sale order line that has already been invoiced !"
 #~ msgstr "Et vo perua myyntitilauksen riviä joka on jo laskutettu!"
+
+#~ msgid "Number Packages"
+#~ msgstr "Pakkauksien määrä"
 
 #, python-format
 #~ msgid ""
@@ -2679,14 +2731,82 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Other data"
 #~ msgstr "Muut tiedot"
 
+#, python-format
+#~ msgid "Warning !"
+#~ msgstr "Varoitus !"
+
+#, python-format
+#~ msgid "The quotation '%s' has been converted to a sales order."
+#~ msgstr "Tarjous '%s' on muutettu tilaukseksi."
+
+#~ msgid ""
+#~ "Sales Orders help you manage quotations and orders from your customers. "
+#~ "OpenERP suggests that you start by creating a quotation. Once it is "
+#~ "confirmed, the quotation will be converted into a Sales Order. OpenERP can "
+#~ "handle several types of products so that a sales order may trigger tasks, "
+#~ "delivery orders, manufacturing orders, purchases and so on. Based on the "
+#~ "configuration of the sales order, a draft invoice will be generated so that "
+#~ "you just have to confirm it when you want to bill your customer."
+#~ msgstr ""
+#~ "Myyntitilaukset auttavat sinua hallitsemaan tarjouksia ja tilauksia "
+#~ "asiakkailtasi. OpenERP suosittelee että aloitat luomalla tarjouksen. Kun "
+#~ "tarjous on vahvistettu, tarjous muuttuu Tilaukseksi. OpenERP kykenee "
+#~ "käsittelemään usean tyyppisiä tuotteita joten myyntitilaus saattaa "
+#~ "käynnistää tehtäviä, toimituksia, tuotantotilauksia, hankitoja ja niin "
+#~ "edelleen. Myyntitilauksen asetusten perusteella luodaan vedos laskusta, "
+#~ "joten riittää että hyväksyt laskun kun haluat laskuttaa asiakastasi."
+
+#~ msgid "Dates"
+#~ msgstr "Päivämäärät"
+
+#~ msgid "State"
+#~ msgstr "Tila"
+
+#~ msgid "Conditions"
+#~ msgstr "Ehdot"
+
+#~ msgid ""
+#~ "This is the days added to what you promise to customers for security purpose"
+#~ msgstr ""
+#~ "Nämä päivät lisätään asiakkaalle luvattuun aikaan toimituksen takaamiseksi."
+
+#~ msgid "Sales Manager Dashboard"
+#~ msgstr "Myynnin Hallinnan Työtila"
+
+#, python-format
+#~ msgid "Could not cancel this sales order !"
+#~ msgstr "Myyntitilausta ei voitu peruuttaa !"
+
+#~ msgid "Lines to Invoice"
+#~ msgstr "Laskutettavat Rivit"
+
+#~ msgid "Security Days"
+#~ msgstr "Varopäivät"
+
 #~ msgid "Invoice On Order After Delivery"
 #~ msgstr "Laskutetaan Tilauksen Mukaisesti Toimitettaessa"
 
 #~ msgid "  Year  "
 #~ msgstr "  Vuosi  "
 
+#~ msgid "Sales By Month"
+#~ msgstr "Myynnit Kuukausittain"
+
+#, python-format
+#~ msgid "Could not cancel sales order line!"
+#~ msgstr "Myyntitilauksen Riviä ei voitu peruuttaa!"
+
+#~ msgid "Companies"
+#~ msgstr "Yritykset"
+
 #~ msgid "Picking Default Policy"
 #~ msgstr "Keräyksen Oletuskäytäntö"
+
+#~ msgid "References"
+#~ msgstr "Viitteet"
+
+#~ msgid "Sales by Partner"
+#~ msgstr "Myynnit Kumppaneittain"
 
 #~ msgid "Sales Order Dates"
 #~ msgstr "Myyntitilauksen Päiväykset"
@@ -2694,14 +2814,41 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Margins in Sales Orders"
 #~ msgstr "Myyntitilausten Marginaalit"
 
+#~ msgid "Total Tax Excluded"
+#~ msgstr "Veroton Summa"
+
+#~ msgid "Open Invoice"
+#~ msgstr "Avoin Lasku"
+
+#~ msgid "Sales per Customer in last 90 days"
+#~ msgstr "Myynnit Asiakkaittain viimeisen 90 päivän ajalta"
+
+#~ msgid "Related Picking"
+#~ msgstr "Liittyvä keräily"
+
+#~ msgid "Create Pick List"
+#~ msgstr "Luo Keräyslista"
+
+#~ msgid "Sales by Product Category"
+#~ msgstr "Myynnit Tuoteluokittain"
+
 #~ msgid "Delivery Costs"
 #~ msgstr "Toimituskustannukset"
 
 #~ msgid "title"
 #~ msgstr "otsake"
 
+#~ msgid "Stock Move"
+#~ msgstr "Varastosiirto"
+
 #~ msgid "Order date"
 #~ msgstr "Tilauksen Päiväys"
+
+#~ msgid "Procurement Method"
+#~ msgstr "Hankintatapa"
+
+#~ msgid "Picking List"
+#~ msgstr "Keräilylista"
 
 #~ msgid "sale.installer"
 #~ msgstr "sale.installer"
@@ -2709,14 +2856,37 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Invoicing"
 #~ msgstr "Laskutus"
 
+#~ msgid "res_config_contents"
+#~ msgstr "res_config_contents"
+
 #~ msgid "   Month   "
 #~ msgstr "   Kuukausi   "
+
+#, python-format
+#~ msgid "Warning"
+#~ msgstr "Varoitus"
+
+#~ msgid "Sales by Month"
+#~ msgstr "Myynnit Kuukausittain"
+
+#~ msgid "Sales by Product's Category in last 90 days"
+#~ msgstr "Myynnit Tuoteluokittain viimeisen 90 päivän ajalta"
 
 #~ msgid "    Month-1    "
 #~ msgstr "    Kuukausi-1    "
 
+#~ msgid "Image"
+#~ msgstr "Kuva"
+
+#~ msgid "Error! You can not create recursive companies."
+#~ msgstr "Virhe! Rekursiivisiä yrityksiä ei voi luoda."
+
 #~ msgid "Ordered Date"
 #~ msgstr "Tilauksen Päiväys"
+
+#, python-format
+#~ msgid "The sales order '%s' has been cancelled."
+#~ msgstr "Myyntitilaus '%s' on peruttu."
 
 #~ msgid "Configuration Progress"
 #~ msgstr "Määrityksen eteneminen"
@@ -2724,8 +2894,27 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Shipped Qty"
 #~ msgstr "Toimitettu Määrä"
 
+#~ msgid "Delivered"
+#~ msgstr "Toimitettu"
+
+#~ msgid "You must assign a production lot for this product"
+#~ msgstr "Tälle tuotteelle pitää määrittää valmistuserä"
+
+#, python-format
+#~ msgid "The sales order '%s' has been set in draft state."
+#~ msgstr "Myyntitilaus '%s' on asetettu vedokseksi."
+
+#~ msgid "Sales by Salesman in last 90 days"
+#~ msgstr "Myynnit Myyjittäin viimeisen 90 päivän ajalta"
+
+#~ msgid "Sales by Salesman"
+#~ msgstr "Myyjän myynti"
+
 #~ msgid "Configure Picking Policy for Sales Order"
 #~ msgstr "Määritellään myyntitilauksen poimintasäännöt"
+
+#~ msgid "Recreate Packing"
+#~ msgstr "Luo pakkaus uudelleen"
 
 #~ msgid "Configure Sales Order Logistics"
 #~ msgstr "Konfiguroi myyntitilauksen logistiikan"
@@ -2733,8 +2922,37 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Allows you to compute delivery costs on your quotations."
 #~ msgstr "Mahdollistaa kuljetuskustannusten laskennan tarjouksellesi."
 
+#~ msgid ""
+#~ "The invoice is created automatically if the shipping policy is 'Invoice from "
+#~ "pick' or 'Invoice on order after delivery'."
+#~ msgstr ""
+#~ "Lasku luodaan automaattisesti jos toimitusmäärityksenä on 'laskuta "
+#~ "keräilystä' tai 'laskuta tilauksesta toimituksen jälkeen'."
+
 #~ msgid "Configure"
 #~ msgstr "Konfiguroi"
+
+#, python-format
+#~ msgid "You must first cancel stock moves attached to this sales order line."
+#~ msgstr ""
+#~ "Sinun pitää ensin peruuttaa tähän myyntitilausriviin kiinnitetyt "
+#~ "varastosiirrot."
+
+#~ msgid "You try to assign a lot which is not from the same product"
+#~ msgstr "Erä ei ole samaa tuotetta"
+
+#~ msgid ""
+#~ "Number of days between the order confirmation the shipping of the products "
+#~ "to the customer"
+#~ msgstr ""
+#~ "Päivien määrä tilausvahvistuksesta toimituksen lähettämiseen asiakkaalle."
+
+#~ msgid ""
+#~ "Select a product of type service which is called 'Advance Product'. You may "
+#~ "have to create it and set it as a default value on this field."
+#~ msgstr ""
+#~ "Valitse palvelutyyppinen tuote jota kutsutaan 'esitutotteeksi'. Sinun pitää "
+#~ "ehkä luoda se ja asettaa tämän kentän oletusarvoksi."
 
 #~ msgid "Order Reference must be unique !"
 #~ msgstr "Tilauksen viite tulee olla yksilöllinen!"
@@ -2742,32 +2960,139 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgid "Enhance your core Sales Application with additional functionalities."
 #~ msgstr "paranna perusmyyntiohjelmistoasi lisätoiminnoilla"
 
+#~ msgid "Sales Open Invoice"
+#~ msgstr "Myynti Avaa lasku"
+
+#, python-format
+#~ msgid ""
+#~ "You cannot make an advance on a sales order                              "
+#~ "that is defined as 'Automatic Invoice after delivery'."
+#~ msgstr ""
+#~ "Et voi tehdä ennakkoa myyntitilaukselle joka on määritelty 'Automaattinen "
+#~ "lasku toimituksen jälkeen'."
+
+#~ msgid ""
+#~ "For every sales order line, a procurement order is created to supply the "
+#~ "sold product."
+#~ msgstr ""
+#~ "Jokaiselle myyntitilausriville luodaan hankintatilaus myydyn tuotteen "
+#~ "hankkimiseksi."
+
 #~ msgid "Setup your sales workflow and default values."
 #~ msgstr "Aseta myynnin työkulu ja oletusarvot"
 
+#~ msgid ""
+#~ "The name and address of the contact who requested the order or quotation."
+#~ msgstr "Kontaktin nimi ja osoite, joka pyysi tilausta tai tarjousta"
+
 #~ msgid "Do you really want to create the invoice(s) ?"
 #~ msgstr "Oletko varma, että haluat muodostaa laskun?"
+
+#~ msgid "Create Final Invoice"
+#~ msgstr "Luo lopullinen lasku"
+
+#~ msgid "Procurement of sold material"
+#~ msgstr "Myydyn materiaalin hankinta"
 
 #, python-format
 #~ msgid "You cannot cancel a sales order line that has already been invoiced !"
 #~ msgstr "Et voi peruuttaa myyntitilausriviä joka on jo laskutettu!"
 
+#~ msgid ""
+#~ "It indicates that the sales order has been delivered. This field is updated "
+#~ "only after the scheduler(s) have been launched."
+#~ msgstr ""
+#~ "Merkitsee että myyntitilaus on toimitettu. Tämä kenttä päivitetään vasta kun "
+#~ "ajastimet on laukaistu."
+
+#~ msgid "Document of the move to the output or to the customer."
+#~ msgstr "Dokumentti siirrosta kohdepaikkaan tai asiakkalle."
+
+#~ msgid "Based on the shipped or on the ordered quantities."
+#~ msgstr "Perustu joko lähetettyihin tai tilattuihin määriin"
+
+#~ msgid "Deliveries to Invoice"
+#~ msgstr "Laskutettavat toimitukset"
+
+#~ msgid "Pick List"
+#~ msgstr "Keräilylista"
+
 #~ msgid "Sales Application Configuration"
 #~ msgstr "Myyntiohjelmiston konfiguraatio"
+
+#~ msgid "Create Procurement Order"
+#~ msgstr "Luo hankintatilaus"
+
+#~ msgid "Create Delivery Order"
+#~ msgstr "Luo toimitusmääräin"
+
+#~ msgid "Reference UoM"
+#~ msgstr "Viitemittayksikkö"
 
 #, python-format
 #~ msgid "Picking Information !"
 #~ msgstr "Keräilyn tiedot !"
 
+#~ msgid ""
+#~ "You can generate invoices based on sales orders or based on shippings."
+#~ msgstr "Voit luoda laskuja myyntitilausten tai toimitusten pohjalta."
+
 #~ msgid "Invoice From The Picking"
 #~ msgstr "Laskutus keräilystä"
+
+#, python-format
+#~ msgid "Could not cancel sales order !"
+#~ msgstr "Ei voi peruuttaa myyntitilausta !"
+
+#, python-format
+#~ msgid ""
+#~ "You have to select a customer in the sales form !\n"
+#~ "Please set one customer before choosing a product."
+#~ msgstr ""
+#~ "Sinun pitää valita asiakas myyntilomakkeella !\n"
+#~ "Ole hyvä ja valitse yksi asiakas enennkuin valitset tuotteen"
+
+#, python-format
+#~ msgid "You must first cancel all picking attached to this sales order."
+#~ msgstr ""
+#~ "Sinun pitää ensin peruuttaa kaikki keräilyt jotka liittyvät tähän "
+#~ "myyntitilaukseen."
+
+#, python-format
+#~ msgid "There is no income account defined for this product: \"%s\" (id:%d)"
+#~ msgstr "Tulotiliä ei ole määritelty tälle tuotteelle: \"%s\" (id:%d)"
+
+#~ msgid "Document of the move to the customer."
+#~ msgstr "Dokumentti siirrosta asiakkaalle"
+
+#~ msgid "Logistic"
+#~ msgstr "Logistinen"
+
+#~ msgid "Picking Policy"
+#~ msgstr "Keräilysäännöt"
 
 #~ msgid "Picking List & Delivery Order"
 #~ msgstr "Keräilylista ja toimitusmääräin"
 
 #, python-format
+#~ msgid "There is no sales journal defined for this company: \"%s\" (id:%d)"
+#~ msgstr "Myyntipäiväkirjaa ei ole määritelty tälle yritykselle \"%s\" (id:%d)"
+
+#, python-format
 #~ msgid "Cannot delete a sales order line which is %s !"
 #~ msgstr "Ei voi oistaa myyntitilausriviä joka on %s !"
+
+#~ msgid ""
+#~ "This is a list of picking that has been generated for this sales order."
+#~ msgstr "Tämä on keräilylista joka on luotu tälle myyntitilaukselle."
+
+#~ msgid ""
+#~ "Depending on the configuration of the location Output, the move between the "
+#~ "output area and the customer is done through the Delivery Order manually or "
+#~ "automatically."
+#~ msgstr ""
+#~ "Riippuen paikan lähtöpisteen määrittelyista, siirto lähetysalueen ja "
+#~ "asiakkaan välillä tehdään toimitusmääräimissä käsin tai automaattisest."
 
 #~ msgid ""
 #~ "Gives the margin of profitability by calculating the difference between Unit "
@@ -2775,6 +3100,12 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgstr ""
 #~ "Antaa voittomarginaalin laskemalla erotuksen yksikköhinnasta ja "
 #~ "kustannushinnasta."
+
+#~ msgid "Packings"
+#~ msgstr "Pakkaukset"
+
+#~ msgid "Delivery Lead Time"
+#~ msgstr "Toimitusviive"
 
 #~ msgid "Configure Your Sales Management Application"
 #~ msgstr "Konfiguroi myynninhallinta ohjelmistosi"
@@ -2786,8 +3117,24 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ msgstr "Myyntitilauksen asettelun parannukset"
 
 #, python-format
+#~ msgid "You must first cancel all invoices attached to this sales order."
+#~ msgstr ""
+#~ "Sinun pitää ensin peruuttaa kaikki laskut jotka liittyvät tähän "
+#~ "myyntitilaukseen."
+
+#~ msgid ""
+#~ "One Procurement order for each sales order line and for each of the "
+#~ "components."
+#~ msgstr ""
+#~ "Yksi hankintatilaus jokaista myyntitilausriviä kohti ja jokaista komponettia "
+#~ "kohti."
+
+#, python-format
 #~ msgid "Not enough stock !"
 #~ msgstr "Ei tarpeeksi varastoa !"
+
+#~ msgid "You invoice has been successfully created!"
+#~ msgstr "Lasku on luotu onnistuneesti!"
 
 #~ msgid "Layout Sequence"
 #~ msgstr "Asettelun järjestys"
@@ -2795,6 +3142,29 @@ msgstr "Lasku perustuen toimitettuihin"
 #, python-format
 #~ msgid "Cannot delete Sales Order(s) which are already confirmed !"
 #~ msgstr "Ei voi poistaa myyntitilauksia jotka on jo vahvistettu !"
+
+#~ msgid "Drives procurement orders for every sales order line."
+#~ msgstr "Ohjaa hankintatilauksia jokaiselle myyntitilausriville"
+
+#, python-format
+#~ msgid "(n/a)"
+#~ msgstr "(ei saatavilla)"
+
+#~ msgid ""
+#~ "Incoterm which stands for 'International Commercial terms' implies its a "
+#~ "series of sales terms which are used in the commercial transaction."
+#~ msgstr ""
+#~ "Incoterm tarkoittaa 'international commercial terms' kansainväliset "
+#~ "toimitushedot, nämä määrittelevät sarjan myyntiehtoa joita käytetään "
+#~ "kaupankäynnissä."
+
+#, python-format
+#~ msgid ""
+#~ "There is no income category account defined in default Properties for "
+#~ "Product Category or Fiscal Position is not defined !"
+#~ msgstr ""
+#~ "Tulokategorian tiliä ei ole määritelty tuotekategorian oletusarvoissa tai "
+#~ "taloudellista asemaa ei ole määritelty !"
 
 #~ msgid ""
 #~ "By default, OpenERP is able to manage complex routing and paths of products "
@@ -2807,6 +3177,16 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "konfiguroi yleisimmät ja yksinkertaisimmat metodit tuotteiden "
 #~ "toimittamiseksi asiakkaalle yhdellä tai kahdella työntekijän tekemällä "
 #~ "operaatiolla."
+
+#~ msgid ""
+#~ "A procurement order is automatically created as soon as a sales order is "
+#~ "confirmed or as the invoice is paid. It drives the purchasing and the "
+#~ "production of products regarding to the rules and to the sales order's "
+#~ "parameters. "
+#~ msgstr ""
+#~ "Hankintatilaus luodaan automaattisesti kun myyntitilaus on vahvistettu tai "
+#~ "lasku maksettu. Se ohjaa hankintaa ja tuotantoa myyntitilausten parametrien "
+#~ "ja sääntöjen mukaan. "
 
 #~ msgid ""
 #~ "The Shipping Policy is used to configure per order if you want to deliver as "
@@ -2831,6 +3211,14 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "\n"
 #~ "EAN: %s määrä %s Tyyppi %s"
 
+#, python-format
+#~ msgid ""
+#~ "You plan to sell %.2f %s but you only have %.2f %s available !\n"
+#~ "The real stock is %.2f %s. (without reservations)"
+#~ msgstr ""
+#~ "Suunnitelet myyväsi %.2f %s mutta sinulla on vain %.2f %s saatavilla !\n"
+#~ "Todellinen varasto on %.2f %s (ilman varauksia)"
+
 #~ msgid ""
 #~ "Provides some features to improve the layout of the Sales Order reports."
 #~ msgstr "Lisää joitaikin ominaisuuksia myyntitilausraporttien asetteluun."
@@ -2845,5 +3233,128 @@ msgstr "Lasku perustuen toimitettuihin"
 #~ "Mahdollistaa toimitusten laskujen ryhmittelyn eri jaksoille: päivittäin, "
 #~ "viikottain jne."
 
+#~ msgid "Sales Order Requisition"
+#~ msgstr "Myyntitilausehdotus"
+
 #~ msgid "Steps To Deliver a Sales Order"
 #~ msgstr "Vaiheet myyntitilauksen toimittamiseksi"
+
+#~ msgid ""
+#~ "Here is a list of each sales order line to be invoiced. You can invoice "
+#~ "sales orders partially, by lines of sales order. You do not need this list "
+#~ "if you invoice from the delivery orders or if you invoice sales totally."
+#~ msgstr ""
+#~ "Tässä on lista kaikista laskutettavista myyntitilausriveistä. Voit laskuttaa "
+#~ "myyntitilaukset osittain, riveittäin tai myyntitilauksittain. Et tarvitse "
+#~ "listaa, jos laskutat toimitusmääräyksistä tai jos laskutat myyntiä "
+#~ "koontilaskuilla."
+
+#~ msgid "Print Quotation"
+#~ msgstr "Tulosta Tarjous"
+
+#~ msgid "Main Working Time Unit"
+#~ msgstr "Työn pääaikayksikkö"
+
+#~ msgid "Based on Timesheet"
+#~ msgstr "Tuntilistan mukaan"
+
+#~ msgid "Invoice based on deliveries"
+#~ msgstr "Toimituksiin perustuva lasku"
+
+#~ msgid "Based on Delivery Orders"
+#~ msgstr "Perustuu toimitusmääräyksiin"
+
+#, python-format
+#~ msgid ""
+#~ "In order to delete a confirmed sale order, you must cancel it before ! To "
+#~ "cancel a sale order, you must first cancel related picking or delivery "
+#~ "orders."
+#~ msgstr ""
+#~ "Poistaaksesi vahvistetun myyntitilausken sinun pitää ensin peruuttaa se! "
+#~ "Peruuttaaksesi myyntitilauksen, sinun pitää ensin peruuttaa tähän liittyvät "
+#~ "keräily ja lähetysmääräykset."
+
+#~ msgid "Based on Tasks' Work"
+#~ msgstr "Perustuu tehtävän työhön"
+
+#~ msgid "The company name must be unique !"
+#~ msgstr "Yrityksen nimen pitää olla uniikki!"
+
+#~ msgid "Reference must be unique per Company!"
+#~ msgstr "Viitteen tulee olla uniikki yrityskohtaisesti!"
+
+#~ msgid "Month-1"
+#~ msgstr "Edellinen kuukausi"
+
+#, python-format
+#~ msgid "Configuration Error !"
+#~ msgstr "Konfiguraatio virhe !"
+
+#~ msgid "Deliver each product when available"
+#~ msgstr "Toimita jokainen tuote kun saaatavilla"
+
+#~ msgid "You can not move products from or to a location of the type view."
+#~ msgstr "Et voi siirtää tuotteita paikkaan tai paikasta tässä näkymässä."
+
+#~ msgid "Based on Sales Orders"
+#~ msgstr "Perustuu myyntitilauksiin"
+
+#~ msgid "Line Sequence"
+#~ msgstr "Rivijärjestys"
+
+#~ msgid "Miscellaneous"
+#~ msgstr "Sekalaiset"
+
+#~ msgid "Options"
+#~ msgstr "Valinnat"
+
+#~ msgid "Deliver all products at once"
+#~ msgstr "Toimita kaikki tuotteet kerralla"
+
+#~ msgid "Invoice on order after delivery"
+#~ msgstr "Laskuta tilaukseta toimituksen jälkeen"
+
+#~ msgid "Auto-email confirmed sale orders"
+#~ msgstr "Lähetä automaattinen vahvistus myyntitilauksesta"
+
+#, python-format
+#~ msgid "Cannot delete a sales order line which is in state '%s'!"
+#~ msgstr "Ei voida poistaa myyntitilausriviä jonka tila on '%s'!"
+
+#~ msgid "Do you charge the delivery?"
+#~ msgstr "Haluatko veloittaa toimituksesta?"
+
+#~ msgid "Sales order created in current month"
+#~ msgstr "Myyntitilaukset jotka luotu kuluvan kuukauden aikana"
+
+#~ msgid "Setup your Invoicing Method"
+#~ msgstr "Aseta laskutustapa"
+
+#~ msgid "Invoice Policy"
+#~ msgstr "Läskutussäännöt"
+
+#, python-format
+#~ msgid "Picking Information ! : "
+#~ msgstr "Keräilytiedot ! : "
+
+#~ msgid "Pay before delivery"
+#~ msgstr "Maksu ennen toimitusta"
+
+#~ msgid "Print Order"
+#~ msgstr "Tulostusjärjestys"
+
+#~ msgid "Main Method Based On"
+#~ msgstr "Päämetodi perustuu"
+
+#~ msgid "Sales order created in current year"
+#~ msgstr "Myyntitilaukset luotu kuluvana vuonna"
+
+#~ msgid "Sales order created in last month"
+#~ msgstr "Edellisen kuun luodut myyntitilaukset"
+
+#~ msgid "Deliver & invoice on demand"
+#~ msgstr "Toimita ja laskuta pyydettäessä"
+
+#, python-format
+#~ msgid "Not enough stock ! : "
+#~ msgstr "Ei tarpeeksi varastoa ! : "

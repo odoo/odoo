@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <!-- Top menu item -->
+        <menuitem name="Tools" id="base.menu_tools" sequence="160"/>
 
         <menuitem name="Surveys" id="menu_surveys" parent="base.menu_tools" sequence="2" groups="base.group_tool_user,base.group_tool_manager,base.group_survey_user"/>
         
@@ -26,8 +28,12 @@
                 </header>
                 <sheet>
                     <div class="oe_button_box oe_right">
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Test Survey" type="action" icon="gtk-new" context="{'active':True,'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
-                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel" string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                        <button name="test_survey" states="open,draft,close,cancel" string="Test Survey" type="object" icon="gtk-new" context="{'survey_id': active_id}" attrs="{'invisible':[('id','=',0)]}"/>
+                        <button name="fill_survey" states="open" string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
+                        <button name="action_print_survey" states="open,draft,close,cancel" string="Print Answer" type="object"/>
+                        <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
+                            string="Edit Survey" type="action" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+
                     </div>
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
@@ -49,8 +55,6 @@
                      </group>
                      <notebook>
                         <page string="Survey Details">
-                            <field name="note" colspan="4" placeholder="Survey description..."/>
-                            <label for="page_ids"/>
                             <field name="page_ids" colspan="4" mode="tree">
                                 <form string="Survey Page" version="7.0">
                                     <sheet>
@@ -58,9 +62,7 @@
                                     <h1>
                                         <field name="title"/>
                                     </h1>
-                                    <group>
-                                        <field name="note" placeholder="Description on the survey page..." nolabel="1"/>
-                                    </group>
+                                    <field name="note" placeholder="Description on the survey page..."/>
                                     <newline/>
                                     <group>
                                         <label for="question_ids"/>
@@ -210,6 +212,7 @@
                                     </sheet>
                                     </form>
                                 </field>
+                            <field name="note" placeholder="Survey description..."/>
                         </page>
                         <page string="Invited User">
                             <field name="invited_user_ids" readonly="1"/>
@@ -254,13 +257,11 @@
                     <field name="tot_start_survey" string="Started"/>
                     <field name="tot_comp_survey" string="Completed"/>
                     <field name="state"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Test Survey" type="action" icon="gtk-new"
-                        context="{'active':True,'survey_id': active_id}"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Answer Survey" type="action" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>
-                    <button name="%(action_view_survey_question_message)d" states="open,draft,close,cancel"
-                        string="Edit Survey" type="action" icon="gtk-edit" context="{'active':True,'edit' : True,'survey_id': active_id}"/>
+                    <button name="test_survey" states="open,draft,close,cancel"
+                        string="Test Survey" type="object" icon="gtk-new"
+                        context="{'survey_id': active_id}"/>
+                    <button name="fill_survey" states="open"
+                        string="Answer Survey" type="object" icon="gtk-execute" context="{'survey_id': active_id}" attrs="{'invisible':[('state','!=','open')]}"/>                   
                     <button name="action_print_survey" states="open,draft,close,cancel"
                                     string="Print Answer" type="object" icon="gtk-print"/>
                 </tree>
@@ -295,10 +296,13 @@
                 <kanban>
                     <field name="title"/>
                     <field name="date_open"/>
+                    <field name="tot_comp_survey"/>
+                    <field name="max_response_limit"/>
+                    <field name="responsible_id"/>
                     <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_semantic_html_override">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_survey">
                                 <div class="oe_dropdown_toggle oe_dropdown_kanban">
                                     <span class="oe_e">i</span>
                                     <ul class="oe_dropdown_menu">
@@ -309,21 +313,13 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <h3 class="oe_kanban_ellipsis"><t t-esc="record.title.raw_value.toString()"></t></h3>
-                                    <div class="oe_survey_responsible">
-                                       <t t-if="record.responsible_id.raw_value">By: <field name="responsible_id"/></t>
-                                   </div><br/>
-                                   <div class="oe_survey_start_date">
-                                       <t t-if="record.date_open.raw_value">
-                                           Opened at
-                                           <t t-esc="record.date_open.raw_value.getDate()"/>
-                                           <t t-esc="record.date_open.raw_value.toString('MMM')"/>,
-                                           <t t-esc="record.date_open.raw_value.getFullYear()"/>
-                                       </t>
-                                   </div><br/>
-                                   <div class="oe_survey_rate">
-                                       Rate:
-                                        <a name="fill_survey" type="object">Fill</a>
-                                   </div>
+                                    <div>
+                                        Answers: <field name="tot_comp_survey"/>
+                                        <t t-if="record.max_response_limit.raw_value > 0"> / <field name="max_response_limit"/></t>
+                                    </div>
+                                    <br/>
+                                    <a name="fill_survey" type="object">Answer Survey</a>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.responsible_id.raw_value)" t-att-title="record.responsible_id.value" width="24" height="24" class="oe_kanban_avatar oe_right"/>
                                 </div>
                             </div>
                         </t>

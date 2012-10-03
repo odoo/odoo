@@ -72,19 +72,19 @@ class PointOfSaleController(openerpweb.Controller):
         return getattr(self, method)(request, **kwargs)
 
     @openerpweb.jsonrequest
-    def scan_item_success(self, request):
+    def scan_item_success(self, request, ean):
         """
         A product has been scanned with success
         """
-        print 'scan_item_success'
+        print 'scan_item_success: ' + str(ean)
         return 
 
     @openerpweb.jsonrequest
-    def scan_item_error_unrecognized(self, request):
+    def scan_item_error_unrecognized(self, request, ean):
         """
         A product has been scanned without success
         """
-        print 'scan_item_error_unrecognized'
+        print 'scan_item_error_unrecognized: ' + str(ean)
         return 
 
     @openerpweb.jsonrequest
@@ -119,21 +119,21 @@ class PointOfSaleController(openerpweb.Controller):
         return 
 
     @openerpweb.jsonrequest
-    def payment_request(self, request, price, method, info):
+    def payment_request(self, request, price):
         """
         The PoS will activate the method payment 
         """
-        print "payment_request: price:"+str(price)+" method:"+str(method)+" info:"+str(info)
-        return 
+        print "payment_request: price:"+str(price)
+        return 'ok'
 
     @openerpweb.jsonrequest
-    def is_payment_accepted(self, request):
-        print "is_payment_accepted"
-        return 'waiting_for_payment' 
+    def payment_status(self, request):
+        print "payment_status"
+        return { 'status':'waiting' } 
 
     @openerpweb.jsonrequest
-    def payment_canceled(self, request):
-        print "payment_canceled"
+    def payment_cancel(self, request):
+        print "payment_cancel"
         return 
 
     @openerpweb.jsonrequest
@@ -164,6 +164,11 @@ class PointOfSaleController(openerpweb.Controller):
     @openerpweb.jsonrequest
     def print_receipt(self, request, receipt):
         print 'print_receipt' + str(receipt)
+        return
+
+    @openerpweb.jsonrequest
+    def print_pdf_invoice(self, request, pdfinvoice):
+        print 'print_pdf_invoice' + str(pdfinvoice)
         return
 
 

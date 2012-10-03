@@ -32,11 +32,11 @@ class res_company(osv.osv):
     _columns = {
         'income_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Income Currency Rate",
+            string="Gain Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
         'expense_currency_exchange_account_id': fields.many2one(
             'account.account',
-            string="Expense Currency Rate",
+            string="Loss Exchange Rate Account",
             domain="[('type', '=', 'other')]",),
     }
 
@@ -782,9 +782,16 @@ class account_voucher(osv.osv):
             vals[key].update(res[key])
         return vals
 
+    def button_proforma_voucher(self, cr, uid, ids, context=None):
+        context = context or {}
+        wf_service = netsvc.LocalService("workflow")
+        for vid in ids:
+            wf_service.trg_validate(uid, 'account.voucher', vid, 'proforma_voucher', cr)
+        return {'type': 'ir.actions.act_window_close'}
+
     def proforma_voucher(self, cr, uid, ids, context=None):
         self.action_move_line_create(cr, uid, ids, context=context)
-        return {'type': 'ir.actions.act_window_close'}
+        return True
 
     def action_cancel_draft(self, cr, uid, ids, context=None):
         wf_service = netsvc.LocalService("workflow")
@@ -842,7 +849,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def _sel_context(self, cr, uid, voucher_id,context=None):
+    def _sel_context(self, cr, uid, voucher_id, context=None):
         """
         Select the context to use accordingly if it needs to be multicurrency or not.
 
@@ -950,11 +957,11 @@ class account_voucher(osv.osv):
         if amount_residual > 0:
             account_id = line.voucher_id.company_id.expense_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
         else:
             account_id = line.voucher_id.company_id.income_currency_exchange_account_id
             if not account_id:
-                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Expense Currency Rate' on the company, then create accounting entry for currency rate difference."))
+                raise osv.except_osv(_('Warning!'),_("First you have to configure the 'Income Currency Rate' on the company, then create accounting entry for currency rate difference."))
         # Even if the amount_currency is never filled, we need to pass the foreign currency because otherwise
         # the receivable/payable account may have a secondary currency, which render this field mandatory
         account_currency_id = company_currency <> current_currency and current_currency or False
@@ -1045,6 +1052,8 @@ class account_voucher(osv.osv):
             # if the amount encoded in voucher is equal to the amount unreconciled, we need to compute the
             # currency rate difference
             if line.amount == line.amount_unreconciled:
+                if not line.move_line_id.amount_residual:
+                    raise osv.except_osv(_('Wrong bank statement line'),_("You have to delete the bank statement line which the payment was reconciled to manually. Please check the payment of the partner %s by the amount of %s.")%(line.voucher_id.partner_id.name, line.voucher_id.amount))
                 currency_rate_difference = line.move_line_id.amount_residual - amount
             else:
                 currency_rate_difference = 0.0
@@ -1266,7 +1275,9 @@ class account_voucher(osv.osv):
                 self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'number': False,
@@ -1293,17 +1304,17 @@ class account_voucher(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def post_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_append_note(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
 account_voucher()
 

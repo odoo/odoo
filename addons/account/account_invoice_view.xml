@@ -127,7 +127,7 @@
                     <field name="user_id"/>
                     <field name="date_due"/>
                     <field name="origin"/>
-                    <field name="currency_id"/>
+                    <field name="currency_id" groups="base.group_multi_currency"/>
                     <field name="residual" sum="Residual Amount"/>
                     <field name="amount_untaxed" sum="Untaxed Amount"/>
                     <field name="amount_total" sum="Total Amount"/>
@@ -184,7 +184,7 @@
                                 name="account_id" groups="account.group_account_user"/>
                             <field name="journal_id" groups="account.group_account_user"
                                 on_change="onchange_journal_id(journal_id, context)" widget="selection"/>
-                            <field name="currency_id"/>
+                            <field name="currency_id" groups="base.group_multi_currency"/>
                         </group>
                     </group>
                     <notebook>
@@ -271,7 +271,7 @@
                                     <field name="debit"/>
                                     <field name="credit"/>
                                     <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </tree>
                             </field>
                         </page>
@@ -299,8 +299,8 @@
                         <button name="invoice_open" states="draft" string="Validate" class="oe_highlight"/>
                         <button name="invoice_open" states="proforma2" string="Validate"/>
                         <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='paid'/>
-                        <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
+                        <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid'/>
+                        <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel" groups="base.group_no_one"/>
                         <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"/>
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                         <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->
@@ -332,8 +332,8 @@
                             <field domain="[('company_id', '=', company_id),('type','=', 'receivable')]"
                                 name="account_id" groups="account.group_account_user"/>
 
-                            <label for="currency_id"/>
-                            <div>
+                            <label for="currency_id" groups="base.group_multi_currency"/>
+                            <div groups="base.group_multi_currency">
                                 <field name="currency_id" class="oe_inline"/>
                                 <!-- note fp: I don't think we need this feature ?
                                 <button name="%(action_account_change_currency)d" type="action"
@@ -429,8 +429,8 @@
                                     <field name="journal_id" groups="base.group_user"/>
                                     <field name="debit"/>
                                     <field name="credit"/>
-                                    <field name="amount_currency"/>
-                                    <field name="currency_id"/>
+                                    <field name="amount_currency" groups="base.group_multi_currency"/>
+                                    <field name="currency_id" groups="base.group_multi_currency"/>
                                 </tree>
                             </field>
                         </page>

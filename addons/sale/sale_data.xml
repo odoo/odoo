@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data>
-        <record id="account_voucher.todo_open_invoice_menu" model="ir.actions.todo">
-            <field name="state">done</field>
-        </record>
-    </data>
     <data noupdate="1">
 
         <!-- After installation of the module, open the related menu -->
@@ -13,10 +8,9 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('base.menu_base_partner')}"/>
         </record>
-        <record id="todo_open_sale_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_sale_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
         </record>
 
         <!-- Requests Links -->
@@ -28,7 +22,6 @@
         <!-- Resource: sale.shop -->
         <record id="sale_shop_1" model="sale.shop">
             <field name="company_id" ref="base.main_company"/>
-            <field name="warehouse_id" ref="stock.warehouse0"/>
             <field name="payment_default_id" ref="account.account_payment_term"/>
             <field name="pricelist_id" ref="product.list0"/>
 
@@ -41,13 +34,14 @@
         <function eval="('default',False,'shop_id', [('sale.order', False)], sale_shop_1, True, False, False, False, True)" id="sale_default_set" model="ir.values" name="set"/>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>The Sales Management application has been installed.</value>
-            <value>This modules allows you to create and send easily quotations and process your sales orders; from the delivery to the invoicing.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Sales Management application installed!</field>
+            <field name="body">This application lets you create and send quotations and process your sales orders; from delivery to invoicing.
 
-If you need to manage your sales pipeline (leads, opportunities, phonecalls), you can install the module &lt;i&gt;CRM&lt;/i&gt; from the top menu Settings.</value>
-        </function>
+If you need to manage your sales pipeline (leads, opportunities, phonecalls), the &lt;i&gt;CRM&lt;/i&gt; application may be useful. Use the Settings menu to install it.</field>
+        </record>
     </data>
 </openerp>

@@ -27,27 +27,21 @@
     'sequence': 16,
     'summary': 'Timesheets, Attendances, Activities',
     'description': """
-This module helps you to easily encode and validate timesheet and attendances within the same view.
-===================================================================================================
+Record and validate timesheets and attendances easily
+=====================================================
 
-    * It will maintain attendances and track (sign in/sign out) events.
-    * Track the timesheet lines.
+This application supplies a new screen enabling you to manage both attendances (Sign in/Sign out) and your work encoding (timesheet) by period. Timesheet entries are made by employees each day. At the end of the defined period, employees validate their sheet and the manager must then approve his team's entries. Periods are defined in the company forms and you can set them to run monthly or weekly.
 
-Other tabs contains statistics views to help you analyse your time or the time of your team:
---------------------------------------------------------------------------------------------
-    * Time spent by day (with attendances)
-    * Time spent by project
-
-This module also implements a complete timesheet validation process:
---------------------------------------------------------------------
-    * Draft sheet
-    * Confirmation at the end of the period by the employee
-    * Validation by the project manager
+The complete timesheet validation process is:
+---------------------------------------------
+* Draft sheet
+* Confirmation at the end of the period by the employee
+* Validation by the project manager
 
 The validation can be configured in the company:
 ------------------------------------------------
-    * Period size (day, week, month, year)
-    * Maximal difference between timesheet and attendances
+* Period size (Day, Week, Month)
+* Maximal difference between timesheet and attendances
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
@@ -70,7 +64,6 @@ The validation can be configured in the company:
     'test':['test/test_hr_timesheet_sheet.yml'],
     'installable': True,
     'auto_install': False,
-    'certificate': '0073297700829',
     'application': True,
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

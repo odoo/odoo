@@ -46,23 +46,27 @@ class project_project(osv.osv):
     def open_timesheets(self, cr, uid, ids, context=None):
         """ open Timesheets view """
         project = self.browse(cr, uid, ids[0], context)
-        try:
-            journal_id = self.pool.get('ir.model.data').get_object(cr, uid, 'hr_timesheet', 'analytic_journal').id
-        except ValueError:
-            journal_id = False
         view_context = {
             'search_default_account_id': [project.analytic_account_id.id],
             'default_account_id': project.analytic_account_id.id,
-            'default_journal_id': journal_id,
         }
+        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""")
+        try:
+            if project.to_invoice and project.partner_id:
+                help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
+        except:
+            # if the user do not have access rights on the partner
+            pass
+
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Bill Tasks Works'),
-            'res_model': 'account.analytic.line',
+            'name': _('Timesheets'),
+            'res_model': 'hr.analytic.timesheet',
             'view_type': 'form',
             'view_mode': 'tree,form',
             'context': view_context,
             'nodestroy': True,
+            'help': help
         }
 project_project()
 
@@ -221,7 +225,7 @@ class task(osv.osv):
 
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context=None):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if vals.get('project_id',False) or vals.get('name',False):

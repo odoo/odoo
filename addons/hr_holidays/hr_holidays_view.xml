@@ -44,7 +44,6 @@
             <field name="arch" type="xml">
                 <search string="Search Leave">
                     <field name="date_from"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="needaction_pending" domain="[('needaction_pending','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" domain="[('state','=','draft')]" string="To Confirm"/>
                     <filter icon="terp-camera_test" domain="[('state','=','confirm')]" string="To Approve" name="approve"/>
@@ -93,7 +92,7 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate1,validate" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -138,7 +137,7 @@
                 <header>
                     <button string="Approve" name="validate" states="confirm" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
                     <button string="Validate" name="second_validate" states="validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
-                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user" class="oe_highlight"/>
+                    <button string="Refuse" name="refuse" states="confirm,validate,validate1" type="workflow" groups="base.group_hr_user"/>
                     <button string="Reset to New" name="set_to_draft" states="cancel,refuse" type="object" groups="base.group_hr_user" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm,validate" statusbar_colors='{"confirm":"blue","validate1":"blue","refuse":"red"}'/>
                 </header>
@@ -170,8 +169,7 @@
             <field name="name">hr.holidays.allocation.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == 'draft';black:state in ('confirm','validate','validate1')" string="Allocation Requests">
                     <field name="employee_id"/>
                     <field name="holiday_type"/>
                     <field name="category_id"/>
@@ -218,8 +216,7 @@
             <field name="model">hr.holidays</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leaves Summary">
                     <field name="employee_id"/>
                     <field name="category_id" invisible="1"/>
                     <field name="department_id" invisible="1"/>
@@ -241,8 +238,7 @@
             <field name="name">hr.holidays.tree</field>
             <field name="model">hr.holidays</field>
             <field name="arch" type="xml">
-                <tree fonts="bold:needaction_pending==True" colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
-                    <field name="needaction_pending" invisible="1"/>
+                <tree colors="red:state == 'refuse';blue:state == ' draft';black:state in ('confirm','validate','validate1')" string="Leave Requests">
                     <field name="employee_id"/>
                     <field name="holiday_type" string="Mode" groups="base.group_hr_user"/>
                     <field name="name"/>
@@ -487,6 +483,7 @@
         <record id="hr_holidays_leaves_assign_tree_view" model="ir.ui.view">
             <field name="name">hr.employee.leave.tree</field>
             <field name="model">hr.employee</field>
+            <field name="priority" eval="20"/>
             <field name="arch" type="xml">
                 <tree string="Assign Leaves" editable="bottom">
                     <field name="name" string="Employee"/>
@@ -517,13 +514,17 @@
             <field name="model">hr.employee</field>
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
-                <field name="active" position="before">
-                    <label for="remaining_leaves"/>
-                    <div>
-                        <field name="remaining_leaves" class="oe_inline"/>
-                        <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" class="oe_inline oe_right"/>
-                    </div>
-                </field>
+                <xpath expr="//group[@name='active_group']" position="before">
+                    <group string="Leaves">
+                        <label for="remaining_leaves"/>
+                        <div>
+                            <field name="remaining_leaves" class="oe_inline"/>
+                        </div>
+                    </group>
+                </xpath>
+                <xpath expr="//div[@name='button_box']" position="inside">
+                    <button name="%(act_hr_employee_holiday_request)d" string="Leaves" type="action" groups="base.group_hr_user"/>
+                </xpath>
             </field>
         </record>
 

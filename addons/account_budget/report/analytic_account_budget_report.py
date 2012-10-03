@@ -35,7 +35,9 @@ class analytic_account_budget_report(report_sxw.rml_parse):
         })
         self.context = context
 
-    def funct(self, object, form, ids={}, done=None, level=1):
+    def funct(self, object, form, ids=None, done=None, level=1):
+        if ids is None:
+            ids = {}
         if not ids:
             ids = self.ids
         if not done:
@@ -153,7 +155,7 @@ class analytic_account_budget_report(report_sxw.rml_parse):
                 tot['perc'] = float(tot['prac'] / tot['theo']) * 100
         return result
 
-    def funct_total(self,form):
+    def funct_total(self, form):
         result = []
         res = {}
         res = {
