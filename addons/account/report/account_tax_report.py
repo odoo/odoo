@@ -160,7 +160,7 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             i+=1
         return res
 
-    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=[], context=None):
+    def _get_codes(self, based_on, company_id, parent=False, level=0, period_list=None, context=None):
         obj_tc = self.pool.get('account.tax.code')
         ids = obj_tc.search(self.cr, self.uid, [('parent_id','=',parent),('company_id','=',company_id)], order='sequence', context=context)
 
@@ -171,7 +171,11 @@ class tax_report(report_sxw.rml_parse, common_report_header):
             res += self._get_codes(based_on, company_id, code.id, level+1, context=context)
         return res
 
-    def _add_codes(self, based_on, account_list=[], period_list=[], context=None):
+    def _add_codes(self, based_on, account_list=None, period_list=None, context=None):
+        if account_list is None:
+            account_list = []
+        if period_list is None:
+            period_list = []
         res = []
         obj_tc = self.pool.get('account.tax.code')
         for account in account_list:
