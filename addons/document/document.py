@@ -36,7 +36,6 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
-    _rec_name = 'datas_fname'
 
 
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
@@ -149,7 +148,14 @@ class document_file(osv.osv):
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
     ]
-    def _check_duplication(self, cr, uid, vals, ids=None, op='create'):
+
+    def onchange_file(self, cr, uid, ids, datas_fname=False, context=None):
+        res = {'value':{}}
+        if datas_fname:
+            res['value'].update({'name': datas_fname})
+        return res
+
+    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
         name = vals.get('name', False)
         parent_id = vals.get('parent_id', False)
         res_model = vals.get('res_model', False)

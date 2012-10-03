@@ -228,9 +228,11 @@
         <field name="priority" eval="1"/>
         <field name="inherit_id" ref="base.view_attachment_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//field[@name='datas_fname']" position="replace">
+                <field name="datas_fname" invisible="1" on_change="onchange_file(datas_fname)"/>
+            </xpath>
             <field name="url" position="after">
                 <field name="user_id"/>
-                <field name="datas_fname" select="1"/>
             </field>
             <field name="company_id" position="before">
                 <field name="parent_id"/>
@@ -339,15 +341,6 @@
         <field name="value" eval="'ir.actions.act_window,%d'%action_document_file_directory_form"/>
     </record>
 
-    <record model="ir.ui.view" id="view_attachment_form_inherit">
-        <field name="name">ir.attachment.view.inherit</field>
-        <field name="model">ir.attachment</field>
-        <field name="inherit_id" ref="base.view_attachment_form"/>
-        <field name="arch" type="xml">
-            <field name="datas_fname" position = "replace" >
-            </field>
-        </field>
-    </record>
 
     <record model="ir.ui.view" id="view_process_node_form_inherit1">
         <field name="name">process.node.form</field>
