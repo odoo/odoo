@@ -81,8 +81,8 @@ class crm_contact_us(osv.TransientModel):
     def create(self, cr, uid, values, context=None):
         """
         Since they are potentially sensitive, we don't want any user to be able
-        to read datas generated through this module.  That's why we'll write
-        those information directly in the crm.lead table and leave blank
+        to read datas generated through this module.  Therefore we'll write
+        these information directly in the crm.lead table and leave blank
         entries in the portal_crm.crm_contact_us table.
         This is why the create() method is overwritten.
         """
@@ -93,8 +93,7 @@ class crm_contact_us(osv.TransientModel):
         models implied (like mail.thread, among others, that performs a read
         when its create() method is called (in method message_get_subscribers()),
         it is quite complicated to set proper rights for this object.
-        Therefore, user SUPERUSER_ID will perform the creation until a better
-        workaround is figured out.
+        Therefore, user SUPERUSER_ID will perform the creation.
         """
         values['contact_name'] = values['name']
         crm_lead.create(cr, SUPERUSER_ID, dict(values,user_id=False), context)
@@ -103,7 +102,8 @@ class crm_contact_us(osv.TransientModel):
         Create an empty record in the portal_crm.crm_contact_us table.
         Since the 'name' field is mandatory, give an empty string to avoid an integrity error.
         """
-        return super(crm_contact_us, self).create(cr, uid, {'name': ' '})
+        empty_values = dict((k, False) if k != 'name' else (k, '') for k, v in values.iteritems())
+        return super(crm_contact_us, self).create(cr, uid, empty_values)
 
     def submit(self, cr, uid, ids, context=None):
         """ When the form is submitted, redirect the user to a "Thanks" message """

@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
                 return False
         return True
 
-    def check_produce_service(self, cr, uid, procurement, context=None):    
+    def check_produce_service(self, cr, uid, procurement, context=None):
         return True
 
     def _convert_qty_company_hours(self, cr, uid, procurement, context=None):

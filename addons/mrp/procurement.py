@@ -34,7 +34,7 @@ class procurement_order(osv.osv):
         'production_id': fields.many2one('mrp.production', 'Manufucture Order'),
     }
     
-    def check_produce_product(self, cr, uid, procurement, context=[]):
+    def check_produce_product(self, cr, uid, procurement, context=None):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False
         """
