@@ -525,12 +525,6 @@ class fleet_contract_type(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
     }
 
-class fleet_contract_state(osv.Model):
-    _name = 'fleet.contract.state'
-    _columns = {
-        'name':fields.char('Contract Status',size=32),
-    }
-
 class fleet_vehicle_log_contract(osv.Model):
     _inherits = {'fleet.vehicle.odometer': 'odometer_id'}
 
@@ -599,7 +593,6 @@ class fleet_vehicle_log_contract(osv.Model):
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'ins_ref' : fields.char('Contract Reference', size=64),
         'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
-        #'state' : fields.many2one('fleet.contract.state', 'Contract Status', help='Choose wheter the contract is still valid or not'),
         'reminder' : fields.boolean('Renewal Reminder', help="Warn the user when this contract needs to be renewed"),
         'notes' : fields.text('Terms and Conditions'),
         'costs' : fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs covered'),
