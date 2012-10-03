@@ -348,13 +348,15 @@
             <field name="arch" type="xml">
                 <form string="Contract logs" version="7.0">
                     <header>
-                        <field name="state" widget="statusbar" clickable="True" />
+                        <button modifiers="{'invisible': [['state', 'not in', ['open']]]}" name="contract_close" states="open" type="object" class="oe_highlight" string="Terminate Contract"/>
+                        <button modifiers="{'invisible': [['state', 'not in', ['closed']]]}" name="contract_open" states="closed" type="object" class="oe_highlight" string="Set Contract In Progress"/>
+                        <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
                         <group string="Contract details" col="2">
                             <group >
-                                <field name="contract_type" />
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="contract_type" />
                                 <field name="price" />
                                 <field name="insurer_id" />
                             </group>
@@ -363,6 +365,7 @@
                                 <field name="start_date" on_change="on_change_start_date(start_date)"/>
                                 <field name="expiration_date" />
                                 <field name="ins_ref" />
+                                <field name="reminder" />
                             </group>
                         </group>
                         <group>
@@ -401,7 +404,7 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date&lt;0">
+                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0">
                     <field name="vehicle_id" />
                     <field name="contract_type" />
                     <field name="state" />

@@ -235,7 +235,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress'),('reminder','=',True)],order='expiration_date')
             due_soon=0
             if (len(contracts) > 0):
                 for element in contracts:
@@ -569,16 +569,19 @@ class fleet_vehicle_log_contract(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            if (record.state):
+            if (record.reminder==True):
                 if (record.expiration_date and record.state.name=='In Progress'):
                     today=self.str_to_date(time.strftime('%Y-%m-%d'))
                     renew_date = self.str_to_date(record.expiration_date)
                     diff_time=int((renew_date-today).days)
-                    res.append((record.id,diff_time))
+                    if (diff_time<=0):
+                        res.append((record.id,0))
+                    else:
+                        res.append((record.id,diff_time))
                 else:
-                    res.append((record.id,0))
+                    res.append((record.id,-1))
             else:
-                res.append((record.id,0))
+                res.append((record.id,-1))
         return dict(res)
 
     _name = 'fleet.vehicle.log.contract'
@@ -595,16 +598,27 @@ class fleet_vehicle_log_contract(osv.Model):
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'ins_ref' : fields.char('Contract Reference', size=64),
-        'state' : fields.many2one('fleet.contract.state', 'Contract Status', help='Choose wheter the contract is still valid or not'),
+        'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
+        #'state' : fields.many2one('fleet.contract.state', 'Contract Status', help='Choose wheter the contract is still valid or not'),
+        'reminder' : fields.boolean('Renewal Reminder', help="Warn the user when this contract needs to be renewed"),
         'notes' : fields.text('Terms and Conditions'),
         'costs' : fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs covered'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'start_date' : time.strftime('%Y-%m-%d'),
+        'state':'open',
         #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }
+
+    def contract_close(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'closed'})
+        return True
+
+    def contract_open(self, cr, uid, ids, *args):
+        self.write(cr, uid, ids, {'state': 'open'})
+        return True
 
 class fleet_service_type(osv.Model):
     _name = 'fleet.service.type'
