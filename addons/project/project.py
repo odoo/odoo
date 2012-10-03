@@ -1099,6 +1099,7 @@ class task(base_stage, osv.osv):
         task_record = self.browse(cr, uid, task_id, context=context)
         project_obj = self.pool.get("project.project")
         subtype_obj = self.pool.get('mail.message.subtype')
+        subtype_ids = []
         if task_record.project_id:
             project_subtype = task_record.project_id.message_subtype_data
             for key in project_subtype:
@@ -1106,7 +1107,7 @@ class task(base_stage, osv.osv):
                 if subtype_ids:
                      subtype_obj.write(cr,uid, subtype_ids, {'default': project_subtype[key]['default']},context=context)
             project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [task_id], project_follower_ids,
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids, subtype_ids = subtype_ids,
                 context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
