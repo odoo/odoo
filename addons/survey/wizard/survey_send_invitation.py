@@ -74,7 +74,7 @@ class survey_send_invitation(osv.osv_memory):
             raise osv.except_osv(_('Warning!'), _('%sSurvey is not in open state') % msg)
         data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                     \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
-                    \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,'''
+                    \n link :- http://'''+ str(socket.gethostname()) + ''':8069 \n\n Thanks,'''
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
