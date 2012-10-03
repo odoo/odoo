@@ -413,7 +413,7 @@
                 <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com" target="_blank"><span>Open</span>ERP</a>
+                    Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
                 </div>
             </td>
             <td class="oe_application">
@@ -1128,7 +1128,7 @@
                     <td>
                         <t t-call="HiddenInputFile">
                             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_style">width: 83px;</t>
+                            <t t-set="fileupload_style" t-translation="off">width: 83px;</t>
                             <button class="oe_button oe_field_button" type="button">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
