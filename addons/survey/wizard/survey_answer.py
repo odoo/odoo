@@ -435,7 +435,7 @@ class survey_question_wiz(osv.osv_memory):
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
 
-                    etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
+                    etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
                     etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})
