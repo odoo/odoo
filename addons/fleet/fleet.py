@@ -207,7 +207,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress')],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open'),('reminder','=',True)],order='expiration_date')
             overdue=0
             if (len(contracts) > 0):
                 for element in contracts:
@@ -235,7 +235,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','In Progress'),('reminder','=',True)],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open'),('reminder','=',True)],order='expiration_date')
             due_soon=0
             if (len(contracts) > 0):
                 for element in contracts:
@@ -570,7 +570,7 @@ class fleet_vehicle_log_contract(osv.Model):
         res=[]
         for record in reads:
             if (record.reminder==True):
-                if (record.expiration_date and record.state.name=='In Progress'):
+                if (record.expiration_date and record.state=='open'):
                     today=self.str_to_date(time.strftime('%Y-%m-%d'))
                     renew_date = self.str_to_date(record.expiration_date)
                     diff_time=int((renew_date-today).days)
