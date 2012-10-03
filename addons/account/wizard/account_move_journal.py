@@ -38,7 +38,7 @@ class account_move_journal(osv.osv_memory):
     _defaults = {
         'target_move': 'all'
     }
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         """
         Return  default account period value
         """

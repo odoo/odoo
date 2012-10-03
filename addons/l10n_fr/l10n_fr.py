@@ -29,7 +29,6 @@ class l10n_fr_report(osv.osv):
         'name': fields.char('Name', size=128),
         'line_ids': fields.one2many('l10n.fr.line', 'report_id', 'Lines'),
     }
-
     _sql_constraints = [
         ('code_uniq', 'unique (code)','The code report must be unique !')
     ]
@@ -60,8 +59,5 @@ class res_company(osv.osv):
     }
 
 res_company()
-
-
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

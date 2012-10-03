@@ -149,7 +149,7 @@ class document_file(osv.osv):
     _sql_constraints = [
         # filename_uniq is not possible in pure SQL
     ]
-    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=None, op='create'):
         name = vals.get('name', False)
         parent_id = vals.get('parent_id', False)
         res_model = vals.get('res_model', False)

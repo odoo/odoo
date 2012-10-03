@@ -14,7 +14,14 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.weighting = false;
 
             this.paying = false;
-            this.payment_status = 'waiting_for_payment';
+            this.default_payment_status = {
+                status: 'waiting',
+                message: '',
+                payment_method: undefined,
+                receipt_client: undefined,
+                receipt_shop:   undefined,
+            };    
+            this.custom_payment_status = this.default_payment_status;
 
             this.connection = new instance.web.JsonRPC();
             this.connection.setup(url);
@@ -23,16 +30,21 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.notifications = {};
             
         },
-        message : function(name,params,success_callback, error_callback){
-            success_callback = success_callback || function(){}; 
-            error_callback   =  error_callback  || function(){};    
-
+        message : function(name,params){
+            var ret = new $.Deferred();
             var callbacks = this.notifications[name] || [];
             for(var i = 0; i < callbacks.length; i++){
                 callbacks[i](params);
             }
 
-            this.connection.rpc('/pos/'+name, params || {}, success_callback, error_callback);
+            this.connection.rpc('/pos/'+name, params || {}, 
+                    function(result){
+                        ret.resolve(result);
+                    },
+                    function(error){
+                        ret.reject(error);
+                    });
+            return ret;
         },
 
         // this allows the client to be notified when a proxy call is made. The notification 
@@ -47,23 +59,23 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
         //a product has been scanned and recognized with success
         // ean is a parsed ean object
         scan_item_success: function(ean){
-            this.message('scan_item_success',{ean: ean});
+            return this.message('scan_item_success',{ean: ean});
         },
 
         // a product has been scanned but not recognized
         // ean is a parsed ean object
         scan_item_error_unrecognized: function(ean){
-            this.message('scan_item_error_unrecognized',{ean: ean});
+            return this.message('scan_item_error_unrecognized',{ean: ean});
         },
 
         //the client is asking for help
         help_needed: function(){
-            this.message('help_needed');
+            return this.message('help_needed');
         },
 
         //the client does not need help anymore
         help_canceled: function(){
-            this.message('help_canceled');
+            return this.message('help_canceled');
         },
 
         //the client is starting to weight
@@ -72,7 +84,7 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
                 this.weight = 0;
                 this.weighting = true;
                 this.bypass_proxy = false;
-                this.message('weighting_start');
+                return this.message('weighting_start');
             }
         },
 
@@ -84,11 +96,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             if(this.bypass_proxy){
                 return this.weight;
             }else{
-                this.message('weighting_read_kg',{},function(weight){
-                    if(self.weighting && !self.bypass_proxy){
-                        self.weight = weight;
-                    }
-                });
+                this.message('weighting_read_kg',{})
+                    .then(function(weight){
+                        if(self.weighting && !self.bypass_proxy){
+                            self.weight = weight;
+                        }
+                    });
                 return this.weight;
             }
         },
@@ -104,77 +117,76 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
             this.weight = 0;
             this.weighting = false;
             this.bypass_proxy = false;
-            this.message('weighting_end');
+            return this.message('weighting_end');
         },
 
         // the pos asks the client to pay 'price' units
-        // method: 'mastercard' | 'cash' | ... ? TBD
-        // info:   'extra information to display on the payment terminal' ... ? TBD
-        payment_request: function(price, method, info){
+        payment_request: function(price){
+            var ret = new $.Deferred();
             this.paying = true;
-            this.payment_status = 'waiting_for_payment';
-            this.message('payment_request',{'price':price,'method':method,'info':info});
+            this.custom_payment_status = this.default_payment_status;
+            return this.message('payment_request',{'price':price});
         },
 
-        // is called at regular interval after a payment request to see if the client
-        // has paid the required money
-        // returns 'waiting_for_payment' | 'payment_accepted' | 'payment_rejected'
-        is_payment_accepted: function(){
-            var self = this;
+        payment_status: function(){
             if(this.bypass_proxy){
                 this.bypass_proxy = false;
-                return this.payment_status;
+                return (new $.Deferred()).resolve(this.custom_payment_status);
             }else{
-                this.message('is_payment_accepted', {}, function(payment_status){
-                    if(self.paying){
-                        self.payment_status = payment_status;
-                    }
-                });
-                return this.payment_status;
+                return this.message('payment_status');
             }
         },
         
         // override what the proxy says and accept the payment
         debug_accept_payment: function(){
             this.bypass_proxy = true;
-            this.payment_status = 'payment_accepted';
+            this.custom_payment_status = {
+                status: 'paid',
+                message: 'Successfull Payment, have a nice day',
+                payment_method: 'AMEX',
+                receipt_client: '<xml>bla</xml>',
+                receipt_shop:   '<xml>bla</xml>',
+            };    
         },
 
         // override what the proxy says and reject the payment
         debug_reject_payment: function(){
             this.bypass_proxy = true;
-            this.payment_status = 'payment_rejected';
+            this.custom_payment_status = {
+                status: 'error-rejected',
+                message: 'Sorry you don\'t have enough money :(',
+            };    
         },
         // the client cancels his payment
-        payment_canceled: function(){
+        payment_cancel: function(){
             this.paying = false;
-            this.payment_status = 'waiting_for_payment';
-            this.message('payment_canceled');
+            this.custom_payment_status = 'waiting_for_payment';
+            return this.message('payment_cancel');
         },
 
         // called when the client logs in or starts to scan product
         transaction_start: function(){
-            this.message('transaction_start');
+            return this.message('transaction_start');
         },
 
         // called when the clients has finished his interaction with the machine
         transaction_end: function(){
-            this.message('transaction_end');
+            return this.message('transaction_end');
         },
 
         // called when the POS turns to cashier mode
         cashier_mode_activated: function(){
-            this.message('cashier_mode_activated');
+            return this.message('cashier_mode_activated');
         },
 
         // called when the POS turns to client mode
         cashier_mode_deactivated: function(){
-            this.message('cashier_mode_deactivated');
+            return this.message('cashier_mode_deactivated');
         },
         
         // ask for the cashbox (the physical box where you store the cash) to be opened
         open_cashbox: function(){
-            this.message('open_cashbox');
+            return this.message('open_cashbox');
         },
 
         /* ask the printer to print a receipt
@@ -216,12 +228,12 @@ function openerp_pos_devices(instance,module){ //module is instance.point_of_sal
          *    }
          */
         print_receipt: function(receipt){
-            this.message('print_receipt',{receipt: receipt});
+            return this.message('print_receipt',{receipt: receipt});
         },
 
         // asks the proxy to print an invoice in pdf form ( used to print invoices generated by the server ) 
         print_pdf_invoice: function(pdfinvoice){
-            this.message('print_pdf_invoice',{pdfinvoice: pdfinvoice});
+            return this.message('print_pdf_invoice',{pdfinvoice: pdfinvoice});
         },
     });
 

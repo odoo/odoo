@@ -47,7 +47,9 @@ import logging
 magic_md5 = '$1$'
 _logger = logging.getLogger(__name__)
 
-def gen_salt( length=8, symbols=ascii_letters + digits ):
+def gen_salt( length=8, symbols=None):
+    if symbols is None:
+        symbols = ascii_letters + digits
     seed()
     return ''.join( sample( symbols, length ) )
 

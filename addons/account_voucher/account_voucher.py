@@ -849,7 +849,7 @@ class account_voucher(osv.osv):
             res['account_id'] = account_id
         return {'value':res}
 
-    def _sel_context(self, cr, uid, voucher_id,context=None):
+    def _sel_context(self, cr, uid, voucher_id, context=None):
         """
         Select the context to use accordingly if it needs to be multicurrency or not.
 
@@ -1275,7 +1275,9 @@ class account_voucher(osv.osv):
                 self.reconcile_send_note(cr, uid, [voucher.id], context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'number': False,
@@ -1302,17 +1304,17 @@ class account_voucher(osv.osv):
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>created</b>." % self._document_type[obj.type or False]
-            self.message_post(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def post_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s '%s' is <b>posted</b>." % (self._document_type[obj.type or False], obj.move_id.name)
-            self.message_post(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
     def reconcile_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             message = "%s <b>reconciled</b>." % self._document_type[obj.type or False]
-            self.message_post(cr, uid, [obj.id], body=message, context=context)
+            self.message_post(cr, uid, [obj.id], body=message, subtype="account_voucher.mt_voucher", context=context)
 
 account_voucher()
 
