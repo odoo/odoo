@@ -50,7 +50,7 @@ class project_project(osv.osv):
             'search_default_account_id': [project.analytic_account_id.id],
             'default_account_id': project.analytic_account_id.id,
         }
-        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""")
+        help = _("""<p class="oe_view_nocontent_create">Record your timesheets for the project '%s'.</p>""") % (project.name,)
         try:
             if project.to_invoice and project.partner_id:
                 help+= _("""<p>Timesheets on this project may be invoiced to %s, according to the terms defined in the contract.</p>""" ) % (project.partner_id.name,)
