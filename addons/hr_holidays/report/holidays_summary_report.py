@@ -203,6 +203,8 @@ class report_custom(report_rml):
         months_xml =['<months  number="%d" name="%s"/>' % (x, _(month_dict[x])) for x in range(1,len(month_dict)+1) ]
         months_xml.append(st)
         
+        months_xml = ustr(''.join(months_xml))
+        
         emp_xml=''
         row_id=1
         
