@@ -40,6 +40,6 @@ This block demonstrates a common pattern in OpenERP views and widgets:
 a highlighted button, and a discard button styled as a link to cancel
 the action:
 
-.. image:: /images/templates/ui.Header.*
+.. image:: ./images/templates/ui.Header.*
 
 In this case, both buttons are OpenERP action buttons.
