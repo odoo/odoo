@@ -101,7 +101,7 @@ openerp.account = function (instance) {
                 return self.rpc("/web/action/load", {
                     action_id: result[1],
                     context: additional_context
-                }, function (result) {
+                }).then(function (result) {
                     result = result.result;
                     result.context = _.extend(result.context || {}, additional_context);
                     result.flags = result.flags || {};

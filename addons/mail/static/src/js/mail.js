@@ -1127,7 +1127,7 @@ openerp.mail = function(session) {
                 domains: domains || [],
                 contexts: contexts || [],
                 group_by_seq: groupbys || []
-            }, function (results) {
+            }).then(function (results) {
                 self.search_results['context'] = results.context;
                 self.search_results['domain'] = results.domain;
                 self.thread.destroy();

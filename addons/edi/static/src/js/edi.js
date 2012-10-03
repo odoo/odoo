@@ -15,7 +15,7 @@ openerp.edi.EdiView = openerp.web.Widget.extend({
         this._super();
         var self = this;
         var param = {"db": self.db, "token": self.token};
-        return self.rpc('/edi/get_edi_document', param, this.on_document_loaded, this.on_document_failed);
+        return self.rpc('/edi/get_edi_document', param).done(this.on_document_loaded), fail(this.on_document_failed);
     },
     on_document_loaded: function(docs){
         this.doc = docs[0];
@@ -149,11 +149,11 @@ openerp.edi.EdiImport = openerp.web.Widget.extend({
     },
 
     do_import: function() {
-        this.rpc('/edi/import_edi_url', {url: this.url}, this.on_imported, this.on_imported_error);
+        this.rpc('/edi/import_edi_url', {url: this.url}),done(this.on_imported), fail(this.on_imported_error);
     },
     on_imported: function(response) {
         if ('action' in response) {
-            this.rpc("/web/session/save_session_action", {the_action: response.action}, function(key) {
+            this.rpc("/web/session/save_session_action", {the_action: response.action}).then(function(key) {
                 window.location = "/#sa="+encodeURIComponent(key);
             });
         }

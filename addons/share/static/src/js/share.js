@@ -15,7 +15,7 @@ openerp.share = function(session) {
         self.rpc('/web/session/eval_domain_and_context', {
             domains: [domain],
             contexts: [view.dataset.context]
-        }, function (result) {
+        }).then(function (result) {
             Share.create({
                 name: action.name,
                 record_name: rec_name,

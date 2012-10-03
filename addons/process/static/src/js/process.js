@@ -223,7 +223,7 @@ instance.web.ViewManager.include({
                 self.rpc("/web/action/load", {
                     action_id: action.id,
                     context: dataset.context
-                    }, function(result) {
+                    }).then(function(result) {
                         action_manager.replace(self.$el);
                         action_manager.do_action(result.result);
                     })
