@@ -31,7 +31,10 @@ Allow users to reset their password from the login page.
     'website': 'http://www.openerp.com',
     'installable': True,
     'depends': ['auth_signup', 'email_template'],
-    'data': ['auth_reset_password.xml'],
+    'data': [
+        'auth_reset_password.xml',
+        'res_users_view.xml',
+    ],
     'js': ['static/src/js/reset_password.js'],
     'qweb': ['static/src/xml/reset_password.xml'],
 }

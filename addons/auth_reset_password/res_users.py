@@ -34,22 +34,26 @@ class res_users(osv.osv):
 
     def reset_password(self, cr, uid, login, context=None):
         """ retrieve the user corresponding to login (login or email),
-            create a specific signup token, and send it to the user
+            and reset their password
         """
         user_ids = self.search(cr, uid, [('login', '=', login)], context=context)
         if not user_ids:
             user_ids = self.search(cr, uid, [('email', '=', login)], context=context)
         if len(user_ids) != 1:
             raise Exception('Reset password: invalid username or email')
+        return self.action_reset_password(cr, uid, user_ids, context=context)
 
+    def action_reset_password(self, cr, uid, ids, context=None):
+        """ create signup token for each user, and send their signup url by email """
         # prepare reset password signup
-        user = self.browse(cr, uid, user_ids[0], context)
-        user.partner_id.signup_prepare(expiration=now(days=+1))
+        res_partner = self.pool.get('res.partner')
+        partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context)]
+        res_partner.signup_prepare(cr, uid, partner_ids, expiration=now(days=+1), context=context)
 
-        # send email to user with their signup url
-        user = self.browse(cr, uid, user.id, context)
+        # send email to users with their signup url
         template = self.pool.get('ir.model.data').get_object(cr, uid, 'auth_reset_password', 'reset_password_email')
         assert template._name == 'email.template'
-        self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, force_send=True, context=context)
+        for user in self.browse(cr, uid, ids, context):
+            self.pool.get('email.template').send_mail(cr, uid, template.id, user.id, context=context)
 
         return True

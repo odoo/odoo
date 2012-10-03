@@ -20,4 +20,4 @@
 ##############################################################################
 
 import controllers
-import auth_reset_password
+import res_users
