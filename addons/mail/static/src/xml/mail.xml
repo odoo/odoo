@@ -111,8 +111,7 @@
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
                 <li t-if="!widget.options.thread.display_on_flat and widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
                 <li t-if="!widget.options.thread.display_on_flat and !widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
-                <li t-if="!widget.options.message.show_reply_by_email" title="Reply"><a class="oe_reply oe_e">)</a></li>
-                <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_e" title="Reply by mail">)</a></li>
+                <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
                 <t t-if="(widget.options.message.show_reply || widget.options.message.show_reply_by_email || (widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email')">
                     <li>
                         <span class="oe_dropdown_toggle">
@@ -124,7 +123,7 @@
                                     <a href="#" class="oe_mail_msg_hide_type" t-attf-data-subtype='{widget.subtype}'>Hide '<t t-esc="widget.subtype"/>' for this document</a>
                                 </li> -->
                                 <li t-if="widget.options.message.show_reply" title="Reply"><a class="oe_reply oe_full_reply">Full reply</a></li>
-                                <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_full_reply" title="Reply by mail">Full reply</a></li>
+                                <li t-if="widget.options.message.show_reply_by_email"><a class="oe_reply_by_email oe_full_reply" title="Reply by mail">Full reply by mail</a></li>
                                 <li t-if="widget.type == 'email'"><a class="oe_mail_msg_details" t-attf-href="#model=mail.message&amp;id=#{widget.id}" >Details</a></li>
                             </ul>
                         </span>

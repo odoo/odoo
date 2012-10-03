@@ -134,6 +134,7 @@ class mail_message(osv.Model):
         'subtype_id': fields.many2one('mail.message.subtype', 'Subtype'),
         'vote_user_ids': fields.many2many('res.users', 'mail_vote', 'message_id', 'user_id', string='Votes',
             help='Users that voted for this message'),
+        'is_private': fields.boolean('Private message'),
     }
 
     def _needaction_domain_get(self, cr, uid, context=None):
@@ -150,6 +151,7 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
+        'is_private': False,
     }
 
     #------------------------------------------------------
@@ -221,7 +223,7 @@ class mail_message(osv.Model):
             'unread': msg.unread and msg.unread['unread'] or False
         }
 
-    def message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
+    def _message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
         """
         create the expandable message for all parent message read
         this function is used by message_read
@@ -337,7 +339,7 @@ class mail_message(osv.Model):
 
         result = sorted(result, key=lambda k: k['id'])
 
-        result = self.message_read_expandable(cr, uid, tree, result, message_loaded, domain, context, parent_id, limit)
+        result = self._message_read_expandable(cr, uid, tree, result, message_loaded, domain, context, parent_id, limit)
 
         return result
 

@@ -1134,13 +1134,10 @@ openerp.mail = function(session) {
 
         /** Clean and display the threads */
         message_render: function (search) {
-            var domain = this.options.domain.concat(this.search_results['domain']);
-
-            var context = _.extend(this.options.context, search&&search.context ? search.context : {});
-
+            //console
             this.thread = new mail.Thread(this, {
-                    'domain' : domain,
-                    'context' : context,
+                    'domain' : this.options.domain.concat(this.search_results['domain']),
+                    'context' : _.extend(this.options.context, this.search_results&&this.search_results['context'] ? this.search_results['context'] : {}),
                     'options': {
                         'thread' :{
                             'thread_level': this.options.thread_level,

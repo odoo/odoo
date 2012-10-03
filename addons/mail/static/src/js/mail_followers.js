@@ -149,7 +149,6 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
             this.$('div.oe_mail_recthread_followers h4').html(this.options.title + (records.length>=5 ? ' (' + records.length + ')' : '') );
-            console.log(records);
             for(var i=0; i<records.length&&i<5; i++) {
                 var record=records[i];
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
@@ -200,7 +199,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked','checked');
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], undefined, undefined, context]).pipe(function(value_){
+            return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context]).pipe(function(value_){
                     self.read_value(value_);
                     if(!self.$('.oe_recthread_subtypes').is(":visible"))
                         self.display_subtypes(true);
@@ -212,7 +211,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked',false);
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], undefined, context]).pipe(this.proxy('read_value'));
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).pipe(this.proxy('read_value'));
         },
 
         do_update_subscription: function () {
