@@ -1095,6 +1095,7 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var searchview_ready = this.load_searchview({}, false);
             var thread_displayed = this.message_render();
+            this.options.domain = this.options.domain.concat(this.search_results['domain']);
             return (searchview_ready && thread_displayed);
         },
 
@@ -1134,18 +1135,14 @@ openerp.mail = function(session) {
 
         /** Clean and display the threads */
         message_render: function (search) {
-            var domain = this.options.domain.concat(this.search_results['domain']);
-
-            var context = _.extend(this.options.context, search&&search.context ? search.context : {});
-
             this.thread = new mail.Thread(this, {
-                    'domain' : domain,
-                    'context' : context,
+                    'domain' : this.options.domain.concat(this.search_results['domain']),
+                    'context' : _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {}),
                     'options': {
                         'thread' :{
                             'thread_level': this.options.thread_level,
                             'use_composer': true,
-                            'show_header_compose': 1, 
+                            'show_header_compose': 1,
                         },
                         'message': {
                             'show_reply': this.options.thread_level > 0,
