@@ -35,6 +35,16 @@
             <field name="model">product.template</field>
             <field name="inherit_id" ref="product.product_template_form_view"/>
             <field name="arch" type="xml">
+            	<group name="delay" position="inside">
+            		<field name="sale_delay" attrs="{'readonly':[('sale_ok','=',False)]}"/>
+            	</group>
+            	<group name="delay" position="after">
+            		<group name="store" string="Storage Localisation">
+                        <field name="loc_rack"/>
+                        <field name="loc_row"/>
+                    	<field name="loc_case"/>
+                	</group>
+                </group>
                 <page position="after" string="Information">
                     <page string="Properties">
                         <group string="Counter-Part Locations Properties" groups="stock.group_locations">
@@ -65,12 +75,45 @@
                         <field name="active"/>
                     </group>
                 </group>
-                <group name="inventory" position="inside">
-                    <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
-                        <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
-                        <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
-                        <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                <xpath expr="//group[@string='Sale Conditions']" position="inside">
+                    <label for="sale_delay"/>
+                        <div>
+                            <field name="sale_delay" class="oe_inline"/> days
+                        </div>
+                </xpath>
+                <group name="status" position="before" version="7.0">
+                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
+                        <label for="qty_available"/>
+                            <div>
+                                <field name="qty_available" class="oe_inline"/>
+                                <button name="%(action_view_change_product_quantity)d" string="update"
+                                type="action"
+                                class="oe_link"/>
+                            </div>
+                            <field name="incoming_qty" class="oe_inline"/>
+                            <field name="outgoing_qty" class="oe_inline"/>
+                            <field name="virtual_available" class="oe_inline"/>
                     </group>
+                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
+                        <field name="track_production" groups="stock.group_production_lot"/>
+                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
+                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
+                    </group>
+                </group>
+                <group name="status" position="after" version="7.0">
+                     <group name="store" string="Storage Localisation">
+                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
+                         <field name="loc_rack" attrs="{'invisible':[('type','=','service')]}"/>
+                         <field name="loc_row" attrs="{'invisible':[('type','=','service')]}"/>
+                         <field name="loc_case" attrs="{'invisible':[('type','=','service')]}"/>
+                     </group>
+                </group>
+                <group name="Weights" position="after">
+                     <group name="store" groups="stock.group_locations" string="Counter-Part Locations Properties">
+                         <field name="property_stock_procurement" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','procurement')]"/>
+                         <field name="property_stock_production" attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','production')]"/>
+                         <field name="property_stock_inventory"  attrs="{'readonly':[('type','=','service')]}" domain="[('usage','=','inventory')]"/>
+                     </group>
                 </group>
             </field>
         </record>
@@ -116,32 +159,6 @@
             </field>
         </record>
 
-        <record id="view_normal_stock_property_form" model="ir.ui.view">
-            <field name="name">product.normal.stock.form.inherit</field>
-            <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
-            <field name="arch" type="xml">
-                <group name="status" position="before" version="7.0">
-                    <group string="Stock and Expected Variations" attrs="{'invisible': [('type', '=', 'service')]}" groups="base.group_user">
-                        <label for="qty_available"/>
-                        <div>
-                            <field name="qty_available" class="oe_inline"/>
-                            <button name="%(action_view_change_product_quantity)d" string="update"
-                                type="action"
-                                class="oe_link"/>
-                        </div>
-                        <field name="incoming_qty" class="oe_inline"/>
-                        <field name="outgoing_qty" class="oe_inline"/>
-                        <field name="virtual_available" class="oe_inline"/>
-                    </group>
-                    <group name="lot" groups="stock.group_tracking_lot,stock.group_production_lot" string="Lots">
-                        <field name="track_production" groups="stock.group_production_lot"/>
-                        <field name="track_incoming" groups="stock.group_tracking_lot"/>
-                        <field name="track_outgoing" groups="stock.group_tracking_lot"/>
-                    </group>
-                </group>
-            </field>
-        </record>
 
         <record id="action_receive_move" model="ir.actions.act_window">
             <field name="name">Receptions</field>

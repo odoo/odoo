@@ -294,7 +294,6 @@ class product_template(osv.osv):
             help="Standard Price: the cost price is fixed and recomputed periodically (usually at the end of the year), Average Price: the cost price is recomputed at each reception of products."),
         'warranty': fields.float('Warranty'),
         'sale_ok': fields.boolean('Can be Sold', help="Determines if the product can be visible in the list of product within a selection from a sale order line."),
-        'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
         'state': fields.selection([('',''),
             ('draft', 'In Development'),
             ('sellable','Normal'),
@@ -309,9 +308,6 @@ class product_template(osv.osv):
             ' uos = uom * coeff'),
         'mes_type': fields.selection((('fixed', 'Fixed'), ('variable', 'Variable')), 'Measure Type'),
         'seller_ids': fields.one2many('product.supplierinfo', 'product_id', 'Partners'),
-        'loc_rack': fields.char('Rack', size=16),
-        'loc_row': fields.char('Row', size=16),
-        'loc_case': fields.char('Case', size=16),
         'company_id': fields.many2one('res.company', 'Company', select=1),
     }
 
@@ -353,7 +349,6 @@ class product_template(osv.osv):
         'cost_method': lambda *a: 'standard',
         'standard_price': lambda *a: 0.0,
         'sale_ok': lambda *a: 1,
-        'sale_delay': lambda *a: 7,
         'produce_delay': lambda *a: 1,
         'purchase_ok': lambda *a: 1,
         'uom_id': _get_uom_id,
