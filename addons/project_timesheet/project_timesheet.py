@@ -98,6 +98,7 @@ class project_work(osv.osv):
             if not acc_id:
                 raise osv.except_osv(_('Bad Configuration !'),
                         _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
+
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
         res['general_account_id'] = acc_id
@@ -157,7 +158,7 @@ class project_work(osv.osv):
         result = {}
 
         if isinstance(ids, (long, int)):
-            ids = [ids,]
+            ids = [ids]
 
         for task in self.browse(cr, uid, ids, context=context):
             line_id = task.hr_analytic_timesheet_id
@@ -174,17 +175,18 @@ class project_work(osv.osv):
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
-                default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
-                result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
+                details = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
                 for field in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
-                    if result.get(field, False):
-                        vals_line[field] = result[field]
+                    if details.get(field, False):
+                        vals_line[field] = details[field]
 
-                if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
-                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+                # Check if user's default UOM differs from product's UOM
+                user_default_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+                if details.get('product_uom_id', False) and details['product_uom_id'] != user_default_uom_id:
+                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, user_default_uom_id, vals['hours'], details['product_uom_id'])
 
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
