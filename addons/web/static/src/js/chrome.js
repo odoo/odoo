@@ -1137,15 +1137,6 @@ instance.web.WebClient = instance.web.Client.extend({
                 });
             });
     },
-    do_action: function(action) {
-        var self = this;
-        // TODO replace by client action menuclick
-        if(action.menu_id) {
-            this.do_reload().then(function () {
-                self.menu.menu_click(action.menu_id);
-            });
-        }
-    },
     set_content_full_screen: function(fullscreen) {
         if (fullscreen) {
             $(".oe_webclient", this.$el).addClass("oe_content_full_screen");
