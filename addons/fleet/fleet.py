@@ -558,7 +558,7 @@ class fleet_vehicle_log_fuel(osv.Model):
         'vendor_id' : fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
         'notes' : fields.text('Notes'),
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='string',string='Odometer',store=False),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
@@ -753,7 +753,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'costs' : fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs covered'),
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='string',string='Odometer',store=False),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
