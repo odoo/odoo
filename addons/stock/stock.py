@@ -346,22 +346,28 @@ class stock_location(osv.osv):
         })
         return product_obj.get_product_available(cr, uid, product_ids, context=context)
 
-    def _product_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_get(self, cr, uid, id, product_ids=False, context=None, states=None):
         """
         @param product_ids:
         @param states:
         @return:
         """
+        if states is None:
+            states = ['done']
         ids = id and [id] or []
         return self._product_get_multi_location(cr, uid, ids, product_ids, context=context, states=states)
 
-    def _product_all_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_all_get(self, cr, uid, id, product_ids=False, context=None, states=None):
+        if states is None:
+            states = ['done']
         # build the list of ids of children of the location given by id
         ids = id and [id] or []
         location_ids = self.search(cr, uid, [('location_id', 'child_of', ids)])
         return self._product_get_multi_location(cr, uid, location_ids, product_ids, context, states)
 
-    def _product_virtual_get(self, cr, uid, id, product_ids=False, context=None, states=['done']):
+    def _product_virtual_get(self, cr, uid, id, product_ids=False, context=None, states=None):
+        if states is None:
+            states = ['done']
         return self._product_all_get(cr, uid, id, product_ids, context, ['confirmed', 'waiting', 'assigned', 'done'])
 
     def _product_reserve(self, cr, uid, ids, product_id, product_qty, context=None, lock=False):
@@ -522,7 +528,7 @@ class stock_tracking(osv.osv):
     def unlink(self, cr, uid, ids, context=None):
         raise osv.except_osv(_('Error!'), _('You cannot remove a lot line.'))
 
-    def action_traceability(self, cr, uid, ids, context={}):
+    def action_traceability(self, cr, uid, ids, context=None):
         """ It traces the information of a product
         @param self: The object pointer.
         @param cr: A database cursor
@@ -1444,7 +1450,7 @@ class stock_picking(osv.osv):
                 'internal': _("Products have been <b>moved</b>."),
         }
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=type_dict.get(obj.type, _('Products have been moved.')), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Products have been <b>%s</b>.") % (type_dict.get(obj.type, 'move done')), context=context)
 
     def ship_cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
