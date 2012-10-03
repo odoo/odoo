@@ -187,7 +187,7 @@ class survey_history(osv.osv):
         'date': fields.datetime('Date started', readonly=1),
     }
     _defaults = {
-         'date': lambda * a: strftime("%Y-%m-%d %H:%M:%S")
+         'date': lambda * a: datetime.datetime.now()
     }
 survey_history()
 
