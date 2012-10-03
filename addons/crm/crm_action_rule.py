@@ -57,8 +57,8 @@ class base_action_rule(osv.osv):
 
         if hasattr(obj, 'section_id'):
             ok = ok and (not action.trg_section_id or action.trg_section_id.id == obj.section_id.id)
-        if hasattr(obj, 'categ_id'):
-            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id == obj.categ_id.id)
+        if hasattr(obj, 'categ_ids'):
+            ok = ok and (not action.trg_categ_id or action.trg_categ_id.id in obj.categ_ids)
 
         #Cheking for history
         regex = action.regex_history
