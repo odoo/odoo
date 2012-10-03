@@ -1,0 +1,38 @@
+-
+  Set the current user as portal user.
+-
+  !context
+    'uid': 'portal.demo_user0'
+-
+  As a portal user, I fill in the contact form and submit it.
+-
+  !record {model: portal_crm.crm_contact_us, id: contact_us_01}:
+    name: 'Need information about your contact form module'
+    partner_name: 'Mr. John Doe'
+    email_from: 'mister@john.doe'
+    phone: '+32 444 11 22 33'
+    description: 'Dear Sir or Madam, could you get back to me asap ?  Regards.'
+-
+  For security reasons, the wizard values is empty.
+-
+  !python {model: portal_crm.crm_contact_us}: |
+    obj = self.browse(cr, uid, ref("contact_us_01"))
+    assert not(obj.name or obj.partner_name or obj.email_from or obj.phone or obj.description), 'All the wizard\'s values are not empty'
+-
+  And a lead is created with the proper values.
+-
+  !python {model: crm.lead}: |
+    from openerp import SUPERUSER_ID
+
+    ids = self.search(cr, SUPERUSER_ID, [('name', '=', 'Need information about your contact form module')])
+    assert len(ids) == 1, 'There are more than one matching lead, while only one was expected'
+
+    obj = self.browse(cr, SUPERUSER_ID, ids[0])
+    expected_values = dict(
+        name='Need information about your contact form module',
+        partner_name='Mr. John Doe',
+        email_from='mister@john.doe',
+        phone='+32 444 11 22 33',
+        description='Dear Sir or Madam, could you get back to me asap ?  Regards.')
+    for k, v in expected_values.iteritems():
+        assert obj[k] == expected_values[k], 'Lead data mismatch: expected %s, got %s' % (expected_values[k], obj[k])

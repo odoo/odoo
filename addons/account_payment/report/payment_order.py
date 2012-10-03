@@ -71,6 +71,7 @@ class payment_order(report_sxw.rml_parse):
         user = pool.get('res.users').browse(self.cr, self.uid, self.uid)
         return user.company_id and user.company_id.currency_id and user.company_id.currency_id.symbol or False
 
+
     def _get_account_name(self,bank_id):
         if bank_id:
             pool = pooler.get_pool(self.cr.dbname)

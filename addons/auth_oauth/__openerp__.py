@@ -38,7 +38,10 @@ Allow users to login through Google OAuth2.
         'security/ir.model.access.csv'
     ],
     'js': ['static/src/js/auth_oauth.js'],
-    'css': ['static/lib/zocial/css/zocial.css'],
+    'css': [
+        'static/lib/zocial/css/zocial.css',
+        'static/src/css/auth_oauth.css',
+    ],
     'qweb': ['static/src/xml/auth_oauth.xml'],
     'installable': True,
     'auto_install': False,

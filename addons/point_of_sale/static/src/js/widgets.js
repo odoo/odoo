@@ -687,7 +687,7 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             'print_receipt',
             'print_pdf_invoice',
             'weighting_read_kg',
-            'is_payment_accepted',
+            'payment_status',
         ],
         minimized: false,
         start: function(){
@@ -898,10 +898,10 @@ function openerp_pos_widgets(instance, module){ //module is instance.point_of_sa
             this.error_popup = new module.ErrorPopupWidget(this, {});
             this.error_popup.appendTo($('.point-of-sale'));
 
-            this.error_product_popup = new module.ErrorProductNotRecognizedPopupWidget(this, {});
+            this.error_product_popup = new module.ProductErrorPopupWidget(this, {});
             this.error_product_popup.appendTo($('.point-of-sale'));
 
-            this.error_session_popup = new module.ErrorNoSessionPopupWidget(this, {});
+            this.error_session_popup = new module.ErrorSessionPopupWidget(this, {});
             this.error_session_popup.appendTo($('.point-of-sale'));
 
             this.choose_receipt_popup = new module.ChooseReceiptPopupWidget(this, {});
