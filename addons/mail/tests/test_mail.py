@@ -551,48 +551,6 @@ class test_mail(TestMailMockups):
     #        # print '%send compare' % ('\t' * n)
 
     #    # ----------------------------------------
-    #    # CASE1: Flattening test
-    #    # ----------------------------------------
-
-    #    # Create dummy message structure
-    #    import copy
-    #    tree = [{'id': 2, 'child_nbr': 1, 'child_ids': [
-    #                {'id': 6, 'child_nbr': 1, 'child_ids': [
-    #                    {'id': 8, 'child_nbr': 0, 'child_ids': []},
-    #                    ]},
-    #                ]},
-    #            {'id': 1, 'child_nbr': 3, 'child_ids':[
-    #                {'id': 7, 'child_nbr': 1, 'child_ids': [
-    #                    {'id': 9, 'child_nbr': 0, 'child_ids': []},
-    #                    ]},
-    #                {'id': 4, 'child_nbr': 2, 'child_ids': [
-    #                    {'id': 10, 'child_nbr': 0, 'child_ids': []},
-    #                    {'id': 5, 'child_nbr': 0, 'child_ids': []},
-    #                    ]},
-    #                {'id': 3, 'child_nbr': 0, 'child_ids': []},
-    #                ]},
-    #            ]
-    #    # Test: completely flat
-    #    new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 0, limit=15, add_expandable=False)
-    #    _compare_structures(new_tree, new_tree)
-    #    self.assertEqual(len(new_tree), 10, 'message_read_tree_flatten wrong in flat')
-    #    # Test: 1 thread level
-    #    tree_test = [{'id': 2, 'child_ids': [
-    #                    {'id': 8, 'child_ids': []}, {'id': 6, 'child_ids': []},
-    #                ]},
-    #                {'id': 1, 'child_ids': [
-    #                    {'id': 10, 'child_ids': []}, {'id': 9, 'child_ids': []},
-    #                    {'id': 7, 'child_ids': []}, {'id': 5, 'child_ids': []},
-    #                    {'id': 4, 'child_ids': []}, {'id': 3, 'child_ids': []},
-    #                ]},
-    #                ]
-    #    new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 1, limit=15, add_expandable=False)
-    #    _compare_structures(new_tree, tree_test)
-    #    # Test: 2 thread levels
-    #    new_tree = self.mail_message.message_read_tree_flatten(cr, uid, None, copy.deepcopy(tree), [('type', 'in', 'borderlands')], 2, limit=15, add_expandable=False)
-    #    _compare_structures(new_tree, tree)
-
-    #    # ----------------------------------------
     #    # CASE2: message_read test
     #    # ----------------------------------------
 

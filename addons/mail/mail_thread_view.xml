@@ -18,15 +18,21 @@
           <field name="action" ref="action_mail_inbox_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
+        <record id="mail_wallfeeds" model="ir.ui.menu">
+          <field name="name">Wall</field>
+          <field name="sequence" eval="11"/>
+          <field name="action" ref="action_mail_wall_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
+        </record>
         <record id="mail_archivesfeeds" model="ir.ui.menu">
           <field name="name">Archives</field>
-          <field name="sequence" eval="11"/>
+          <field name="sequence" eval="12"/>
           <field name="action" ref="action_mail_archives_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
         <record id="mail_sentfeeds" model="ir.ui.menu">
           <field name="name">Sent</field>
-          <field name="sequence" eval="12"/>
+          <field name="sequence" eval="13"/>
           <field name="action" ref="action_mail_sent_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
