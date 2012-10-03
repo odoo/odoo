@@ -256,10 +256,10 @@ openerp.mail = function(session) {
                 default_res_id:  0,
                 default_parent_id: false }, options.context || {});
 
-            this.id =           -1;
+            this.id =           options.parameters.id || -1;
             this.parent_id=     options.parameters.parent_id || false;
             this.nb_messages =  options.parameters.nb_messages || 0;
-            this.type =         options.parameters.type || false;
+            this.type =         'expandable';
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0] ;
@@ -501,9 +501,6 @@ openerp.mail = function(session) {
             } else {
                 self.destroy();
             }
-            for(var i in this.thread.messages){
-                this.thread.messages[i].animated_destroy({fadeTime:0});
-            }
         },
 
         on_message_delete: function (event) {
@@ -598,8 +595,8 @@ openerp.mail = function(session) {
         display_vote: function () {
             var self = this;
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': self});
-            self.$(".placeholder-mail-vote").empty();
-            self.$(".placeholder-mail-vote").html(vote_element);
+            self.$(".placeholder-mail-vote:first").empty();
+            self.$(".placeholder-mail-vote:first").html(vote_element);
         },
     });
 
@@ -879,7 +876,7 @@ openerp.mail = function(session) {
             fetch_domain = replace_domain ? replace_domain : this.domain;
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.id||0].concat( self.options.thread._parents[0].get_child_ids() );
-            
+
             return this.ds_message.call('message_read', [ids, fetch_domain, (this.options.thread.thread_level+1), fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
@@ -945,11 +942,11 @@ openerp.mail = function(session) {
                 }
             }
 
-            if(parent_newer)
-                message.insertAfter(parent_newer.$el);
-            else if(parent_older)
+            if(parent_older)
                 message.insertBefore(parent_older.$el);
-            else
+            else if(parent_newer)
+                message.insertAfter(parent_newer.$el);
+            else 
                 message.prependTo(thread.list_ul);
 
             return message
@@ -1139,7 +1136,6 @@ openerp.mail = function(session) {
         message_render: function (search) {
             var domain = this.options.domain.concat(this.search_results['domain']);
 
-            var domain = _.extend(this.options.domain, search&&search.domain? search.domain : {});
             var context = _.extend(this.options.context, search&&search.context ? search.context : {});
 
             this.thread = new mail.Thread(this, {

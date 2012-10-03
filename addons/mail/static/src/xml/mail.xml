@@ -104,7 +104,7 @@
     </div>
 
     <!-- default layout -->
-    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}" t-attf-data-msg_id="{widget.id}">
+    <li t-name="mail.thread.message" t-attf-class="oe_mail oe_mail_thread_msg #{widget.unread?'oe_mail_unread':'oe_mail_read'}">
         <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
@@ -171,7 +171,7 @@
     </li>
 
     <!-- expandable message layout -->
-    <li t-name="mail.thread.expandable" t-attf-class="oe_mail oe_mail_thread_msg oe_mail_unread" t-attf-data-thread_id="{widget.id}">
+    <li t-name="mail.thread.expandable" class="oe_mail oe_mail_thread_msg oe_mail_unread">
         <div t-attf-class="oe_mail_msg_#{widget.type} oe_semantic_html_override">
             <div class="oe_mail_msg_content oe_mail_msg_more_message">
                 <a class="oe_mail_fetch_more">Load more messages <span t-if="widget.nb_messages>0">(<t t-raw="widget.nb_messages"/> messages not display)</span>...</a>

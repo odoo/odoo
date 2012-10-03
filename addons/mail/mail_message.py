@@ -224,6 +224,7 @@ class mail_message(osv.Model):
     def message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
         """
         create the expandable message for all parent message read
+        this function is used by message_read
         """
 
         tree_not = []   
@@ -252,10 +253,12 @@ class mail_message(osv.Model):
                             'parent_id': id_msg,
                             'id':  id_min
                         })
+                    id_min=None
+                    id_max=None
                     nb=0
             if nb>0:
                 result.append({
-                    'domain': [['id','>=',id_min],['parent_id','=',id_msg]],
+                    'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',id_msg]],
                     'nb_messages': nb,
                     'type': 'expandable', 
                     'parent_id': id_msg, 
@@ -294,7 +297,6 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
-
         message_loaded = context and context.get('message_loaded') or [0]
 
         # don't read the message display by .js, in context message_loaded list
