@@ -1106,4 +1106,16 @@ class mail_mail(osv.osv):
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 mail_mail()
+
+class product_template(osv.osv):
+    _name = 'product.template'
+    _inherit = 'product.template'
+    _columns = {
+                'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
+            }
+    _defaults = {
+             'purchase_ok': lambda *a: 1,
+            }
+
+product_template()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -513,8 +513,15 @@ class product_template(osv.osv):
             string='Stock Output Account', view_load=True,
             help="When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless "
                  "there is a specific valuation account set on the destination location. When not set on the product, the one from the product category is used."),
+        'sale_delay': fields.float('Customer Lead Time', help="This is the average delay in days between the confirmation of the customer order and the delivery of the finished products. It's the time you promise to your customers."),
+        'loc_rack': fields.char('Rack', size=16),
+        'loc_row': fields.char('Row', size=16),
+        'loc_case': fields.char('Case', size=16),
     }
 
+    _defaults = {
+        'sale_delay': lambda *a: 7,
+    }
 product_template()
 
 class product_category(osv.osv):

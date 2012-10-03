@@ -589,6 +589,10 @@
             <field name="model">product.product</field>
             <field name="inherit_id" ref="product.product_normal_form_view"/>
             <field name="arch" type="xml">
+                <div name="options" position="inside">
+                    <field name="purchase_ok"/>
+                    <label for="purchase_ok"/>
+                </div>
                 <group name="procurement" position="after">
                      <separator string="Suppliers"/>
                      <field name="seller_ids" context="{'uom_id': uom_id}"/>
@@ -609,5 +613,45 @@
                 </group>
             </field>
         </record>
+
+        <record id="product_search_form_view_purchase" model="ir.ui.view">
+            <field name="name">product.search.stock.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter name="filter_to_sell" position="before">
+                    <filter name="filter_to_purchase" string="To Purchase" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                </filter>
+                <filter name="filter_to_sell" position="after">
+                   <filter name="filter_to_purchase" string="Can be Purchased" icon="terp-accessories-archiver+" domain="[('purchase_ok', '=', 1)]"/>
+                </filter>
+            </field>
+        </record>
+
+        <record id="view_template_purchase_ok_form" model="ir.ui.view">
+            <field name="name">product.template.purchase.ok.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="sale_ok" position="after">
+                    <field name="purchase_ok"/>
+                </field>
+            </field>
+        </record>
+  
+        <record id="view_product_account_purchase_ok_form" model="ir.ui.view">
+            <field name="name">product.account.purchase.ok.form.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="account.product_normal_form_view"/>
+            <field name="arch" type="xml">
+                <field name="property_account_expense" position="replace" >
+                     <field name="property_account_expense" domain="[('type','&lt;&gt;','view'),('type','&lt;&gt;','consolidation')]" attrs="{'readonly':[('purchase_ok','=',0)]}" />
+                </field>
+                <field name="supplier_taxes_id" position="replace" >
+                     <field name="supplier_taxes_id" colspan="2" widget="many2many_tags" attrs="{'readonly':[('purchase_ok','=',0)]}"/>
+                </field>
+            </field>
+        </record>
+
     </data>
 </openerp>
