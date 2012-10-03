@@ -20,6 +20,7 @@
 ##############################################################################
 
 from base_status.base_state import base_state
+from base_status.base_stage import base_stage
 from crm import crm
 from osv import fields, osv
 import tools
@@ -31,7 +32,7 @@ CRM_HELPDESK_STATES = (
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_helpdesk(base_state, osv.osv):
+class crm_helpdesk(base_state, base_stage, osv.osv):
     """ Helpdesk Cases """
 
     _name = "crm.helpdesk"
@@ -68,9 +69,9 @@ class crm_helpdesk(base_state, osv.osv):
             'probability': fields.float('Probability (%)'),
             'categ_id': fields.many2one('crm.case.categ', 'Category', \
                             domain="['|',('section_id','=',False),('section_id','=',section_id),\
-                            ('object_id.model', '=', 'crm.helpdesk')]"), 
-            'duration': fields.float('Duration', states={'done': [('readonly', True)]}), 
-            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True, 
+                            ('object_id.model', '=', 'crm.helpdesk')]"),
+            'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
+            'state': fields.selection(crm.AVAILABLE_STATES, 'Status', size=16, readonly=True,
                                   help='The state is set to \'Draft\', when a case is created.\
                                   \nIf the case is in progress the state is set to \'Open\'.\
                                   \nWhen the case is over, the state is set to \'Done\'.\
@@ -138,9 +139,9 @@ class crm_helpdesk(base_state, osv.osv):
 
         return super(crm_helpdesk,self).message_update(cr, uid, ids, msg, update_vals=update_vals, context=context)
 
-    # ******************************
+    # ---------------------------------------------------
     # OpenChatter
-    # ******************************
+    # ---------------------------------------------------
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
         """ override of default base_state method. """
@@ -150,6 +151,5 @@ class crm_helpdesk(base_state, osv.osv):
         msg = _('Case has been <b>created</b>.')
         self.message_post(cr, uid, ids, body=msg, context=context)
         return True
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -55,7 +55,7 @@ class hr_attendance(osv.osv):
         'name': fields.datetime('Date', required=True, select=1),
         'action': fields.selection([('sign_in', 'Sign In'), ('sign_out', 'Sign Out'), ('action','Action')], 'Action', required=True),
         'action_desc': fields.many2one("hr.action.reason", "Action Reason", domain="[('action_type', '=', action)]", help='Specifies the reason for Signing In/Signing Out in case of extra hours.'),
-        'employee_id': fields.many2one('hr.employee', "Employee's Name", required=True, select=True),
+        'employee_id': fields.many2one('hr.employee', "Employee", required=True, select=True),
         'day': fields.function(_day_compute, type='char', string='Day', store=True, select=1, size=32),
     }
     _defaults = {
@@ -126,9 +126,18 @@ class hr_employee(osv.osv):
                 result[id] = res[0]
         return result
 
+    def _attendance_access(self, cr, uid, ids, name, args, context=None):
+        # this function field use to hide attendance button to singin/singout from menu
+        group = self.pool.get('ir.model.data').get_object(cr, uid, 'base', 'group_hr_attendance')
+        visible = False
+        if uid in [user.id for user in group.users]:
+            visible = True
+        return dict([(x, visible) for x in ids])
+
     _columns = {
        'state': fields.function(_state, type='selection', selection=[('absent', 'Absent'), ('present', 'Present')], string='Attendance'),
        'last_sign': fields.function(_last_sign, type='datetime', string='Last Sign'),
+       'attendance_access': fields.function(_attendance_access, type='boolean'),
     }
 
     def _action_check(self, cr, uid, emp_id, dt=False, context=None):

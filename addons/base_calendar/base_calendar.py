@@ -971,8 +971,8 @@ class calendar_event(osv.osv):
             event = datas['id']
             if datas.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
-            if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count cannot be negative.'))
+            if datas.get('count', 0) <= 0:
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
             if datas['recurrency']:
                 result[event] = self.compute_rule_string(datas)
             else:
@@ -996,7 +996,7 @@ class calendar_event(osv.osv):
         'sequence': fields.integer('Sequence'),
         'name': fields.char('Description', size=64, required=False, states={'done': [('readonly', True)]}),
         'date': fields.datetime('Date', states={'done': [('readonly', True)]}, required=True,),
-        'date_deadline': fields.datetime('Deadline', states={'done': [('readonly', True)]}, required=True,),
+        'date_deadline': fields.datetime('End Date', states={'done': [('readonly', True)]}, required=True,),
         'create_date': fields.datetime('Created', readonly=True),
         'duration': fields.float('Duration', states={'done': [('readonly', True)]}),
         'description': fields.text('Description', states={'done': [('readonly', True)]}),
@@ -1058,7 +1058,39 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         'active': fields.boolean('Active', help="If the active field is set to \
          true, it will allow you to hide the event alarm information without removing it."),
         'recurrency': fields.boolean('Recurrent', help="Recurrent Meeting"),
+        'partner_ids': fields.many2many('res.partner', string='Attendees', states={'done': [('readonly', True)]}),
     }
+
+    def create_attendees(self, cr, uid, ids, context):
+        att_obj = self.pool.get('calendar.attendee')
+        user_obj = self.pool.get('res.users')
+        current_user = user_obj.browse(cr, uid, uid, context=context)
+        for event in self.browse(cr, uid, ids, context):
+            attendees = {}
+            for att in event.attendee_ids:
+                attendees[att.partner_id.id] = True
+            new_attendees = []
+            mail_to = []
+            for partner in event.partner_ids:
+                if partner.id in attendees:
+                    continue
+                att_id = self.pool.get('calendar.attendee').create(cr, uid, {
+                    'partner_id': partner.id,
+                    'user_id': partner.user_ids and partner.user_ids[0].id or False,
+                    'ref': self._name+','+str(event.id),
+                    'email': partner.email
+                }, context=context)
+                if partner.email:
+                    mail_to.append(partner.email)
+                self.write(cr, uid, [event.id], {
+                    'attendee_ids': [(4, att_id)]
+                }, context=context)
+                new_attendees.append(att_id)
+
+            if mail_to and current_user.email:
+                att_obj._send_mail(cr, uid, new_attendees, mail_to,
+                    email_from = current_user.email)
+        return True
 
     def default_organizer(self, cr, uid, context=None):
         user_pool = self.pool.get('res.users')
@@ -1081,6 +1113,16 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
     }
+    
+    def _check_closing_date(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.date_deadline < event.date:
+                return False
+        return True
+
+    _constraints = [
+        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['date_deadline']),
+    ]
 
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule
@@ -1366,6 +1408,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             vals['vtimezone'] = vals['vtimezone'][40:]
 
         res = super(calendar_event, self).write(cr, uid, ids, vals, context=context)
+        if vals.get('partner_ids', False):
+            self.create_attendees(cr, uid, ids, context)
 
         if ('alarm_id' in vals or 'base_calendar_alarm_id' in vals)\
                 or ('date' in vals or 'duration' in vals or 'date_deadline' in vals):
@@ -1431,7 +1475,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if r['class']=='private':
                 for f in r.keys():
                     if f not in ('id','date','date_deadline','duration','user_id','state'):
-                        r[f] = False
+                        if isinstance(r[f], list):
+                            r[f] = []
+                        else:    
+                            r[f] = False
                     if f=='name':
                         r[f] = _('Busy')
 
@@ -1486,17 +1533,10 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         if vals.get('vtimezone', '') and vals.get('vtimezone', '').startswith('/freeassociation.sourceforge.net/tzfile/'):
             vals['vtimezone'] = vals['vtimezone'][40:]
 
-        #updated_vals = self.onchange_dates(cr, uid, [],
-        #    vals.get('date', False),
-        #    vals.get('duration', False),
-        #    vals.get('date_deadline', False),
-        #    vals.get('allday', False),
-        #    context=context)
-        #vals.update(updated_vals.get('value', {}))
-
         res = super(calendar_event, self).create(cr, uid, vals, context)
         alarm_obj = self.pool.get('res.alarm')
         alarm_obj.do_alarm_create(cr, uid, [res], self._name, 'date', context=context)
+        self.create_attendees(cr, uid, [res], context)
         return res
 
     def do_tentative(self, cr, uid, ids, context=None, *args):

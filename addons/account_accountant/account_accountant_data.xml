@@ -5,6 +5,7 @@
         <!-- Top menu item -->
         <menuitem name="Accounting"
             id="account.menu_finance"/>
+
     </data>
 
     <data noupdate="1">
@@ -14,10 +15,9 @@
             <field name="tag">reload</field>
             <field name="params" eval="{'menu_id': ref('account.menu_finance')}"/>
         </record>
-        <record id="todo_open_account_menu" model="ir.actions.todo">
+        <record id="base.open_menu" model="ir.actions.todo">
             <field name="action_id" ref="action_client_account_menu"/>
-            <field name="type">automatic</field>
-            <field name="sequence">100</field>
+            <field name="state">open</field>
         </record>
 
         <!-- Notify all employees of module installation -->
@@ -26,9 +26,11 @@
             <field name="res_id" ref="mail.group_all_employees"/>
             <field name="type">notification</field>
             <field name="subject">Accounting and Finance application installed!</field>
-            <field name="body">With OpenERP's accounting, you get instant access to your financial data, and can setup analytic accounting, forecast taxes, control budgets, easily create and send invoices, record bank statements, etc.
+            <field name="body"><![CDATA[
+                With OpenERP's accounting, you get instant access to your financial  data, and can setup analytic accounting, forecast taxes, control  budgets, easily create and send invoices, record bank statements, etc.
 
-The accounting features are fully integrated with other OpenERP applications to automate all your processes: creation of customer invoices, control of supplier invoices, point-of-sale integration, automated follow-ups, etc.</field>
+<p>The accounting features are fully integrated  with other OpenERP applications to automate all your processes:  creation of customer invoices, control of supplier invoices,  point-of-sale integration, automated follow-ups, etc.</p>
+            ]]></field>
         </record>
     </data>
 </openerp>

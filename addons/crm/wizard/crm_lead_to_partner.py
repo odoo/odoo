@@ -28,10 +28,10 @@ class crm_lead2partner(osv.osv_memory):
     _description = 'Lead to Partner'
 
     _columns = {
-        'action': fields.selection([('exist', 'Link to an existing partner'), \
-                                    ('create', 'Create a new partner')], \
+        'action': fields.selection([('exist', 'Link to an existing customer'), \
+                                    ('create', 'Create a new customer')], \
                                     'Action', required=True),
-        'partner_id': fields.many2one('res.partner', 'Partner'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
     }
     def view_init(self, cr, uid, fields, context=None):
         """
@@ -55,6 +55,8 @@ class crm_lead2partner(osv.osv_memory):
         partner = self.pool.get('res.partner')
         lead = self.pool.get('crm.lead')
         this = lead.browse(cr, uid, context.get('active_id'), context=context)
+        if this.partner_id:
+            return this.partner_id.id
         partner_id = False
         if this.email_from:
             partner_ids = partner.search(cr, uid, [('email', '=', this.email_from)], context=context)

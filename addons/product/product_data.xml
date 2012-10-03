@@ -7,7 +7,11 @@
         <record id="product_category_all" model="product.category">
             <field name="name">All products</field>
         </record>
-
+        <record id="product_category_1" model="product.category">
+            <field name="parent_id" ref="product_category_all"/>
+            <field name="name">Saleable</field>
+        </record>
+        
         <record id="product_uom_categ_unit" model="product.uom.categ">
             <field name="name">Unit</field>
         </record>
@@ -190,7 +194,7 @@ parameter) will see those record just disappear.
             <field name="standard_price">30.0</field>
             <field name="uom_id" ref="product.product_uom_hour"/>
             <field name="uom_po_id" ref="product.product_uom_hour"/>
-            <field name="name">Service on Demand</field>
+            <field name="name">Service</field>
             <field name="categ_id" ref="product.product_category_all"/>
             <field name="type">service</field>
             <field eval="False" name="purchase_ok"/>

@@ -6,7 +6,8 @@
         id="stock.next_id_61"
         name="Warehouse"
         sequence="15"
-        parent="base.menu_reporting"/>
+        parent="base.menu_reporting"
+        groups="group_stock_manager"/>
 
     <record id="view_stock_tree" model="ir.ui.view">
         <field name="name">report.stock.move.tree</field>
@@ -154,7 +155,7 @@
                     <field name="state"/>
                     <field name="location_type"/>
                     <field name="date"/>
-                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('location_type','=','scrap')]"/>
+                    <filter icon="terp-go-home" name="location_type_scrap" string="Scrap" domain="[('scrap_location','=','True')]"/>
                 </group>
                 <group expand="1" string="Group By..." >
                     <filter string="Partner" name="group_partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

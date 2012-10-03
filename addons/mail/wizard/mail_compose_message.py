@@ -31,6 +31,7 @@ from tools.translate import _
 # main mako-like expression pattern
 EXPRESSION_PATTERN = re.compile('(\$\{.+?\})')
 
+
 class mail_compose_message(osv.TransientModel):
     """ Generic message composition wizard. You may inherit from this wizard
         at model and view levels to provide specific features.
@@ -101,9 +102,9 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': fields.many2many('res.partner',
             'mail_compose_message_res_partner_rel',
             'wizard_id', 'partner_id', 'Additional contacts'),
-        'attachment_ids': fields.many2many('ir.attachment',
-            'mail_compose_message_ir_attachments_rel',
-            'wizard_id', 'attachment_id', 'Attachments'),
+        'attachment_ids': fields.one2many('ir.attachment', 'res_id',
+            domain=lambda self: [('res_model', '=', self._name)],
+            string='Attachments'),
         'filter_id': fields.many2one('ir.filters', 'Filters'),
         'body_text': fields.text('Plain-text Contents'),
         'content_subtype': fields.char('Message content subtype', size=32, readonly=1,
@@ -117,6 +118,7 @@ class mail_compose_message(osv.TransientModel):
         'body_text': lambda self, cr, uid, ctx={}: False,
         'body': lambda self, cr, uid, ctx={}: '',
         'subject': lambda self, cr, uid, ctx={}: False,
+        'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
     def notify(self, cr, uid, newid, context=None):
@@ -152,7 +154,7 @@ class mail_compose_message(osv.TransientModel):
         # create subject
         re_prefix = _('Re:')
         reply_subject = tools.ustr(message_data.subject or '')
-        if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)):
+        if not (reply_subject.startswith('Re:') or reply_subject.startswith(re_prefix)) and message_data.subject:
             reply_subject = "%s %s" % (re_prefix, reply_subject)
         # create the reply in the body
         reply_body = _('<div>On %(date)s, %(sender_name)s wrote:<blockquote>%(body)s</blockquote></div>') % {
@@ -176,8 +178,8 @@ class mail_compose_message(osv.TransientModel):
         return result
 
     def toggle_content_subtype(self, cr, uid, ids, context=None):
-        """ hit toggle formatting mode button: calls onchange_formatting to
-            emulate an on_change, then writes the value to update the form. """
+        """ toggle content_subtype: calls onchange_formatting to emulate an
+            on_change, then writes the value to update the form. """
         for record in self.browse(cr, uid, ids, context=context):
             content_st_new_value = 'plain' if record.content_subtype == 'html' else 'html'
             onchange_res = self.onchange_content_subtype(cr, uid, ids, content_st_new_value, record.model, record.res_id, context=context)
@@ -185,47 +187,22 @@ class mail_compose_message(osv.TransientModel):
         return True
 
     def onchange_content_subtype(self, cr, uid, ids, value, model, res_id, context=None):
-        """ onchange_content_subtype (values: 'plain' or 'html'). This onchange
-            on the subtype allows to have some specific behavior when switching
-            between text or html mode.
-            This method can be overridden for models that want to have their
-            specific behavior. """
+        """ This onchange allows to have some specific behavior when switching
+            between text or html mode. This method can be overridden.
+            :param values: 'plain' or 'html'
+        """
         return {'value': {'content_subtype': value}}
 
-    def _verify_partner_email(self, cr, uid, partner_ids, context=None):
-        """ Verify that selected partner_ids have an email_address defined.
-            Otherwise throw a warning. """
-        partner_wo_email_lst = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
-            if not partner.email:
-                partner_wo_email_lst.append(partner)
-        if not partner_wo_email_lst:
-            return {}
-        warning_msg = _('The following partners chosen as recipients for the email have no email address linked :')
-        for partner in partner_wo_email_lst:
-            warning_msg += '\n- %s' % (partner.name)
-        return {'warning': {
-                    'title': _('Partners email addresses not found'),
-                    'message': warning_msg,
-                    }
-                }
-
     def onchange_partner_ids(self, cr, uid, ids, value, context=None):
-        """ onchange_partner_ids (value format: [[6, 0, [3, 4]]]). The
-            basic purpose of this method is to check that destination partners
+        """ The basic purpose of this method is to check that destination partners
             effectively have email addresses. Otherwise a warning is thrown.
+            :param value: value format: [[6, 0, [3, 4]]]
         """
         res = {'value': {}}
         if not value or not value[0] or not value[0][0] == 6:
             return
-        res.update(self._verify_partner_email(cr, uid, value[0][2], context=context))
+        res.update(self.check_partners_email(cr, uid, value[0][2], context=context))
         return res
-
-    def unlink(self, cr, uid, ids, context=None):
-        # Cascade delete all attachments, as they are owned by the composition wizard
-        for wizard in self.read(cr, uid, ids, ['attachment_ids'], context=context):
-            self.pool.get('ir.attachment').unlink(cr, uid, wizard['attachment_ids'], context=context)
-        return super(mail_compose_message, self).unlink(cr, uid, ids, context=context)
 
     def dummy(self, cr, uid, ids, context=None):
         """ TDE: defined to have buttons that do basically nothing. It is
@@ -242,11 +219,21 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
+        print '**', context
         active_ids = context.get('active_ids')
 
         for wizard in self.browse(cr, uid, ids, context=context):
             mass_mail_mode = wizard.composition_mode == 'mass_mail'
             active_model_pool = self.pool.get(wizard.model if wizard.model else 'mail.thread')
+
+            if wizard.content_subtype == 'html':
+                if not wizard.body:
+                    return False
+                body = wizard.body
+            else: # wizard.content_subtype == 'plain':
+                if not wizard.body_text:
+                    return False
+                body = '<pre>%s</pre>' % tools.ustr(wizard.body_text or '')
 
             # wizard works in batch mode: [res_id] or active_ids
             res_ids = active_ids if mass_mail_mode and wizard.model and active_ids else [wizard.res_id]
@@ -254,7 +241,8 @@ class mail_compose_message(osv.TransientModel):
                 # default values, according to the wizard options
                 post_values = {
                     'subject': wizard.subject if wizard.content_subtype == 'html' else False,
-                    'body': wizard.body if wizard.content_subtype == 'html' else '<pre>%s</pre>' % tools.ustr(wizard.body_text),
+                    'body': body,
+                    'parent_id': wizard.parent_id and wizard.parent_id.id,
                     'partner_ids': [(4, partner.id) for partner in wizard.partner_ids],
                     'attachments': [(attach.datas_fname or attach.name, base64.b64decode(attach.datas)) for attach in wizard.attachment_ids],
                 }
@@ -267,9 +255,13 @@ class mail_compose_message(osv.TransientModel):
                     post_values['attachments'] += new_attachments
                     post_values.update(email_dict)
                 # post the message
-                active_model_pool.message_post(cr, uid, [res_id], type='comment', context=context, **post_values)
+                id=active_model_pool.message_post(cr, uid, [res_id], type='comment', subtype='mt_comment', context=context, **post_values)
 
-        return {'type': 'ir.actions.act_window_close'}
+            # post process: update attachments, because id is not necessarily known when adding attachments in Chatter
+            # self.pool.get('ir.attachment').write(cr, uid, [attach.id for attach in wizard.attachment_ids], {
+            #     'res_id': wizard.id, 'res_model': wizard.model or False}, context=context)
+        
+        return {'type': 'ir.actions.act_window_close', 'res_model':'mail.compose.message', 'id': id}
 
     def render_message(self, cr, uid, wizard, res_id, context=None):
         """ Generate an email from the template for given (wizard.model, res_id)
@@ -296,6 +288,7 @@ class mail_compose_message(osv.TransientModel):
         """
         if context is None:
             context = {}
+
         def merge(match):
             exp = str(match.group()[2:-1]).strip()
             result = eval(exp, {

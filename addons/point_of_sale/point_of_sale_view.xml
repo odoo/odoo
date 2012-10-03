@@ -863,6 +863,8 @@
                 <form string="Point of Sale Session" version="7.0">
                     <header>
                         <button name="open" type="workflow" string="Validate &amp; Open Session" states="opening_control" class="oe_highlight"/>
+                        <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"
+                            class="oe_highlight"/>
                         <button name="cashbox_control" type="workflow" string="End of Session"
                             attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', '!=', 'opened')]}" 
                             class="oe_highlight" />
@@ -871,7 +873,6 @@
                             class="oe_highlight" />
                         <button name="close" type="workflow" string="Validate Closing &amp; Post Entries" states="closing_control"
                             class="oe_highlight" />
-                        <button name="open_frontend_cb" type="object" string="Continue Selling" states="opened"/>
                         <div class="oe_right">
                             <field name="state" widget="statusbar" statusbar_visible="opening_control,opened,closing_control,closed" nolabel="1" />
                         </div>
@@ -896,8 +897,8 @@
                                 <field name="stop_at" attrs="{'invisible' : [('state', '!=', 'closed')]}"/>
                             </group>
                             <newline/>
-
-                            <group string="Opening Cash Control" attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', 'in', ('opened', 'closing_control'))]}">
+                            <group string="Opening Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', '=', 'opening_control'), ('cash_control', '=', True), ('state', '!=',
+                                'closed')]  }" >
                                 <field name="opening_details_ids" nolabel="1" colspan="2" attrs="{'readonly' : [('state', 'not in', ('opening_control',))]}">
                                     <tree string="Opening Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -906,7 +907,8 @@
                                     </tree>
                                 </field>
                             </group>
-                            <group string="Closing Cash Control" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'in', ('opening_control', 'opened'))]}">
+                            <group string="Closing Cash Control" attrs="{'invisible' : [ '&amp;' ,'!', '&amp;', ('state', '=', 'closing_control'), ('cash_control', '=', True), ('state', '!=',
+                                'closed')]  }" >
                                 <field name="details_ids" nolabel="1" colspan="2">
                                     <tree string="Cashbox Lines" editable="bottom">
                                         <field name="pieces" readonly="1" />
@@ -916,7 +918,7 @@
                                 </field>
                             </group>
 
-                            <div attrs="{'invisible' : ['|', ('cash_control', '=', False),('state', 'in', ('opened', 'closing_control'))]}">
+                            <div attrs="{'invisible' : [('state', '!=', 'closed')]}">
                                 <group class="oe_subtotal_footer oe_right">
                                     <field name="cash_register_balance_start" readonly="1" string="Opening Balance" class="oe_subtotal_footer_separator"/>
                                     <field name="cash_register_total_entry_encoding"  attrs="{'invisible' : [('state', '=', 'opening_control')]}" string="+ Transactions"/>
@@ -933,7 +935,7 @@
                             </div>
 
 
-                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': ['|', ('cash_control', '=', False), ('state', 'in', ('opening_control', 'opened'))]}">
+                            <group class="oe_subtotal_footer oe_right" attrs="{'invisible': [('state', '!=', 'closed')]}">
                                 <field name="cash_register_balance_end_real" class="oe_subtotal_footer_separator"/>
                                 <field name="cash_register_difference"  class="oe_subtotal_footer_separator"/>
                             </group>
@@ -1035,7 +1037,7 @@
                     <filter icon="gtk-convert" string="Posted" domain="[('state','=','done')]"/>
                     <field name="user_id"/>
                     <field name="session_id"/>
-                    <group expand="0" string="Group By..." groups="base.group_extended">
+                    <group expand="0" string="Group By...">
                         <filter string="Customer" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}"/>
                         <filter string="Salesman" icon="terp-personal" domain="[]" context="{'group_by':'user_id'}"/>
                         <filter string="Session" icon="terp-personal" domain="[]" context="{'group_by':'session_id'}"/>
@@ -1053,7 +1055,6 @@
         <record model="ir.ui.view" id="pos_ean13_generator">
             <field name="name">pos.ean_wizard</field>
             <field name="model">pos.ean_wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Ean13 Generator" version="7.0">  
                     <p class="oe_grey">

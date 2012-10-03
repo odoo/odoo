@@ -41,18 +41,19 @@ class project_task_type(osv.osv):
         'case_default': fields.boolean('Common to All Projects',
                         help="If you check this field, this stage will be proposed by default on each new project. It will not assign this stage to existing projects."),
         'project_ids': fields.many2many('project.project', 'project_task_type_rel', 'type_id', 'project_id', 'Projects'),
-        'state': fields.selection(_TASK_STATE, 'State', required=True,
-                        help="The related state for the stage. The state of your document will automatically change regarding the selected stage. Example, a stage is related to the state 'Close', when your document reach this stage, it will be automatically closed."),
+        'state': fields.selection(_TASK_STATE, 'Related Status', required=True,
+                        help="The status of your document is automatically changed regarding the selected stage. " \
+                            "For example, if a stage is related to the status 'Close', when your document reaches this stage, it is automatically closed."),
         'fold': fields.boolean('Hide in views if empty',
                         help="This stage is not visible, for example in status bar or kanban view, when there are no records in that stage to display."),
     }
     _defaults = {
         'sequence': 1,
-        'state': 'draft',
+        'state': 'open',
         'fold': False,
+        'case_default': True,
     }
     _order = 'sequence'
-
 
 def short_name(name):
         """Keep first word(s) of name to make it small enough
@@ -189,7 +190,6 @@ class project(osv.osv):
 
     # Lambda indirection method to avoid passing a copy of the overridable method when declaring the field
     _alias_models = lambda self, *args, **kwargs: self._get_alias_models(*args, **kwargs)
-
     _columns = {
         'complete_name': fields.function(_complete_name, string="Project Name", type='char', size=250),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the project without removing it."),
@@ -309,11 +309,12 @@ class project(osv.osv):
         task_obj.duplicate_task(cr, uid, map_task_id, context=context)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
         if context is None:
             context = {}
+        if default is None:
+            default = {}
 
-        default = default or {}
         context['active_test'] = False
         default['state'] = 'open'
         default['tasks'] = []
@@ -321,7 +322,7 @@ class project(osv.osv):
         default.pop('alias_id', None)
         proj = self.browse(cr, uid, id, context=context)
         if not default.get('name', False):
-            default['name'] = proj.name + _(' (copy)')
+            default.update(name=_("%s (copy)") % (proj.name))
         res = super(project, self).copy(cr, uid, id, default, context)
         self.map_tasks(cr,uid,id,res,context)
         return res
@@ -342,7 +343,7 @@ class project(osv.osv):
                 new_date_end = (datetime(*time.strptime(new_date_start,'%Y-%m-%d')[:3])+(end_date-start_date)).strftime('%Y-%m-%d')
             context.update({'copy':True})
             new_id = self.copy(cr, uid, proj.id, default = {
-                                    'name': proj.name +_(' (copy)'),
+                                    'name':_("%s (copy)") % (proj.name),
                                     'state':'open',
                                     'date_start':new_date_start,
                                     'date':new_date_end,
@@ -507,6 +508,8 @@ def Project():
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
+        if vals.get('partner_id', False):
+            vals['type'] = 'contract'
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
         self.create_send_note(cr, uid, [project_id], context=context)
@@ -516,20 +519,16 @@ def Project():
         return self.message_post(cr, uid, ids, body=_("Project has been <b>created</b>."), context=context)
 
     def set_open_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>opened</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>opened</b>."), context=context)
 
     def set_pending_send_note(self, cr, uid, ids, context=None):
-        message = _("Project is now <b>pending</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=_("Project is now <b>pending</b>."), context=context)
 
     def set_cancel_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>cancelled</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>canceled</b>."), context=context)
 
     def set_close_send_note(self, cr, uid, ids, context=None):
-        message = _("Project has been <b>closed</b>.")
-        return self.message_post(cr, uid, ids, body=message, context=context)
+        return self.message_post(cr, uid, ids, body=_("Project has been <b>closed</b>."), context=context)
 
     def write(self, cr, uid, ids, vals, context=None):
         # if alias_model has been changed, update alias_model_id accordingly
@@ -646,12 +645,12 @@ class task(base_stage, osv.osv):
                 res[task.id]['progress'] = 100.0
         return res
 
-    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned = 0.0):
+    def onchange_remaining(self, cr, uid, ids, remaining=0.0, planned=0.0):
         if remaining and not planned:
             return {'value':{'planned_hours': remaining}}
         return {}
 
-    def onchange_planned(self, cr, uid, ids, planned = 0.0, effective = 0.0):
+    def onchange_planned(self, cr, uid, ids, planned=0.0, effective=0.0):
         return {'value':{'remaining_hours': planned - effective}}
 
     def onchange_project(self, cr, uid, id, project_id):
@@ -682,20 +681,20 @@ class task(base_stage, osv.osv):
             #FIXME why there is already the copy and the old one
             self.write(cr, uid, new, {'parent_ids':[(6,0,set(parent_ids))], 'child_ids':[(6,0, set(child_ids))]})
 
-    def copy_data(self, cr, uid, id, default={}, context=None):
+    def copy_data(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default = default or {}
         default.update({'work_ids':[], 'date_start': False, 'date_end': False, 'date_deadline': False})
         if not default.get('remaining_hours', False):
             default['remaining_hours'] = float(self.read(cr, uid, id, ['planned_hours'])['planned_hours'])
         default['active'] = True
-        default['stage_id'] = False
         if not default.get('name', False):
             default['name'] = self.browse(cr, uid, id, context=context).name or ''
             if not context.get('copy',False):
-                new_name = _("%s (copy)")%default.get('name','')
+                new_name = _("%s (copy)") % (default.get('name', ''))
                 default.update({'name':new_name})
         return super(task, self).copy_data(cr, uid, id, default, context)
-
 
     def _is_template(self, cr, uid, ids, field_name, arg, context=None):
         res = {}
@@ -727,7 +726,7 @@ class task(base_stage, osv.osv):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'categ_ids': fields.many2many('project.category', string='Categories'),
+        'categ_ids': fields.many2many('project.category', string='Tags'),
         'kanban_state': fields.selection([('normal', 'Normal'),('blocked', 'Blocked'),('done', 'Ready To Pull')], 'Kanban State',
                                          help="A task's kanban state indicates special situations affecting it:\n"
                                               " * Normal is the default situation\n"
@@ -766,7 +765,7 @@ class task(base_stage, osv.osv):
             }),
         'user_id': fields.many2one('res.users', 'Assigned to'),
         'delegated_user_id': fields.related('child_ids', 'user_id', type='many2one', relation='res.users', string='Delegated To'),
-        'partner_id': fields.many2one('res.partner', 'Contact'),
+        'partner_id': fields.many2one('res.partner', 'Customer'),
         'work_ids': fields.one2many('project.task.work', 'task_id', 'Work done'),
         'manager_id': fields.related('project_id', 'analytic_account_id', 'user_id', type='many2one', relation='res.users', string='Project Manager'),
         'company_id': fields.many2one('res.company', 'Company'),
@@ -774,7 +773,6 @@ class task(base_stage, osv.osv):
         'color': fields.integer('Color Index'),
         'user_email': fields.related('user_id', 'email', type='char', string='User Email', readonly=True),
     }
-
     _defaults = {
         'stage_id': _get_default_stage_id,
         'project_id': _get_default_project_id,
@@ -787,7 +785,6 @@ class task(base_stage, osv.osv):
         'user_id': lambda obj, cr, uid, context: uid,
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'project.task', context=c),
     }
-
     _order = "priority, sequence, date_start, name, id"
 
     def set_priority(self, cr, uid, ids, priority, *args):
@@ -850,9 +847,8 @@ class task(base_stage, osv.osv):
         (_check_recursion, 'Error ! You cannot create recursive tasks.', ['parent_ids']),
         (_check_dates, 'Error ! Task end-date must be greater then task start-date', ['date_start','date_end'])
     ]
-    #
+
     # Override view according to the company definition
-    #
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
         users_obj = self.pool.get('res.users')
         if context is None: context = {}
@@ -884,9 +880,9 @@ class task(base_stage, osv.osv):
                 res['fields'][f]['string'] = res['fields'][f]['string'].replace('Hours',tm)
         return res
 
-    # ****************************************
+    # ----------------------------------------
     # Case management
-    # ****************************************
+    # ----------------------------------------
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
         """ Override of the base.stage method
@@ -1018,10 +1014,12 @@ class task(base_stage, osv.osv):
             new_attachment_ids.append(attachment.copy(cr, uid, attachment_id, default={'res_id': delegated_task_id}, context=context))
         return new_attachment_ids
 
-    def do_delegate(self, cr, uid, ids, delegate_data={}, context=None):
+    def do_delegate(self, cr, uid, ids, delegate_data=None, context=None):
         """
         Delegate Task to another users.
         """
+        if delegate_data is None:
+            delegate_data = {}
         assert delegate_data['user_id'], _("Delegated User should be specified")
         delegated_tasks = {}
         for task in self.browse(cr, uid, ids, context=context):
@@ -1098,6 +1096,11 @@ class task(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
+        task_record = self.browse(cr, uid, task_id, context=context)
+        if task_record.project_id:
+            project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids, 
+                context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
         return task_id
@@ -1107,6 +1110,9 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        if vals.get('project_id'):
+            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
@@ -1160,7 +1166,7 @@ class task(base_stage, osv.osv):
         return result
 
     # ---------------------------------------------------
-    # mail gateway
+    # Mail gateway
     # ---------------------------------------------------
 
     def message_new(self, cr, uid, msg, custom_values=None, context=None):
@@ -1226,14 +1232,14 @@ class task(base_stage, osv.osv):
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('project.task.type').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name),
+            context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Task has been <b>created</b>."), context=context)
 
     def case_draft_send_note(self, cr, uid, ids, context=None):
-        msg = _('Task has been set as <b>draft</b>.')
-        return self.message_post(cr, uid, ids, body=msg, context=context)
+        return self.message_post(cr, uid, ids, body=_('Task has been set as <b>draft</b>.'), context=context)
 
     def do_delegation_send_note(self, cr, uid, ids, context=None):
         for task in self.browse(cr, uid, ids, context=context):

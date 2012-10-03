@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
-    <data noupdate="1">
+    <data>
         <!-- This will set the unit of measure used in projects and tasks.-->
         <record id="base.main_company" model="res.company">
             <field name="project_time_mode_id" ref="product.product_uom_hour"></field>
@@ -82,6 +82,42 @@
             <field name="state">cancelled</field>
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
+        </record>
+
+        <!-- mail: subtypes -->
+        <record id="mt_project_new" model="mail.message.subtype">
+            <field name="name">New Task</field>
+            <field name="res_model">project.project</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mt_project_closed" model="mail.message.subtype">
+            <field name="name">Task Closed</field>
+            <field name="res_model">project.project</field>
+        </record>
+        <record id="mt_project_canceled" model="mail.message.subtype">
+            <field name="name">Task Canceled</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_project_stage" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="res_model">project.task</field>
+        </record>
+
+        <record id="mt_task_new" model="mail.message.subtype">
+            <field name="name">New Task</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_closed" model="mail.message.subtype">
+            <field name="name">Task Closed</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_canceled" model="mail.message.subtype">
+            <field name="name">Task canceled</field>
+            <field name="res_model">project.task</field>
+        </record>
+        <record id="mt_task_change" model="mail.message.subtype">
+            <field name="name">Task Stage Changed</field>
+            <field name="res_model">project.task</field>
         </record>
 
         <!-- notify all employees of module installation -->

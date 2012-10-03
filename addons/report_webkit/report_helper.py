@@ -75,7 +75,7 @@ class WebKitHelper(object):
         head = header_obj.browse(self.cursor, self.uid, header_img_id)
         return (head.img, head.type)
             
-    def embed_logo_by_name(self, name, width=0, height=0) :
+    def embed_logo_by_name(self, name, width=0, height=0):
         """Return HTML embedded logo by name"""
         img, type = self.get_logo_by_name(name)
         return self.embed_image(type, img, width, height)

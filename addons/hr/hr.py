@@ -90,6 +90,7 @@ class hr_job(osv.osv):
 
     _name = "hr.job"
     _description = "Job Description"
+    _inherit = ['mail.thread']
     _columns = {
         'name': fields.char('Job Name', size=128, required=True, select=True),
         'expected_employees': fields.function(_no_of_employee, string='Total Employees',
@@ -261,7 +262,6 @@ class hr_employee(osv.osv):
     _defaults = {
         'active': 1,
         'image': _get_default_image,
-        'marital': 'single',
         'color': 0,
     }
 

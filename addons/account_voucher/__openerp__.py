@@ -25,13 +25,19 @@
     'author' : 'OpenERP SA',
     'summary': 'Send Invoices and Track Payments',
     'description': """
-eInvoicing & Payments module manage all Voucher Entries such as 'Reconciliation Entries', 'Adjustment Entries', 'Closing or Opening Entries' for Sales, Purchase, Bank, Cash, Expense, Contra.
-==============================================================================================================================================================================================
+Invoicing & Payments by Accounting Voucher & Receipts
+======================================================
+The specific and easy-to-use Invoicing system in OpenERP allows you to keep track of your accounting, even when you are not an accountant. It provides an easy way to follow up on your suppliers and customers. 
 
-    * Voucher Entry
-    * Voucher Receipt [Sales & Purchase]
-    * Voucher Payment [Customer & Supplier]
-    * Cheque Register
+You could use this simplified accounting in case you work with an (external) account to keep your books, and you still want to keep track of payments. 
+
+The Invoicing system includes receipts and vouchers (an easy way to keep track of sales and purchases). It also offers you an easy method of registering payments, without having to encode complete abstracts of account.
+
+This module manages:
+
+* Voucher Entry
+* Voucher Receipt [Sales & Purchase]
+* Voucher Payment [Customer & Supplier]
     """,
     'category': 'Accounting & Finance',
     'sequence': 4,
@@ -66,7 +72,6 @@ eInvoicing & Payments module manage all Voucher Entries such as 'Reconciliation 
         'test/case4_cad_chf.yml',
         'test/case_eur_usd.yml',
     ],
-    'certificate': '0037580727101',
     'auto_install': False,
     'application': True,
     'installable': True,

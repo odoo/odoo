@@ -52,6 +52,5 @@ Italian accounting chart and localization.
     'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate' : '00926677190009155165',
     'images': ['images/config_chart_l10n_it.jpeg','images/l10n_it_chart.jpeg'],
 }

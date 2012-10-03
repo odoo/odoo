@@ -9,17 +9,19 @@
             <field name="password">portal</field>
             <!-- Avoid auto-including this user in any default group -->
             <field name="groups_id" eval="[(5,)]"/>
-            <field name="partner_id" eval="ref('base.res_partner_1')"/>
+            <field name="supplier" eval="False"/>
+            <field name="customer" eval="True"/>
+            <field name="email">demo@portal.wrong.address</field>
         </record>
 
         <!-- Add the demo user to the portal (and therefore to the portal member group) -->
-        <record id="portal" model="res.portal">
+        <record id="group_portal" model="res.groups">
             <field name="users" eval="[(4,ref('demo_user0'))]"/>
         </record>
 
         <!-- Company news and comments -->
         <record id="message_company_news0" model="mail.message">
-            <field name="subject">Our first company's blogpost !</field>
+            <field name="subject">Our company's first blog-post !</field>
             <field name="model">mail.group</field>
             <field name="res_id" ref="company_news_feed"/>
             <field name="body"><![CDATA[Hello, and welcome to our company's portal !

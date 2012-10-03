@@ -11,7 +11,6 @@
                     <header>
                         <button name="do_tentative" states="needs-action,declined,accepted" string="Uncertain" type="object" class="oe_highlight"/>
                         <button name="do_accept" string="Accept" states="needs-action,tentative,declined" type="object" class="oe_highlight"/>
-                        <button name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d" string="Delegate" type="action" states="needs-action,tentative,declined,accepted" context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}"/>
                         <button name="do_decline" string="Decline" states="needs-action,tentative,accepted" type="object" class="oe_highlight"/>
                         <field name="state" widget="statusbar"
                             statusbar_visible="tentative,needs-action,accepted" statusbar_colors='{"proforma":"blue"}'/>
@@ -226,10 +225,6 @@
                         <field name="description"/>
                     </page>
                     <page string="Invitation Detail">
-                        <button string="Invite People"
-                            name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                            icon="terp-partner" type="action"
-                            context="{'model' : 'calendar.event', 'attendee_field':'attendee_ids'}" colspan="2"/>
                         <field name="attendee_ids" colspan="4"
                             nolabel="1" widget="one2many" mode="tree">
                             <tree string="Invitation details" editable="top">
@@ -248,12 +243,6 @@
                                 <button name="do_decline" string="Decline"
                                     states="needs-action,tentative,accepted"
                                     type="object" icon="gtk-cancel"/>
-                                <button
-                                    name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                    string="Delegate" type="action"
-                                    icon="gtk-sort-descending"
-                                    states="needs-action,tentative,declined,accepted"
-                                    context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}"/>
                             </tree>
                             <form string="Invitation details" version="7.0">
                                 <notebook colspan="4">
@@ -281,13 +270,6 @@
                                                 states="needs-action,tentative,accepted"
                                                 type="object"
                                                 icon="gtk-cancel"/>
-                                            <button
-                                                name="%(base_calendar.action_view_calendar_invite_attendee_wizard)d"
-                                                string="Delegate"
-                                                type="action"
-                                                icon="gtk-sort-descending"
-                                                states="needs-action,tentative,declined,accepted"
-                                                context="{'model' : 'calendar.attendee', 'attendee_field' : 'child_ids'}"/>
                                         </group>
                                     </page>
                                     </notebook>
@@ -418,7 +400,7 @@
                 <field name="type">ir.actions.act_window</field>
                 <field name="res_model">calendar.event</field>
                 <field name="view_type">form</field>
-                <field name="view_mode">tree,form,calendar</field>
+                <field name="view_mode">calendar,tree,form</field>
                 <field name="search_view_id" ref="view_calendar_event_filter"/>
             </record>
 

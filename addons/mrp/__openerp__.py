@@ -31,41 +31,27 @@
     'images': ['images/bill_of_materials.jpeg', 'images/manufacturing_order.jpeg', 'images/planning_manufacturing_order.jpeg', 'images/production_analysis.jpeg', 'images/production_dashboard.jpeg','images/routings.jpeg','images/work_centers.jpeg'],
     'depends': ['procurement', 'stock', 'resource', 'purchase', 'product','process'],
     'description': """
-This is the base module to manage the manufacturing process in OpenERP.
-=======================================================================
+Manage the Manufacturing process in OpenERP
+===========================================
 
-Features:
----------
-    * Make to Stock/Make to Order (by line)
-    * Multi-level BoMs, no limit
-    * Multi-level routing, no limit
-    * Routing and work center integrated with analytic accounting
-    * Scheduler computation periodically/Just In Time module
-    * Multi-pos, multi-warehouse
-    * Different reordering policies
-    * Cost method by product: standard price, average price
-    * Easy analysis of troubles or needs
-    * Very flexible
-    * Allows to browse Bill of Materials in complete structure that include child and phantom BoMs
+The manufacturing module allows you to cover planning, ordering, stocks and the manufacturing or assembly of products from raw materials and components. It handles the consumption and production of products according to a bill of materials and the necessary operations on machinery, tools or human resources according to routings.
 
-It supports complete integration and planification of stockable goods,
-consumable of services. Services are completely integrated with the rest
-of the software. For instance, you can set up a sub-contracting service
-in a BoM to automatically purchase on order the assembly of your production.
+It supports complete integration and planification of stockable goods, consumables or services. Services are completely integrated with the rest of the software. For instance, you can set up a sub-contracting service in a bill of materials to automatically purchase on order the assembly of your production.
 
-Reports provided by this module:
---------------------------------
-    * Bill of Material structure and components
-    * Load forecast on Work Centers
-    * Print a production order
-    * Stock forecasts
-    * Cost Structure
+Key Features
+------------
+* Make to Stock/Make to Order
+* Multi-level bill of materials, no limit
+* Multi-level routing, no limit
+* Routing and work center integrated with analytic accounting
+* Periodical scheduler computation 
+* Allows to browse bills of materials in a complete structure that includes child and phantom bills of materials
 
-Dashboard provided by this module:
-----------------------------------
-    * List of procurements in exception
-    * List of next production orders
-    * Graph of stock value variation
+Dashboard / Reports for MRP will include:
+-----------------------------------------
+* Procurements in Exception (Graph)
+* Stock Value Variation (Graph)
+* Work Order Analysis
     """,
     'data': [
         'security/mrp_security.xml',
@@ -98,6 +84,5 @@ Dashboard provided by this module:
     'installable': True,
     'application': True,
     'auto_install': False,
-    'certificate': '0032052481373',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

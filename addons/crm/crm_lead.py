@@ -27,13 +27,15 @@ import time
 import tools
 from tools.translate import _
 
+from base.res.res_partner import format_address
+
 CRM_LEAD_PENDING_STATES = (
     crm.AVAILABLE_STATES[2][0], # Cancelled
     crm.AVAILABLE_STATES[3][0], # Done
     crm.AVAILABLE_STATES[4][0], # Pending
 )
 
-class crm_lead(base_stage, osv.osv):
+class crm_lead(base_stage, format_address, osv.osv):
     """ CRM Lead Case """
     _name = "crm.lead"
     _description = "Lead/Opportunity"
@@ -104,6 +106,12 @@ class crm_lead(base_stage, osv.osv):
             fold[stage.id] = stage.fold or False
 
         return result, fold
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        res = super(crm_lead,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
@@ -269,6 +277,10 @@ class crm_lead(base_stage, osv.osv):
 
     def create(self, cr, uid, vals, context=None):
         obj_id = super(crm_lead, self).create(cr, uid, vals, context)
+        section_id = self.browse(cr, uid, obj_id, context=context).section_id
+        if section_id:
+            followers = [follow.id for follow in section_id.message_follower_ids]
+            self.message_subscribe(cr, uid, [obj_id], followers, context=context)
         self.create_send_note(cr, uid, [obj_id], context=context)
         return obj_id
 
@@ -286,15 +298,18 @@ class crm_lead(base_stage, osv.osv):
         if partner_id:
             partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
             values = {
-                'partner_name' : partner.name, 
+                'partner_name' : partner.name,
                 'street' : partner.street,
                 'street2' : partner.street2,
                 'city' : partner.city,
                 'state_id' : partner.state_id and partner.state_id.id or False,
                 'country_id' : partner.country_id and partner.country_id.id or False,
+                'email_from' : partner.email,
+                'phone' : partner.phone,
+                'mobile' : partner.mobile,
+                'fax' : partner.fax,
             }
         return {'value' : values}
-
 
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
@@ -479,7 +494,8 @@ class crm_lead(base_stage, osv.osv):
             title = "%s : %s" % (merge_message, opportunity.name)
             details.append(self._mail_body(cr, uid, opportunity, fields, title=title, context=context))
 
-        subject = subject[0] + ", ".join(subject[1:])
+        # Chatter message's subject
+        subject = subject[0] + ": " + ", ".join(subject[1:])
         details = "\n\n".join(details)
         return self.message_post(cr, uid, [opportunity_id], body=details, subject=subject, context=context)
 
@@ -548,19 +564,18 @@ class crm_lead(base_stage, osv.osv):
 
         data = self._merge_data(cr, uid, ids, oldest, fields, context=context)
 
-        # merge data into first opportunity
-        self.write(cr, uid, [first_opportunity.id], data, context=context)
-
-        #copy message and attachements into the first opportunity
+        # Merge messages and attachements into the first opportunity
         self._merge_opportunity_history(cr, uid, first_opportunity.id, tail_opportunities, context=context)
         self._merge_opportunity_attachments(cr, uid, first_opportunity.id, tail_opportunities, context=context)
 
-        #Notification about loss of information
+        # Merge notifications about loss of information
         self._merge_notification(cr, uid, first_opportunity, opportunities, context=context)
-        #delete tail opportunities
+        # Write merged data into first opportunity
+        self.write(cr, uid, [first_opportunity.id], data, context=context)
+        # Delete tail opportunities
         self.unlink(cr, uid, [x.id for x in tail_opportunities], context=context)
 
-        #open first opportunity
+        # Open first opportunity
         self.case_open(cr, uid, [first_opportunity.id])
         return first_opportunity.id
 
@@ -569,13 +584,16 @@ class crm_lead(base_stage, osv.osv):
         contact_id = False
         if customer:
             contact_id = self.pool.get('res.partner').address_get(cr, uid, [customer.id])['default']
+
         if not section_id:
             section_id = lead.section_id and lead.section_id.id or False
+
         if section_id:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1), ('section_ids','=', section_id)])
         else:
             stage_ids = crm_stage.search(cr, uid, [('sequence','>=',1)])
         stage_id = stage_ids and stage_ids[0] or False
+
         return {
                 'planned_revenue': lead.planned_revenue,
                 'probability': lead.probability,
@@ -586,11 +604,12 @@ class crm_lead(base_stage, osv.osv):
                 'stage_id': stage_id or False,
                 'date_action': time.strftime('%Y-%m-%d %H:%M:%S'),
                 'date_open': time.strftime('%Y-%m-%d %H:%M:%S'),
+                'email_from': customer and customer.email or lead.email_from,
+                'phone': customer and customer.phone or lead.phone,
         }
 
     def convert_opportunity(self, cr, uid, ids, partner_id, user_ids=False, section_id=False, context=None):
         partner = self.pool.get('res.partner')
-        mail_message = self.pool.get('mail.message')
         customer = False
         if partner_id:
             customer = partner.browse(cr, uid, partner_id, context=context)
@@ -776,6 +795,11 @@ class crm_lead(base_stage, osv.osv):
             stage = self.pool.get('crm.case.stage').browse(cr, uid, vals['stage_id'], context=context)
             if stage.on_change:
                 vals['probability'] = stage.probability
+        if vals.get('section_id'):
+            section_id = self.pool.get('crm.case.section').browse(cr, uid, vals.get('section_id'), context=context)
+            if section_id:
+                vals.setdefault('message_follower_ids', [])
+                vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
         return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
     # ----------------------------------------

@@ -194,7 +194,7 @@ class hr_applicant(base_stage, osv.Model):
                       When the case is over, the state is set to \'Done\'.\
                       If the case needs to be reviewed then the state is \
                       set to \'Pending\'.'),
-        'categ_ids': fields.many2many('hr.applicant_category', string='Categories'),
+        'categ_ids': fields.many2many('hr.applicant_category', string='Tags'),
         'company_id': fields.many2one('res.company', 'Company'),
         'user_id': fields.many2one('res.users', 'Responsible'),
         # Applicant Columns
@@ -243,7 +243,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def onchange_job(self,cr, uid, ids, job, context=None):
+    def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
         if job:
@@ -398,7 +398,7 @@ class hr_applicant(base_stage, osv.Model):
         for applicant in self.browse(cr, uid, ids, context=context):
             address_id = False
             if applicant.partner_id:
-                address_id = applicant.partner_id.address_get(['contact'])['contact']
+                address_id = self.pool.get('res.partner').address_get(cr,uid,[applicant.partner_id.id],['contact'])['contact']
             if applicant.job_id:
                 applicant.job_id.write({'no_of_recruitment': applicant.job_id.no_of_recruitment - 1})
                 emp_id = hr_employee.create(cr,uid,{'name': applicant.partner_name or applicant.name,
@@ -461,7 +461,7 @@ class hr_applicant(base_stage, osv.Model):
         """ Override of the (void) default notification method. """
         if not stage_id: return True
         stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
@@ -474,6 +474,8 @@ class hr_applicant(base_stage, osv.Model):
         if context is None:
             context = {}
         for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
                 self.message_post(cr, uid, [applicant.id], body=message, context=context)
@@ -492,8 +494,10 @@ class hr_applicant(base_stage, osv.Model):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been <b>created</b>.")
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
         return self.message_post(cr, uid, ids, body=message, context=context)
-
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -505,7 +509,6 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
-
     _defaults = {
         'alias_domain': False, # always hide alias during creation
     }
@@ -548,12 +551,12 @@ class hr_job(osv.osv):
         datas['model'] = 'survey.print'
         context.update({'response_id': [0], 'response_no': 0,})
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'context' : context,
-                'nodestroy':True,
-            }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.form',
+            'datas': datas,
+            'context' : context,
+            'nodestroy':True,
+        }
 
 class applicant_category(osv.osv):
     """ Category of applicant """

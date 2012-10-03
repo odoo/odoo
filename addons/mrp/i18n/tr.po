@@ -13,8 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 05:59+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-09-13 04:39+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
 
 #. module: mrp
 #: view:mrp.routing.workcenter:0
@@ -225,11 +225,6 @@ msgid "For purchased material"
 msgstr "Satın alınan malzemeler için"
 
 #. module: mrp
-#: field:mrp.bom.revision,indice:0
-msgid "Revision"
-msgstr "Düzeltme"
-
-#. module: mrp
 #: model:ir.actions.act_window,help:mrp.product_form_config_action
 msgid ""
 "Create a product form for everything you buy or sell. Specify a supplier if "
@@ -406,6 +401,11 @@ msgid ""
 "sales person creates a sales order, he can relate it to several properties "
 "and OpenERP will automatically select the BoM to use according the needs."
 msgstr ""
+"Aynı ürünü farklı yöntemlerle yapma durumunuz varsa, OpenERP özellikleri bir "
+"ürünün üretimi için doğru ürün ağacını seçmek için kullanılır. Her Ürün "
+"Ağacına çeşitli özellikler atayabilirsiniz. Bir satış elemanı bir satış "
+"siparişi oluşturduğunda onu çeşitli özelliklerle ilişkilendirebilir ve "
+"OpenERP gereksinimlere göre kullanmak üzere otomatikman Ürün Ağacını seçer."
 
 #. module: mrp
 #: help:mrp.production,picking_id:0
@@ -497,11 +497,6 @@ msgid "For Services."
 msgstr "Hizmetler için."
 
 #. module: mrp
-#: field:mrp.bom.revision,date:0
-msgid "Modification Date"
-msgstr "Değiştirme Tarihi"
-
-#. module: mrp
 #: help:mrp.workcenter,costs_cycle_account_id:0
 #: help:mrp.workcenter,costs_hour_account_id:0
 msgid ""
@@ -559,11 +554,6 @@ msgstr "İş merkezlerinizi ayarlayın"
 #: view:mrp.production:0
 msgid "Force Reservation"
 msgstr "Rezerve Et"
-
-#. module: mrp
-#: field:mrp.bom.revision,author_id:0
-msgid "Author"
-msgstr "Yazar"
 
 #. module: mrp
 #: field:report.mrp.inout,value:0
@@ -858,11 +848,6 @@ msgstr "Toplam Çevrim"
 #: selection:mrp.production,state:0
 msgid "Ready to Produce"
 msgstr "Üretim için Hazır"
-
-#. module: mrp
-#: field:mrp.bom.revision,name:0
-msgid "Modification name"
-msgstr "Değiştirme Adı"
 
 #. module: mrp
 #: view:mrp.bom:0
@@ -1452,11 +1437,6 @@ msgid "Work Center Loads"
 msgstr "İş Merkezi Yükleri"
 
 #. module: mrp
-#: model:ir.model,name:mrp.model_mrp_bom_revision
-msgid "Bill of Material Revision"
-msgstr "Ürün Ağacı Revizyonu"
-
-#. module: mrp
 #: help:mrp.production,origin:0
 msgid ""
 "Reference of the document that generated this production order request."
@@ -1992,12 +1972,6 @@ msgid "Orange Juice"
 msgstr "Portakal Suyu"
 
 #. module: mrp
-#: field:mrp.bom.revision,bom_id:0
-#: field:procurement.order,bom_id:0
-msgid "BoM"
-msgstr "BoM"
-
-#. module: mrp
 #: model:ir.model,name:mrp.model_report_mrp_inout
 #: view:report.mrp.inout:0
 msgid "Stock value variation"
@@ -2013,17 +1987,6 @@ msgstr "Stoktan atama."
 #: selection:mrp.production,state:0
 msgid "Waiting Goods"
 msgstr "Malzeme Bekleniyor"
-
-#. module: mrp
-#: field:mrp.bom.revision,last_indice:0
-msgid "last indice"
-msgstr "son indis"
-
-#. module: mrp
-#: field:mrp.bom,revision_ids:0
-#: view:mrp.bom.revision:0
-msgid "BoM Revisions"
-msgstr "BoM Revizyonları"
 
 #. module: mrp
 #: field:report.mrp.inout,date:0
@@ -2214,19 +2177,6 @@ msgstr "Miktar Değiştir"
 #: model:ir.actions.act_window,name:mrp.action_change_production_qty
 msgid "Change Product Qty"
 msgstr "Ürün Miktarını Değiştir"
-
-#. module: mrp
-#: view:mrp.bom.revision:0
-#: field:mrp.bom.revision,description:0
-#: view:mrp.property:0
-#: view:mrp.property.group:0
-#: field:mrp.routing,note:0
-#: view:mrp.routing.workcenter:0
-#: field:mrp.routing.workcenter,note:0
-#: view:mrp.workcenter:0
-#: field:mrp.workcenter,note:0
-msgid "Description"
-msgstr "Açıklama"
 
 #. module: mrp
 #: view:board.board:0
@@ -2441,8 +2391,14 @@ msgstr "Sarf Edilecek Ürünler"
 #~ msgid "Make Procurement"
 #~ msgstr "Satınalma Yap"
 
+#~ msgid "Modification Date"
+#~ msgstr "Değiştirme Tarihi"
+
 #~ msgid "Purchase Lead Time"
 #~ msgstr "Alış Tedarik Süresi"
+
+#~ msgid "Author"
+#~ msgstr "Yazar"
 
 #~ msgid "Stockable Product Stock"
 #~ msgstr "Stoklanabilir Ürün Stoğ"
@@ -2488,6 +2444,9 @@ msgstr "Sarf Edilecek Ürünler"
 
 #~ msgid "Security Days"
 #~ msgstr "Emniyet Günü"
+
+#~ msgid "Modification name"
+#~ msgstr "Değiştirme Adı"
 
 #~ msgid "Exception"
 #~ msgstr "İstisnai"
@@ -2682,6 +2641,9 @@ msgstr "Sarf Edilecek Ürünler"
 #~ msgid "New Production Order"
 #~ msgstr "Yeni Üretim Emri Oluştur"
 
+#~ msgid "BoM Revisions"
+#~ msgstr "BoM Revizyonları"
+
 #~ msgid "Retry"
 #~ msgstr "Tekrar Dene"
 
@@ -2714,6 +2676,9 @@ msgstr "Sarf Edilecek Ürünler"
 
 #~ msgid "Close Move at end"
 #~ msgstr "Son Hareketi Kapat"
+
+#~ msgid "Description"
+#~ msgstr "Açıklama"
 
 #~ msgid "Running"
 #~ msgstr "Çalışıyor"
@@ -3022,6 +2987,12 @@ msgstr "Sarf Edilecek Ürünler"
 #~ msgid "Image"
 #~ msgstr "Resim"
 
+#~ msgid "BoM"
+#~ msgstr "BoM"
+
+#~ msgid "last indice"
+#~ msgstr "son indis"
+
 #~ msgid "Configuration Progress"
 #~ msgstr "Kurulum Safhası"
 
@@ -3039,6 +3010,9 @@ msgstr "Sarf Edilecek Ürünler"
 #~ "Rota kullanılan tüm iş merkezlerini, ne kadar uzun süreli kullanıldığını "
 #~ "ve/veya çevrimleri gösterir. Rota gösterilirse, ürün emrinin üçüncü sekmesi "
 #~ "(iş merkezleri) otomatik olarak önceden doldurulacaktır."
+
+#~ msgid "Bill of Material Revision"
+#~ msgstr "Ürün Ağacı Revizyonu"
 
 #, python-format
 #~ msgid "Work Cost of "
@@ -3095,3 +3069,6 @@ msgstr "Sarf Edilecek Ürünler"
 
 #~ msgid "Moves Created"
 #~ msgstr "Oluşturulan Hareketler"
+
+#~ msgid "Revision"
+#~ msgstr "Düzeltme"

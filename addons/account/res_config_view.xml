@@ -130,6 +130,10 @@
                                 <label for="module_account_accountant"/>
                             </div>
                             <div>
+                                <field name="group_analytic_accounting" class="oe_inline"/>
+                                <label for="group_analytic_accounting"/>
+                            </div>
+                            <div>
                                 <field name="module_account_asset" class="oe_inline"/>
                                 <label for="module_account_asset"/>
                             </div>
@@ -224,10 +228,8 @@
                         <div>
                             <div>
                                 <label for="company_footer"/>
-                                <button name="%(action_bank_tree)d"
-                                    string="Configure your bank accounts"
-                                    icon="gtk-go-forward"
-                                    type="action"
+                                <button name="open_company_form" type="object"
+                                    string="Configure your company bank accounts" icon="gtk-go-forward"
                                     class="oe_inline oe_link"/>
                                 <field name="company_footer"/>
                             </div>

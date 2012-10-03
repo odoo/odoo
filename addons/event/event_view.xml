@@ -1,15 +1,14 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-
-        <act_window
-            id="act_event_list_register_event"
-            name="Registration"
-            res_model="event.registration"
-            src_model="event.event"
-            view_mode="calendar,tree,form,graph"
-            context="{'search_default_event_id': active_id, 'default_event_id': active_id}"
-            view_type="form"/>
+        
+        <record id="act_event_list_register_event" model="ir.actions.act_window">
+            <field name="res_model">event.registration</field>
+            <field name="view_type">form</field>
+            <field name="name">Registrations</field>
+            <field name="view_mode">calendar,tree,form,graph</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        </record>
 
         <!-- Top menu item -->
         <menuitem name="Events"
@@ -101,7 +100,7 @@
             <field name="arch" type="xml">
                 <form string="Events" version="7.0">
                     <header>
-                        <span groups="base.user_group">
+                        <span groups="base.group_user">
                             <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight"/>
                             <button string="Event Ended" name="button_done" states="confirm" type="object" class="oe_highlight"/>
                             <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" />
@@ -111,51 +110,53 @@
                     </header>
                     <sheet>
                         <div class="oe_right oe_button_box">
-                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registration" icon="gtk-index" help="Register with this event"/>
+                            <button name="%(event.act_event_list_register_event)d" type="action" string="Registrations" help="Register with this event"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
                         </div>
                         <div>
-                            <h2>From <field name="date_begin" class="oe_inline" /> to <field name="date_end" class="oe_inline"/>
-                            </h2>
                             <group>
                                 <group>
-                                    <label for="address_id" string="Location Address"/>
+                                    <label for="address_id" string="Location"/>
                                     <div>
-                                        <field name="address_id" widget="many2one_address_google_map" widget_option="{'placeholder':'.oe_google_map'}" on_change="on_change_address_id(address_id)" />
+                                        <field name="address_id" on_change="on_change_address_id(address_id)" />
                                         <field name="street" placeholder="Street..."/>
-                                        <div>
-                                            <field name="zip" class="oe_inline" placeholder="Zip"/>
-                                            <field name="city" class="oe_inline" placeholder="City"/>
+                                        <field name="street2"/>
+                                        <div class="address_format">
+                                            <field name="city" placeholder="City" style="width: 40%%"/>
+                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": true}'/>
+                                            <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                         </div>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
                                     </div>
                                 </group>
                                 <group>
                                     <field name="type" on_change="onchange_event_type(type,context)"/>
-                                    <field name="register_min"/>
-                                    <field name="register_max"/>
-                                    <label for="register_current" string="Current Registrations" groups="base.group_user"/>
-                                    <div groups="base.group_user">
-                                       Confirmed: <field name="register_current" class="oe_inline"/>, Unconfirmed: <field name="register_prospect" class="oe_inline"/>
-                                    </div>
+                                    <field name="date_begin"/>
+                                    <field name="date_end"/>
                                 </group>
                             </group>
                         </div>
-                        <div class="oe_google_map" style="height: 200px"></div>
                         <notebook>
                             <page string="Event Description">
                                 <field name="note" colspan="4" nolabel="1"/>
                             </page>
-                            <page string="Internal Data">
+                            <page string="Registrations">
                                 <group>
+                                    <group>
+                                        <field name="register_min"/>
+                                        <field name="register_max"/>
+                                        <label for="register_current" string="Current Registrations" groups="base.group_user"/>
+                                        <div groups="base.group_user">
+                                             <field name="register_prospect" class="oe_inline"/> (confirmed: <field name="register_current" class="oe_inline"/>)
+                                        </div>
+                                        <field name="register_attended"/>
+                                    </group>
                                     <group>
                                         <field name="main_speaker_id" domain="[('speaker','=',True)]" context="{'default_speaker':1}"/>
                                         <field name="speaker_confirmed"/>
-                                    </group>
-                                    <group>
-                                        <field name="register_attended"/>
                                     </group>
                                 </group>
                                 <field name="registration_ids" colspan="4" nolabel="1" groups="event.group_event_manager,event.group_event_user">
@@ -166,7 +167,7 @@
                                         <field name="nb_register" />
                                         <field name="state"/>
                                         <button name="registration_open" string="Confirm Registration" states="draft" type="object" icon="gtk-apply"/>
-                                        <button name="button_reg_close" string="Attented the Event" states="open" type="object" icon="gtk-jump-to"/>
+                                        <button name="button_reg_close" string="Attended the Event" states="open" type="object" icon="gtk-jump-to"/>
                                         <button name="button_reg_cancel" string="Cancel Registration" states="draft,open" type="object" icon="gtk-cancel"/>
                                     </tree>
                                     <form string="Registration">
@@ -245,12 +246,12 @@
                     <t t-name="kanban-box">
                       <div class="oe_module_vignette">
                         <a type="open" class="oe_module_icon">
-                           <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
-                           <div class="oe_event_month_year">
-                             <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
-                             <t t-esc="record.date_begin.raw_value.getFullYear()"/>
-                           </div>
-                           <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
+                            <div class="oe_event_date "><t t-esc="record.date_begin.raw_value.getDate()"/></div>
+                            <div class="oe_event_month_year">
+                                <t t-esc="record.date_begin.raw_value.toString('MMM')"/>
+                                <t t-esc="record.date_begin.raw_value.getFullYear()"/>
+                            </div>
+                            <div class="oe_event_time"><t t-esc="record.date_begin.raw_value.toString('hh:mm tt')"/></div>
                         </a>
                         <div class="oe_module_desc">
                             <h4><a type="open"><field name="name"/></a></h4>
@@ -270,10 +271,10 @@
                             </p>
                             <t t-if="record.register_avail.raw_value != 0">
                               <t t-if="!record.is_subscribed.raw_value">
-                                  <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
-                                  <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_mail_button_follow">
-                                  <span >Subscribe</span>
-                                  </button>
+                                <input t-att-id="record.id.raw_value" type="text" name="subscribe" class="no_of_seats" value="1" onchange="document.getElementById('btn_sub' +this.id).setAttribute('data-context',JSON.stringify({'ticket':this.value}))"/>
+                                <button t-att-id="'btn_sub'+record.id.raw_value" type="object" name="subscribe_to_event" class="oe_mail_button_follow">
+                                    <span >Subscribe</span>
+                                </button>
                               </t>
                             </t>
                             <t t-if="record.is_subscribed.raw_value">
