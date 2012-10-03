@@ -47,16 +47,23 @@ openerp.base_import = function (instance) {
             this._super.apply(this, arguments);
             if(add_button) {
                 this.$buttons.on('click', '.oe_list_button_import', function() {
-                    new instance.web.DataImport(self, self.dataset).open();
+                    self.do_action({
+                        type: 'ir.actions.client',
+                        tag: 'import',
+                        params: {
+                            model: self.dataset.model
+                        }
+                    });
                     return false;
                 });
             }
         }
     });
 
-    instance.web.DataImport = instance.web.Dialog.extend({
+    instance.web.client_actions.add(
+        'import', 'instance.web.DataImport');
+    instance.web.DataImport = instance.web.Widget.extend({
         template: 'ImportView',
-        dialog_title: _lt("Import Data"),
         opts: [
             {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
             {name: 'separator', label: _lt("Separator:"), value: ','},
@@ -100,41 +107,34 @@ openerp.base_import = function (instance) {
                     ];
                 });
                 this.do_action(_.extend(action, {target: 'new'}));
+            },
+            // buttons
+            'click .oe_import_validate': 'import_dryrun',
+            'click .oe_import_import': 'do_import',
+            'click .oe_import_cancel': function (e) {
+                e.preventDefault();
+                this.exit();
             }
         },
-        init: function (parent, dataset) {
-            var self = this;
-            this._super(parent, {
-                buttons: [
-                    {text: _t("Validate"), click: self.proxy('import_dryrun'),
-                     'class': 'oe_import_dialog_button'},
-                    {text: _t("Import"), click: self.proxy('do_import'),
-                     'class': 'oe_import_dialog_button oe_highlight'}
-                ]
-            });
-            this.res_model = parent.model;
+        init: function (parent, params) {
+            this._super.apply(this, arguments);
+            this.res_model = params.model;
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
         },
         start: function () {
             var self = this;
-            return this.Import.call('create', [{
-                'res_model': this.res_model
-            }]).then(function (id) {
-                self.id = id;
-                self.$('input[name=import_id]').val(id);
-            });
-        },
-        open: function () {
-            this._super.apply(this, arguments);
-            this.$el.dialog('widget').find('.ui-dialog-buttonset')
-                .append(_t(" or "))
-                .append(
-                    $('<button type="button" class="oe_link oe_button">')
-                        .click(this.proxy('close'))
-                        .append($('<span>').text(_t("Cancel"))));
-            return this;
+
+            return $.when(
+                this._super(),
+                this.Import.call('create', [{
+                    'res_model': this.res_model
+                }]).then(function (id) {
+                    self.id = id;
+                    self.$('input[name=import_id]').val(id);
+                })
+            )
         },
 
         import_options: function () {
@@ -151,6 +151,7 @@ openerp.base_import = function (instance) {
 
         //- File & settings change section
         file_update: function (e) {
+            this.$('.oe_import_button').prop('disabled', true);
             if (!this.$('input.oe_import_file').val()) { return; }
 
             this.$el.removeClass('oe_import_preview oe_import_error');
@@ -178,6 +179,7 @@ openerp.base_import = function (instance) {
                     .get(0).scrollIntoView();
                 return;
             }
+            this.$('.oe_import_button').prop('disabled', false);
             this.$el.addClass('oe_import_preview');
             this.$('table').html(QWeb.render('ImportView.preview', result));
 
@@ -310,17 +312,21 @@ openerp.base_import = function (instance) {
             return this.call_import({ dryrun: false }).then(function (message) {
                 if (!_.any(message, function (message) {
                         return message.type === 'error' })) {
-                    if (self.getParent().reload_content) {
-                        self.getParent().reload_content();
-                    }
-                    self.close();
+                    self.exit();
                     return;
                 }
                 self.render_import_result(message);
             });
         },
+        exit: function () {
+            this.do_action({
+                type: 'ir.actions.client',
+                tag: 'history_back'
+            });
+        },
         render_import_result: function (message) {
             if (_.isEmpty(message)) {
+                this.$('.oe_import_import').addClass('oe_highlight');
                 message.push({
                     type: 'info',
                     message: _t("Everything seems valid.")

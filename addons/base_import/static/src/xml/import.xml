@@ -2,6 +2,16 @@
     <t t-name="ImportView">
         <t t-set="_id" t-value="_.uniqueId('export')"/>
         <form action="" method="post" enctype="multipart/form-data" class="oe_import">
+            <header>
+                <button type="button" disabled="disabled"
+                        class="oe_button oe_import_button oe_import_validate"
+                    >Validate</button>
+                <button type="button" disabled="disabled"
+                        class="oe_button oe_import_button oe_import_import"
+                    >Import</button>
+                <span class="oe_fade">or</span>
+                <a class="oe_import_cancel" href="#">Cancel</a>
+            </header>
             <input type="hidden" name="session_id"
                    t-att-value="widget.session.session_id"/>
             <input type="hidden" name="import_id"/>
