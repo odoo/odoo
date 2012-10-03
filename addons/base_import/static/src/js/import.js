@@ -100,7 +100,15 @@ openerp.base_import = function (instance) {
                           : 'tree'
                     ];
                 });
-                this.do_action(_.extend(action, {target: 'new'}));
+                this.do_action(_.extend(action, {
+                    target: 'new',
+                    flags: {
+                        search_view: true,
+                        display_title: true,
+                        pager: true,
+                        list: {selectable: false}
+                    }
+                }));
             },
             // buttons
             'click .oe_import_validate': 'validate',
