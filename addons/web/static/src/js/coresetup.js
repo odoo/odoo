@@ -542,13 +542,9 @@ instance.web.qweb.preprocess_node = function() {
             if (translation && translation.value === 'off') {
                 return;
             }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = instance.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
+            var match = /^(\s*)(.+?)(\s*)$/.exec(this.node.data);
+            if (match) {
+                this.node.data = match[1] + instance.web._t(match[2]) + match[3];
             }
             break;
         case 1:
