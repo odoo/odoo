@@ -116,10 +116,9 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name"/></h1>
                         </div>
-                        <div>
-                            <group>
-                                <group>
-                                    <label for="address_id" string="Location"/>
+                        <group>
+                             <group>
+                                 <label for="address_id" string="Location"/>
                                     <div>
                                         <field name="address_id" on_change="on_change_address_id(address_id)" />
                                         <field name="street" placeholder="Street..."/>
@@ -128,17 +127,17 @@
                                             <field name="city" placeholder="City" style="width: 40%%"/>
                                             <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": true}'/>
                                             <field name="zip" placeholder="ZIP" style="width: 20%%"/>
-                                        </div>
+                                        </div>    
                                         <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
                                     </div>
-                                </group>
-                                <group>
-                                    <field name="type" on_change="onchange_event_type(type,context)"/>
-                                    <field name="date_begin"/>
-                                    <field name="date_end"/>
-                                </group>
+                             </group>
+                             <group>
+                                <field name="type" on_change="onchange_event_type(type,context)" />
+                                <field name="date_begin"/>
+                                <field name="date_end"/>
                             </group>
-                        </div>
+                        </group>
+                        
                         <notebook>
                             <page string="Event Description">
                                 <field name="note" colspan="4" nolabel="1"/>
@@ -279,7 +278,6 @@
                             </t>
                             <t t-if="record.is_subscribed.raw_value">
                               <button type="object" name="unsubscribe_to_event" class="oe_mail_button_unfollow">
-                                <span>Subscribed</span>
                                 <span class="unsubscribe">Unsubscribe</span>
                               </button>
                             </t>
