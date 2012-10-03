@@ -144,7 +144,7 @@
                                 </group>
                             </group>
                         </page>
-                        <page string="Tasks Stages">
+                        <page string="Tasks Stages" attrs="{'invisible': [('use_tasks', '=', False)]}">
                              <field name="type_ids"/>
                         </page>
                     </notebook>
