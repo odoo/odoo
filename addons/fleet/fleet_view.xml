@@ -231,6 +231,7 @@
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('license_plate','ilike',self)]" string="Vehicle"/>
                     <field name="driver"/>
                     <field name="tag_ids"/>
+                    <field name="location"/>
                </search>
             </field>
         </record>
@@ -265,6 +266,17 @@
                                             <field name="model_id" />
                                         </a>
                                     </h4>
+                                    <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
+                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
+                                            <span class="oe_kanban_button oe_kanban_color_3">Contract Renewal</span>
+                                        </a>
+                                    </t>
+
+                                    <t t-if="record.contract_renewal_overdue.raw_value > 0">
+                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
+                                            <span class="oe_kanban_button oe_kanban_color_2">Contract Renewal</span>
+                                        </a>
+                                    </t>
                                     <div class="oe_kanban_partner_categories">
                                         <span class="oe_kanban_list_many2many">
                                             <div modifiers="{}" name="tag_ids" class="oe_form_field oe_tags" model="fleet.vehicle.tag" t-att-data="record.tag_ids.raw_value" />
@@ -277,20 +289,7 @@
                                         <li>
                                             <t t-if="record.location.raw_value"><field name="location"/></t>
                                         </li>
-                                        <li>
-                                            <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
-                                                 <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
-                                                        Alert Contract Renewal
-                                                </a>
-                                            </t>
-
-                                            <t t-if="record.contract_renewal_overdue.raw_value > 0">
-                                                <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
-                                                        Alert Contract Renewal
-                                                </a>
-                                            </t>
-                                            
-                                        </li>
+                                        
                                     </ul>
 
                                     
@@ -404,7 +403,7 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0">
+                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0;grey:state=='closed'">
                     <field name="vehicle_id" />
                     <field name="contract_type" />
                     <field name="state" />
