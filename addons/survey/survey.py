@@ -60,10 +60,10 @@ class survey(osv.osv):
                      help="Set to one if  you require only one Answer per user"),
         'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
-        'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
-        'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
+        'tot_start_survey': fields.integer("Total Started Survey"),
+        'tot_comp_survey': fields.integer("Total Completed Survey"),
         'note': fields.text('Description', size=128),
-        'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
+        'history': fields.one2many('survey.history', 'survey_id', 'History Lines'),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
@@ -187,7 +187,7 @@ class survey_history(osv.osv):
         'date': fields.datetime('Date started', readonly=1),
     }
     _defaults = {
-         'date': lambda * a: datetime.datetime.now()
+         'date': lambda * a: strftime("%Y-%m-%d %H:%M:%S")
     }
 survey_history()
 

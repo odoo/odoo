@@ -49,8 +49,8 @@
                             <field name="type"/>
                         </group>
                         <group>
-                            <field name="max_response_limit" attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                            <field name="response_user" attrs="{'readonly':[('state','in',('open','close'))]}"/>
+                            <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="response_user" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                      </group>
                      <notebook>
@@ -215,7 +215,7 @@
                             <field name="note" placeholder="Survey description..."/>
                         </page>
                         <page string="Invited User">
-                            <field name="invited_user_ids" readonly="1"/>
+                            <field name="invited_user_ids"/>
                         </page>
                         <page string="History">
                             <group>
