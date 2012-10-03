@@ -5,6 +5,15 @@ import tools
 import datetime
 
 
+class fleet_vehicle_cost(osv.Model):
+    _name = 'fleet.vehicle.cost'
+    _description = 'Cost of vehicle'
+    _columns = {
+        'price': fields.float('Price'),
+        'type': fields.many2one('fleet.service.type', 'Service type', required=True, help='Service type purchased with this cost'),
+        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this cost'),
+    }
+
 class fleet_vehicle_model_type(osv.Model):
     _name = 'fleet.vehicle.type'
     _description = 'Type of the vehicle'
@@ -564,6 +573,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'ins_ref' : fields.char('Contract Reference', size=64),
         'state' : fields.many2one('fleet.contract.state', 'Contract Status', help='Choose wheter the contract is still valid or not'),
         'notes' : fields.text('Terms and Conditions'),
+        'costs' : fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs covered'),
     }
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
