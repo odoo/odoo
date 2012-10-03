@@ -466,13 +466,13 @@ class test_selection(ImporterCase):
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [message(
             u"Value 'Baz' not found in selection field 'unknown'",
-            moreinfo="Foo Bar Qux".split())])
+            moreinfo="Foo Bar Qux 4".split())])
 
         result = self.import_(['value'], [[42]])
         self.assertIs(result['ids'], False)
         self.assertEqual(result['messages'], [message(
             u"Value '42' not found in selection field 'unknown'",
-            moreinfo="Foo Bar Qux".split())])
+            moreinfo="Foo Bar Qux 4".split())])
 
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'

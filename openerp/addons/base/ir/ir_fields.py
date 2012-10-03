@@ -168,7 +168,8 @@ class ir_fields_converter(orm.Model):
         raise ValueError(
             _(u"Value '%s' not found in selection field '%%(field)s'") % (
                 value), {
-                'moreinfo': map(operator.itemgetter(1), selection)
+                'moreinfo': [label or unicode(item) for item, label in selection
+                             if label or item]
             })
 
 

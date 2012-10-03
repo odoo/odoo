@@ -22,7 +22,7 @@ models = [
     ('date', fields.date()),
     ('datetime', fields.datetime()),
     ('text', fields.text()),
-    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux")])),
+    ('selection', fields.selection([(1, "Foo"), (2, "Bar"), (3, "Qux"), (4, '')])),
     ('selection.function', fields.selection(selection_fn)),
     # just relate to an integer
     ('many2one', fields.many2one('export.integer')),
