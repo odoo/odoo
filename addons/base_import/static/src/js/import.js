@@ -71,14 +71,8 @@ openerp.base_import = function (instance) {
         ],
         events: {
             // 'change .oe_import_grid input': 'import_dryrun',
-            'change input.oe_import_file': 'file_update',
-            'change input.oe_import_has_header, .oe_import_options input': 'settings_updated',
-            'click a.oe_import_csv': function (e) {
-                e.preventDefault();
-            },
-            'click a.oe_import_export': function (e) {
-                e.preventDefault();
-            },
+            'change input.oe_import_file': 'loaded_file',
+            'change input.oe_import_has_header, .oe_import_options input': 'settings_changed',
             'click a.oe_import_toggle': function (e) {
                 e.preventDefault();
                 var $el = $(e.target);
@@ -109,14 +103,15 @@ openerp.base_import = function (instance) {
                 this.do_action(_.extend(action, {target: 'new'}));
             },
             // buttons
-            'click .oe_import_validate': 'import_dryrun',
-            'click .oe_import_import': 'do_import',
+            'click .oe_import_validate': 'validate',
+            'click .oe_import_import': 'import',
             'click .oe_import_cancel': function (e) {
                 e.preventDefault();
                 this.exit();
             }
         },
         init: function (parent, params) {
+            var self = this;
             this._super.apply(this, arguments);
             this.res_model = params.model;
             // import object id
@@ -150,42 +145,48 @@ openerp.base_import = function (instance) {
         },
 
         //- File & settings change section
-        file_update: function (e) {
+        onfile_loaded: function () {
             this.$('.oe_import_button').prop('disabled', true);
             if (!this.$('input.oe_import_file').val()) { return; }
 
             this.$el.removeClass('oe_import_preview oe_import_error');
             jsonp(this.$el, {
                 url: '/base_import/set_file'
-            }, this.proxy('settings_updated'));
+            }, this.proxy('settings_changed'));
         },
-        settings_updated: function () {
+        onpreviewing: function () {
+            var self = this;
+            this.$('.oe_import_button').prop('disabled', true);
             this.$el.addClass('oe_import_with_file');
             // TODO: test that write // succeeded?
-            this.Import.call(
-                'parse_preview', [this.id, this.import_options()])
-                .then(this.proxy('preview'));
-        },
-        preview: function (result) {
             this.$el.removeClass('oe_import_preview_error oe_import_error');
             this.$el.toggleClass(
                 'oe_import_noheaders',
                 !this.$('input.oe_import_has_header').prop('checked'));
-            if (result.error) {
-                this.$('.oe_import_options').show();
-                this.$el.addClass('oe_import_preview_error oe_import_error');
-                this.$('.oe_import_error_report').html(
-                        QWeb.render('ImportView.preview.error', result))
-                    .get(0).scrollIntoView();
-                return;
-            }
+            this.Import.call(
+                'parse_preview', [this.id, this.import_options()])
+                .then(function (result) {
+                    var signal = result.error ? 'preview_failed' : 'preview_succeeded';
+                    self[signal](result);
+                });
+        },
+        onpreview_error: function (event, from, to, result) {
+            this.$('.oe_import_options').show();
+            this.$el.addClass('oe_import_preview_error oe_import_error');
+            this.$('.oe_import_error_report').html(
+                    QWeb.render('ImportView.preview.error', result))
+                .get(0).scrollIntoView();
+        },
+        onpreview_success: function (event, from, to, result) {
+            this.$('.oe_import_import').removeClass('oe_highlight');
+            this.$('.oe_import_validate').addClass('oe_highlight');
             this.$('.oe_import_button').prop('disabled', false);
             this.$el.addClass('oe_import_preview');
             this.$('table').html(QWeb.render('ImportView.preview', result));
 
             if (result.headers.length === 1) {
                 this.$('.oe_import_options').show();
-                this.render_import_result([{
+                this.onresults(null, null, null, [{
                     type: 'warning',
                     message: _t("A single column was found in the file, this often means the file separator is incorrect")
                 }]);
@@ -225,7 +226,6 @@ openerp.base_import = function (instance) {
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             });
-            //this.import_dryrun();
         },
         generate_fields_completion: function (root) {
             var basic = [];
@@ -303,20 +303,23 @@ openerp.base_import = function (instance) {
             return this.Import.call(
                 'do', [this.id, fields, this.import_options()], options);
         },
-        import_dryrun: function () {
+        onvalidate: function () {
             return this.call_import({ dryrun: true })
-                .then(this.proxy('render_import_result'));
+                .then(this.proxy('validated'));
         },
-        do_import: function () {
+        onimport: function () {
             var self = this;
             return this.call_import({ dryrun: false }).then(function (message) {
                 if (!_.any(message, function (message) {
                         return message.type === 'error' })) {
-                    self.exit();
+                    self['import_succeeded']();
                     return;
                 }
-                self.render_import_result(message);
+                self['import_failed'](message);
             });
+        },
+        onimported: function () {
+            this.exit();
         },
         exit: function () {
             this.do_action({
@@ -324,7 +327,7 @@ openerp.base_import = function (instance) {
                 tag: 'history_back'
             });
         },
-        render_import_result: function (message) {
+        onresults: function (event, from, to, message) {
             var no_messages = _.isEmpty(message);
             this.$('.oe_import_import').toggleClass('oe_highlight', no_messages);
             this.$('.oe_import_validate').toggleClass('oe_highlight', !no_messages);
@@ -386,4 +389,23 @@ openerp.base_import = function (instance) {
                 })).get(0).scrollIntoView();
         },
     });
+    // FSM-ize DataImport
+    StateMachine.create({
+        target: instance.web.DataImport.prototype,
+        events: [
+            { name: 'loaded_file',
+              from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results'],
+              to: 'file_loaded' },
+            { name: 'settings_changed',
+              from: ['file_loaded', 'preview_error', 'preview_success', 'results'],
+              to: 'previewing' },
+            { name: 'preview_failed', from: 'previewing', to: 'preview_error' },
+            { name: 'preview_succeeded', from: 'previewing', to: 'preview_success' },
+            { name: 'validate', from: 'preview_success', to: 'validating' },
+            { name: 'validated', from: 'validating', to: 'results' },
+            { name: 'import', from: ['preview_success', 'results'], to: 'importing' },
+            { name: 'import_succeeded', from: 'importing', to: 'imported'},
+            { name: 'import_failed', from: 'importing', to: 'results' }
+        ]
+    })
 };
