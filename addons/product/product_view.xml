@@ -709,11 +709,19 @@
                                 <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}"/>
                                 <field name="cost_method"/>
                             </group>
+
                             <group string="Weights">
                                 <field digits="(14, 3)" name="volume" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight" attrs="{'readonly':[('type','=','service')]}"/>
                                 <field digits="(14, 3)" name="weight_net" attrs="{'readonly':[('type','=','service')]}"/>
                             </group> 
+
+                            <group name="status" string="Status">
+                                <field name="categ_id"/>
+                                <field name="state"/>
+                                <field name="product_manager"/>
+                            </group>
+
                             <group name="uom" string="Unit of Measure">
                                 <field name="uom_id" on_change="onchange_uom(uom_id,uom_po_id)" groups="product.group_uom"/>
                                 <field name="uom_po_id"/>
