@@ -148,8 +148,8 @@ openerp.mail = function(session) {
             // handle attachment button
             this.fileupload_id = _.uniqueId('oe_fileupload');
             var button_attach = this.$('button.oe_mail_compose_message_attachment');
-            var rendered = $( session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this}) );
-            rendered.insertBefore(button_attach);
+            var rendered = session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this});
+            $(rendered).insertBefore(button_attach);
             // move the button inside div.oe_hidden_input_file
             var input_node = this.$('input[name=ufile]');
             button_attach.detach().insertAfter(input_node);
@@ -256,10 +256,10 @@ openerp.mail = function(session) {
                 default_res_id:  0,
                 default_parent_id: false }, options.context || {});
 
-            this.id =           options.parameters.id || -1;
+            this.id =           -1;
             this.parent_id=     options.parameters.parent_id || false;
             this.nb_messages =  options.parameters.nb_messages || 0;
-            this.type =         'expandable';
+            this.type =         options.parameters.type || false;
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0] ;
@@ -501,6 +501,9 @@ openerp.mail = function(session) {
             } else {
                 self.destroy();
             }
+            for(var i in this.thread.messages){
+                this.thread.messages[i].animated_destroy({fadeTime:0});
+            }
         },
 
         on_message_delete: function (event) {
@@ -595,8 +598,8 @@ openerp.mail = function(session) {
         display_vote: function () {
             var self = this;
             var vote_element = session.web.qweb.render('mail.thread.message.vote', {'widget': self});
-            self.$(".placeholder-mail-vote:first").empty();
-            self.$(".placeholder-mail-vote:first").html(vote_element);
+            self.$(".placeholder-mail-vote").empty();
+            self.$(".placeholder-mail-vote").html(vote_element);
         },
     });
 
@@ -876,7 +879,7 @@ openerp.mail = function(session) {
             fetch_domain = replace_domain ? replace_domain : this.domain;
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.id||0].concat( self.options.thread._parents[0].get_child_ids() );
-
+            
             return this.ds_message.call('message_read', [ids, fetch_domain, (this.options.thread.thread_level+1), fetch_context, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
@@ -942,11 +945,11 @@ openerp.mail = function(session) {
                 }
             }
 
-            if(parent_older)
-                message.insertBefore(parent_older.$el);
-            else if(parent_newer)
+            if(parent_newer)
                 message.insertAfter(parent_newer.$el);
-            else 
+            else if(parent_older)
+                message.insertBefore(parent_older.$el);
+            else
                 message.prependTo(thread.list_ul);
 
             return message
@@ -1095,7 +1098,6 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             var searchview_ready = this.load_searchview({}, false);
             var thread_displayed = this.message_render();
-            this.options.domain = this.options.domain.concat(this.search_results['domain']);
             return (searchview_ready && thread_displayed);
         },
 
@@ -1135,14 +1137,19 @@ openerp.mail = function(session) {
 
         /** Clean and display the threads */
         message_render: function (search) {
+            var domain = this.options.domain.concat(this.search_results['domain']);
+
+            var domain = _.extend(this.options.domain, search&&search.domain? search.domain : {});
+            var context = _.extend(this.options.context, search&&search.context ? search.context : {});
+
             this.thread = new mail.Thread(this, {
-                    'domain' : this.options.domain.concat(this.search_results['domain']),
-                    'context' : _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {}),
+                    'domain' : domain,
+                    'context' : context,
                     'options': {
                         'thread' :{
                             'thread_level': this.options.thread_level,
                             'use_composer': true,
-                            'show_header_compose': 1,
+                            'show_header_compose': 1, 
                         },
                         'message': {
                             'show_reply': this.options.thread_level > 0,
