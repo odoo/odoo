@@ -151,6 +151,9 @@ class project_work(osv.osv):
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
+        """
+        When a project task work gets updated, handle its hr analytic timesheet.
+        """
         if context is None:
             context = {}
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
@@ -178,6 +181,7 @@ class project_work(osv.osv):
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
+                # Put user related details in analytic timesheet values
                 details = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
                 for field in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
                     if details.get(field, False):
