@@ -255,20 +255,78 @@ instance.web.ActionManager = instance.web.Widget.extend({
         this.dialog_stop();
         this.clear_breadcrumbs();
     },
-    ir_actions_common: function(action, on_close, clear_breadcrumbs) {
-        var self = this, klass, widget, post_process;
-        if (this.inner_widget && (action.type === 'ir.actions.client' || action.target !== 'new')) {
+    /**
+     *
+     * @param {Object} executor
+     * @param {Object} executor.action original action
+     * @param {Function<instance.web.Widget>} executor.widget function used to fetch the widget instance
+     * @param {String} executor.klass CSS class to add on the dialog root, if action.target=new
+     * @param {Function<instance.web.Widget, undefined>} executor.post_process cleanup called after a widget has been added as inner_widget
+     * @param on_close
+     * @param clear_breadcrumbs
+     * @return {*}
+     */
+    ir_actions_common: function(executor, on_close, clear_breadcrumbs) {
+        if (this.inner_widget && executor.action.target !== 'new') {
             if (this.getParent().has_uncommitted_changes()) {
                 return $.Deferred().reject();
             } else if (clear_breadcrumbs) {
                 this.clear_breadcrumbs();
             }
         }
-        if (action.type === 'ir.actions.client') {
-            var ClientWidget = instance.web.client_actions.get_object(action.tag);
-            widget = new ClientWidget(this, action.params);
-            klass = 'oe_act_client';
-            post_process = function() {
+        var widget = executor.widget();
+        if (executor.action.target === 'new') {
+            if (this.dialog === null) {
+                // These buttons will be overwrited by <footer> if any
+                this.dialog = new instance.web.Dialog(this, {
+                    buttons: { "Close": function() { $(this).dialog("close"); }},
+                    dialogClass: executor.klass
+                });
+                if(on_close)
+                    this.dialog.on_close.add(on_close);
+            } else {
+                this.dialog_widget.destroy();
+            }
+            this.dialog.dialog_title = executor.action.name;
+            this.dialog_widget = widget;
+            var initialized = this.dialog_widget.appendTo(this.dialog.$el);
+            this.dialog.open();
+            return initialized;
+        } else  {
+            this.dialog_stop();
+            this.inner_action = executor.action;
+            this.inner_widget = widget;
+            executor.post_process(widget);
+            return this.inner_widget.appendTo(this.$el);
+        }
+    },
+    ir_actions_act_window: function (action, on_close, clear_breadcrumbs) {
+        var self = this;
+
+        return this.ir_actions_common({
+            widget: function () { return new instance.web.ViewManagerAction(self, action); },
+            action: action,
+            klass: 'oe_act_window',
+            post_process: function (widget) { widget.add_breadcrumb(); }
+        }, on_close, clear_breadcrumbs);
+    },
+    ir_actions_client: function (action, on_close, clear_breadcrumbs) {
+        var self = this;
+        var ClientWidget = instance.web.client_actions.get_object(action.tag);
+
+        if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
+            var next;
+            if (next = ClientWidget(this, action.params)) {
+                return this.do_action(next, on_close, clear_breadcrumbs);
+            }
+            return $.when();
+        }
+
+        return this.ir_actions_common({
+            widget: function () { return new ClientWidget(self, action.params); },
+            action: action,
+            klass: 'oe_act_client',
+            post_process: function(widget) {
                 self.push_breadcrumb({
                     widget: widget,
                     title: action.name
@@ -276,50 +334,8 @@ instance.web.ActionManager = instance.web.Widget.extend({
                 if (action.tag !== 'reload') {
                     self.do_push_state({});
                 }
-            };
-        } else {
-            widget = new instance.web.ViewManagerAction(this, action);
-            klass = 'oe_act_window';
-            post_process = widget.proxy('add_breadcrumb');
-        }
-        if (action.target === 'new') {
-            if (this.dialog === null) {
-                // These buttons will be overwrited by <footer> if any
-                this.dialog = new instance.web.Dialog(this, {
-                    buttons: { "Close": function() { $(this).dialog("close"); }},
-                    dialogClass: klass
-                });
-                if(on_close)
-                    this.dialog.on_close.add(on_close);
-            } else {
-                this.dialog_widget.destroy();
             }
-            this.dialog.dialog_title = action.name;
-            this.dialog_widget = widget;
-            this.dialog_widget.appendTo(this.dialog.$el);
-            this.dialog.open();
-        } else  {
-            this.dialog_stop();
-            this.inner_action = action;
-            this.inner_widget = widget;
-            post_process();
-            this.inner_widget.appendTo(this.$el);
-        }
-    },
-    ir_actions_act_window: function (action, on_close, clear_breadcrumbs) {
-        var self = this;
-        if (action.target !== 'new') {
-            if(action.menu_id) {
-                this.dialog_stop();
-                return this.getParent().do_action(action, function () {
-                    instance.webclient.menu.open_menu(action.menu_id);
-                }, clear_breadcrumbs);
-            }
-        }
-        return this.ir_actions_common(action, on_close, clear_breadcrumbs);
-    },
-    ir_actions_client: function (action, on_close, clear_breadcrumbs) {
-        return this.ir_actions_common(action, on_close, clear_breadcrumbs);
+        }, on_close, clear_breadcrumbs);
     },
     ir_actions_act_window_close: function (action, on_closed) {
         if (!this.dialog && on_closed) {

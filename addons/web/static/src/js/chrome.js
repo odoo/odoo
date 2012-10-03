@@ -614,39 +614,32 @@ instance.web.client_actions.add("login", "instance.web.Login");
  * Client action to reload the whole interface.
  * If params has an entry 'menu_id', it opens the given menu entry.
  */
-instance.web.Reload = instance.web.Widget.extend({
-    init: function(parent, params) {
-        this._super(parent);
-        this.menu_id = (params && params.menu_id) || false;
-    },
-    start: function() {
-        var l = window.location;
+instance.web.Reload = function(parent, params) {
+    var menu_id = (params && params.menu_id) || false;
+    var l = window.location;
 
-        var sobj = $.deparam(l.search.substr(1));
-        sobj.ts = new Date().getTime();
-        var search = '?' + $.param(sobj);
+    var sobj = $.deparam(l.search.substr(1));
+    sobj.ts = new Date().getTime();
+    var search = '?' + $.param(sobj);
 
-        var hash = l.hash;
-        if (this.menu_id) {
-            hash = "#menu_id=" + this.menu_id;
-        }
-        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-        window.location = url;
+    var hash = l.hash;
+    if (menu_id) {
+        hash = "#menu_id=" + menu_id;
     }
-});
+    var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+    window.location = url;
+};
 instance.web.client_actions.add("reload", "instance.web.Reload");
 
 /**
  * Client action to go back in breadcrumb history.
  * If can't go back in history stack, will go back to home.
  */
-instance.web.HistoryBack = instance.web.Widget.extend({
-    init: function(parent, params) {
-        if (!parent.history_back()) {
-            window.location = '/' + (window.location.search || '');
-        }
+instance.web.HistoryBack = function(parent, params) {
+    if (!parent.history_back()) {
+        window.location = '/' + (window.location.search || '');
     }
-});
+};
 instance.web.client_actions.add("history_back", "instance.web.HistoryBack");
 
 /**
@@ -1136,15 +1129,6 @@ instance.web.WebClient = instance.web.Client.extend({
                     self.menu.open_menu(options.previous_menu_id);
                 });
             });
-    },
-    do_action: function(action) {
-        var self = this;
-        // TODO replace by client action menuclick
-        if(action.menu_id) {
-            this.do_reload().then(function () {
-                self.menu.menu_click(action.menu_id);
-            });
-        }
     },
     set_content_full_screen: function(fullscreen) {
         if (fullscreen) {
