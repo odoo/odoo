@@ -151,7 +151,6 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
-        'is_private': False,
     }
 
     #------------------------------------------------------
@@ -473,11 +472,9 @@ class mail_message(osv.Model):
             self.pool.get('ir.attachment').unlink(cr, uid, attachments_to_delete, context=context)
         return super(mail_message, self).unlink(cr, uid, ids, context=context)
 
-    def _notify(self, cr, uid, newid, context=None):
+    def _notify_followers(self, cr, uid, newid, message, context=None):
         """ Add the related record followers to the destination partner_ids.
-            Call mail_notification.notify to manage the email sending
         """
-        message = self.browse(cr, uid, newid, context=context)
         partners_to_notify = set([])
         # message has no subtype_id: pure log message -> no partners, no one notified
         if not message.subtype_id:
@@ -505,6 +502,14 @@ class mail_message(osv.Model):
         else:
             self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
 
+    def _notify(self, cr, uid, newid, context=None):
+        """ Add the related record followers to the destination partner_ids if is not a private message.
+            Call mail_notification.notify to manage the email sending
+        """
+        message = self.browse(cr, uid, newid, context=context)
+        if message and (message.is_private!=False and message.is_private!=None):
+            self._notify_followers(cr, uid, newid, message, context=context)
+        
         self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):

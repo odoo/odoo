@@ -121,7 +121,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return
@@ -219,7 +219,6 @@ class mail_compose_message(osv.TransientModel):
             email(s), rendering any template patterns on the fly if needed. """
         if context is None:
             context = {}
-        print '**', context
         active_ids = context.get('active_ids')
 
         for wizard in self.browse(cr, uid, ids, context=context):
