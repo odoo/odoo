@@ -274,6 +274,17 @@ class mrp_bom(osv.osv):
             return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
         return {}
 
+    def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
+        res = {'value':{}}
+        if not product_uom or not product_id:
+            return res
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        uom = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
+        if uom.category_id.id != product.uom_id.category_id.id:
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
+            res['value'].update({'product_uom': product.uom_id.id})
+        return res
+
     def _bom_find(self, cr, uid, product_id, product_uom, properties=None):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.
