@@ -558,6 +558,29 @@ class fleet_vehicle_log_contract(osv.Model):
         else:
             return {}
 
+    def str_to_date(self,strdate):
+        return datetime.datetime(int(strdate[:4]),int(strdate[5:7]),int(strdate[8:]))
+
+    def get_warning_date(self,cr,uid,ids,prop,unknow_none,context=None):
+        if context is None:
+            context={}
+        if not ids:
+            return dict([])
+        reads = self.browse(cr,uid,ids,context=context)
+        res=[]
+        for record in reads:
+            if (record.state):
+                if (record.expiration_date and record.state.name=='In Progress'):
+                    today=self.str_to_date(time.strftime('%Y-%m-%d'))
+                    renew_date = self.str_to_date(record.expiration_date)
+                    diff_time=int((renew_date-today).days)
+                    res.append((record.id,diff_time))
+                else:
+                    res.append((record.id,0))
+            else:
+                res.append((record.id,0))
+        return dict(res)
+
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
     _columns = {
@@ -567,6 +590,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'contract_type' : fields.many2one('fleet.contract.type', 'Type', required=False, help='Type of the contract'),
         'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
         'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
+        'warning_date' : fields.function(get_warning_date,type='integer',string='Warning Date',store=False),
         'price' : fields.float('Price', help="Cost of the contract for the specified period"),
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
@@ -578,7 +602,6 @@ class fleet_vehicle_log_contract(osv.Model):
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'start_date' : time.strftime('%Y-%m-%d'),
-        #'state' : 'in_progress',
         #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }

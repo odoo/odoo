@@ -401,12 +401,13 @@
             <field name="name">fleet.vehicle.log.contract.tree</field>
             <field name="model">fleet.vehicle.log.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contract logs" version="7.0">
+                <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date&lt;0">
                     <field name="vehicle_id" />
                     <field name="contract_type" />
                     <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
+                    <field name="warning_date" invisible="1"/>
                     <field name="insurer_id" />
                     <field name="price" />
                     <field name="value" />
