@@ -83,7 +83,7 @@ class project_work(osv.osv):
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define employee for user "%s". You must create one.')% (user_name,))
-        emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
+        emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define product on the related employee.\nFill in the timesheet tab of the employee form.'))
@@ -92,21 +92,20 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        a = emp.product_id.product_tmpl_id.property_account_expense.id
-        if not a:
-            a = emp.product_id.categ_id.property_account_expense_categ.id
-            if not a:
+        acc_id = emp.product_id.product_tmpl_id.property_account_expense.id
+        if not acc_id:
+            acc_id = emp.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
                 raise osv.except_osv(_('Bad Configuration !'),
                         _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
-        res['general_account_id'] = a
+        res['general_account_id'] = acc_id
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
     def create(self, cr, uid, vals, *args, **kwargs):
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
-        project_obj = self.pool.get('project.project')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
 
@@ -154,7 +153,6 @@ class project_work(osv.osv):
         if context is None:
             context = {}
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
-        project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
         result = {}
 
