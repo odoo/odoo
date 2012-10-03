@@ -709,7 +709,6 @@ class WebClient(openerpweb.Controller):
 
         # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
         # done server-side when the language is loaded, so we only need to load the user's lang.
-        start = datetime.datetime.now()
         ir_translation = req.session.model('ir.translation')
         translations_per_module = {}
         messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
@@ -721,11 +720,6 @@ class WebClient(openerpweb.Controller):
             translations_per_module[mod]['messages'].extend({'id': m['src'],
                                                              'string': m['value']} \
                                                                 for m in msg_group)
-
-        print "Loaded translations in ", datetime.datetime.now()-start
-        import pprint
-        pprint.pprint(translations_per_module)
-
         return {"modules": translations_per_module,
                 "lang_parameters": lang_params}
 
