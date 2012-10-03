@@ -586,8 +586,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback
      * @returns {$.Deferred}
      */
-    call: function (method, args, callback, error_callback) {
-        return this._model.call(method, args).then(callback, error_callback);
+    call: function (method, args) {
+        return this._model.call(method, args);
     },
     /**
      * Calls an arbitrary method, with more crazy
