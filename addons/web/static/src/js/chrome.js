@@ -392,7 +392,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_create: function(form) {
         var self = this;
         var fields = $(form).serializeArray();
-        self.rpc("/web/database/create", {'fields': fields}, function(result) {
+        self.rpc("/web/database/create", {'fields': fields}).then(function(result) {
             var form_obj = self.to_object(fields);
             var client_action = {
                 type: 'ir.actions.client',
@@ -418,7 +418,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
             return;
         }
-        self.rpc("/web/database/drop", {'fields': fields}, function(result) {
+        self.rpc("/web/database/drop", {'fields': fields}).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -481,7 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var self = this;
         self.rpc("/web/database/change_password", {
             'fields': $(form).serializeArray()
-        }, function(result) {
+        }).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -660,7 +660,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
-                }, function(result) {
+                }).then(function(result) {
                     if (result.error) {
                         self.display_error(result);
                         return;
@@ -1165,7 +1165,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         var self = this;
         return $.when(this._super()).pipe(function() {
             return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
-                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                return self.rpc("/web/action/load", { action_id: self.action_id }).then(function(result) {
                     var action = result.result;
                     action.flags = _.extend({
                         //views_switcher : false,

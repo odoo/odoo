@@ -105,8 +105,7 @@ instance.web.DiagramView = instance.web.View.extend({
         });
 
         this.rpc(
-            '/web_diagram/diagram/get_diagram_info',params,
-            function(result) {
+            '/web_diagram/diagram/get_diagram_info',params).then(function(result) {
                 self.draw_diagram(result);
             }
         );

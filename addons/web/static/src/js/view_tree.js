@@ -45,7 +45,7 @@ instance.web.TreeView = instance.web.View.extend(/** @lends instance.web.TreeVie
             view_type: "tree",
             toolbar: this.view_manager ? !!this.view_manager.sidebar : false,
             context: this.dataset.get_context()
-        }, this.on_loaded);
+        }).then(this.on_loaded);
     },
     /**
      * Returns the list of fields needed to correctly read objects.

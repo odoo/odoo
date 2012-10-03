@@ -1693,7 +1693,7 @@ instance.web.search.Advanced = instance.web.search.Input.extend({
             });
         return $.when(
             this._super(),
-            this.rpc("/web/searchview/fields_get", {model: this.view.model}, function(data) {
+            this.rpc("/web/searchview/fields_get", {model: this.view.model}).then(function(data) {
                 self.fields = _.extend({
                     id: { string: 'ID', type: 'id' }
                 }, data.fields);

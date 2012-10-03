@@ -841,7 +841,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        instance.session.rpc(url, data). then(function() {
+        instance.session.rpc(url, data).then(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -1299,7 +1299,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params, success_callback, error_callback) {
+    rpc: function(url, params) {
         var self = this;
         // url can be an $.ajax option object
         if (_.isString(url)) {
@@ -1358,7 +1358,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                     self.on_rpc_error(error, event);
                 }
             });
-        }).then(success_callback, error_callback).promise();
+        });
         return deferred;
     },
     /**
