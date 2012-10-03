@@ -3,18 +3,9 @@
     <data noupdate="1">
 
         <!-- mail: subtypes -->
-        <record id="mail.mt_account_new" model="mail.message.subtype">
-            <field name="name">new</field>
+        <record id="mt_account_status" model="mail.message.subtype">
+            <field name="name">Status Change</field>
             <field name="res_model">account.analytic.account</field>
-        </record>
-        <record id="mail.mt_account_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">account.analytic.account</field>
-        </record>
-        <record id="mail.mt_account_canceled" model="mail.message.subtype">
-            <field name="name">canceled</field>
-            <field name="res_model">account.analytic.account</field>
-            <field name="default" eval="False"/>
         </record>
 
     </data>

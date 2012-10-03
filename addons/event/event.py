@@ -223,6 +223,7 @@ class event_event(osv.osv):
         'company_id': lambda self,cr,uid,c: self.pool.get('res.company')._company_default_get(cr, uid, 'event.event', context=c),
         'user_id': lambda obj, cr, uid, context: uid,
     }
+
     def subscribe_to_event(self, cr, uid, ids, context=None):
         register_pool = self.pool.get('event.registration')
         user_pool = self.pool.get('res.users')
@@ -252,6 +253,7 @@ class event_event(osv.osv):
     _constraints = [
         (_check_closing_date, 'Error ! Closing Date cannot be set before Beginning Date.', ['date_end']),
     ]
+
     def onchange_event_type(self, cr, uid, ids, type_event, context=None):
         if type_event:
             type_info =  self.pool.get('event.type').browse(cr,uid,type_event,context)
@@ -293,17 +295,17 @@ class event_event(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>created</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_event_new", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_event_cancel", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_draft_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been set to <b>draft</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_event_new", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def button_done_send_note(self, cr, uid, ids, context=None):
@@ -313,7 +315,7 @@ class event_event(osv.osv):
 
     def button_confirm_send_note(self, cr, uid, ids, context=None):
         message = _("Event has been <b>confirmed</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_event_confirm", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
 event_event()
@@ -347,7 +349,6 @@ class event_registration(osv.osv):
         'phone': fields.char('Phone', size=64),
         'name': fields.char('Name', size=128, select=True),
     }
-
     _defaults = {
         'nb_register': 1,
         'state': 'draft',
@@ -359,7 +360,9 @@ class event_registration(osv.osv):
         return self.write(cr, uid, ids, {'state': 'draft'}, context=context)
 
     def confirm_registration(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_('State set to open'),subtype="mt_registration_confirm", context=context)
+        for reg in self.browse(cr, uid, ids, context=context or {}):
+            self.pool.get('event.event').message_post(cr, uid, [reg.event_id.id], body=_('New registration confirmed: %s.') % (reg.name or '', ),subtype="event.mt_event_registration", context=context)
+        self.message_post(cr, uid, ids, body=_('Registration confirmed.'), context=context)
         return self.write(cr, uid, ids, {'state': 'open'},context=context)
 
     def create(self, cr, uid, vals, context=None):
@@ -395,7 +398,7 @@ class event_registration(osv.osv):
         return True
 
     def button_reg_cancel(self, cr, uid, ids, context=None, *args):
-        self.message_post(cr, uid, ids, body=_('State set to Cancel'), subtype="mt_registration_cancel", context=context)
+        self.message_post(cr, uid, ids, body=_('State set to Cancel'), context=context)
         return self.write(cr, uid, ids, {'state': 'cancel'})
 
     def mail_user(self, cr, uid, ids, context=None):

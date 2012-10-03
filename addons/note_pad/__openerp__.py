@@ -34,7 +34,6 @@ Use for update your text memo in real time with the following user that you invi
     'website': 'http://openerp.com',
     'summary': 'Sticky memos, Collaborative',
     'depends': [
-        'base_tools',
         'mail',
         'pad',
         'note',

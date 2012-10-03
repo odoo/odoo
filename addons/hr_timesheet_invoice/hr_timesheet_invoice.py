@@ -199,6 +199,7 @@ class hr_analytic_timesheet(osv.osv):
 
 hr_analytic_timesheet()
 
+
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
@@ -218,6 +219,7 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
+
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
@@ -234,4 +236,3 @@ class account_move_line(osv.osv):
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

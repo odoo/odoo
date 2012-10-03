@@ -13,40 +13,18 @@
         </record>
 
         <!-- mail: event subtype -->
-        <record id="mail.mt_event_new" model="mail.message.subtype">
-            <field name="name">created</field>
+        <record id="event.mt_event_registration" model="mail.message.subtype">
+            <field name="name">New Registrations</field>
             <field name="res_model">event.event</field>
             <field name="default" eval="False"/>
         </record>
-        <record id="mail.mt_event_cancel" model="mail.message.subtype">
-            <field name="name">canceled</field>
-            <field name="res_model">event.event</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_event_confirm" model="mail.message.subtype">
-            <field name="name">confirmed</field>
-            <field name="res_model">event.event</field>
-            <field name="default" eval="False"/>
-        </record>
-        
-        <!-- mail: event registration subtype -->
-        <record id="mail.mt_registration_cancel" model="mail.message.subtype">
-            <field name="name">canceled</field>
-            <field name="res_model">event.event</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_registration_confirm" model="mail.message.subtype">
-            <field name="name">confirmed</field>
-            <field name="res_model">event.registration</field>
-            <field name="default" eval="False"/>
-        </record>      
 
         <!-- notify all employees of module installation -->
         <function model="mail.group" name="message_post">
             <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
             <value eval="[ref('mail.group_all_employees')]"/>
             <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
-            <value>Module Events Organisation has been installed</value>
+            <value>Module Events has been installed</value>
         </function>
     </data>
 </openerp>

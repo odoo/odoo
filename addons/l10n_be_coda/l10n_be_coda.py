@@ -171,6 +171,7 @@ class account_coda_trans_type(osv.osv):
         'parent_id': fields.many2one('account.coda.trans.type', 'Parent'),
         'description': fields.text('Description', translate=True),
     }
+
 account_coda_trans_type()
 
 class account_coda_trans_code(osv.osv):
@@ -187,6 +188,7 @@ class account_coda_trans_code(osv.osv):
         'description': fields.char('Description', size=128, translate=True, select=2),
         'comment': fields.text('Comment', translate=True),
     }
+
 account_coda_trans_code()
 
 class account_coda_trans_category(osv.osv):
@@ -197,6 +199,7 @@ class account_coda_trans_category(osv.osv):
         'category': fields.char('Transaction Category', size=3, required=True),
         'description': fields.char('Description', size=256, translate=True),
     }
+
 account_coda_trans_category()
 
 class account_coda_comm_type(osv.osv):
@@ -209,14 +212,17 @@ class account_coda_comm_type(osv.osv):
     }
     _sql_constraints = [
         ('code_uniq', 'unique (code)','The Structured Communication Code must be unique !')
-        ]
+    ]
+
 account_coda_comm_type()
 
 class coda_bank_statement(osv.osv):
     _name = 'coda.bank.statement'
     _description = 'CODA Bank Statement'
 
-    def _default_journal_id(self, cr, uid, context={}):
+    def _default_journal_id(self, cr, uid, context=None):
+        if context is None:
+            context = {}
         if context.get('journal_id', False):
             return context['journal_id']
         return False
@@ -232,7 +238,7 @@ class coda_bank_statement(osv.osv):
             res[r] = round(res[r], 2)
         return res
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -404,6 +410,7 @@ class account_bank_statement_line_global(osv.osv):
     _columns = {
         'coda_statement_line_ids': fields.one2many('coda.bank.statement.line', 'globalisation_id', 'CODA Bank Statement Lines', readonly=True),
     }
+
 account_bank_statement_line_global()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

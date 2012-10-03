@@ -75,25 +75,6 @@
             <field name="case_default" eval="True"/>
             <field name="fold" eval="True"/>
         </record>
-        
-        <!-- mail subtypes -->
-        <record id="mail.mt_claim_new" model="mail.message.subtype">
-            <field name="name">created</field>
-            <field name="res_model">crm.claim</field>
-        </record>
-        <record id="mail.mt_claim_refused" model="mail.message.subtype">
-            <field name="name">refused</field>
-            <field name="res_model">crm.claim</field>
-            <field name="default" eval="False"/>
-        </record>
-        <record id="mail.mt_claim_stage" model="mail.message.subtype">
-            <field name="name">stage change</field>
-            <field name="res_model">crm.claim</field>
-        </record>
-        <record id="mail.mt_claim_closed" model="mail.message.subtype">
-            <field name="name">closed</field>
-            <field name="res_model">crm.claim</field>
-        </record>
 
     </data>
 </openerp>

@@ -274,13 +274,15 @@ class mrp_bom(osv.osv):
             return {'value': {'name': prod.name, 'product_uom': prod.uom_id.id}}
         return {}
 
-    def _bom_find(self, cr, uid, product_id, product_uom, properties=[]):
+    def _bom_find(self, cr, uid, product_id, product_uom, properties=None):
         """ Finds BoM for particular product and product uom.
         @param product_id: Selected product.
         @param product_uom: Unit of measure of a product.
         @param properties: List of related properties.
         @return: False or BoM id.
         """
+        if properties is None:
+            properties = []
         cr.execute('select id from mrp_bom where product_id=%s and bom_id is null order by sequence', (product_id,))
         ids = map(lambda x: x[0], cr.fetchall())
         max_prop = 0
@@ -295,7 +297,7 @@ class mrp_bom(osv.osv):
                 max_prop = prop
         return result
 
-    def _bom_explode(self, cr, uid, bom, factor, properties=[], addthis=False, level=0, routing_id=False):
+    def _bom_explode(self, cr, uid, bom, factor, properties=None, addthis=False, level=0, routing_id=False):
         """ Finds Products and Work Centers for related BoM for manufacturing order.
         @param bom: BoM of particular product.
         @param factor: Factor of product UoM.
@@ -609,11 +611,13 @@ class mrp_production(osv.osv):
         self.write(cr, uid, ids, {'state': 'picking_except'})
         return True
 
-    def action_compute(self, cr, uid, ids, properties=[], context=None):
+    def action_compute(self, cr, uid, ids, properties=None, context=None):
         """ Computes bills of material of a product.
         @param properties: List containing dictionaries of properties.
         @return: No. of products.
         """
+        if properties is None:
+            properties = []
         results = []
         bom_obj = self.pool.get('mrp.bom')
         uom_obj = self.pool.get('product.uom')
@@ -832,7 +836,7 @@ class mrp_production(osv.osv):
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.hour,
                         'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-                        
+
                     } )
             if wc.costs_journal_id and wc.costs_general_account_id:
                 value = wc_line.cycle * wc.costs_cycle
@@ -849,7 +853,7 @@ class mrp_production(osv.osv):
                         'product_id': wc.product_id.id,
                         'unit_amount': wc_line.cycle,
                         'product_uom_id': wc.product_id.id and wc.product_id.uom_id.id or False
-                        
+
                     } )
         return amount
 
@@ -1049,12 +1053,12 @@ class mrp_production(osv.osv):
     # ---------------------------------------------------
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), subtype="mt_mrp_order_new", context=context)
+        self.message_post(cr, uid, ids, body=_("Manufacturing order has been <b>created</b>."), context=context)
         return True
 
     def action_cancel_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>canceled</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_mrp_order_canceled", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_ready_send_note(self, cr, uid, ids, context=None):
@@ -1069,7 +1073,7 @@ class mrp_production(osv.osv):
 
     def action_done_send_note(self, cr, uid, ids, context=None):
         message = _("Manufacturing order has been <b>done</b>.")
-        self.message_post(cr, uid, ids, body=message, subtype="mt_mrp_order_closed", context=context)
+        self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def action_confirm_send_note(self, cr, uid, ids, context=None):

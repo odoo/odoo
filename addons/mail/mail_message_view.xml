@@ -56,16 +56,16 @@
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <field name="author_id"/>
-                    <filter icon="terp-personal+" string="Unread"
+                    <filter string="Unread"
                             name="unread_message" help="Show unread message"
                             domain="[('unread', '=', True)]"/>
-                    <filter icon="terp-personal+" string="Comments"
+                    <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
-                    <filter icon="terp-personal+" string="Notifications"
+                    <filter string="Notifications"
                             name="notifications" help="Notifications"
                             domain="[('type', '=', 'notification')]"/>
-                    <filter icon="terp-personal+" string="Emails"
+                    <filter string="Emails"
                             name="emails" help="Emails"
                             domain="[('type', '=', 'email')]"/>
                 </search>

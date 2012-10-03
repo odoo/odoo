@@ -94,10 +94,10 @@ class purchase_requisition(osv.osv):
         self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
 
     def reset_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), subtype="mt_requisition_new", context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
 
     def done_to_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), subtype="mt_requisition_closed", context=context)
+        self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
@@ -183,7 +183,7 @@ class purchase_requisition(osv.osv):
         return res
     
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), subtype="mt_requisition_new", context=context)  
+        return self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>created</b>."), context=context)  
 
     def create(self, cr, uid, vals, context=None):
         requisition =  super(purchase_requisition, self).create(cr, uid, vals, context=context)
@@ -207,7 +207,7 @@ class purchase_requisition_line(osv.osv):
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id

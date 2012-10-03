@@ -35,7 +35,7 @@ CRM_CLAIM_PENDING_STATES = (
 
 class crm_claim_stage(osv.osv):
     """ Model for claim stages. This models the main stages of a claim
-        management flow. Main CRM objects (leads, opportunities, project 
+        management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
@@ -104,7 +104,7 @@ class crm_claim(base_stage, osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"), 
+                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,
@@ -238,16 +238,16 @@ class crm_claim(base_stage, osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>created</b>.')
-        return self.message_post(cr, uid, ids, body=msg, subtype='mt_claim_new', context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def case_refuse_send_note(self, cr, uid, ids, context=None):
         msg = _('Claim has been <b>refused</b>.')
-        return self.message_post(cr, uid, ids, body=msg, subtype='mt_claim_refused', context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def stage_set_send_note(self, cr, uid, ids, stage_id, context=None):
         """ Override of the (void) default notification method. """
         stage_name = self.pool.get('crm.claim.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), subtype='mt_claim_stage', context=context)
+        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
 
 class res_partner(osv.osv):

@@ -30,21 +30,5 @@
         <field name="start_stop">done</field>
     </record>
 
-    <!-- mail: subtypes -->
-    <record id="mail.mt_workcenter_new" model="mail.message.subtype">
-        <field name="name">new</field>
-        <field name="res_model">mrp.production.workcenter.line</field>
-        <field name="default" eval="False"/>
-    </record>
-    <record id="mail.mt_workcenter_canceled" model="mail.message.subtype">
-        <field name="name">canceled</field>
-        <field name="res_model">mrp.production.workcenter.line</field>
-        <field name="default" eval="False"/>
-    </record>
-    <record id="mail.mt_workcenter_closed" model="mail.message.subtype">
-        <field name="name">closed</field>
-        <field name="res_model">mrp.production.workcenter.line</field>
-        <field name="default" eval="False"/>
-    </record>
 </data>
 </openerp>

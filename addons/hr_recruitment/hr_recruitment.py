@@ -243,7 +243,7 @@ class hr_applicant(base_stage, osv.Model):
         'stage_id': _read_group_stage_ids
     }
 
-    def onchange_job(self,cr, uid, ids, job, context=None):
+    def onchange_job(self, cr, uid, ids, job, context=None):
         result = {}
 
         if job:
@@ -474,26 +474,30 @@ class hr_applicant(base_stage, osv.Model):
         if context is None:
             context = {}
         for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
-                self.message_post(cr, uid, [applicant.id], body=message, subtype="mt_recruitment_hired", context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, context=context)
             else:
                 message = _("Applicant has been <b>hired</b>.")
-                self.message_post(cr, uid, [applicant.id], body=message, subtype="mt_recruitment_hired", context=context)
+                self.message_post(cr, uid, [applicant.id], body=message, context=context)
         return True
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         msg = 'Applicant <b>refused</b>.'
-        return self.message_post(cr, uid, ids, body=msg, subtype="mt_recruitment_refused", context=context)
+        return self.message_post(cr, uid, ids, body=msg, context=context)
 
     def case_reset_send_note(self,  cr, uid, ids, context=None):
         message =_("Applicant has been set as <b>new</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_recruitment_new", context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been <b>created</b>.")
-        return self.message_post(cr, uid, ids, body=message, subtype="mt_recruitment_new", context=context)
-
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
+        return self.message_post(cr, uid, ids, body=message, context=context)
 
 class hr_job(osv.osv):
     _inherit = "hr.job"
@@ -505,7 +509,6 @@ class hr_job(osv.osv):
                                     help="Email alias for this job position. New emails will automatically "
                                          "create new applicants for this job position."),
     }
-
     _defaults = {
         'alias_domain': False, # always hide alias during creation
     }
@@ -548,12 +551,12 @@ class hr_job(osv.osv):
         datas['model'] = 'survey.print'
         context.update({'response_id': [0], 'response_no': 0,})
         return {
-                'type': 'ir.actions.report.xml',
-                'report_name': 'survey.form',
-                'datas': datas,
-                'context' : context,
-                'nodestroy':True,
-            }
+            'type': 'ir.actions.report.xml',
+            'report_name': 'survey.form',
+            'datas': datas,
+            'context' : context,
+            'nodestroy':True,
+        }
 
 class applicant_category(osv.osv):
     """ Category of applicant """

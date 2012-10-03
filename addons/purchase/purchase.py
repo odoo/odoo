@@ -31,9 +31,6 @@ import decimal_precision as dp
 from osv.orm import browse_record, browse_null
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
-#
-# Model definition
-#
 class purchase_order(osv.osv):
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -239,7 +236,6 @@ class purchase_order(osv.osv):
             else:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
 
-        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
         wf_service = netsvc.LocalService("workflow")
         for id in unlink_ids:
@@ -333,7 +329,7 @@ class purchase_order(osv.osv):
                 'view_id': view_id,
                 'res_id': pick_ids[0]
             })
-            
+
         action.update({
             'context': ctx,
         })
@@ -380,7 +376,7 @@ class purchase_order(osv.osv):
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
-#        current_name = self.name_get(cr, uid, ids)[0][1]
+
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -491,7 +487,7 @@ class purchase_order(osv.osv):
         self.invoice_done_send_note(cr, uid, ids, context=context)
         return True
 
-    def has_stockable_product(self,cr, uid, ids, *args):
+    def has_stockable_product(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -596,7 +592,7 @@ class purchase_order(osv.osv):
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
-    def action_picking_create(self,cr, uid, ids, context=None):
+    def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
             picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
@@ -665,7 +661,7 @@ class purchase_order(osv.osv):
             list_key.sort()
             return tuple(list_key)
 
-    # compute what the new orders should contain
+        # Compute what the new orders should contain
 
         new_orders = {}
 
@@ -746,7 +742,7 @@ class purchase_order(osv.osv):
         return [('state', '=', 'draft')]
 
     def create_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), subtype="mt_purchase_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Request for quotation <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -767,13 +763,13 @@ class purchase_order(osv.osv):
                 self.message_post(cr, uid, [order.id], body=_("Draft Invoice of %s %s is <b>waiting for validation</b>.") % (invoice.amount_total, invoice.currency_id.symbol), context=context)
 
     def shipment_done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("""Shipment <b>received</b>."""), subtype="mt_purchase_received", context=context)
+        self.message_post(cr, uid, ids, body=_("""Shipment <b>received</b>."""), context=context)
 
     def invoice_done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), subtype="mt_purchase_paid", context=context)
+        self.message_post(cr, uid, ids, body=_("Invoice <b>paid</b>."), context=context)
 
     def draft_send_note(self, cr, uid, ids, context=None):
-        return self.message_post(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), subtype="mt_purchase_new", context=context)
+        return self.message_post(cr, uid, ids, body=_("Purchase Order has been set to <b>draft</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
@@ -1098,4 +1094,5 @@ class mail_mail(osv.osv):
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 mail_mail()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
