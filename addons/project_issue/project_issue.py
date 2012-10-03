@@ -362,10 +362,15 @@ class project_issue(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         #Update last action date every time the user change the stage, the state or send a new email
         logged_fields = ['stage_id', 'state', 'message_ids']
+        subtype_obj = self.pool.get('mail.message.subtype')
         if any([field in vals for field in logged_fields]):
             vals['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
         if vals.get('project_id'):
             project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            for key in project_id.message_subtype_data:
+                subtype_ids = subtype_obj.search(cr, uid, [('res_model', '=', self._name), ('name', '=', key)], context=context)
+                if subtype_ids:
+                        subtype_obj.write(cr,uid, subtype_ids, {'default': project_id.message_subtype_data[key]['default']},context=context)
             vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
 
         return super(project_issue, self).write(cr, uid, ids, vals, context)
@@ -384,8 +389,14 @@ class project_issue(base_stage, osv.osv):
         return res
 
     def create(self, cr, uid, vals, context=None):
+        subtype_obj = self.pool.get('mail.message.subtype')
         obj_id = super(project_issue, self).create(cr, uid, vals, context=context)
         project_id = self.browse(cr, uid, obj_id, context=context).project_id
+        project_subtype = project_id.message_subtype_data
+        for key in project_subtype:
+            subtype_ids = subtype_obj.search(cr, uid, [('res_model', '=', self._name), ('name', 'ilike', key)], context=context)
+            if subtype_ids:
+                 subtype_obj.write(cr,uid, subtype_ids, {'default': project_subtype[key]['default']},context=context)        
         if project_id:
             followers = [follower.id for follower in project_id.message_follower_ids]
             self.message_subscribe(cr, uid, [obj_id], followers, context=context)

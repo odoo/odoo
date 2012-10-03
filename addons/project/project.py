@@ -1097,9 +1097,16 @@ class task(base_stage, osv.osv):
     def create(self, cr, uid, vals, context=None):
         task_id = super(task, self).create(cr, uid, vals, context=context)
         task_record = self.browse(cr, uid, task_id, context=context)
+        project_obj = self.pool.get("project.project")
+        subtype_obj = self.pool.get('mail.message.subtype')
         if task_record.project_id:
+            project_subtype = task_record.project_id.message_subtype_data
+            for key in project_subtype:
+                subtype_ids = subtype_obj.search(cr, uid, [('res_model', '=', self._name), ('name', 'ilike', key)], context=context)
+                if subtype_ids:
+                     subtype_obj.write(cr,uid, subtype_ids, {'default': project_subtype[key]['default']},context=context)
             project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [task_id], project_follower_ids, 
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids,
                 context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
@@ -1110,9 +1117,15 @@ class task(base_stage, osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if isinstance(ids, (int, long)):
             ids = [ids]
+        project_obj = self.pool.get("project.project")
+        subtype_obj = self.pool.get('mail.message.subtype')
         if vals.get('project_id'):
-            project_id = self.pool.get('project.project').browse(cr, uid, vals.get('project_id'), context=context)
+            project_id = project_obj.browse(cr, uid, vals.get('project_id'), context=context)
             vals['message_follower_ids'] = [(4, follower.id) for follower in project_id.message_follower_ids]
+            for key in project_id.message_subtype_data:
+                subtype_ids = subtype_obj.search(cr, uid, [('res_model', '=', self._name), ('name', '=', key)], context=context)
+                if subtype_ids:
+                        subtype_obj.write(cr,uid, subtype_ids, {'default': project_id.message_subtype_data[key]['default']},context=context)
         if vals and not 'kanban_state' in vals and 'stage_id' in vals:
             new_stage = vals.get('stage_id')
             vals_reset_kstate = dict(vals, kanban_state='normal')
