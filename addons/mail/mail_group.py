@@ -30,6 +30,7 @@ class mail_group(osv.Model):
         group. The group mechanics are based on the followers. """
     _description = 'Discussion group'
     _name = 'mail.group'
+    _mail_autothread = False
     _inherit = ['mail.thread']
     _inherits = {'mail.alias': 'alias_id', 'ir.ui.menu': 'menu_id'}
 
@@ -157,7 +158,7 @@ class mail_group(osv.Model):
     def write(self, cr, uid, ids, vals, context=None):
         result = super(mail_group, self).write(cr, uid, ids, vals, context=context)
         if vals.get('group_ids'):
-            self._subscribe_users(cr, uid, ids, vals.get('group_ids'), context=context)
+            self._subscribe_users(cr, uid, ids, context=context)
         return result
 
     def action_follow(self, cr, uid, ids, context=None):

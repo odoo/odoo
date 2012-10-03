@@ -26,7 +26,7 @@ from tools.translate import _
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
-    def amount_to_pay(self, cr, uid, ids, name, arg={}, context=None):
+    def amount_to_pay(self, cr, uid, ids, name, arg=None, context=None):
         """ Return the amount still to pay regarding all the payemnt orders
         (excepting cancelled orders)"""
         if not ids:

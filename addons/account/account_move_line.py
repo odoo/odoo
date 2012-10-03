@@ -1105,7 +1105,7 @@ class account_move_line(osv.osv):
                                 'has been confirmed.') % res[2])
         return res
 
-    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+    def _remove_move_reconcile(self, cr, uid, move_ids=None, context=None):
         # Function remove move rencocile ids related with moves
         obj_move_line = self.pool.get('account.move.line')
         obj_move_rec = self.pool.get('account.move.reconcile')
