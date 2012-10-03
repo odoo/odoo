@@ -33,6 +33,7 @@ import logging
 import tarfile
 import tempfile
 import threading
+from babel.messages import extract
 from os.path import join
 
 from datetime import datetime
@@ -46,6 +47,9 @@ import osutil
 from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
+
+# used to notify web client that these translations should be loaded in the UI
+WEB_TRANSLATION_COMMENT = "openerp-web"
 
 _LOCALE2WIN32 = {
     'af_ZA': 'Afrikaans_South Africa',
@@ -390,11 +394,13 @@ class TinyPoFile(object):
                             }
                           )
 
-    def write(self, modules, tnrs, source, trad):
+    def write(self, modules, tnrs, source, trad, comments=None):
 
         plurial = len(modules) > 1 and 's' or ''
         self.buffer.write("#. module%s: %s\n" % (plurial, ', '.join(modules)))
 
+        if comments:
+            self.buffer.write(''.join(('#. %s\n' % c for c in comments)))
 
         code = False
         for typy, name, res_id in tnrs:
@@ -421,44 +427,43 @@ class TinyPoFile(object):
 
 def trans_export(lang, modules, buffer, format, cr):
 
-    def _process(format, modules, rows, buffer, lang, newlang):
+    def _process(format, modules, rows, buffer, lang):
         if format == 'csv':
-            writer=csv.writer(buffer, 'UNIX')
-            for row in rows:
-                writer.writerow(row)
+            writer = csv.writer(buffer, 'UNIX')
+            # write header first
+            writer.writerow(("module","type","name","res_id","src","value"))
+            for module, type, name, res_id, src, trad, comments in rows:
+                # Comments are ignored by the CSV writer
+                writer.writerow((module, type, name, res_id, src, trad))
         elif format == 'po':
-            rows.pop(0)
             writer = TinyPoFile(buffer)
             writer.write_infos(modules)
 
             # we now group the translations by source. That means one translation per source.
             grouped_rows = {}
-            for module, type, name, res_id, src, trad in rows:
+            for module, type, name, res_id, src, trad, comments in rows:
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
                 if ('translation' not in row) or (not row['translation']):
                     row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
+                row.setdefault('comments', set()).update(comments)
 
             for src, row in grouped_rows.items():
-                writer.write(row['modules'], row['tnrs'], src, row['translation'])
+                writer.write(row['modules'], row['tnrs'], src, row['translation'], row['comments'])
 
         elif format == 'tgz':
-            rows.pop(0)
             rows_by_module = {}
             for row in rows:
                 module = row[0]
-                # first row is the "header", as in csv, it will be popped
-                rows_by_module.setdefault(module, [['module', 'type', 'name', 'res_id', 'src', ''],])
-                rows_by_module[module].append(row)
-
+                rows_by_module.setdefault(module, []).append(row)
             tmpdir = tempfile.mkdtemp()
             for mod, modrows in rows_by_module.items():
                 tmpmoddir = join(tmpdir, mod, 'i18n')
                 os.makedirs(tmpmoddir)
-                pofilename = (newlang and mod or lang) + ".po" + (newlang and 't' or '')
+                pofilename = (lang if lang else mod) + ".po" + ('t' if not lang else '')
                 buf = file(join(tmpmoddir, pofilename), 'w')
-                _process('po', [mod], modrows, buf, lang, newlang)
+                _process('po', [mod], modrows, buf, lang)
                 buf.close()
 
             tar = tarfile.open(fileobj=buffer, mode='w|gz')
@@ -469,16 +474,15 @@ def trans_export(lang, modules, buffer, format, cr):
             raise Exception(_('Unrecognized extension: must be one of '
                 '.csv, .po, or .tgz (received .%s).' % format))
 
-    newlang = not bool(lang)
-    if newlang:
-        lang = 'en_US'
-    trans = trans_generate(lang, modules, cr)
-    if newlang and format!='csv':
-        for trx in trans:
-            trx[-1] = ''
-    modules = set([t[0] for t in trans[1:]])
-    _process(format, modules, trans, buffer, lang, newlang)
-    del trans
+    trans_lang = lang
+    if not trans_lang and format == 'csv':
+        # CSV files are meant for translators and they need a starting point,
+        # so we at least put the original term in the translation column
+        trans_lang = 'en_US'
+    translations = trans_generate(lang, modules, cr)
+    modules = set([t[0] for t in translations[1:]])
+    _process(format, modules, translations, buffer, lang)
+    del translations
 
 def trans_parse_xsl(de):
     res = []
@@ -541,6 +545,46 @@ def in_modules(object_name, modules):
     module = module_dict.get(module, module)
     return module in modules
 
+
+def babel_extract_qweb(fileobj, keywords, comment_tags, options):
+    """Babel message extractor for qweb template files.
+    :param fileobj: the file-like object the messages should be extracted from
+    :param keywords: a list of keywords (i.e. function names) that should
+                     be recognized as translation functions
+    :param comment_tags: a list of translator tags to search for and
+                         include in the results
+    :param options: a dictionary of additional options (optional)
+    :return: an iterator over ``(lineno, funcname, message, comments)``
+             tuples
+    :rtype: ``iterator``
+    """
+    result = []
+    def handle_text(text, lineno):
+        text = (text or "").strip()
+        if len(text) > 1: # Avoid mono-char tokens like ':' ',' etc.
+            result.append((lineno, None, text, []))
+
+    # not using elementTree.iterparse because we need to skip sub-trees in case
+    # the ancestor element had a reason to be skipped
+    def iter_elements(current_element):
+        for el in current_element:
+            if isinstance(el, SKIPPED_ELEMENT_TYPES): continue
+            if "t-js" not in el.attrib and \
+                    not ("t-jquery" in el.attrib and "t-operation" not in el.attrib) and \
+                    not ("t-translation" in el.attrib and el.attrib["t-translation"].strip() == "off"):
+                handle_text(el.text, el.sourceline)
+                for att in ('title', 'alt', 'label', 'placeholder'):
+                    if att in el.attrib:
+                        handle_text(el.attrib[att], el.sourceline)
+                iter_elements(el)
+            handle_text(el.tail, el.sourceline)
+
+    tree = etree.parse(fileobj)
+    iter_elements(tree.getroot())
+
+    return result
+
+
 def trans_generate(lang, modules, cr):
     dbname = cr.dbname
 
@@ -572,8 +616,8 @@ def trans_generate(lang, modules, cr):
     cr.execute(query, query_param)
 
     _to_translate = []
-    def push_translation(module, type, name, id, source):
-        tuple = (module, source, name, id, type)
+    def push_translation(module, type, name, id, source, comments=None):
+        tuple = (module, source, name, id, type, comments or [])
         if source and tuple not in _to_translate:
             _to_translate.append(tuple)
 
@@ -723,7 +767,7 @@ def trans_generate(lang, modules, cr):
         if not hasattr(msg, '__call__'):
             push_translation(module, term_type, model, 0, encode(msg))
 
-    for (model_id, model, module) in cr.fetchall():
+    for (_, model, module) in cr.fetchall():
         module = encode(module)
         model = encode(model)
 
@@ -739,7 +783,6 @@ def trans_generate(lang, modules, cr):
         for constraint in getattr(model_obj, '_sql_constraints', []):
             push_constraint_msg(module, 'sql_constraint', model, constraint[2])
 
-    # parse source code for _() calls
     def get_module_from_path(path, mod_paths=None):
         if not mod_paths:
             # First, construct a list of possible paths
@@ -777,76 +820,55 @@ def trans_generate(lang, modules, cr):
     _logger.debug("Scanning modules at paths: ", path_list)
 
     mod_paths = []
-    join_dquotes = re.compile(r'([^\\])"[\s\\]*"', re.DOTALL)
-    join_quotes = re.compile(r'([^\\])\'[\s\\]*\'', re.DOTALL)
-    re_dquotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*"(.+?)"[\s]*?\)', re.DOTALL)
-    re_quotes = re.compile(r'[^a-zA-Z0-9_]_\([\s]*\'(.+?)\'[\s]*?\)', re.DOTALL)
 
-    def export_code_terms_from_file(fname, path, root, terms_type):
+    def verified_module_filepaths(fname, path, root):
         fabsolutepath = join(root, fname)
         frelativepath = fabsolutepath[len(path):]
+        display_path = "addons%s" % frelativepath
         module = get_module_from_path(fabsolutepath, mod_paths=mod_paths)
-        is_mod_installed = module in installed_modules
-        if (('all' in modules) or (module in modules)) and is_mod_installed:
-            _logger.debug("Scanning code of %s at module: %s", frelativepath, module)
-            src_file = misc.file_open(fabsolutepath, subdir='')
+        if (('all' in modules) or (module in modules)) and module in installed_modules:
+            return module, fabsolutepath, frelativepath, display_path
+        return None, None, None, None
+
+    def babel_extract_terms(fname, path, root, extract_method="python", trans_type='code',
+                               extra_comments=None, extract_keywords={'_': None}):
+        module, fabsolutepath, _, display_path = verified_module_filepaths(fname, path, root)
+        extra_comments = extra_comments or []
+        if module:
+            src_file = open(fabsolutepath, 'r')
             try:
-                code_string = src_file.read()
+                for lineno, message, comments in extract.extract(extract_method, src_file,
+                                                                 keywords=extract_keywords):
+                    push_translation(module, trans_type, display_path, lineno,
+                                     encode(message), comments + extra_comments)
             finally:
                 src_file.close()
-            if module in installed_modules:
-                frelativepath = str("addons" + frelativepath)
-            ite = re_dquotes.finditer(code_string)
-            code_offset = 0
-            code_line = 1
-            for i in ite:
-                src = i.group(1)
-                if src.startswith('""'):
-                    assert src.endswith('""'), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
-                    src = src[2:-2]
-                else:
-                    src = join_dquotes.sub(r'\1', src)
-                # try to count the lines from the last pos to our place:
-                code_line += code_string[code_offset:i.start(1)].count('\n')
-                # now, since we did a binary read of a python source file, we
-                # have to expand pythonic escapes like the interpreter does.
-                src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, code_line, encode(src))
-                code_line += i.group(1).count('\n')
-                code_offset = i.end() # we have counted newlines up to the match end
-
-            ite = re_quotes.finditer(code_string)
-            code_offset = 0 #reset counters
-            code_line = 1
-            for i in ite:
-                src = i.group(1)
-                if src.startswith("''"):
-                    assert src.endswith("''"), "Incorrect usage of _(..) function (should contain only literal strings!) in file %s near: %s" % (frelativepath, src[:30])
-                    src = src[2:-2]
-                else:
-                    src = join_quotes.sub(r'\1', src)
-                code_line += code_string[code_offset:i.start(1)].count('\n')
-                src = src.decode('string_escape')
-                push_translation(module, terms_type, frelativepath, code_line, encode(src))
-                code_line += i.group(1).count('\n')
-                code_offset = i.end() # we have counted newlines up to the match end
 
     for path in path_list:
         _logger.debug("Scanning files of modules at %s", path)
         for root, dummy, files in osutil.walksymlinks(path):
-            for fname in itertools.chain(fnmatch.filter(files, '*.py')):
-                export_code_terms_from_file(fname, path, root, 'code')
-            for fname in itertools.chain(fnmatch.filter(files, '*.mako')):
-                export_code_terms_from_file(fname, path, root, 'report')
+            for fname in fnmatch.filter(files, '*.py'):
+                babel_extract_terms(fname, path, root)
+            for fname in fnmatch.filter(files, '*.mako'):
+                babel_extract_terms(fname, path, root, trans_type='report')
+            # Javascript source files in the static/src/js directory, rest is ignored (libs)
+            if fnmatch.fnmatch(root, '*/static/src/js*'):
+                for fname in fnmatch.filter(files, '*.js'):
+                    babel_extract_terms(fname, path, root, 'javascript',
+                                        extra_comments=[WEB_TRANSLATION_COMMENT],
+                                        extract_keywords={'_t': None})
+            # QWeb template files
+            if fnmatch.fnmatch(root, '*/static/src/xml*'):
+                for fname in fnmatch.filter(files, '*.xml'):
+                    babel_extract_terms(fname, path, root, 'openerp.tools.translate:babel_extract_qweb',
+                                        extra_comments=[WEB_TRANSLATION_COMMENT])
 
-
-    out = [["module","type","name","res_id","src","value"]] # header
+    out = []
     _to_translate.sort()
     # translate strings marked as to be translated
-    for module, source, name, id, type in _to_translate:
-        trans = trans_obj._get_source(cr, uid, name, type, lang, source)
-        out.append([module, type, name, id, source, encode(trans) or ''])
-
+    for module, source, name, id, type, comments in _to_translate:
+        trans = '' if not lang else trans_obj._get_source(cr, uid, name, type, lang, source)
+        out.append([module, type, name, id, source, encode(trans) or '', comments])
     return out
 
 def trans_load(cr, filename, lang, verbose=True, module_name=None, context=None):
