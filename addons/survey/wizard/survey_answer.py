@@ -1008,7 +1008,7 @@ class survey_question_wiz(osv.osv_memory):
 
         return survey_question_wiz_id
 
-    def action_new_question(self,cr, uid, ids, context=None):
+    def action_new_question(self, cr, uid, ids, context=None):
         """
         New survey.Question form.
         """
@@ -1050,7 +1050,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_page(self,cr, uid, ids, context=None):
+    def action_edit_page(self, cr, uid, ids, context=None):
         """
         Edit survey.page.
         """
@@ -1072,7 +1072,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_page(self,cr, uid, ids, context=None):
+    def action_delete_page(self, cr, uid, ids, context=None):
         """
         Delete survey.page.
         """
@@ -1098,7 +1098,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_edit_question(self,cr, uid, ids, context=None):
+    def action_edit_question(self, cr, uid, ids, context=None):
         """
         Edit survey.question.
         """
@@ -1120,7 +1120,7 @@ class survey_question_wiz(osv.osv_memory):
             'context': context
         }
 
-    def action_delete_question(self,cr, uid, ids, context=None):
+    def action_delete_question(self, cr, uid, ids, context=None):
         """
         Delete survey.question.
         """

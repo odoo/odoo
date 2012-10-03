@@ -44,17 +44,17 @@ class account_fiscal_position(osv.osv):
             return []
         if not fposition_id:
             return map(lambda x: x.id, taxes)
-        result = []
+        result = set()
         for t in taxes:
             ok = False
             for tax in fposition_id.tax_ids:
                 if tax.tax_src_id.id == t.id:
                     if tax.tax_dest_id:
-                        result.append(tax.tax_dest_id.id)
+                        result.add(tax.tax_dest_id.id)
                     ok=True
             if not ok:
-                result.append(t.id)
-        return result
+                result.add(t.id)
+        return list(result)
 
     def map_account(self, cr, uid, fposition_id, account_id, context=None):
         if not fposition_id:
@@ -77,6 +77,12 @@ class account_fiscal_position_tax(osv.osv):
         'tax_dest_id': fields.many2one('account.tax', 'Replacement Tax')
     }
 
+    _sql_constraints = [
+        ('tax_src_dest_uniq',
+         'unique (position_id,tax_src_id,tax_dest_id)',
+         'A tax fiscal position could be defined only once time on same taxes.')
+    ]
+
 account_fiscal_position_tax()
 
 class account_fiscal_position_account(osv.osv):
@@ -88,6 +94,12 @@ class account_fiscal_position_account(osv.osv):
         'account_src_id': fields.many2one('account.account', 'Account Source', domain=[('type','<>','view')], required=True),
         'account_dest_id': fields.many2one('account.account', 'Account Destination', domain=[('type','<>','view')], required=True)
     }
+
+    _sql_constraints = [
+        ('account_src_dest_uniq',
+         'unique (position_id,account_src_id,account_dest_id)',
+         'An account fiscal position could be defined only once time on same accounts.')
+    ]
 
 account_fiscal_position_account()
 

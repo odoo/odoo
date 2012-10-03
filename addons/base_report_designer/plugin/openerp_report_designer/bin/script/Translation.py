@@ -61,7 +61,7 @@ if __name__<>"package":
 
 
 class AddLang(unohelper.Base, XJobExecutor ):
-    def __init__(self,sVariable="",sFields="",sDisplayName="",bFromModify=False):
+    def __init__(self, sVariable="", sFields="", sDisplayName="", bFromModify=False):
         LoginTest()
         if not loginstatus and __name__=="package":
             exit(1)
@@ -157,7 +157,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
             ErrorDialog("Please insert user define field Field-1 or Field-4","Just go to File->Properties->User Define \nField-1 E.g. http://localhost:8069 \nOR \nField-4 E.g. account.invoice")
             self.win.endExecute()
 
-    def lstbox_selected(self,oItemEvent):
+    def lstbox_selected(self, oItemEvent):
         try:
 
             desktop=getDesktop()
@@ -183,7 +183,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
         if self.bModify:
             self.win.setEditText("txtUName",self.sGDisplayName)
 
-    def getRes(self,sock ,sObject,sVar):
+    def getRes(self, sock, sObject, sVar):
         desktop=getDesktop()
         doc =desktop.getCurrentComponent()
         docinfo=doc.getDocumentInfo()
@@ -203,7 +203,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
                 return sObject
 
 
-    def cmbVariable_selected(self,oItemEvent):
+    def cmbVariable_selected(self, oItemEvent):
         if self.count > 0 :
             try:
                 desktop=getDesktop()
@@ -229,7 +229,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
             except:
                 import traceback;traceback.print_exc()
 
-    def btnOk_clicked( self, oActionEvent ):
+    def btnOk_clicked(self, oActionEvent):
         self.bOkay = True
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
@@ -263,7 +263,7 @@ class AddLang(unohelper.Base, XJobExecutor ):
         else:
             ErrorDialog("Please fill appropriate data in name field \nor select particular value from the list of fields.")
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 

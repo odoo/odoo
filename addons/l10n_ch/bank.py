@@ -48,7 +48,7 @@ class ResPartnerBank(osv.osv):
         'dta_code': fields.char('DTA code', size=5),
         'print_bank': fields.boolean('Print Bank on BVR'),
         'print_account': fields.boolean('Print Account Number on BVR'),
-        'acc_number': fields.char('Account/IBAN Number', size=64),
+        'acc_number': fields.char('Account Number', size=64),
         'my_bank': fields.boolean('Use my account to print BVR ?', help="Check to print BVR invoices"),
     }
 
