@@ -325,8 +325,10 @@ openerp.base_import = function (instance) {
             });
         },
         render_import_result: function (message) {
-            if (_.isEmpty(message)) {
-                this.$('.oe_import_import').addClass('oe_highlight');
+            var no_messages = _.isEmpty(message);
+            this.$('.oe_import_import').toggleClass('oe_highlight', no_messages);
+            this.$('.oe_import_validate').toggleClass('oe_highlight', !no_messages);
+            if (no_messages) {
                 message.push({
                     type: 'info',
                     message: _t("Everything seems valid.")
