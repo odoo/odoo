@@ -53,7 +53,6 @@ class survey(osv.osv):
         'id': fields.integer('ID'),
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
-        'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
@@ -80,7 +79,7 @@ class survey(osv.osv):
     }
 
     def survey_open(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
+        self.write(cr, uid, ids, {'state': 'open'})
         return True
 
     def survey_close(self, cr, uid, ids, arg):
