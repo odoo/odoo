@@ -444,7 +444,7 @@
         <record model="ir.ui.view" id="fleet_vehicle_odometer_graph">
            <field name="name">fleet.vehicle.odometer.graph</field>
            <field name="model">fleet.vehicle.odometer</field>
-           <field name="type">graph</field>
+           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Odometer value per month">
                     <field name="date" />
@@ -523,7 +523,7 @@
         <record model="ir.ui.view" id="fleet_vehicle_log_fuel_graph">
            <field name="name">fleet.vehicle.log.fuel.graph</field>
            <field name="model">fleet.vehicle.log.fuel</field>
-           <field name="type">graph</field>
+           <!--<field name="type">graph</field>-->
            <field name="arch" type="xml">
                 <graph string="Total Fuel amount per month">
                     <field name="date" />
@@ -601,7 +601,6 @@
         <record model="ir.ui.view" id="fleet_vehicle_log_services_graph">
            <field name="name">fleet.vehicle.log.services.graph</field>
            <field name="model">fleet.vehicle.log.services</field>
-           <field name="type">graph</field>
            <field name="arch" type="xml">
                 <graph string="Services total amount per month">
                     <field name="date" />
