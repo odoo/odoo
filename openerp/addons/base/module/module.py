@@ -237,7 +237,6 @@ class module(osv.osv):
         'menus_by_module': fields.function(_get_views, string='Menus', type='text', multi="meta", store=True),
         'reports_by_module': fields.function(_get_views, string='Reports', type='text', multi="meta", store=True),
         'views_by_module': fields.function(_get_views, string='Views', type='text', multi="meta", store=True),
-        'certificate' : fields.char('Quality Certificate', size=64, readonly=True),
         'application': fields.boolean('Application', readonly=True),
         'icon': fields.char('Icon URL', size=128),
         'icon_image': fields.function(_get_icon_image, string='Icon', type="binary"),
@@ -253,12 +252,9 @@ class module(osv.osv):
 
     def _name_uniq_msg(self, cr, uid, ids, context=None):
         return _('The name of the module must be unique !')
-    def _certificate_uniq_msg(self, cr, uid, ids, context=None):
-        return _('The certificate ID of the module must be unique !')
 
     _sql_constraints = [
         ('name_uniq', 'UNIQUE (name)',_name_uniq_msg ),
-        ('certificate_uniq', 'UNIQUE (certificate)',_certificate_uniq_msg )
     ]
 
     def unlink(self, cr, uid, ids, context=None):
@@ -511,7 +507,6 @@ class module(osv.osv):
             'contributors': ', '.join(terp.get('contributors', [])) or False,
             'website': terp.get('website', ''),
             'license': terp.get('license', 'AGPL-3'),
-            'certificate': terp.get('certificate') or False,
             'sequence': terp.get('sequence', 100),
             'application': terp.get('application', False),
             'auto_install': terp.get('auto_install', False),
@@ -645,14 +640,6 @@ class module(osv.osv):
         for mod in self.browse(cr, uid, ids, context=context):
             if not mod.description:
                 _logger.warning('module %s: description is empty !', mod.name)
-
-            if not mod.certificate or not mod.certificate.isdigit():
-                _logger.info('module %s: no quality certificate', mod.name)
-            else:
-                val = long(mod.certificate[2:]) % 97 == 29
-                if not val:
-                    _logger.critical('module %s: invalid quality certificate: %s', mod.name, mod.certificate)
-                    raise osv.except_osv(_('Error'), _('Module %s: Invalid Quality Certificate') % (mod.name,))
 
 class module_dependency(osv.osv):
     _name = "ir.module.module.dependency"

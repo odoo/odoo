@@ -329,7 +329,7 @@ class act_wizard(osv.osv):
 act_wizard()
 
 class act_url(osv.osv):
-    _name = 'ir.actions.url'
+    _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
