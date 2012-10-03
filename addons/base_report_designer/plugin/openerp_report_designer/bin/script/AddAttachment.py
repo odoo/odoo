@@ -64,7 +64,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         'PDF' : 'pdf',
         'OpenOffice': 'sxw',
     }
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
@@ -132,7 +132,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         self.win.addButton('btnCancel', -2 - 27 , -5 , 30 , 15, 'Cancel' ,actionListenerProc = self.btnCancel_clicked )
         self.win.doModalDialog("lstResourceType", self.Kind.keys()[0])
 
-    def btnSearch_clicked( self, oActionEvent ):
+    def btnSearch_clicked(self, oActionEvent):
         modelSelectedItem = self.win.getListBoxSelectedItem("lstmodel")
         if modelSelectedItem == "":
             return
@@ -151,7 +151,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         for result in self.aSearchResult:
             self.lstResource.addItem(result[1],result[0])
 
-    def _send_attachment( self, name, data, res_model, res_id ):
+    def _send_attachment(self, name, data, res_model, res_id):
         desktop = getDesktop()
         oDoc2 = desktop.getCurrentComponent()
         docinfo = oDoc2.getDocumentInfo()
@@ -166,7 +166,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
 
         return self.sock.execute( database, uid, self.password, 'ir.attachment', 'create', params )
 
-    def send_attachment( self, model, resource_id ):
+    def send_attachment(self, model, resource_id):
         desktop = getDesktop()
         oDoc2 = desktop.getCurrentComponent()
         docinfo = oDoc2.getDocumentInfo()
@@ -187,7 +187,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         data = read_data_from_file( get_absolute_file_path( url ) )
         return self._send_attachment( os.path.basename( url ), data, model, resource_id )
 
-    def btnOkWithoutInformation_clicked( self, oActionEvent ):
+    def btnOkWithoutInformation_clicked(self, oActionEvent):
         desktop = getDesktop()
         oDoc2 = desktop.getCurrentComponent()
         docinfo = oDoc2.getDocumentInfo()
@@ -199,7 +199,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         res = self.send_attachment( docinfo.getUserFieldValue(3), docinfo.getUserFieldValue(2) )
         self.win.endExecute()
 
-    def btnOkWithInformation_clicked(self,oActionEvent):
+    def btnOkWithInformation_clicked(self, oActionEvent):
         if self.win.getListBoxSelectedItem("lstResourceType") == "":
             ErrorDialog( "You have to select a resource type.", "", "Selection Error." )
             return
@@ -221,7 +221,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
         res = self.send_attachment( self.dModel[self.win.getListBoxSelectedItem('lstmodel')], resourceid )
         self.win.endExecute()
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
     def doc2pdf(self, strFile):
@@ -262,7 +262,7 @@ class AddAttachment(unohelper.Base, XJobExecutor ):
             # Can be None if len(strFilterSubName) <= 0
             return filename
 
-    def _MakePropertyValue(self, cName = "", uValue = u"" ):
+    def _MakePropertyValue(self, cName="", uValue=u""):
        oPropertyValue = createUnoStruct( "com.sun.star.beans.PropertyValue" )
        if cName:
           oPropertyValue.Name = cName

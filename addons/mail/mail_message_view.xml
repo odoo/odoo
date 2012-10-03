@@ -31,6 +31,7 @@
                                 <field name="author_id"/>
                                 <field name="date"/>
                                 <field name="type"/>
+                                <field name="subtype_id"/>
                             </group>
                             <group>
                                 <field name="model"/>
@@ -55,16 +56,18 @@
                     <field name="subject" string="Content" filter_domain="['|', ('subject', 'ilike', self), ('body', 'ilike', self)]" />
                     <field name="type"/>
                     <field name="author_id"/>
-                    <filter icon="terp-personal+" string="Comments"
+                    <filter string="Unread"
+                            name="unread_message" help="Show unread message"
+                            domain="[('unread', '=', True)]"/>
+                    <filter string="Comments"
                             name="comments" help="Comments"
                             domain="[('type', '=', 'comment')]"/>
-                    <filter icon="terp-personal+" string="Notifications"
+                    <filter string="Notifications"
                             name="notifications" help="Notifications"
                             domain="[('type', '=', 'notification')]"/>
-                    <filter icon="terp-personal+" string="Emails"
+                    <filter string="Emails"
                             name="emails" help="Emails"
                             domain="[('type', '=', 'email')]"/>
-                    <field name="author_id"/>
                 </search>
             </field>
         </record>
@@ -75,20 +78,28 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="search_view_id" ref="view_message_search"/>
+            <field name="context">{'search_default_unread_message':True}</field>
         </record>
         
         <!-- Add menu entry in Settings/Email -->
         <menuitem name="Messages" id="menu_mail_message" parent="base.menu_email" action="action_view_mail_message"/>
 
-        <record id="action_mail_all_feeds" model="ir.actions.client">
-            <field name="name">News Feed</field>
+        <record id="action_mail_inbox_feeds" model="ir.actions.client">
+            <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
-            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid])],
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
         </record>
 
-        <record id="action_mail_my_feeds" model="ir.actions.client">
-            <field name="name">My Posts</field>
+        <record id="action_mail_archives_feeds" model="ir.actions.client">
+            <field name="name">Archives</field>
+            <field name="tag">mail.wall</field>
+            <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', False)],
+                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+        </record>
+
+        <record id="action_mail_sent_feeds" model="ir.actions.client">
+            <field name="name">Sent</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
                 'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>

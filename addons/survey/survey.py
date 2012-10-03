@@ -548,7 +548,7 @@ class survey_question_column_heading(osv.osv):
     _description = 'Survey Question Column Heading'
     _rec_name = 'title'
 
-    def _get_in_visible_rating_weight(self,cr, uid, context=None):
+    def _get_in_visible_rating_weight(self, cr, uid, context=None):
         if context is None:
             context = {}
         if context.get('in_visible_rating_weight', False):
@@ -601,7 +601,7 @@ class survey_answer(osv.osv):
             }
         return val
 
-    def _get_in_visible_answer_type(self,cr, uid, context=None):
+    def _get_in_visible_answer_type(self, cr, uid, context=None):
         if context is None:
             context = {}
         return context.get('in_visible_answer_type', False)

@@ -43,6 +43,7 @@ class hr_evaluation_plan(osv.osv):
         'month_next': 12,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
+
 hr_evaluation_plan()
 
 class hr_evaluation_plan_phase(osv.osv):
@@ -95,6 +96,7 @@ Thanks,
 
         '''),
     }
+
 hr_evaluation_plan_phase()
 
 class hr_employee(osv.osv):
@@ -210,8 +212,6 @@ class hr_evaluation(osv.osv):
                 elif phase.action == "self":
                     children = [evaluation.employee_id]
                 for child in children:
-#                    if not child.user_id:
-#                        continue
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
@@ -250,7 +250,7 @@ class hr_evaluation(osv.osv):
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
-    def button_done(self,cr, uid, ids, context=None):
+    def button_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
