@@ -20,6 +20,7 @@
 ##############################################################################
 
 from osv import fields, osv
+from tools.translate import _
 
 class procurement_order(osv.osv):
     _name = "procurement.order"
@@ -82,10 +83,16 @@ class procurement_order(osv.osv):
                 'description': procurement.note,
                 'project_id':  project and project.id or False,
                 'company_id': procurement.company_id.id,
-            },context=context)
+            },context=context)            
             self.write(cr, uid, [procurement.id], {'task_id': task_id, 'state': 'running', 'message':'from project: task created.'}, context=context)
-        self.running_send_note(cr, uid, ids, context=None)
+            self.document_send_note(cr, uid, [procurement.id], body='%s %s:%s %s' % (_("Task"), procurement.origin or '', procurement.product_id.name, _("created")), context=context)
+        self.project_task_create_note(cr, uid, ids, context=context)
         return task_id
+
+    def project_task_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = "%s %s %s" % (_("Task"), procurement.task_id.name, _("Created"))
+            self.message_post(cr, uid, ids, body=body, context=context)
 
 procurement_order()
 

@@ -31,6 +31,7 @@ class procurement_order(osv.osv):
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
+        'production_id': fields.many2one('mrp.production', 'Manufucture Order'),
     }
     
     def check_produce_product(self, cr, uid, procurement, context=[]):
@@ -95,16 +96,23 @@ class procurement_order(osv.osv):
                 'move_prod_id': res_id,
                 'company_id': procurement.company_id.id,
             })
+            
             res[procurement.id] = produce_id
-            self.write(cr, uid, [procurement.id], {'state': 'running'})
-            self.running_send_note(cr, uid, ids, context=context)
+            self.write(cr, uid, [procurement.id], {'state': 'running', 'production_id': produce_id})   
+                     
             bom_result = production_obj.action_compute(cr, uid,
                     [produce_id], properties=[x.id for x in procurement.property_ids])
             wf_service.trg_validate(uid, 'mrp.production', produce_id, 'button_confirm', cr)
             if res_id:
                 move_obj.write(cr, uid, [res_id],
                         {'location_id': procurement.location_id.id})
+        self.production_order_create_note(cr, uid, ids, context=context)
         return res
+
+    def production_order_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = "%s %s %s" % (_("Manufacturing Order"), procurement.production_id.name, _("Created"))
+            self.message_post(cr, uid, ids, body=body, context=context)
     
 procurement_order()
 
