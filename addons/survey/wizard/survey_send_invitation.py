@@ -50,8 +50,6 @@ class survey_send_invitation(osv.osv_memory):
     _defaults = {
         'send_mail': lambda *a: 1,
         'send_mail_existing': lambda *a: 1,
-        'mail_subject': lambda *a: "Invitation",
-        'mail_subject_existing': lambda *a: "Invitation",
         'mail_from': lambda *a: tools.config['email_from']
     }
 
@@ -75,6 +73,8 @@ class survey_send_invitation(osv.osv_memory):
         data['mail'] = '''Hello %(name)s, \n\n We are inviting you for following survey. \
                     \n  ''' + name + '''\n Your login ID: %(login)s, Your password: %(passwd)s
                     \n link :- http://'''+ str(socket.gethostname()) + ''':8080 \n\n Thanks,'''
+        data['mail_subject'] = "Invitation for " + sur.title
+        data['mail_subject_existing'] = "Invitation for " + sur.title
         return data
 
     def create_report(self, cr, uid, res_ids, report_name=False, file_name=False):
