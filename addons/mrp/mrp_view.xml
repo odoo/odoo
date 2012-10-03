@@ -954,6 +954,7 @@
             <data>
                 <xpath expr="//field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                    <field name="production_id"/>
                 </xpath>
                 <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">

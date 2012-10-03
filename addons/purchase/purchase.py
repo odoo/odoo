@@ -1082,8 +1082,7 @@ class procurement_order(osv.osv):
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
-            self.document_send_note(cr, uid, [procurement.id], body='%s %s %s' % (_("Draft Purchase Order"), name or '', _("created")), context=context)
-        self.purchase_order_create_note(self, cr, uid, ids, context=context)
+        self.purchase_order_create_note(cr, uid, ids, context=context)
         return res
 
     def purchase_order_create_note(self, cr, uid, ids, context=None):
