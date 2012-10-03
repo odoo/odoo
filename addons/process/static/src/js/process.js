@@ -217,8 +217,7 @@ instance.web.ViewManager.include({
         var dataset = new instance.web.DataSet(this, 'ir.values', this.session.user_context);
         var action_manager = new instance.web.ActionManager(self);
         dataset.call('get',
-            ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context],
-            function(res) {
+            ['action', 'tree_but_open',[['ir.ui.menu', id]], dataset.context]).then(function(res) {
                 var action = res[0][res[0].length - 1];
                 self.rpc("/web/action/load", {
                     action_id: action.id,

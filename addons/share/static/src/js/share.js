@@ -24,9 +24,8 @@ openerp.share = function(session) {
                 user_type: user_type || 'embedded',
                 view_type: view.fields_view.type,
                 invite: invite || false,
-            }, function(result) {
-                var share_id = result.result;
-                var step1 = Share.call('go_step_1', [[share_id],], function(result) {
+            }).then(function(share_id) {
+                var step1 = Share.call('go_step_1', [[share_id]]).then(function(result) {
                     var action = result;
                     self.do_action(action);
                 });
