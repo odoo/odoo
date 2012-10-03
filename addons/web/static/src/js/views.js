@@ -313,6 +313,15 @@ instance.web.ActionManager = instance.web.Widget.extend({
     ir_actions_client: function (action, on_close, clear_breadcrumbs) {
         var self = this;
         var ClientWidget = instance.web.client_actions.get_object(action.tag);
+
+        if (!(ClientWidget.prototype instanceof instance.web.Widget)) {
+            var next;
+            if (next = ClientWidget(this, action.params)) {
+                return this.do_action(next, on_close, clear_breadcrumbs);
+            }
+            return $.when();
+        }
+
         return this.ir_actions_common({
             widget: function () { return new ClientWidget(self, action.params); },
             action: action,

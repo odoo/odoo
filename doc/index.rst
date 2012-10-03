@@ -24,6 +24,8 @@ Contents:
 
     templates
 
+    guides/client-action
+
 Indices and tables
 ==================
 
