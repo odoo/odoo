@@ -520,7 +520,7 @@ class product_template(osv.osv):
     }
 
     _defaults = {
-        'sale_delay': lambda *a: 7,
+        'sale_delay': 7,
     }
 product_template()
 
