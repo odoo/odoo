@@ -112,9 +112,9 @@ class project_work(osv.osv):
         vals_line = {}
         context = kwargs.get('context', {})
         if not context.get('no_analytic_entry',False):
-            obj_task = task_obj.browse(cr, uid, vals['task_id'])
+            task_obj = task_obj.browse(cr, uid, vals['task_id'])
             result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-            vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
+            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name']) or '/')
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
@@ -125,7 +125,7 @@ class project_work(osv.osv):
             default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
             if result['product_uom_id'] != default_uom:
                 vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-            acc_id = obj_task.project_id and obj_task.project_id.analytic_account_id.id or False
+            acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or False
             if acc_id:
                 vals_line['account_id'] = acc_id
                 res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
@@ -232,12 +232,11 @@ class task(osv.osv):
         if vals.get('project_id',False) or vals.get('name',False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
-            task_obj_l = self.browse(cr, uid, ids, context=context)
             if vals.get('project_id',False):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
                 acc_id = project_obj.analytic_account_id.id
 
-            for task_obj in task_obj_l:
+            for task_obj in self.browse(cr, uid, ids, context=context):
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
                         if not task_work.hr_analytic_timesheet_id:
