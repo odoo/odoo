@@ -28,6 +28,7 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
+
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
@@ -68,6 +69,7 @@ class project_project(osv.osv):
             'nodestroy': True,
             'help': help
         }
+
 project_project()
 
 class project_work(osv.osv):
@@ -118,7 +120,7 @@ class project_work(osv.osv):
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
 
-            #calculate quantity based on employee's product's uom
+            # Calculate quantity based on employee's product's uom
             vals_line['unit_amount'] = vals['hours']
 
             default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
@@ -165,23 +167,24 @@ class project_work(osv.osv):
                 # if a record is deleted from timesheet, the line_id will become
                 # null because of the foreign key on-delete=set null
                 continue
+
             vals_line = {}
             if 'name' in vals:
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
-                
-
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
                 default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
+
                 result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
-                for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
-                    if result.get(fld, False):
-                        vals_line[fld] = result[fld]
+                for field in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
+                    if result.get(field, False):
+                        vals_line[field] = result[field]
+
                 if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
                     vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
 
@@ -203,7 +206,7 @@ class project_work(osv.osv):
         for task in self.browse(cr, uid, ids):
             if task.hr_analytic_timesheet_id:
                 hat_ids.append(task.hr_analytic_timesheet_id.id)
-#            delete entry from timesheet too while deleting entry to task.
+        # Delete entry from timesheet too while deleting entry to task.
         if hat_ids:
             hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
@@ -253,6 +256,7 @@ task()
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
+
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
@@ -263,6 +267,7 @@ res_partner()
 
 class account_analytic_line(osv.osv):
    _inherit = "account.analytic.line"
+
    def on_change_account_id(self, cr, uid, ids, account_id):
        res = {}
        if not account_id:
@@ -274,5 +279,7 @@ class account_analytic_line(osv.osv):
        if acc.state == 'close' or acc.state == 'cancelled':
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
+
 account_analytic_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
