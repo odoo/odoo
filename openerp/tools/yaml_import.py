@@ -368,7 +368,9 @@ class YamlInterpreter(object):
                     record_dict[field_name] = field_value
                     #if (field_name in defaults) and defaults[field_name] == field_value:
                     #    print '*** You can remove these lines:', field_name, field_value
-                else:
+
+                #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
+                elif field_name not in defaults:
                     continue
 
                 if not el.attrib.get('on_change', False):
@@ -385,7 +387,7 @@ class YamlInterpreter(object):
 
                 ctx = record_dict.copy()
                 ctx['context'] = self.context
-                ctx['uid'] = 1
+                ctx['uid'] = SUPERUSER_ID
                 ctx['parent'] = parent2(parent)
                 for a in fg:
                     if a not in ctx:
