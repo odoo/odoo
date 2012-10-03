@@ -31,9 +31,6 @@ import decimal_precision as dp
 from osv.orm import browse_record, browse_null
 from tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT, DATETIME_FORMATS_MAP
 
-#
-# Model definition
-#
 class purchase_order(osv.osv):
 
     def _amount_all(self, cr, uid, ids, field_name, arg, context=None):
@@ -239,7 +236,6 @@ class purchase_order(osv.osv):
             else:
                 raise osv.except_osv(_('Invalid Action!'), _('In order to delete a purchase order, you must cancel it first.'))
 
-        # TODO: temporary fix in 5.0, to remove in 5.2 when subflows support
         # automatically sending subflow.delete upon deletion
         wf_service = netsvc.LocalService("workflow")
         for id in unlink_ids:
@@ -333,7 +329,7 @@ class purchase_order(osv.osv):
                 'view_id': view_id,
                 'res_id': pick_ids[0]
             })
-            
+
         action.update({
             'context': ctx,
         })
@@ -380,7 +376,7 @@ class purchase_order(osv.osv):
             for line in po.order_line:
                 if line.state=='draft':
                     todo.append(line.id)
-#        current_name = self.name_get(cr, uid, ids)[0][1]
+
         self.pool.get('purchase.order.line').action_confirm(cr, uid, todo, context)
         for id in ids:
             self.write(cr, uid, [id], {'state' : 'confirmed', 'validator' : uid})
@@ -491,7 +487,7 @@ class purchase_order(osv.osv):
         self.invoice_done_send_note(cr, uid, ids, context=context)
         return True
 
-    def has_stockable_product(self,cr, uid, ids, *args):
+    def has_stockable_product(self, cr, uid, ids, *args):
         for order in self.browse(cr, uid, ids):
             for order_line in order.order_line:
                 if order_line.product_id and order_line.product_id.product_tmpl_id.type in ('product', 'consu'):
@@ -596,7 +592,7 @@ class purchase_order(osv.osv):
         wf_service.trg_validate(uid, 'stock.picking', picking_id, 'button_confirm', cr)
         return [picking_id]
 
-    def action_picking_create(self,cr, uid, ids, context=None):
+    def action_picking_create(self, cr, uid, ids, context=None):
         picking_ids = []
         for order in self.browse(cr, uid, ids):
             picking_ids.extend(self._create_pickings(cr, uid, order, order.order_line, None, context=context))
@@ -665,7 +661,7 @@ class purchase_order(osv.osv):
             list_key.sort()
             return tuple(list_key)
 
-    # compute what the new orders should contain
+        # Compute what the new orders should contain
 
         new_orders = {}
 
@@ -792,14 +788,6 @@ class purchase_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total'])
         return res
 
-    def _get_uom_id(self, cr, uid, context=None):
-        try:
-            proxy = self.pool.get('ir.model.data')
-            result = proxy.get_object_reference(cr, uid, 'product', 'product_uom_unit')
-            return result[1]
-        except Exception, ex:
-            return False
-
     _columns = {
         'name': fields.text('Description', required=True),
         'product_qty': fields.float('Quantity', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
@@ -826,7 +814,6 @@ class purchase_order_line(osv.osv):
 
     }
     _defaults = {
-        'product_uom' : _get_uom_id,
         'product_qty': lambda *a: 1.0,
         'state': lambda *args: 'draft',
         'invoiced': lambda *a: 0,
@@ -1057,9 +1044,10 @@ class procurement_order(osv.osv):
             purchase_date = self._get_purchase_order_date(cr, uid, procurement, company, schedule_date, context=context)
 
             #Passing partner_id to context for purchase order line integrity of Line name
-            context.update({'lang': partner.lang, 'partner_id': partner_id})
+            new_context = context.copy()
+            new_context.update({'lang': partner.lang, 'partner_id': partner_id})
 
-            product = prod_obj.browse(cr, uid, procurement.product_id.id, context=context)
+            product = prod_obj.browse(cr, uid, procurement.product_id.id, context=new_context)
             taxes_ids = procurement.product_id.product_tmpl_id.supplier_taxes_id
             taxes = acc_pos_obj.map_tax(cr, uid, partner.property_account_position, taxes_ids)
 
@@ -1088,7 +1076,7 @@ class procurement_order(osv.osv):
                 'company_id': procurement.company_id.id,
                 'fiscal_position': partner.property_account_position and partner.property_account_position.id or False
             }
-            res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=context)
+            res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
             self.running_send_note(cr, uid, [procurement.id], context=context)
         return res
@@ -1106,4 +1094,5 @@ class mail_mail(osv.osv):
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 mail_mail()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

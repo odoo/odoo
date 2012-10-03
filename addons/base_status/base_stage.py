@@ -381,7 +381,7 @@ class base_stage(object):
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 

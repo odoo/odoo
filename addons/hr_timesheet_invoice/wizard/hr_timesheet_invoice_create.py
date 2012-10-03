@@ -38,7 +38,7 @@ class account_analytic_line(osv.osv):
     #   'price': boolean
     #   'product': many2one id
     # }
-    def invoice_cost_create(self, cr, uid, ids, data={}, context=None):
+    def invoice_cost_create(self, cr, uid, ids, data=None, context=None):
         analytic_account_obj = self.pool.get('account.analytic.account')
         res_partner_obj = self.pool.get('res.partner')
         account_payment_term_obj = self.pool.get('account.payment.term')
@@ -52,6 +52,8 @@ class account_analytic_line(osv.osv):
         invoices = []
         if context is None:
             context = {}
+        if data is None:
+            data = {}
 
         account_ids = {}
         for line in self.pool.get('account.analytic.line').browse(cr, uid, ids, context=context):
@@ -79,17 +81,24 @@ class account_analytic_line(osv.osv):
             curr_invoice = {
                 'name': time.strftime('%d/%m/%Y')+' - '+account.name,
                 'partner_id': account.partner_id.id,
+                'company_id': account.company_id.id,
                 'payment_term': partner.property_payment_term.id or False,
                 'account_id': partner.property_account_receivable.id,
                 'currency_id': account.pricelist_id.currency_id.id,
                 'date_due': date_due,
                 'fiscal_position': account.partner_id.property_account_position.id
             }
-            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context)
-            invoices.append(last_invoice)
 
             context2 = context.copy()
             context2['lang'] = partner.lang
+            # set company_id in context, so the correct default journal will be selected
+            context2['force_company'] = curr_invoice['company_id']
+            # set force_company in context so the correct product properties are selected (eg. income account)
+            context2['company_id'] = curr_invoice['company_id']
+
+            last_invoice = invoice_obj.create(cr, uid, curr_invoice, context=context2)
+            invoices.append(last_invoice)
+
             cr.execute("SELECT product_id, to_invoice, sum(unit_amount), product_uom_id, name " \
                     "FROM account_analytic_line as line " \
                     "WHERE account_id = %s " \
@@ -115,11 +124,11 @@ class account_analytic_line(osv.osv):
                 else:
                     price = 0.0
 
+                general_account = product.product_tmpl_id.property_account_income or product.categ_id.property_account_income_categ
+                if not general_account:
+                    raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 taxes = product.taxes_id
                 tax = fiscal_pos_obj.map_tax(cr, uid, account.partner_id.property_account_position, taxes)
-                account_id = product.product_tmpl_id.property_account_income.id or product.categ_id.property_account_income_categ.id
-                if not account_id:
-                    raise osv.except_osv(_("Configuration Error!"), _("Please define income account for product '%s'.") % product.name)
                 curr_line = {
                     'price_unit': price,
                     'quantity': qty,
@@ -130,7 +139,7 @@ class account_analytic_line(osv.osv):
                     'product_id': product_id,
                     'invoice_line_tax_id': [(6,0,tax)],
                     'uos_id': uom,
-                    'account_id': account_id,
+                    'account_id': general_account.id,
                     'account_analytic_id': account.id,
                 }
 

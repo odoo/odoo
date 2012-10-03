@@ -562,6 +562,7 @@ class account_move_line(osv.osv):
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'credit': 0.0,
         'debit': 0.0,
+        'amount_currency': 0.0,
         'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
@@ -1104,7 +1105,7 @@ class account_move_line(osv.osv):
                                 'has been confirmed.') % res[2])
         return res
 
-    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+    def _remove_move_reconcile(self, cr, uid, move_ids=None, context=None):
         # Function remove move rencocile ids related with moves
         obj_move_line = self.pool.get('account.move.line')
         obj_move_rec = self.pool.get('account.move.reconcile')
@@ -1193,12 +1194,12 @@ class account_move_line(osv.osv):
         jour_period_obj = self.pool.get('account.journal.period')
         cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
         result = cr.fetchall()
+        journal = journal_obj.browse(cr, uid, journal_id, context=context)
+        period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You cannot add/modify entries in a closed journal.'))
+                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
         if not result:
-            journal = journal_obj.browse(cr, uid, journal_id, context=context)
-            period = period_obj.browse(cr, uid, period_id, context=context)
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
                 'journal_id': journal.id,
