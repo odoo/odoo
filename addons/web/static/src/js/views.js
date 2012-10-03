@@ -307,15 +307,6 @@ instance.web.ActionManager = instance.web.Widget.extend({
         }
     },
     ir_actions_act_window: function (action, on_close, clear_breadcrumbs) {
-        var self = this;
-        if (action.target !== 'new') {
-            if(action.menu_id) {
-                this.dialog_stop();
-                return this.getParent().do_action(action, function () {
-                    instance.webclient.menu.open_menu(action.menu_id);
-                }, clear_breadcrumbs);
-            }
-        }
         return this.ir_actions_common(action, on_close, clear_breadcrumbs);
     },
     ir_actions_client: function (action, on_close, clear_breadcrumbs) {
