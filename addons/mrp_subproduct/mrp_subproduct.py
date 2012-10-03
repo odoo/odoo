@@ -22,6 +22,7 @@
 from osv import fields
 from osv import osv
 import decimal_precision as dp
+from tools.translate import _
 
 class mrp_subproduct(osv.osv):
     _name = 'mrp.subproduct'
@@ -50,6 +51,17 @@ class mrp_subproduct(osv.osv):
             v = {'product_uom': prod.uom_id.id}
             return {'value': v}
         return {}
+
+    def onchange_uom(self, cr, uid, ids, product_id, product_uom, context=None):
+        res = {'value':{}}
+        if not product_uom or not product_id:
+            return res
+        product = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+        uom = self.pool.get('product.uom').browse(cr, uid, product_uom, context=context)
+        if uom.category_id.id != product.uom_id.category_id.id:
+            res['warning'] = {'title': _('Warning'), 'message': _('Selected Unit of Measure does not belong to the same category as the product Unit of Measure.')}
+            res['value'].update({'product_uom': product.uom_id.id})
+        return res
 
 mrp_subproduct()
 
