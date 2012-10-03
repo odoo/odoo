@@ -104,7 +104,7 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
+        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."), #TOCHECK: is it need after OpenChatter ?
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),

@@ -31,7 +31,7 @@ class procurement_order(osv.osv):
     _columns = {
         'bom_id': fields.many2one('mrp.bom', 'BoM', ondelete='cascade', select=True),
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
-        'production_id': fields.many2one('mrp.production', 'Manufucture Order'),
+        'production_id': fields.many2one('mrp.production', 'Manufacturing Order'),
     }
     
     def check_produce_product(self, cr, uid, procurement, context=None):
@@ -80,8 +80,10 @@ class procurement_order(osv.osv):
         procurement_obj = self.pool.get('procurement.order')
         for procurement in procurement_obj.browse(cr, uid, ids, context=context):
             res_id = procurement.move_id.id
+            #TOFIX: split into new function to compute manufacturing lead time
             newdate = datetime.strptime(procurement.date_planned, '%Y-%m-%d %H:%M:%S') - relativedelta(days=procurement.product_id.product_tmpl_id.produce_delay or 0.0)
             newdate = newdate - relativedelta(days=company.manufacturing_lead)
+            #TOFIX: implement hook method for creating production order
             produce_id = production_obj.create(cr, uid, {
                 'origin': procurement.origin,
                 'product_id': procurement.product_id.id,
@@ -111,8 +113,8 @@ class procurement_order(osv.osv):
 
     def production_order_create_note(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            body = "%s %s %s" % (_("Manufacturing Order"), procurement.production_id.name, _("Created"))
-            self.message_post(cr, uid, ids, body=body, context=context)
+            body = "%s <em>%s</em> %s" % (_("Manufacturing Order"), procurement.production_id.name, _("Created"))
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
     
 procurement_order()
 

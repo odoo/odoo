@@ -69,8 +69,10 @@ class procurement_order(osv.osv):
     def action_produce_assign_service(self, cr, uid, ids, context=None):
         project_task = self.pool.get('project.task')
         for procurement in self.browse(cr, uid, ids, context=context):
+            #TOFIX: split into new function to compute task planning hours
             project = self._get_project(cr, uid, procurement, context=context)
             planned_hours = self._convert_qty_company_hours(cr, uid, procurement, context=context)
+            #TOFIX: implement hook method for creating Task
             task_id = project_task.create(cr, uid, {
                 'name': '%s:%s' % (procurement.origin or '', procurement.product_id.name),
                 'date_deadline': procurement.date_planned,
@@ -90,8 +92,8 @@ class procurement_order(osv.osv):
 
     def project_task_create_note(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            body = "%s %s %s" % (_("Task"), procurement.task_id.name, _("Created"))
-            self.message_post(cr, uid, ids, body=body, context=context)
+            body = "%s <em>%s</em> %s" % (_("Task"), procurement.task_id.name, _("Created"))
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
 
