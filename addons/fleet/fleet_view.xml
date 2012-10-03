@@ -247,8 +247,7 @@
                     <field name="driver" />
                     <field name="location" />
                     <field name="state" />
-                    <field name="odometer" />
-                    <field name="odometer_unit" />
+
                     <field name="image" />
                     <field name="tag_ids" />
                     <field name="contract_renewal_due_soon" />
@@ -386,8 +385,8 @@
                         <group col="2">
                             <group string="Odometer details">
                                 <div>
-                                    <field name="value" class="oe_inline"/>
-                                    <field name="unit" class="oe_inline"/>
+                                    <field name="odometer" class="oe_inline"/>
+                                    <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
                             <group></group>
@@ -412,8 +411,7 @@
                     <field name="warning_date" invisible="1"/>
                     <field name="insurer_id" />
                     <field name="price" />
-                    <field name="value" />
-                    <field name="unit" />
+
                     <field name="notes" />
                 </tree>
             </field>
@@ -436,10 +434,10 @@
                     <sheet>
                         <group>
                             <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                            <div>
-                                <field name="value" class="oe_inline"/>
-                                <field name="unit" class="oe_inline"/>
-                            </div>
+                                <div>
+                                    <field name="value" class="oe_inline"/>
+                                    <field name="unit" class="oe_inline"/>
+                                </div>
                             <field name="date" />
                         </group>
                     </sheet>
@@ -501,8 +499,8 @@
                         <group col="2">
                             <group string="Odometer Details">
                                 <div>
-                                    <field name="value" class="oe_inline"/>
-                                    <field name="unit" class="oe_inline"/>
+                                    <field name="odometer" class="oe_inline"/>
+                                    <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
                             <group string="Additional Details">
@@ -530,11 +528,11 @@
                     <field name="price_per_liter" />
                     <field name="amount" />
                     <field name="purchaser_id" />   
-                    <field name="date" />   
-                    <field name="value" />
-                    <field name="unit" />         
+                    <field name="date" />           
                     <field name="inv_ref" />
                     <field name="vendor_id" />
+                    <field name="odometer" />
+                    <field name="odometer_unit" />
                 </tree>
             </field>
         </record>
@@ -580,8 +578,8 @@
                         <group col="2">
                             <group string="Odometer Details">
                                 <div>
-                                    <field name="value" class="oe_inline"/>
-                                    <field name="unit" class="oe_inline"/>
+                                    <field name="odometer" class="oe_inline"/>
+                                    <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
                             <group string="Additional Details">
@@ -611,8 +609,6 @@
                     <field name="purchaser_id" />
                     <field name="vendor_id" />
                     <field name="inv_ref" />
-                    <field name="value" />
-                    <field name="unit" /> 
                 </tree>
             </field>
         </record>
