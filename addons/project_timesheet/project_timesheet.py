@@ -105,7 +105,7 @@ class project_work(osv.osv):
         return res
 
     def create(self, cr, uid, vals, *args, **kwargs):
-        obj_timesheet = self.pool.get('hr.analytic.timesheet')
+        timesheet_obj = self.pool.get('hr.analytic.timesheet')
         project_obj = self.pool.get('project.project')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
@@ -129,7 +129,7 @@ class project_work(osv.osv):
             acc_id = obj_task.project_id and obj_task.project_id.analytic_account_id.id or False
             if acc_id:
                 vals_line['account_id'] = acc_id
-                res = obj_timesheet.on_change_account_id(cr, uid, False, acc_id)
+                res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
                 if res.get('value'):
                     vals_line.update(res['value'])
                 vals_line['general_account_id'] = result['general_account_id']
@@ -139,14 +139,14 @@ class project_work(osv.osv):
                 amount = vals_line['unit_amount']
                 prod_id = vals_line['product_id']
                 unit = False
-                timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=context)
+                timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
 
                 # Compute based on pricetype
-                amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
+                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
                     prod_id, amount, False, unit, vals_line['journal_id'], context=context)
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     updv = { 'amount': amount_unit['value']['amount'] }
-                    obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
+                    timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
                 vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
@@ -263,6 +263,7 @@ class res_partner(osv.osv):
             raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
+
 res_partner()
 
 class account_analytic_line(osv.osv):
