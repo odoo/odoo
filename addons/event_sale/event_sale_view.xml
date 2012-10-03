@@ -4,7 +4,7 @@
         <record model="ir.ui.view" id="event_sale_order">
              <field name="name">event.product</field>
              <field name="model">product.product</field>
-             <field name="inherit_id" ref="product.product_normal_form_view" />
+             <field name="inherit_id" ref="procurement.product_template_form_view_procurement" />
              <field name="arch" type="xml">
                 <div name="options" position="inside">
                     <field name="event_ok" on_change="onchange_event_ok(event_ok, context)"/>

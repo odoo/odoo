@@ -102,7 +102,6 @@ class procurement_order(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
-
         'note': fields.text('Note'),
         'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
@@ -642,6 +641,18 @@ class stock_warehouse_orderpoint(osv.osv):
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
 stock_warehouse_orderpoint()
+class product_template(osv.osv):
+    _inherit="product.template"
+    _columns = {
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
+    }
+    _defaults = {
+        'procure_method': lambda *a: 'make_to_stock',
+        'supply_method': lambda *a: 'buy',
+    }
+product_template()
 
 class product_product(osv.osv):
     _inherit="product.product"
@@ -649,6 +660,6 @@ class product_product(osv.osv):
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
-product_product()
 
+product_product()
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

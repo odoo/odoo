@@ -47,6 +47,7 @@ depending on the product's configuration.
         'security/ir.model.access.csv',
         'security/procurement_security.xml',
         'procurement_data.xml',
+        'procurement_demo.xml',
         'wizard/make_procurement_view.xml',
         'wizard/mrp_procurement_view.xml',
         'wizard/orderpoint_procurement_view.xml',
