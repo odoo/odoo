@@ -148,8 +148,8 @@ openerp.mail = function(session) {
             // handle attachment button
             this.fileupload_id = _.uniqueId('oe_fileupload');
             var button_attach = this.$('button.oe_mail_compose_message_attachment');
-            var rendered = session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this});
-            $(rendered).insertBefore(button_attach);
+            var rendered = $( session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this}) );
+            rendered.insertBefore(button_attach);
             // move the button inside div.oe_hidden_input_file
             var input_node = this.$('input[name=ufile]');
             button_attach.detach().insertAfter(input_node);
