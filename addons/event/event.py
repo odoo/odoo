@@ -290,12 +290,13 @@ class event_event(osv.osv):
 
         return {'value' : values}
 
-    def onchange_start_date(self, cr, uid, ids, date_end, date_begin, context=None):
+    def onchange_start_date(self, cr, uid, ids, date_end=False, date_begin=False, context=None):
         value = {}
         if date_begin:
-            start = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
-            date_end = start + timedelta(hours=1.00)
+            date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
+            date_end = date_begin + timedelta(hours=1.00)
             return {'value': {'date_end':date_end.strftime("%Y-%m-%d %H:%M:%S")}}
+        return {}
 
     # ----------------------------------------
     # OpenChatter methods and notifications
