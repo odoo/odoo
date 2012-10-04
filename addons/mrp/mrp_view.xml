@@ -661,6 +661,7 @@
                                     <field name="product_qty"  string="Qty"/>
                                     <field name="product_uom"  string="UOM"/>
                                     <field name="location_id"  string="Source Loc."/>
+                                    <field name="prodlot_id" string="Production Lot"/>
                                     <field name="state" invisible="1"/>
                                     <button name="%(stock.move_consume)d"
                                         string="Consume Products" type="action"
@@ -687,6 +688,10 @@
                                        <field name="prodlot_id" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
+                                       <button
+                                           name="%(stock.track_line)d"
+                                           string="Split in production lots"
+                                           type="action" icon="gtk-justify-fill"/>
                                        <button
                                            name="%(stock.move_scrap)d"
                                            string="Scrap Products" type="action"

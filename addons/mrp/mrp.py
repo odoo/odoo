@@ -737,8 +737,21 @@ class mrp_production(osv.osv):
                         # we already have more qtys consumed than we need 
                         continue
 
+                    qty_remained = 0
+                    qty_tobe_consumed = qty
                     for consume_line in raw_product:
-                        consume_line.action_consume(qty, consume_line.location_id.id, context=context)
+                        if consume_line.prodlot_id and consume_line.product_id.id==scheduled.product_id.id:
+                            if qty_remained:
+                                qty = qty_remained
+                            if consume_line.product_qty >= qty:
+                                consume_line.action_consume(qty, consume_line.location_id.id, context=context)
+                                break
+                            else:
+                                qty_tobe_consumed += consume_line.product_qty
+                                consume_line.action_consume(qty_tobe_consumed, consume_line.location_id.id, context=context)
+                                qty_remained = qty - consume_line.product_qty
+                        else:
+                            consume_line.action_consume(qty, consume_line.location_id.id, context=context)
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
