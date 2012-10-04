@@ -44,6 +44,13 @@ instance.web.form.FieldManagerMixin = {
     @return (Deferred) Is resolved after all the values are setted.
     */
     set_values: function(values) {},
+    /**
+    Computes an OpenERP domain.
+
+    @param (list) expression An OpenERP domain.
+    @return (boolean) The computed value of the domain.
+    */
+    compute_domain: function(expression) {},
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
@@ -1109,6 +1116,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     get_field_value: function(field_name) {
         return this.fields[field_name].get_value();
     },
+    compute_domain: function(expression) {
+        return instance.web.form.compute_domain(expression, this.fields);
+    },
 });
 
 /**
@@ -1641,9 +1651,7 @@ instance.web.form.InvisibilityChangerMixin = {
         this._ic_invisible_modifier = invisible_domain;
         this._ic_field_manager.on("view_content_has_changed", this, function() {
             var result = self._ic_invisible_modifier === undefined ? false :
-                instance.web.form.compute_domain(
-                    self._ic_invisible_modifier,
-                    self._ic_field_manager.fields);
+                self._ic_field_manager.compute_domain(self._ic_invisible_modifier);
             self.set({"invisible": result});
         });
         this.set({invisible: this._ic_invisible_modifier === true, force_invisible: false});
@@ -1738,12 +1746,11 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         });
     },
     process_modifiers: function() {
-        var compute_domain = instance.web.form.compute_domain;
         var to_set = {};
         for (var a in this.modifiers) {
             if (!this.modifiers.hasOwnProperty(a)) { continue; }
             if (!_.include(["invisible"], a)) {
-                var val = compute_domain(this.modifiers[a], this.view.fields);
+                var val = this.field_manager.compute_domain(this.modifiers[a]);
                 to_set[a] = val;
             }
         }
