@@ -735,13 +735,13 @@ class sale_order_line(osv.osv):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos_qty or 0.0
-            return line.product_uom_qty
+        return line.product_uom_qty
 
     def _get_line_uom(self, cr, uid, line, context=None):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos.id
-            return line.product_uom.id
+        return line.product_uom.id
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a

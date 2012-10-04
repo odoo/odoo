@@ -183,6 +183,16 @@ class stock_picking(osv.osv):
                             'invoiced': True,
                             'invoice_lines': [(6, 0, [invoice_line_id])],
                         })
+                if not sale_line.product_id:
+                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, sale_line, False, context)
+                    if vals:
+                        vals['invoice_id'] = invoices[result[picking.id]].id
+                        invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
+                        order_line_obj.write(cursor, user, [sale_line.id], {
+                            'invoiced': True,
+                            'invoice_lines': [(6, 0, [invoice_line_id])],
+                        })
+
         return result
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm
