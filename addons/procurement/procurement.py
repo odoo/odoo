@@ -104,7 +104,7 @@ class procurement_order(osv.osv):
             " a make to order method."),
 
         'note': fields.text('Note'),
-        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."), #TOCHECK: is it need after OpenChatter ?
+        'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders.")
         'state': fields.selection([
             ('draft','Draft'),
             ('cancel','Cancelled'),
@@ -389,8 +389,6 @@ class procurement_order(osv.osv):
                 order_point_id = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [('product_id', '=', procurement.product_id.id)], context=context)
                 if not order_point_id and not ok:
                     message = _("Not enough stock and no minimum orderpoint rule defined.")
-                elif not order_point_id:
-                    message = _("No minimum orderpoint rule defined.")
                 elif not ok:
                     message = _("Not enough stock.")
 
