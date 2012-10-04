@@ -76,11 +76,15 @@ class lunch_order(osv.Model):
 						elif alert.active_from<alert.active_to:
 							#the alert is executing from ... to ...
 							now = fields.datetime.now().split(' ')[1]
-							print now
 							user = self.pool.get('res.users').browse(cr, uid, uid)
             				tz = pytz.timezone(user.tz) if user.tz else pytz.utc
-            				print tz
-            				if now>=alert.active_from and now<=alert.active_to:
+            				hour_to = int(alert.active_to)
+            				min_to = int((alert.active_to-hour_to)*60)
+            				to_alert = ""+str(hour_to)+":"+str(min_to)
+            				hour_from = int(alert.active_from)
+            				min_from = int((alert.active_from-hour_from)*60)
+            				from_alert = ""+str(hour_from)+":"+str(min_from)
+            				if now>=from_alert and now<=to_alert:
 								alert_msg+=" * "
 								alert_msg+=alert.message
 								alert_msg+='\n'
