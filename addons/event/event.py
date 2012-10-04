@@ -23,6 +23,7 @@ from datetime import datetime, timedelta, date
 from osv import fields, osv
 from tools.translate import _
 from openerp import SUPERUSER_ID
+import time
 
 class event_type(osv.osv):
     """ Event Type """
