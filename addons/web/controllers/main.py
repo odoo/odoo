@@ -685,7 +685,7 @@ class WebClient(openerpweb.Controller):
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
         if '-' in lang: # RFC2616 uses '-' separators for sublanguages
-            lang = [lang.split('-',1)[0], lang]
+            lang = lang.split('-')[0]
 
         translations_per_module = {}
         for addon_name in mods:
