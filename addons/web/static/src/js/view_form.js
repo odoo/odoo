@@ -51,6 +51,14 @@ instance.web.form.FieldManagerMixin = {
     @return (boolean) The computed value of the domain.
     */
     compute_domain: function(expression) {},
+    /**
+    Builds an evaluation context for the resolution of the fields' contexts. Please note
+    the field are only supposed to use this context to evualuate their own, they should not
+    extend it.
+
+    @return (CompoundContext) An OpenERP context.
+    */
+    build_eval_context: function() {},
 };
 
 instance.web.views.add('form', 'instance.web.FormView');
@@ -1119,6 +1127,25 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     compute_domain: function(expression) {
         return instance.web.form.compute_domain(expression, this.fields);
     },
+    _build_view_fields_values: function(blacklist) {
+        var a_dataset = this.dataset;
+        var fields_values = this.get_fields_values(blacklist);
+        var active_id = a_dataset.ids[a_dataset.index];
+        _.extend(fields_values, {
+            active_id: active_id || false,
+            active_ids: active_id ? [active_id] : [],
+            active_model: a_dataset.model,
+            parent: {}
+        });
+        if (a_dataset.parent_view) {
+            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
+        }
+        return fields_values;
+    },
+    build_eval_context: function(blacklist) {
+        var a_dataset = this.dataset;
+        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
+    },
 });
 
 /**
@@ -1779,25 +1806,6 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
             }, options || {});
         $(trigger).tipsy(options);
     },
-    _build_view_fields_values: function(blacklist) {
-        var a_dataset = this.view.dataset;
-        var fields_values = this.view.get_fields_values(blacklist);
-        var active_id = a_dataset.ids[a_dataset.index];
-        _.extend(fields_values, {
-            active_id: active_id || false,
-            active_ids: active_id ? [active_id] : [],
-            active_model: a_dataset.model,
-            parent: {}
-        });
-        if (a_dataset.parent_view) {
-            fields_values.parent = a_dataset.parent_view.get_fields_values([a_dataset.child_name]);
-        }
-        return fields_values;
-    },
-    _build_eval_context: function(blacklist) {
-        var a_dataset = this.view.dataset;
-        return new instance.web.CompoundContext(a_dataset.get_context(), this._build_view_fields_values(blacklist));
-    },
     /**
      * Builds a new context usable for operations related to fields by merging
      * the fields'context with the action's context.
@@ -1810,7 +1818,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         }
 
         if (v_context.__ref || true) { //TODO: remove true
-            var fields_values = this._build_eval_context(blacklist);
+            var fields_values = this.field_manager.build_eval_context(blacklist);
             v_context = new instance.web.CompoundContext(v_context).set_eval_context(fields_values);
         }
         return v_context;
@@ -1821,7 +1829,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         // if there is a domain on the node, overrides the model's domain
         var final_domain = n_domain !== null ? n_domain : f_domain;
         if (!(final_domain instanceof Array) || true) { //TODO: remove true
-            var fields_values = this._build_eval_context();
+            var fields_values = this.field_manager.build_eval_context();
             final_domain = new instance.web.CompoundDomain(final_domain).set_eval_context(fields_values);
         }
         return final_domain;
