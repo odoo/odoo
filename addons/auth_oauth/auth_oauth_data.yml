@@ -1,0 +1,6 @@
+-
+  Use database uuid as client_id for OpenERP oauth provider
+-
+  !python {model: ir.config_parameter}: |
+    oauth = self.pool.get('auth.oauth.provider')
+    oauth.write(cr, uid, [ref('provider_openerp')], {'client_id': self.get_param(cr, uid, 'database.uuid')})
