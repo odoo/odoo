@@ -117,7 +117,7 @@ this if you want the rule to send a reminder by email to the user."),
 the rule to mark CC(mail to any other person defined in actions)."),
         'act_mail_to_email': fields.char('Mail to these Emails', size=128, \
         help="Email-id of the persons whom mail is to be sent"),
-        'act_mail_body': fields.text('Mail body', help="Content of mail"),
+        'act_mail_body': fields.text('Mail body', translate=True, help="Content of mail"),
         'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
