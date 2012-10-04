@@ -336,8 +336,8 @@ class YamlInterpreter(object):
         :param fields: dictonary mapping the field names and their values
         :param view_info: result of fields_view_get() called on the object
         :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
-        :param default: boolean flag depicting if the default values must be added to the process or not
-        :return: dictionary mapping the field names and their values to use when calling the create() function
+        :param default: boolean flag depicting if the default values must be processed too or not
+        :return: dictionary mapping the field names and their values, ready to use when calling the create() function
         :rtype: dict
         """
         def process_val(key, val):
@@ -409,7 +409,7 @@ class YamlInterpreter(object):
                     args = map(lambda x: eval(x, ctx), match.group(2).split(','))
                     result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
                     for key, val in (result or {}).get('value', {}).items():
-                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s' or in its view named '%s'" % (key, match.group(1), model._name, view_info['name'])
+                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist either on the object '%s', either in the view '%s' used for the creation" % (key, match.group(1), model._name, view_info['name'])
                         record_dict[key] = process_val(key, val)
                         #if (key in fields) and record_dict[key] == process_val(key, val):
                         #    print '*** You can remove these lines:', key, val
