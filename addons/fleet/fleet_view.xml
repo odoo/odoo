@@ -32,7 +32,6 @@
                 <tree string="Models" version="7.0">
                     <field name="brand" />
                     <field name="modelname" />
-                    <field name="vendors" />
                 </tree>
             </field>
         </record>
@@ -527,7 +526,7 @@
                             </group>
                         </group>
                         <group string="Notes">
-                            <field nolabel="1" name="notes" />
+                            <field nolabel="1" name="notes" placeholder="Write here any other information"/>
                         </group>
                     </sheet>
                 </form>
@@ -541,14 +540,15 @@
                 <tree string="Fuel Logs">
                     <field name="vehicle_id" />
                     <field name="liter" />
-                    <field name="price_per_liter" />
-                    <field name="amount" />
+                    <field name="price_per_liter" invisible="1"/>
+                    <field name="amount" sum="Price"/>
                     <field name="purchaser_id" />   
                     <field name="date" />           
-                    <field name="inv_ref" />
-                    <field name="vendor_id" />
-                    <field name="odometer" />
-                    <field name="odometer_unit" />
+                    <field name="inv_ref" invisible="1"/>
+                    <field name="vendor_id" invisible="1"/>
+                    <field name="odometer" invisible="1"/>
+                    <field name="odometer_unit" invisible="1"/>
+                    <field name="notes" />
                 </tree>
             </field>
         </record>
@@ -616,7 +616,7 @@
                         </group>
                         
                         <group string="Notes">
-                            <field nolabel="1" name="notes" />
+                            <field nolabel="1" name="notes" placeholder="Write here any other information related to the service completed."/>
                         </group>
                     </sheet>
                 </form>
@@ -629,12 +629,13 @@
             <field name="arch" type="xml">
                 <tree string="Services Logs">
                     <field name="vehicle_id" />
-                    <field name="service_ids"/>
+                    <field name="cost_type"/>
                     <field name="amount" />
                     <field name="date" />
-                    <field name="purchaser_id" />
+                    <field name="purchaser_id"/>
                     <field name="vendor_id" />
                     <field name="inv_ref" />
+                    <field name="notes" />
                 </tree>
             </field>
         </record>
