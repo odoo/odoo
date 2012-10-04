@@ -80,6 +80,7 @@
                             <field name="date" on_change="onchange_date(date, currency_id, currency_id, amount, company_id, context)"/>
                             <field name="name"/>
                             <field name="paid" invisible="1"/>
+                            <field name="paid_amount_in_company_currency" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
                         <field name="type" invisible="True"/>
@@ -235,6 +236,7 @@
                                 widget="selection"
                                 on_change="onchange_journal(journal_id, line_dr_ids, tax_id, partner_id, date, amount, type, company_id, context)"
                                 groups="account.group_account_user"/>
+                            <field name="paid_amount_in_company_currency" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
