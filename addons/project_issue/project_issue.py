@@ -279,7 +279,7 @@ class project_issue(base_stage, osv.osv):
         'section_id': lambda s, cr, uid, c: s._get_default_section_id(cr, uid, c),
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.helpdesk', context=c),
         'priority': crm.AVAILABLE_PRIORITIES[2][0],
-         }
+    }
 
     _group_by_full = {
         'stage_id': _read_group_stage_ids
