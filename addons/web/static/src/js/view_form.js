@@ -1573,7 +1573,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     that usage. Don't think that this class will hold the answer to all your problems, at best it will allow
     you to hack the system with more style.
 */
-instance.web.form.DefaultFieldManager = instance.web.CallbackEnabled.extend({
+instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
     init: function(parent, eval_context) {
         this._super(parent);
         this.field_descs = {};
@@ -1582,10 +1582,16 @@ instance.web.form.DefaultFieldManager = instance.web.CallbackEnabled.extend({
     get_field_desc: function(field_name) {
         if (this.field_descs[field_name] === undefined) {
             this.field_descs[field_name] = {
-                string: "I have no name",
+                string: field_name,
             };
         }
         return this.field_descs[field_name];
+    },
+    extend_field_desc: function(fields) {
+        var self = this;
+        _.each(fields, function(v, k) {
+            _.extend(self.get_field_desc(k), v);
+        });
     },
     get_field_value: function(field_name) {
         return false;
@@ -4606,11 +4612,21 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     },
     initialize_content: function() {
         var self = this;
-        this.selection = new instance.web.form.FieldSelection(this, { attrs: {
+        var fm = new instance.web.form.DefaultFieldManager(this);
+        fm.extend_field_desc({
+            "selection": {
+                selection: this.field_manager.get_field_desc(this.name).selection,
+                type: "selection",
+            },
+            "m2o": {
+                relation: null,
+                type: "many2one",
+            },
+        });
+        this.selection = new instance.web.form.FieldSelection(fm, { attrs: {
             name: 'selection',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
-        this.selection.view = this.view;
         this.selection.on("change:value", this, this.on_selection_changed);
         this.selection.setElement(this.$(".oe_form_view_reference_selection"));
         this.selection.renderElement();
@@ -4619,11 +4635,10 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             .on('focused', null, function () {self.trigger('focused')})
             .on('blurred', null, function () {self.trigger('blurred')});
 
-        this.m2o = new instance.web.form.FieldMany2One(this, { attrs: {
+        this.m2o = new instance.web.form.FieldMany2One(fm, { attrs: {
             name: 'm2o',
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
-        this.m2o.view = this.view;
         this.m2o.on("change:value", this, this.data_changed);
         this.m2o.setElement(this.$(".oe_form_view_reference_m2o"));
         this.m2o.renderElement();
@@ -4662,20 +4677,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         } else {
             this.set({'value': false});
         }
-    },
-    get_field: function(name) {
-        if (name === "selection") {
-            return {
-                selection: this.field_manager.get_field_desc(this.name).selection,
-                type: "selection",
-            };
-        } else if (name === "m2o") {
-            return {
-                relation: null,
-                type: "many2one",
-            };
-        }
-        throw Exception("Should not happen");
     },
 });
 
