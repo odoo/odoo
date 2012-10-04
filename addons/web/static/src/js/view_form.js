@@ -2893,7 +2893,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     title: _t("Open: ") + self.string
                 }
             );
-            pop.on_write_completed.add_last(function() {
+           pop.on('on_write_complete',self,function(){
                 self.display_value = {};
                 self.render_value();
                 self.focus();
@@ -4038,9 +4038,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             title: _t("Open: ") + this.m2m_field.string,
             readonly: this.getParent().get("effective_readonly")
         });
-        pop.on_write_completed.add_last(function() {
-            self.reload_content();
-        });
+        pop.on('on_write_complete',self,self.reload_content);
     }
 });
 
@@ -4287,7 +4285,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
-            return fct.call(this, id, data, options).then(self.on_write_completed);
+            return fct.call(this, id, data, options).then(function(){self.trigger('on_write_complete',self)});
         };
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.child_name = this.options.child_name;
@@ -4307,7 +4305,6 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.$buttonpane = dialog.$el.dialog("widget").find(".ui-dialog-buttonpane").html("");
         this.start();
     },
-    on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
         if (this.row_id) {
