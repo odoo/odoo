@@ -293,8 +293,7 @@ class event_event(osv.osv):
         value = {}
         if date_begin:
             start = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
-            if not date_end or date_end:
-                date_end = start + timedelta(hours=1.00)
+            date_end = start + timedelta(hours=1.00)
             return {'value': {'date_end':date_end.strftime("%Y-%m-%d %H:%M:%S")}}
 
     # ----------------------------------------
