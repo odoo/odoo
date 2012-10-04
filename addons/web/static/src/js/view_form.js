@@ -2900,7 +2900,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 self.focus();
                 return;
             }
-            var pop = new instance.web.form.FormOpenPopup(self.view);
+            var pop = new instance.web.form.FormOpenPopup(self);
             pop.show_element(
                 self.field.relation,
                 self.get("value"),
@@ -3495,7 +3495,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         }
         var self = this;
         var id = self.o2m.dataset.index !== null ? self.o2m.dataset.ids[self.o2m.dataset.index] : null;
-        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
+        var pop = new instance.web.form.FormOpenPopup(this);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
             create_function: function(data) {
@@ -3611,7 +3611,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
     },
     do_activate_record: function(index, id) {
         var self = this;
-        var pop = new instance.web.form.FormOpenPopup(self.o2m.view);
+        var pop = new instance.web.form.FormOpenPopup(self);
         pop.show_element(self.o2m.field.relation, id, self.o2m.build_context(), {
             title: _t("Open: ") + self.o2m.string,
             write_function: function(id, data) {
@@ -3639,7 +3639,10 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var parent_form = this.o2m.view;
         var self = this;
         this.ensure_saved().pipe(function () {
-            return parent_form.do_save();
+            if (parent_form)
+                return parent_form.do_save();
+            else
+                return $.when();
         }).then(function () {
             self.handle_button(name, id, callback);
         });
@@ -4165,7 +4168,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             });
         } else {
             var id = self.dataset.ids[self.dataset.index];
-            var pop = new instance.web.form.FormOpenPopup(self.view);
+            var pop = new instance.web.form.FormOpenPopup(this);
             pop.show_element(self.field.relation, id, self.build_context(), {
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
@@ -4627,7 +4630,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     get_field: function(name) {
         if (name === "selection") {
             return {
-                selection: this.view.fields_view.fields[this.name].selection,
+                selection: this.field_manager.get_field(this.name).selection,
                 type: "selection",
             };
         } else if (name === "m2o") {
@@ -4725,9 +4728,10 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
     },
     set_filename: function(value) {
         var filename = this.node.attrs.filename;
-        if (this.view.fields[filename]) {
-            this.view.fields[filename].set_value(value);
-            this.view.fields[filename].on_ui_change();
+        if (filename) {
+            var tmp = {};
+            tmp[filename] = value;
+            this.field_manager.set_values(tmp);
         }
     },
     on_clear: function() {
@@ -4769,7 +4773,9 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         } else {
             this.$el.find('a').show(!!this.get('value'));
             if (this.get('value')) {
-                var show_value = _t("Download") + " " + (this.view.datarecord[this.node.attrs.filename] || '');
+                var show_value = _t("Download")
+                if (this.view)
+                    show_value += " " + (this.view.datarecord[this.node.attrs.filename] || '');
                 this.$el.find('a').text(show_value);
             }
         }
@@ -4780,12 +4786,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         var show_value = name + " (" + this.human_filesize(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
         this.set_filename(name);
-    },
-    set_filename: function(value_) {
-        var filename = this.node.attrs.filename;
-        if (this.view.fields[filename]) {
-            this.view.fields[filename].set({value: value_});
-        }
     },
     on_clear: function() {
         this._super.apply(this, arguments);
@@ -4835,10 +4835,12 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this.set({'value': file_base64});
         this.binary_value = true;
         this.render_value();
+        this.set_filename(name);
     },
     on_clear: function() {
         this._super.apply(this, arguments);
         this.render_value();
+        this.set_filename('');
     }
 });
 
