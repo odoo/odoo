@@ -20,6 +20,7 @@
 ##############################################################################
 import addons
 import tools
+import pytz
 from osv import osv, fields
 
 class lunch_order(osv.Model):
@@ -37,6 +38,53 @@ class lunch_order(osv.Model):
 					value+=product.product.price
 					result[order.id]=value
 		return result
+
+	def _alerts_get(self,cr,uid,ids,name,arg,context=None):
+		orders = self.browse(cr,uid,ids,context=context)
+		alert_ref = self.pool.get('lunch.alert')
+		alert_ids = alert_ref.search(cr,uid,[],context=context)
+		result={}
+		alert_msg= self._default_alerts_get(cr,uid,arg,context)
+		for order in orders:
+			if order.state=='new':
+				result[order.id]=alert_msg
+		return result
+
+	def _default_alerts_get(self,cr,uid,arg,context=None):
+		alert_ref = self.pool.get('lunch.alert')
+		alert_ids = alert_ref.search(cr,uid,[],context=context)
+		alert_msg=""
+		for alert in alert_ref.browse(cr,uid,alert_ids,context=context):
+			if alert :
+				#there are alerts
+				if alert.active==True:
+					#the alert is active
+					if alert.day=='specific':
+						#the alert is only activated a specific day
+						if alert.specific==fields.datetime.now().split(' ')[0]:
+							print alert.specific
+					elif alert.day=='week':
+						#the alert is activated during some days of the week
+						continue
+					elif alert.day=='days':
+						#the alert is activated everyday
+						if alert.active_from==alert.active_to:
+							#the alert is executing all the day
+							alert_msg+=" * "
+							alert_msg+=alert.message
+							alert_msg+='\n'
+						elif alert.active_from<alert.active_to:
+							#the alert is executing from ... to ...
+							now = fields.datetime.now().split(' ')[1]
+							print now
+							user = self.pool.get('res.users').browse(cr, uid, uid)
+            				tz = pytz.timezone(user.tz) if user.tz else pytz.utc
+            				print tz
+            				if now>=alert.active_from and now<=alert.active_to:
+								alert_msg+=" * "
+								alert_msg+=alert.message
+								alert_msg+='\n'
+		return alert_msg
 
 	def onchange_price(self,cr,uid,ids,products,context=None):
 		res = {'value':{'total':0.0}}
@@ -57,12 +105,14 @@ class lunch_order(osv.Model):
 		'total' : fields.function(_price_get, string="Total",store=True),
 		'state': fields.selection([('new', 'New'),('confirmed','Confirmed'), ('cancelled','Cancelled'), ('partially','Parcially Confirmed')], \
         	'Status', readonly=True, select=True),
+		'alerts': fields.function(_alerts_get, string="Alerts", type='text'),
 	}
 
 	_defaults = {
         'user_id': lambda self, cr, uid, context: uid,
         'date': fields.date.context_today,
         'state': lambda self, cr, uid, context: 'new',
+        'alerts': _default_alerts_get,
     }
 
 class lunch_order_line(osv.Model): #define each product that will be in one ORDER.
@@ -83,12 +133,50 @@ class lunch_order_line(osv.Model): #define each product that will be in one ORDE
         	return {'value': {'price': price}}
 		return {'value': {'price': 0.0}} 
 
-	def confirm(self,cr,uid,ids,order,context=None):
+
+	def confirm(self,cr,uid,ids,context=None):
+		#confirm one or more order.line, update order status and create new cashmove
 		cashmove_ref = self.pool.get('lunch.cashmove')
+		orders_ref = self.pool.get('lunch.order')
+
 		for order in self.browse(cr,uid,ids,context=context):
-			if order.state == 'new':
-				new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':-order.price,'description':'Order','cash_id':order.id, 'state':'order', 'date':order.date})
-				self.write(cr, uid, [order.id], {'state': 'confirmed', 'cashmove':new_id})
+			if order.state!='confirmed':
+				new_id = cashmove_ref.create(cr,uid,{'user_id': order.user_id.id, 'amount':0 - order.price,'description':order.product.name, 'order_id':order.id, 'state':'order', 'date':order.date})
+				self.write(cr,uid,[order.id],{'cashmove':[('0',new_id)], 'state':'confirmed'},context)
+		for order in self.browse(cr,uid,ids,context=context):
+			isconfirmed = True
+			for product in order.order_id.products:
+				if product.state == 'new':
+					isconfirmed = False
+				if product.state == 'cancelled':
+					isconfirmed = False
+					orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
+			if isconfirmed == True:
+				orders_ref.write(cr,uid,[order.order_id.id],{'state':'confirmed'},context)
+		return {}
+
+	def cancel(self,cr,uid,ids,context=None):
+		#confirm one or more order.line, update order status and create new cashmove
+		cashmove_ref = self.pool.get('lunch.cashmove')
+		orders_ref = self.pool.get('lunch.order')
+
+		for order in self.browse(cr,uid,ids,context=context):
+			self.write(cr,uid,[order.id],{'state':'cancelled'},context)
+			for cash in order.cashmove:
+				cashmove_ref.unlink(cr,uid,cash.id,context)
+		for order in self.browse(cr,uid,ids,context=context):
+			hasconfirmed = False
+			hasnew = False
+			for product in order.order_id.products:
+				if product.state=='confirmed':
+					hasconfirmed= True
+				if product.state=='new':
+					hasnew= True
+			if hasnew == False:
+				if hasconfirmed == False:
+					orders_ref.write(cr,uid,[order.order_id.id],{'state':'cancelled'},context)
+					return {}
+			orders_ref.write(cr,uid,[order.order_id.id],{'state':'partially'},context)
 		return {}
 
 	_columns = {
@@ -163,8 +251,10 @@ class lunch_alert(osv.Model):
 		'friday' : fields.boolean('Friday'),
 		'saturday' : fields.boolean('Saturday'),
 		'sunday' :  fields.boolean('Sunday'),
-		'from' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'Between',required=True), #defines from when (hours) the alert will be displayed
-		'to' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'and',required=True), # to when (hours) the alert will be disabled
+		'active_from': fields.float('Between',required=True),
+		'active_to': fields.float('And',required=True),
+		#'active_from' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'Between',required=True), #defines from when (hours) the alert will be displayed
+		#'active_to' : fields.selection([('0','00h00'),('1','00h30'),('2','01h00'),('3','01h30'),('4','02h00'),('5','02h30'),('6','03h00'),('7','03h30'),('8','04h00'),('9','04h30'),('10','05h00'),('11','05h30'),('12','06h00'),('13','06h30'),('14','07h00'),('15','07h30'),('16','08h00'),('17','08h30'),('18','09h00'),('19','09h30'),('20','10h00'),('21','10h30'),('22','11h00'),('23','11h30'),('24','12h00'),('25','12h30'),('26','13h00'),('27','13h30'),('28','14h00'),('29','14h30'),('30','15h00'),('31','15h30'),('32','16h00'),('33','16h30'),('34','17h00'),('35','17h30'),('36','18h00'),('37','18h30'),('38','19h00'),('39','19h30'),('40','20h00'),('41','20h30'),('42','21h00'),('43','21h30'),('44','22h00'),('45','22h30'),('46','23h00'),('47','23h30')],'and',required=True), # to when (hours) the alert will be disabled
 	}
 
 
