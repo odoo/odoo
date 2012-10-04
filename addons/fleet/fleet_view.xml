@@ -354,6 +354,7 @@
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+
                                 <field name="cost_type" />
                             </group>
                             <group string="Odometer details">
@@ -372,6 +373,7 @@
                             </group>
                             <group>
                                 <field name="insurer_id" />
+                                <field name="purchaser_id" />
                                 <field name="ins_ref" />
                             </group>
                         </group>
@@ -390,10 +392,11 @@
                                     </sheet>
                                 </form>
                             </field>
+
                             <field name="amount" />
                         </group>
                         <group string="Terms and Conditions">
-                            <field name="notes" />
+                            <field name="notes" nolabel="1" placeholder="Write here all other information relative to this contract" />
                         </group>
                     </sheet>
                 </form>
@@ -424,6 +427,19 @@
             <field name="res_model">fleet.vehicle.log.contract</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new contract. 
+              </p><p>
+                Here you can create new contracts and show all existing
+                contracts. Contracts can be of various type, from insurance
+                contracts to leasing contracts. Each contract is associated
+                to an existing vehicle and can also be associated to a user.
+                For each contract, you can ask for a reminder that will color
+                the contract in orange when the expiration date is near or in
+                red when the expiration date is passed.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_log_contract_act" parent="fleet_vehicles" id="fleet_vehicle_log_contract_menu" />

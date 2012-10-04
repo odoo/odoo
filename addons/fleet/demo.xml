@@ -2683,17 +2683,5 @@ gg==
           <field name="value">1000</field>
       </record>
 
-      <record id="log_service_1" model="fleet.vehicle.log.services">
-          <field name="vehicle_id" ref="vehicle_1" />
-          <field name="purchaser_id" ref="base.res_partner_2" />
-          <field name="vendor_id">5</field>
-          <field name="date">2012-10-01</field>
-          <field name="amount">500.0</field>
-          <field name="service_ids" eval="[(6,0,[ref('type_service_53')])]" />
-          <field name="inv_ref">4574.2321</field>
-          <field name="odometer_id" ref="log_odometer_29" />
-          <field name="notes">Usual car maintenance</field>
-      </record>
-
     </data>
 </openerp>
