@@ -57,6 +57,7 @@ class procurement_order(osv.osv):
                     break
             assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
+            #TOFIX: implement hook method for creating picking
             picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,
                 'company_id': line.company_id and line.company_id.id or False,
@@ -67,6 +68,7 @@ class procurement_order(osv.osv):
                 'note': _('Picking for pulled procurement coming from original location %s, pull rule %s, via original Procurement %s (#%d)') % (proc.location_id.name, line.name, proc.name, proc.id),
                 'invoice_state': line.invoice_state,
             })
+            #TOFIX: implement hook method for creating move
             move_id = move_obj.create(cr, uid, {
                 'name': line.name,
                 'picking_id': picking_id,
@@ -92,6 +94,8 @@ class procurement_order(osv.osv):
                 move_obj.write(cr,uid, [proc.move_id.id],  {
                     'state':'waiting'
                 }, context=context)
+
+            #TOFIX: implement hook method for creating new procurement
             proc_id = proc_obj.create(cr, uid, {
                 'name': line.name,
                 'origin': origin,
@@ -115,9 +119,9 @@ class procurement_order(osv.osv):
             if proc.move_id:
                 move_obj.write(cr, uid, [proc.move_id.id],
                     {'location_id':proc.location_id.id})
-            self.write(cr, uid, [proc.id], {'state':'running', 'message':_('Pulled from another location via procurement %d') % proc_id})
-            self.running_send_note(cr, uid, [proc.id], context=context)
-
+            msg = _('Pulled from another location.')
+            self.write(cr, uid, [proc.id], {'state':'running', 'message': msg})
+            self.message_post(cr, uid, [proc.id], body=msg, context=context)
             # trigger direct processing (the new procurement shares the same planned date as the original one, which is already being processed)
             wf_service.trg_validate(uid, 'procurement.order', proc_id, 'button_check', cr)
         return False

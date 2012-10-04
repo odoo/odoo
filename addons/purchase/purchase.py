@@ -1078,8 +1078,13 @@ class procurement_order(osv.osv):
             }
             res[procurement.id] = self.create_procurement_purchase_order(cr, uid, procurement, po_vals, line_vals, context=new_context)
             self.write(cr, uid, [procurement.id], {'state': 'running', 'purchase_id': res[procurement.id]})
-            self.running_send_note(cr, uid, [procurement.id], context=context)
+        self.purchase_order_create_note(cr, uid, ids, context=context)
         return res
+
+    def purchase_order_create_note(self, cr, uid, ids, context=None):
+        for procurement in self.browse(cr, uid, ids, context=context):
+            body = "Draft Purchase Order <em>%s</em> created" % (procurement.purchase_id.name,)
+            self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
 
