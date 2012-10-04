@@ -1494,7 +1494,7 @@ instance.web.search.ManyToOneField = instance.web.search.CharField.extend({
                 return $.when(facet_from(this, value));
             }
             assert(value.length <= 1,
-                   _("M2O search fields do not currently handle multiple default values"));
+                   _t("M2O search fields do not currently handle multiple default values"));
             // there are many cases of {search_default_$m2ofield: [id]}, need
             // to handle this as if it were a single value.
             value = value[0];
@@ -1578,7 +1578,7 @@ instance.web.search.CustomFilters = instance.web.search.Input.extend({
 
         $filter.unbind('click').click(function () {
             self.view.query.reset([{
-                category: _("Custom Filter"),
+                category: _t("Custom Filter"),
                 icon: 'M',
                 field: {
                     get_context: function () { return filter.context; },

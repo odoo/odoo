@@ -57,7 +57,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             if(self.session_is_valid()) {
                 return deferred.pipe(function() { return self.load_modules(); });
             }
-            return deferred;
+            return $.when(
+                    deferred, 
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).pipe(function(trans) {
+                        instance.web._t.database.set_bundle(trans);
+                    })
+            );
         });
     },
     /**
@@ -537,13 +542,9 @@ instance.web.qweb.preprocess_node = function() {
             if (translation && translation.value === 'off') {
                 return;
             }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = instance.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
+            var match = /^(\s*)(.+?)(\s*)$/.exec(this.node.data);
+            if (match) {
+                this.node.data = match[1] + instance.web._t(match[2]) + match[3];
             }
             break;
         case 1:
@@ -600,8 +601,7 @@ var messages_by_seconds = function() {
         [120, _t("Don't leave yet,<br />it's still loading...")],
         [300, _t("You may not believe it,<br />but the application is actually loading...")],
         [420, _t("Take a minute to get a coffee,<br />because it's loading...")],
-        [600, _t("It's loading...<br />By the way, did you tried the kitten mode?")],
-        [3600, _t("Maybe you should consider pressing F5...")],
+        [3600, _t("Maybe you should consider reloading the application by pressing F5...")],
     ];
 };
 
