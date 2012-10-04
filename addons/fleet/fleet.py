@@ -653,7 +653,7 @@ class fleet_service_type(osv.Model):
     _name = 'fleet.service.type'
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
-        'category': fields.selection([('contract', 'Contract'), ('service', 'Service'),('both', 'Both')], 'Category', readonly=True, help='Choose wheter the service refer to contracts, vehicle services or both'),
+        'category': fields.selection([('contract', 'Contract'), ('service', 'Service'),('both', 'Both')], 'Category',required=True, help='Choose wheter the service refer to contracts, vehicle services or both'),
     }
     _defaults = {
         'category': 'both'
