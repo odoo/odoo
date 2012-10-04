@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<openerp>
+	<data>
+		<record model='ir.ui.view' id='partner_instructor_form_view'>
+			<field name='name'>partner.supplier.name.form</field>
+			<field name='model'>res.partner</field>
+			<field name='type'>form</field>
+			<field name='inherit_id' ref='base.view_partner_form' />
+			<field name='arch' type='xml'>
+				<field name='title' position='after'>
+					<field name='supplier_lunch'/>
+				</field> 
+			</field>
+		</record>
+
+
+	</data>
+</openerp>

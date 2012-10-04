@@ -1,0 +1,395 @@
+<?xml version="1.0"?>
+<openerp>
+    <data>
+    	<!--Menu and Title-->
+    	<menuitem id='menu_lunch' name='Lunch' />
+    	<menuitem name="Lunch Menu" parent="menu_lunch" id="menu_lunch_title" sequence="50" />
+    	<menuitem name="Administrate Orders" parent="menu_lunch" id="menu_lunch_admin" sequence="51" />
+        <menuitem name="Administrate Cash Moves" parent="menu_lunch" id="menu_lunch_cash" sequence="52" />
+    	<menuitem name="Configuration" parent="menu_lunch" id="menu_lunch_config" sequence="53" />
+    	
+         <!--View Search to group by Supplier and time-->
+        <record model="ir.ui.view" id="supplier_group_by_month_search_view">
+            <field name="name">Search</field>
+            <field name="model">lunch.order.line</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+                <search string="Search">
+                    <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
+                    <filter name="not_confirmed" string="Not Confirmed" domain="[('state','!=',('confirmed'))]"/>
+                    <filter name="group_by_date" string="By Date" context="{'group_by':'date'}"/>
+                   <!-- <filter name="thisMonth" string="This Month" domain="[('date','>=',time.strftime('%%m-01-%%Y')),('date','&lt;=',time.strftime('%%m-31-%%Y'))]"/> -->
+                </search>
+            </field>
+        </record>
+
+        <record id="view_lunch_order_filter" model="ir.ui.view">
+            <field name="name">lunch order list</field>
+            <field name="model">lunch.order.line</field>
+            <field name="arch" type="xml">
+                <search string="Search Lunch Order">
+                    <filter name="group_by_supplier" string="By Supplier" context="{'group_by':'supplier'}"/>
+                    <filter name="not_confirmed" string="Not Confirmed" domain="[('state','!=',('confirmed'))]"/>
+                    <filter name="today" string="Today" domain="[('date','=',time.strftime('%%m-%%d-%%Y'))]"/>
+                </search>
+            </field>
+        </record>
+
+        <!--View Search to group by employee and input/output (cashmoves)-->
+        <record id="view_lunch_employee_payment_filter" model="ir.ui.view">
+            <field name='name'>lunch employee payment</field>
+            <field name='model'>lunch.cashmove</field>
+            <field name='type'>search</field>
+            <field name='arch' type='xml'>
+                <search string="lunch employee payment">
+                    <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_lunch_cashmove_filter" model="ir.ui.view">
+            <field name='name'>lunch cashmove</field>
+            <field name='model'>lunch.cashmove</field>
+            <field name='type'>search</field>
+            <field name='arch' type='xml'>
+                <search string="lunch cashmove">
+                    <filter name='group_by_user' string="By Employee" context="{'group_by':'user_id'}"/>
+                </search>
+            </field>
+        </record>
+
+    	<!--Action for Your Orders-->
+		<record model="ir.actions.act_window" id="action_lunch_order_form">
+            <field name="name">Your Orders</field>
+            <field name="res_model">lunch.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a lunch order. 
+            </p>
+            <p>
+                Use lunch order if you need to order any food for your lunch.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Your Orders" parent="menu_lunch_title" id="menu_lunch_order_form" action="action_lunch_order_form" />
+
+        <!--Action for Lunch cashmoves-->
+        <record model="ir.actions.act_window" id="action_lunch_cashmove_form">
+            <field name="name">Your Account</field>
+            <field name="res_model">lunch.cashmove</field>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+              <p>
+                Here you can see your cash moves. There are your orders and refund.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Your Lunch Account" parent="menu_lunch_title" id="menu_lunch_cashmove_form" action="action_lunch_cashmove_form" />
+
+        <!--Action for Administrate Orders group by supplier-->
+        <record model="ir.actions.act_window" id="action_lunch_order_by_supplier_form">
+            <field name="name">Orders by Supplier</field>
+            <field name="res_model">lunch.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_lunch_order_filter"/>
+            <field name="context">{"search_default_group_by_supplier":1, "search_default_today":1}</field>
+            <field name="help" type="html">
+              <p>
+                Here you can see the orders of the day grouped by suppliers.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Today's Orders by Supplier" parent="menu_lunch_admin" id="menu_lunch_order_by_supplier_form" action="action_lunch_order_by_supplier_form" />
+
+        <!--Action for control Supplier-->
+        <record model="ir.actions.act_window" id="action_lunch_control_suppliers">
+            <field name="name">Control Suppliers</field>
+            <field name="res_model">lunch.order.line</field>
+            <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="supplier_group_by_month_search_view"/> 
+            <field name="context">{"search_default_group_by_date":1, "search_default_group_by_supplier":1}</field>
+            <field name="help" type="html">
+              <p>
+                Here you can see the orders of the month grouped by suppliers.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Orders by Supplier" parent="menu_lunch_admin" id="menu_lunch_control_suppliers" action="action_lunch_control_suppliers" />
+
+        <!--Action for Control Accounts-->
+        <record model="ir.actions.act_window" id="action_lunch_control_accounts">
+            <field name="name">Control Accounts</field>
+            <field name="res_model">lunch.cashmove</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_lunch_cashmove_filter"/>
+            <field name="context">{"search_default_group_by_user":1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a transaction. 
+            </p>
+              <p>
+                The different cash moves are used to see the orders but also the
+                employees' refunds.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Control Accounts" parent="menu_lunch_cash" id="menu_lunch_control_accounts" action="action_lunch_control_accounts" />
+
+
+        <!--Action for Payment cashmove-->
+        <record model="ir.actions.act_window" id="action_lunch_cashmove">
+            <field name="name">Register Cash Moves</field>
+            <field name="res_model">lunch.cashmove</field>
+            <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_lunch_employee_payment_filter"/>
+            <field name="context">{"search_default_is_payment":1}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a payment. 
+            </p>
+              <p>
+                Here you can see the employees' refund.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Employee's Payment" parent="menu_lunch_cash" id="menu_lunch_cashmove" action="action_lunch_cashmove" />
+
+        <!--Action for Products-->
+        <record model="ir.actions.act_window" id="action_lunch_products">
+            <field name="name">Products</field>
+            <field name="res_model">lunch.product</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a product for lunch. 
+            </p>
+              <p>
+                A product is defined by its name, category, price and supplier.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Products" parent="menu_lunch_config" id="menu_lunch_products" action="action_lunch_products" />
+
+        <!--Action for Product categories-->
+		<record model="ir.actions.act_window" id="action_lunch_product_categories">
+            <field name="name">Product Categories</field>
+            <field name="res_model">lunch.product.category</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a lunch category. 
+            </p>
+              <p>
+                Here you can find every lunch categories for products.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Product Categories" parent="menu_lunch_config" id="menu_lunch_product_categories" action="action_lunch_product_categories" />
+
+        <!--Action for Alert-->
+        <record model="ir.actions.act_window" id="action_lunch_alert">
+            <field name="name">Alerts</field>
+            <field name="res_model">lunch.alert</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                Click to create a lunch alert. 
+            </p>
+              <p>
+                Alerts are used to warn employee and user from possible issues about the lunch.
+              </p>
+            </field>
+        </record>
+        <menuitem name="Alerts" parent="menu_lunch_config" id="menu_lunch_alert" action="action_lunch_alert" />
+
+        <!--View for Order lines-->
+        <record model="ir.ui.view" id="orders_order_lines_tree_view">
+            <field name="name">Order lines Tree</field>
+            <field name="model">lunch.order.line</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Order lines Tree"> 
+                    <field name='date'/>
+                    <field name='user_id'/>
+                    <field name='supplier' invisible='1'/> 
+                    <field name='product'/>                             
+                    <field name='note'/>
+                    <field name='state'/>
+                    <field name='price' sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <!--View for Your orders-->
+        <record model="ir.ui.view" id="orders_tree_view">
+            <field name="name">Orders Tree</field>
+            <field name="model">lunch.order</field>
+            <field name="arch" type="xml">
+                <tree string="Orders Tree">
+                    <field name="date"/>
+                    <field name="products"/>
+                    <field name="state"/>
+                    <field name="total" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+       
+        <record model="ir.ui.view" id="orders_form_view">
+			<field name="name">Orders Form</field>
+			<field name="model">lunch.order</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<form string="Orders Form" version="7.0">
+                <header> 
+                    <field name="state" widget="statusbar" statusbar_visible="new,confirmed,cancelled"/>
+               </header> 
+					<group colspan="2" col="2">
+						<field name="user_id"/>
+						<field name="date"/>
+					</group>
+					<group colspan="2" col="2">
+					</group>
+                    <img src="/lunch_new/static/src/img/warning.png" width="52" height="52"/>
+					<separator string="Products" colspan="4"/>					
+
+					<separator string="Your Order" colspan="4"/>
+					<field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
+						<tree string="List" editable="bottom">
+							<field name="product" colspan="2" on_change="onchange_price(product)"/>
+							<field name="note" />
+                            <field name="state"/>
+							<field name="price"/>
+						</tree>
+					</field>
+					<field name="total"/>
+				</form>
+			</field>
+		</record>
+
+        <!--View for Products-->
+        <record model="ir.ui.view" id="products_tree_view">
+            <field name="name">Products Tree</field>
+            <field name="model">lunch.product</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="Products Tree">
+                    <field name="name"/>
+                    <field name="category_id"/>
+                    <field name="supplier"/>
+                    <field name="description"/>
+                    <field name="price"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="products_form_view">
+            <field name="name">Products Form</field>
+            <field name="model">lunch.product</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Products Form">
+                    <group colspan="2" col="2">
+                        <field name='name'/>
+                        <field name='category_id'/>
+                        <field name='supplier'/>
+                        <field name='price'/>
+                        <field name='active'/>
+                    </group>
+                    <group colspan="2" col="2">
+                    </group>
+                    <field name='description'/>
+                </form>
+            </field>
+        </record>
+
+        <!--view for cashmove-->
+        <record model="ir.ui.view" id="casmove_tree_view">
+            <field name="name">cashmove tree</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="cashmove tree">
+                    <field name="date"/>
+                    <field name="user_id"/>
+                    <field name="description"/>
+                    <field name="amount" sum="Total"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="casmove_form_view">
+            <field name="name">cashmove form</field>
+            <field name="model">lunch.cashmove</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="cashmove form">
+                    <group colspan="2" col="2">
+                        <field name="user_id"/>
+                        <field name="date"/>
+                        <field name="amount"/>
+                    </group>
+                     <group colspan="2" col="2">
+                    </group>
+                    <field name="description"/>
+                </form>
+            </field>
+        </record>
+
+        <!--view for alerts-->
+        <record model="ir.ui.view" id="alert_tree_view">
+            <field name="name">alert tree</field>
+            <field name="model">lunch.alert</field>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <tree string="alert tree">
+                    <field name="message"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+
+         <record model="ir.ui.view" id="alert_form_view">
+            <field name="name">alert tree</field>
+            <field name="model">lunch.alert</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="alert tree">
+                    <separator string="Schedule Date" colspan="4"/>
+                        <group col="2" colspan="2">
+                            <field name="day"/>
+                            <field name="specific" attrs="{'invisible': [('day','!=','specific')]}"/>
+                        </group>
+                        <group col="2" colspan="2">
+                        </group>
+                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
+                            <field name="monday"/>
+                            <field name="tuesday"/>
+                            <field name="wednesday"/>
+                            <field name="thursday"/>
+                        </group>
+                        <group col="2" attrs="{'invisible': [('day','!=','week')]}">
+                            <field name="friday"/>
+                            <field name="saturday"/>
+                            <field name="sunday"/>
+                        </group>
+                    <separator string="Schedule Hour" colspan="4"/>
+                    <group col="2" colspan="2">
+                        <field name='from'/>
+                        <field name='to'/>
+                    </group>
+                    <group col="2" colspan="2">
+                    </group>
+                    <separator string="Alert Informations" colspan="4"/>
+                     <group col="2" colspan="2">
+                        <field name='active'/>
+                        <field name='message' placeholder="Write the message you want to display during the defined period..."/>
+                    </group>
+                    <group col="2" colspan="2">
+                    </group>
+                </form>
+            </field>
+        </record>
+    </data>
+</openerp>

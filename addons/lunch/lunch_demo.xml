@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+
+        <record model="lunch.category" id="categ_sandwich">
+            <field name="name">Sandwich</field>
+        </record>
+
+        <record model="lunch.product" id="product_club">
+            <field name="name">Club</field>
+            <field name="category_id" eval="str(ref('categ_sandwich'))"/>
+            <field name="price">2.75</field>
+        </record>
+
+        <record model="lunch.cashbox" id="cashbox_cashbox">
+            <field name="name">Cashbox</field>
+            <field name="manager" ref="base.user_root"/>
+        </record>
+
+        <record id="base.user_demo" model="res.users">
+            <field name="groups_id" eval="[(4,ref('base.group_tool_user'))]"/> 
+        </record>
+
+    </data>
+</openerp>

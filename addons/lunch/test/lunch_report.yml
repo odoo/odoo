@@ -1,0 +1,8 @@
+-
+  In order to test the PDF reports defined on a Lunch, we will print a Lunch Order Report
+-
+  !python {model: lunch.order}: |
+    import netsvc, tools, os
+    (data, format) = netsvc.LocalService('report.lunch.order').create(cr, uid, [ref('lunch.lunch_order_0'),ref('lunch.lunch_order_1')], {}, {})
+    if tools.config['test_report_directory']:
+        file(os.path.join(tools.config['test_report_directory'], 'lunch-lunch_order_report.'+format), 'wb+').write(data)
