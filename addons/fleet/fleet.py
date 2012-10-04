@@ -15,11 +15,37 @@ from import_base.mapper import *
 class fleet_vehicle_cost(osv.Model):
     _name = 'fleet.vehicle.cost'
     _description = 'Cost of vehicle'
+    _order = 'date desc, vehicle_id asc'
+
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            if record.vehicle_id.license_plate:
+                name = record.vehicle_id.license_plate
+            if record.cost_type.name:
+                name = name + ' / '+ record.cost_type.name
+            if record.date:
+                name = name + ' / '+ record.date
+            res.append((record.id, name))
+        return res
+
+    def _cost_name_get_fnc(self, cr, uid, ids, name, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     _columns = {
+        'name' : fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
+
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
+        'date' :fields.date('Cost Date',help='Date when the cost has been executed'),
     }
     def create(self, cr, uid, data, context=None):
         if 'parent_id' in data:
@@ -559,7 +585,6 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _columns = {
         #'name' : fields.char('Name',size=64),
-        'date' :fields.date('Refueling Date',help='Date when the refueling has been performed'),
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price Per Liter'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
@@ -631,7 +656,6 @@ class fleet_vehicle_log_services(osv.Model):
 
         #'name' : fields.char('Name',size=64),
 
-        'date' :fields.date('Service Date',help='Date when the service will be/has been performed'),
         'service_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Services completed'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
@@ -773,7 +797,6 @@ class fleet_vehicle_log_contract(osv.Model):
     _columns = {
         'name' : fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
         #'name' : fields.char('Name',size=64),
-        'date' :fields.date('Contract Date',help='Date when the contract has been signed'),
 
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
 

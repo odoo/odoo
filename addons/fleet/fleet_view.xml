@@ -763,8 +763,31 @@
                     <field name="vehicle_id" />
                     <field name="cost_type"/>
                     <field name="amount"/>
+                    <field name="date"/>
                     <field name="parent_id"/>
                 </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_costs_form'>
+            <field name="name">fleet.vehicle.cost.form</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <form string="Vehicle costs" version="7.0">
+                    <sheet>
+                        <group col="2" string="Cost Details">
+                            <group>
+                                <field name="vehicle_id" />
+                                <field name="cost_type"/>
+                                <field name="amount"/>
+                            </group>
+                            <group>
+                                <field name="date"/>
+                                <field name="parent_id"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 
