@@ -410,6 +410,7 @@ openerp.base_import = function (instance) {
             { name: 'preview_failed', from: 'previewing', to: 'preview_error' },
             { name: 'preview_succeeded', from: 'previewing', to: 'preview_success' },
             { name: 'validate', from: 'preview_success', to: 'validating' },
+            { name: 'validate', from: 'results', to: 'validating' },
             { name: 'validated', from: 'validating', to: 'results' },
             { name: 'import', from: ['preview_success', 'results'], to: 'importing' },
             { name: 'import_succeeded', from: 'importing', to: 'imported'},
