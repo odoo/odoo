@@ -139,7 +139,6 @@ class hr_job(osv.osv):
     def job_open(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'open', 'no_of_recruitment': 0})
         return True
-
 hr_job()
 
 class hr_employee(osv.osv):
