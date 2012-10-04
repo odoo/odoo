@@ -328,6 +328,18 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view_info=False, parent={}, default=True):
+        """
+        This function process the !record tag in yalm files. It simulates the record creation through an xml
+        view (either specified on the !record tag or the default one for this object), including the calls to
+        on_change() functions.
+        :param model: browseable object
+        :param fields: dictonary mapping the field names and their values
+        :param view_info: result of fields_view_get() called on the object
+        :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
+        :param default: boolean flag depicting if the default values must be added to the process or not
+        :return: dictionary mapping the field names and their values to use when calling the create() function
+        :rtype: dict
+        """
         def process_val(key, val):
             if fg[key]['type']=='many2one':
                 if type(val) in (tuple,list):
@@ -347,6 +359,7 @@ class YamlInterpreter(object):
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
             record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
+
             # Process all on_change calls
             nodes = [view]
             while nodes:
@@ -356,9 +369,10 @@ class YamlInterpreter(object):
                     assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
                     if field_name in fields:
                         one2many_form_view = None
-                        # if the form view is not inline, we call fields_view_get
                         if (view is not False) and (fg[field_name]['type']=='one2many'):
+                            # for one2many fields, we want to eval them using the inline form view defined on the parent
                             one2many_form_view = view_info['fields'][field_name]['views'].get('form')
+                            # if the form view is not defined inline, we call fields_view_get()
                             if not one2many_form_view:
                                 one2many_form_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
 
