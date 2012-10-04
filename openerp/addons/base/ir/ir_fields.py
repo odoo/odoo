@@ -127,7 +127,8 @@ class ir_fields_converter(orm.Model):
             return value, []
         except ValueError:
             raise ValueError(
-                _(u"'%s' does not seem to be a valid date for field '%%(field)s'") % value)
+                _(u"'%s' does not seem to be a valid date for field '%%(field)s'. Use the format '%s'") %
+                    (value, u"2012-12-31"))
 
     def _str_to_datetime(self, cr, uid, model, column, value, context=None):
         try:
@@ -135,7 +136,8 @@ class ir_fields_converter(orm.Model):
             return value, []
         except ValueError:
             raise ValueError(
-                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'") % value)
+                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'. Use the format '%s'") %
+                    (value, u"2012-12-31 23:59:59"))
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)

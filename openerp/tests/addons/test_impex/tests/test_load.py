@@ -1008,7 +1008,7 @@ class test_date(ImporterCase):
         result = self.import_(['value'], [['not really a date']])
         self.assertEqual(result['messages'], [
             message(u"'not really a date' does not seem to be a valid date "
-                    u"for field 'unknown'")])
+                    u"for field 'unknown'. Use the format '2012-12-31'")])
         self.assertIs(result['ids'], False)
 
 class test_datetime(ImporterCase):
@@ -1028,7 +1028,8 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['not really a datetime']])
         self.assertEqual(result['messages'], [
             message(u"'not really a datetime' does not seem to be a valid "
-                    u"datetime for field 'unknown'")])
+                    u"datetime for field 'unknown'. Use the format "
+                    u"'2012-12-31 23:59:59'")])
         self.assertIs(result['ids'], False)
 
 # function, related, reference: written to db as-is...
