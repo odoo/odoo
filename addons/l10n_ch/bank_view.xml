@@ -28,34 +28,6 @@
                 </field>
             </field>
         </record>
-        
-        <!-- res.partner.bank in res partner form-->
-        <!-- Partner -> Bank Details -->
-        
-        <record model="ir.ui.view" id="l10nch_view_res_partner_bank_add_groups">
-            <field name="name">res.partner_bank.form.hide.f2</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="account.view_partner_property_form"/>
-            <field name="arch" type="xml">
-                <field name="state" position="after">
-                    <newline/>
-                    <separator colspan="4" string="Account Infos"/>
-                    <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
-                        <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
-                        <field name="dta_code"/>
-                        <newline/>
-                    </group>
-                    <newline/>
-                    <group string="Postal account info" colspan="4"  attrs="{'invisible': [('state','not in', ['bvpost','bvrpost','bvbank','bvrbank'])]}" >
-                        <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
-                        <newline/>
-                    </group>
-                    <separator colspan="4" string="Financial Institute Infos"/>
-                    <field name="bank" />
-                </field>
-            </field>
-        </record>
-
 
         <!-- res.partner.bank base form-->
         <!-- Sales -> Configuration -> Address Book -> Bank accounts -->
@@ -66,35 +38,21 @@
             <field name="model">res.partner.bank</field>
             <field name="inherit_id" ref="base.view_partner_bank_form"/>
             <field name="arch" type="xml">
-                <field name="state" position="after">
-                    <newline/>
-                    
-                    <separator colspan="4" string="Account Infos"/>
-                        <newline/>
-                    <group string="Bank account info" colspan="4" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}" >
-                            <field name="acc_number" string="Account/IBAN Number" attrs="{'required': [('state','not in',['bvpost','bvrpost'])]}"/>
-                            <field name="dta_code"/>
-                        <newline/>
+                <xpath expr="//field[@name='acc_number']" position="attributes">
+                    <attribute name="attrs">{'required': [('state','not in',['bvpost','bvrpost'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='acc_number']" position="after">
+                    <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])], 'invisible': [('state','not in', ['bvpost','bvrpost','bvbank','bvrbank'])]}"/>
+                    <field name="dta_code" attrs="{'invisible': [('state','in', ['bvpost','bvrpost'])]}"/>
+                    <field name="my_bank"  attrs="{'invisible': ['|', ('state', 'not in', ['bvrpost','bvrbank']), ('company_id', '=', False)]}" />
+                </xpath>
+                <xpath expr="//group[@name='bank']" position="after">
+                    <group string="BVR print options" attrs="{'invisible': [('my_bank', '!=', True)]}" >
+                        <field name="bvr_adherent_num" attrs="{'invisible': [('state','!=','bvrbank')]}"/>
+                        <field name="print_bank"/>
+                        <field name="print_account"/>
                     </group>
-                    <newline/>
-                    <group string="Postal account info" colspan="4"  attrs="{'invisible': [('state','not in', ['bvpost','bvrpost','bvbank','bvrbank'])]}" >
-                        <field name="post_number" attrs="{'required': [('state','in',['bvpost','bvrpost','bvrbank'])]}"/>
-                        <newline/>
-                    </group>
-                    <separator colspan="4" string="Financial Institute Infos"/>
-                    <newline/>
-                    <group attrs="{'invisible': ['|', ('state', 'not in', ['bvrpost','bvrbank']), ('company_id', '=', False)]}" colspan="4">
-                        <field name="my_bank"  attrs="{'invisible': [('company_id', '=', False)]}" />
-                        <group string="BVR print options" colspan="4"  attrs="{'invisible': [('my_bank', '!=', True)]}" >
-                            <field name="bvr_adherent_num" attrs="{'invisible': [('state','!=','bvrbank')]}"/>
-                            <field name="print_bank"/>
-                            <field name="print_account"/>
-                            <newline/>
-                        </group>
-                    </group>
-                    <newline/>
-                    <field name="bank" />
-                </field>
+                </xpath>
             </field>
         </record>        
 

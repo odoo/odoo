@@ -42,5 +42,21 @@ You can record issues, assign them to a responsible person, and keep track of th
 Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</field>
         </record>
 
+        <!-- Mail subtypes -->
+        <record id="mail.mt_issue_new" model="mail.message.subtype">
+            <field name="name">created</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mt_issue_new" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mt_issue_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="res_model">project.issue</field>
+        </record>
+
     </data>
 </openerp>

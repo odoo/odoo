@@ -15,9 +15,10 @@
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
-                    <field name="message_is_follower"/>
                     <field name="message_follower_ids"/>
+                    <field name="message_is_follower"/>
                     <field name="message_summary"/>
+                    <field name="description"/>
                     <templates>
                         <t t-name="kanban-description">
                             <div class="oe_group_description" t-if="record.description.raw_value">

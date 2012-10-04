@@ -92,13 +92,13 @@ class purchase_requisition(osv.osv):
 
     def in_progress_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Draft Requisition has been <b>sent to suppliers</b>."), context=context)
-    
+
     def reset_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been set to <b>draft</b>."), context=context)
-     
+
     def done_to_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>done</b>."), context=context)
-        
+
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Purchase Requisition has been <b>cancelled</b>."), context=context)
 
@@ -207,7 +207,7 @@ class purchase_requisition_line(osv.osv):
         'company_id': fields.related('requisition_id','company_id',type='many2one',relation='res.company',string='Company', store=True, readonly=True),
     }
 
-    def onchange_product_id(self, cr, uid, ids, product_id,product_uom_id, context=None):
+    def onchange_product_id(self, cr, uid, ids, product_id, product_uom_id, context=None):
         """ Changes UoM and name if product_id changes.
         @param name: Name of the field
         @param product_id: Changed product_id
@@ -267,16 +267,13 @@ class procurement_order(osv.osv):
     }
     def make_po(self, cr, uid, ids, context=None):
         res = {}
-        sequence_obj = self.pool.get('ir.sequence')
         requisition_obj = self.pool.get('purchase.requisition')
         warehouse_obj = self.pool.get('stock.warehouse')
         procurement = self.browse(cr, uid, ids, context=context)[0]
         if procurement.product_id.purchase_requisition:
-             seq_name = sequence_obj.get(cr, uid, 'purchase.order.requisition')
              warehouse_id = warehouse_obj.search(cr, uid, [('company_id', '=', procurement.company_id.id or company.id)], context=context)
              res[procurement.id] = requisition_obj.create(cr, uid, 
                    {
-                    'name': seq_name,
                     'origin': procurement.origin,
                     'date_end': procurement.date_planned,
                     'warehouse_id':warehouse_id and warehouse_id[0] or False,

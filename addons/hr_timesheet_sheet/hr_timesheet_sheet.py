@@ -358,7 +358,7 @@ class hr_timesheet_sheet(osv.osv):
         'department_id':fields.many2one('hr.department','Department'),
     }
 
-    def _default_date_from(self,cr, uid, context=None):
+    def _default_date_from(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':
@@ -369,7 +369,7 @@ class hr_timesheet_sheet(osv.osv):
             return time.strftime('%Y-01-01')
         return time.strftime('%Y-%m-%d')
 
-    def _default_date_to(self,cr, uid, context=None):
+    def _default_date_to(self, cr, uid, context=None):
         user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
         r = user.company_id and user.company_id.timesheet_range or 'month'
         if r=='month':

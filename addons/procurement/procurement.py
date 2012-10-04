@@ -97,9 +97,9 @@ class procurement_order(osv.osv):
         'product_uos_qty': fields.float('UoS Quantity', states={'draft':[('readonly',False)]}, readonly=True),
         'product_uos': fields.many2one('product.uom', 'Product UoS', states={'draft':[('readonly',False)]}, readonly=True),
         'move_id': fields.many2one('stock.move', 'Reservation', ondelete='set null'),
-        'close_move': fields.boolean('Close Move at end', required=True),
+        'close_move': fields.boolean('Close Move at end'),
         'location_id': fields.many2one('stock.location', 'Location', required=True, states={'draft':[('readonly',False)]}, readonly=True),
-        'procure_method': fields.selection([('make_to_stock','from stock'),('make_to_order','on order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
 
@@ -333,8 +333,8 @@ class procurement_order(osv.osv):
         move_obj = self.pool.get('stock.move')
         for procurement in self.browse(cr, uid, ids, context=context):
             if procurement.product_qty <= 0.00:
-                raise osv.except_osv(_('Insufficient Data!'),
-                    _('Quantity in procurement order(s) must be greater than 0.'))
+                raise osv.except_osv(_('Data Insufficient !'),
+                    _('Please check the quantity in procurement order(s) for the product "%s", it should not be 0 or less!' % procurement.product_id.name))
             if procurement.product_id.type in ('product', 'consu'):
                 if not procurement.move_id:
                     source = procurement.location_id.id
@@ -423,24 +423,26 @@ class procurement_order(osv.osv):
         """
         return 0
 
+    # XXX action_cancel() should accept a context argument
     def action_cancel(self, cr, uid, ids):
-        """ Cancels procurement and writes move state to Assigned.
+        """Cancel Procurements and either cancel or assign the related Stock Moves, depending on the procurement configuration.
+        
         @return: True
         """
-        todo = []
-        todo2 = []
+        to_assign = []
+        to_cancel = []
         move_obj = self.pool.get('stock.move')
         for proc in self.browse(cr, uid, ids):
             if proc.close_move and proc.move_id:
                 if proc.move_id.state not in ('done', 'cancel'):
-                    todo2.append(proc.move_id.id)
+                    to_cancel.append(proc.move_id.id)
             else:
                 if proc.move_id and proc.move_id.state == 'waiting':
-                    todo.append(proc.move_id.id)
-        if len(todo2):
-            move_obj.action_cancel(cr, uid, todo2)
-        if len(todo):
-            move_obj.write(cr, uid, todo, {'state': 'assigned'})
+                    to_assign.append(proc.move_id.id)
+        if len(to_cancel):
+            move_obj.action_cancel(cr, uid, to_cancel)
+        if len(to_assign):
+            move_obj.write(cr, uid, to_assign, {'state': 'assigned'})
         self.write(cr, uid, ids, {'state': 'cancel'})
         self.cancel_send_note(cr, uid, ids, context=None)
         wf_service = netsvc.LocalService("workflow")
@@ -496,22 +498,22 @@ class procurement_order(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>created</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
 
     def running_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement set to <b>running</b>."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>done</b>."), context=context)
 
 procurement_order()
 
@@ -548,6 +550,19 @@ class stock_warehouse_orderpoint(osv.osv):
             result[orderpoint.id] = procurement_ids
         return result
 
+    def _check_product_uom(self, cr, uid, ids, context=None):
+        '''
+        Check if the UoM has the same category as the product standard UoM
+        '''
+        if not context:
+            context = {}
+            
+        for rule in self.browse(cr, uid, ids, context=context):
+            if rule.product_id.uom_id.category_id.id != rule.product_uom.category_id.id:
+                return False
+            
+        return True
+
     _columns = {
         'name': fields.char('Name', size=32, required=True),
         'active': fields.boolean('Active', help="If the active field is set to False, it will allow you to hide the orderpoint without removing it."),
@@ -580,6 +595,9 @@ class stock_warehouse_orderpoint(osv.osv):
     _sql_constraints = [
         ('qty_multiple_check', 'CHECK( qty_multiple > 0 )', 'Qty Multiple must be greater than zero.'),
     ]
+    _constraints = [
+        (_check_product_uom, 'You have to select a product unit of measure in the same category than the default unit of measure of the product', ['product_id', 'product_uom']),
+    ]
 
     def default_get(self, cr, uid, fields, context=None):
         res = super(stock_warehouse_orderpoint, self).default_get(cr, uid, fields, context)
@@ -610,9 +628,10 @@ class stock_warehouse_orderpoint(osv.osv):
         """
         if product_id:
             prod = self.pool.get('product.product').browse(cr, uid, product_id, context=context)
+            d = {'product_uom': [('category_id', '=', prod.uom_id.category_id.id)]}
             v = {'product_uom': prod.uom_id.id}
-            return {'value': v}
-        return {}
+            return {'value': v, 'domain': d}
+        return {'domain': {'product_uom': []}}
 
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:

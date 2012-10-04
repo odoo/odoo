@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+from openerp import SUPERUSER_ID
 from osv import osv
 from osv import fields
 import tools
@@ -45,6 +46,8 @@ class mail_followers(osv.Model):
                         help='Id of the followed resource'),
         'partner_id': fields.many2one('res.partner', string='Related Partner',
                         ondelete='cascade', required=True, select=1),
+        'subtype_ids': fields.many2many('mail.message.subtype', string='Subtype',
+            help="Message subtypes followed, meaning subtypes that will be pushed onto the user's Wall."),
     }
 
 
@@ -80,18 +83,27 @@ class mail_notification(osv.Model):
             return super(mail_notification, self).create(cr, uid, vals, context=context)
         return False
 
-    def set_message_read(self, cr, uid, msg_id, context=None):
-        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
-        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', '=', msg_id)], context=context)
-        return self.write(cr, uid, notif_ids, {'read': True}, context=context)
+    def set_message_read(self, cr, uid, msg_ids, read=None, context=None):
+        if msg_ids == None:
+            return False
+        if type(msg_ids) is not list:
+            msg_ids=[msg_ids]
 
-    def get_partners_to_notify(self, cr, uid, partner_ids, message, context=None):
+        partner_id = self.pool.get('res.users').browse(cr, uid, uid, context=context).partner_id.id
+        notif_ids = self.search(cr, uid, [('partner_id', '=', partner_id), ('message_id', 'in', msg_ids)], context=context)
+
+        return self.write(cr, uid, notif_ids, {'read': read}, context=context)
+
+    def get_partners_to_notify(self, cr, uid, message, context=None):
         """ Return the list of partners to notify, based on their preferences.
 
             :param browse_record message: mail.message to notify
         """
         notify_pids = []
-        for partner in self.pool.get('res.partner').browse(cr, uid, partner_ids, context=context):
+        for notification in message.notification_ids:
+            if notification.read:
+                continue
+            partner = notification.partner_id
             # Do not send an email to the writer
             if partner.user_ids and partner.user_ids[0].id == uid:
                 continue
@@ -110,15 +122,15 @@ class mail_notification(osv.Model):
             notify_pids.append(partner.id)
         return notify_pids
 
-    def notify(self, cr, uid, partner_ids, msg_id, context=None):
+    def _notify(self, cr, uid, msg_id, context=None):
         """ Send by email the notification depending on the user preferences """
         context = context or {}
         # mail_noemail (do not send email) or no partner_ids: do not send, return
-        if context.get('mail_noemail') or not partner_ids:
+        if context.get('mail_noemail'):
             return True
         msg = self.pool.get('mail.message').browse(cr, uid, msg_id, context=context)
 
-        notify_partner_ids = self.get_partners_to_notify(cr, uid, partner_ids, msg, context=context)
+        notify_partner_ids = self.get_partners_to_notify(cr, uid, msg, context=context)
         if not notify_partner_ids:
             return True
 
