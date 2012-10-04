@@ -653,6 +653,10 @@ class fleet_service_type(osv.Model):
     _name = 'fleet.service.type'
     _columns = {
         'name': fields.char('Name', required=True, translate=True),
+        'category': fields.selection([('contract', 'Contract'), ('service', 'Service'),('both', 'Both')], 'Category', readonly=True, help='Choose wheter the service refer to contracts, vehicle services or both'),
+    }
+    _defaults = {
+        'category': 'both'
     }
 
 ############################
@@ -747,6 +751,8 @@ class fleet_vehicle_log_contract(osv.Model):
 
         #'name' : fields.char('Name',size=64),
         'date' :fields.date('Contract Date',help='Date when the contract has been signed'),
+
+        'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
 
         'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
         'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
