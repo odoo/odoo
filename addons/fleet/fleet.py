@@ -635,7 +635,7 @@ class fleet_vehicle_log_services(osv.Model):
         'notes' : fields.text('Notes'),
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Value',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
