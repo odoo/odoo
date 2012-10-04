@@ -820,9 +820,10 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
      * the action manager can be found amongst the ancestors of the current widget.
      * If that's not the case this method will simply return `false`.
      */
-    do_action: function(action, on_finished) {
-        if (this.getParent()) {
-            return this.getParent().do_action(action, on_finished);
+    do_action: function() {
+        var parent = this.getParent();
+        if (parent) {
+            return parent.do_action.apply(parent, arguments);
         }
         return false;
     },
