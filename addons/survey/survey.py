@@ -53,6 +53,7 @@ class survey(osv.osv):
         'id': fields.integer('ID'),
         'title': fields.char('Survey Title', size=128, required=1),
         'page_ids': fields.one2many('survey.page', 'survey_id', 'Page'),
+        'date_open': fields.datetime('Survey Open Date', readonly=1),
         'date_close': fields.datetime('Survey Close Date', readonly=1),
         'max_response_limit': fields.integer('Maximum Answer Limit',
                      help="Set to one if survey is answerable only once"),
@@ -60,10 +61,10 @@ class survey(osv.osv):
                      help="Set to one if  you require only one Answer per user"),
         'state': fields.selection([('open', 'Open'), ('cancel', 'Cancelled'),('close', 'Closed') ], 'Status', readonly=True),
         'responsible_id': fields.many2one('res.users', 'Responsible', help="User responsible for survey"),
-        'tot_start_survey': fields.integer("Total Started Survey"),
-        'tot_comp_survey': fields.integer("Total Completed Survey"),
+        'tot_start_survey': fields.integer("Total Started Survey", readonly=1),
+        'tot_comp_survey': fields.integer("Total Completed Survey", readonly=1),
         'note': fields.text('Description', size=128),
-        'history': fields.one2many('survey.history', 'survey_id', 'History Lines'),
+        'history': fields.one2many('survey.history', 'survey_id', 'History Lines', readonly=True),
         'users': fields.many2many('res.users', 'survey_users_rel', 'sid', 'uid', 'Users'),
         'send_response': fields.boolean('Email Notification on Answer'),
         'type': fields.many2one('survey.type', 'Type'),
@@ -76,10 +77,11 @@ class survey(osv.osv):
         'tot_comp_survey': lambda * a: 0,
         'send_response': lambda * a: 1,
         'response_user': lambda * a:1,
+        'date_open': strftime("%Y-%m-%d %H:%M:%S"),
     }
 
     def survey_open(self, cr, uid, ids, arg):
-        self.write(cr, uid, ids, {'state': 'open'})
+        self.write(cr, uid, ids, {'state': 'open', 'date_open': strftime("%Y-%m-%d %H:%M:%S")})
         return True
 
     def survey_close(self, cr, uid, ids, arg):
