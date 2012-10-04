@@ -387,6 +387,10 @@ class hr_timesheet_line(osv.osv):
                 raise osv.except_osv(_('Error!'), _('You cannot modify an entry in a confirmed timesheet.'))
         return True
 
+    def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
+        return dict([(el, self.on_change_account_id(cr, uid, ids, el)) for el in account_ids])
+
+
 hr_timesheet_line()
 
 class hr_attendance(osv.osv):

@@ -89,47 +89,53 @@ openerp.hr_timesheet_sheet = function(instance) {
                         el.account_id = el.account_id[0];
                     return el;
                 })
-                .groupBy("account_id")
-                .map(function(lines, account_id) {
-                    // group by days
-                    account_id = account_id === "false" ? false :  Number(account_id);
-                    var index = _.groupBy(lines, "date");
-                    var days = _.map(dates, function(date) {
-                        var day = {day: date, lines: index[instance.web.date_to_str(date)] || []};
-                        // add line where we will insert/remove hours
-                        var to_add = _.find(day.lines, function(line) { return line.name === self.description_line });
-                        if (to_add) {
-                            day.lines = _.without(day.lines, to_add);
-                            day.lines.unshift(to_add);
-                        } else {
-                            day.lines.unshift(_.extend(_.clone(default_get), {
-                                name: self.description_line,
-                                unit_amount: 0,
-                                date: instance.web.date_to_str(date),
-                                account_id: account_id,
-                            }));
-                        }
-                        return day;
-                    });
-                    return {account: account_id, days: days};
-                }).sortBy(function(account) {
-                    return account.account;
-                }).value();
+                .groupBy("account_id").value();
 
-                // we need the name_get of the analytic accounts
-                return new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(accounts, "account"),
-                    new instance.web.CompoundContext()]).pipe(function(result) {
-                    account_names = {};
-                    _.each(result, function(el) {
-                        account_names[el[0]] = el[1];
-                    });
-                });;
+                var account_ids = _.map(_.keys(accounts), function(el) { return el === "false" ? false : Number(el) });
+
+                return new instance.web.Model("hr.analytic.timesheet").call("multi_on_change_account_id", [[], account_ids,
+                    new instance.web.CompoundContext({'user_id': self.get('user_id')})]).pipe(function(accounts_defaults) {
+                    accounts = _(accounts).chain().map(function(lines, account_id) {
+                        account_defaults = _.extend({}, default_get, accounts_defaults[account_id]);
+                        // group by days
+                        account_id = account_id === "false" ? false :  Number(account_id);
+                        var index = _.groupBy(lines, "date");
+                        var days = _.map(dates, function(date) {
+                            var day = {day: date, lines: index[instance.web.date_to_str(date)] || []};
+                            // add line where we will insert/remove hours
+                            var to_add = _.find(day.lines, function(line) { return line.name === self.description_line });
+                            if (to_add) {
+                                day.lines = _.without(day.lines, to_add);
+                                day.lines.unshift(to_add);
+                            } else {
+                                day.lines.unshift(_.extend(_.clone(account_defaults), {
+                                    name: self.description_line,
+                                    unit_amount: 0,
+                                    date: instance.web.date_to_str(date),
+                                    account_id: account_id,
+                                }));
+                            }
+                            return day;
+                        });
+                        return {account: account_id, days: days, account_defaults: account_defaults};
+                    }).sortBy(function(account) {
+                        return account.account;
+                    }).value();
+
+                    // we need the name_get of the analytic accounts
+                    return new instance.web.Model("account.analytic.account").call("name_get", [_.pluck(accounts, "account"),
+                        new instance.web.CompoundContext()]).pipe(function(result) {
+                        account_names = {};
+                        _.each(result, function(el) {
+                            account_names[el[0]] = el[1];
+                        });
+                    });;
+                });
             })).pipe(function(result) {
                 // we put all the gathered data in self, then we render
                 self.dates = dates;
                 self.accounts = accounts;
                 self.account_names = account_names;
-                self.default_get = default_get;
                 //real rendering
                 self.display_data();
             });
@@ -198,11 +204,11 @@ openerp.hr_timesheet_sheet = function(instance) {
         sync: function() {
             var self = this;
             var ops = [];
-            var auth_keys = _.extend(_.clone(self.default_get), {
-                name: true, unit_amount: true, date: true, account_id:true,
-            });
 
             _.each(self.accounts, function(account) {
+                var auth_keys = _.extend(_.clone(account.account_defaults), {
+                    name: true, unit_amount: true, date: true, account_id:true,
+                });
                 _.each(account.days, function(day) {
                     _.each(day.lines, function(line) {
                         if (line.unit_amount !== 0) {
