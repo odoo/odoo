@@ -34,30 +34,6 @@
   !assert {model: hr.employee, id: hr.employee_qdp}:
     - state == 'present'
 -
-  I want to check attendance and work of yesterday. I click on <- button.
--
-  !python {model: hr_timesheet_sheet.sheet}: |
-    date_prev = self.date_previous(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
-    assert date_prev == True, "I See Previous Date Timesheet"
--
-  Then I click on "Today" button to fill today's timesheet.
--
-  !python {model: hr_timesheet_sheet.sheet}: |
-    date_to = self.date_today(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
-    assert date_to == True, "I See Today Date Timesheet"
--
-  I can also move to next day by clicking on -> button.
--
-  !python {model: hr_timesheet_sheet.sheet}: |
-    date_next = self.date_next(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
-    assert date_next == True, "I See Next Date Timesheet"
--
-  I want to go to a particular date and see attendance then I select the date and click on "Go to:" button.
--
-  !python {model: hr_timesheet_sheet.sheet}: |
-    button_dumy = self.button_dummy(cr, uid, [ref('hr_timesheet_sheet_sheet_deddk0')], None)
-    assert button_dumy == True, "I See Particular Date Attendance"
--
   At the time of logout, I create attendance and perform "Sign Out".
 -
   !record {model: hr.attendance, id: hr_attendance_2}:
