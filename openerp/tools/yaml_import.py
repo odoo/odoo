@@ -354,8 +354,10 @@ class YamlInterpreter(object):
         view = view_info and etree.fromstring(view_info['arch'].encode('utf-8')) or False
         fields = fields or {}
         if view is not False:
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, fields, context=self.context) or {}
             fg = view_info['fields']
+            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
             record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
