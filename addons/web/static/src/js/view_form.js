@@ -2081,7 +2081,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         var self = this;
         var trans = new instance.web.DataSet(this, 'ir.translation');
         return trans.call_button('translate_fields', [this.view.dataset.model, this.view.datarecord.id, this.name, this.view.dataset.get_context()]).then(function(r) {
-            self.do_action(r.result);
+            self.do_action(r);
         });
     },
 });
@@ -4282,7 +4282,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.create_function = function(data, sup) {
             var fct = self.options.create_function || sup;
             return fct.call(this, data).then(function(r) {
-                self.created_elements.push(r.result);
+                self.created_elements.push(r);
             });
         };
         this.dataset.write_function = function(id, data, options, sup) {
