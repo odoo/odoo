@@ -201,13 +201,16 @@ class ir_fields_converter(orm.Model):
         if context is None: context = {}
         id = None
         warnings = []
-        extras = {'moreinfo': {
-            'type': 'ir.actions.act_window', 'target': 'new',
-            'res_model': column._obj, 'view_mode': 'tree,form',
-            'view_type': 'form',
-            'views': [(False, 'tree', (False, 'form'))],
-            'help': _(u"See all possible values")
-        }}
+        action = {'type': 'ir.actions.act_window', 'target': 'new',
+                  'view_mode': 'tree,form', 'view_type': 'form',
+                  'views': [(False, 'tree', (False, 'form'))],
+                  'help': _(u"See all possible values")}
+        if subfield is None:
+            action['res_model'] = column._obj
+        elif subfield in ('id', '.id'):
+            action['res_model'] = 'ir.model.data'
+            action['domain'] = [('model', '=', column._obj)]
+
         RelatedModel = self.pool[column._obj]
         if subfield == '.id':
             field_type = _(u"database id")
@@ -221,7 +224,7 @@ class ir_fields_converter(orm.Model):
                 # type error
                 raise ValueError(
                     _(u"Invalid database id '%s' for the field '%%(field)s'") % value,
-                    extras)
+                    {'moreinfo': action})
         elif subfield == 'id':
             field_type = _(u"external id")
             if '.' in value:
@@ -252,7 +255,8 @@ class ir_fields_converter(orm.Model):
         if id is None:
             raise ValueError(
                 _(u"No matching record found for %(field_type)s '%(value)s' in field '%%(field)s'")
-                % {'field_type': field_type, 'value': value}, extras)
+                % {'field_type': field_type, 'value': value},
+                {'moreinfo': action})
         return id, field_type, warnings
 
     def _referencing_subfield(self, record):
