@@ -24,6 +24,20 @@
             <label t-attf-for="file_#{_id}" autofocus="autofocus">CSV File:</label>
             <input type="file" id-attf-id="file_#{_id}"
                    name="file" class="oe_import_file"/>
+            <div class="oe_import_with_file">
+                <a href="#" class="oe_import_toggle">
+                    File Format Options…</a>
+                <div class="oe_import_toggled oe_import_options">
+                    <p t-foreach="widget.opts" t-as="option">
+                        <!-- no @name, avoid submission when file_update called -->
+                        <label t-attf-for="#{option.name}_#{_id}">
+                            <t t-esc="option.label"/></label>
+                        <input t-attf-id="#{option.name}_#{_id}"
+                               t-attf-class="oe_import_#{option.name}"
+                               t-att-value="option.value"/>
+                    </p>
+                </div>
+            </div>
 
             <div class="oe_import_with_file">
                 <h2>Map your data to OpenERP</h2>
@@ -38,18 +52,6 @@
 
                 <div class="oe_import_error_report"></div>
                 <table class="oe_import_grid" width="100%"/>
-                <a href="#" class="oe_import_toggle">
-                    File Format Options…</a>
-                <div class="oe_import_toggled oe_import_options">
-                    <p t-foreach="widget.opts" t-as="option">
-                        <!-- no @name, avoid submission when file_update called -->
-                        <label t-attf-for="#{option.name}_#{_id}">
-                            <t t-esc="option.label"/></label>
-                        <input t-attf-id="#{option.name}_#{_id}"
-                               t-attf-class="oe_import_#{option.name}"
-                               t-att-value="option.value"/>
-                    </p>
-                </div>
 
                 <h2>Frequently Asked Questions</h2>
                 <dl>
