@@ -115,5 +115,3 @@ class crm_meeting(base_state, osv.Model):
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
-
-
