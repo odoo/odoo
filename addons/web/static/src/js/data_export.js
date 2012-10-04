@@ -5,7 +5,15 @@ instance.web.DataExport = instance.web.Dialog.extend({
     template: 'ExportTreeView',
     dialog_title: {toString: function () { return _t("Export Data"); }},
     init: function(parent, dataset) {
-        this._super(parent);
+        var self = this;
+        options = {
+            buttons : [
+                {text: _t("Close"), click: function() { self.close(); }},
+                {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
+            ],
+            close: function(event, ui){ self.close();}
+        }
+        this._super(parent, options);
         this.records = {};
         this.dataset = dataset;
         this.exports = new instance.web.DataSetSearch(
@@ -14,13 +22,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
     start: function() {
         var self = this;
         this._super.apply(this, arguments);
-        this.open({
-            buttons : [
-                {text: _t("Close"), click: function() { self.close(); }},
-                {text: _t("Export To File"), click: function() { self.on_click_export_data(); }}
-            ],
-            close: function(event, ui){ self.close();}
-        });
+        this.open();
         self.$el.removeClass('ui-dialog-content ui-widget-content');
         self.$el.find('#add_field').click(function() {
             if ($('#field-tree-structure tr.ui-selected')) {
