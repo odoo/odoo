@@ -25,7 +25,7 @@ class hr_attendance_config_settings(osv.osv_memory):
     _inherit = 'hr.config.settings'
 
     _columns = {
-        'group_hr_attendance': fields.boolean('Track attendances',
+        'group_hr_attendance': fields.boolean('Attendance group allocation to users',
             implied_group='base.group_hr_attendance',
             help="Allocates attendance group to all users."),
     }
