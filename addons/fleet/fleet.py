@@ -15,10 +15,16 @@ class fleet_vehicle_cost(osv.Model):
     _name = 'fleet.vehicle.cost'
     _description = 'Cost of vehicle'
     _columns = {
-        'price': fields.float('Price'),
-        'type': fields.many2one('fleet.service.type', 'Service type', required=True, help='Service type purchased with this cost'),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this cost'),
+        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
+        'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
+        'amount': fields.float('Total Price'),
+        'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
     }
+    def create(self, cr, uid, data, context=None):
+        if 'parent_id' in data:
+            data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
+        cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
+        return cost_id
 
 ############################
 ############################
@@ -468,6 +474,7 @@ class fleet_vehicle_odometer(osv.Model):
 class fleet_vehicle_log_fuel(osv.Model):
 
     #_inherits = {'fleet.vehicle.odometer': 'odometer_id'}
+    _inherits = {'fleet.vehicle.cost': 'cost_id'}
 
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
 
@@ -478,7 +485,7 @@ class fleet_vehicle_log_fuel(osv.Model):
 
         return {
             'value' : {
-                'unit' : odometer_unit,
+                'odometer_unit' : odometer_unit,
             }
         }
 
@@ -548,11 +555,9 @@ class fleet_vehicle_log_fuel(osv.Model):
 
     _columns = {
         #'name' : fields.char('Name',size=64),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
         'date' :fields.date('Refueling Date',help='Date when the refueling has been performed'),
         'liter' : fields.float('Liter'),
         'price_per_liter' : fields.float('Price Per Liter'),
-        'amount': fields.float('Total price'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' : fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
@@ -564,6 +569,7 @@ class fleet_vehicle_log_fuel(osv.Model):
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date' : time.strftime('%Y-%m-%d'),
+
     }
 
 ############################
@@ -574,6 +580,8 @@ class fleet_vehicle_log_fuel(osv.Model):
 
 
 class fleet_vehicle_log_services(osv.Model):
+
+    _inherits = {'fleet.vehicle.cost': 'cost_id'}
 
     def on_change_vehicle(self, cr, uid, ids, vehicle_id, context=None):
 
@@ -618,10 +626,9 @@ class fleet_vehicle_log_services(osv.Model):
     _columns = {
 
         #'name' : fields.char('Name',size=64),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this services log'),
+
         'date' :fields.date('Service Date',help='Date when the service will be/has been performed'),
-        'amount' :fields.float('Cost', help="Total cost of the service"),
-        'service_ids' :fields.many2many('fleet.service.type','fleet_vehicle_service_type_rel','vehicle_service_type_id','service_id','Services completed'),
+        'service_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Services completed'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
@@ -655,6 +662,8 @@ class fleet_service_type(osv.Model):
 ############################
 
 class fleet_vehicle_log_contract(osv.Model):
+
+    _inherits = {'fleet.vehicle.cost': 'cost_id'}
     
     def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
         res = dict.fromkeys(ids, False)
@@ -737,20 +746,19 @@ class fleet_vehicle_log_contract(osv.Model):
     _columns = {
 
         #'name' : fields.char('Name',size=64),
-        'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this contract log'),
         'date' :fields.date('Contract Date',help='Date when the contract has been signed'),
-        'contract_type' : fields.many2one('fleet.contract.type', 'Type', required=False, help='Type of the contract'),
+
         'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
         'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),
         'warning_date' : fields.function(get_warning_date,type='integer',string='Warning Date',store=False),
-        'price' : fields.float('Price', help="Cost of the contract for the specified period"),
+
         'insurer_id' :fields.many2one('res.partner', 'Insurer', domain="[('supplier','=',True)]"),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'ins_ref' : fields.char('Contract Reference', size=64),
         'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
         'reminder' : fields.boolean('Renewal Reminder', help="Warn the user when this contract needs to be renewed"),
         'notes' : fields.text('Terms and Conditions'),
-        'costs' : fields.one2many('fleet.vehicle.cost', 'vehicle_id', 'Costs covered'),
+        'costs' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Costs covered'),
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False),

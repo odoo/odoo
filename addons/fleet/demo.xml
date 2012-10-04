@@ -2145,6 +2145,12 @@ gg==
           <field name="name">Windshield Wiper(s) Replacement</field>
       </record>
 
+      <record id="log_odometer_1" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-01-01</field>
+          <field name="value">0</field>
+      </record>
+
        <record id="log_fuel_1" model="fleet.vehicle.log.fuel">
           <field name="purchaser_id" ref="base.res_partner_2" />
           <field name="vehicle_id" ref="vehicle_1" />
@@ -2154,8 +2160,14 @@ gg==
           <field name="price_per_liter">1.3</field>
           <field name="amount">52</field>
           <field name="inv_ref">67458</field>
-          <field name="value">0</field>
+          <field name="odometer_id" ref="log_odometer_1" />
           <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_odometer_2" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-02-11</field>
+          <field name="value">658</field>
       </record>
 
       <record id="log_fuel_2" model="fleet.vehicle.log.fuel">
@@ -2167,8 +2179,14 @@ gg==
           <field name="price_per_liter">1.3</field>
           <field name="amount">65</field>
           <field name="inv_ref">455812</field>
-          <field name="value">658</field>
+          <field name="odometer_id" ref="log_odometer_2" />
           <field name="notes">Second refueling of the car</field>
+      </record>
+
+      <record id="log_odometer_3" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-03-23</field>
+          <field name="value">1360</field>
       </record>
 
        <record id="log_fuel_3" model="fleet.vehicle.log.fuel">
@@ -2180,8 +2198,14 @@ gg==
           <field name="price_per_liter">1.32</field>
           <field name="amount">59.4</field>
           <field name="inv_ref">45199877</field>
-          <field name="value">1360</field>
+          <field name="odometer_id" ref="log_odometer_3" />
           <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_odometer_4" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-04-5</field>
+          <field name="value">2044</field>
       </record>
 
       <record id="log_fuel_4" model="fleet.vehicle.log.fuel">
@@ -2193,8 +2217,14 @@ gg==
           <field name="price_per_liter">1.32</field>
           <field name="amount">72.6</field>
           <field name="inv_ref">654</field>
-          <field name="value">2044</field>
+          <field name="odometer_id" ref="log_odometer_4" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_5" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-04-25</field>
+          <field name="value">2756</field>
       </record>
 
       <record id="log_fuel_5" model="fleet.vehicle.log.fuel">
@@ -2206,8 +2236,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">54</field>
           <field name="inv_ref">55488</field>
-          <field name="value">2756</field>
+          <field name="odometer_id" ref="log_odometer_5" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_6" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-05-15</field>
+          <field name="value">3410</field>
       </record>
 
       <record id="log_fuel_6" model="fleet.vehicle.log.fuel">
@@ -2219,8 +2255,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
           <field name="inv_ref">4952</field>
-          <field name="value">3410</field>
+          <field name="odometer_id" ref="log_odometer_6" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_7" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-06-11</field>
+          <field name="value">3750</field>
       </record>
 
       <record id="log_fuel_7" model="fleet.vehicle.log.fuel">
@@ -2232,8 +2274,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
           <field name="inv_ref">4952</field>
-          <field name="value">3750</field>
+          <field name="odometer_id" ref="log_odometer_7" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_8" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-07-02</field>
+          <field name="value">4115</field>
       </record>
 
       <record id="log_fuel_8" model="fleet.vehicle.log.fuel">
@@ -2245,8 +2293,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">64.53</field>
           <field name="inv_ref">15151</field>
-          <field name="value">4115</field>
+          <field name="odometer_id" ref="log_odometer_8" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_9" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-07-28</field>
+          <field name="value">4750</field>
       </record>
 
       <record id="log_fuel_9" model="fleet.vehicle.log.fuel">
@@ -2258,8 +2312,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">33.75</field>
           <field name="inv_ref">874195</field>
-          <field name="value">4750</field>
+          <field name="odometer_id" ref="log_odometer_9" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_10" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-08-17</field>
+          <field name="value">5171</field>
       </record>
 
        <record id="log_fuel_10" model="fleet.vehicle.log.fuel">
@@ -2271,8 +2331,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">69.12</field>
           <field name="inv_ref">4431</field>
-          <field name="value">5171</field>
+          <field name="odometer_id" ref="log_odometer_10" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_11" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-09-11</field>
+          <field name="value">5873</field>
       </record>
 
       <record id="log_fuel_11" model="fleet.vehicle.log.fuel">
@@ -2284,8 +2350,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">61.236</field>
           <field name="inv_ref">11234</field>
-          <field name="value">5873</field>
+          <field name="odometer_id" ref="log_odometer_11" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_12" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-10-06</field>
+          <field name="value">6571</field>
       </record>
 
       <record id="log_fuel_12" model="fleet.vehicle.log.fuel">
@@ -2297,8 +2369,14 @@ gg==
           <field name="price_per_liter">1.37</field>
           <field name="amount">73.158</field>
           <field name="inv_ref">798846</field>
-          <field name="value">6571</field>
+          <field name="odometer_id" ref="log_odometer_12" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_13" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-11-02</field>
+          <field name="value">7954</field>
       </record>
 
       <record id="log_fuel_13" model="fleet.vehicle.log.fuel">
@@ -2310,8 +2388,14 @@ gg==
           <field name="price_per_liter">1.37</field>
           <field name="amount">66.445</field>
           <field name="inv_ref">7954</field>
-          <field name="value">7292</field>
+          <field name="odometer_id" ref="log_odometer_13" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_14" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-12-02</field>
+          <field name="value">7981</field>
       </record>
 
       <record id="log_fuel_14" model="fleet.vehicle.log.fuel">
@@ -2323,8 +2407,14 @@ gg==
           <field name="price_per_liter">1.4</field>
           <field name="amount">49</field>
           <field name="inv_ref">545</field>
-          <field name="value">7981</field>
+          <field name="odometer_id" ref="log_odometer_14" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_15" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-01-01</field>
+          <field name="value">0</field>
       </record>
 
       <record id="log_fuel_15" model="fleet.vehicle.log.fuel">
@@ -2336,8 +2426,14 @@ gg==
           <field name="price_per_liter">1.3</field>
           <field name="amount">52</field>
           <field name="inv_ref">67458</field>
-          <field name="value">0</field>
+          <field name="odometer_id" ref="log_odometer_15" />
           <field name="notes">First refueling</field>
+      </record>
+
+      <record id="log_odometer_16" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-02-11</field>
+          <field name="value">658</field>
       </record>
 
       <record id="log_fuel_16" model="fleet.vehicle.log.fuel">
@@ -2349,8 +2445,14 @@ gg==
           <field name="price_per_liter">1.3</field>
           <field name="amount">65</field>
           <field name="inv_ref">455812</field>
-          <field name="value">658</field>
+          <field name="odometer_id" ref="log_odometer_16" />
           <field name="notes">Second refueling of the car</field>
+      </record>
+
+      <record id="log_odometer_17" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-03-23</field>
+          <field name="value">1360</field>
       </record>
 
        <record id="log_fuel_17" model="fleet.vehicle.log.fuel">
@@ -2362,8 +2464,14 @@ gg==
           <field name="price_per_liter">1.32</field>
           <field name="amount">59.4</field>
           <field name="inv_ref">45199877</field>
-          <field name="value">1360</field>
+          <field name="odometer_id" ref="log_odometer_17" />
           <field name="notes">Some notes ...</field>
+      </record>
+
+      <record id="log_odometer_18" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-04-5</field>
+          <field name="value">2044</field>
       </record>
 
       <record id="log_fuel_18" model="fleet.vehicle.log.fuel">
@@ -2375,8 +2483,14 @@ gg==
           <field name="price_per_liter">1.32</field>
           <field name="amount">72.6</field>
           <field name="inv_ref">654</field>
-          <field name="value">2044</field>
+          <field name="odometer_id" ref="log_odometer_18" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_19" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-04-25</field>
+          <field name="value">2756</field>
       </record>
 
       <record id="log_fuel_19" model="fleet.vehicle.log.fuel">
@@ -2388,8 +2502,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">54</field>
           <field name="inv_ref">55488</field>
-          <field name="value">2756</field>
+          <field name="odometer_id" ref="log_odometer_19" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_20" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-05-15</field>
+          <field name="value">3410</field>
       </record>
 
       <record id="log_fuel_20" model="fleet.vehicle.log.fuel">
@@ -2401,8 +2521,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
           <field name="inv_ref">4952</field>
-          <field name="value">3410</field>
+          <field name="odometer_id" ref="log_odometer_20" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_21" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-06-11</field>
+          <field name="value">3750</field>
       </record>
 
       <record id="log_fuel_21" model="fleet.vehicle.log.fuel">
@@ -2414,8 +2540,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">75.33</field>
           <field name="inv_ref">4952</field>
-          <field name="value">3750</field>
+          <field name="odometer_id" ref="log_odometer_21" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_22" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-07-02</field>
+          <field name="value">4115</field>
       </record>
 
       <record id="log_fuel_22" model="fleet.vehicle.log.fuel">
@@ -2427,8 +2559,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">64.53</field>
           <field name="inv_ref">15151</field>
-          <field name="value">4115</field>
+          <field name="odometer_id" ref="log_odometer_22" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_23" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-07-28</field>
+          <field name="value">4750</field>
       </record>
 
       <record id="log_fuel_23" model="fleet.vehicle.log.fuel">
@@ -2440,8 +2578,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">33.75</field>
           <field name="inv_ref">874195</field>
-          <field name="value">4750</field>
+          <field name="odometer_id" ref="log_odometer_23" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_24" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-08-17</field>
+          <field name="value">5171</field>
       </record>
 
        <record id="log_fuel_24" model="fleet.vehicle.log.fuel">
@@ -2453,8 +2597,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">69.12</field>
           <field name="inv_ref">4431</field>
-          <field name="value">5171</field>
+          <field name="odometer_id" ref="log_odometer_24" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_25" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-09-11</field>
+          <field name="value">5873</field>
       </record>
 
       <record id="log_fuel_25" model="fleet.vehicle.log.fuel">
@@ -2466,8 +2616,14 @@ gg==
           <field name="price_per_liter">1.35</field>
           <field name="amount">61.236</field>
           <field name="inv_ref">11234</field>
-          <field name="value">5873</field>
+          <field name="odometer_id" ref="log_odometer_25" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_26" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-10-06</field>
+          <field name="value">6571</field>
       </record>
 
       <record id="log_fuel_26" model="fleet.vehicle.log.fuel">
@@ -2479,8 +2635,14 @@ gg==
           <field name="price_per_liter">1.37</field>
           <field name="amount">73.158</field>
           <field name="inv_ref">798846</field>
-          <field name="value">6571</field>
+          <field name="odometer_id" ref="log_odometer_26" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_27" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-11-02</field>
+          <field name="value">7292</field>
       </record>
 
       <record id="log_fuel_27" model="fleet.vehicle.log.fuel">
@@ -2492,8 +2654,14 @@ gg==
           <field name="price_per_liter">1.37</field>
           <field name="amount">66.445</field>
           <field name="inv_ref">7954</field>
-          <field name="value">7292</field>
+          <field name="odometer_id" ref="log_odometer_27" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_28" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_2" />
+          <field name="date">2012-12-02</field>
+          <field name="value">7981</field>
       </record>
 
       <record id="log_fuel_28" model="fleet.vehicle.log.fuel">
@@ -2505,8 +2673,14 @@ gg==
           <field name="price_per_liter">1.4</field>
           <field name="amount">49</field>
           <field name="inv_ref">545</field>
-          <field name="value">7981</field>
+          <field name="odometer_id" ref="log_odometer_28" />
           <field name="notes">Some notes</field>
+      </record>
+
+      <record id="log_odometer_29" model="fleet.vehicle.odometer">
+          <field name="vehicle_id" ref="vehicle_1" />
+          <field name="date">2012-10-01</field>
+          <field name="value">1000</field>
       </record>
 
       <record id="log_service_1" model="fleet.vehicle.log.services">
@@ -2517,7 +2691,7 @@ gg==
           <field name="amount">500.0</field>
           <field name="service_ids" eval="[(6,0,[ref('type_service_53')])]" />
           <field name="inv_ref">4574.2321</field>
-          <field name="value">1000</field>
+          <field name="odometer_id" ref="log_odometer_29" />
           <field name="notes">Usual car maintenance</field>
       </record>
 

@@ -351,48 +351,50 @@
                         <field name="state" widget="statusbar" />
                     </header>
                     <sheet>
-                        <group string="Contract details" col="2">
-                            <group >
-                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="contract_type" />
-                                <field name="price" />
-                                <field name="insurer_id" />
-                            </group>
-                            <group>
-                                <field name="date" />
-                                <field name="start_date" on_change="on_change_start_date(start_date)"/>
-                                <field name="expiration_date" />
-                                <field name="ins_ref" />
-                                <field name="reminder" />
-                            </group>
-                        </group>
-                        <group>
-                            <field name="costs" >
-                                <tree string="Costs" version="7.0">
-                                    <field name="type" />
-                                    <field name="price" />
-                                </tree>
-                                <form string="Costs" version="7.0">
-                                    <sheet>
-                                        <group>
-                                            <field name="type" />
-                                            <field name="price" />
-                                        </group>
-                                    </sheet>
-                                </form>
-                            </field>
-                        </group>
                         <group col="2">
+                            <group string="Contract details">
+                                <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
+                                <field name="cost_type" />
+                            </group>
                             <group string="Odometer details">
                                 <div>
                                     <field name="odometer" class="oe_inline"/>
                                     <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
-                            <group></group>
                         </group>
-                        <group string="Terms and Conditions"></group>
-                        <field name="notes" />
+                        <group col="2">
+                            <group>
+                                <field name="date" />
+                                <field name="start_date" on_change="on_change_start_date(start_date)"/>
+                                <field name="expiration_date" />
+                                <field name="reminder" />
+                            </group>
+                            <group>
+                                <field name="insurer_id" />
+                                <field name="ins_ref" />
+                            </group>
+                        </group>
+                        <group>
+                            <field name="costs" context="{'vehicle_id': vehicle_id}">
+                                <tree string="Costs" version="7.0">
+                                    <field name="cost_type" />
+                                    <field name="amount" />
+                                </tree>
+                                <form string="Costs" version="7.0">
+                                    <sheet>
+                                        <group>
+                                            <field name="cost_type" />
+                                            <field name="amount" />
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                            <field name="amount" />
+                        </group>
+                        <group string="Terms and Conditions">
+                            <field name="notes" />
+                        </group>
                     </sheet>
                 </form>
             </field>
@@ -404,13 +406,13 @@
             <field name="arch" type="xml">
                 <tree string="Contract logs" version="7.0" colors="orange:warning_date>0 and warning_date&lt;15;red:warning_date==0;grey:state=='closed'">
                     <field name="vehicle_id" />
-                    <field name="contract_type" />
+                    <field name="cost_type" />
                     <field name="state" />
                     <field name="start_date" />
                     <field name="expiration_date" />
                     <field name="warning_date" invisible="1"/>
                     <field name="insurer_id" />
-                    <field name="price" />
+                    <field name="amount" />
 
                     <field name="notes" />
                 </tree>
@@ -570,18 +572,31 @@
                             <group string="Vehicle Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
                             </group>
-                            <group string="Services Details">
-                                <field name="service_ids" widget="many2many_tags"/>
-                                <field name="amount" />
-                            </group>
-                        </group>
-                        <group col="2">
                             <group string="Odometer Details">
                                 <div>
                                     <field name="odometer" class="oe_inline"/>
                                     <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
+                        </group>
+                        <group string="Service Details">
+                            <field name="service_ids">
+                                <tree string="Services" version="7.0">
+                                    <field name="cost_type" />
+                                    <field name="amount" />
+                                </tree>
+                                <form string="Services" version="7.0">
+                                    <sheet>
+                                        <group>
+                                            <field name="cost_type" />
+                                            <field name="amount" />
+                                        </group>
+                                    </sheet>
+                                </form>
+                            </field>
+                            <field name="amount" />
+                        </group>
+                        <group col="2">
                             <group string="Additional Details">
                                 <field name="date" />
                                 <field name="purchaser_id" />
@@ -603,7 +618,7 @@
             <field name="arch" type="xml">
                 <tree string="Services Logs">
                     <field name="vehicle_id" />
-                    <field name="service_ids" widget="many2many_tags"/>
+                    <field name="service_ids"/>
                     <field name="amount" />
                     <field name="date" />
                     <field name="purchaser_id" />
