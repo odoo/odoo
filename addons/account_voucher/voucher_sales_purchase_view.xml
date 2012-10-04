@@ -95,6 +95,9 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
+                            <!-- TODO: onchange_partner_id() should not returns line_dr_ids for type sale, and not line_cr_ids for type purchase -->
+                            <!-- in the meanwhile, bellow line must be there because the field must be present in the view if the onchange returns a value for it-->
+                            <field name="line_dr_ids" invisible="1"/>
 			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
@@ -249,6 +252,9 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
+                            <!-- TODO: onchange_partner_id() should not returns line_dr_ids for type sale, and not line_cr_ids for type purchase -->
+                            <!-- in the meanwhile, bellow line must be there because the field must be present in the view if the onchange returns a value for it-->
+                            <field name="line_cr_ids" invisible="1"/>
                             <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
