@@ -30,7 +30,7 @@ instance.web.form.FieldManagerMixin = {
     /**
      * Must return the asked field as in fields_get.
      */
-    get_field: function(field_name) {},
+    get_field_desc: function(field_name) {},
     /**
      * Returns the current value of a field present in the view. See the get_value() method
      * method in FieldInterface for further information.
@@ -1100,7 +1100,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         field.on('focused', null, this.proxy('widgetFocused'))
              .on('blurred', null, this.proxy('widgetBlurred'));
-        if (this.get_field(name).translate) {
+        if (this.get_field_desc(name).translate) {
             this.translatable_fields.push(field);
         }
         field.on('changed_value', this, function() {
@@ -1118,7 +1118,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
         });
     },
-    get_field: function(field_name) {
+    get_field_desc: function(field_name) {
         return this.fields_view.fields[field_name];
     },
     get_field_value: function(field_name) {
@@ -2017,7 +2017,7 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         var self = this
         this._super(field_manager, node);
         this.name = this.node.attrs.name;
-        this.field = this.field_manager.get_field(this.name);
+        this.field = this.field_manager.get_field_desc(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
         this.options = JSON.parse(this.node.attrs.options || '{}');
@@ -4630,7 +4630,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     get_field: function(name) {
         if (name === "selection") {
             return {
-                selection: this.field_manager.get_field(this.name).selection,
+                selection: this.field_manager.get_field_desc(this.name).selection,
                 type: "selection",
             };
         } else if (name === "m2o") {
