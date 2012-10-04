@@ -1694,8 +1694,9 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
      */
     init: function(field_manager, node) {
         this._super(field_manager);
-        this.view = field_manager;
         this.field_manager = field_manager;
+        if (this.field_manager instanceof instance.web.FormView)
+            this.view = this.field_manager;
         this.node = node;
         this.modifiers = JSON.parse(this.node.attrs.modifiers || '{}');
         instance.web.form.InvisibilityChangerMixin.init.call(this, this.field_manager, this.modifiers.invisible);
@@ -2015,11 +2016,11 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     renderElement: function() {
         var self = this;
         this._super();
-        if (this.field.translate) {
+        if (this.field.translate && this.view) {
             this.$el.addClass('oe_form_field_translatable');
             this.$el.find('.oe_field_translate').click(this.on_translate);
         }
-        this.$label = this.view.$el.find('label[for=' + this.id_for_label + ']');
+        this.$label = this.view ? this.view.$el.find('label[for=' + this.id_for_label + ']') : $();
         if (instance.session.debug) {
             this.do_attach_tooltip(this, this.$label[0] || this.$el);
             this.$label.off('dblclick').on('dblclick', function() {
@@ -3879,7 +3880,7 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     },
     render_value: function() {
         var self = this;
-        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.view.dataset.get_context());
+        var dataset = new instance.web.DataSetStatic(this, this.field.relation, self.build_context());
         var values = self.get("value")
         var handle_names = function(data) {
             var indexed = {};
