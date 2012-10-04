@@ -41,6 +41,15 @@
             <field name="res_model">fleet.vehicle.model</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new model.
+              </p><p>
+                Here you can add the different model for a 
+                particular brand of vehicle. Like Audi A3,
+                Audi A4, ...
+              </p>
+            </field>
         </record>
  
         <record model='ir.ui.view' id='fleet_vehicle_model_brand_tree'>
@@ -108,6 +117,13 @@
             <field name="res_model">fleet.vehicle.model.brand</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new brand.
+              </p><p>
+                Here you can add vehicle's brands  (BMW, Opel, ...)
+              </p>
+            </field>
         </record>
 
         <record model='ir.ui.view' id='fleet_vehicle_state_tree'>
@@ -127,6 +143,15 @@
             <field name="res_model">fleet.vehicle.state</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new state.
+              </p><p>
+                Here you can create and organize the state for a vehicle.
+                A state can help you knowing in what condition your
+                vehicle is. In reparation, Sold, Active, ...
+              </p>
+            </field>
         </record>
 
         <menuitem name="Fleet" id="menu_root" />
@@ -231,6 +256,7 @@
                     <field name="driver"/>
                     <field name="tag_ids"/>
                     <field name="location"/>
+                    <field name="state" />
                </search>
             </field>
         </record>
@@ -334,6 +360,16 @@
             <field name="res_model">fleet.vehicle</field>
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new vehicle. 
+              </p><p>
+                Here you can create and add new vehicles to your fleet.
+                You can associate a driver, add tags, contracts, services
+                and other informations to a vehicle. You can also sort 
+                them by brand, plate number, driver, location, tags, status.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Vehicles" parent="menu_root" id="fleet_vehicles" />
@@ -353,7 +389,7 @@
                         <group col="2">
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_type" required="1" domain="[('category','=','contract')]"/>
+                                <field name="cost_type" required="1" domain="['|',('category','=','contract'),('category','=','both')]"/>
                                 <field name="amount" string="Price"/>
                             </group>
                             <group string="Odometer details">
@@ -379,7 +415,7 @@
                         <group>
                             <field name="costs" context="{'vehicle_id': vehicle_id}">
                                 <tree string="Costs" version="7.0" editable="bottom">
-                                    <field name="cost_type"/>
+                                    <field name="cost_type" domain="[('category','=','service')]"/>
                                     <field name="amount" string="Cost" />
                                 </tree>
                                 <!--<form string="Costs" version="7.0">
@@ -490,6 +526,13 @@
             <field name="res_model">fleet.vehicle.odometer</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+              <p>
+                Here you can add various odometer entries for all vehicles.
+                You can also show odometer value for a particular vehicle using
+                the search field.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_odometer_act" parent="fleet_vehicles" id="fleet_vehicle_odometer_menu" />
@@ -571,6 +614,15 @@
             <field name="res_model">fleet.vehicle.log.fuel</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new fuel log. 
+              </p><p>
+                Here you can add refuelling entries for all vehicles.
+                You can also show the log for a particular vehicle using
+                the search field.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_log_fuel_act" parent="fleet_vehicles" id="fleet_vehicle_log_fuel_menu" />
@@ -585,13 +637,13 @@
                         <group col="2">
                             <group string="Services Details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
-                                <field name="cost_type" domain="[('category','=','contract')]" required="1"/>
+                                <field name="cost_type" domain="['|',('category','=','service'),('category','=','both')]" required="1"/>
                                 <field name="amount" string="Price"/>
                             </group>
                             <group string="Odometer Details">
                                 <label for="odometer"/>
                                 <div>
-                                    <field name="odometer" string="Value" class="oe_inline"/>
+                                    <field name="odometer" class="oe_inline"/>
                                     <field name="odometer_unit" class="oe_inline"/>
                                 </div>
                             </group>
@@ -607,7 +659,7 @@
                         <group string="Service Details">
                             <field name="service_ids">
                                 <tree string="Services" version="7.0" editable="bottom">
-                                    <field name="cost_type" />
+                                    <field name="cost_type" domain="[('category','=','service')]"/>
                                     <field name="amount" string="Cost"/>
                                 </tree>
                                 
@@ -630,7 +682,7 @@
                 <tree string="Services Logs">
                     <field name="vehicle_id" />
                     <field name="cost_type"/>
-                    <field name="amount" />
+                    <field name="amount" sum="Total"/>
                     <field name="date" />
                     <field name="purchaser_id"/>
                     <field name="vendor_id" />
@@ -657,6 +709,16 @@
             <field name="res_model">fleet.vehicle.log.services</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,graph</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new service log entry. 
+              </p><p>
+                Here you can create new services entries and show all past and
+                future services. A service can be an occasional repair on a
+                vehicle or a fixed maintenance. A service is associated to
+                an existing vehicle.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_log_services_act" parent="fleet_vehicles" id="fleet_vehicle_log_services_menu" />
@@ -665,7 +727,7 @@
             <field name="name">fleet.service.type.tree</field>
             <field name="model">fleet.service.type</field>
             <field name="arch" type="xml">
-                <tree string="Service types">
+                <tree string="Service types" editable="bottom">
                     <field name="name" />
                     <field name="category"/>
                 </tree>
@@ -677,6 +739,17 @@
             <field name="res_model">fleet.service.type</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a new type of service.
+              </p><p>
+                Here you can add new services, each service
+                belong to a category. <br />
+                - contract if this service is used in a contract (ie: leasing, ...). <br />
+                - service if it is used as a service (ie: repair, ...). <br />
+                - both if it is used in both case.
+              </p>
+            </field>
         </record>
 
         <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" />

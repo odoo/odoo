@@ -639,7 +639,7 @@ class fleet_vehicle_log_services(osv.Model):
         'notes' : fields.text('Notes'),
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Value',store=False),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
@@ -659,9 +659,9 @@ class fleet_service_type(osv.Model):
         'name': fields.char('Name', required=True, translate=True),
         'category': fields.selection([('contract', 'Contract'), ('service', 'Service'),('both', 'Both')], 'Category',required=True, help='Choose wheter the service refer to contracts, vehicle services or both'),
     }
-    _defaults = {
-        'category': 'both'
-    }
+    #_defaults = {
+    #    'category': 'both'
+    #}
 
 ############################
 ############################
@@ -791,7 +791,7 @@ class fleet_vehicle_log_contract(osv.Model):
 
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
