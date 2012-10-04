@@ -302,50 +302,14 @@ class base_stage(object):
         rule_ids = rule_obj.search(cr, uid, [('model_id','=',model_ids[0])], context=context)
         return rule_obj._action(cr, uid, rule_ids, cases, scrit=scrit, context=context)
 
-    def remind_partner(self, cr, uid, ids, context=None, attach=False):
-        return self.remind_user(cr, uid, ids, context, attach,
-                destination=False)
-
-    def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        if hasattr(self, 'message_post'):
-            for case in self.browse(cr, uid, ids, context=context):
-                if destination:
-                    recipient_id = case.user_id.partner_id.id
-                else:
-                    if not case.email_from:
-                        return False
-                    recipient_id = self.pool.get('res.partner').find_or_create(cr, uid, case.email_from, context=context)
-                
-                body = case.description or ""
-                for message in case.message_ids:
-                    if message.type == 'email' and message.body:
-                        body = message.body
-                        break
-                body = self.format_body(body)
-                attach_to_send = {}
-                if attach:
-                    attach_ids = self.pool.get('ir.attachment').search(cr, uid, [('res_model', '=', self._name), ('res_id', '=', case.id)])
-                    attach_to_send = self.pool.get('ir.attachment').read(cr, uid, attach_ids, ['datas_fname', 'datas'])
-                    attach_to_send = dict(map(lambda x: (x['datas_fname'], x['datas'].decode('base64')), attach_to_send))
- 
-                subject = "Reminder: [%s] %s" % (case.id, case.name)
-                self.message_post(cr, uid, case.id, body=body,
-                    subject=subject, attachments=attach_to_send, 
-                    partner_ids=[recipient_id], context=context)
-        return True
-
+    
     def _check(self, cr, uid, ids=False, context=None):
         """ Function called by the scheduler to process cases for date actions.
             Must be overriden by inheriting classes.
         """
         return True
 
-    def format_body(self, body):
-        return self.pool.get('base.action.rule').format_body(body)
-
-    def format_mail(self, obj, body):
-        return self.pool.get('base.action.rule').format_mail(obj, body)
-
+    
     # ******************************
     # Notifications
     # ******************************

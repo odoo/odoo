@@ -19,15 +19,16 @@
 #
 ##############################################################################
 
-from osv import fields, osv, orm
-from tools.translate import _
 from datetime import datetime
 from datetime import timedelta
+import re
+import time
+
+from osv import fields, osv, orm
+from tools.translate import _
 from tools.safe_eval import safe_eval
 from tools import ustr
 import pooler
-import re
-import time
 import tools
 
 
@@ -48,32 +49,20 @@ class base_action_rule(osv.osv):
     _description = 'Action Rules'
 
     def _state_get(self, cr, uid, context=None):
-        """ Get State
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
+        """ Get State """
         return self.state_get(cr, uid, context=context)
 
     def state_get(self, cr, uid, context=None):
-        """ Get State
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
+        """ Get State """
         return [('', '')]
 
     def priority_get(self, cr, uid, context=None):
-        """ Get Priority
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
+        """ Get Priority """
         return [('', '')]
 
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
-        'model_id': fields.many2one('ir.model', 'Object', required=True),
+        'model_id': fields.many2one('ir.model', 'Related Document Model', required=True, domain=[('osv_memory','=', False)]),
         'create_date': fields.datetime('Create Date', readonly=1),
         'active': fields.boolean('Active', help="If the active field is set to False,\
  it will allow you to hide the rule without removing it."),
@@ -98,35 +87,14 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'trg_state_from': fields.selection(_state_get, 'Status', size=16),
         'trg_state_to': fields.selection(_state_get, 'Button Pressed', size=16),
 
-        'act_method': fields.char('Call Object Method', size=64),
         'act_user_id': fields.many2one('res.users', 'Set Responsible to'),
         'act_state': fields.selection(_state_get, 'Set State to', size=16),
-        'act_email_cc': fields.char('Add Watchers (Cc)', size=250, help="\
-These people will receive a copy of the future communication between partner \
-and users by email"),
-        'act_remind_partner': fields.boolean('Remind Partner', help="Check \
-this if you want the rule to send a reminder by email to the partner."),
-        'act_remind_user': fields.boolean('Remind Responsible', help="Check \
-this if you want the rule to send a reminder by email to the user."),
-        'act_reply_to': fields.char('Reply-To', size=64),
-        'act_remind_attach': fields.boolean('Remind with Attachment', help="Check this if you want that all documents attached to the object be attached to the reminder email sent."),
-        'act_mail_to_user': fields.boolean('Mail to Responsible', help="Check\
- this if you want the rule to send an email to the responsible person."),
-        'act_mail_to_watchers': fields.boolean('Mail to Watchers (CC)',
-                                                help="Check this if you want \
-the rule to mark CC(mail to any other person defined in actions)."),
-        'act_mail_to_email': fields.char('Mail to these Emails', size=128, \
-        help="Email-id of the persons whom mail is to be sent"),
-        'act_mail_body': fields.text('Mail body', translate=True, help="Content of mail"),
+        'act_followers': fields.many2many("res.partner", string="Set Followers"),
         'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
         'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"),
-        'filter_id':fields.many2one('ir.filters', 'Filter', required=False),
-        'act_email_from' : fields.char('Email From', size=64, required=False,
-                help="Use a python expression to specify the right field on which one than we will use for the 'From' field of the header"),
-        'act_email_to' : fields.char('Email To', size=64, required=False,
-                                     help="Use a python expression to specify the right field on which one than we will use for the 'To' field of the header"),
+        'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model)]
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
@@ -134,42 +102,24 @@ the rule to mark CC(mail to any other person defined in actions)."),
         'active': lambda *a: True,
         'trg_date_type': lambda *a: 'none',
         'trg_date_range_type': lambda *a: 'day',
-        'act_mail_to_user': lambda *a: 0,
-        'act_remind_partner': lambda *a: 0,
-        'act_remind_user': lambda *a: 0,
-        'act_mail_to_watchers': lambda *a: 0,
     }
 
     _order = 'sequence'
 
-    def onchange_model_id(self, cr, uid, ids, name):
-        #This is not a good solution as it will affect the domain only on onchange
-        res = {'domain':{'filter_id':[]}}
-        if name:
-            model_name = self.pool.get('ir.model').read(cr, uid, [name], ['model'])
-            if model_name:
-                mod_name = model_name[0]['model']
-                res['domain'] = {'filter_id': [('model_id','=',mod_name)]}
-        else:
-            res['value'] = {'filter_id':False}
-        return res
 
     def post_action(self, cr, uid, ids, model, context=None):
         # Searching for action rules
         cr.execute("SELECT model.model, rule.id  FROM base_action_rule rule \
                         LEFT JOIN ir_model model on (model.id = rule.model_id) \
-                        WHERE active")
+                        WHERE active and model = %%s", model)
         res = cr.fetchall()
         # Check if any rule matching with current object
         for obj_name, rule_id in res:
-            if not (model == obj_name):
-                continue # TODO add this condition in the WHERE clause above.
-            else:
-                obj = self.pool.get(obj_name)
-                # If the rule doesn't involve a time condition, run it immediately
-                # Otherwise we let the scheduler run the action
-                if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
-                    self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
+            obj = self.pool.get(obj_name)
+            # If the rule doesn't involve a time condition, run it immediately
+            # Otherwise we let the scheduler run the action
+            if self.browse(cr, uid, rule_id, context=context).trg_date_type == 'none':
+                self._action(cr, uid, [rule_id], obj.browse(cr, uid, ids, context=context), context=context)
         return True
 
     def _create(self, old_create, model, context=None):
@@ -279,58 +229,8 @@ the rule to mark CC(mail to any other person defined in actions)."),
             rule_pool.write(cr, uid, [rule.id], {'last_run': now},
                             context=context)
 
-    def format_body(self, body):
-        """ Foramat Action rule's body
-            @param self: The object pointer """
-        return body and tools.ustr(body) or ''
-
-    def format_mail(self, obj, body):
-        data = {
-            'object_id': obj.id,
-            'object_subject': hasattr(obj, 'name') and obj.name or False,
-            'object_date': hasattr(obj, 'date') and obj.date or False,
-            'object_description': hasattr(obj, 'description') and obj.description or False,
-            'object_user': hasattr(obj, 'user_id') and (obj.user_id and obj.user_id.name) or '/',
-            'object_user_email': hasattr(obj, 'user_id') and (obj.user_id and \
-                                     obj.user_id.email) or '/',
-            'object_user_phone': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and \
-                                     obj.partner_address_id.phone) or '/',
-            'partner': hasattr(obj, 'partner_id') and (obj.partner_id and obj.partner_id.name) or '/',
-            'partner_email': hasattr(obj, 'partner_address_id') and (obj.partner_address_id and\
-                                         obj.partner_address_id.email) or '/',
-        }
-        return self.format_body(body % data)
-
-    def email_send(self, cr, uid, obj, emails, body, emailfrom=None, context=None):
-        if not emailfrom:
-            emailfrom = tools.config.get('email_from')
-        body = self.format_mail(obj, body)
-        if not emailfrom and hasattr(obj, 'user_id') and obj.user_id and obj.user_id.email:
-            emailfrom = obj.user_id.email
-        emailfrom = tools.ustr(emailfrom)
-        reply_to = emailfrom
-        if not emailfrom:
-            raise osv.except_osv(_('Error!'),
-                                 _("Missing default email address or missing email on responsible user"))
-        return self.pool.get('mail.mail').create(cr, uid,
-                {   'email_from': emailfrom,
-                    'email_to': emails.join(','),
-                    'reply_to': reply_to,
-                    'state': 'outgoing',
-                    'subject': '[%d] %s' % (obj.id, tools.ustr(obj.name)),
-                    'body_html': '<pre>%s</pre>' % body,
-                    'res_id': obj.id,
-                    'model': obj._table_name,
-                    'auto_delete': True
-                }, context=context)
-
-
     def do_check(self, cr, uid, action, obj, context=None):
-        """ check Action
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param context: A standard dictionary for contextual values """
+        """ check Action """
         if context is None:
             context = {}
         ok = True
@@ -373,79 +273,32 @@ the rule to mark CC(mail to any other person defined in actions)."),
         return ok
 
     def do_action(self, cr, uid, action, model_obj, obj, context=None):
-        """ Do Action
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param action: pass action
-            @param model_obj: pass Model object
-            @param context: A standard dictionary for contextual values """
+        """ Do Action """
         if context is None:
             context = {}
 
         if action.server_action_id:
             context.update({'active_id':obj.id, 'active_ids':[obj.id]})
             self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
-        write = {}
 
+        write = {}
         if hasattr(obj, 'user_id') and action.act_user_id:
-            obj.user_id = action.act_user_id
             write['user_id'] = action.act_user_id.id
         if hasattr(obj, 'date_action_last'):
             write['date_action_last'] = time.strftime('%Y-%m-%d %H:%M:%S')
         if hasattr(obj, 'state') and action.act_state:
-            obj.state = action.act_state
             write['state'] = action.act_state
-
-        if hasattr(obj, 'categ_id') and action.act_categ_id:
-            obj.categ_id = action.act_categ_id
-            write['categ_id'] = action.act_categ_id.id
-
+        
         model_obj.write(cr, uid, [obj.id], write, context)
-
-        if hasattr(model_obj, 'remind_user') and action.act_remind_user:
-            model_obj.remind_user(cr, uid, [obj.id], context, attach=action.act_remind_attach)
-        if hasattr(model_obj, 'remind_partner') and action.act_remind_partner:
-            model_obj.remind_partner(cr, uid, [obj.id], context, attach=action.act_remind_attach)
-        if action.act_method:
-            getattr(model_obj, 'act_method')(cr, uid, [obj.id], action, context)
-
-        emails = []
-        if hasattr(obj, 'user_id') and action.act_mail_to_user:
-            if obj.user_id:
-                emails.append(obj.user_id.email)
-
-        if action.act_mail_to_watchers:
-            emails += (action.act_email_cc or '').split(',')
-        if action.act_mail_to_email:
-            emails += (action.act_mail_to_email or '').split(',')
-
-        locals_for_emails = {
-            'user' : self.pool.get('res.users').browse(cr, uid, uid, context=context),
-            'obj' : obj,
-        }
-
-        if action.act_email_to:
-            emails.append(safe_eval(action.act_email_to, {}, locals_for_emails))
-
-        emails = filter(None, emails)
-        if len(emails) and action.act_mail_body:
-            emails = list(set(emails))
-            email_from = safe_eval(action.act_email_from, {}, locals_for_emails)
-            emails = tools.email_split(','.join(filter(None, emails)))
-            email_froms = tools.email_split(email_from)
-            if email_froms:
-                self.email_send(cr, uid, obj, emails, action.act_mail_body, emailfrom=email_froms[0])
+        if hasattr(obj, 'state') and hasattr(obj, 'message_post') and action.act_state:
+            model_obj.message_post(cr, uid, [obj], _(action.act_state), context=context)
+        
+        if hasattr(obj, 'message_subscribe') and action.act_followers:
+            model_obj.message_subscribe(cr, uid, [obj.id], [x.id for x in action.act_followers], context=context)
         return True
 
     def _action(self, cr, uid, ids, objects, scrit=None, context=None):
-        """ Do Action
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Basic Action Rule’s IDs,
-            @param objects: pass objects
-            @param context: A standard dictionary for contextual values """
+        """ Do Action """
         if context is None:
             context = {}
 
@@ -461,28 +314,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
 
         context.update({'action': False})
         return True
-
-    def _check_mail(self, cr, uid, ids, context=None):
-        """ Check Mail
-            @param self: The object pointer
-            @param cr: the current row, from the database cursor,
-            @param uid: the current user’s ID for security checks,
-            @param ids: List of Action Rule’s IDs
-            @param context: A standard dictionary for contextual values """
-
-        empty = orm.browse_null()
-        rule_obj = self.pool.get('base.action.rule')
-        for rule in self.browse(cr, uid, ids, context=context):
-            if rule.act_mail_body:
-                try:
-                    rule_obj.format_mail(empty, rule.act_mail_body)
-                except (ValueError, KeyError, TypeError):
-                    return False
-        return True
-
-    _constraints = [
-        (_check_mail, 'Error ! The mail is not well formated.', ['act_mail_body']),
-    ]
 
 base_action_rule()
 

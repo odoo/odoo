@@ -7,53 +7,21 @@
             <field name="model">base.action.rule</field>
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
             <field name="arch" type="xml">
-                <group name="partner" position="after">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Condition on Communication History"/>
+                <xpath expr="//group[@name='partner']" position="after">
+                    <group name="case" string="Condition Case Fields">
+                        <field name="trg_section_id" widget="selection"/>
+                        <field name="trg_categ_id"/>
+                    </group>
+                    <group name="communication" string="Condition on Communication History">
                         <field name="regex_history"/>
                         <field name="trg_max_history"/>
                     </group>
-                </group>
-            </field>
-       </record>
-
-       <record id="view_base_action_rule_line_form2" model="ir.ui.view">
-            <field name="name">base.action.rule.form2.inherit</field>
-            <field name="model">base.action.rule</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="arch" type="xml">
-                <group name="partner" position="after">
-                    <group col="2" colspan="2">
-                        <separator colspan="4" string="Condition Case Fields"/>
-                        <field name="trg_section_id"  widget="selection"/>
-                        <field name="trg_categ_id"/>
-                    </group>
-                </group>
-            </field>
-       </record>
-
-       <record id="view_base_action_rule_line_form3" model="ir.ui.view">
-            <field name="name">base.action.rule.form3.inherit</field>
-            <field name="model">base.action.rule</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="arch" type="xml">
-                <field name="act_user_id" position="after">
+                </xpath>
+                <xpath expr="//field[@name='act_user_id']" position="after">
                     <field name="act_section_id"/>
                     <field name="act_categ_id"/>
-                </field>
+                </xpath>
             </field>
        </record>
-       
-       <record id="view_base_action_rule_line_form4" model="ir.ui.view">
-            <field name="name">base.action.rule.form4.inherit</field>
-            <field name="model">base.action.rule</field>
-            <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
-            <field name="arch" type="xml">
-                <field name="act_mail_to_user" position="after">
-                    <field name="act_mail_to_partner"/>
-                </field>
-            </field>
-       </record>
-
     </data>
 </openerp>
