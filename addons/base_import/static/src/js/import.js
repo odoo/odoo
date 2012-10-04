@@ -53,6 +53,8 @@ openerp.base_import = function (instance) {
                         params: {
                             model: self.dataset.model
                         }
+                    }, void 0, void 0, function () {
+                        self.reload();
                     });
                     return false;
                 });
