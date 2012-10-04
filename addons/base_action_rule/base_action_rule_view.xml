@@ -56,21 +56,20 @@
                                 </group>
                             </page>
                             <page string="Email Actions">
-                                <group col="4">
-                                    <separator colspan="4" string="Email Reminders"/>
-                                    <field name="act_remind_partner"/>
-                                    <field name="act_remind_attach"/>
-                                    <field name="act_remind_user"/>
-                                    <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
-                                        <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                <group>
+                                    <group name="model" string="Email Information">
+                                        <field name="act_mail_to_user"/>
+                                        <field name="act_email_from" placeholder=""/>
+                                        <field name="act_email_to" placeholder=""/>
                                     </group>
-                                    <separator colspan="4" string="Email Information"/>
-                                    <field name="act_email_from" />
-                                    <field name="act_email_to" />
-                                    <field name="act_mail_to_user"/>
-                                    <field colspan="4" name="act_mail_to_email"/>
-                                    <field name="act_mail_to_watchers"/>
-                                    <field colspan="4" name="act_email_cc"/>
+                                    <group name="partner" string="Email Reminders">
+                                        <field name="act_remind_partner"/>
+                                        <field name="act_remind_attach"/>
+                                        <field name="act_remind_user"/>
+                                        <group col="2" colspan="2" attrs="{'invisible': [('act_remind_user','=',False)]}">
+                                            <field name="act_reply_to" attrs="{'required':[('act_remind_user','=',True)]}"/>
+                                        </group>
+                                    </group>
                                     <separator colspan="4" string="Email Body"/>
                                     <field colspan="4" name="act_mail_body" height="250"
                                         nolabel="1" attrs="{'required':[('act_remind_user','=',True)]}" />
