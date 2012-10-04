@@ -453,7 +453,7 @@
                     <sheet string="Registration">
                         <label for="event_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                            <field name="event_id" domain="[('state','in',('draft','confirm'))]"/>
                         </h1>
                         <group>
                             <group>
@@ -475,9 +475,6 @@
                             <group groups="base.group_no_one">
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
-                            </group>
-                            <group>
-                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
