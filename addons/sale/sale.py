@@ -700,7 +700,7 @@ class sale_order_line(osv.osv):
         'invoice_lines': fields.many2many('account.invoice.line', 'sale_order_line_invoice_rel', 'order_line_id', 'invoice_id', 'Invoice Lines', readonly=True),
         'invoiced': fields.boolean('Invoiced', readonly=True),
         'price_unit': fields.float('Unit Price', required=True, digits_compute= dp.get_precision('Product Price'), readonly=True, states={'draft': [('readonly', False)]}),
-        'price_subtotal': fields.function(_amount_line, string='Subtotal', digits_compute= dp.get_precision('Account')),
+        'price_subtotal': fields.function(_amount_line, string='Subtotal', store=True, digits_compute= dp.get_precision('Account')),
         'tax_id': fields.many2many('account.tax', 'sale_order_tax', 'order_line_id', 'tax_id', 'Taxes', readonly=True, states={'draft': [('readonly', False)]}),
         'address_allotment_id': fields.many2one('res.partner', 'Allotment Partner'),
         'product_uom_qty': fields.float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True, readonly=True, states={'draft': [('readonly', False)]}),
