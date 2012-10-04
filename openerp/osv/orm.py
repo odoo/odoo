@@ -1501,7 +1501,6 @@ class BaseModel(object):
             for field, strvalue in record.iteritems():
                 if field in (None, 'id', '.id'): continue
                 if not strvalue:
-                    converted[field] = False
                     continue
 
                 # In warnings and error messages, use translated string as

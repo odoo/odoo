@@ -123,3 +123,13 @@ class Many2ManyChild(orm.Model):
                     , context=context)
                 if isinstance(name, basestring) and name.split(':')[0] == self._name
                 else [])
+
+class SelectionWithDefault(orm.Model):
+    _name = 'export.selection.withdefault'
+
+    _columns = {
+        'value': fields.selection([(1, "Foo"), (2, "Bar")], required=True),
+    }
+    _defaults = {
+        'value': 2,
+    }

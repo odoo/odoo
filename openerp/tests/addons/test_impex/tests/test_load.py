@@ -474,6 +474,21 @@ class test_selection(ImporterCase):
             u"Value '42' not found in selection field 'unknown'",
             moreinfo="Foo Bar Qux 4".split())])
 
+class test_selection_with_default(ImporterCase):
+    model_name = 'export.selection.withdefault'
+
+    def test_skip_empty(self):
+        """ Empty cells should be entirely skipped so that default values can
+        be inserted by the ORM
+        """
+        result = self.import_(['value'], [['']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+        self.assertEqual(
+            values(self.read()),
+            [2])
+
 class test_selection_function(ImporterCase):
     model_name = 'export.selection.function'
     translations_fr = [
