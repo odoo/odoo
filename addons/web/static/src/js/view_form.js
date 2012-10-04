@@ -111,6 +111,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
         });
+        self.on("record_load", self, self.on_record_loaded);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
@@ -316,7 +317,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
                     context: { 'bin_size': true, 'future_display_name' : true }
-                }).pipe(self.on_record_loaded);
+                }).pipe(function(r){self.trigger('record_load',r)});
             });
         }
         return shown.pipe(function() {
@@ -364,6 +365,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
+        console.log("on_record_loaded");
         return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
                 // New record: Second pass in order to trigger the onchanges
@@ -398,12 +400,13 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @return {$.Deferred}
      */
     load_defaults: function () {
+        var self = this;
         var keys = _.keys(this.fields_view.fields);
         if (keys.length) {
             return this.dataset.default_get(keys)
-                    .pipe(this.on_record_loaded);
+                    .pipe(function(r){self.trigger('record_load',r)});
         }
-        return this.on_record_loaded({});
+        return self.trigger('record_load',{});
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
@@ -737,7 +740,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.trigger('history_back');
             } else {
                 this.to_view_mode();
-                this.on_record_loaded(this.datarecord);
+                self.trigger('record_load',this.datarecord);
             }
         }
         return false;
@@ -943,7 +946,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
                     context : { 'bin_size' : true, 'future_display_name' : true }
-                }).pipe(self.on_record_loaded);
+                }).pipe(function(r){self.trigger('record_load',r)});
             }
         });
     },
@@ -3291,9 +3294,10 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 if (self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$el).children().remove();
                 }
-                controller.on_record_loaded.add_last(function() {
-                    once.resolve();
-                });
+                controller.on("record_load", self, function(){
+                    console.log("view manager form");
+                     once.resolve();
+                 });
                 controller.on_pager_action.add_first(function() {
                     self.save_any_view();
                 });
