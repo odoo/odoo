@@ -12,16 +12,14 @@ def message(msg, type='error', from_=0, to_=0, record=0, field='value', **kwargs
     return dict(kwargs,
                 type=type, rows={'from': from_, 'to': to_}, record=record,
                 field=field, message=msg)
-def moreaction(model):
-    return {
-        'type': 'ir.actions.act_window',
-        'target': 'new',
-        'res_model': model,
-        'view_mode': 'tree,form',
-        'view_type': 'form',
-        'views': [(False, 'tree', (False, 'form'))],
-        'help': u"See all possible values"
-    }
+def moreaction(**kwargs):
+    return dict(kwargs,
+        type='ir.actions.act_window',
+        target='new',
+        view_mode='tree,form',
+        view_type='form',
+        views=[(False, 'tree', (False, 'form'))],
+        help=u"See all possible values")
 
 def values(seq, field='value'):
     return [item[field] for item in seq]
@@ -626,7 +624,7 @@ class test_m2o(ImporterCase):
         self.assertEqual(result['messages'], [
             message(u"No matching record found for name '%s' in field 'unknown'" % id,
                     from_=index, to_=index, record=index,
-                    moreinfo=moreaction('export.integer'))
+                    moreinfo=moreaction(res_model='export.integer'))
             for index, id in enumerate([integer_id1, integer_id2, integer_id1])])
         self.assertIs(result['ids'], False)
 
@@ -636,7 +634,8 @@ class test_m2o(ImporterCase):
 
         self.assertEqual(result['messages'], [
             message(u"Invalid database id 'foo' for the field 'unknown'",
-                    moreinfo=moreaction('export.integer'))
+                    moreinfo=moreaction(res_model='ir.model.data',
+                                        domain=[('model','=','export.integer')]))
         ])
         self.assertIs(result['ids'], False)
 
@@ -654,19 +653,22 @@ class test_m2o(ImporterCase):
         result = self.import_(['value'], [['nameisnoexist:3']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for name 'nameisnoexist:3' "
-            u"in field 'unknown'", moreinfo=moreaction('export.integer'))])
+            u"in field 'unknown'", moreinfo=moreaction(
+                res_model='export.integer'))])
         self.assertIs(result['ids'], False)
 
         result = self.import_(['value/id'], [['noxidhere']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidhere' "
-            u"in field 'unknown'", moreinfo=moreaction('export.integer'))])
+            u"in field 'unknown'", moreinfo=moreaction(
+                res_model='ir.model.data', domain=[('model','=','export.integer')]))])
         self.assertIs(result['ids'], False)
 
         result = self.import_(['value/.id'], [['66']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '66' "
-            u"in field 'unknown'", moreinfo=moreaction('export.integer'))])
+            u"in field 'unknown'", moreinfo=moreaction(
+                res_model='ir.model.data', domain=[('model','=','export.integer')]))])
         self.assertIs(result['ids'], False)
 
     def test_fail_multiple(self):
@@ -718,7 +720,8 @@ class test_m2m(ImporterCase):
         result = self.import_(['value/.id'], [['42']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for database id '42' in field "
-            u"'unknown'", moreinfo=moreaction('export.many2many.other'))])
+            u"'unknown'", moreinfo=moreaction(
+                res_model='ir.model.data', domain=[('model','=','export.many2many.other')]))])
         self.assertIs(result['ids'], False)
 
     def test_xids(self):
@@ -744,7 +747,8 @@ class test_m2m(ImporterCase):
         result = self.import_(['value/id'], [['noxidforthat']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for external id 'noxidforthat' in field"
-            u" 'unknown'", moreinfo=moreaction('export.many2many.other'))])
+            u" 'unknown'", moreinfo=moreaction(
+                res_model='ir.model.data', domain=[('model','=','export.many2many.other')]))])
         self.assertIs(result['ids'], False)
 
     def test_names(self):
@@ -773,7 +777,8 @@ class test_m2m(ImporterCase):
         result = self.import_(['value'], [['wherethem2mhavenonames']])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for name 'wherethem2mhavenonames' in "
-            u"field 'unknown'", moreinfo=moreaction('export.many2many.other'))])
+            u"field 'unknown'", moreinfo=moreaction(
+                res_model='export.many2many.other'))])
         self.assertIs(result['ids'], False)
 
     def test_import_to_existing(self):
@@ -807,7 +812,7 @@ class test_o2m(ImporterCase):
             [['5', s]])
         self.assertEqual(result['messages'], [message(
             u"No matching record found for name '%s' in field 'unknown'" % s,
-            moreinfo=moreaction('export.one2many.child'))])
+            moreinfo=moreaction(res_model='export.one2many.child'))])
         self.assertIs(result['ids'], False)
 
     def test_single(self):
