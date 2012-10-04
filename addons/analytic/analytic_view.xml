@@ -24,6 +24,7 @@
                                 <field name="partner_id" on_change="on_change_partner_id(partner_id, name)" attrs="{'required':[('type','=','contract')]}"/>
                                 <field name="manager_id"/>
                                 <field name="code"/>
+                                <field name="currency_id" attrs="{'invisible': ['|',('type', &lt;&gt;, 'view'), ('company_id', &lt;&gt;, False)]}"/>
                             </group>
                             <group>
                                 <field name="type"/>
