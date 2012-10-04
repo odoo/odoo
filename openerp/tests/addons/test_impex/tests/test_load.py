@@ -184,6 +184,7 @@ class test_boolean_field(ImporterCase):
         self.assertEqual(len(result['ids']), 10)
         self.assertEqual(result['messages'], [
             message(u"Unknown value '%s' for boolean field 'unknown', assuming 'yes'" % v[0],
+                    moreinfo=u"Use '1' for yes and '0' for no",
                     type='warning', from_=i, to_=i, record=i)
             for i, v in enumerate(trues)
             if v[0] not in ('true', 'yes', '1')
@@ -1008,7 +1009,8 @@ class test_date(ImporterCase):
         result = self.import_(['value'], [['not really a date']])
         self.assertEqual(result['messages'], [
             message(u"'not really a date' does not seem to be a valid date "
-                    u"for field 'unknown'. Use the format '2012-12-31'")])
+                    u"for field 'unknown'",
+                    moreinfo=u"Use the format '2012-12-31'")])
         self.assertIs(result['ids'], False)
 
 class test_datetime(ImporterCase):
@@ -1028,8 +1030,8 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['not really a datetime']])
         self.assertEqual(result['messages'], [
             message(u"'not really a datetime' does not seem to be a valid "
-                    u"datetime for field 'unknown'. Use the format "
-                    u"'2012-12-31 23:59:59'")])
+                    u"datetime for field 'unknown'",
+                    moreinfo=u"Use the format '2012-12-31 23:59:59'")])
         self.assertIs(result['ids'], False)
 
 # function, related, reference: written to db as-is...

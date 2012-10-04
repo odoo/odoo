@@ -99,7 +99,9 @@ class ir_fields_converter(orm.Model):
 
         return True, [orm.ImportWarning(
             _(u"Unknown value '%s' for boolean field '%%(field)s', assuming '%s'")
-                % (value, yes))]
+                % (value, yes), {
+                'moreinfo': _(u"Use '1' for yes and '0' for no")
+            })]
 
     def _str_to_integer(self, cr, uid, model, column, value, context=None):
         try:
@@ -127,8 +129,9 @@ class ir_fields_converter(orm.Model):
             return value, []
         except ValueError:
             raise ValueError(
-                _(u"'%s' does not seem to be a valid date for field '%%(field)s'. Use the format '%s'") %
-                    (value, u"2012-12-31"))
+                _(u"'%s' does not seem to be a valid date for field '%%(field)s'") % value, {
+                    'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"
+                })
 
     def _str_to_datetime(self, cr, uid, model, column, value, context=None):
         try:
@@ -136,8 +139,9 @@ class ir_fields_converter(orm.Model):
             return value, []
         except ValueError:
             raise ValueError(
-                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'. Use the format '%s'") %
-                    (value, u"2012-12-31 23:59:59"))
+                _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'") % value, {
+                    'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"
+                })
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)
