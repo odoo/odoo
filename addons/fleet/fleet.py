@@ -50,6 +50,7 @@ class fleet_vehicle_cost(osv.Model):
     def create(self, cr, uid, data, context=None):
         if 'parent_id' in data:
             data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
+            data['date'] = self.browse(cr, uid, data['parent_id'], context=context).date
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
         return cost_id
 
@@ -798,7 +799,7 @@ class fleet_vehicle_log_contract(osv.Model):
         'name' : fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
         #'name' : fields.char('Name',size=64),
 
-        'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
+        #'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost', domain="[('category','=','contract')]"),
 
         'start_date' : fields.date('Start Date', required=False, help='Date when the coverage of the contract begins'),
         'expiration_date' : fields.date('Expiration Date', required=False, help='Date when the coverage of the contract expirates (by default, one year after begin date)'),

@@ -759,13 +759,29 @@
             <field name="name">fleet.vehicle.cost.tree</field>
             <field name="model">fleet.vehicle.cost</field>
             <field name="arch" type="xml">
-                <tree string="Vehicles costs">
+                <tree string="Vehicles costs" >
+                    <field name="date"/>
                     <field name="vehicle_id" />
                     <field name="cost_type"/>
-                    <field name="amount"/>
+                    <field name="amount" sum="Total Cost"/>
+                    <field name="parent_id" invisible="1" />
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.ui.view' id='fleet_vehicle_costs_search'>
+            <field name="name">fleet.vehicle.cost.search</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <search string="Vehicles costs" >
+                    <field name="vehicle_id" />
+                    <field name="cost_type"/>
                     <field name="date"/>
                     <field name="parent_id"/>
-                </tree>
+                    <filter name="parent_false" domain="[('parent_id','=',False)]" string="Effective Costs"/>
+                    <filter name="groupby_cost_type" context="{'group_by' : 'cost_type'}" string="Cost Type"/>
+                    <filter name="groupby_vehicle_id" context="{'group_by' : 'vehicle_id'}" string="Vehicle"/>
+                </search>
             </field>
         </record>
 
@@ -796,6 +812,7 @@
             <field name="res_model">fleet.vehicle.cost</field>
             <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
+            <field name="context">{"search_default_parent_false" : True}</field>
         </record>
 
         <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" />
