@@ -429,13 +429,13 @@ class survey_question_wiz(osv.osv_memory):
                                 vals['attachment_ids'] = [(0,0,{'name': a_name,
                                                                 'datas_fname': a_name,
                                                                 'datas': str(a_content).encode('base64')})
-                                                                for a_name, a_content in attachments]
+                                                                for a_name, a_content in attachments.items()]
                             self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
                     xml_form = etree.Element('form', {'string': _('Complete Survey Answer')})
                     xml_footer = etree.SubElement(xml_form, 'footer', {'col': '6', 'colspan': '4' ,'class': 'oe_survey_title_height'})
 
-                    etree.SubElement(xml_form, 'separator', {'string': 'Complete Survey', 'colspan': "4"})
+                    etree.SubElement(xml_form, 'separator', {'string': 'Survey Completed', 'colspan': "4"})
                     etree.SubElement(xml_form, 'label', {'string': 'Thanks for your Answer'})
                     etree.SubElement(xml_form, 'newline')
                     etree.SubElement(xml_footer, 'button', {'special':"cancel",'string':"OK",'colspan':"2",'class':'oe_highlight'})

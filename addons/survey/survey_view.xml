@@ -38,24 +38,24 @@
                     <div class="oe_title">
                         <label for="title" class="oe_edit_only"/>
                         <h1>
-                            <field name="title"/>
+                            <field name="title" attrs="{'readonly':[('state','=','close')]}"/>
                         </h1>
                     </div>
                     <group>
                         <group>
                             <field name="id" invisible="1"/>
-                            <field name="responsible_id" class="oe_inline"/>
-                            <field name="send_response"/>
-                            <field name="type"/>
+                            <field name="responsible_id" class="oe_inline" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="send_response" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="type" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                         <group>
-                            <field name="max_response_limit" attrs="{'readonly':[('state','in',('open','close'))]}"/>
-                            <field name="response_user" attrs="{'readonly':[('state','in',('open','close'))]}"/>
+                            <field name="max_response_limit" attrs="{'readonly':[('state','=','close')]}"/>
+                            <field name="response_user" attrs="{'readonly':[('state','=','close')]}"/>
                         </group>
                      </group>
                      <notebook>
                         <page string="Survey Details">
-                            <field name="page_ids" colspan="4" mode="tree">
+                            <field name="page_ids" colspan="4" mode="tree" attrs="{'readonly':[('state','=','close')]}">
                                 <form string="Survey Page" version="7.0">
                                     <sheet>
                                     <label for="title" class="oe_edit_only"/>
@@ -212,10 +212,10 @@
                                     </sheet>
                                     </form>
                                 </field>
-                            <field name="note" placeholder="Survey description..."/>
+                            <field name="note" placeholder="Survey description..." attrs="{'readonly':[('state','=','close')]}"/>
                         </page>
                         <page string="Invited User">
-                            <field name="invited_user_ids" readonly="1"/>
+                            <field name="invited_user_ids" attrs="{'readonly':[('state','=','close')]}"/>
                         </page>
                         <page string="History">
                             <group>
