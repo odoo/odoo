@@ -1622,7 +1622,7 @@ class Action(openerpweb.Controller):
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
-        return {'result': value}
+        return value
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):
