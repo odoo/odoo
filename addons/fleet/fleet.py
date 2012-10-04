@@ -669,6 +669,25 @@ class fleet_vehicle_log_contract(osv.Model):
 
     _inherits = {'fleet.vehicle.cost': 'cost_id'}
     
+    def name_get(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
+        if not ids:
+            return []
+        reads = self.browse(cr, uid, ids, context=context)
+        res = []
+        for record in reads:
+            if record.vehicle_id.name:
+                name = str(record.vehicle_id.name)
+            if record.cost_type.name:
+                name = name+ ' / '+ str(record.cost_type.name)
+            res.append((record.id, name))
+        return res
+
+    def _vehicle_contract_name_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.name_get(cr, uid, ids, context=context)
+        return dict(res)
+
     def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
         res = dict.fromkeys(ids, False)
         for record in self.browse(cr,uid,ids,context=context):
@@ -748,7 +767,7 @@ class fleet_vehicle_log_contract(osv.Model):
     _name = 'fleet.vehicle.log.contract'
     _order='state,expiration_date'
     _columns = {
-
+        'name' : fields.function(_vehicle_contract_name_get_fnc, type="text", string='Name', store=True),
         #'name' : fields.char('Name',size=64),
         'date' :fields.date('Contract Date',help='Date when the contract has been signed'),
 
