@@ -685,7 +685,7 @@ class WebClient(openerpweb.Controller):
         # sub-languages (that should only be partially translated) we load the
         # main language PO instead - that should be enough for the login screen.
         if '-' in lang: # RFC2616 uses '-' separators for sublanguages
-            lang = [lang.split('-',1)[0], lang]
+            lang = lang.split('-')[0]
 
         translations_per_module = {}
         for addon_name in mods:
@@ -1209,8 +1209,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return {'result': clean_action(req, action)}
-        return {'result': False}
+            return clean_action(req, action)
+        return False
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
