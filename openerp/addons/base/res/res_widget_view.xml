@@ -82,11 +82,11 @@
             <field name="model">res.widget.wizard</field>
             <field name="arch" type="xml">
                 <form string="Widget Wizard" col="4" version="7.0">
-                    <t t-call="ui.Header">
+                    <header>
                         <button name="res_widget_add" string="Add" type="object" class="oe_highlight"/>
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                    </t>
+                    </header>
                     <group>
                         <field name="widgets_list"/>
                     </group>
