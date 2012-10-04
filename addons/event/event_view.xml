@@ -136,6 +136,7 @@
                                     <field name="type" on_change="onchange_event_type(type,context)"/>
                                     <field name="date_begin"/>
                                     <field name="date_end"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </div>
@@ -474,6 +475,9 @@
                             <group groups="base.group_no_one">
                                 <field name="create_date"/>
                                 <field name="date_closed"/>
+                            </group>
+                            <group>
+                                <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                         </group>
                     </sheet>
