@@ -355,9 +355,10 @@
                             <group string="Contract details">
                                 <field name="vehicle_id" on_change="on_change_vehicle(vehicle_id)"/>
 
-                                <field name="cost_type" />
+                                <field name="cost_type" required="1"/>
                             </group>
                             <group string="Odometer details">
+                                <label for="odometer"/>
                                 <div>
                                     <field name="odometer" class="oe_inline"/>
                                     <field name="odometer_unit" class="oe_inline"/>
@@ -369,7 +370,6 @@
                                 <field name="date" />
                                 <field name="start_date" on_change="on_change_start_date(start_date)"/>
                                 <field name="expiration_date" />
-                                <field name="reminder" />
                             </group>
                             <group>
                                 <field name="insurer_id" />
@@ -435,9 +435,6 @@
                 contracts. Contracts can be of various type, from insurance
                 contracts to leasing contracts. Each contract is associated
                 to an existing vehicle and can also be associated to a user.
-                For each contract, you can ask for a reminder that will color
-                the contract in orange when the expiration date is near or in
-                red when the expiration date is passed.
               </p>
             </field>
         </record>

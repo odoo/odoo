@@ -243,7 +243,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open'),('reminder','=',True)],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],order='expiration_date')
             overdue=0
             if (len(contracts) > 0):
                 for element in contracts:
@@ -271,7 +271,7 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open'),('reminder','=',True)],order='expiration_date')
+            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],order='expiration_date')
             due_soon=0
             if (len(contracts) > 0):
                 for element in contracts:
@@ -726,19 +726,19 @@ class fleet_vehicle_log_contract(osv.Model):
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
         for record in reads:
-            if (record.reminder==True):
-                if (record.expiration_date and record.state=='open'):
-                    today=self.str_to_date(time.strftime('%Y-%m-%d'))
-                    renew_date = self.str_to_date(record.expiration_date)
-                    diff_time=int((renew_date-today).days)
-                    if (diff_time<=0):
-                        res.append((record.id,0))
-                    else:
-                        res.append((record.id,diff_time))
+            #if (record.reminder==True):
+            if (record.expiration_date and record.state=='open'):
+                today=self.str_to_date(time.strftime('%Y-%m-%d'))
+                renew_date = self.str_to_date(record.expiration_date)
+                diff_time=int((renew_date-today).days)
+                if (diff_time<=0):
+                    res.append((record.id,0))
                 else:
-                    res.append((record.id,-1))
+                    res.append((record.id,diff_time))
             else:
                 res.append((record.id,-1))
+            #else:
+            #    res.append((record.id,-1))
         return dict(res)
 
     _name = 'fleet.vehicle.log.contract'
@@ -756,13 +756,13 @@ class fleet_vehicle_log_contract(osv.Model):
         'purchaser_id' : fields.many2one('res.partner', 'Contractor',domain="['|',('customer','=',True),('employee','=',True)]",help='Person to which the contract is signed for'),
         'ins_ref' : fields.char('Contract Reference', size=64),
         'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
-        'reminder' : fields.boolean('Renewal Reminder', help="Warn the user a few days before the expiration date of this contract"),
+        #'reminder' : fields.boolean('Renewal Reminder', help="Warn the user a few days before the expiration date of this contract"),
         'notes' : fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
         'costs' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Costs covered'),
 
 
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
-        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer',store=False,help='Odometer measure of the vehicle at the moment of this log'),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
     }
     _defaults = {
@@ -782,17 +782,7 @@ class fleet_vehicle_log_contract(osv.Model):
         self.write(cr, uid, ids, {'state': 'open'})
         return True
 
-############################
-############################
-#Vehicle.log.contract.type class
-############################
-############################
 
-class fleet_contract_type(osv.Model):
-    _name = 'fleet.contract.type'
-    _columns = {
-        'name': fields.char('Name', required=True, translate=True),
-    }
 ############################
 ############################
 #Vehicle.log.contract.state class
