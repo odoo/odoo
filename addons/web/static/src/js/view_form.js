@@ -1565,6 +1565,42 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
     },
 });
 
+/**
+    Welcome.
+
+    If you read this documentation, it probably means that you were asked to use a form view widget outside of
+    a form view. Before going further, you must understand that those fields were never really created for
+    that usage. Don't think that this class will hold the answer to all your problems, at best it will allow
+    you to hack the system with more style.
+*/
+instance.web.form.DefaultFieldManager = instance.web.CallbackEnabled.extend({
+    init: function(parent, eval_context) {
+        this._super(parent);
+        this.field_descs = {};
+        this.eval_context = eval_context || {};
+    },
+    get_field_desc: function(field_name) {
+        if (this.field_descs[field_name] === undefined) {
+            this.field_descs[field_name] = {
+                string: "I have no name",
+            };
+        }
+        return this.field_descs[field_name];
+    },
+    get_field_value: function(field_name) {
+        return false;
+    },
+    set_values: function(values) {
+        // nothing
+    },
+    compute_domain: function(expression) {
+        return instance.web.form.compute_domain(expression, {});
+    },
+    build_eval_context: function() {
+        return new instance.web.CompoundContext(this.eval_context);
+    },
+});
+
 instance.web.form.FormDialog = instance.web.Dialog.extend({
     init: function(parent, options, view_id, dataset) {
         this._super(parent, options);
