@@ -665,7 +665,7 @@
             <field name="name">fleet.service.type.tree</field>
             <field name="model">fleet.service.type</field>
             <field name="arch" type="xml">
-                <tree string="Services Logs">
+                <tree string="Service types">
                     <field name="name" />
                     <field name="category"/>
                 </tree>
@@ -680,6 +680,29 @@
         </record>
 
         <menuitem action="fleet_vehicle_service_types_act" parent="fleet_configuration" id="fleet_vehicle_service_types_menu" />
+
+
+        <record model='ir.ui.view' id='fleet_vehicle_costs_tree'>
+            <field name="name">fleet.vehicle.cost.tree</field>
+            <field name="model">fleet.vehicle.cost</field>
+            <field name="arch" type="xml">
+                <tree string="Vehicles costs">
+                    <field name="vehicle_id" />
+                    <field name="cost_type"/>
+                    <field name="amount"/>
+                    <field name="parent_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model='ir.actions.act_window' id='fleet_vehicle_costs_act'>
+            <field name="name">Vehicle Costs</field>
+            <field name="res_model">fleet.vehicle.cost</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem action="fleet_vehicle_costs_act" parent="fleet_vehicles" id="fleet_vehicle_costs_menu" />
 <!--    
         <record model='ir.ui.view' id='fleet_hr_employee_form'>
             <field name="name">fleet.hr.employee.form</field>

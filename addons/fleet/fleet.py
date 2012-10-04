@@ -5,6 +5,7 @@ import tools
 import datetime
 from osv.orm import except_orm
 from tools.translate import _
+from import_base.mapper import *
 ############################
 ############################
 #Vehicle.cost class
@@ -550,6 +551,9 @@ class fleet_vehicle_log_fuel(osv.Model):
         self.write(cr, uid, id, {'odometer_id': ''})
         return False
 
+    def _get_default_service_type(self, cr, uid, context):
+        model, model_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'fleet', 'type_service_refueling')
+        return model_id
 
     _name = 'fleet.vehicle.log.fuel'
 
@@ -569,7 +573,7 @@ class fleet_vehicle_log_fuel(osv.Model):
     _defaults = {
         'purchaser_id': lambda self, cr, uid, ctx: uid,
         'date' : time.strftime('%Y-%m-%d'),
-
+        'cost_type': _get_default_service_type,
     }
 
 ############################

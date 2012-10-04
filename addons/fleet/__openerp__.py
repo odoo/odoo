@@ -24,6 +24,7 @@ Add insurance and services reminder that will help you by sending you a mail whe
     ],
     'data' : [
         'fleet_view.xml',
+        'data.xml',
     ],
     'update_xml' : ['security/ir.model.access.csv'],
     'demo': ['demo.xml'],
