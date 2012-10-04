@@ -67,7 +67,23 @@
             <div class="oe_mail_msg_content">
                 <!-- contains the composition form -->
                 <!-- default content: old basic textarea -->
+                <div class="oe_mail_post_header">
+                    Post a message to: 
+                    <span i-if="!widget.is_private" class="oe_all_follower">All Followers</span> 
+                    <t t-if="!widget.is_private and widget.partner_ids.length"> and </t>
+                    <t t-set="inc" t-value="0"/>
+                    <t t-if="widget.partner_ids.length" t-foreach="widget.partner_ids" t-as="partner"><span t-attf-class="oe_partner_follower #{inc>=3?'oe_hidden':''}"><t t-if="inc" t-raw="', '"/><a t-attf-href="#model=res.partner&amp;id=#{partner[0]}"><t t-raw="partner[1]"/></a></span><t t-set="inc" t-value="inc+1"/>
+                    </t>
+                    <t t-if="widget.partner_ids.length>=3">
+                        <span class="oe_more">, <a><t t-raw="widget.partner_ids.length-3"/> others...</a></span>
+                        <a class="oe_more_hidden">&lt;&lt;&lt;</a>
+                    </t>
+                </div>
                 <textarea placeholder="Add your comment here..."/>
+                <div class="oe_mail_post_bottom">
+                    <button class="post">Post</button>
+                    <span><a>Compose a full message</a></span>
+                </div>
             </div>
             <div class="oe_clear"/>
         </div>

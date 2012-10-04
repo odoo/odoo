@@ -88,28 +88,28 @@
             <field name="name">Inbox</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('is_private','=',True),('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'default_is_private':True} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_res_id': uid, 'default_is_private':True} }&quot;"/>
         </record>
 
         <record id="action_mail_wall_feeds" model="ir.actions.client">
             <field name="name">Wall</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('is_private','=',False),('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', True)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid, 'default_is_private':False} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_res_id': uid, 'default_is_private':False} }&quot;"/>
         </record>
 
         <record id="action_mail_archives_feeds" model="ir.actions.client">
             <field name="name">Archives</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('notification_ids.partner_id.user_ids', 'in', [uid]),('unread', '=', False)],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_res_id': uid} }&quot;"/>
         </record>
 
         <record id="action_mail_sent_feeds" model="ir.actions.client">
             <field name="name">Sent</field>
             <field name="tag">mail.wall</field>
             <field name="params" eval="&quot;{'domain': [('author_id.user_ids', 'in', [uid])],
-                'context': {'default_model': 'res.users', 'default_res_id': uid} }&quot;"/>
+                'context': {'default_model': 'res.partner', 'default_res_id': uid} }&quot;"/>
         </record>
     </data>
 </openerp>

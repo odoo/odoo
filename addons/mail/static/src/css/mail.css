@@ -173,14 +173,39 @@
     clear: both; 
 }
 
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_header .oe_all_follower {
+    color: blue;
+}
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_header .oe_partner_follower a {
+    color: red;
+}
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_header .oe_hidden,
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_header .oe_more_hidden {
+    display: none;
+}
+
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_bottom button.post {
+    float: left;
+}
+
+.openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_bottom span {
+    float: right;
+}
+
 /* default textarea (oe_mail_compose_textarea), and body textarea for compose form view */
-.openerp .oe_mail_msg_content textarea.oe_mail_compose_textarea,
-.openerp .oe_mail_msg_content div.oe_mail_compose_message_body textarea {
+.openerp .oe_mail.oe_semantic_html_override .oe_mail_compose_textarea textarea,
+.openerp .oe_mail div.oe_mail_compose_message_body textarea {
     width: 474px;
-    height: 60px;
+    min-height: 120px;
+    height: auto;
     padding: 4px;
     font-size: 12px;
     border: 1px solid #cccccc;
+}
+
+/* not top textarea */
+.openerp .oe_mail.oe_semantic_html_override .oe_semantic_html_override .oe_mail_compose_textarea textarea {
+    height: 60px;
 }
 
 /* default textarea (oe_mail_compose_textarea), and body textarea for compose form view */
@@ -413,11 +438,6 @@
 }
 
 /* Dropdown menu */
-/*.openerp .oe_mail_msg_content .oe_dropdown_toggle {
-    position: absolute;
-    top: 0px;
-    right: 3px;
-}*/
 
 .openerp .oe_mail .oe_semantic_html_override {
     position: relative;
