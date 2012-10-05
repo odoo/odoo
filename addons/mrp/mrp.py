@@ -27,6 +27,7 @@ from tools.translate import _
 import netsvc
 import time
 import tools
+from operator import attrgetter
 
 
 #----------------------------------------------------------
@@ -738,40 +739,29 @@ class mrp_production(osv.osv):
                         continue
 
                     consumed = 0
-                    
+
+                    rounding=rounding = raw_product[0].product_uom.rounding
+
                     # search for exact quantity
                     for consume_line in raw_product:
-                        if consume_line.product_qty == qty:
+                        if tools.float_compare(consume_line.product_qty, qty, precision_rounding=rounding) == 0:
                             # consume this line
                             consume_line.action_consume(qty, consume_line.location_id.id, context=context)
                             consumed = qty
                             break
-                    
-                    # using the quick sort algorithm
-                    def _sort_quantity(raw_product):
-                        if len(raw_product) <= 1:
-                            return raw_product
-                        pivot = raw_product[0]
-                        smaller = _sort_quantity([x for x in raw_product[1:] if x.product_qty < pivot.product_qty])
-                        bigger = _sort_quantity([x for x in raw_product[1:] if x.product_qty >= pivot.product_qty])
-                        return smaller + [pivot] + bigger
                             
                     # sort the list by quantity if we have not consumed yet
-                    if consumed < qty:
-                        raw_product = _sort_quantity(raw_product)
+                    if tools.float_compare(consumed, qty, precision_rounding=rounding) == -1:
+                        raw_product.sort(key=attrgetter('product_qty'))
                     
-                    index = 0    
+                    index = 0  
+                      
                     # consume the smallest quantity while we have not consumed enough
-                    while consumed < qty and index < len(raw_product):
+                    while tools.float_compare(consumed, qty, precision_rounding=rounding) == -1 and index < len(raw_product):
                         consume_line = raw_product[index]
-                        # we don't need to split
-                        if consume_line.product_qty <= (qty - consumed):      
-                            consume_line.action_consume(consume_line.product_qty, consume_line.location_id.id, context=context)
-                            consumed += consume_line.product_qty 
-                        # we need to split
-                        else:
-                            consume_line.action_consume(qty - consumed, consume_line.location_id.id, context=context)
-                            consumed += qty - consumed  
+                        to_consume = min(consume_line.product_qty, qty - consumed) 
+                        consume_line.action_consume(to_consume, consume_line.location_id.id, context=context)
+                        consumed += to_consume
                         index += 1
 
         if production_mode == 'consume_produce':
