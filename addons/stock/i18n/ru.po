@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-02-08 01:37+0100\n"
-"PO-Revision-Date: 2012-09-28 10:57+0000\n"
+"PO-Revision-Date: 2012-10-03 09:25+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-29 05:21+0000\n"
-"X-Generator: Launchpad (build 16049)\n"
+"X-Launchpad-Export-Date: 2012-10-04 05:51+0000\n"
+"X-Generator: Launchpad (build 16061)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -1490,7 +1490,7 @@ msgid ""
 "the generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
-"Используется для оценки инвентаризации реального времени. Когда задан по "
+"Используется для оценки инвентаризации в реальном времени. Когда задан по "
 "виртуальному месту хранения (не внутреннего типа), этот счёт будет "
 "использован для хранения значения продуктов перемещённых из этого места "
 "хранения во внутреннее место хранения, вместо заданного исходящего счёта в "
@@ -1760,7 +1760,7 @@ msgstr "Созданные перемещения товаров"
 #. module: stock
 #: field:stock.location,valuation_in_account_id:0
 msgid "Stock Valuation Account (Incoming)"
-msgstr ""
+msgstr "Счёт оценки запаса (входяшего)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_14
@@ -1775,7 +1775,7 @@ msgstr "Отслеживаемая партия"
 #. module: stock
 #: view:stock.picking:0
 msgid "Back Orders"
-msgstr ""
+msgstr "Дозаказы"
 
 #. module: stock
 #: view:product.product:0 view:product.template:0
@@ -1812,11 +1812,15 @@ msgid ""
 "specific valuation account set on the destination location. When not set on "
 "the product, the one from the product category is used."
 msgstr ""
+"При проведении оценки инвентаризации в реальном времени, корреспондирующие "
+"элементы журнала для всех исходящих перемещений будут помещены на этот счёт, "
+"если нет задан счёт в месте назначения. Его также можно установить "
+"непосредственно для каждого продукта."
 
 #. module: stock
 #: view:report.stock.move:0
 msgid "Day Planned"
-msgstr ""
+msgstr "Запланированный день"
 
 #. module: stock
 #: view:report.stock.inventory:0 field:report.stock.inventory,date:0
@@ -1897,7 +1901,7 @@ msgstr "Разукомплектовать"
 #. module: stock
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
 msgid "Split in production lots"
-msgstr "Разделить партию по отдельным серийным номерам"
+msgstr "Разделить в партии производства"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -1935,6 +1939,11 @@ msgid ""
 "generic Stock Output Account set on the product. This has no effect for "
 "internal locations."
 msgstr ""
+"Используется для оценки инвентаризации в реальном времени. Когда задан по "
+"виртуальному месту хранения (не внутреннего типа), этот счёт будет "
+"использован для хранения значения продуктов перемещённых из внутреннего "
+"места хранения в это место хранения, вместо заданного исходящего счёта в "
+"товаре. Это не оказывает влияния на внутренние места хранения."
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -1994,6 +2003,8 @@ msgid ""
 "Can not create Journal Entry, Output Account defined on this product and "
 "Valuation account on category of this product are same."
 msgstr ""
+"Невозможно создать запись журнала, определённый для этого продукта счёт "
+"выхода и счёт оценки по категории этого продукта один и тот же."
 
 #. module: stock
 #: field:report.stock.move,day_diff1:0
@@ -2008,7 +2019,7 @@ msgstr "Цена"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking_memory
 msgid "stock.return.picking.memory"
-msgstr ""
+msgstr "stock.return.picking.memory"
 
 #. module: stock
 #: view:stock.inventory:0
@@ -2073,6 +2084,8 @@ msgid ""
 "This field is for internal purpose. It is used to decide if the column "
 "prodlot has to be shown on the move_ids field or not"
 msgstr ""
+"Это поле для внутренних целей. Оно используется для принятия решения должна "
+"ли быть показана колонка prodlot в поле move_ids или нет"
 
 #. module: stock
 #: help:product.template,property_stock_inventory:0
@@ -2132,6 +2145,9 @@ msgid ""
 "Inventory Journal in which the chained move will be written, if the Chaining "
 "Type is not Transparent (no journal is used if left empty)"
 msgstr ""
+"Журнал инвентаризации, в который будет записано сцеплённое перемещение, если "
+"тип сцепления - не прозрачный (нет используемого журнала, если оставить "
+"пустым)"
 
 #. module: stock
 #: view:stock.move:0
@@ -2143,6 +2159,8 @@ msgstr "Создание"
 msgid ""
 "Analysis of current inventory (only moves that have already been processed)"
 msgstr ""
+"Анализ текущей инвентаризации (только перемещения, которые уже были "
+"обработаны)"
 
 #. module: stock
 #: field:stock.partial.move.line,cost:0
@@ -2160,7 +2178,7 @@ msgstr "Счет стоимости входящих ТМЦ"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Shipping type specify, goods coming in or going out"
-msgstr ""
+msgstr "Тип доставки определяет приходящие или уходящие товары."
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_warehouse_mgmt
@@ -2181,7 +2199,7 @@ msgstr "Шаги не добавляются автоматически"
 #. module: stock
 #: view:stock.location.product:0
 msgid "Stock Location Analysis"
-msgstr "Анализ места хранения ТМЦ"
+msgstr "Анализ места хранения"
 
 #. module: stock
 #: help:stock.move,date:0
@@ -2197,7 +2215,7 @@ msgstr ""
 #: view:stock.inventory:0 view:stock.move:0 view:stock.picking:0
 #: view:stock.production.lot:0
 msgid "Group By..."
-msgstr "Объединять по..."
+msgstr "Группировать по ..."
 
 #. module: stock
 #: view:stock.location:0
