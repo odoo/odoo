@@ -66,6 +66,12 @@ Editable list view
 The editable list view module adds a few supplementary style hook
 classes, for edition situations:
 
+``.oe_list_editable``
+
+    Added to the ``.oe_list`` when the list is editable (however that
+    was done). The class may be removed on-the-fly if the list becomes
+    non-editable.
+
 ``.oe_editing``
 
     Added to both ``.oe_list`` and ``.oe_list_button`` (as the
@@ -79,6 +85,59 @@ classes, for edition situations:
     modifying the row while it's being edited separately. Mostly for
     fields which can not be edited (e.g. read-only fields).
 
+Columns display customization
+-----------------------------
+
+The list view provides a registry to
+:js:class:`openerp.web.list.Column` objects allowing for the
+customization of a column's display (e.g. so that a binary field is
+rendered as a link to the binary file directly in the list view).
+
+The registry is ``instance.web.list.columns``, the keys are of the
+form ``tag.type`` where ``tag`` can be ``field`` or ``button``, and
+``type`` can be either the field's type or the field's ``@widget`` (in
+the view).
+
+Most of the time, you'll want to define a ``tag.widget`` key
+(e.g. ``field.progressbar``).
+
+.. js:class:: openerp.web.list.Column(id, tag, attrs)
+
+    .. js:function:: openerp.web.list.Column.format(record_data, options)
+
+        Top-level formatting method, returns an empty string if the
+        column is invisible (unless the ``process_modifiers=false``
+        option is provided); returns ``options.value_if_empty`` or an
+        empty string if there is no value in the record for the
+        column.
+
+        Otherwise calls :js:func:`~openerp.web.list.Column._format`
+        and returns its result.
+
+        This method only needs to be overridden if the column has no
+        concept of values (and needs to bypass that check), for a
+        button for instance.
+
+        Otherwise, custom columns should generally override
+        :js:func:`~openerp.web.list.Column._format` instead.
+
+        :returns: String
+
+    .. js:function:: openerp.web.list.Column._format(record_data, options)
+
+        Never called directly, called if the column is visible and has
+        a value.
+
+        The default implementation calls
+        :js:func:`~openerp.web.format_value` and htmlescapes the
+        result (via ``_.escape``).
+
+        Note that the implementation of
+        :js:func:`~openerp.web.list.Column._format` *must* escape the
+        data provided to it, its output will *not* be escaped by
+        :js:func:`~openerp.web.list.Column.format`.
+
+        :returns: String
 
 Editable list view
 ------------------
@@ -160,10 +219,13 @@ Interaction Methods
               updated) and ``record`` the reloaded record having been
               edited.
 
-.. js:function:: openerp.web.ListView.cancel_edition
+.. js:function:: openerp.web.ListView.cancel_edition([force=false])
 
     Cancels pending edition, cleans up the list view in case of
     creation (removes the empty record being created).
+
+    :param Boolean force: doesn't check if the user has added any
+                          data, discards the edition unconditionally
 
 Utility Methods
 +++++++++++++++
@@ -345,11 +407,14 @@ formview, delegating instead to its
                   from when it was passed in, aside from the ``id``
                   attribute.
 
-    .. js:function:: openerp.web.list.Editor.cancel
+    .. js:function:: openerp.web.list.Editor.cancel([force=false])
 
         Attemps to cancel the edition of the internal form, then hide
         the form
 
+        :param Boolean force: unconditionally cancels the edition of
+                              the internal form, even if the user has
+                              already entered data in it.
         :returns: delegate to the record under edition
 
 .. js:class:: EditorOptions

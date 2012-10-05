@@ -1,16 +1,16 @@
 {
-    "name" : "Web",
-    "category": "Hidden",
-    "description":
+    'name': 'Web',
+    'category': 'Hidden',
+    'description':
         """
 OpenERP Web core module.
 ========================
 
 This module provides the core of the OpenERP Web Client.
         """,
-    "depends" : [],
+    'depends': [],
     'auto_install': True,
-    'post_load' : 'wsgi_postload',
+    'post_load': 'wsgi_postload',
     'js' : [
         "static/lib/datejs/globalization/en-US.js",
         "static/lib/datejs/core.js",
@@ -23,6 +23,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.validate/jquery.validate.js",
         "static/lib/jquery.ba-bbq/jquery.ba-bbq.js",
         "static/lib/spinjs/spin.js",
+        "static/lib/jquery.autosize/jquery.autosize.js",
         "static/lib/jquery.blockUI/jquery.blockUI.js",
         "static/lib/jquery.ui/js/jquery-ui-1.8.17.custom.min.js",
         "static/lib/jquery.ui.timepicker/js/jquery-ui-timepicker-addon.js",
@@ -37,7 +38,7 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/underscore/underscore.string.js",
         "static/lib/backbone/backbone.js",
         "static/lib/cleditor/jquery.cleditor.js",
-        "static/lib/py.js/lib/py.js",
+        "static/lib/py.js/lib/py.js",        
         "static/src/js/boot.js",
         "static/src/js/pyeval.js",
         "static/src/js/corelib.js",
@@ -48,7 +49,6 @@ This module provides the core of the OpenERP Web Client.
         "static/src/js/views.js",
         "static/src/js/data.js",
         "static/src/js/data_export.js",
-        "static/src/js/data_import.js",
         "static/src/js/search.js",
         "static/src/js/view_form.js",
         "static/src/js/view_list.js",
@@ -63,7 +63,6 @@ This module provides the core of the OpenERP Web Client.
         "static/lib/jquery.textext/jquery.textext.css",
         "static/src/css/base.css",
         "static/src/css/data_export.css",
-        "static/src/css/data_import.css",
         "static/lib/cleditor/jquery.cleditor.css",
     ],
     'qweb' : [

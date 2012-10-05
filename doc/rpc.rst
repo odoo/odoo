@@ -137,7 +137,7 @@ around and use them differently/add new specifications on them.
                                       asked of the server. Grouping
                                       can actually be an array or
                                       varargs.
-       :rtype: Deferred<Array<openerp.web.Group>> | null
+       :rtype: Deferred<Array<openerp.web.QueryGroup>> | null
 
     The second set of methods is the "mutator" methods, they create a
     **new** :js:class:`~openerp.web.Query` object with the relevant
@@ -189,7 +189,7 @@ in that they're recursive, and level n+1 relies on data provided
 directly by the grouping at level n. As a result, while ``read_group``
 works it's not a very intuitive API.
 
-OpenERP Web 6.2 eschews direct calls to ``read_group`` in favor of
+OpenERP Web 7.0 eschews direct calls to ``read_group`` in favor of
 calling a method of :js:class:`~openerp.web.Query`, `much in the way
 it is one in SQLAlchemy
 <http://docs.sqlalchemy.org/en/latest/orm/query.html#sqlalchemy.orm.query.Query.group_by>`_ [#]_:
@@ -238,76 +238,7 @@ regular query for records):
       });
 
 The result of a (successful) :js:func:`~openerp.web.Query.group_by` is
-an array of :js:class:`~openerp.web.data.Group`.
-
-Synchronizing views (provisional)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. note:: this API may not be final, and may not even remain
-
-While the high-level RPC API is mostly stateless, some objects in
-OpenERP Web need to share state information. One of those is OpenERP
-views, especially between "collection-based" views (lists, graphs) and
-"record-based" views (forms, diagrams), which gets its very own API
-for traversing collections of records, the aptly-named
-:js:class:`~openerp.web.Traverser`.
-
-A :js:class:`~openerp.web.Traverser` is linked to a
-:js:class:`~openerp.web.Model` and is used to iterate over it
-asynchronously (and using indexes).
-
-.. js:class:: openerp.web.Traverser(model)
-
-    .. js:function:: openerp.web.Traverser.model()
-
-        :returns: the :js:class:`~openerp.web.Model` this traverser
-                  instance is bound to
-
-    .. js:function:: openerp.web.Traverser.index([idx])
-
-        If provided with an index parameter, sets that as the new
-        index for the traverser.
-
-        :param Number idx: the new index for the traverser
-        :returns: the current index for the traverser
-
-    .. js:function:: openerp.web.Traverser.current([fields])
-
-        Fetches the traverser's "current" record (that is, the record
-        at the current index of the traverser)
-
-        :param Array<String> fields: fields to return in the record
-        :rtype: Deferred<>
-
-    .. js:function:: openerp.web.Traverser.next([fields])
-
-        Increases the traverser's internal index by one, the fetches
-        the corresponding record. Roughly equivalent to:
-
-        .. code-block:: javascript
-
-            var idx = traverser.index();
-            traverser.index(idx+1);
-            traverser.current();
-
-        :param Array<String> fields: fields to return in the record
-        :rtype: Deferred<>
-
-    .. js:function:: openerp.web.Traverser.previous([fields])
-
-        Similar to :js:func:`~openerp.web.Traverser.next` but iterates
-        the traverser backwards rather than forward.
-
-        :param Array<String> fields: fields to return in the record
-        :rtype: Deferred<>
-
-    .. js:function:: openerp.web.Traverser.size()
-
-        Shortcut to checking the size of the backing model, calling
-        ``traverser.size()`` is equivalent to calling
-        ``traverser.model().query([]).count()``
-
-        :rtype: Deferred<Number>
+an array of :js:class:`~openerp.web.QueryGroup`.
 
 Low-level API: RPC calls to Python side
 ---------------------------------------

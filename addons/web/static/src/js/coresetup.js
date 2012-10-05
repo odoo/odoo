@@ -11,32 +11,6 @@ if (!console.debug) {
 
 openerp.web.coresetup = function(instance) {
 
-/**
- * @deprecated use :class:`instance.web.Widget`
- */
-instance.web.OldWidget = instance.web.Widget.extend({
-    init: function(parent, element_id) {
-        this._super(parent);
-        this.element_id = element_id;
-        this.element_id = this.element_id || _.uniqueId('widget-');
-
-        var tmp = document.getElementById(this.element_id);
-        this.setElement(tmp || this._make_descriptive());
-    },
-    renderElement: function() {
-        var rendered = this.render();
-        if (rendered) {
-            this.replaceElement($(rendered));
-        }
-        return this;
-    },
-    render: function (additional) {
-        if (this.template)
-            return instance.web.qweb.render(this.template, _.extend({widget: this}, additional || {}));
-        return null;
-    }
-});
-
 /** Session openerp specific RPC class */
 instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Session# */{
     init: function() {
@@ -61,7 +35,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.username = false;
         this.user_context= {};
         this.db = false;
-        this.openerp_entreprise = false;
         this.module_list = instance._modules.slice();
         this.module_loaded = {};
         _(this.module_list).each(function (mod) {
@@ -84,7 +57,12 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             if(self.session_is_valid()) {
                 return deferred.pipe(function() { return self.load_modules(); });
             }
-            return deferred;
+            return $.when(
+                    deferred, 
+                    self.rpc('/web/webclient/bootstrap_translations', {mods: instance._modules}).pipe(function(trans) {
+                        instance.web._t.database.set_bundle(trans);
+                    })
+            );
         });
     },
     /**
@@ -104,8 +82,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
         });
     },
@@ -129,8 +106,7 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
                 db: result.db,
                 username: result.login,
                 uid: result.uid,
-                user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                user_context: result.context
             });
             if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
@@ -142,20 +118,6 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
         this.set_cookie('session_id', '');
         return this.rpc("/web/session/destroy", {});
     },
-    on_session_valid: function() {
-    },
-    /**
-     * Called when a rpc call fail due to an invalid session.
-     * By default, it's a noop
-     */
-    on_session_invalid: function(retry_callback) {
-    },
-    /**
-     * Fetches a cookie stored by an openerp session
-     *
-     * @private
-     * @param name the cookie's name
-     */
     get_cookie: function (name) {
         if (!this.name) { return null; }
         var nameEQ = this.name + '|' + name + '=';
@@ -189,9 +151,8 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
     /**
      * Load additional web addons of that instance and init them
      *
-     * @param {Boolean} [no_session_valid_signal=false] prevents load_module from triggering ``on_session_valid``.
      */
-    load_modules: function(no_session_valid_signal) {
+    load_modules: function() {
         var self = this;
         return this.rpc('/web/session/modules', {}).pipe(function(result) {
             var lang = self.user_context.lang,
@@ -200,32 +161,31 @@ instance.web.Session = instance.web.JsonRPC.extend( /** @lends instance.web.Sess
             var to_load = _.difference(result, self.module_list).join(',');
             self.module_list = all_modules;
 
-            var loaded = $.Deferred().resolve().promise();
-            if (to_load.length) {
+            var loaded = self.rpc('/web/webclient/translations', params).then(function(trans) {
+                instance.web._t.database.set_bundle(trans);
+            });
+            var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
+            if(to_load.length) {
                 loaded = $.when(
-                    self.rpc('/web/webclient/csslist', {mods: to_load}, self.do_load_css),
+                    loaded,
+                    self.rpc('/web/webclient/csslist', {mods: to_load}).then(self.do_load_css),
                     self.rpc('/web/webclient/qweblist', {mods: to_load}).pipe(self.do_load_qweb),
-                    self.rpc('/web/webclient/translations', params).pipe(function(trans) {
-                        instance.web._t.database.set_bundle(trans);
-                        var file_list = ["/web/static/lib/datejs/globalization/" + lang.replace("_", "-") + ".js"];
-                        return self.rpc('/web/webclient/jslist', {mods: to_load}).pipe(function(files) {
-                            return self.do_load_js(file_list.concat(files));
-                        }).then(function () {
-                            if (!Date.CultureInfo.pmDesignator) {
-                                // If no am/pm designator is specified but the openerp
-                                // datetime format uses %i, date.js won't be able to
-                                // correctly format a date. See bug#938497.
-                                Date.CultureInfo.amDesignator = 'AM';
-                                Date.CultureInfo.pmDesignator = 'PM';
-                            }
-                        });
-                    }))
+                    self.rpc('/web/webclient/jslist', {mods: to_load}).then(function(files) {
+                        file_list = file_list.concat(files);
+                    })
+                );
             }
-            return loaded.then(function() {
+            return loaded.pipe(function () {
+                return self.do_load_js(file_list);
+            }).then(function() {
                 self.on_modules_loaded();
                 self.trigger('module_loaded');
-                if (!no_session_valid_signal) {
-                    self.on_session_valid();
+                if (!Date.CultureInfo.pmDesignator) {
+                    // If no am/pm designator is specified but the openerp
+                    // datetime format uses %i, date.js won't be able to
+                    // correctly format a date. See bug#938497.
+                    Date.CultureInfo.amDesignator = 'AM';
+                    Date.CultureInfo.pmDesignator = 'PM';
                 }
             });
         });
@@ -540,52 +500,14 @@ $.async_when = function() {
 // special tweak for the web client
 var old_async_when = $.async_when;
 $.async_when = function() {
-    if (instance.connection.synch)
+    if (instance.session.synch)
         return $.when.apply(this, arguments);
     else
         return old_async_when.apply(this, arguments);
 };
 
-/** Setup blockui */
-if ($.blockUI) {
-    $.blockUI.defaults.baseZ = 1100;
-    $.blockUI.defaults.message = '<div class="oe_blockui_spin" style="height: 50px">';
-    $.blockUI.defaults.css.border = '0';
-    $.blockUI.defaults.css["background-color"] = '';
-    $.blockUI.spinners = [];
-}
-instance.web.blockUI = function() {
-    var tmp = $.blockUI.apply($, arguments);
-    var target = $(".oe_blockui_spin")[0];
-    var opts = {
-      lines: 13, // The number of lines to draw
-      length: 7, // The length of each line
-      width: 4, // The line thickness
-      radius: 10, // The radius of the inner circle
-      rotate: 0, // The rotation offset
-      color: '#FFF', // #rgb or #rrggbb
-      speed: 1, // Rounds per second
-      trail: 60, // Afterglow percentage
-      shadow: false, // Whether to render a shadow
-      hwaccel: false, // Whether to use hardware acceleration
-      className: 'spinner', // The CSS class to assign to the spinner
-      zIndex: 2e9, // The z-index (defaults to 2000000000)
-      top: 'auto', // Top position relative to parent in px
-      left: 'auto' // Left position relative to parent in px
-    };
-    var spinner = new Spinner(opts).spin(target);
-    $.blockUI.spinners.push(spinner);
-    return tmp;
-}
-instance.web.unblockUI = function() {
-    _.each($.blockUI.spinners, function(el) {
-        el.stop();
-    });
-    return $.unblockUI.apply($, arguments);
-}
-
 /** Setup default session */
-instance.connection = new instance.web.Session();
+instance.session = new instance.web.Session();
 
 /** Configure default qweb */
 instance.web._t = new instance.web.TranslationDataBase().build_translation_function();
@@ -604,8 +526,8 @@ instance.web._lt = function (s) {
     return {toString: function () { return instance.web._t(s); }}
 };
 instance.web.qweb = new QWeb2.Engine();
-instance.web.qweb.default_dict['__debug__'] = instance.connection.debug; // Which one ?
-instance.web.qweb.debug = instance.connection.debug;
+instance.web.qweb.default_dict['__debug__'] = instance.session.debug; // Which one ?
+instance.web.qweb.debug = instance.session.debug;
 instance.web.qweb.default_dict = {
     '_' : _,
     '_t' : instance.web._t
@@ -620,13 +542,9 @@ instance.web.qweb.preprocess_node = function() {
             if (translation && translation.value === 'off') {
                 return;
             }
-            var ts = _.str.trim(this.node.data);
-            if (ts.length === 0) {
-                return;
-            }
-            var tr = instance.web._t(ts);
-            if (tr !== ts) {
-                this.node.data = tr;
+            var match = /^(\s*)(.+?)(\s*)$/.exec(this.node.data);
+            if (match) {
+                this.node.data = match[1] + instance.web._t(match[2]) + match[3];
             }
             break;
         case 1:
@@ -662,41 +580,95 @@ var _t = instance.web._t;
     _t('%d years ago');
 }
 
-instance.connection.on('module_loaded', this, function () {
+instance.session.on('module_loaded', this, function () {
     // provide timeago.js with our own translator method
     $.timeago.settings.translator = instance.web._t;
 });
+
+/** Setup blockui */
+if ($.blockUI) {
+    $.blockUI.defaults.baseZ = 1100;
+    $.blockUI.defaults.message = '<div class="openerp oe_blockui_spin_container" style="background-color: transparent;">';
+    $.blockUI.defaults.css.border = '0';
+    $.blockUI.defaults.css["background-color"] = '';
+}
+
+var messages_by_seconds = function() {
+    return [
+        [0, _t("Loading...")],
+        [20, _t("Still loading...")],
+        [60, _t("Still loading...<br />Please be patient.")],
+        [120, _t("Don't leave yet,<br />it's still loading...")],
+        [300, _t("You may not believe it,<br />but the application is actually loading...")],
+        [420, _t("Take a minute to get a coffee,<br />because it's loading...")],
+        [3600, _t("Maybe you should consider reloading the application by pressing F5...")],
+    ];
+};
+
+instance.web.Throbber = instance.web.Widget.extend({
+    template: "Throbber",
+    start: function() {
+        var opts = {
+          lines: 13, // The number of lines to draw
+          length: 7, // The length of each line
+          width: 4, // The line thickness
+          radius: 10, // The radius of the inner circle
+          rotate: 0, // The rotation offset
+          color: '#FFF', // #rgb or #rrggbb
+          speed: 1, // Rounds per second
+          trail: 60, // Afterglow percentage
+          shadow: false, // Whether to render a shadow
+          hwaccel: false, // Whether to use hardware acceleration
+          className: 'spinner', // The CSS class to assign to the spinner
+          zIndex: 2e9, // The z-index (defaults to 2000000000)
+          top: 'auto', // Top position relative to parent in px
+          left: 'auto' // Left position relative to parent in px
+        };
+        this.spin = new Spinner(opts).spin(this.$el[0]);
+        this.start_time = new Date().getTime();
+        this.act_message();
+    },
+    act_message: function() {
+        var self = this;
+        setTimeout(function() {
+            if (self.isDestroyed())
+                return;
+            var seconds = (new Date().getTime() - self.start_time) / 1000;
+            var mes;
+            _.each(messages_by_seconds(), function(el) {
+                if (seconds >= el[0])
+                    mes = el[1];
+            });
+            self.$(".oe_throbber_message").html(mes);
+            self.act_message();
+        }, 1000);
+    },
+    destroy: function() {
+        if (this.spin)
+            this.spin.stop();
+        this._super();
+    },
+});
+instance.web.Throbber.throbbers = [];
+
+instance.web.blockUI = function() {
+    var tmp = $.blockUI.apply($, arguments);
+    var throbber = new instance.web.Throbber();
+    instance.web.Throbber.throbbers.push(throbber);
+    throbber.appendTo($(".oe_blockui_spin_container"));
+    return tmp;
+}
+instance.web.unblockUI = function() {
+    _.each(instance.web.Throbber.throbbers, function(el) {
+        el.destroy();
+    });
+    return $.unblockUI.apply($, arguments);
+}
 
 /**
  * Registry for all the client actions key: tag value: widget
  */
 instance.web.client_actions = new instance.web.Registry();
-
-/**
- * Client action to reload the whole interface.
- * If params has an entry 'menu_id', it opens the given menu entry.
- */
-instance.web.Reload = instance.web.Widget.extend({
-    init: function(parent, params) {
-        this._super(parent);
-        this.menu_id = (params && params.menu_id) || false;
-    },
-    start: function() {
-        var l = window.location;
-        var timestamp = new Date().getTime();
-        var search = "?ts=" + timestamp;
-        if (l.search) {
-            search = l.search + "&ts=" + timestamp;
-        } 
-        var hash = l.hash;
-        if (this.menu_id) {
-            hash = "#menu_id=" + this.menu_id;
-        }
-        var url = l.protocol + "//" + l.host + l.pathname + search + hash;
-        window.location = url;
-    }
-});
-instance.web.client_actions.add("reload", "instance.web.Reload");
 
 };
 

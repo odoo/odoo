@@ -105,7 +105,7 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(level=getattr(logging, options.log_level.upper()))
 
-    app = web.common.http.Root(options, openerp_addons_namespace=False)
+    app = web.common.http.Root(options)
 
     if options.proxy_mode:
         app = werkzeug.contrib.fixers.ProxyFix(app)
