@@ -1578,6 +1578,10 @@ instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
         this._super(parent);
         this.field_descs = {};
         this.eval_context = eval_context || {};
+        this.set({
+            display_invalid_fields: false,
+            actual_mode: 'create',
+        });
     },
     get_field_desc: function(field_name) {
         if (this.field_descs[field_name] === undefined) {
