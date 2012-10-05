@@ -153,13 +153,14 @@ class stock_picking(osv.osv):
                 inv_name = picking.sale_id.client_order_ref + " : " + invoice_created.name
                 invoice_obj.write(cursor, user, [invoice_created.id], {'name': inv_name}, context=context)
             for sale_line in sale_lines:
+                account_id = False
+                if not type:
+                    type = context.get('inv_type', False)
+                if group:
+                    name = picking.name + '-' + sale_line.name
+                else:
+                    name = sale_line.name
                 if sale_line.product_id.type == 'service' and sale_line.invoiced == False:
-                    if not type:
-                        type = context.get('inv_type', False)
-                    if group:
-                        name = picking.name + '-' + sale_line.name
-                    else:
-                        name = sale_line.name
                     if type in ('out_invoice', 'out_refund'):
                         account_id = sale_line.product_id.product_tmpl_id.\
                                 property_account_income.id
@@ -173,26 +174,16 @@ class stock_picking(osv.osv):
                             account_id = sale_line.product_id.categ_id.\
                                     property_account_expense_categ.id
 
-                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, sale_line, account_id, context)
-                    if vals: #note: in some cases we may not want to include all service lines as invoice lines
-                        vals['name'] = name
-                        vals['account_analytic_id'] = self._get_account_analytic_invoice(cursor, user, picking, sale_line)
-                        vals['invoice_id'] = invoices[result[picking.id]].id
-                        invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
-                        order_line_obj.write(cursor, user, [sale_line.id], {
-                            'invoiced': True,
-                            'invoice_lines': [(6, 0, [invoice_line_id])],
-                        })
-                if not sale_line.product_id:
-                    vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, sale_line, False, context)
-                    if vals:
-                        vals['invoice_id'] = invoices[result[picking.id]].id
-                        invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
-                        order_line_obj.write(cursor, user, [sale_line.id], {
-                            'invoiced': True,
-                            'invoice_lines': [(6, 0, [invoice_line_id])],
-                        })
-
+                vals = order_line_obj._prepare_order_line_invoice_line(cursor, user, sale_line, account_id, context)
+                if vals: #note: in some cases we may not want to include all service lines as invoice lines
+                    vals['name'] = name
+                    vals['account_analytic_id'] = self._get_account_analytic_invoice(cursor, user, picking, sale_line)
+                    vals['invoice_id'] = invoices[result[picking.id]].id
+                    invoice_line_id = invoice_line_obj.create(cursor, user, vals, context=context)
+                    order_line_obj.write(cursor, user, [sale_line.id], {
+                        'invoiced': True,
+                        'invoice_lines': [(6, 0, [invoice_line_id])],
+                    })
         return result
 
 # Redefinition of the new field in order to update the model stock.picking.out in the orm
