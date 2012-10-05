@@ -52,7 +52,7 @@
                                 <field name="act_state"/>
                             </group>
                             <group name="action_server" string="Server Action to be Triggered (eg. Email Reminder, Call Object Method, etc...)">
-                                <field name="server_action_id" domain="[('model_id','=', model_id)]"/>
+                                <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1"/>
                             </group>
                             <group name="action_followers" string="Add Followers">
                                 <field name="act_followers" widget="many2many_tags" nolabel="1"/>

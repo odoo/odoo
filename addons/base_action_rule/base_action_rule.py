@@ -93,7 +93,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
-        'server_action_id': fields.many2one('ir.actions.server', 'Server Action', help="Describes the action name.\neg:on which object which action to be taken on basis of which condition"),
+        'server_action_ids': fields.many2many('ir.actions.server', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."),
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model)]
         'last_run': fields.datetime('Last Run', readonly=1),
     }
@@ -276,10 +276,11 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         """ Do Action """
         if context is None:
             context = {}
-
-        if action.server_action_id:
-            context.update({'active_id':obj.id, 'active_ids':[obj.id]})
-            self.pool.get('ir.actions.server').run(cr, uid, [action.server_action_id.id], context)
+        ctx = dict(context)
+        action_server_obj = self.pool.get('ir.actions.server')
+        if action.server_action_ids:
+            ctx.update({'active_id':obj.id, 'active_ids':[obj.id]})
+            action_server_obj.run(cr, uid, [x.id for x in action.server_action_ids], context=ctx)
 
         write = {}
         if hasattr(obj, 'user_id') and action.act_user_id:
