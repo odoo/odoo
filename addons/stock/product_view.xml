@@ -86,7 +86,7 @@
                         <field name="standard_price" attrs="{'readonly':[('cost_method','=','average')]}" nolabel="1"/>
                         <button name="%(action_view_change_standard_price)d" string="- update"
                             type="action" attrs="{'invisible':[('cost_method','&lt;&gt;','average')]}"
-                            class="oe_link"/>
+                            class="oe_link" groups="product.group_costing_method"/>
                     </div>
                 </field>
             </field>
