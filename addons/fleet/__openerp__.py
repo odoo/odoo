@@ -27,7 +27,9 @@ Add insurance and services reminder that will help you by sending you a mail whe
         'data.xml',
     ],
     'update_xml' : ['security/ir.model.access.csv'],
+
     'demo': ['cars.xml','demo.xml'],
+
     'installable' : True,
     'application' : True,
 }

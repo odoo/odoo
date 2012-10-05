@@ -40,14 +40,22 @@ class fleet_vehicle_cost(osv.Model):
 
     _columns = {
         'name' : fields.function(_cost_name_get_fnc, type="char", string='Name', store=True),
-
+        #'name' : fields.char('Name',size=32),
         'vehicle_id': fields.many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this fuel log'),
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
+
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
         'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
+
         'date' :fields.date('Cost Date',help='Date when the cost has been executed'),
     }
+
+    _default ={
+        'parent_id':None,
+    }
+
+    
 
     def create(self, cr, uid, data, context=None):
         if 'parent_id' in data and data['parent_id']:
@@ -322,20 +330,6 @@ class fleet_vehicle(osv.Model):
                 res.append((record.id,0))
         return dict(res)
 
-    def get_next_service_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
-        if context is None:
-            context={}
-        if not ids:
-            return dict([])
-        reads = self.browse(cr,uid,ids,context=context)
-        res=[]
-        for record in reads:
-            services = self.pool.get('fleet.vehicle.log.services').search(cr,uid,[('vehicle_id','=',record.id)],order='date')
-            if (len(services) > 0):
-                res.append((record.id,self.pool.get('fleet.vehicle.log.services').browse(cr,uid,services[0],context=context).date))
-            else:
-                res.append((record.id,None))
-        return dict(res)
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
@@ -376,8 +370,7 @@ class fleet_vehicle(osv.Model):
 
         'contract_renewal_due_soon' : fields.function(get_next_contract_reminder,type="integer",string='Contract Renewal Due Soon',store=False),
         'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contract Renewal Overdue',store=False),
-        'next_service_date' : fields.function(get_next_service_reminder,type="date",string='Next Service Due Date',store=False),
-
+        
         'car_value': fields.float('Car value', help='Value of the bought vehicle'),
         'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
         }
@@ -387,7 +380,13 @@ class fleet_vehicle(osv.Model):
         'odometer_unit' : 'kilometers',
     }
 
-
+    def copy(self, cr, uid, id, default=None, context=None):
+        if not default:
+            default = {}
+        #default.update({
+        #    'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
+        #})
+        return super(fleet_vehicle, self).copy(cr, uid, id, default, context=context)
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
 
@@ -824,6 +823,29 @@ class fleet_vehicle_log_contract(osv.Model):
         #'expiration_date' : self.compute_next_year_date(time.strftime('%Y-%m-%d')),
     
     }
+
+    def copy(self, cr, uid, id, default=None, context=None):
+        default = default or {}
+        current_object = self.browse(cr,uid,id,context)
+        default['start_date'] = time.strftime('%Y-%m-%d')
+        default['expiration_date'] = self.compute_next_year_date(time.strftime('%Y-%m-%d'))
+        #default['name'] = current_object.name
+        default['insurer_id']= current_object.insurer_id
+        default['purchaser_id'] = current_object.purchaser_id
+        default['ins_ref'] = ''
+        default['state'] = 'open'
+        default['notes'] = ''
+        default['costs'] = current_object.costs
+        default['odometer_id'] = current_object.odometer_id
+        default['vehicle_id'] = current_object.vehicle_id
+        default['cost_type'] = current_object.cost_type
+        default['amount'] = current_object.amount
+        default['parent_id'] = current_object.parent_id
+        default['date'] = time.strftime('%Y-%m-%d')
+
+        #default['odometer'] = current_object.odometer
+        #default['odometer_unit'] = current_object.odometer_unit
+        return super(fleet_vehicle_log_contract, self).copy(cr, uid, id, default, context=context)
 
     def contract_close(self, cr, uid, ids, *args):
         self.write(cr, uid, ids, {'state': 'closed'})

@@ -242,7 +242,6 @@
                     <field name="odometer" />
                     <field name="contract_renewal_due_soon" invisible="1"/>
                     <field name="contract_renewal_overdue" invisible="1"/>
-                    <field name="next_service_date" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -291,13 +290,13 @@
                                         </a>
                                     </h4>
                                     <t t-if="record.contract_renewal_due_soon.raw_value > 0 and record.contract_renewal_overdue.raw_value lte 0">
-                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:orange">
+                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
                                             <span class="oe_kanban_button oe_kanban_color_3">Contract Renewal</span>
                                         </a>
                                     </t>
 
                                     <t t-if="record.contract_renewal_overdue.raw_value > 0">
-                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a" Style="color:red">
+                                        <a data-type="object" data-name="act_show_log_contract" href="#" class="oe_kanban_action oe_kanban_action_a">
                                             <span class="oe_kanban_button oe_kanban_color_2">Contract Renewal</span>
                                         </a>
                                     </t>
@@ -316,7 +315,6 @@
                                         
                                     </ul>
 
-                                    
                                 </div>
                                 
                             </div>
@@ -603,8 +601,8 @@
            <field name="arch" type="xml">
                 <graph string="Total Fuel amount per month">
                     <field name="date" />
-                    <field name="amount" operator="+"/>
                     <field name="vehicle_id" group="True" /> 
+                    <field name="amount" operator="+"/>
                 </graph>
             </field>
         </record>
@@ -801,9 +799,6 @@
                                 <field name="date"/>
                                 <field name="parent_id"/>
                             </group>
-                        </group>
-                        <group>
-                            <field name="cost_ids"/>
                         </group>
                     </sheet>
                 </form>
