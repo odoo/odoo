@@ -39,4 +39,14 @@ class sale_order_line(osv.osv):
 
 sale_order_line()
 
+class sale_order(osv.osv):
+    _inherit = "sale.order"
+
+    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
+        # Remove the project_id from the result of super() call, if any, as this field is not in the view anymore
+        res = super(sale_order, self).onchange_shop_id(cr, uid, ids, shopd_id, context=context)
+        if res.get('value',{}).get('project_id'):
+            del(res['value']['porject_id'])
+        return {'value': res}
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

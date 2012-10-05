@@ -165,16 +165,6 @@ class sale_order(osv.osv):
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
-    def onchange_shop_id(self, cr, uid, ids, shop_id):
-        v = {}
-        if shop_id:
-            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id)
-            v['project_id'] = shop.project_id.id
-            # Que faire si le client a une pricelist a lui ?
-            if shop.pricelist_id.id:
-                v['pricelist_id'] = shop.pricelist_id.id
-        return {'value': v}
-
     def action_view_delivery(self, cr, uid, ids, context=None):
         '''
         This function returns an action that display existing delivery orders of given sale order ids. It can either be a in a list or in a form view, if there is only one delivery order to show.

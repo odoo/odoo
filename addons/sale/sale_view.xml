@@ -181,7 +181,7 @@
                         </group>
                         <group>
                             <field name="date_order"/>
-                            <field name="shop_id" invisible="1"/>
+                            <field name="shop_id" groups="base.extended" on_change="onchange_shop_id(shop_id, context)" widget="selection"/>
                             <field name="client_order_ref"/>
                             <field domain="[('type','=','sale')]" name="pricelist_id" groups="product.group_sale_pricelist" on_change="onchange_pricelist_id(pricelist_id,order_line)"/>
                         </group>

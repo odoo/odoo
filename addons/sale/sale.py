@@ -50,6 +50,16 @@ class sale_order(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
 
+    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
+        v = {}
+        if shop_id:
+            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
+            if shop.project_id.id:
+                v['project_id'] = shop.project_id.id
+            if shop.pricelist_id.id:
+                v['pricelist_id'] = shop.pricelist_id.id
+        return {'value': v}
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
