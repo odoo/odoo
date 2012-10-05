@@ -716,12 +716,12 @@ true, it will allow you to hide the event alarm information without removing it.
         ir_obj = self.pool.get('ir.model')
         model_id = ir_obj.search(cr, uid, [('model', '=', model)])[0]
         model_obj = self.pool.get(model)
-        for datas in model_obj.browse(cr, uid, ids, context=context):
-            alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', datas.id)])
+        for data in model_obj.browse(cr, uid, ids, context=context):
+            alarm_ids = alarm_obj.search(cr, uid, [('model_id', '=', model_id), ('res_id', '=', data.id)])
             if alarm_ids:
                 alarm_obj.unlink(cr, uid, alarm_ids)
                 cr.execute('Update %s set base_calendar_alarm_id=NULL, alarm_id=NULL\
-                            where id=%%s' % model_obj._table,(datas.id,))
+                            where id=%%s' % model_obj._table,(data.id,))
         return True
 
 res_alarm()
@@ -968,14 +968,14 @@ class calendar_event(osv.osv):
         if not isinstance(ids, list):
             ids = [ids]
 
-        for datas in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
-            event = datas['id']
-            if datas.get('interval', 0) < 0:
+        for data in self.read(cr, uid, ids, ['id','byday','recurrency', 'month_list','end_date', 'rrule_type', 'select1', 'interval', 'count', 'end_type', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'su', 'exrule', 'day', 'week_list' ], context=context):
+            event = data['id']
+            if data.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
-            if datas.get('count', 0) <= 0:
+            if data.get('count', 0) <= 0:
                 raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
-            if datas['recurrency']:
-                result[event] = self.compute_rule_string(datas)
+            if data['recurrency']:
+                result[event] = self.compute_rule_string(data)
             else:
                 result[event] = ""
         return result
@@ -1187,45 +1187,45 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             ids = list(set(result))
         return ids
 
-    def compute_rule_string(self, datas):
+    def compute_rule_string(self, data):
         """
         Compute rule string according to value type RECUR of iCalendar from the values given.
         @param self: the object pointer
-        @param datas: dictionary of freq and interval value.
+        @param data: dictionary of freq and interval value.
         """
-        def get_week_string(freq, datas):
+        def get_week_string(freq, data):
             weekdays = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
             if freq == 'weekly':
-                byday = map(lambda x: x.upper(), filter(lambda x: datas.get(x) and x in weekdays, datas))
+                byday = map(lambda x: x.upper(), filter(lambda x: data.get(x) and x in weekdays, data))
                 if byday:
                     return ';BYDAY=' + ','.join(byday)
             return ''
 
-        def get_month_string(freq, datas):
+        def get_month_string(freq, data):
             if freq == 'monthly':
-                if datas.get('select1')=='date' and (datas.get('day') < 1 or datas.get('day') > 31):
+                if data.get('select1')=='date' and (data.get('day') < 1 or data.get('day') > 31):
                     raise osv.except_osv(_('Error!'), ("Please select a proper day of the month."))
 
-                if datas.get('select1')=='day':
-                    return ';BYDAY=' + datas.get('byday') + datas.get('week_list')
-                elif datas.get('select1')=='date':
-                    return ';BYMONTHDAY=' + str(datas.get('day'))
+                if data.get('select1')=='day':
+                    return ';BYDAY=' + data.get('byday') + data.get('week_list')
+                elif data.get('select1')=='date':
+                    return ';BYMONTHDAY=' + str(data.get('day'))
             return ''
 
-        def get_end_date(datas):
-            if datas.get('end_date'):
-                datas['end_date_new'] = ''.join((re.compile('\d')).findall(datas.get('end_date'))) + 'T235959Z'
+        def get_end_date(data):
+            if data.get('end_date'):
+                data['end_date_new'] = ''.join((re.compile('\d')).findall(data.get('end_date'))) + 'T235959Z'
 
-            return (datas.get('end_type') == 'count' and (';COUNT=' + str(datas.get('count'))) or '') +\
-                             ((datas.get('end_date_new') and datas.get('end_type') == 'end_date' and (';UNTIL=' + datas.get('end_date_new'))) or '')
+            return (data.get('end_type') == 'count' and (';COUNT=' + str(data.get('count'))) or '') +\
+                             ((data.get('end_date_new') and data.get('end_type') == 'end_date' and (';UNTIL=' + data.get('end_date_new'))) or '')
 
-        freq=datas.get('rrule_type')
+        freq=data.get('rrule_type')
         if freq == 'none':
             return ''
 
-        interval_srting = datas.get('interval') and (';INTERVAL=' + str(datas.get('interval'))) or ''
+        interval_srting = data.get('interval') and (';INTERVAL=' + str(data.get('interval'))) or ''
 
-        return 'FREQ=' + freq.upper() + get_week_string(freq, datas) + interval_srting + get_end_date(datas) + get_month_string(freq, datas)
+        return 'FREQ=' + freq.upper() + get_week_string(freq, data) + interval_srting + get_end_date(data) + get_month_string(freq, data)
 
     def _get_empty_rrule_data(self):
         return  {
@@ -1683,7 +1683,7 @@ ir_model()
 
 class virtual_report_spool(web_services.report_spool):
 
-    def exp_report(self, db, uid, object, ids, datas=None, context=None):
+    def exp_report(self, db, uid, object, ids, data=None, context=None):
         """
         Export Report
         @param self: The object pointer
@@ -1694,13 +1694,13 @@ class virtual_report_spool(web_services.report_spool):
 
         if object == 'printscreen.list':
             return super(virtual_report_spool, self).exp_report(db, uid, \
-                            object, ids, datas, context)
+                            object, ids, data, context)
         new_ids = []
         for id in ids:
             new_ids.append(base_calendar_id2real_id(id))
-        if datas.get('id', False):
-            datas['id'] = base_calendar_id2real_id(datas['id'])
-        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, datas, context)
+        if data.get('id', False):
+            data['id'] = base_calendar_id2real_id(data['id'])
+        return super(virtual_report_spool, self).exp_report(db, uid, object, new_ids, data, context)
 
 virtual_report_spool()
 
