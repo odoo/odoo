@@ -3,12 +3,12 @@
     'name' : 'Fleet Management',
     'version' : '0.1',
     'author' : 'OpenERP S.A.',
-    'category': 'Fleet Management',
+    'category': 'Vehicle, leasing, insurances, costs',
     'website' : 'http://www.openerp.com',
     'summary' : 'Manage your fleet of vehicle',
     'description' : """
-Easy way to manage your fleet
-===============================
+Vehicle, leasing, insurances, cost
+==================================
 
 With this easy to use module, you can in a few clicks manage your entire vehicle fleet.
 

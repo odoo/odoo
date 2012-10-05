@@ -415,6 +415,7 @@ class fleet_vehicle(osv.Model):
             'log_contracts':[],
             'log_services':[],
             'tag_ids':[],
+            'vin_sn':'',
         })
         return super(fleet_vehicle, self).copy(cr, uid, id, default, context=context)
 
