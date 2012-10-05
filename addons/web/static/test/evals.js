@@ -145,5 +145,76 @@ $(document).ready(function () {
             ['name', '>=', current_date],
             ['name', '<=', current_date]
         ]);
-    })
+    });
+
+    module('eval.groupbys', {
+        setup: function () {
+            openerp = window.openerp.testing.instanceFor('coresetup');
+        }
+    });
+    test('groupbys_00', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            {group_by: ['bar', 'qux']},
+            {group_by: null},
+            {group_by: 'grault'}
+        ]);
+        deepEqual(result, ['foo', 'bar', 'qux', 'grault']);
+    });
+    test('groupbys_01', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            { __ref: 'context', __debug: '{"group_by": "bar"}' },
+            {group_by: 'grault'}
+        ]);
+        deepEqual(result, ['foo', 'bar', 'grault']);
+    });
+    test('groupbys_02', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            {
+                __ref: 'compound_context',
+                __contexts: [ {group_by: 'bar'} ],
+                __eval_context: null
+            },
+            {group_by: 'grault'}
+        ]);
+        deepEqual(result, ['foo', 'bar', 'grault']);
+    });
+    test('groupbys_03', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            {
+                __ref: 'compound_context',
+                __contexts: [
+                    { __ref: 'context', __debug: '{"group_by": value}' }
+                ],
+                __eval_context: { value: 'bar' }
+            },
+            {group_by: 'grault'}
+        ]);
+        deepEqual(result, ['foo', 'bar', 'grault']);
+    });
+    test('groupbys_04', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            {
+                __ref: 'compound_context',
+                __contexts: [
+                    { __ref: 'context', __debug: '{"group_by": value}' }
+                ],
+                __eval_context: { value: 'bar' }
+            },
+            {group_by: 'grault'}
+        ], { value: 'bar' });
+        deepEqual(result, ['foo', 'bar', 'grault']);
+    });
+    test('groupbys_05', function () {
+        var result = openerp.web.pyeval.eval('groupbys', [
+            {group_by: 'foo'},
+            { __ref: 'context', __debug: '{"group_by": value}' },
+            {group_by: 'grault'}
+        ], { value: 'bar' });
+        deepEqual(result, ['foo', 'bar', 'grault']);
+    });
 });

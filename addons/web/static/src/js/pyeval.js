@@ -194,7 +194,7 @@ openerp.web.pyeval = function (instance) {
             var evaluated = ctx;
             switch(ctx.__ref) {
             case 'context':
-                evaluated = py.eval(ctx.__debug), evaluation_context;
+                evaluated = py.eval(ctx.__debug, evaluation_context);
                 break;
             case 'compound_context':
                 var eval_context = eval_contexts([ctx.__eval_context]);
