@@ -740,7 +740,7 @@ class mrp_production(osv.osv):
 
                     consumed = 0
 
-                    rounding=rounding = raw_product[0].product_uom.rounding
+                    rounding = raw_product[0].product_uom.rounding
 
                     # search for exact quantity
                     for consume_line in raw_product:
