@@ -36,10 +36,8 @@
                                 </group>
                                 <group name="timing" string="Conditions on Timing">
                                     <field name="trg_date_type"/>
-                                    <group attrs="{'invisible': [('trg_date_type', '=', 'none')]}">
-                                        <field name="trg_date_range" string="Delay After Trigger Date"/>
-                                        <field name="trg_date_range_type"/>
-                                    </group>
+                                    <field name="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
+                                    <field name="trg_date_range_type" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
                                 </group>
                             </group>
                             <group string="Note">
