@@ -547,6 +547,20 @@ class account_voucher(osv.osv):
         vals = self.recompute_payment_rate(cr, uid, ids, res, currency_id, date, ttype, journal_id, amount, context=context)
         for key in vals.keys():
             res[key].update(vals[key])
+        #TODO: onchange_partner_id() should not returns [pre_line, line_dr_ids, payment_rate...] for type sale, and not 
+        # [pre_line, line_cr_ids, payment_rate...] for type purchase.
+        # We should definitively split account.voucher object in two and make distinct on_change functions. In the 
+        # meanwhile, bellow lines must be there because the fields aren't present in the view, what crashes if the 
+        # onchange returns a value for them
+        print "TTYPE", ttype
+        if ttype == 'sale':
+            del(res['value']['line_dr_ids'])
+            del(res['value']['pre_line'])
+            del(res['value']['payment_rate'])
+        elif ttype == 'purchase':
+            del(res['value']['line_cr_ids'])
+            del(res['value']['pre_line'])
+            del(res['value']['payment_rate'])
         return res
 
     def recompute_voucher_lines(self, cr, uid, ids, partner_id, journal_id, price, currency_id, ttype, date, context=None):
@@ -588,7 +602,7 @@ class account_voucher(osv.osv):
 
         #set default values
         default = {
-            'value': {'line_ids': [] ,'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
+            'value': {'line_dr_ids': [] ,'line_cr_ids': [] ,'pre_line': False,},
         }
 
         #drop existing lines
@@ -772,8 +786,10 @@ class account_voucher(osv.osv):
         if account_id and account_id.tax_ids:
             tax_id = account_id.tax_ids[0].id
 
-        vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
-        vals['value'].update({'tax_id':tax_id,'amount': amount})
+        vals = {'value':{} }
+        if ttype in ('sale', 'purchase'):
+            vals = self.onchange_price(cr, uid, ids, line_ids, tax_id, partner_id, context)
+            vals['value'].update({'tax_id':tax_id,'amount': amount})
         currency_id = False
         if journal.currency:
             currency_id = journal.currency.id

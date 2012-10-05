@@ -72,6 +72,7 @@
                     <h1><label for="number" string="Sale Receipt"/> <field name="number" class="oe_inline" readonly="1"/></h1>
                     <group>
                         <group>
+                            <field name="type" invisible="True"/>
                             <field name="partner_id" domain="[('customer','=',True)]" on_change="onchange_partner_id(partner_id, journal_id, amount, currency_id, type, date, context)" string="Customer" context="{'search_default_customer':1, 'show_address': 1}" options='{"always_reload": true}'/>
                             <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                         </group>
@@ -83,7 +84,6 @@
                             <field name="paid_amount_in_company_currency" invisible="1"/>
                             <field name="currency_id" invisible="1"/>
                         </group>
-                        <field name="type" invisible="True"/>
                     </group>
                     <notebook>
                         <page string="Sales Information">
@@ -95,12 +95,6 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <!-- TODO: onchange_partner_id() should not returns [line_ids, pre_line, line_dr_ids...] for type sale, and not [line_ids, pre_line, line_cr_ids,...] for type purchase -->
-                            <!-- in the meanwhile, bellow lines must be there because the fields must be present in the view if the onchange returns a value for them-->
-                            <field name="pre_line" invisible="1"/>
-                            <field name="line_ids" invisible="1"/>
-                            <field name="payment_rate" invisible="1"/>
-                            <field name="line_dr_ids" invisible="1"/>
 			                <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
@@ -255,12 +249,6 @@
                                     <field name="account_analytic_id" groups="analytic.group_analytic_accounting"/>
                                 </tree>
                             </field>
-                            <!-- TODO: onchange_partner_id() should not returns [line_ids, pre_line, line_dr_ids...] for type sale, and not [line_ids, pre_line, line_cr_ids,...] for type purchase -->
-                            <!-- in the meanwhile, bellow lines must be there because the fields must be present in the view if the onchange returns a value for them-->
-                            <field name="pre_line" invisible="1"/>
-                            <field name="line_ids" invisible="1"/>
-                            <field name="payment_rate" invisible="1"/>
-                            <field name="line_cr_ids" invisible="1"/>
                             <group>
                                 <field name="narration" placeholder="Internal Notes" nolabel="1"/>
                                 <group class="oe_subtotal_footer oe_right">
