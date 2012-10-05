@@ -1,30 +1,33 @@
 # Translation of OpenERP Server.
 # This file contains the translation of the following modules:
-#	* l10n_be
-#
+# * l10n_be
+# Els Van Vossel <evv@agaplan.eu>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.0\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2011-12-23 09:56+0000\n"
-"PO-Revision-Date: 2009-02-03 14:48+0000\n"
-"Last-Translator: Niels Huylebroeck <Unknown>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2012-10-01 14:57+0000\n"
+"Last-Translator: Els Van Vossel (Agaplan) <Unknown>\n"
+"Language-Team: Els Van Vossel\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 06:22+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-02 05:20+0000\n"
+"X-Generator: Launchpad (build 16061)\n"
+"Language: nl\n"
 
 #. module: l10n_be
 #: field:partner.vat.intra,test_xml:0
 msgid "Test XML file"
-msgstr "Test XML bestand"
+msgstr "Test XML-bestand"
 
 #. module: l10n_be
 #: view:partner.vat.list_13:0
 msgid "You can remove customers which you do not want in exported xml file"
 msgstr ""
+"U kunt klanten die u niet wilt, verwijderen uit het geëxporteerde xml-"
+"bestand."
 
 #. module: l10n_be
 #: view:partner.vat_13:0
@@ -32,34 +35,36 @@ msgid ""
 "This wizard will create an XML file for VAT details and total invoiced "
 "amounts per partner."
 msgstr ""
+"Deze assistent zal een XML-bestand maken met de btw-gegevens en totaal "
+"gefactureerde bedragen per relatie."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_receiv
 msgid "Tiers - Recevable"
-msgstr ""
+msgstr "Derden - te ontvangen"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
 #, python-format
 msgid "Wrong Period Code"
-msgstr ""
+msgstr "Verkeerde periode"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:52
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
 #, python-format
 msgid "No partner has a VAT Number asociated with him."
-msgstr ""
+msgstr "Er is geen relatie met een btw-nummer."
 
 #. module: l10n_be
 #: constraint:res.company:0
 msgid "Error! You can not create recursive companies."
-msgstr ""
+msgstr "U kunt niet dezelfde bedrijven maken."
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers
 msgid "Tiers"
-msgstr ""
+msgstr "Derde"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,period_id:0
@@ -69,18 +74,18 @@ msgstr "Periode"
 #. module: l10n_be
 #: field:partner.vat.intra,period_ids:0
 msgid "Period (s)"
-msgstr ""
+msgstr "Periode(n)"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
 msgid "Save the File with '.xml' extension."
-msgstr ""
+msgstr "Bestand opslaan met '.xml'-extensie"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_charge
 msgid "Charge"
-msgstr ""
+msgstr "Kosten"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
@@ -89,13 +94,13 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:109
 #, python-format
 msgid "Data Insufficient!"
-msgstr ""
+msgstr "Onvoldoende gegevens"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.list_13:0
 msgid "Create XML"
-msgstr "XML Aanmaken"
+msgstr "XML maken"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_capitaux
@@ -105,23 +110,23 @@ msgstr "Kapitaal"
 #. module: l10n_be
 #: view:partner.vat.list_13:0
 msgid "Print"
-msgstr ""
+msgstr "Afdrukken"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Save XML"
-msgstr ""
+msgstr "XML opslaan"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:219
 #, python-format
 msgid "Save"
-msgstr ""
+msgstr "Opslaan"
 
 #. module: l10n_be
 #: sql_constraint:res.company:0
 msgid "The company name must be unique !"
-msgstr ""
+msgstr "De firmanaam moet uniek zijn"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,msg:0
@@ -133,65 +138,65 @@ msgstr "Bestand aangemaakt"
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "_Close"
-msgstr ""
+msgstr "_Sluiten"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:131
 #, python-format
 msgid "Save XML For Vat declaration"
-msgstr ""
+msgstr "XML voor btw-aangifte opslaan"
 
 #. module: l10n_be
 #: view:partner.vat.list_13:0
 msgid "Customers"
-msgstr ""
+msgstr "Klanten"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax_in
 msgid "Taxes à l'entrée"
-msgstr ""
+msgstr "Te ontvangen btw"
 
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,ask_restitution:0
 msgid "It indicates whether a resitution is to made or not?"
-msgstr ""
+msgstr "Het geeft aan of een teruggave nodig is of niet"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_declaration
 msgid "Vat Declaraion"
-msgstr ""
+msgstr "Btw-aangifte"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,no_vat:0
 msgid "Partner With No VAT"
-msgstr ""
+msgstr "Relatie zonder btw"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_immo
 msgid "Immobilisation"
-msgstr "Onroerende goederen"
+msgstr "Activa"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
 msgid "Company"
-msgstr ""
+msgstr "Bedrijf"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_13
 msgid "partner.vat_13"
-msgstr ""
+msgstr "partner.vat_13"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.partner_vat_listing
 msgid "Annual Listing Of VAT-Subjected Customers"
-msgstr ""
+msgstr "Jaarlijke klantenlisting"
 
 #. module: l10n_be
 #: view:partner.vat.list_13:0
 msgid "XML File has been Created."
-msgstr "XML bestand is aangemaakt"
+msgstr "XML-bestand is gemaakt."
 
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,client_nihil:0
@@ -199,64 +204,66 @@ msgid ""
 "Tick this case only if it concerns only the last statement on the civil or "
 "cessation of activity"
 msgstr ""
+"Dit vakje alleen inschakelen als het gaat om de laatste aangifte van het "
+"boekjaar of om de stopzetting van een activiteit."
 
 #. module: l10n_be
 #: view:partner.vat.list_13:0
 msgid "Select Fiscal Year"
-msgstr "Selecteer Fiscaaljaar"
+msgstr "Selecteer boekjaar"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_restitution:0
 msgid "Ask Restitution"
-msgstr ""
+msgstr "Teruggave"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_intra
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_intra
 msgid "Partner VAT Intra"
-msgstr ""
+msgstr "Intracommunautaire opgave"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.l10_be_vat_declaration
 #: view:l1on_be.vat.declaration:0
 msgid "Periodical VAT Declaration"
-msgstr ""
+msgstr "Periodieke btw-aangifte"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Note: "
-msgstr ""
+msgstr "Opmerking: "
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "_Preview"
-msgstr ""
+msgstr "_Voorbeeld"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tiers_payable
 msgid "Tiers - Payable"
-msgstr ""
+msgstr "Derden - te betalen"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,tax_code_id:0
 #: field:partner.vat.intra,tax_code_id:0
 msgid "Tax Code"
-msgstr ""
+msgstr "Btw-code"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Periods"
-msgstr ""
+msgstr "Perioden"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_produit
 msgid "Produit"
-msgstr "Product"
+msgstr "Opbrengsten"
 
 #. module: l10n_be
 #: help:partner.vat.intra,test_xml:0
 msgid "Sets the XML output as test file"
-msgstr ""
+msgstr "Maakt een testbestand in xml"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_view
@@ -266,18 +273,19 @@ msgstr "Weergave"
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Ok"
-msgstr "Ok"
+msgstr "OK"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,ask_payment:0
 msgid "Ask Payment"
-msgstr ""
+msgstr "Betaling vragen"
 
 #. module: l10n_be
 #: help:partner.vat.intra,no_vat:0
 msgid ""
 "The Partner whose VAT number is not defined they doesn't include in XML File."
 msgstr ""
+"Een relatie zonder btw-nummer wordt niet opgenomen in het xml-bestand."
 
 #. module: l10n_be
 #: field:partner.vat_13,limit_amount:0
@@ -287,44 +295,44 @@ msgstr "Bestedingslimiet"
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Bedrijven"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Create _XML"
-msgstr ""
+msgstr "_XML maken"
 
 #. module: l10n_be
 #: help:partner.vat.intra,period_ids:0
 msgid ""
 "Select here the period(s) you want to include in your intracom declaration"
-msgstr ""
+msgstr "Kies hier de periode(n) voor uw intracommunautaire opgave"
 
 #. module: l10n_be
 #: view:partner.vat_13:0
 msgid "View Customers"
-msgstr ""
+msgstr "Klanten bekijken"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:102
 #, python-format
 msgid "The period code you entered is not valid."
-msgstr ""
+msgstr "De periode die u heeft ingevoerd, is onjuist."
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Is Last Declaration"
-msgstr ""
+msgstr "Laatste aangifte"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_stock
 msgid "Stock et Encours"
-msgstr ""
+msgstr "Voorraden in bestelling"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,client_nihil:0
 msgid "Last Declaration of Enterprise"
-msgstr ""
+msgstr "Laatste aangifte van bedrijf"
 
 #. module: l10n_be
 #: help:partner.vat.intra,mand_id:0
@@ -332,6 +340,8 @@ msgid ""
 "This identifies the representative of the sending company. This is a string "
 "of 14 characters"
 msgstr ""
+"Identificatie van de vertegenwoordiger van de verzender. Dit is een reeks "
+"van 14 tekens."
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
@@ -339,37 +349,37 @@ msgstr ""
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
 #, python-format
 msgid "Data Insufficient"
-msgstr ""
+msgstr "Onvoldoende gegevens"
 
 #. module: l10n_be
 #: model:ir.ui.menu,name:l10n_be.menu_finance_belgian_statement
 msgid "Belgium Statements"
-msgstr ""
+msgstr "Belgische aangiften"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_vat_intra
 msgid "Partner Vat Intra"
-msgstr ""
+msgstr "Intracommunautaire opgave"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Declare Periodical VAT"
-msgstr ""
+msgstr "Periodieke btw-aangifte"
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_partner_vat_list_13
 msgid "partner.vat.list_13"
-msgstr ""
+msgstr "partner.vat.list_13"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 msgid "Save xml"
-msgstr ""
+msgstr "Xml opslaan"
 
 #. module: l10n_be
 #: field:partner.vat.intra,mand_id:0
 msgid "MandataireId"
-msgstr ""
+msgstr "MandataireId"
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,file_save:0
@@ -391,23 +401,32 @@ msgid ""
 "      YYYY stands for the year (4 positions).\n"
 "    "
 msgstr ""
+"Hier typt u de periode voor de intracommunautaire opgave in het formaat: "
+"ppyyyy\n"
+"      PP betekent een maand: van '01' tot '12'.\n"
+"      PP kan ook een kwartaal beteken: '31','32','33','34'\n"
+"          Het eerste cijfer duidt aan dat het om een kwartaal gaat,\n"
+"          Het tweede cijfer geeft het specifieke kwartaal aan.\n"
+"      PP kan ook een volledig boekjaar betekenen: '00'.\n"
+"      YYYY duidt het jaar aan (4 posities).\n"
+"    "
 
 #. module: l10n_be
 #: field:l1on_be.vat.declaration,name:0
 #: field:partner.vat.intra,name:0
 #: field:partner.vat.list_13,name:0
 msgid "File Name"
-msgstr ""
+msgstr "Bestandsnaam"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax_out
 msgid "Taxes à la sortie"
-msgstr ""
+msgstr "Te betalen btw"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_tax
 msgid "Tax"
-msgstr "Belasting"
+msgstr "Btw"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_account_vat_declaration.py:75
@@ -415,83 +434,83 @@ msgstr "Belasting"
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:98
 #, python-format
 msgid "No VAT Number Associated with Main Company!"
-msgstr ""
+msgstr "De firma heeft geen btw-nummer."
 
 #. module: l10n_be
 #: model:ir.model,name:l10n_be.model_l1on_be_vat_declaration
 msgid "Vat Declaration"
-msgstr ""
+msgstr "Btw-aangifte"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 #: field:partner.vat.intra,country_ids:0
 msgid "European Countries"
-msgstr ""
+msgstr "Europese landen"
 
 #. module: l10n_be
 #: model:ir.actions.act_window,name:l10n_be.action_partner_vat_listing_13
 #: view:partner.vat_13:0
 msgid "Partner VAT Listing"
-msgstr ""
+msgstr "Intracommunautaire opgave"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "General Information"
-msgstr ""
+msgstr "Algemene informatie"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Create an XML file for Vat Intra"
-msgstr ""
+msgstr "Maak een xml-bestand voor de IC-opgave"
 
 #. module: l10n_be
 #: field:partner.vat.intra,period_code:0
 msgid "Period Code"
-msgstr ""
+msgstr "Periodecode"
 
 #. module: l10n_be
 #: model:account.account.type,name:l10n_be.user_type_financiers
 msgid "Financier"
-msgstr ""
+msgstr "Financieel"
 
 #. module: l10n_be
 #: field:partner.vat_13,year:0
 msgid "Year"
-msgstr ""
+msgstr "Jaar"
 
 #. module: l10n_be
 #: view:partner.vat_13:0
 msgid "Cancel"
-msgstr "Annuleer"
+msgstr "Annuleren"
 
 #. module: l10n_be
 #: view:l1on_be.vat.declaration:0
 #: view:partner.vat.intra:0
 #: view:partner.vat.list_13:0
 msgid "Close"
-msgstr ""
+msgstr "Sluiten"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_vat_intra.py:105
 #, python-format
 msgid "Please select at least one Period."
-msgstr ""
+msgstr "Selecteer minimaal een periode."
 
 #. module: l10n_be
 #: help:l1on_be.vat.declaration,ask_payment:0
 msgid "It indicates whether a payment is to made or not?"
-msgstr ""
+msgstr "Het geeft aan of een betaling nodig is of niet"
 
 #. module: l10n_be
 #: view:partner.vat.intra:0
 msgid "Partner VAT intra"
-msgstr ""
+msgstr "Intracommunautaire opgave"
 
 #. module: l10n_be
 #: code:addons/l10n_be/wizard/l10n_be_partner_vat_listing.py:47
 #, python-format
 msgid "No data for the selected Year."
-msgstr ""
+msgstr "Geen gegevens voor het geselecteerde jaar."
 
 #~ msgid "Notification"
 #~ msgstr "Mededeling"

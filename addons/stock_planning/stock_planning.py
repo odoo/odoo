@@ -406,7 +406,7 @@ class stock_planning(osv.osv):
                 res[val.id] = 'Future'
         return res
 
-    def _get_op(self, cr, uid, ids, field_names, arg, context=None):  # op = OrderPoint
+    def _get_op(self, cr, uid, ids, field_names, arg, context=None):
         res = {}
         for val in self.browse(cr, uid, ids, context=context):
             res[val.id]={}

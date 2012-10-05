@@ -59,7 +59,7 @@ if __name__<>"package":
     database="test"
 
 class ServerParameter( unohelper.Base, XJobExecutor ):
-    def __init__(self, aVal= None, sURL=""):
+    def __init__(self, aVal=None, sURL=""):
         self.module  = "openerp_report"
         self.version = "0.1"
         desktop=getDesktop()
@@ -116,8 +116,7 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
 
         #self.win.doModalDialog("lstDatabase",docinfo.getUserFieldValue(2))
 
-    def btnOk_clicked(self,oActionEvent):
-
+    def btnOk_clicked(self, oActionEvent):
         sLogin=self.win.getEditText("txtLoginName")
         sPassword=self.win.getEditText("txtPassword")
         global url
@@ -157,11 +156,10 @@ class ServerParameter( unohelper.Base, XJobExecutor ):
             self.logobj.log_write('successful login',LOG_INFO, ': successful login from %s using database %s' % (sLogin, sDatabase))
             self.win.endExecute()
 
-
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
-    def btnPrevious_clicked(self,oActionEvent):
+    def btnPrevious_clicked(self, oActionEvent):
         self.win.endExecute()
         Change(None)
         self.win.endExecute()
@@ -171,6 +169,5 @@ if __name__<>"package" and __name__=="__main__":
     ServerParameter(None)
 elif __name__=="package":
     g_ImplementationHelper.addImplementation( ServerParameter, "org.openoffice.openerp.report.serverparam", ("com.sun.star.task.Job",),)
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

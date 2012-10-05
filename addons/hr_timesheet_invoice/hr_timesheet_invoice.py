@@ -84,8 +84,8 @@ class account_analytic_account(osv.osv):
             res['value']['to_invoice'] = ir_model_obj.get_object_reference(cr, uid, 'hr_timesheet_invoice', 'timesheet_invoice_factor1')[1]
         return res
 
-    def on_change_partner_id(self, cr, uid, ids,partner_id, name, context=None):
-        res = super(account_analytic_account,self).on_change_partner_id(cr, uid, ids,partner_id, name, context=context)
+    def on_change_partner_id(self, cr, uid, ids, partner_id, name, context=None):
+        res = super(account_analytic_account, self).on_change_partner_id(cr, uid, ids, partner_id, name, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         pricelist = part.property_product_pricelist and part.property_product_pricelist.id or False
         if pricelist:
@@ -93,25 +93,25 @@ class account_analytic_account(osv.osv):
         return res
 
     def set_close(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'close'}, context=context)
+        self.write(cr, uid, ids, {'state': 'close'}, context=context)
         message = _("Contract has been <b>closed</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.message_post(cr, uid, ids, body=message, subtype="mt_account_closed", context=context)
         return True
 
     def set_cancel(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'cancelled'}, context=context)
-        message = _("Contract has been <b>cancelled</b>.")
-        self.message_post(cr, uid, ids, body=message, context=context)
+        self.write(cr, uid, ids, {'state': 'cancelled'}, context=context)
+        message = _("Contract has been <b>canceled</b>.")
+        self.message_post(cr, uid, ids, body=message, subtype="mt_account_canceled", context=context)
         return True
 
     def set_open(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'open'}, context=context)
+        self.write(cr, uid, ids, {'state': 'open'}, context=context)
         message = _("Contract has been <b>opened</b>.")
         self.message_post(cr, uid, ids, body=message, context=context)
         return True
 
     def set_pending(self, cr, uid, ids, context=None):
-        self.write(cr, uid, ids, {'state':'pending'}, context=context)
+        self.write(cr, uid, ids, {'state': 'pending'}, context=context)
         message = _("Contract has been set as <b>pending</b>.")
         self.message_post(cr, uid, ids, body=message, context=context)
         return True
@@ -201,6 +201,7 @@ class hr_analytic_timesheet(osv.osv):
 
 hr_analytic_timesheet()
 
+
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
 
@@ -220,6 +221,7 @@ class account_invoice(osv.osv):
 
 account_invoice()
 
+
 class account_move_line(osv.osv):
     _inherit = "account.move.line"
 
@@ -236,4 +238,3 @@ class account_move_line(osv.osv):
 account_move_line()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
-

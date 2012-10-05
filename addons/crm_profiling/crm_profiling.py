@@ -77,7 +77,7 @@ def _get_parents(cr, uid, ids):
     return ids_to_check
 
 
-def test_prof(cr, uid, seg_id, pid, answers_ids = []):
+def test_prof(cr, uid, seg_id, pid, answers_ids=None):
 
     """ return True if the partner pid fetch the segmentation rule seg_id
         @param cr: the current row, from the database cursor,

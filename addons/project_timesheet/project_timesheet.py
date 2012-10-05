@@ -28,6 +28,7 @@ from tools.translate import _
 
 class project_project(osv.osv):
     _inherit = 'project.project'
+
     def onchange_partner_id(self, cr, uid, ids, part=False, context=None):
         res = super(project_project, self).onchange_partner_id(cr, uid, ids, part, context)
         if part and res and ('value' in res):
@@ -68,6 +69,7 @@ class project_project(osv.osv):
             'nodestroy': True,
             'help': help
         }
+
 project_project()
 
 class project_work(osv.osv):
@@ -81,7 +83,7 @@ class project_work(osv.osv):
             user_name = self.pool.get('res.users').read(cr, uid, [user_id], ['name'])[0]['name']
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define employee for user "%s". You must create one.')% (user_name,))
-        emp = self.pool.get('hr.employee').browse(cr, uid, emp_id[0])
+        emp = emp_obj.browse(cr, uid, emp_id[0])
         if not emp.product_id:
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define product on the related employee.\nFill in the timesheet tab of the employee form.'))
@@ -90,44 +92,44 @@ class project_work(osv.osv):
             raise osv.except_osv(_('Bad Configuration !'),
                  _('Please define journal on the related employee.\nFill in the timesheet tab of the employee form.'))
 
-        a = emp.product_id.product_tmpl_id.property_account_expense.id
-        if not a:
-            a = emp.product_id.categ_id.property_account_expense_categ.id
-            if not a:
+        acc_id = emp.product_id.product_tmpl_id.property_account_expense.id
+        if not acc_id:
+            acc_id = emp.product_id.categ_id.property_account_expense_categ.id
+            if not acc_id:
                 raise osv.except_osv(_('Bad Configuration !'),
                         _('Please define product and product category property account on the related employee.\nFill in the timesheet tab of the employee form.'))
+
         res['product_id'] = emp.product_id.id
         res['journal_id'] = emp.journal_id.id
-        res['general_account_id'] = a
+        res['general_account_id'] = acc_id
         res['product_uom_id'] = emp.product_id.uom_id.id
         return res
 
     def create(self, cr, uid, vals, *args, **kwargs):
-        obj_timesheet = self.pool.get('hr.analytic.timesheet')
-        project_obj = self.pool.get('project.project')
+        timesheet_obj = self.pool.get('hr.analytic.timesheet')
         task_obj = self.pool.get('project.task')
         uom_obj = self.pool.get('product.uom')
 
         vals_line = {}
         context = kwargs.get('context', {})
         if not context.get('no_analytic_entry',False):
-            obj_task = task_obj.browse(cr, uid, vals['task_id'])
+            task_obj = task_obj.browse(cr, uid, vals['task_id'])
             result = self.get_user_related_details(cr, uid, vals.get('user_id', uid))
-            vals_line['name'] = '%s: %s' % (tools.ustr(obj_task.name), tools.ustr(vals['name']) or '/')
+            vals_line['name'] = '%s: %s' % (tools.ustr(task_obj.name), tools.ustr(vals['name']) or '/')
             vals_line['user_id'] = vals['user_id']
             vals_line['product_id'] = result['product_id']
             vals_line['date'] = vals['date'][:10]
 
-            #calculate quantity based on employee's product's uom
+            # Calculate quantity based on employee's product's uom
             vals_line['unit_amount'] = vals['hours']
 
             default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
             if result['product_uom_id'] != default_uom:
                 vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
-            acc_id = obj_task.project_id and obj_task.project_id.analytic_account_id.id or False
+            acc_id = task_obj.project_id and task_obj.project_id.analytic_account_id.id or False
             if acc_id:
                 vals_line['account_id'] = acc_id
-                res = obj_timesheet.on_change_account_id(cr, uid, False, acc_id)
+                res = timesheet_obj.on_change_account_id(cr, uid, False, acc_id)
                 if res.get('value'):
                     vals_line.update(res['value'])
                 vals_line['general_account_id'] = result['general_account_id']
@@ -137,27 +139,29 @@ class project_work(osv.osv):
                 amount = vals_line['unit_amount']
                 prod_id = vals_line['product_id']
                 unit = False
-                timeline_id = obj_timesheet.create(cr, uid, vals=vals_line, context=context)
+                timeline_id = timesheet_obj.create(cr, uid, vals=vals_line, context=context)
 
                 # Compute based on pricetype
-                amount_unit = obj_timesheet.on_change_unit_amount(cr, uid, timeline_id,
+                amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, timeline_id,
                     prod_id, amount, False, unit, vals_line['journal_id'], context=context)
                 if amount_unit and 'amount' in amount_unit.get('value',{}):
                     updv = { 'amount': amount_unit['value']['amount'] }
-                    obj_timesheet.write(cr, uid, [timeline_id], updv, context=context)
+                    timesheet_obj.write(cr, uid, [timeline_id], updv, context=context)
                 vals['hr_analytic_timesheet_id'] = timeline_id
         return super(project_work,self).create(cr, uid, vals, *args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
+        """
+        When a project task work gets updated, handle its hr analytic timesheet.
+        """
         if context is None:
             context = {}
         timesheet_obj = self.pool.get('hr.analytic.timesheet')
-        project_obj = self.pool.get('project.project')
         uom_obj = self.pool.get('product.uom')
         result = {}
 
         if isinstance(ids, (long, int)):
-            ids = [ids,]
+            ids = [ids]
 
         for task in self.browse(cr, uid, ids, context=context):
             line_id = task.hr_analytic_timesheet_id
@@ -165,25 +169,28 @@ class project_work(osv.osv):
                 # if a record is deleted from timesheet, the line_id will become
                 # null because of the foreign key on-delete=set null
                 continue
+
             vals_line = {}
             if 'name' in vals:
                 vals_line['name'] = '%s: %s' % (tools.ustr(task.task_id.name), tools.ustr(vals['name']) or '/')
             if 'user_id' in vals:
                 vals_line['user_id'] = vals['user_id']
-                result = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
-                for fld in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
-                    if result.get(fld, False):
-                        vals_line[fld] = result[fld]
-
             if 'date' in vals:
                 vals_line['date'] = vals['date'][:10]
             if 'hours' in vals:
-                default_uom = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
                 vals_line['unit_amount'] = vals['hours']
                 prod_id = vals_line.get('product_id', line_id.product_id.id) # False may be set
 
-                if result.get('product_uom_id',False) and (not result['product_uom_id'] == default_uom):
-                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, default_uom, vals['hours'], result['product_uom_id'])
+                # Put user related details in analytic timesheet values
+                details = self.get_user_related_details(cr, uid, vals.get('user_id', task.user_id.id))
+                for field in ('product_id', 'general_account_id', 'journal_id', 'product_uom_id'):
+                    if details.get(field, False):
+                        vals_line[field] = details[field]
+
+                # Check if user's default UOM differs from product's UOM
+                user_default_uom_id = self.pool.get('res.users').browse(cr, uid, uid).company_id.project_time_mode_id.id
+                if details.get('product_uom_id', False) and details['product_uom_id'] != user_default_uom_id:
+                    vals_line['unit_amount'] = uom_obj._compute_qty(cr, uid, user_default_uom_id, vals['hours'], details['product_uom_id'])
 
                 # Compute based on pricetype
                 amount_unit = timesheet_obj.on_change_unit_amount(cr, uid, line_id.id,
@@ -203,7 +210,7 @@ class project_work(osv.osv):
         for task in self.browse(cr, uid, ids):
             if task.hr_analytic_timesheet_id:
                 hat_ids.append(task.hr_analytic_timesheet_id.id)
-#            delete entry from timesheet too while deleting entry to task.
+        # Delete entry from timesheet too while deleting entry to task.
         if hat_ids:
             hat_obj.unlink(cr, uid, hat_ids, *args, **kwargs)
         return super(project_work,self).unlink(cr, uid, ids, *args, **kwargs)
@@ -225,18 +232,17 @@ class task(osv.osv):
 
         return super(task,self).unlink(cr, uid, ids, *args, **kwargs)
 
-    def write(self, cr, uid, ids,vals,context=None):
+    def write(self, cr, uid, ids, vals, context=None):
         if context is None:
             context = {}
         if vals.get('project_id',False) or vals.get('name',False):
             vals_line = {}
             hr_anlytic_timesheet = self.pool.get('hr.analytic.timesheet')
-            task_obj_l = self.browse(cr, uid, ids, context=context)
             if vals.get('project_id',False):
                 project_obj = self.pool.get('project.project').browse(cr, uid, vals['project_id'], context=context)
                 acc_id = project_obj.analytic_account_id.id
 
-            for task_obj in task_obj_l:
+            for task_obj in self.browse(cr, uid, ids, context=context):
                 if len(task_obj.work_ids):
                     for task_work in task_obj.work_ids:
                         if not task_work.hr_analytic_timesheet_id:
@@ -253,16 +259,19 @@ task()
 
 class res_partner(osv.osv):
     _inherit = 'res.partner'
+
     def unlink(self, cursor, user, ids, context=None):
         parnter_id=self.pool.get('project.project').search(cursor, user, [('partner_id', 'in', ids)])
         if parnter_id:
             raise osv.except_osv(_('Invalid Action!'), _('You cannot delete a partner which is assigned to project, but you can uncheck the active box.'))
         return super(res_partner,self).unlink(cursor, user, ids,
                 context=context)
+
 res_partner()
 
 class account_analytic_line(osv.osv):
    _inherit = "account.analytic.line"
+
    def on_change_account_id(self, cr, uid, ids, account_id):
        res = {}
        if not account_id:
@@ -274,5 +283,7 @@ class account_analytic_line(osv.osv):
        if acc.state == 'close' or acc.state == 'cancelled':
            raise osv.except_osv(_('Invalid Analytic Account !'), _('You cannot select a Analytic Account which is in Close or Cancelled state.'))
        return res
+
 account_analytic_line()
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

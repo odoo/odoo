@@ -42,11 +42,11 @@ import copy
 
 class DomApiGeneral:
     """General DOM API utilities."""
-    def __init__(self,content_string="",file=""):
+    def __init__(self, content_string="", file=""):
         self.content_string = content_string
         self.re_digits = re.compile(r"(.*?\d)(pt|cm|mm|inch|in)")
 
-    def _unitTuple(self,string):
+    def _unitTuple(self, string):
         """Split values and units to a tuple."""
         temp = self.re_digits.findall(string)
         if not temp:
@@ -54,13 +54,15 @@ class DomApiGeneral:
         else:
             return (temp[0])
 
-    def stringPercentToFloat(self,string):
+    def stringPercentToFloat(self, string):
         temp = string.replace("""%""","")
         return float(temp)/100
 
-    def findChildrenByName(self,parent,name,attr_dict={}):
+    def findChildrenByName(self, parent, name, attr_dict=None):
         """Helper functions. Does not work recursively.
         Optional: also test for certain attribute/value pairs."""
+        if attr_dict is None:
+            attr_dict = {}
         children = []
         for c in parent.childNodes:
             if c.nodeType == c.ELEMENT_NODE and c.nodeName == name:
@@ -70,7 +72,7 @@ class DomApiGeneral:
         else:
             return self._selectForAttributes(nodelist=children,attr_dict=attr_dict)
 
-    def _selectForAttributes(self,nodelist,attr_dict):
+    def _selectForAttributes(self, nodelist, attr_dict):
         "Helper function."""
         selected_nodes = []
         for n in nodelist:
@@ -83,7 +85,7 @@ class DomApiGeneral:
                 selected_nodes.append(n)
         return selected_nodes
 
-    def _stringToTuple(self,s):
+    def _stringToTuple(self, s):
         """Helper function."""
         try:
             temp = string.split(s,",")
@@ -91,13 +93,13 @@ class DomApiGeneral:
         except:
             return None
 
-    def _tupleToString(self,t):
+    def _tupleToString(self, t):
         try:
             return self.openOfficeStringUtf8("%s,%s" % (t[0],t[1]))
         except:
             return None
 
-    def _lengthToFloat(self,value):
+    def _lengthToFloat(self, value):
         v = value
         if not self.re_digits.search(v):
             return v
@@ -113,7 +115,7 @@ class DomApiGeneral:
         except:
             return v
 
-    def openOfficeStringUtf8(self,string):
+    def openOfficeStringUtf8(self, string):
         if type(string) == unicode:
             return string.encode("utf-8")
         tempstring = unicode(string,"cp1252").encode("utf-8")
@@ -121,7 +123,7 @@ class DomApiGeneral:
 
 class DomApi(DomApiGeneral):
     """This class provides a DOM-API for XML-Files from an SXW-Archive."""
-    def __init__(self,xml_content,xml_styles):
+    def __init__(self, xml_content, xml_styles):
         DomApiGeneral.__init__(self)
         self.content_dom = xml.dom.minidom.parseString(xml_content)
         self.styles_dom = xml.dom.minidom.parseString(xml_styles)
@@ -145,7 +147,7 @@ class DomApi(DomApiGeneral):
         for s in self.style_dict.keys():
             self.style_properties_dict[s] = self.getStylePropertiesDict(s)
 
-    def updateWithPercents(self,dict,updatedict):
+    def updateWithPercents(self, dict, updatedict):
         """Sometimes you find values like "115%" in the style hierarchy."""
         if not updatedict:
             # no style hierarchies for this style? =>
@@ -244,7 +246,7 @@ class DomApi(DomApiGeneral):
     def toxml(self):
         return self.content_dom.toxml(encoding="utf-8")
 
-    def getStylePropertiesDict(self,style_name):
+    def getStylePropertiesDict(self, style_name):
         res = {}
 
         if self.style_dict[style_name].hasAttribute("style:parent-style-name"):
@@ -265,7 +267,7 @@ class PyOpenOffice(object):
         self.save_pict = save_pict
         self.images = {}
 
-    def oo_read(self,fname):
+    def oo_read(self, fname):
         z = zipfile.ZipFile(fname,"r")
         content = z.read('content.xml')
         style = z.read('styles.xml')
@@ -281,7 +283,7 @@ class PyOpenOffice(object):
         z.close()
         return content,style
 
-    def oo_replace(self,content):
+    def oo_replace(self, content):
         regex = [
             (r"<para[^>]*/>", ""),
             (r"<para(.*)>(.*?)<text:line-break[^>]*/>", "<para$1>$2</para><para$1>"),
@@ -290,7 +292,7 @@ class PyOpenOffice(object):
             content = re.sub(key, val, content)
         return content
 
-    def unpackNormalize(self,sourcefile):
+    def unpackNormalize(self, sourcefile):
         c,s = self.oo_read(sourcefile)
         c = self.oo_replace(c)
         dom = DomApi(c,s)

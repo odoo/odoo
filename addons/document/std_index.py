@@ -39,7 +39,7 @@ def _to_unicode(s):
             except UnicodeError:
                 return s
 
-def textToString(element) :
+def textToString(element):
     buffer = u""
     for node in element.childNodes :
         if node.nodeType == xml.dom.Node.TEXT_NODE :
@@ -56,7 +56,7 @@ class TxtIndex(indexer):
     def _getExtensions(self):
         return ['.txt', '.py']
 
-    def _doIndexContent(self,content):
+    def _doIndexContent(self, content):
         return content
 
 cntIndex.register(TxtIndex())
@@ -68,7 +68,7 @@ class PptxIndex(indexer):
     def _getExtensions(self):
         return ['.pptx']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         def toString () :
             """ Converts the document to a string. """
             buffer = u""
@@ -96,7 +96,7 @@ class DocIndex(indexer):
     def _getExtensions(self):
         return ['.doc']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         try:
             pop = Popen(['antiword', fname], shell=False, stdout=PIPE)
             (data, _) = pop.communicate()
@@ -116,7 +116,7 @@ class DocxIndex(indexer):
     def _getExtensions(self):
         return ['.docx']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         zip = zipfile.ZipFile(fname)
         content = xml.dom.minidom.parseString(zip.read("word/document.xml"))
         def toString () :
@@ -141,7 +141,7 @@ class XlsxIndex(indexer):
     def _getExtensions(self):
         return ['.xlsx']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         zip = zipfile.ZipFile(fname)
         content = xml.dom.minidom.parseString(zip.read("xl/sharedStrings.xml"))
         def toString () :
@@ -165,7 +165,7 @@ class PdfIndex(indexer):
     def _getExtensions(self):
         return ['.pdf']
 
-    def _doIndexFile(self,fname):
+    def _doIndexFile(self, fname):
         pop = Popen(['pdftotext', '-enc', 'UTF-8', '-nopgbrk', fname, '-'], shell=False, stdout=PIPE)
         (data, _) = pop.communicate()
         return _to_unicode(data)
@@ -181,7 +181,7 @@ class ImageNoIndex(indexer):
         return []
         #return ['.png','.jpg','.gif','.jpeg','.bmp','.tiff']
 
-    def _doIndexContent(self,content):
+    def _doIndexContent(self, content):
         return 'image'
 
 
