@@ -292,7 +292,7 @@ class event_event(osv.osv):
 
     def onchange_start_date(self, cr, uid, ids, date_end=False, date_begin=False, context=None):
         value = {}
-        if date_begin:
+        if type(date_begin) is str:
             date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
             date_end = date_begin + timedelta(hours=1.00)
             return {'value': {'date_end':date_end.strftime("%Y-%m-%d %H:%M:%S")}}
