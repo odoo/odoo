@@ -47,6 +47,7 @@
             <field name='arch' type='xml'>
                 <search string="lunch employee payment">
                     <filter name='is_payment' string="Payment" domain="[('state','=','payment')]"/>
+                    <filter name='is_mine' string="My Account" domain="[('user_id','=',uid)]"/>
                 </search>
             </field>
         </record>
@@ -62,11 +63,25 @@
             </field>
         </record>
 
+        <!--View search for order-->
+        <record id="view_search_my_order" model="ir.ui.view">
+            <field name='name'>lunch orders</field>
+            <field name='model'>lunch.order</field>
+            <field name='type'>search</field>
+            <field name='arch' type='xml'>
+                <search string="lunch orders">
+                    <filter name='is_mine' string="My Orders" domain="[('user_id','=',uid)]"/>
+                </search>
+            </field>
+        </record>
+
     	<!--Action for Your Orders-->
 		<record model="ir.actions.act_window" id="action_lunch_order_form">
             <field name="name">Your Orders</field>
             <field name="res_model">lunch.order</field>
             <field name="view_mode">tree,form</field>
+            <field name="search_view_id" ref="view_search_my_order"/>
+            <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
             <p class="oe_view_nocontent_create">
                 Click to create a lunch order. 
@@ -83,6 +98,8 @@
             <field name="name">Your Account</field>
             <field name="res_model">lunch.cashmove</field>
             <field name="view_mode">tree</field>
+            <field name="search_view_id" ref="view_lunch_employee_payment_filter"/>
+            <field name="context">{"search_default_is_mine":1}</field>
             <field name="help" type="html">
               <p>
                 Here you can see your cash moves. There are your orders and refund.
@@ -163,7 +180,7 @@
         <record model="ir.actions.act_window" id="action_lunch_products">
             <field name="name">Products</field>
             <field name="res_model">lunch.product</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">tree,form,kanban</field>
             <field name="help" type="html">
                 <p class="oe_view_nocontent_create">
                 Click to create a product for lunch. 
@@ -237,6 +254,7 @@
                     <field name="products"/>
                     <field name="state" invisible='1'/>
                     <field name="total" sum="Total"/>
+                    <field name="preferences" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -244,9 +262,9 @@
         <record model="ir.ui.view" id="orders_form_view">
 			<field name="name">Orders Form</field>
 			<field name="model">lunch.order</field>
-			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<form string="Orders Form" version="7.0">
+                    <sheet>
                 <field name="state" invisible='1'/>
                 <group col="2">
                     <field name="user_id"/>
@@ -260,8 +278,36 @@
                     </group>
                     <group colspan="2" col="2">
                     </group>
-					<separator string="Products" colspan="4"/>					
-
+					<separator string="Products" colspan="4"/>	
+                    <field name="preferences" colspan="4" nolabel="1">
+                        <kanban default_group_by="category_id">
+                            <templates>
+                                <t t-name="kanban-box">
+                                    <div class="oe_kanban_color_0 oe_kanban_card oe_kanban_global_click oe_kanban_draghandle">
+                                    <div class="oe_kanban_vignette oe_semantic_html_override"> 
+                                        <div class="oe_kanban_details">
+                                            <h3 class="oe_partner_heading">
+                                                <a type="open">
+                                                    <u><field name="name"/><br/></u>
+                                                </a>
+                                            </h3> 
+                                            <h4>
+                                                <a type="open">
+                                                    Price:
+                                                    <field name="price"/>
+                                                    €
+                                                    <br/>
+                                                </a>
+                                            </h4> 
+                                            Supplier: <field name="supplier"/><br/>
+                                            <font size="2" color="gray"><field name="description"/></font>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </t>
+                            </templates>
+                        </kanban>
+                    </field>
 					<separator string="Your Order" colspan="4"/>
 					<field name="products" colspan="4" nolabel="1" on_change="onchange_price(products)">
 						<tree string="List" editable="bottom">
@@ -270,8 +316,9 @@
                             <field name="state"/>
 							<field name="price"/>
 						</tree>
-					</field>
+					</field> 
 					<field name="total"/>
+                    </sheet>
 				</form>
 			</field>
 		</record>
@@ -299,17 +346,51 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Products Form">
-                    <group colspan="2" col="2">
-                        <field name='name'/>
-                        <field name='category_id'/>
-                        <field name='supplier'/>
-                        <field name='price'/>
-                        <field name='active'/>
-                    </group>
-                    <group colspan="2" col="2">
-                    </group>
-                    <field name='description'/>
+                        <group colspan="2" col="2">
+                            <field name='name'/>
+                            <field name='category_id'/>
+                            <field name='supplier'/>
+                            <field name='price'/>
+                            <field name='active'/>
+                        </group>
+                        <group colspan="2" col="2">
+                        </group>
+                        <field name='description'/>
                 </form>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="products_kanban_view">
+            <field name="name">Products Kanban</field>
+            <field name="model">lunch.product</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="category_id">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_color_0 oe_kanban_card oe_kanban_global_click oe_kanban_draghandle">
+                            <div class="oe_kanban_vignette oe_semantic_html_override"> 
+                                <div class="oe_kanban_details">
+                                    <h3 class="oe_partner_heading">
+                                        <a type="open">
+                                            <u><field name="name"/><br/></u>
+                                        </a>
+                                    </h3> 
+                                    <h4>
+                                        <a type="open">
+                                            Price:
+                                            <field name="price"/>
+                                            €
+                                            <br/>
+                                        </a>
+                                    </h4> 
+                                    Supplier: <field name="supplier"/><br/>
+                                    <font size="2" color="gray"><field name="description"/></font>
+                                </div>
+                            </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
             </field>
         </record>
 
@@ -354,6 +435,9 @@
             <field name="arch" type="xml">
                 <tree string="alert tree">
                     <field name="message"/>
+                    <field name="day"/>
+                    <field name='active_from' widget='float_time'/>
+                    <field name='active_to' widget='float_time'/>
                     <field name="active"/>
                 </tree>
             </field>
