@@ -603,8 +603,8 @@
            <field name="arch" type="xml">
                 <graph string="Total Fuel amount per month">
                     <field name="date" />
-                    <field name="vehicle_id" group="True" /> 
                     <field name="amount" operator="+"/>
+                    <field name="vehicle_id" group="True" /> 
                 </graph>
             </field>
         </record>
@@ -801,6 +801,9 @@
                                 <field name="date"/>
                                 <field name="parent_id"/>
                             </group>
+                        </group>
+                        <group>
+                            <field name="cost_ids"/>
                         </group>
                     </sheet>
                 </form>

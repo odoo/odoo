@@ -45,12 +45,12 @@ class fleet_vehicle_cost(osv.Model):
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
-        'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Services covered'),
+        'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Included Services'),
         'date' :fields.date('Cost Date',help='Date when the cost has been executed'),
     }
 
     def create(self, cr, uid, data, context=None):
-        if 'parent_id' in data:
+        if 'parent_id' in data and data['parent_id']:
             data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
             data['date'] = self.browse(cr, uid, data['parent_id'], context=context).date
         cost_id = super(fleet_vehicle_cost, self).create(cr, uid, data, context=context)
