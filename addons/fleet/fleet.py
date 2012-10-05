@@ -249,26 +249,32 @@ class fleet_vehicle(osv.Model):
             'default_vehicle_id': ids[0]
         }
         res['domain']=[('vehicle_id','=', ids[0])]
-        return res    
-
-    def get_odometer(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        if not ids:
-            return []
-        reads = self.browse(cr, uid, ids, context=context)
-        res = []
-        for record in reads:
-            #odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='value desc')
-            #if len(odometers) > 0:
-            #    res.append((record.id,self.pool.get('fleet.vehicle.odometer').browse(cr, uid, odometers[0], context=context).value))
-            #else :
-            res.append((record.id,0))
         return res
 
-    def _vehicle_odometer_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
-        res = self.get_odometer(cr, uid, ids, context=context)
-        return dict(res)
+    def _get_odometer(self, cr, uid, ids, odometer_id, arg, context):
+        res = dict.fromkeys(ids, False)
+        for record in self.browse(cr,uid,ids,context=context):    
+            ids = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)],limit=1, order='value desc')
+            if len(ids) > 0:
+                res[record.id] = str(self.pool.get('fleet.vehicle.odometer').browse(cr,uid,ids[0],context=context).value)
+            else:
+                res[record.id] = str(0)
+        return res
+
+    def _set_odometer(self, cr, uid, id, name, value, args=None, context=None):
+        if value:
+            try:
+                value = float(value)
+            except ValueError:
+                #_logger.exception(value+' is not a correct odometer value. Please, fill a float for this field')
+                raise except_orm(_('Error!'), value+' is not a correct odometer value. Please, fill a float for this field')
+            
+            date = time.strftime('%Y-%m-%d')
+            data = {'value' : value,'date' : date,'vehicle_id' : id}
+            odometer_id = self.pool.get('fleet.vehicle.odometer').create(cr, uid, data, context=context)
+            return value
+        self.write(cr, uid, id, {'odometer_id': ''})
+        return False  
 
     def str_to_date(self,strdate):
         return datetime.datetime(int(strdate[:4]),int(strdate[5:7]),int(strdate[8:]))
@@ -342,7 +348,6 @@ class fleet_vehicle(osv.Model):
         nexts = self.get_next_contract_reminder_fnc(cr,uid,ids,context=context)
         overdues = self.get_overdue_contract_reminder_fnc(cr,uid,ids,context=context)
         for key,value in nexts.items():
-            print str(key) + ' : ' + str(value)
             if value > 0 and overdues[key] > 0:
                 self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon and '+str(overdues[key])+' contract(s) is (are) overdued', context=context)
             elif value > 0:
@@ -373,7 +378,7 @@ class fleet_vehicle(osv.Model):
         'doors' : fields.integer('Doors Number', help='Number of doors of the vehicle'),
         'tag_ids' :fields.many2many('fleet.vehicle.tag','fleet_vehicle_vehicle_tag_rel','vehicle_tag_id','tag_id','Tags'),
 
-        'odometer' : fields.function(_vehicle_odometer_get_fnc, type="float", string='Odometer', store=False),
+        'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.selection([('kilometers', 'Kilometers'),('miles','Miles')], 'Odometer Unit', help='Unit of the odometer ',required=False),
 
         'transmission' : fields.selection([('manual', 'Manual'),('automatic','Automatic')], 'Transmission', help='Transmission Used by the vehicle',required=False),
