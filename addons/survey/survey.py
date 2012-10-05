@@ -164,10 +164,14 @@ class survey(osv.osv):
             'context': context
         }
     def test_survey(self, cr, uid, ids, context=None):
-        sur_obj = self.read(cr, uid, ids,['title'], context=context)
+        sur_obj = self.read(cr, uid, ids,['title','page_ids'], context=context)
         for sur in sur_obj:
             name = sur['title']
-            context.update({'active':True,'survey_id': ids[0]})
+            pages = sur['page_ids']
+            if not pages:
+                raise osv.except_osv(_('Warning!'), _('This survey has no pages defined. Please define pages first.'))
+            else:
+                context.update({'active':True,'survey_id': ids[0]})
         return {
             'view_type': 'form',
             'view_mode': 'form',
