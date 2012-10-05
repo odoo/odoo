@@ -413,10 +413,10 @@
                             </group>
                         </group>
                         <group>
-                            <field name="costs" context="{'vehicle_id': vehicle_id}">
-                                <tree string="Costs" version="7.0" editable="bottom">
+                            <field name="cost_ids" context="{'vehicle_id': vehicle_id}">
+                                <tree string="Included services" version="7.0" editable="bottom">
                                     <field name="cost_type" domain="[('category','=','service')]"/>
-                                    <field name="amount" string="Cost" />
+                                    <field name="amount" sum="Price" string="Cost" />
                                 </tree>
                                 <!--<form string="Costs" version="7.0">
                                     <sheet>
@@ -657,10 +657,10 @@
                             </group>
                         </group>
                         <group string="Service Details">
-                            <field name="service_ids">
-                                <tree string="Services" version="7.0" editable="bottom">
+                            <field name="cost_ids">
+                                <tree string="Included Services" version="7.0" editable="bottom">
                                     <field name="cost_type" domain="[('category','=','service')]"/>
-                                    <field name="amount" string="Cost"/>
+                                    <field name="amount" sum="Price" string="Cost"/>
                                 </tree>
                                 
                             </field>

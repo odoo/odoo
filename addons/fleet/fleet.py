@@ -45,8 +45,10 @@ class fleet_vehicle_cost(osv.Model):
         'cost_type': fields.many2one('fleet.service.type', 'Service type', required=False, help='Service type purchased with this cost'),
         'amount': fields.float('Total Price'),
         'parent_id': fields.many2one('fleet.vehicle.cost', 'Parent', required=False, help='Parent cost to this current cost'),
+        'cost_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Services covered'),
         'date' :fields.date('Cost Date',help='Date when the cost has been executed'),
     }
+
     def create(self, cr, uid, data, context=None):
         if 'parent_id' in data:
             data['vehicle_id'] = self.browse(cr, uid, data['parent_id'], context=context).vehicle_id.id
@@ -657,7 +659,6 @@ class fleet_vehicle_log_services(osv.Model):
 
         #'name' : fields.char('Name',size=64),
 
-        'service_ids' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Services completed'),
         'purchaser_id' : fields.many2one('res.partner', 'Purchaser',domain="['|',('customer','=',True),('employee','=',True)]"),
         'inv_ref' : fields.char('Invoice Reference', size=64),
         'vendor_id' :fields.many2one('res.partner', 'Supplier', domain="[('supplier','=',True)]"),
@@ -811,9 +812,6 @@ class fleet_vehicle_log_contract(osv.Model):
         'state' : fields.selection([('open', 'In Progress'), ('closed', 'Terminated')], 'Status', readonly=True, help='Choose wheter the contract is still valid or not'),
         #'reminder' : fields.boolean('Renewal Reminder', help="Warn the user a few days before the expiration date of this contract"),
         'notes' : fields.text('Terms and Conditions', help='Write here all supplementary informations relative to this contract'),
-        'costs' : fields.one2many('fleet.vehicle.cost', 'parent_id', 'Costs covered'),
-
-
         'odometer_id' : fields.many2one('fleet.vehicle.odometer', 'Odometer', required=False, help='Odometer measure of the vehicle at the moment of this log'),
         'odometer' : fields.function(_get_odometer,fnct_inv=_set_odometer,type='char',string='Odometer Value',store=False,help='Odometer measure of the vehicle at the moment of this log'),
         'odometer_unit': fields.related('vehicle_id','odometer_unit',type="char",string="Unit",store=False, readonly=True),
