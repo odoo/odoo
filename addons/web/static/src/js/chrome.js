@@ -146,8 +146,8 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
             this.$el.dialog("widget").append(this.$buttons);
         }
-        var res = this.start();
         this.dialog_inited = true;
+        var res = this.start();
         return res;
     },
     close: function() {
