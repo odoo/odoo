@@ -51,7 +51,7 @@ class Overdue(report_sxw.rml_parse):
                  }
         if adr_id:
             fields = result.keys()
-            result = res_partner.read(self.cr, self.uid, [adr_id],fields, context=self.context.copy())
+            result = res_partner.read(self.cr, self.uid, [adr_id], fields, context=self.context.copy())
             result[0]['country_id'] = result[0]['country_id'] and result[0]['country_id'][1] or False
             result[0]['state_id'] = result[0]['state_id'] and result[0]['state_id'][1] or False
             return result
