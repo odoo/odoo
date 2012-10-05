@@ -552,7 +552,6 @@ class account_voucher(osv.osv):
         # We should definitively split account.voucher object in two and make distinct on_change functions. In the 
         # meanwhile, bellow lines must be there because the fields aren't present in the view, what crashes if the 
         # onchange returns a value for them
-        print "TTYPE", ttype
         if ttype == 'sale':
             del(res['value']['line_dr_ids'])
             del(res['value']['pre_line'])
