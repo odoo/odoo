@@ -140,6 +140,12 @@ openerp.hr_timesheet_sheet = function(instance) {
                 self.display_data();
             });
         },
+        destroy_content: function() {
+            if (this.dfm) {
+                this.dfm.destroy();
+                this.dfm = undefined;
+            }
+        },
         display_data: function() {
             var self = this;
             self.$el.html(QWeb.render("hr_timesheet_sheet.WeeklyTimesheet", {widget: self}));
@@ -162,6 +168,23 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
             self.display_totals();
+            self.$(".oe_timesheet_weekly_adding button").click(function() {
+                self.$(".oe_timesheet_weekly_add_row").show();
+                self.dfm = new instance.web.form.DefaultFieldManager(self);
+                self.dfm.extend_field_desc({
+                    account: {
+                        relation: "account.analytic.account",
+                    },
+                });
+                self.account_m2o = new instance.web.form.FieldMany2One(self.dfm, {
+                    attrs: {
+                        name: "account",
+                        type: "many2one",
+                        domain: [['type','in',['normal', 'contract']], ['state', '<>', 'close'], ['use_timesheets','=',1]],
+                    },
+                });
+                self.account_m2o.appendTo(self.$(".oe_timesheet_weekly_add_row td"));
+            });
         },
         get_box: function(account, day_count) {
             return this.$('[data-account="' + account.account + '"][data-day-count="' + day_count + '"]');

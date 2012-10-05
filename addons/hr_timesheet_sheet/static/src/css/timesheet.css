@@ -32,7 +32,7 @@
     padding-right: 30px;
 }
 
-.openerp .oe_timesheet_weekly td input {
+.openerp .oe_timesheet_weekly td input.oe_timesheet_weekly_input {
     border: 1px solid #CCC;
     padding: 5px 2px !important;
     color: #666 !important;
@@ -64,4 +64,13 @@
 
 .openerp .oe_timesheet_weekly .oe_timesheet_weekly_tottot {
     display: table-cell;
+}
+
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_add_row td {
+    text-align: left;
+}
+
+.openerp .oe_timesheet_weekly .oe_timesheet_weekly_add_row .oe_form_field_many2one {
+    display: inline-block;
+    width: 200px;
 }

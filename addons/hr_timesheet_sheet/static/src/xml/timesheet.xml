@@ -16,13 +16,16 @@
                     <td class="oe_timesheet_weekly_account"><t t-esc="widget.account_names[account.account]"/></td>
                     <t t-set="day_count" t-value="0"/>
                     <td t-foreach="account.days" t-as="day">
-                        <input t-if="!widget.get('effective_readonly')" t-att-data-account="account.account"
+                        <input t-if="!widget.get('effective_readonly')" class="oe_timesheet_weekly_input" t-att-data-account="account.account"
                             t-att-data-day-count="day_count" type="text"/>
                         <span t-if="widget.get('effective_readonly')" t-att-data-account="account.account"
                             t-att-data-day-count="day_count" class="oe_timesheet_weekly_box"/>
                         <t t-set="day_count" t-value="day_count + 1"/>
                     </td>
                     <td t-att-data-account-total="account.account"> </td>
+                </tr>
+                <tr class="oe_timesheet_weekly_add_row" style="display: none">
+                    <td t-att-colspan="widget.dates.length + 2"></td>
                 </tr>
                 <tr>
                     <td>
