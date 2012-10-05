@@ -579,17 +579,16 @@
             <field name="model">fleet.vehicle.log.fuel</field>
             <field name="arch" type="xml">
                 <tree string="Fuel Logs">
+                    <field name="date" /> 
                     <field name="vehicle_id" />
+                    <field name="odometer" invisible="1"/>
+                    <field name="odometer_unit" invisible="1"/>
+                    <field name="purchaser_id" />             
+                    <field name="inv_ref" invisible="1"/>
+                    <field name="vendor_id" invisible="1"/>
                     <field name="liter" />
                     <field name="price_per_liter" invisible="1"/>
                     <field name="amount" sum="Price"/>
-                    <field name="purchaser_id" />   
-                    <field name="date" />           
-                    <field name="inv_ref" invisible="1"/>
-                    <field name="vendor_id" invisible="1"/>
-                    <field name="odometer" invisible="1"/>
-                    <field name="odometer_unit" invisible="1"/>
-                    <field name="notes" />
                 </tree>
             </field>
         </record>
