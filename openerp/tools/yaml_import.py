@@ -328,17 +328,16 @@ class YamlInterpreter(object):
                 self.cr.commit()
 
     def _create_record(self, model, fields, view_info=False, parent={}, default=True):
-        """
-        This function process the !record tag in yalm files. It simulates the record creation through an xml
-        view (either specified on the !record tag or the default one for this object), including the calls to
-        on_change() functions.
-        :param model: browseable object
-        :param fields: dictonary mapping the field names and their values
-        :param view_info: result of fields_view_get() called on the object
-        :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
-        :param default: boolean flag depicting if the default values must be processed too or not
-        :return: dictionary mapping the field names and their values, ready to use when calling the create() function
-        :rtype: dict
+        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+            view (either specified on the !record tag or the default one for this object), including the calls to
+            on_change() functions.
+            :param model: model instance
+            :param fields: dictonary mapping the field names and their values
+            :param view_info: result of fields_view_get() called on the object
+            :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
+            :param default: if True, the default values must be processed too or not
+            :return: dictionary mapping the field names and their values, ready to use when calling the create() function
+            :rtype: dict
         """
         def process_val(key, val):
             if fg[key]['type']=='many2one':
@@ -358,6 +357,7 @@ class YamlInterpreter(object):
             # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
             # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
             defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
+
             # copy the default values in record_dict, only if they are in the view (because that's what the client does)
             # the other default values will be added later on by the create().
             record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
