@@ -1780,7 +1780,7 @@ $sheet-max-width: 860px
         .oe_datepicker_root
             display: inline-block
         .oe_form_required 
-            input:not([disabled]), select:not([disabled]), textarea:not([disabled])
+            input:not([disabled]):not([readonly]), select:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])
                 background-color: #D2D2FF !important
         .oe_form_invalid
             input, select, textarea
