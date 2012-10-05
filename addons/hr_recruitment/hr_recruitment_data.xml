@@ -460,6 +460,15 @@ You can automatically receive job application though an email gateway, see the H
         <field name="alias_model_id" ref="model_hr_applicant"/>
         <field name="alias_user_id" ref="base.user_root"/>
     </record>
-    
+
+    <!-- mail: subtypes -->
+    <record id="mt_hired" model="mail.message.subtype">
+        <field name="name">Employee Hired</field>
+        <field name="res_model">hr.job</field>
+    </record>
+    <record id="mt_applicant_new" model="mail.message.subtype">
+        <field name="name">New Applicant</field>
+        <field name="res_model">hr.job</field>
+    </record>
 </data>
 </openerp>

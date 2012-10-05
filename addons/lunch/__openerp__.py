@@ -23,7 +23,7 @@
     'name': 'Lunch Orders',
     'author': 'OpenERP SA',
     'version': '0.1',
-    'depends': ['base_tools'],
+    'depends': [],
     'category' : 'Tools',
     'description': """
 The base module to manage lunch.

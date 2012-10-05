@@ -64,7 +64,7 @@ if __name__<>"package":
 
 #class RepeatIn:
 class RepeatIn( unohelper.Base, XJobExecutor ):
-    def __init__(self,sObject="",sVariable="",sFields="",sDisplayName="",bFromModify=False):
+    def __init__(self, sObject="", sVariable="", sFields="", sDisplayName="", bFromModify=False):
         # Interface Design
         LoginTest()
         self.logobj=Logger()
@@ -204,7 +204,7 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
             ErrorDialog("Please Select Appropriate module" ,"Create new report from: \nOpenERP -> Open a New Report")
             self.win.endExecute()
 
-    def lstbox_selected(self,oItemEvent):
+    def lstbox_selected(self, oItemEvent):
         sItem=self.win.getListBoxSelectedItem("lstFields")
         sMain=self.aListRepeatIn[self.win.getListBoxSelectedItemPos("lstFields")]
 
@@ -215,7 +215,7 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
 	    self.win.setEditText("txtName",sMain[sMain.rfind("/")+1:])
 	    self.win.setEditText("txtUName","|-."+sItem[sItem.rfind("/")+1:]+".-|")
 
-    def cmbVariable_selected(self,oItemEvent):
+    def cmbVariable_selected(self, oItemEvent):
 
         if self.count > 0 :
 
@@ -290,7 +290,7 @@ class RepeatIn( unohelper.Base, XJobExecutor ):
         else:
             ErrorDialog("Please fill appropriate data in Object Field or Name field \nor select particular value from the list of fields.")
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
 if __name__<>"package" and __name__=="__main__":
