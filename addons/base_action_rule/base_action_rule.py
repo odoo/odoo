@@ -295,7 +295,10 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
             model_obj.message_post(cr, uid, [obj], _(action.act_state), context=context)
         
         if hasattr(obj, 'message_subscribe') and action.act_followers:
-            model_obj.message_subscribe(cr, uid, [obj.id], [x.id for x in action.act_followers], context=context)
+            exits_followers = [x.id for x in obj.message_follower_ids]
+            new_followers = [x.id for x in action.act_followers if x.id not in exits_followers]
+            if new_followers:
+                model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
         return True
 
     def _action(self, cr, uid, ids, objects, scrit=None, context=None):
