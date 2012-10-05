@@ -273,7 +273,7 @@ class fleet_vehicle(osv.Model):
     def str_to_date(self,strdate):
         return datetime.datetime(int(strdate[:4]),int(strdate[5:7]),int(strdate[8:]))
 
-    def get_overdue_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+    def get_overdue_contract_reminder_fnc(self,cr,uid,ids,context=None):
         if context is None:
             context={}
         if not ids:
@@ -301,7 +301,11 @@ class fleet_vehicle(osv.Model):
 
         return dict(res)
 
-    def get_next_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+    def get_overdue_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
+        res = self.get_overdue_contract_reminder_fnc(cr, uid, ids, context=context)
+        return res
+
+    def get_next_contract_reminder_fnc(self,cr,uid,ids,context=None):
         if context is None:
             context={}
         if not ids:
@@ -326,11 +330,26 @@ class fleet_vehicle(osv.Model):
                 res.append((record.id,due_soon))
             else:
                 res.append((record.id,0))
-
-
         
         return dict(res)
 
+    def get_next_contract_reminder(self, cr, uid, ids, prop, unknow_none, context=None):
+        res = self.get_next_contract_reminder_fnc(cr, uid, ids, context=context)
+        return res
+
+    def run_scheduler(self,cr,uid,context=None):
+        ids = self.pool.get('fleet.vehicle').search(cr, uid, [], offset=0, limit=None, order=None,context=None, count=False)
+        nexts = self.get_next_contract_reminder_fnc(cr,uid,ids,context=context)
+        overdues = self.get_overdue_contract_reminder_fnc(cr,uid,ids,context=context)
+        for key,value in nexts.items():
+            print str(key) + ' : ' + str(value)
+            if value > 0 and overdues[key] > 0:
+                self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon and '+str(overdues[key])+' contract(s) is (are) overdued', context=context)
+            elif value > 0:
+                self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon!', context=context)
+            elif overdues[key] > 0 : 
+                self.message_post(cr, uid, [key], body=str(overdues.key) + ' contract(s) is(are) overdued!', context=context)
+        return True
 
     _name = 'fleet.vehicle'
     _description = 'Fleet Vehicle'
