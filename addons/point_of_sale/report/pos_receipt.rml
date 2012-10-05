@@ -104,12 +104,18 @@
         <td>
           <para style="P1">[[ repeatIn(o.lines,'line') ]]</para>
           <para style="terp_default_9b">[[ line.product_id.name ]]</para>
+          <para style="terp_default_Right_9">
+            <font face="Helvetica">With a [[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ '%.2f' % line.discount ]]) % discount.</font>
+          </para>
+          <para style="terp_default_9b">
+            <font color="white"> </font>
+          </para>
         </td>
         <td>
           <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][['%.f' % line.qty ]]</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[ '%.2f' % net(line.id) ]] [[company.currency_id.symbol]] <font face="Helvetica">[[ line and line.discount == 0.0 and removeParentNode('font') ]] ([[ '%.2f' % line.discount ]]%) [[company.currency_id.symbol]]</font></para>
+          <para style="terp_default_Right_9">[[o.state=='cancel' and o.statement_ids and '-' or '']][[ '%.2f' % net(line.id) ]] [[company.currency_id.symbol]] </para>
         </td>
       </tr>
     </blockTable>
