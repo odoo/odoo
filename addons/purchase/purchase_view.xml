@@ -597,6 +597,14 @@
                      <separator string="Suppliers"/>
                      <field name="seller_ids" context="{'uom_id': uom_id}"/>
                 </group>
+            </field>
+        </record>
+
+        <record id="product_product_normal_form_procurement_help_view" model="ir.ui.view">
+            <field name="name">product.normal.form.procurement.help.inherit</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
+            <field name="arch" type="xml">
                 <group name="procurement_help" position="inside">
                     <p attrs="{'invisible': [('type','&lt;&gt;','service'),('procure_method','&lt;&gt;','make_to_order'),('supply_method','&lt;&gt;','buy')]}">
                         When you sell this service to a customer, <b>a draft purchase order</b>
