@@ -541,6 +541,7 @@
 
     <t t-name="PosTicket">
         <div class="pos-sale-ticket">
+            
             <div class="pos-right-align"><t t-esc="new Date().toString(Date.CultureInfo.formatPatterns.shortDate + ' ' +
                 Date.CultureInfo.formatPatterns.longTime)"/></div>
             <br />
@@ -553,12 +554,22 @@
                 <tr t-foreach="widget.currentOrderLines.toArray()" t-as="order">
                     <td>
                         <t t-esc="order.get_product().get('name')"/>
+                         <t t-if="order.get_discount() > 0">
+                            <li>
+                                <t t-esc="order.get_discount()"/>% discount
+                            </li>
+                        </t>
                     </td>
                     <td class="pos-right-align">
                         <t t-esc="order.get_quantity().toFixed(0)"/>
                     </td>
                     <td class="pos-right-align">
-                        <t t-esc="widget.format_currency(order.get_list_price() * (1 - order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        <t t-esc="widget.format_currency(order.get_list_price() * order.get_quantity().toFixed(2))"/>
+                        <t t-if="order.get_discount() > 0">
+                        <li class="pos-right-align">
+                            -<t t-esc="widget.format_currency(order.get_list_price() * (order.get_discount()/100) * order.get_quantity().toFixed(2))"/>
+                        </li>
+                    </t>
                     </td>
                 </tr>
             </table>
