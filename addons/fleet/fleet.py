@@ -259,11 +259,11 @@ class fleet_vehicle(osv.Model):
         reads = self.browse(cr, uid, ids, context=context)
         res = []
         for record in reads:
-            odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='value desc')
-            if len(odometers) > 0:
-                res.append((record.id,self.pool.get('fleet.vehicle.odometer').browse(cr, uid, odometers[0], context=context).value))
-            else :
-                res.append((record.id,0))
+            #odometers = self.pool.get('fleet.vehicle.odometer').search(cr,uid,[('vehicle_id','=',record.id)], order='value desc')
+            #if len(odometers) > 0:
+            #    res.append((record.id,self.pool.get('fleet.vehicle.odometer').browse(cr, uid, odometers[0], context=context).value))
+            #else :
+            res.append((record.id,0))
         return res
 
     def _vehicle_odometer_get_fnc(self, cr, uid, ids, prop, unknow_none, context=None):
@@ -363,7 +363,6 @@ class fleet_vehicle(osv.Model):
         'vin_sn' : fields.char('Chassis Number', size=32, required=False, help='Unique number written on the vehicle motor (VIN/SN number)'),
         'driver' : fields.many2one('res.partner', 'Driver',required=False, help='Driver of the vehicle', domain="['|',('customer','=',True),('employee','=',True)]"),
         'model_id' : fields.many2one('fleet.vehicle.model', 'Model', required=True, help='Model of the vehicle'),
-        'log_ids' : fields.one2many('fleet.vehicle.log', 'vehicle_id', 'Other Logs'),
         'log_fuel' : fields.one2many('fleet.vehicle.log.fuel','vehicle_id', 'Fuel Logs'),
         'log_services' : fields.one2many('fleet.vehicle.log.services','vehicle_id', 'Services Logs'),
         'log_contracts' : fields.one2many('fleet.vehicle.log.contract','vehicle_id', 'Contracts'),
@@ -392,7 +391,7 @@ class fleet_vehicle(osv.Model):
         'contract_renewal_overdue' : fields.function(get_overdue_contract_reminder,type="integer",string='Contract Renewal Overdue',store=False),
         
         'car_value': fields.float('Car value', help='Value of the bought vehicle'),
-        'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
+        #'leasing_value': fields.float('Leasing value',help='Value of the leasing(Monthly, usually'),
         }
 
     _defaults = {
@@ -403,9 +402,15 @@ class fleet_vehicle(osv.Model):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        #default.update({
+
+        default.update({
         #    'name': self.pool.get('ir.sequence').get(cr, uid, 'stock.orderpoint') or '',
-        #})
+            #'log_ids':[],
+            'log_fuel':[],
+            'log_contracts':[],
+            'log_services':[],
+            'tag_ids':[],
+        })
         return super(fleet_vehicle, self).copy(cr, uid, id, default, context=context)
 
     def on_change_model(self, cr, uid, ids, model_id, context=None):
