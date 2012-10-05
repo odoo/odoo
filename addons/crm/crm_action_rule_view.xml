@@ -8,11 +8,11 @@
             <field name="inherit_id" ref="base_action_rule.view_base_action_rule_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='partner']" position="after">
-                    <group name="case" string="Condition Case Fields">
+                    <group name="case" string="Conditions on Case Fields">
                         <field name="trg_section_id" widget="selection"/>
                         <field name="trg_categ_id"/>
                     </group>
-                    <group name="communication" string="Condition on Communication History">
+                    <group name="communication" string="Conditions on Communication History">
                         <field name="regex_history"/>
                         <field name="trg_max_history"/>
                     </group>
