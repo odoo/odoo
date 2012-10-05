@@ -84,16 +84,17 @@ openerp.mail = function(session) {
      * This widget handles the display of a form to compose a new message.
      * This form is a mail.compose.message form_view.
      */
-
+    
     mail.ComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
-        
+
         /**
          * @param {Object} parent parent
          * @param {Object} [options]
-         * @param {Object} [options.context] context passed to the
-         *  mail.compose.message DataSetSearch. Please refer to this model
-         *  for more details about fields and default values.
+         *      @param {Object} [context] context passed to the
+         *          mail.compose.message DataSetSearch. Please refer to this model
+         *          for more details about fields and default values.
+         *      @param {Boolean} [show_attachment_delete] 
          */
         init: function (parent, options) {
             var self = this;
@@ -102,118 +103,43 @@ openerp.mail = function(session) {
             // options
             this.options = options || {};
             this.options.context = options.context || {};
-            this.options.form_xml_id = options.form_xml_id || 'email_compose_message_wizard_form_chatter';
-            this.options.form_view_id = options.form_view_id || false;
+            this.options.show_attachment_delete = options.show_attachment_delete || false;
+
+            this.id =           options.parameters.id;
+            this.model =        options.parameters.model;
+            this.is_private =   options.parameters.is_private;
+            this.partner_ids =  options.parameters.partner_ids;
+
+            this.attachment_ids = [];
             this.show_attachment_delete = true;
+            this.show_attachment_link = false;
         },
 
-        start: function () {
-            this._super.apply(this, arguments);
-            // customize display: add avatar, clean previous content
+        start: function(){
+            var self = this;
+
+            this.display_attachments();
+
+            self.bind_events();
+
             var user_avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             this.$('img.oe_mail_icon').attr('src', user_avatar);
-            this.$('div.oe_mail_msg_content').empty();
-            // create a context for the dataset and default_get of the wizard
-            var context = _.extend({}, this.options.context);
-            this.ds_compose = new session.web.DataSetSearch(this, 'mail.compose.message', context);
-            // find the id of the view to display in the chatter form
-            if (this.options.form_view_id) {
-                return this.create_form_view();
-            }
-            else {
-                var data_ds = new session.web.DataSetSearch(this, 'ir.model.data');
-                return data_ds.call('get_object_reference', ['mail', this.options.form_xml_id]).pipe(this.proxy('create_form_view'));
-            }
         },
 
-        /** Create a FormView, then append it to the to widget DOM. */
-        create_form_view: function (new_form_view_id) {
+        display_attachments: function(){
             var self = this;
-            this.options.form_view_id = (new_form_view_id && new_form_view_id[1]) || this.options.form_view_id;
-            // destroy previous form_view if any
-            if (this.form_view) { this.form_view.destroy(); }
-            // create the FormView
-            this.form_view = new session.web.FormView(this, this.ds_compose, this.options.form_view_id, {
-                action_buttons: false,
-                pager: false,
-                initial_mode: 'edit',
-                disable_autofocus: true,
-            });
-            // add the form, bind events, activate the form
-            var msg_node = this.$('div.oe_mail_msg_content');
-            return $.when(this.form_view.appendTo(msg_node)).pipe(this.proxy('postprocess_create_form_view'));
-        },
-
-        postprocess_create_form_view: function () {
-            // handle attachment button
-            this.fileupload_id = _.uniqueId('oe_fileupload');
-            var button_attach = this.$('button.oe_mail_compose_message_attachment');
-            var rendered = $( session.web.qweb.render('mail.compose_message.add_attachment', {'widget': this}) );
-            rendered.insertBefore(button_attach);
-            // move the button inside div.oe_hidden_input_file
-            var input_node = this.$('input[name=ufile]');
-            button_attach.detach().insertAfter(input_node);
-            // set the function called when attachments are added
-            this.$('input.oe_form_binary_file').change(this.on_attachment_change);
-            this.bind_events();
-            this.form_view.do_show();
-        },
-
-        on_attachment_change: function (event) {
-            var $target = $(event.target);
-            if ($target.val() !== '') {
-                this.$('form.oe_form_binary_form').submit();
-                session.web.blockUI();
+            var render = $(session.web.qweb.render('mail.thread.message.attachments', {'widget': self}));
+            if(!this.list_attachment){
+                this.$('.oe_mail_compose_attachment_list').replaceWith( render );
+            } else {
+                this.list_attachment.replaceWith( render );
             }
+            this.list_attachment = this.$("ul.oe_mail_msg_attachments");
+
+            // event: delete an attachment
+            this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
         },
 
-        on_attachment_delete: function (event) {
-            if (event.target.dataset && event.target.dataset.id) {
-                var attachment_id = parseInt(event.target.dataset.id);
-                var idx = _.pluck(this.attachment_ids, 'id').indexOf(attachment_id);
-                if (idx == -1) return false;
-                new session.web.DataSetSearch(this, 'ir.attachment').unlink(attachment_id);
-                this.attachment_ids.splice(idx, 1);
-                this.display_attachments();
-            }
-        },
-
-        display_attachments: function () {
-            var attach_node = this.$('div.oe_mail_compose_message_attachments');
-            var rendered = session.web.qweb.render('mail.thread.message.attachments', {'record': this});
-            attach_node.empty();
-            $(rendered).appendTo(attach_node);
-            this.$('.oe_mail_msg_attachments').show();
-            var composer_attachment_ids = _.pluck(this.attachment_ids, 'id');
-            var onchange_like = {'value': {'attachment_ids': composer_attachment_ids}}
-            this.form_view.on_processed_onchange(onchange_like, []);
-        },
-
-        /**
-         * Reinitialize the widget field values to the default values obtained
-         * using default_get on mail.compose.message. This allows to reinitialize
-         * the widget without having to rebuild a complete form view.
-         * @param {Object} new_context: context of the refresh */
-        refresh: function (new_context) {
-            if (! this.form_view) return;
-            var self = this;
-            this.attachments = [];
-            this.options.context = _.extend(this.options.context, new_context || {});
-            this.ds_compose.context = _.extend(this.ds_compose.context, this.options.context);
-            return this.ds_compose.call('default_get', [
-                ['subject', 'body_text', 'body', 'partner_ids', 'composition_mode',
-                    'use_template', 'template_id', 'model', 'res_id', 'parent_id', 'content_subtype'],
-                this.ds_compose.get_context(),
-            ]).then( function (result) {
-                self.form_view.on_processed_onchange({'value': result}, []);
-                self.attachment_ids = [];
-                self.display_attachments();
-            });
-        },
-
-        /**
-         * Bind events in the widget. Each event is slightly described
-         * in the function. */
         bind_events: function() {
             var self = this;
             // event: add a new attachment
@@ -225,11 +151,54 @@ openerp.mail = function(session) {
                 self.display_attachments();
                 session.web.unblockUI();
             });
-            // event: delete an attachment
-            this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
+
+            // set the function called when attachments are added
+            this.$el.on('change', 'input.oe_insert_file', self.on_attachment_change);
         },
-    }),
-    
+
+        on_attachment_change: function (event) {
+            event.stopPropagation();
+            var $target = $(event.target);
+            if ($target.val() !== '') {
+                //session.web.blockUI();
+                var id = _.uniqueId('oe_fileupload');
+                this.attachment_ids.push({
+                    'url': $target.val(),
+                    'filename' : $target.val().replace(/.*[\/\\]/,''),
+                    'id': id
+                });
+                $newfield = $target.clone();
+                $newfield.insertAfter($target);
+                $target.hide();
+                $target.attr("id",id);
+
+                this.display_attachments();
+            }
+        },
+
+        on_attachment_delete: function (event) {
+            event.stopPropagation();
+            var id=$(event.target).data("id");
+            if (id) {
+                var attachments=[];
+                for(var i in this.attachment_ids){
+                    if(id!=this.attachment_ids[i].id)
+                        attachments.push(this.attachment_ids[i]);
+                }
+                this.attachment_ids = attachments;
+                this.$("input#"+id).remove();
+            /*
+                var attachment_id = parseInt(event.target.dataset.id);
+                var idx = _.pluck(this.attachment_ids, 'id').indexOf(attachment_id);
+                if (idx == -1) return false;
+                new session.web.DataSetSearch(this, 'ir.attachment').unlink(attachment_id);
+                this.attachment_ids.splice(idx, 1);
+            */
+                this.display_attachments();
+            }
+        },
+
+    });
 
     /** 
      * ------------------------------------------------------------
@@ -263,7 +232,6 @@ openerp.mail = function(session) {
 
             // record options and data
             this.parent_thread= parent.messages!= undefined ? parent : options.options.thread._parents[0] ;
-
         },
 
         
@@ -285,7 +253,7 @@ openerp.mail = function(session) {
         * @param {object} mouse envent
         */
         on_expandable: function (event) {
-            event.stopPropagation();
+            if(event)event.stopPropagation();
             this.parent_thread.message_fletch(false, this.domain, this.context);
             this.destroy();
             return false;
@@ -361,7 +329,7 @@ openerp.mail = function(session) {
             this._date =        param.date;
             this.author_id =    param.author_id || [];
             this.attachment_ids = param.attachment_ids || [];
-            
+
             // record domain and context
             this.domain = options.domain || [];
             this.context = _.extend({
@@ -439,21 +407,13 @@ openerp.mail = function(session) {
 
             // event: click on 'Reply' in msg
             this.$el.on('click', 'a.oe_reply', this.on_message_reply);
-            // event: click on 'Reply by email' in msg side menu
-            this.$el.on('click', 'a.oe_reply_by_email', this.on_message_reply_by_mail);
             // event: click on 'Vote' button
             this.$el.on('click', 'button.oe_mail_msg_vote', this.on_vote);
         },
 
         on_message_reply:function(event){
             event.stopPropagation();
-            this.thread.on_compose_message($(event.srcElement).hasClass("oe_full_reply"), false);
-            return false;
-        },
-
-        on_message_reply_by_mail:function(event){
-            event.stopPropagation();
-            this.thread.on_compose_message(true, true);
+            this.thread.on_compose_message();
             return false;
         },
 
@@ -670,6 +630,7 @@ openerp.mail = function(session) {
             this.model=         param.model || false;
             this.parent_id=     param.parent_id || false;
             this.is_private =   param.is_private || false;
+            this.author_id =   param.author_id || false;
             this.partner_ids =  [];
             for(var i in param.partner_ids){
                 if(param.partner_ids[i][0]!=(param.author_id ? param.author_id[0] : -1)){
@@ -694,7 +655,12 @@ openerp.mail = function(session) {
             var display_done = compose_done = false;
             
             // add message composition form view
-            compose_done = this.instantiate_composition_form();
+            this.ComposeMessage = new mail.ComposeMessage(this,{
+                'context': this.context,
+                'parameters': this,
+                'show_attachment_delete': true,
+            });
+            this.ComposeMessage.appendTo(this.$(".oe_mail_thread_action:first"));
 
             this.bind_events();
 
@@ -710,7 +676,6 @@ openerp.mail = function(session) {
         * Normally it should be called only when clicking on 'Post/Send'
         * in the composition form. */
         do_action: function(action, on_close) {
-            this.instantiate_composition_form();
             this.message_fletch(false, false, false, [action.id]);
             return this._super(action, on_close);
         },
@@ -718,10 +683,40 @@ openerp.mail = function(session) {
         /* this method is runing for first parent thread
         */
         on_first_thread: function(){
+            var self=this;
             // fetch and display message, using message_ids if set
             display_done = this.message_fletch(true);
             //show the first write message
-            this.$(">.oe_mail_thread_action").show();
+            self.$(">.oe_mail_thread_action").show();
+
+            $(document).scroll( self.on_scroll );
+            window.setTimeout( self.on_scroll, 500 );
+        },
+
+        /* When the expandable object is visible on screen (with scrolling)
+         * then the on_expandable function is launch
+        */
+        on_scroll: function(event){
+            if(event)event.stopPropagation();
+            var last=this.messages[0];
+            if(last && last.type=="expandable"){
+                var pos = last.$el.position();
+                if(pos.top){
+                    /* bottom of the screen */
+                    var bottom = $(window).scrollTop()+$(window).height()+100;
+                    if(bottom - pos.top > 0){
+                        last.on_expandable();
+                    }
+                }
+            }
+        },
+
+        on_attachment_change: function (event) {
+            var $target = $(event.target);
+            if ($target.val() !== '') {
+                this.$('form.oe_form_binary_form').submit();
+                session.web.blockUI();
+            }
         },
 
         /**
@@ -794,43 +789,9 @@ openerp.mail = function(session) {
                 return this.options.thread._parents[0].messages[0].browse_message(options);
         },
 
-        /** Instantiate the composition form, with every parameters in context
-        *   or in the widget context.
-        *   @param {object}
-        *       @param {boolean} show_header_compose, force to instantiate form
-        */
-        instantiate_composition_form: function(context) {
-            // add message composition form view
-            if ((!context || !context.show_header_compose) &&
-                (!this.options.thread.show_header_compose || !this.options.thread.use_composer ||
-                (this.options.thread.show_header_compose <= this.options.thread._parents.length && this.options.thread._parents[0]!=this))) {
-                this.$("textarea:first").val("");
-                return false;
-            }
-            if (this.compose_message_widget) {
-                this.compose_message_widget.refresh();
-            } else {
-                var context = _.extend(context || {}, this.context);
-                this.compose_message_widget = new mail.ComposeMessage(this, {'context': context});
-                var composition_node = this.$('div.oe_mail_thread_action');
-                composition_node.empty();
-                return this.compose_message_widget.appendTo(composition_node);
-            }
-        },
-
         /* this function is launch when a user click on "Reply" button
         */
-        on_compose_message: function(full_reply, by_mail){
-            if(full_reply){
-                this.instantiate_composition_form({'show_header_compose':true});
-            }
-            if(by_mail){
-                if (!this.compose_message_widget) return true;
-                this.compose_message_widget.refresh({
-                    'default_composition_mode': 'reply',
-                    'default_parent_id': this.id,
-                    'default_content_subtype': 'html'} );
-            }
+        on_compose_message: function(){
             this.$('div.oe_mail_thread_action:first').toggle();
             return false;
         },
@@ -951,19 +912,6 @@ openerp.mail = function(session) {
                 message.prependTo(thread.list_ul);
 
             return message
-        },
-
-        /* Hide messages if they are more message that _expandable_max
-        *  display "show more messages"
-        */
-        display_expandable: function(){
-            if(this.messages.length>this.options._expandable_max){
-                this.list_ul.find('>li:gt('+(this.options._expandable_max-1)+')').hide();
-                this.more_msg.show();
-            } else {
-                this.list_ul.find('>li').show();
-                this.more_msg.hide();
-            }
         },
 
         display_user_avatar: function () {

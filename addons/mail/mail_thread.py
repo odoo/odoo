@@ -696,10 +696,14 @@ class mail_thread(osv.AbstractModel):
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
+        # if the user write on his wall
+        if self._name=='res.partner' and (not thread_id or not thread_id[0]):
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            thread_id = user.partner_id.id
+
         added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
                         subtype=subtype, parent_id=parent_id, attachments=attachments, context=context)
         added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
-
         return added_message
 
     def get_message_subtypes(self, cr, uid, ids, context=None):

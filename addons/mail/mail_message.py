@@ -151,6 +151,7 @@ class mail_message(osv.Model):
         'date': lambda *a: fields.datetime.now(),
         'author_id': lambda self, cr, uid, ctx={}: self._get_default_author(cr, uid, ctx),
         'body': '',
+        'is_private': True,
     }
 
     #------------------------------------------------------
@@ -495,13 +496,6 @@ class mail_message(osv.Model):
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified
 
-        # add myself if I wrote on my wall, 
-        # unless remove myself author
-        if ((message.model=="res.partner" and message.res_id==message.author_id.id)):
-            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
-        else:
-            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
-
     def _notify(self, cr, uid, newid, context=None):
         """ Add the related record followers to the destination partner_ids if is not a private message.
             Call mail_notification.notify to manage the email sending
@@ -510,6 +504,13 @@ class mail_message(osv.Model):
         if message and (message.is_private!=False and message.is_private!=None):
             self._notify_followers(cr, uid, newid, message, context=context)
         
+        # add myself if I wrote on my wall, 
+        # unless remove myself author
+        if ((message.model=="res.partner" and message.res_id==message.author_id.id)):
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, message.author_id.id)]}, context=context)
+        else:
+            self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(3, message.author_id.id)]}, context=context)
+
         self.pool.get('mail.notification')._notify(cr, uid, newid, context=context)
 
     def copy(self, cr, uid, id, default=None, context=None):
