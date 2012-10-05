@@ -592,6 +592,7 @@ property or property parameter."),
             vals['cn'] = vals.get("cn")
         res = super(calendar_attendee, self).create(cr, uid, vals, context)
         return res
+
 calendar_attendee()
 
 class res_alarm(osv.osv):
@@ -990,7 +991,6 @@ class calendar_event(osv.osv):
                 super(calendar_event, obj).write(cr, uid, ids, data, context=context)
         return True
 
-
     _columns = {
         'id': fields.integer('ID', readonly=True),
         'sequence': fields.integer('Sequence'),
@@ -1113,7 +1113,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
     }
-    
+
     def _check_closing_date(self, cr, uid, ids, context=None):
         for event in self.browse(cr, uid, ids, context=context):
             if event.date_deadline < event.date:
@@ -1140,7 +1140,8 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 result.append(data['id'])
                 continue
             event_date = datetime.strptime(data['date'], "%Y-%m-%d %H:%M:%S")
-#                To check: If the start date is replace by event date .. the event date will be changed by that of calendar code
+
+            # TOCHECK: the start date should be replaced by event date; the event date will be changed by that of calendar code
 
             if not data['rrule']:
                 continue
@@ -1248,19 +1249,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             'week_list' : False
         }
 
-    #def _write_rrule(self, cr, uid, ids, field_value, rule_date=False, context=None):
-    #    data = self._get_empty_rrule_data()
-    #
-    #    if field_value:
-    #        data['recurrency'] = True
-    #        for event in self.browse(cr, uid, ids, context=context):
-    #            rdate = rule_date or event.date
-    #            update_data = self._parse_rrule(field_value, dict(data), rdate)
-    #            data.update(update_data)
-    #            #parse_rrule
-    #            self.write(cr, uid, event.id, data, context=context)
-
-
     def _parse_rrule(self, rule, data, date_start):
         day_list = ['mo', 'tu', 'we', 'th', 'fr', 'sa', 'su']
         rrule_type = ['yearly', 'monthly', 'weekly', 'daily']
@@ -1278,7 +1266,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                 if i in r._byweekday:
                     data[day_list[i]] = True
             data['rrule_type'] = 'weekly'
-        #repeat monthly bynweekday ((weekday, weeknumber), )
+        #repeat monthly by nweekday ((weekday, weeknumber), )
         if r._bynweekday:
             data['week_list'] = day_list[r._bynweekday[0][0]].upper()
             data['byday'] = r._bynweekday[0][1]
@@ -1290,7 +1278,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             data['select1'] = 'date'
             data['rrule_type'] = 'monthly'
 
-        #yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
+        #repeat yearly but for openerp it's monthly, take same information as monthly but interval is 12 times
         if r._bymonth:
             data['interval'] = data['interval'] * 12
 
@@ -1363,7 +1351,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             except Exception:
                 return True
 
-
     def write(self, cr, uid, ids, vals, context=None, check=True, update_check=True):
         context = context or {}
         if isinstance(ids, (str, int, long)):
@@ -1384,14 +1371,14 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             data = self.read(cr, uid, event_id, ['date', 'date_deadline', \
                                                 'rrule', 'duration', 'exdate'])
             if data.get('rrule'):
-                data.update(vals)
-                data.update({
-                    'recurrent_uid': real_event_id,
-                    'recurrent_id': data.get('date'),
-                    'rrule_type': 'none',
-                    'rrule': '',
-                    'recurrency' : False,
-                    })
+                data.update(
+                    vals,
+                    recurrent_uid=real_event_id,
+                    recurrent_id=data.get('date'),
+                    rrule_type='none',
+                    rrule='',
+                    recurrency=False,
+                )
 
                 new_id = self.copy(cr, uid, real_event_id, default=data, context=context)
 
@@ -1435,7 +1422,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         return res
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        # FIXME This whole id mangling has to go!
         if context is None:
             context = {}
         fields2 = fields and fields[:] or None
@@ -1445,10 +1431,12 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             if fields and (f not in fields):
                 fields2.append(f)
 
+        # FIXME This whole id mangling has to go!
         if isinstance(ids, (str, int, long)):
             select = [ids]
         else:
             select = ids
+
         select = map(lambda x: (x, base_calendar_id2real_id(x)), select)
         result = []
 
@@ -1477,7 +1465,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     if f not in ('id','date','date_deadline','duration','user_id','state'):
                         if isinstance(r[f], list):
                             r[f] = []
-                        else:    
+                        else:
                             r[f] = False
                     if f=='name':
                         r[f] = _('Busy')
@@ -1524,7 +1512,6 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         self.pool.get('res.alarm').do_alarm_unlink(cr, uid, ids, self._name)
         self.unlink_events(cr, uid, ids, context=context)
         return res
-
 
     def create(self, cr, uid, vals, context=None):
         if context is None:
@@ -1769,6 +1756,5 @@ class res_users(osv.osv):
     }
 
 res_users()
-
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
