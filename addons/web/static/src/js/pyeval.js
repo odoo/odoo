@@ -164,7 +164,7 @@ openerp.web.pyeval = function (instance) {
             // siblings
             _.extend(evaluation_context, evaluated);
             return _.extend(result_context, evaluated);
-        }, _.extend({}, instance.connection.user_context));
+        }, _.extend({}, instance.session.user_context));
     };
     var eval_domains = function (domains, evaluation_context) {
         var result_domain = [];
@@ -219,7 +219,7 @@ openerp.web.pyeval = function (instance) {
 
     instance.web.pyeval.context = function () {
         return {
-            uid: new py.float(instance.connection.uid),
+            uid: new py.float(instance.session.uid),
             datetime: datetime,
             time: time,
             relativedelta: relativedelta,
