@@ -93,7 +93,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
-        'server_action_ids': fields.many2many('ir.actions.server', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."),
+        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."),
         'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model)]
         'last_run': fields.datetime('Last Run', readonly=1),
     }
@@ -321,6 +321,12 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
 
 base_action_rule()
 
+class actions_server(osv.osv):
+    _inherit = 'ir.actions.server'
+    _columns = {
+        'action_rule_id': fields.many2one("base.action.rule", string="Action Rule")
+    }
+actions_server()
 
 class ir_cron(osv.osv):
     _inherit = 'ir.cron'
