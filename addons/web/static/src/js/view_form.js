@@ -4601,18 +4601,14 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         }
     },
     destroy_content: function() {
-        if (this.selection) {
-            this.selection.destroy();
-            this.selection = undefined;
-        }
-        if (this.m2o) {
-            this.m2o.destroy();
-            this.m2o = undefined;
+        if (this.fm) {
+            this.fm.destroy();
         }
     },
     initialize_content: function() {
         var self = this;
         var fm = new instance.web.form.DefaultFieldManager(this);
+        this.fm = fm;
         fm.extend_field_desc({
             "selection": {
                 selection: this.field_manager.get_field_desc(this.name).selection,
