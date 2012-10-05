@@ -731,15 +731,15 @@ class YamlInterpreter(object):
         res = {'name': node.name, 'url': node.url, 'target': node.target}
 
         id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, \
-                "ir.actions.url", self.module, res, node.id, mode=self.mode)
+                "ir.actions.act_url", self.module, res, node.id, mode=self.mode)
         self.id_map[node.id] = int(id)
         # ir_set
         if (not node.menu or eval(node.menu)) and id:
             keyword = node.keyword or 'client_action_multi'
-            value = 'ir.actions.url,%s' % id
+            value = 'ir.actions.act_url,%s' % id
             replace = node.replace or True
             self.pool.get('ir.model.data').ir_set(self.cr, SUPERUSER_ID, 'action', \
-                    keyword, node.url, ["ir.actions.url"], value, replace=replace, \
+                    keyword, node.url, ["ir.actions.act_url"], value, replace=replace, \
                     noupdate=self.isnoupdate(node), isobject=True, xml_id=node.id)
 
     def process_ir_set(self, node):

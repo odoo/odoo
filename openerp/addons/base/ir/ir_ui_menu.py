@@ -265,7 +265,7 @@ class ir_ui_menu(osv.osv):
             }
             if menu.action and menu.action.type in ('ir.actions.act_window','ir.actions.client') and menu.action.res_model:
                 obj = self.pool.get(menu.action.res_model)
-                if obj._needaction:
+                if obj and obj._needaction:
                     if menu.action.type=='ir.actions.act_window':
                         dom = menu.action.domain and eval(menu.action.domain, {'uid': uid}) or []
                     else:
@@ -298,7 +298,7 @@ class ir_ui_menu(osv.osv):
                 ('ir.actions.report.xml', 'ir.actions.report.xml'),
                 ('ir.actions.act_window', 'ir.actions.act_window'),
                 ('ir.actions.wizard', 'ir.actions.wizard'),
-                ('ir.actions.url', 'ir.actions.url'),
+                ('ir.actions.act_url', 'ir.actions.act_url'),
                 ('ir.actions.server', 'ir.actions.server'),
                 ('ir.actions.client', 'ir.actions.client'),
             ]),
