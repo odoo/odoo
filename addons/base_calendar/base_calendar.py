@@ -971,8 +971,8 @@ class calendar_event(osv.osv):
             event = datas['id']
             if datas.get('interval', 0) < 0:
                 raise osv.except_osv(_('Warning!'), _('Interval cannot be negative.'))
-            if datas.get('count', 0) < 0:
-                raise osv.except_osv(_('Warning!'), _('Count cannot be negative.'))
+            if datas.get('count', 0) <= 0:
+                raise osv.except_osv(_('Warning!'), _('Count cannot be negative or 0.'))
             if datas['recurrency']:
                 result[event] = self.compute_rule_string(datas)
             else:
@@ -1113,6 +1113,16 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             'user_id': lambda self, cr, uid, ctx: uid,
             'organizer': default_organizer,
     }
+    
+    def _check_closing_date(self, cr, uid, ids, context=None):
+        for event in self.browse(cr, uid, ids, context=context):
+            if event.date_deadline < event.date:
+                return False
+        return True
+
+    _constraints = [
+        (_check_closing_date, 'Error ! End date cannot be set before start date.', ['date_deadline']),
+    ]
 
     def get_recurrent_ids(self, cr, uid, select, domain, limit=100, context=None):
         """Gives virtual event ids for recurring events based on value of Recurrence Rule

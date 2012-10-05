@@ -35,7 +35,7 @@ CRM_CLAIM_PENDING_STATES = (
 
 class crm_claim_stage(osv.osv):
     """ Model for claim stages. This models the main stages of a claim
-        management flow. Main CRM objects (leads, opportunities, project 
+        management flow. Main CRM objects (leads, opportunities, project
         issues, ...) will now use only stages, instead of state and stages.
         Stages are for example used to display the kanban view of records.
     """
@@ -104,7 +104,7 @@ class crm_claim(base_stage, osv.osv):
         'email_from': fields.char('Email', size=128, help="These people will receive email."),
         'partner_phone': fields.char('Phone', size=32),
         'stage_id': fields.many2one ('crm.claim.stage', 'Stage',
-                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"), 
+                        domain="['|', ('section_ids', '=', section_id), ('case_default', '=', True)]"),
         'cause': fields.text('Root Cause'),
         'state': fields.related('stage_id', 'state', type="selection", store=True,
                 selection=crm.AVAILABLE_STATES, string="State", readonly=True,

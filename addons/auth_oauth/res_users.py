@@ -1,6 +1,7 @@
 import logging
 
 import urllib
+import urlparse
 import urllib2
 import simplejson
 
@@ -20,8 +21,11 @@ class res_users(osv.Model):
     }
 
     def auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
-        params = urllib.urlencode({'access_token':access_token})
-        url = endpoint + '?' + params
+        params = urllib.urlencode({ 'access_token': access_token })
+        if urlparse.urlparse(endpoint)[4]:
+            url = endpoint + '&' + params
+        else:
+            url = endpoint + '?' + params
         f = urllib2.urlopen(url)
         response = f.read()
         return simplejson.loads(response)
@@ -38,26 +42,32 @@ class res_users(osv.Model):
         validation = self.auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
         if validation.get("error"):
             raise openerp.exceptions.AccessDenied
-        login = validation['email']
+        if p.data_endpoint:
+            data = self.auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
+            validation.update(data)
+        # required
         oauth_uid = validation['user_id']
-        name = self.auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)['name']
-
-        credentials = (cr.dbname, login, access_token)
+        if not oauth_uid:
+            raise openerp.exceptions.AccessDenied
+        email = validation.get('email', 'provider_%d_user_%d' % (p.id, oauth_uid))
+        # optional
+        name = validation.get('name', email)
         res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
         if res:
-            self.write(cr, uid, res[0], {'oauth_access_token':access_token})
+            self.write(cr, uid, res[0], { 'oauth_access_token': access_token })
         else:
             # New user
             new_user = {
                 'name': name,
-                'login': login,
-                'user_email': login,
-                'oauth_provider_id': 1,
+                'login': email,
+                'user_email': email,
+                'oauth_provider_id': p.id,
                 'oauth_uid': oauth_uid,
                 'oauth_access_token': access_token,
                 'active': True,
             }
             self.auth_signup_create(cr, uid, new_user)
+        credentials = (cr.dbname, email, access_token)
         return credentials
 
     def check_credentials(self, cr, uid, password):
