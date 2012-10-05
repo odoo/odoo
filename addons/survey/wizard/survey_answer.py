@@ -137,6 +137,8 @@ class survey_question_wiz(osv.osv_memory):
                         raise osv.except_osv(_('Warning!'),_('This survey has no pages defined. Please define the pages first.'))
                     if sur_name_rec.page_no > - 1:
                         pre_button = True
+                    else:
+                        flag = True
                 else:
                     if sur_name_rec.page_no != 0:
                         p_id = p_id[sur_name_rec.page_no - 1]
@@ -149,7 +151,15 @@ class survey_question_wiz(osv.osv_memory):
                         pre_button = True
                 if flag:
                     pag_rec = page_obj.browse(cr, uid, p_id, context=context)
-                    xml_form = etree.Element('form', {'string': tools.ustr(pag_rec.title or sur_rec.title)})
+                    note = False
+                    question_ids = []
+                    if pag_rec:
+                        title = pag_rec.title
+                        note = pag_rec.note
+                        question_ids=pag_rec.question_ids
+                    else:
+                        title=sur_rec.title
+                    xml_form = etree.Element('form', {'string': tools.ustr(title)})
                     if context.has_key('active') and context.get('active',False) and context.has_key('edit'):
                         context.update({'page_id' : tools.ustr(p_id),'page_number' : sur_name_rec.page_no , 'transfer' : sur_name_read.transfer})
                         xml_group3 = etree.SubElement(xml_form, 'group', {'col': '4', 'colspan': '4'})
@@ -177,10 +187,10 @@ class survey_question_wiz(osv.osv_memory):
                         fields["wizardid_" + str(wiz_id)] = {'type':'char', 'size' : 255, 'string':"", 'views':{}}
                         etree.SubElement(xml_form, 'field', {'invisible':'1','name': "wizardid_" + str(wiz_id),'default':str(lambda *a: 0),'modifiers':'{"invisible":true}'})
 
-                    if pag_rec.note:
-                        for que_test in pag_rec.note.split('\n'):
+                    if note:
+                        for que_test in note.split('\n'):
                             etree.SubElement(xml_form, 'label', {'string': to_xml(tools.ustr(que_test)), 'align':"0.0"})
-                    que_ids = pag_rec.question_ids
+                    que_ids = question_ids
                     qu_no = 0
 
                     for que in que_ids:
