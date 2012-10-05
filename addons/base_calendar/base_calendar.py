@@ -1016,7 +1016,7 @@ defines the list of date/time exceptions for a recurring calendar component."),
 rule or repeating pattern of time to exclude from the recurring rule."),
         'rrule': fields.function(_get_rulestring, type='char', size=124, \
                     fnct_inv=_rrule_write, store=True, string='Recurrent Rule'),
-        'rrule_type': fields.selection([('none', ''), ('daily', 'Daily'), \
+        'rrule_type': fields.selection([('daily', 'Daily'), \
                             ('weekly', 'Weekly'), ('monthly', 'Monthly'), \
                             ('yearly', 'Yearly'),],
                             'Recurrency', states={'done': [('readonly', True)]},
@@ -1101,9 +1101,9 @@ rule or repeating pattern of time to exclude from the recurring rule."),
         return res
 
     _defaults = {
-            'end_type' : 'count',
-            'count' : 1,
-            'rrule_type' : 'none',
+            'end_type': 'count',
+            'count': 1,
+            'rrule_type': False,
             'state': 'tentative',
             'class': 'public',
             'show_as': 'busy',
@@ -1219,13 +1219,13 @@ rule or repeating pattern of time to exclude from the recurring rule."),
             return (data.get('end_type') == 'count' and (';COUNT=' + str(data.get('count'))) or '') +\
                              ((data.get('end_date_new') and data.get('end_type') == 'end_date' and (';UNTIL=' + data.get('end_date_new'))) or '')
 
-        freq=data.get('rrule_type')
-        if freq == 'none':
-            return ''
+        freq = data.get('rrule_type', False)
+        res = ''
+        if freq:
+            interval_srting = data.get('interval') and (';INTERVAL=' + str(data.get('interval'))) or ''
+            res = 'FREQ=' + freq.upper() + get_week_string(freq, data) + interval_srting + get_end_date(data) + get_month_string(freq, data)
 
-        interval_srting = data.get('interval') and (';INTERVAL=' + str(data.get('interval'))) or ''
-
-        return 'FREQ=' + freq.upper() + get_week_string(freq, data) + interval_srting + get_end_date(data) + get_month_string(freq, data)
+        return res
 
     def _get_empty_rrule_data(self):
         return  {
