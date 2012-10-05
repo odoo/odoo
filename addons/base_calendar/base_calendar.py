@@ -1392,7 +1392,7 @@ rule or repeating pattern of time to exclude from the recurring rule."),
                     vals,
                     recurrent_uid=real_event_id,
                     recurrent_id=data.get('date'),
-                    rrule_type='none',
+                    rrule_type=False,
                     rrule='',
                     recurrency=False,
                 )
