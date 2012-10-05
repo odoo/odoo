@@ -484,7 +484,8 @@ class pos_order(osv.osv):
                 'name': order['name'],
                 'user_id': order['user_id'] or False,
                 'session_id': order['pos_session_id'],
-                'lines': order['lines']
+                'lines': order['lines'],
+                'pos_reference':order['name']
             }, context)
 
             for payments in order['statement_ids']:
@@ -592,7 +593,7 @@ class pos_order(osv.osv):
         'picking_id': fields.many2one('stock.picking', 'Picking', readonly=True),
         'note': fields.text('Internal Notes'),
         'nb_print': fields.integer('Number of Print', readonly=True),
-
+        'pos_reference': fields.char('Receipt Ref', size=64, readonly=True),
         'sale_journal': fields.related('session_id', 'config_id', 'journal_id', relation='account.journal', type='many2one', string='Sale Journal', store=True, readonly=True),
     }
 
