@@ -280,25 +280,25 @@ class fleet_vehicle(osv.Model):
             return dict([])
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
+        
         for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],order='expiration_date')
             overdue=0
-            if (len(contracts) > 0):
-                for element in contracts:
-                    current_date_str=time.strftime('%Y-%m-%d')
-                    due_time_str=self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,element,context=context).expiration_date
-                    
-                    current_date=self.str_to_date(current_date_str)
-                    due_time=self.str_to_date(due_time_str)
-     
-                    diff_time=int((due_time-current_date).days)
-                    if diff_time<0:
-                        overdue = overdue +1;
-                    else:
-                        break
+            if (record.log_contracts):
+                for element in record.log_contracts:
+                    if (element.state=='open' and element.expiration_date):
+                        current_date_str=time.strftime('%Y-%m-%d')
+                        due_time_str=element.expiration_date
+                            #due_time_str=element.browse()
+                        current_date=self.str_to_date(current_date_str)
+                        due_time=self.str_to_date(due_time_str)
+             
+                        diff_time=int((due_time-current_date).days)
+                        if diff_time<0:
+                            overdue = overdue +1;
                 res.append((record.id,overdue))
             else:
                 res.append((record.id,0))
+
         return dict(res)
 
     def get_next_contract_reminder(self,cr,uid,ids,prop,unknow_none,context=None):
@@ -308,26 +308,27 @@ class fleet_vehicle(osv.Model):
             return dict([])
         reads = self.browse(cr,uid,ids,context=context)
         res=[]
-        for record in reads:
-            contracts = self.pool.get('fleet.vehicle.log.contract').search(cr,uid,[('vehicle_id','=',record.id),('state','=','open')],order='expiration_date')
-            due_soon=0
-            if (len(contracts) > 0):
-                for element in contracts:
-                    current_date_str=time.strftime('%Y-%m-%d')
-                    due_time_str=self.pool.get('fleet.vehicle.log.contract').browse(cr,uid,element,context=context).expiration_date
-                    
-                    current_date=self.str_to_date(current_date_str)
-                    due_time=self.str_to_date(due_time_str)
-     
-                    diff_time=int((due_time-current_date).days)
-                    if diff_time<15 and diff_time>=0:
-                        due_soon = due_soon +1;
-                    if diff_time>15:
-                        break
 
+        for record in reads:
+            due_soon=0
+            if (record.log_contracts):
+                for element in record.log_contracts:
+                    if (element.state=='open' and element.expiration_date):
+                        current_date_str=time.strftime('%Y-%m-%d')
+                        due_time_str=element.expiration_date
+                            #due_time_str=element.browse()
+                        current_date=self.str_to_date(current_date_str)
+                        due_time=self.str_to_date(due_time_str)
+             
+                        diff_time=int((due_time-current_date).days)
+                        if diff_time<15 and diff_time>=0:
+                            due_soon = due_soon +1;
                 res.append((record.id,due_soon))
             else:
                 res.append((record.id,0))
+
+
+        
         return dict(res)
 
 
@@ -757,8 +758,10 @@ class fleet_vehicle_log_contract(osv.Model):
         }
 
     def compute_next_year_date(self, strdate):
-        nextyear=int(strdate[:4])+1
-        return str(nextyear)+strdate[4:]
+        oneyear=datetime.timedelta(days=365)
+        curdate = self.str_to_date(strdate)
+        nextyear=curdate+oneyear#int(strdate[:4])+1
+        return str(nextyear)#+strdate[4:]
 
     def on_change_start_date(self, cr, uid, ids, strdate, context=None):
         if (strdate):
@@ -830,17 +833,9 @@ class fleet_vehicle_log_contract(osv.Model):
         default['start_date'] = time.strftime('%Y-%m-%d')
         default['expiration_date'] = self.compute_next_year_date(time.strftime('%Y-%m-%d'))
         #default['name'] = current_object.name
-        default['insurer_id']= current_object.insurer_id
-        default['purchaser_id'] = current_object.purchaser_id
         default['ins_ref'] = ''
         default['state'] = 'open'
         default['notes'] = ''
-        default['costs'] = current_object.costs
-        default['odometer_id'] = current_object.odometer_id
-        default['vehicle_id'] = current_object.vehicle_id
-        default['cost_type'] = current_object.cost_type
-        default['amount'] = current_object.amount
-        default['parent_id'] = current_object.parent_id
         default['date'] = time.strftime('%Y-%m-%d')
 
         #default['odometer'] = current_object.odometer
