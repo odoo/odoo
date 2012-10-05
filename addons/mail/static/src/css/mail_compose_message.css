@@ -10,10 +10,25 @@
     float: left;
 }
 
+.openerp .oe_mail .oe_mail_compose_textarea
+{
+   display: none;
+}
+
 .openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_header,
 .openerp .oe_mail .oe_mail_compose_textarea .oe_mail_post_footer,
- {
+{
     position: relative;
+}
+
+.openerp .oe_mail .oe_mail_compose_textarea a.oe_cancel {
+    position: absolute;
+    right: -8px;
+    top: -8px;
+}
+
+.openerp .oe_mail .oe_mail_compose_textarea button.oe_full {
+    float: right;
 }
 
 /* ------------------------------------------------------------ */
@@ -82,6 +97,10 @@
     visibility: hidden;
 }
 
+.openerp .oe_mail .oe_mail_compose_attachment_list {
+    clear: both;
+}
+
 /* ------------------------------------------------------------ */
 /* mail.compose.message
 /* ------------------------------------------------------------ */
@@ -90,7 +109,7 @@
 /* default textarea (oe_mail_compose_textarea), and body textarea for compose form view */
 .openerp .oe_mail.oe_semantic_html_override .oe_mail_compose_textarea textarea.field_text,
 .openerp .oe_mail div.oe_mail_compose_message_body textarea.field_text {
-    width: 474px;
+    width: 100%;
     min-height: 120px;
     height: auto;
     padding: 4px;

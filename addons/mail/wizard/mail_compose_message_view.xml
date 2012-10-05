@@ -16,6 +16,7 @@
                         <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"/>
+                        <field name="is_private" help="If this message is not private, this message will send to all your followers or all followers of the parented message."/>
                     </group>
                     <notebook>
                         <page string="Body">

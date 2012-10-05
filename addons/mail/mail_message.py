@@ -313,7 +313,7 @@ class mail_message(osv.Model):
         record = None
 
         # select ids
-        if ids:
+        if ids and ids!=[None]:
             for msg in self.browse(cr, uid, ids, context=context):
                 result.append(self._message_dict_get(cr, uid, msg, context=context))
             return result

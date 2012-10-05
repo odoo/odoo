@@ -16,11 +16,13 @@
                 <!-- default content: old basic textarea -->
                 <div class="oe_mail_post_header">
                     <t t-call="mail.thread.list_recipients"/>
+                    <a class="oe_cancel oe_e">X</a>
                 </div>
                 <textarea class="field_text" placeholder="Add your comment here..."/>
                 <div class="oe_mail_post_footer">
-                    <span class="oe_mail_compose_attachment_list"/>
-                    <button class="post">Post message</button>
+                    <div class="oe_mail_compose_attachment_list"/>
+                    <button class="oe_full">Full mail message</button>
+                    <button class="oe_post">Post message</button>
                     <t t-call="mail.compose_message.add_attachment"/>
                 </div>
             </div>
@@ -63,7 +65,7 @@
     <t t-name="mail.thread.message.private">
         <div>
             <span class="oe_placeholder_checkbox_private"/>
-            <span class="oe_send_private">This email is private and don't send to all my followers.</span>
+            <span class="oe_send_private">This email is private.</span>
             <span class="oe_send_public">I wrote for contacts and all my followers.</span>
         </div>
     </t>
@@ -92,12 +94,6 @@
         Template used to display the communication history in the wall.
         -->
     <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
-
-        <!--button string="Send Reminder Email" name="%(mail.action_email_compose_message_wizard)d" type="action"
-            states="waiting_answer"
-            context="{'default_body_text': 'Hello,\n\n',
-                        'default_subject': '' }"/-->
-
         <table class="oe_view_manager_header">
           <colgroup>
             <col width="33%"/>
