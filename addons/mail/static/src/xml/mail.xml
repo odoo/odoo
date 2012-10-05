@@ -88,7 +88,6 @@
         </div>
     </t>
 
-
     <!-- 
         wall main template
         Template used to display the communication history in the wall.
@@ -112,6 +111,16 @@
                     </h2>
                 </td>
                 <td><div class="oe_view_manager_view_search" t-opentag="true"/></td>
+            </tr>
+            <tr class="oe_header_row">
+                <td colspan="2">
+                    <button type="button" class="oe_write_full oe_highlight">
+                        Compose a new message
+                    </button>
+                    <button type="button" class="oe_write_onwall" help="Your followers can read this message">
+                        Write on your wall
+                    </button>
+                </td>
             </tr>
           </tbody>
         </table>

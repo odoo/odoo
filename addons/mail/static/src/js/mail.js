@@ -156,7 +156,7 @@ openerp.mail = function(session) {
             this.$el.on('change', 'input.oe_insert_file', self.on_attachment_change );
             this.$el.on('click', 'a.oe_cancel', self.on_cancel );
             this.$el.on('click', 'button.oe_post', function(){self.on_message_post()} );
-            this.$el.on('click', 'button.oe_full', function(){self.on_open_wizard()} );
+            this.$el.on('click', 'button.oe_full', function(){self.on_compose_fullmail()} );
         },
 
         on_attachment_change: function (event) {
@@ -179,7 +179,7 @@ openerp.mail = function(session) {
             }
         },
 
-        on_open_wizard: function(){
+        on_compose_fullmail: function(){
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -193,9 +193,8 @@ openerp.mail = function(session) {
                     'default_content_subtype': 'html',
                     'default_is_private': true,
                     'default_parent_id': this.id,
-                    'default_body': this.$('textarea').val().replace(/[\n\r]/g,'<br>'),
+                    'default_body': (this.$('textarea').val() || '').replace(/[\n\r]/g,'<br>'),
                     'default_attachment_ids': this.attachment_ids
-
                 },
             };
             this.do_action(action);
@@ -743,13 +742,9 @@ openerp.mail = function(session) {
             var self=this;
             // fetch and display message, using message_ids if set
             display_done = this.message_fletch(true);
-            //show the first write message
-            self.$(">.oe_mail_thread_action").show();
 
             $(document).scroll( self.on_scroll );
             window.setTimeout( self.on_scroll, 500 );
-
-            this.ComposeMessage.$el.show();
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -1077,6 +1072,7 @@ openerp.mail = function(session) {
             var searchview_ready = this.load_searchview({}, false);
             var thread_displayed = this.message_render();
             this.options.domain = this.options.domain.concat(this.search_results['domain']);
+            this.bind_events();
             return (searchview_ready && thread_displayed);
         },
 
@@ -1139,6 +1135,13 @@ openerp.mail = function(session) {
             $(render_res).appendTo(this.$('ul.oe_mail_wall_threads'));
 
             return this.thread.appendTo( this.$('li.oe_mail_wall_thread:last') );
+
         },
+
+        bind_events: function(){
+            var self=this;
+            this.$("button.oe_write_full:first").click(function(){ self.thread.ComposeMessage.on_compose_fullmail(); });
+            this.$("button.oe_write_onwall:first").click(function(){ self.thread.ComposeMessage.$el.toggle(); });
+        }
     });
 };
