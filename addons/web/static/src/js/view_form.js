@@ -1784,11 +1784,13 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 
         this.field_manager.on("view_content_has_changed", this, this.process_modifiers);
 
-        this.set({required: this.modifiers['required'] === true});
+        this.set({
+            required: false,
+            readonly: false,
+        });
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "mode" on field_manager
         var self = this;
-        this.set({"readonly": this.modifiers['readonly'] === true});
         var test_effective_readonly = function() {
             self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
         };
@@ -1797,6 +1799,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         test_effective_readonly.call(this);
     },
     renderElement: function() {
+        this.process_modifiers();
         this._super();
         this.$el.addClass(this.node.attrs["class"] || "");
     },
@@ -3979,6 +3982,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
+        this.set({"value": []});
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
