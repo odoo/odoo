@@ -27,6 +27,7 @@ from tools.translate import _
 import netsvc
 import time
 import tools
+from operator import attrgetter
 
 
 #----------------------------------------------------------
@@ -737,8 +738,28 @@ class mrp_production(osv.osv):
                         # we already have more qtys consumed than we need 
                         continue
 
+                    consumed = 0
+                    rounding = raw_product[0].product_uom.rounding
+
+                    # sort the list by quantity, to consume smaller quantities first and avoid splitting if possible
+                    raw_product.sort(key=attrgetter('product_qty'))
+
+                    # search for exact quantity
                     for consume_line in raw_product:
-                        consume_line.action_consume(qty, consume_line.location_id.id, context=context)
+                        if tools.float_compare(consume_line.product_qty, qty, precision_rounding=rounding) == 0:
+                            # consume this line
+                            consume_line.action_consume(qty, consume_line.location_id.id, context=context)
+                            consumed = qty
+                            break
+
+                    index = 0                        
+                    # consume the smallest quantity while we have not consumed enough
+                    while tools.float_compare(consumed, qty, precision_rounding=rounding) == -1 and index < len(raw_product):
+                        consume_line = raw_product[index]
+                        to_consume = min(consume_line.product_qty, qty - consumed) 
+                        consume_line.action_consume(to_consume, consume_line.location_id.id, context=context)
+                        consumed += to_consume
+                        index += 1
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product
