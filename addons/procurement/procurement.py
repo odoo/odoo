@@ -641,8 +641,10 @@ class stock_warehouse_orderpoint(osv.osv):
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
 stock_warehouse_orderpoint()
+
 class product_template(osv.osv):
     _inherit="product.template"
+
     _columns = {
         'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
@@ -652,6 +654,7 @@ class product_template(osv.osv):
         'procure_method': 'make_to_stock',
         'supply_method': 'buy',
     }
+
 product_template()
 
 class product_product(osv.osv):
