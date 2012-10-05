@@ -1212,7 +1212,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         this.$form.appendTo(this.$target);
 
-        _.each(this.fields_to_init, function($elem) {
+        var ws = _.map(this.fields_to_init, function($elem) {
             var name = $elem.attr("name");
             if (!self.fvg.fields[name]) {
                 throw new Error("Field '" + name + "' specified in view could not be found.");
@@ -1228,7 +1228,10 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             }
             self.alter_field(w);
             self.view.register_field(w, $elem.attr("name"));
-            w.replace($elem);
+            return [w, $elem];
+        });
+        _.each(ws, function(w) {
+            w[0].replace(w[1]);
         });
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
@@ -1578,6 +1581,10 @@ instance.web.form.DefaultFieldManager = instance.web.Widget.extend({
         this._super(parent);
         this.field_descs = {};
         this.eval_context = eval_context || {};
+        this.set({
+            display_invalid_fields: false,
+            actual_mode: 'create',
+        });
     },
     get_field_desc: function(field_name) {
         if (this.field_descs[field_name] === undefined) {
@@ -1780,11 +1787,13 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
 
         this.field_manager.on("view_content_has_changed", this, this.process_modifiers);
 
-        this.set({required: this.modifiers['required'] === true});
+        this.set({
+            required: false,
+            readonly: false,
+        });
         // some events to make the property "effective_readonly" sync automatically with "readonly" and
         // "mode" on field_manager
         var self = this;
-        this.set({"readonly": this.modifiers['readonly'] === true});
         var test_effective_readonly = function() {
             self.set({"effective_readonly": self.get("readonly") || self.field_manager.get("actual_mode") === "view"});
         };
@@ -1793,6 +1802,7 @@ instance.web.form.FormWidget = instance.web.Widget.extend(instance.web.form.Invi
         test_effective_readonly.call(this);
     },
     renderElement: function() {
+        this.process_modifiers();
         this._super();
         this.$el.addClass(this.node.attrs["class"] || "");
     },
@@ -3975,6 +3985,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
+        this.set({"value": []});
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
         this.is_setted = $.Deferred();
@@ -4601,18 +4612,14 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         }
     },
     destroy_content: function() {
-        if (this.selection) {
-            this.selection.destroy();
-            this.selection = undefined;
-        }
-        if (this.m2o) {
-            this.m2o.destroy();
-            this.m2o = undefined;
+        if (this.fm) {
+            this.fm.destroy();
         }
     },
     initialize_content: function() {
         var self = this;
         var fm = new instance.web.form.DefaultFieldManager(this);
+        this.fm = fm;
         fm.extend_field_desc({
             "selection": {
                 selection: this.field_manager.get_field_desc(this.name).selection,

@@ -231,7 +231,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
         } else if (_.isNumber(action) || _.isString(action)) {
             var self = this;
             return self.rpc("/web/action/load", { action_id: action }).pipe(function(result) {
-                return self.do_action(result.result, on_close, clear_breadcrumbs, on_reverse_breadcrumb);
+                return self.do_action(result, on_close, clear_breadcrumbs, on_reverse_breadcrumb);
             });
         }
         if (!action.type) {
@@ -1223,7 +1223,7 @@ instance.web.View = instance.web.Widget.extend({
         };
 
         if (action_data.special) {
-            return handler({result: {"type":"ir.actions.act_window_close"}});
+            return handler({"type":"ir.actions.act_window_close"});
         } else if (action_data.type=="object") {
             var args = [[record_id]], additional_args = [];
             if (action_data.args) {
