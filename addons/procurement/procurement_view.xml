@@ -294,6 +294,29 @@
             <field name="res_model">stock.warehouse.orderpoint</field>
         </record>
 
+        <record model="ir.ui.view" id="product_template_form_view_procurement">
+            <field name="name">product.template.procurement</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='type']" position="after">
+                    <field name="procure_method"/>
+                    <field name="supply_method"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="product_search_form_view_procurment" model="ir.ui.view">
+            <field name="name">product.search.procurment.form</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_search_form_view"/>
+            <field name="arch" type="xml">
+                <filter name="consumable" position="before">
+                   <filter string="Products" icon="terp-accessories-archiver" domain="[('type','=','product')]" help="Stockable products"/>
+                </filter>
+            </field>
+        </record>
+
         <record model="ir.ui.view" id="product_form_view_procurement_button">
             <field name="name">product.product.procurement</field>
             <field name="model">product.product</field>
@@ -329,18 +352,6 @@
                            on hand may become negative).
                        </p>
                    </group>
-                </xpath>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="product_template_form_view_procurement">
-            <field name="name">product.template.procurement</field>
-            <field name="model">product.template</field>
-            <field name="inherit_id" ref="product.product_template_form_view"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
-                    <field name="procure_method"/>
-                    <field name="supply_method"/>
                 </xpath>
             </field>
         </record>
