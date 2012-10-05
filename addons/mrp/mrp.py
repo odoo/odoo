@@ -737,21 +737,42 @@ class mrp_production(osv.osv):
                         # we already have more qtys consumed than we need 
                         continue
 
-                    qty_remained = 0
-                    qty_tobe_consumed = qty
+                    consumed = 0
+                    
+                    # search for exact quantity
                     for consume_line in raw_product:
-                        if consume_line.prodlot_id and consume_line.product_id.id==scheduled.product_id.id:
-                            if qty_remained:
-                                qty = qty_remained
-                            if consume_line.product_qty >= qty:
-                                consume_line.action_consume(qty, consume_line.location_id.id, context=context)
-                                break
-                            else:
-                                qty_tobe_consumed += consume_line.product_qty
-                                consume_line.action_consume(qty_tobe_consumed, consume_line.location_id.id, context=context)
-                                qty_remained = qty - consume_line.product_qty
-                        else:
+                        if consume_line.product_qty == qty:
+                            # consume this line
                             consume_line.action_consume(qty, consume_line.location_id.id, context=context)
+                            consumed = qty
+                            break
+                    
+                    # using the quick sort algorithm
+                    def _sort_quantity(raw_product):
+                        if len(raw_product) <= 1:
+                            return raw_product
+                        pivot = raw_product[0]
+                        smaller = _sort_quantity([x for x in raw_product[1:] if x.product_qty < pivot.product_qty])
+                        bigger = _sort_quantity([x for x in raw_product[1:] if x.product_qty >= pivot.product_qty])
+                        return smaller + [pivot] + bigger
+                            
+                    # sort the list by quantity if we have not consumed yet
+                    if consumed < qty:
+                        raw_product = _sort_quantity(raw_product)
+                    
+                    index = 0    
+                    # consume the smallest quantity while we have not consumed enough
+                    while consumed < qty and index < len(raw_product):
+                        consume_line = raw_product[index]
+                        # we don't need to split
+                        if consume_line.product_qty <= (qty - consumed):      
+                            consume_line.action_consume(consume_line.product_qty, consume_line.location_id.id, context=context)
+                            consumed += consume_line.product_qty 
+                        # we need to split
+                        else:
+                            consume_line.action_consume(qty - consumed, consume_line.location_id.id, context=context)
+                            consumed += qty - consumed  
+                        index += 1
 
         if production_mode == 'consume_produce':
             # To produce remaining qty of final product

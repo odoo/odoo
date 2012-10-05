@@ -685,7 +685,7 @@
                                        <field name="product_id" readonly="1"/>
                                        <field name="product_qty" readonly="1" string="Qty"/>
                                        <field name="product_uom" readonly="1" string="UOM"/>
-                                       <field name="prodlot_id" context="{'product_id': product_id}"/>
+                                       <field name="prodlot_id" attrs="{'readonly': False}" context="{'product_id': product_id}"/>
                                        <field name="state" invisible="1"/>
                                        <field name="scrapped" invisible="1"/>
                                        <button
