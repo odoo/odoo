@@ -886,8 +886,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         var self = this;
         if (!this.getParent().has_uncommitted_changes()) {
             self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-                result.result.res_id = instance.session.uid;
-                self.getParent().action_manager.do_action(result.result);
+                result.res_id = instance.session.uid;
+                self.getParent().action_manager.do_action(result);
             });
         }
     },
@@ -1121,7 +1121,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         return this.rpc("/web/action/load", { action_id: options.action_id })
             .pipe(function (result) {
-                var action = result.result;
+                var action = result;
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
@@ -1166,7 +1166,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         return $.when(this._super()).pipe(function() {
             return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
                 return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
-                    var action = result.result;
+                    var action = result;
                     action.flags = _.extend({
                         //views_switcher : false,
                         search_view : false,
