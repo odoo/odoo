@@ -18,7 +18,6 @@
              <field name="name">sale.shop.sale.stock</field>
              <field name="model">sale.shop</field>
              <field name="inherit_id" ref="sale.view_shop_tree"/>
-             <field name="type">tree</field>
              <field name="arch" type="xml">
                  <field name="name" position="after">
                      <field name="warehouse_id"/>
@@ -32,7 +31,6 @@
             <field name="name">sale.order.form.sale.stock</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <data>
                    <xpath expr="//button[@name='invoice_corrected']" position="after">
