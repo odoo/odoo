@@ -461,7 +461,7 @@ class hr_applicant(base_stage, osv.Model):
         """ Override of the (void) default notification method. """
         if not stage_id: return True
         stage_name = self.pool.get('hr.recruitment.stage').name_get(cr, uid, [stage_id], context=context)[0][1]
-        return self.message_post(cr, uid, ids, body= _("Stage changed to <b>%s</b>.") % (stage_name), context=context)
+        return self.message_post(cr, uid, ids, body=_("Stage changed to <b>%s</b>.") % (stage_name), context=context)
 
     def case_get_note_msg_prefix(self, cr, uid, id, context=None):
 		return 'Applicant'
@@ -474,6 +474,8 @@ class hr_applicant(base_stage, osv.Model):
         if context is None:
             context = {}
         for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=_('New employee joined the company %s.')%(applicant.name,), subtype="hr_recruitment.mt_hired", context=context)
             if applicant.emp_id:
                 message = _("Applicant has been <b>hired</b> and created as an employee.")
                 self.message_post(cr, uid, [applicant.id], body=message, context=context)
@@ -492,6 +494,9 @@ class hr_applicant(base_stage, osv.Model):
 
     def create_send_note(self, cr, uid, ids, context=None):
         message = _("Applicant has been <b>created</b>.")
+        for applicant in self.browse(cr, uid, ids, context=context):
+            if applicant.job_id:
+                self.pool.get('hr.job').message_post(cr, uid, [applicant.job_id.id], body=message, subtype="hr_recruitment.mt_applicant_new", context=context)
         return self.message_post(cr, uid, ids, body=message, context=context)
 
 class hr_job(osv.osv):

@@ -498,22 +498,22 @@ class procurement_order(osv.osv):
         return obj_id
 
     def create_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>created</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>created</b>."), context=context)
 
     def confirm_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>confirmed</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
 
     def running_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>running</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement set to <b>running</b>."), context=context)
 
     def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been set to <b>ready</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>cancelled</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
 
     def done_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement has been <b>done</b>."), context=context)
+        self.message_post(cr, uid, ids, body=_("Procurement <b>done</b>."), context=context)
 
 procurement_order()
 
