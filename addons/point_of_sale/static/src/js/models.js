@@ -614,6 +614,11 @@ function openerp_pos_models(instance, module){ //module is instance.point_of_sal
                 return sum + orderLine.get_price_with_tax();
             }), 0);
         },
+        getDiscountTotal: function() {
+            return (this.get('orderLines')).reduce((function(sum, orderLine) {
+                return sum + (orderLine.get_list_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+            }), 0);
+        },
         getTotalTaxExcluded: function() {
             return (this.get('orderLines')).reduce((function(sum, orderLine) {
                 return sum + orderLine.get_price_without_tax();
