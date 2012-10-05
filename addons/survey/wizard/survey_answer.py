@@ -112,26 +112,29 @@ class survey_question_wiz(osv.osv_memory):
                 flag = False
                 fields = {}
                 if sur_name_read.page == "next" or sur_name_rec.page_no == -1:
-                    if total_pages > sur_name_rec.page_no + 1:
-                        if ((context.has_key('active') and not context.get('active', False)) \
-                                    or not context.has_key('active')) and not sur_name_rec.page_no + 1:
-                            if sur_rec.state != "open" :
-                                raise osv.except_osv(_('Warning!'),_("You cannot answer because the survey is not open."))
-                            cr.execute('select count(id) from survey_history where user_id=%s\
-                                                    and survey_id=%s', (uid,survey_id))
-                            res = cr.fetchone()[0]
-                            user_limit = survey_obj.browse(cr, uid, survey_id)
-                            user_limit = user_limit.response_user
-                            if user_limit and res >= user_limit:
-                                raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (user_limit))
-
-                        if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
-                            survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
-
-                        p_id = p_id[sur_name_rec.page_no + 1]
-                        surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
-                        flag = True
-                        page_number += 1
+                    if total_pages:
+                        if total_pages > sur_name_rec.page_no + 1:
+                            if ((context.has_key('active') and not context.get('active', False)) \
+                                        or not context.has_key('active')) and not sur_name_rec.page_no + 1:
+                                if sur_rec.state != "open" :
+                                    raise osv.except_osv(_('Warning!'),_("You cannot answer because the survey is not open."))
+                                cr.execute('select count(id) from survey_history where user_id=%s\
+                                                        and survey_id=%s', (uid,survey_id))
+                                res = cr.fetchone()[0]
+                                user_limit = survey_obj.browse(cr, uid, survey_id)
+                                user_limit = user_limit.response_user
+                                if user_limit and res >= user_limit:
+                                    raise osv.except_osv(_('Warning!'),_("You cannot answer this survey more than %s times.") % (user_limit))
+    
+                            if sur_rec.max_response_limit and sur_rec.max_response_limit <= sur_rec.tot_start_survey and not sur_name_rec.page_no + 1:
+                                survey_obj.write(cr, uid, survey_id, {'state':'close', 'date_close':strftime("%Y-%m-%d %H:%M:%S")})
+    
+                            p_id = p_id[sur_name_rec.page_no + 1]
+                            surv_name_wiz.write(cr, uid, [context['sur_name_id'],], {'page_no' : sur_name_rec.page_no + 1})
+                            flag = True
+                            page_number += 1
+                    else:
+                        raise osv.except_osv(_('Warning!'),_('This survey has no pages defined. Please define the pages first.'))
                     if sur_name_rec.page_no > - 1:
                         pre_button = True
                 else:
