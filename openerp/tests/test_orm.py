@@ -24,6 +24,19 @@ class TestInherits(common.TransactionCase):
 
         self.assertNotIn(foo.partner_id.id, partners_before)
 
+    def test_create_with_ancestor(self):
+        """ creating a user with a specific 'partner_id' should not create a new partner """
+        par_id = self.partner.create(self.cr, UID, {'name': 'Foo'})
+        partners_before = self.partner.search(self.cr, UID, [])
+        foo_id = self.user.create(self.cr, UID, {'partner_id': par_id, 'login': 'foo', 'password': 'foo'})
+        partners_after = self.partner.search(self.cr, UID, [])
+
+        self.assertEqual(set(partners_before), set(partners_after))
+
+        foo = self.user.browse(self.cr, UID, foo_id)
+        self.assertEqual(foo.name, 'Foo')
+        self.assertEqual(foo.partner_id.id, par_id)
+
     def test_read(self):
         """ inherited fields should be read without any indirection """
         foo_id = self.user.create(self.cr, UID, {'name': 'Foo', 'login': 'foo', 'password': 'foo'})
