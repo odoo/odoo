@@ -4489,7 +4489,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             self.rpc('/web/session/eval_domain_and_context', {
                 domains: [],
                 contexts: [this.context]
-            }, function (results) {
+            }).then(function (results) {
                 var search_defaults = {};
                 _.each(results.context, function (value_, key) {
                     var match = /^search_default_(.*)$/.exec(key);
@@ -4557,7 +4557,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
             domains: domains || [],
             contexts: contexts || [],
             group_by_seq: groupbys || []
-        }, function (results) {
+        }).then(function (results) {
             self.view_list.do_search(results.domain, results.context, results.group_by);
         });
     },

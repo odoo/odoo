@@ -654,7 +654,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             domains: [this.action.domain || []].concat(domains || []),
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
-        }, function (results) {
+        }).then(function (results) {
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -1058,7 +1058,7 @@ instance.web.Sidebar = instance.web.Widget.extend({
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
                 context: additional_context
-            }, function(result) {
+            }).then(function(result) {
                 result.result.context = _.extend(result.result.context || {},
                     additional_context);
                 result.result.flags = result.result.flags || {};
@@ -1237,7 +1237,7 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).then(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
