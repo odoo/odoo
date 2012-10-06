@@ -813,13 +813,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 });
                 break;
             case 'fields':
-                this.dataset.call_and_eval(
-                        'fields_get', [false, {}], null, 1).then(function (fields) {
+                this.dataset.call('fields_get', [false, {}]).then(function (fields) {
                     var $root = $('<dl>');
                     _(fields).each(function (attributes, name) {
                         $root.append($('<dt>').append($('<h4>').text(name)));
-                        var $attrs = $('<dl>').appendTo(
-                                $('<dd>').appendTo($root));
+                        var $attrs = $('<dl>').appendTo($('<dd>').appendTo($root));
                         _(attributes).each(function (def, name) {
                             if (def instanceof Object) {
                                 def = JSON.stringify(def);
