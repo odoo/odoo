@@ -353,7 +353,7 @@ class fleet_vehicle(osv.Model):
             elif value > 0:
                 self.message_post(cr, uid, [key], body=str(value) + ' contract(s) has to be renewed soon!', context=context)
             elif overdues[key] > 0 : 
-                self.message_post(cr, uid, [key], body=str(overdues.key) + ' contract(s) is(are) overdued!', context=context)
+                self.message_post(cr, uid, [key], body=str(overdues[key]) + ' contract(s) is(are) overdued!', context=context)
         return True
 
     _name = 'fleet.vehicle'
