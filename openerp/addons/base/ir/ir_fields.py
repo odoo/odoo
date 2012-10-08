@@ -61,8 +61,6 @@ class ir_fields_converter(orm.Model):
         it returns. The handling of a warning at the upper levels is the same
         as ``ValueError`` above.
 
-        :param cr: openerp cursor
-        :param uid: ID of user calling the converter
         :param column: column object to generate a value for
         :type column: :class:`fields._column`
         :param type fromtype: type to convert to something fitting for ``column``
@@ -183,8 +181,6 @@ class ir_fields_converter(orm.Model):
         """ Finds a database id for the reference ``value`` in the referencing
         subfield ``subfield`` of the provided column of the provided model.
 
-        :param cr: OpenERP cursor
-        :param uid: OpenERP user id
         :param model: model to which the column belongs
         :param column: relational column for which references are provided
         :param subfield: a relational subfield allowing building of refs to

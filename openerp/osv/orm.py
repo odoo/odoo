@@ -1310,8 +1310,6 @@ class BaseModel(object):
         the same order they were extracted from the file. They can be passed
         directly to :meth:`~read`
 
-        :param cr: cursor for the request
-        :param int uid: ID of the user attempting the data import
         :param fields: list of fields to import, at the same index as the corresponding data
         :type fields: list(str)
         :param data: row-major matrix of data to import
@@ -1377,8 +1375,6 @@ class BaseModel(object):
         * None is the name_get for the record (to use with name_create/name_search)
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
-
-        :param ImportLogger logger:
         """
         columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
         # Fake columns to avoid special cases in extractor
@@ -1448,7 +1444,6 @@ class BaseModel(object):
         strings) into forms which can be written to the database (via
         self.create or (ir.model.data)._update)
 
-        :param ImportLogger parent_logger:
         :returns: a list of triplets of (id, xid, record)
         :rtype: list((int|None, str|None, dict))
         """
