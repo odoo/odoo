@@ -457,21 +457,6 @@ $sheet-max-width: 860px
 
     // }}}
 
-    // Generic blocks {{{
-    header
-        position: relative
-        border-bottom: 1px solid #cacaca
-        padding-left: 2px
-        @include vertical-gradient(#fcfcfc, #dedede)
-        > span
-            margin-left: 4px
-        ul
-            display: inline-block
-            float: right
-        .oe_button
-            margin: 3px 2px 1px
-    // }}}
-
     // Tags (for many2many tags, among others) {{{
     .oe_tag
         border: 1px solid $tag-border
@@ -1617,6 +1602,22 @@ $sheet-max-width: 860px
                 margin: 0 -16px
             .oe_notebook_page
                 padding: 0 16px
+    // }}}
+    // FormView.header {{{
+    .oe_form header
+        position: relative
+        border-bottom: 1px solid #cacaca
+        padding-left: 2px
+        @include vertical-gradient(#fcfcfc, #dedede)
+        > span
+            margin-left: 4px
+        ul
+            display: inline-block
+            float: right
+        .oe_button,
+            margin: 3px 2px 1px
+            &:first-child
+                margin-left: 6px
     // }}}
     // FormView.custom tags and classes {{{
     .oe_form header .oe_tags
