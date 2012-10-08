@@ -199,7 +199,7 @@ class ir_fields_converter(orm.Model):
         warnings = []
         action = {'type': 'ir.actions.act_window', 'target': 'new',
                   'view_mode': 'tree,form', 'view_type': 'form',
-                  'views': [(False, 'tree', (False, 'form'))],
+                  'views': [(False, 'tree'), (False, 'form')],
                   'help': _(u"See all possible values")}
         if subfield is None:
             action['res_model'] = column._obj
