@@ -327,7 +327,7 @@ class event_registration(osv.osv):
     _inherit = ['ir.needaction_mixin','mail.thread']
     _columns = {
         'id': fields.integer('ID'),
-        'origin': fields.char('Source', size=124,readonly=True,help="Name of the sale order which create the registration"),
+        'origin': fields.char('Source Document', size=124,readonly=True,help="Name of the sale order which create the registration"),
         'nb_register': fields.integer('Number of Participants', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'event_id': fields.many2one('event.event', 'Event', required=True, readonly=True, states={'draft': [('readonly', False)]}),
         'partner_id': fields.many2one('res.partner', 'Partner', states={'done': [('readonly', True)]}),
