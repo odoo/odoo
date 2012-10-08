@@ -30,10 +30,10 @@ class mrp_subproduct(osv.osv):
         'product_id': fields.many2one('product.product', 'Product', required=True),
         'product_qty': fields.float('Product Qty', digits_compute=dp.get_precision('Product Unit of Measure'), required=True),
         'product_uom': fields.many2one('product.uom', 'Product Unit of Measure', required=True),
-        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True, help="Define how the quantity of subproducts will be set on the production orders using this BoM.\
-  'Fixed' depicts a situation where the quantity of created subproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
+        'subproduct_type': fields.selection([('fixed','Fixed'),('variable','Variable')], 'Quantity Type', required=True, help="Define how the quantity of byproducts will be set on the production orders using this BoM.\
+  'Fixed' depicts a situation where the quantity of created byproduct is always equal to the quantity set on the BoM, regardless of how many are created in the production order.\
   By opposition, 'Variable' means that the quantity will be computed as\
-    '(quantity of subproduct set on the BoM / quantity of manufactured product set on the BoM * quantity of manufactured product in the production order.)'"),
+    '(quantity of byproduct set on the BoM / quantity of manufactured product set on the BoM * quantity of manufactured product in the production order.)'"),
         'bom_id': fields.many2one('mrp.bom', 'BoM'),
     }
     _defaults={
@@ -59,7 +59,7 @@ class mrp_bom(osv.osv):
     _inherit='mrp.bom'
 
     _columns={
-        'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'sub_products'),
+        'sub_products':fields.one2many('mrp.subproduct', 'bom_id', 'Byproducts'),
     }
 
 mrp_bom()
@@ -106,7 +106,7 @@ class mrp_production(osv.osv):
     def _get_subproduct_factor(self, cr, uid, production_id, move_id=None, context=None):
         """Compute the factor to compute the qty of procucts to produce for the given production_id. By default, 
             it's always equal to the quantity encoded in the production order or the production wizard, but with 
-            the module mrp_subproduct installed it can differ for subproducts having type 'variable'.
+            the module mrp_byproduct installed it can differ for byproducts having type 'variable'.
         :param production_id: ID of the mrp.order
         :param move_id: ID of the stock move that needs to be produced. Identify the product to produce.
         :return: The factor to apply to the quantity that we should produce for the given production order and stock move.
