@@ -39,7 +39,7 @@ class ir_fields_converter(orm.Model):
         value acceptable for a write() on the column ``column``.
 
         By default, tries to get a method on itself with a name matching the
-        pattern ``_$fromtype_$column._type`` and returns it.
+        pattern ``_$fromtype_to_$column._type`` and returns it.
 
         Converter callables can either return a value and a list of warnings
         to their caller or raise ``ValueError``, which will be interpreted as a
