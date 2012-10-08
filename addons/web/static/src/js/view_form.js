@@ -2165,11 +2165,12 @@ instance.web.form.ReinitializeWidgetMixin =  {
         this.initialize_field();
     },
     initialize_field: function() {
-        this.on("change:effective_readonly", this, function() {
-            this.destroy_content();
-            this.renderElement();
-            this.initialize_content();
-        });
+        this.on("change:effective_readonly", this, this.reinitialize);
+        this.initialize_content();
+    },
+    reinitialize: function() {
+        this.destroy_content();
+        this.renderElement();
         this.initialize_content();
     },
     /**
@@ -2190,9 +2191,10 @@ instance.web.form.ReinitializeWidgetMixin =  {
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
     initialize_field: function() {
         instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
-        this.on("change:effective_readonly", this, function() {
-            this.render_value();
-        });
+        this.render_value();
+    },
+    reinitialize: function() {
+        instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
         this.render_value();
     },
     /**
@@ -2228,7 +2230,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
             if (this.password) {
                 show_value = new Array(show_value.length + 1).join('*');
             }
-            this.$el.text(show_value);
+            this.$(".oe_form_char_content").text(show_value);
         }
     },
     is_syntax_valid: function() {
@@ -4990,6 +4992,37 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
 });
 
+instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
+    template: "FieldMonetary",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set({"currency": false});
+        if (this.options.currency_field) {
+            this.field_manager.on("field_changed:" + this.options.currency_field, this, function() {
+                this.set({"currency": this.field_manager.get_field_value(this.options.currency_field)});
+            });
+        }
+        this.on("change:currency", this, this.get_currency_info);
+        this.get_currency_info();
+        this.ci_dm = new instance.web.DropMisordered();
+    },
+    start: function() {
+        var tmp = this._super();
+        this.on("change:currency_info", this, this.reinitialize);
+        return tmp;
+    },
+    get_currency_info: function() {
+        var self = this;
+        if (this.get("currency") === false) {
+            this.set({"currency_info": null});
+            return;
+        }
+        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"]).first()).pipe(function(res) {
+            self.set({"currency_info": res});
+        });
+    },
+});
+
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
@@ -5020,7 +5053,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
-    'statusbar': 'instance.web.form.FieldStatus'
+    'statusbar': 'instance.web.form.FieldStatus',
+    'monetary': 'instance.web.form.FieldMonetary',
 });
 
 /**

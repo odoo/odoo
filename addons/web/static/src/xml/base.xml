@@ -916,7 +916,7 @@
 </t>
 <t t-name="FieldChar">
     <span t-att-class="'oe_form_field '+widget.widget_class" t-att-style="widget.node.attrs.style">
-        <t  t-if="!widget.get('effective_readonly')">
+        <t t-if="!widget.get('effective_readonly')">
             <input t-att-type="widget.password ? 'password' : 'text'"
                 t-att-id="widget.id_for_label"
                 t-att-tabindex="widget.node.attrs.tabindex"
@@ -924,6 +924,9 @@
                 t-att-placeholder="widget.node.attrs.placeholder"
                 t-att-maxlength="widget.field.size"
             /><img class="oe_field_translate oe_input_icon" t-if="widget.field.translate" t-att-src='_s + "/web/static/src/img/icons/terp-translate.png"' width="16" height="16" border="0"/>
+        </t>
+        <t t-if="widget.get('effective_readonly')">
+            <span class="oe_form_char_content"></span>
         </t>
     </span>
 </t>
@@ -1716,5 +1719,17 @@
     <button class="oe_form_m2o_qc_button oe_button oe_highlight">Quick Add</button>
     <button class="oe_form_m2o_sc_button oe_button">Add All Info...</button>
     <button class="oe_form_m2o_cancel_button oe_button">Cancel</button>
+</t>
+<t t-name="FieldMonetary" t-extend="FieldChar">
+    <t t-jquery="t:first" t-operation="before">
+        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'before'">
+            <t t-esc="widget.get('currency_info').symbol"/>
+        </t>
+    </t>
+    <t t-jquery="t:last" t-operation="after">
+        <t t-if="widget.get('currency_info') and widget.get('currency_info').position === 'after'">
+            <t t-esc="widget.get('currency_info').symbol"/>
+        </t>
+    </t>
 </t>
 </templates>
