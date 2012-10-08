@@ -21,9 +21,6 @@
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="country_id"/>
-                    </xpath>
                     <xpath expr="//group[@string='Group By...']" position="after">
                         <group string="Display">
                             <filter string="Show Sales Team" context="{'invisible_section': False}"/>
