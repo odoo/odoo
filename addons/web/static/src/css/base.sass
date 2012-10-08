@@ -180,9 +180,11 @@ $sheet-max-width: 860px
         font-weight: bold
         background-color: #f0f0f0
         th
-            border-right: 1px dotted $tag-border
-            &:last-child
-                border-right: none
+            border-left: 1px solid #dfdfdf
+            &:first-child
+                border-left: none
+            &.null
+                border-left: none
     th, td
         padding: 0
         text-align: left

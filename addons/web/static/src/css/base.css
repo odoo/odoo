@@ -68,10 +68,13 @@
   background-color: #f0f0f0;
 }
 .openerp thead th {
-  border-right: 1px dotted #afafb6;
+  border-left: 1px solid #dfdfdf;
 }
-.openerp thead th:last-child {
-  border-right: none;
+.openerp thead th:first-child {
+  border-left: none;
+}
+.openerp thead th.null {
+  border-left: none;
 }
 .openerp th, .openerp td {
   padding: 0;
