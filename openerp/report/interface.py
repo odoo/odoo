@@ -163,15 +163,30 @@ class report_rml(report_int):
         # * (re)build/update the stylesheet with the translated items
 
         def translate(doc, lang):
-            for node in doc.xpath('//*[@t]'):
-                if not node.text:
-                    continue
-                translation = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, node.text)
-                if translation:
-                    node.text = translation
+            translate_aux(doc, lang, False)
+
+        def translate_aux(doc, lang, t):
+            for node in doc:
+                t = t or node.get("t")
+                if t:
+                    text = None
+                    tail = None
+                    if node.text:
+                        text = node.text.strip().replace('\n',' ')
+                    if node.tail:
+                        tail = node.tail.strip().replace('\n',' ')
+                    if text:
+                        translation1 = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, text)
+                        if translation1:
+                            node.text = node.text.replace(text, translation1)
+                    if tail:
+                        translation2 = ir_translation_obj._get_source(cr, uid, self.name2, 'xsl', lang, tail)
+                        if translation2:
+                            node.tail = node.tail.replace(tail, translation2)
+                translate_aux(node, lang, t)
 
         if context.get('lang', False):
-            translate(stylesheet, context['lang'])
+            translate(stylesheet.iter(), context['lang'])
 
         transform = etree.XSLT(stylesheet)
         xml = etree.tostring(

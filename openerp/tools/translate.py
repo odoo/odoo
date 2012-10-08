@@ -443,10 +443,15 @@ def trans_export(lang, modules, buffer, format, cr):
                 row = grouped_rows.setdefault(src, {})
                 row.setdefault('modules', set()).add(module)
                 if ('translation' not in row) or (not row['translation']):
-                    row['translation'] = trad
+                    if trad != src:
+                        row['translation'] = trad
                 row.setdefault('tnrs', []).append((type, name, res_id))
 
             for src, row in grouped_rows.items():
+                if newlang:
+                    row['translation'] = ''
+                elif not row.get('translation'):
+                    row['translation'] = src
                 writer.write(row['modules'], row['tnrs'], src, row['translation'])
 
         elif format == 'tgz':
@@ -487,16 +492,25 @@ def trans_export(lang, modules, buffer, format, cr):
     del trans
 
 def trans_parse_xsl(de):
+    return list(set(trans_parse_xsl_aux(de, False)))
+
+def trans_parse_xsl_aux(de, t):
     res = []
+
     for n in de:
-        if n.get("t"):
-            for m in n:
-                if isinstance(m, SKIPPED_ELEMENT_TYPES) or not m.text:
+        t = t or n.get("t")
+        if t:
+                if isinstance(n, SKIPPED_ELEMENT_TYPES) or n.tag.startswith('{http://www.w3.org/1999/XSL/Transform}'):
                     continue
-                l = m.text.strip().replace('\n',' ')
-                if len(l):
-                    res.append(l.encode("utf8"))
-        res.extend(trans_parse_xsl(n))
+                if n.text:
+                    l = n.text.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+                if n.tail:
+                    l = n.tail.strip().replace('\n',' ')
+                    if len(l):
+                        res.append(l.encode("utf8"))
+        res.extend(trans_parse_xsl_aux(n, t))
     return res
 
 def trans_parse_rml(de):
