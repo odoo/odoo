@@ -229,11 +229,8 @@ class ir_fields_converter(orm.Model):
                 module, xid = context.get('_import_current_module', ''), value
             ModelData = self.pool['ir.model.data']
             try:
-                md_id = ModelData._get_id(cr, uid, module, xid)
-                model_data = ModelData.read(cr, uid, [md_id], ['res_id'],
-                                            context=context)
-                if model_data:
-                    id = model_data[0]['res_id']
+                _model, id = ModelData.get_object_reference(
+                    cr, uid, module, xid)
             except ValueError: pass # leave id is None
         elif subfield is None:
             field_type = _(u"name")
