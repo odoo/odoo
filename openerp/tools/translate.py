@@ -523,7 +523,7 @@ def trans_parse_rml(de):
             for s in string_list:
                 if s:
                     res.append(s.encode("utf8"))
-            res.extend(trans_parse_rml(n))
+        res.extend(trans_parse_rml(n))
     return res
 
 def trans_parse_view(de):
