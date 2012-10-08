@@ -580,8 +580,13 @@ class mail_message(osv.Model):
                 partner_wo_email_lst.append(partner)
         if not partner_wo_email_lst:
             return {}
-        warning_msg = _('The following contacts do not have an email address specified.')
         for partner in partner_wo_email_lst:
+            terminology = 'Contact'
+            if partner.customer and not partner.supplier:
+                terminology = 'Customer'
+            elif partner.supplier and not partner.customer:
+                terminology = 'Supplier'
+            warning_msg = _('The following %s do not have an email address specified.') % (terminology,)
             warning_msg += '\n- %s' % (partner.name)
         return {'warning': {
                     'title': _('Email not found'),
