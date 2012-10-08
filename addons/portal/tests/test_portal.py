@@ -21,15 +21,18 @@
 
 from openerp.addons.mail.tests import test_mail
 from openerp.tools import append_content_to_html
+from osv.orm import except_orm
 
 
 class test_portal(test_mail.TestMailMockups):
 
     def setUp(self):
         super(test_portal, self).setUp()
+        cr, uid = self.cr, self.uid
         self.ir_model = self.registry('ir.model')
         self.mail_group = self.registry('mail.group')
         self.mail_mail = self.registry('mail.mail')
+        self.mail_message = self.registry('mail.message')
         self.res_users = self.registry('res.users')
         self.res_partner = self.registry('res.partner')
 
@@ -37,7 +40,42 @@ class test_portal(test_mail.TestMailMockups):
         self.group_pigs_id = self.mail_group.create(self.cr, self.uid,
             {'name': 'Pigs', 'description': 'Fans of Pigs, unite !'})
 
-    def test_00_mail_invite(self):
+        # Find Portal group
+        group_portal_ref = self.registry('ir.model.data').get_object_reference(cr, uid, 'portal', 'group_portal')
+        self.group_portal_id = group_portal_ref and group_portal_ref[1] or False
+
+        # Create Chell (portal user)
+        self.user_chell_id = self.res_users.create(cr, uid, {'name': 'Chell Gladys', 'login': 'chell', 'groups_id': [(6, 0, [self.group_portal_id])]})
+        self.user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
+        self.partner_chell_id = self.user_chell.partner_id.id
+
+    def test_00_access_rights(self):
+        """ Test basic mail_message and mail_group access rights for portal users. """
+        cr, uid = self.cr, self.uid
+        partner_chell_id = self.partner_chell_id
+        user_chell_id = self.user_chell_id
+
+        # Prepare group: Pigs (portal)
+        self.mail_group.message_post(cr, uid, self.group_pigs_id, body='Message')
+        self.mail_group.write(cr, uid, [self.group_pigs_id], {'name': 'Jobs', 'public': 'groups', 'group_public_id': self.group_portal_id})
+
+        # ----------------------------------------
+        # CASE1: Chell will use the Chatter
+        # ----------------------------------------
+
+        # Do: Chell reads Pigs messages, ok because restricted to portal group
+        message_ids = self.mail_group.read(cr, user_chell_id, self.group_pigs_id, ['message_ids'])['message_ids']
+        self.mail_message.read(cr, user_chell_id, message_ids)
+        # Do: Chell posts a message on Pigs, crash because can not write on group or is not in the followers
+        self.assertRaises(except_orm,
+                          self.mail_group.message_post,
+                          cr, user_chell_id, self.group_pigs_id, body='Message')
+        # Do: Chell is added to Pigs followers
+        self.mail_group.message_subscribe(cr, uid, [self.group_pigs_id], [partner_chell_id])
+        # Test: Chell posts a message on Pigs, ok because in the followers
+        self.mail_group.message_post(cr, user_chell_id, self.group_pigs_id, body='Message')
+
+    def test_50_mail_invite(self):
         cr, uid = self.cr, self.uid
         user_admin = self.res_users.browse(cr, uid, uid)
         self.mail_invite = self.registry('mail.wizard.invite')

@@ -10,15 +10,14 @@
 
         <menuitem id="menu_project_management" name="Project" parent="base.menu_main_pm" sequence="1"/>
         <menuitem id="base.menu_definitions" name="Configuration" parent="base.menu_main_pm" sequence="60"/>
-
-        <act_window
-            context="{'search_default_project_id': [active_id], 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="kanban,tree,form,calendar,graph"
-            view_type="form"/>
+        
+        <record id="act_project_project_2_project_task_all" model="ir.actions.act_window">
+            <field name="res_model">project.task</field>
+            <field name="view_type">form</field>
+            <field name="name">Tasks</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="context">{'search_default_project_id': [active_id], 'default_project_id': active_id}</field>
+        </record>
 
         <!-- Project Read/Unread actions -->
         <record id="actions_server_project_unread" model="ir.actions.server">
@@ -93,18 +92,18 @@
                     </div>
                     <group>
                         <group>
+                            <field name="privacy_visibility"/>
                             <field name="user_id" string="Project Manager" attrs="{'readonly':[('state','in',['close', 'cancelled'])]}"/>
-                            <field name="partner_id" string="Contact" on_change="onchange_partner_id(partner_id)"/>
                         </group>
                         <group>
-                            <field name="privacy_visibility"/>
-                            <field name="analytic_account_id" readonly="1" required="0"/>
+                            <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
+                            <field name="analytic_account_id" readonly="1" required="0" attrs="{'invisible': [('analytic_account_id','=',False)]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Team" name="team">
                             <field colspan="4" name="members" widget="many2many_kanban">
-                                <kanban quick_create="true" create="false">
+                                <kanban quick_create="false" create="true">
                                     <field name="name"/>
                                     <templates>
                                         <t t-name="kanban-box">
@@ -122,14 +121,14 @@
                             </field>
                         </page>
                         <page string="Other Info">
-                            <group string="Email Interface" colspan="2">
-                                <div attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                    <field name="alias_id" invisible="1" required="0"/>
-                                    <label for="alias_name" class="oe_edit_only "/>
-                                    <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
-                                </div>
-                            </group>
                             <group>
+                                <group string="Email Interface" attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                    <div>
+                                        <field name="alias_id" invisible="1" required="0"/>
+                                        <label for="alias_name" class="oe_edit_only "/>
+                                        <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_id', '!=', False)]}"/>@<field name="alias_domain" class="oe_inline"/>
+                                    </div>
+                                </group>
                                 <group string="Administration" groups="project.group_time_work_estimation_tasks">
                                     <field name="planned_hours" widget="float_time"/>
                                     <field name="effective_hours" widget="float_time"/>
@@ -137,8 +136,7 @@
                                 </group>
                                 <group string="Miscellaneous" name="misc">
                                     <field name="date"/>
-                                    <field name="parent_id" domain="[('id','!=',analytic_account_id)]" context="{'current_model': 'project.project'}"/>
-                                    <field name="priority"/>
+                                    <field name="priority" groups="base.group_no_one"/>
                                     <field name="active" attrs="{'invisible':[('state','in',['open', 'pending', 'template'])]}"/>
 
                                     <field name="currency_id" groups="base.group_multi_currency" required="1"/>
@@ -153,7 +151,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
-                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically follow all related tasks and issues."/>
                 </div>
                 </form>
             </field>
@@ -207,15 +205,6 @@
             </field>
         </record>
 
-        <act_window
-            context="{'search_default_project_id': active_id, 'default_project_id': active_id}"
-            id="act_project_project_2_project_task_all"
-            name="Tasks"
-            res_model="project.task"
-            src_model="project.project"
-            view_mode="kanban,tree,form,calendar,graph"
-            view_type="form"/>
-
         <record model="ir.ui.view" id="view_project_kanban">
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
@@ -250,7 +239,7 @@
                                         <a t-if="record.use_tasks.raw_value" name="%(act_project_project_2_project_task_all)d" type="action"> <field name="task_count"/> Tasks</a>
                                     </div>
                                     <div class="oe_kanban_footer_left">
-                                        <span>
+                                        <span groups="project.group_time_work_estimation_tasks">
                                             <span class="oe_e">R</span>
                                             <t t-esc="Math.round(record.effective_hours.raw_value)"/>/<t t-esc="Math.round(record.planned_hours.raw_value)"/> <field name="company_uom_id"/>
                                         </span>
@@ -529,7 +518,7 @@
                             <div class="oe_kanban_content">
                                 <div><b><field name="name"/></b></div>
                                 <div>
-                                    <field name="project_id"/>
+                                    <field name="project_id"/><br/>
                                     <t t-esc="kanban_text_ellipsis(record.description.value, 160)"/><br/>
                                     <t t-if="record.date_deadline.raw_value and record.date_deadline.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
                                     <span t-attf-class="#{red || ''}"><i><field name="date_deadline"/></i></span>
@@ -723,7 +712,7 @@
         </record>
 
         <record id="ir_project_task_open" model="ir.values">
-            <field eval=" 'tree_but_open'" name="key2"/>
+            <field eval="'tree_but_open'" name="key2"/>
             <field eval="'project.project'" name="model"/>
             <field name="name">View project's tasks</field>
             <field eval="'ir.actions.act_window,'+str(dblc_proj)" name="value"/>
@@ -767,7 +756,7 @@
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
                 <tree string="Task Stage">
-                    <field name="sequence"/>
+                    <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="state"/>
                 </tree>

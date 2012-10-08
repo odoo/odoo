@@ -78,6 +78,7 @@
                   <!-- title -->
                   <field name="name"/>
                 </div>
+                <div class="oe_clear"></div>
                 <field name="tag_ids"/>
                 <div class="oe_right">
                   <t t-foreach="record.message_follower_ids.raw_value" t-as="follower">
@@ -108,19 +109,21 @@
 
     <!-- New note Form View -->
     <record model="ir.ui.view" id="view_note_note_form">
-      <field name="name">note.note.form</field>
-      <field name="model">note.note</field>
-      <field name="arch" type="xml">
-        <form string="Note" version="7.0">
-          <header>
-            <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
-            <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
-          </header>
-          <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
-          <field name="message_follower_ids" widget="mail_followers"/>
-          <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
-        </form>
-      </field>
+        <field name="name">note.note.form</field>
+        <field name="model">note.note</field>
+        <field name="arch" type="xml">
+            <form string="Note" version="7.0">
+                <header>
+                    <field name="tag_ids" widget="many2many_tags" class="oe_inline" placeholder="Tags"/>
+                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+                </header>
+                <field name="memo" widget="html"/><!-- editor_width="100%%" editor_height="60%%" -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field class="oe_chatter" name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
     </record>
 
     <!-- Search note  -->

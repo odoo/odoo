@@ -189,7 +189,7 @@
                     </group>
                     <notebook>
                         <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line">
+                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -299,8 +299,8 @@
                         <button name="invoice_open" states="draft" string="Validate" class="oe_highlight"/>
                         <button name="invoice_open" states="proforma2" string="Validate"/>
                         <button name="invoice_proforma2" states="draft" string="PRO-FORMA" groups="account.group_proforma_invoices"/>
-                        <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='paid'/>
-                        <button name="invoice_cancel" states="draft,proforma2,sale,open" string="Cancel" groups="base.group_no_one"/>
+                        <button name="%(action_account_invoice_refund)d" type='action' string='Refund Invoice' states='open,proforma2,paid'/>
+                        <button name="invoice_cancel" states="draft,proforma2,open" string="Cancel" groups="base.group_no_one"/>
                         <button name="action_cancel_draft" states="cancel" string="Reset to Draft" type="object"/>
                         <button name='%(action_account_state_open)d' type='action' string='Re-Open' groups="account.group_account_invoice" attrs="{'invisible':['|', ('state','&lt;&gt;','paid'), ('reconciled', '=', True)]}" help="This button only appears when the state of the invoice is 'paid' (showing that it has been fully reconciled) and auto-computed boolean 'reconciled' is False (depicting that it's not the case anymore). In other words, the invoice has been dereconciled and it does not fit anymore the 'paid' state. You should press this button to re-open it and let it continue its normal process after having resolved the eventual exceptions it may have created."/>
                         <!--button name="%(account_invoices)d" string="Print Invoice" type="action" states="open,paid,proforma,sale,proforma2"/-->

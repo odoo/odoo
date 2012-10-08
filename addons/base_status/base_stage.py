@@ -307,7 +307,7 @@ class base_stage(object):
                 destination=False)
 
     def remind_user(self, cr, uid, ids, context=None, attach=False, destination=True):
-        if 'message_post' in self:
+        if hasattr(self, 'message_post'):
             for case in self.browse(cr, uid, ids, context=context):
                 if destination:
                     recipient_id = case.user_id.partner_id.id
@@ -381,7 +381,7 @@ class base_stage(object):
 
     def case_cancel_send_note(self, cr, uid, ids, context=None):
         for id in ids:
-            msg = _('%s has been <b>canceled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
+            msg = _('%s has been <b>cancelled</b>.') % (self.case_get_note_msg_prefix(cr, uid, id, context=context))
             self.message_post(cr, uid, [id], body=msg, context=context)
         return True
 

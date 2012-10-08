@@ -335,7 +335,7 @@ class product_template(osv.osv):
             res = False
         return res
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id:
             return {'value': {'uom_po_id': uom_id}}
         return {}
@@ -594,7 +594,7 @@ class product_product(osv.osv):
         self.pool.get('product.template').unlink(cr, uid, unlink_product_tmpl_ids, context=context)
         return super(product_product, self).unlink(cr, uid, unlink_ids, context=context)
 
-    def onchange_uom(self, cursor, user, ids, uom_id,uom_po_id):
+    def onchange_uom(self, cursor, user, ids, uom_id, uom_po_id):
         if uom_id and uom_po_id:
             uom_obj=self.pool.get('product.uom')
             uom=uom_obj.browse(cursor,user,[uom_id])[0]
@@ -743,6 +743,14 @@ class product_product(osv.osv):
         else:
             return super(product_product, self).copy(cr, uid, id, default=default,
                     context=context)
+
+    def search(self, cr, uid, args, offset=0, limit=None, order=None, context=None, count=False):
+        if context is None:
+            context = {}
+        if context and context.get('search_default_categ_id', False):
+            args.append((('categ_id', 'child_of', context['search_default_categ_id'])))
+        return super(product_product, self).search(cr, uid, args, offset=offset, limit=limit, order=order, context=context, count=False)
+
 product_product()
 
 class product_packaging(osv.osv):

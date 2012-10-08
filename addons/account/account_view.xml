@@ -1305,16 +1305,6 @@
     Account.Entry Edition
     -->
 
-        <record id="account_move_graph" model="ir.ui.view">
-            <field name="name">account.move.graph</field>
-            <field name="model">account.move</field>
-            <field name="arch" type="xml">
-                <graph string="Account Statistics" type="bar">
-                    <field name="period_id"/>
-                    <field name="amount" operator="+"/>
-                </graph>
-            </field>
-         </record>
         <record id="view_move_tree" model="ir.ui.view">
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
@@ -1338,8 +1328,8 @@
             <field name="arch" type="xml">
                 <form string="Account Entry" version="7.0">
                 <header>
-                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight"/>
-                    <button name="button_cancel" states="posted" string="Cancel" type="object"/>
+                    <button name="button_validate" states="draft" string="Post" type="object" class="oe_highlight" groups="account.group_account_invoice"/>
+                    <button name="button_cancel" states="posted" string="Cancel" type="object" groups="account.group_account_invoice"/>
                     <field name="state" widget="statusbar"/>
                 </header>
                 <sheet string="Journal Entries" >
@@ -1488,7 +1478,7 @@
             <field name="name">Journal Entries</field>
             <field name="res_model">account.move</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,graph</field>
+            <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_move_tree"/>
             <field name="search_view_id" ref="view_account_move_filter"/>
             <field name="help" type="html">
@@ -1559,10 +1549,7 @@
             <field name="view_mode">account_reconciliation_list</field>
             <field name="help" type="html">
                 <p>
-                    Good job!
-                </p><p>
-                    There is nothing to reconcile. All invoices and payments
-                    have been reconciled, your partner balance is clean.
+                    No journal items found.
                 </p>
             </field>
         </record>
@@ -2037,7 +2024,7 @@
            src_model="account.journal"/>
 
         <act_window
-            context="{'search_default_reconcile_id':False, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
+            context="{'search_default_unreconciled':True, 'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             domain="[('account_id.reconcile', '=', True),('account_id.type', 'in', ['receivable', 'payable'])]"
             id="act_account_partner_account_move_all"
             name="Receivables &amp; Payables"
@@ -2073,7 +2060,7 @@
             id="account_template_folder"
             name="Templates"
             parent="menu_finance_accounting"
-            groups="base.group_multi_company"/>
+            groups="account.group_account_manager"/>
         <menuitem
             id="account_template_taxes"
             name="Taxes"

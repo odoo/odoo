@@ -45,10 +45,11 @@ Main Features
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'depends': ['base', 'base_tools', 'base_setup'],
+    'depends': ['base', 'base_setup'],
     'data': [
         'wizard/invite_view.xml',
         'wizard/mail_compose_message_view.xml',
+        'mail_message_subtype.xml',
         'res_config_view.xml',
         'mail_message_view.xml',
         'mail_mail_view.xml',
@@ -67,7 +68,6 @@ Main Features
     'installable': True,
     'auto_install': False,
     'application': True,
-    'certificate': '001056784984222247309',
     'images': [
         'images/customer_history.jpeg',
         'images/messages_form.jpeg',

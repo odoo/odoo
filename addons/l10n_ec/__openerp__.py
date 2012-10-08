@@ -42,7 +42,6 @@ Accounting chart and localization for Ecuador.
     ],
     'demo': [],
     'installable': True,
-    'certificate' : '001226484516187330589',
     'images': ['images/config_chart_l10n_ec.jpeg','images/l10n_ec_chart.jpeg'],
 }
 

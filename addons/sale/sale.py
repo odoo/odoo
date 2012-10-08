@@ -50,6 +50,16 @@ class sale_order(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
 
+    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
+        v = {}
+        if shop_id:
+            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
+            if shop.project_id.id:
+                v['project_id'] = shop.project_id.id
+            if shop.pricelist_id.id:
+                v['pricelist_id'] = shop.pricelist_id.id
+        return {'value': v}
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -253,7 +263,7 @@ class sale_order(osv.osv):
 
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
-    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context={}):
+    def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
         if (not pricelist_id) or (not order_lines):
             return {}
         warning = {
@@ -261,7 +271,6 @@ class sale_order(osv.osv):
             'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
         }
         return {'warning': warning}
-
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
@@ -437,7 +446,9 @@ class sale_order(osv.osv):
                 return False
         return True
 
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=['confirmed', 'done', 'exception'], date_inv = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_inv = False, context=None):
+        if states is None:
+            states = ['confirmed', 'done', 'exception']
         res = False
         invoices = {}
         invoice_ids = []
@@ -648,7 +659,7 @@ class sale_order(osv.osv):
     def cancel_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> <b>cancelled</b>.") % (obj.partner_id.name), context=context)
-            
+
     def done_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
             self.message_post(cr, uid, [obj.id], body=_("Sale Order for <em>%s</em> set to <b>Done</b>") % (obj.partner_id.name), context=context)
@@ -874,12 +885,12 @@ class sale_order_line(osv.osv):
         context_partner = {'lang': lang, 'partner_id': partner_id}
 
         if not product:
-            return {'value': {'th_weight': 0, 
+            return {'value': {'th_weight': 0,
                 'product_uos_qty': qty}, 'domain': {'product_uom': [],
                    'product_uos': []}}
         if not date_order:
             date_order = time.strftime(DEFAULT_SERVER_DATE_FORMAT)
-#
+
         result = {}
         warning_msgs = {}
         product_obj = product_obj.browse(cr, uid, product, context=context)
@@ -899,7 +910,6 @@ class sale_order_line(osv.osv):
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
-            result.update({'type': product_obj.procure_method})
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]
@@ -995,6 +1005,7 @@ class mail_compose_message(osv.osv):
             wf_service = netsvc.LocalService("workflow")
             wf_service.trg_validate(uid, 'sale.order', context.get('default_res_id', False), 'quotation_sent', cr)
         return super(mail_compose_message, self).send_mail(cr, uid, ids, context=context)
+
 mail_compose_message()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
