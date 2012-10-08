@@ -21,31 +21,28 @@
 
 from osv import osv, fields
 import tools
-import pooler
 import cStringIO
 from tools.translate import _
 
 class base_update_translations(osv.osv_memory):
     def _get_languages(self, cr, uid, context):
-        lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
-        ids=lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True),])
-        langs=lang_obj.browse(cr, uid, ids)
+        lang_obj = self.pool.get('res.lang')
+        ids = lang_obj.search(cr, uid, ['&', ('active', '=', True), ('translatable', '=', True),])
+        langs = lang_obj.browse(cr, uid, ids)
         return [(lang.code, lang.name) for lang in langs]
 
     def _get_lang_name(self, cr, uid, lang_code):
-        lang_obj=pooler.get_pool(cr.dbname).get('res.lang')
-        ids=lang_obj.search(cr, uid, [('code', '=', lang_code)])
+        lang_obj = self.pool.get('res.lang')
+        ids = lang_obj.search(cr, uid, [('code', '=', lang_code)])
         if not ids:
             raise osv.except_osv(_('Error!'), _('No language with code "%s" exists') % lang_code)
         lang = lang_obj.browse(cr, uid, ids[0])
         return lang.name
-    def act_cancel(self, cr, uid, ids, context=None):
-        return {'type': 'ir.actions.act_window_close'}
 
     def act_update(self, cr, uid, ids, context=None):
         this = self.browse(cr, uid, ids)[0]
         lang_name = self._get_lang_name(cr, uid, this.lang)
-        buf=cStringIO.StringIO()
+        buf = cStringIO.StringIO()
         tools.trans_export(this.lang, ['all'], buf, 'csv', cr)
         tools.trans_load_data(cr, buf, 'csv', this.lang, lang_name=lang_name)
         buf.close()
@@ -66,11 +63,8 @@ class base_update_translations(osv.osv_memory):
         return res
 
     _name = 'base.update.translations'
-    _inherit = "ir.wizard.screen"
     _columns = {
         'lang': fields.selection(_get_languages, 'Language', required=True),
     }
-
-base_update_translations()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -301,7 +301,7 @@ class res_partner(osv.osv, format_address):
 
     def onchange_type(self, cr, uid, ids, is_company, context=None):
         # get value as for an onchange on the image
-        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True)
+        value = tools.image_get_resized_images(self._get_default_image(cr, uid, is_company, context), return_big=True, return_medium=False, return_small=False)
         value['title'] = False
         if is_company:
             value['parent_id'] = False
