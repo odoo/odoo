@@ -243,7 +243,7 @@ class ir_fields_converter(orm.Model):
                         % (len(ids))))
                 id, _name = ids[0]
         else:
-            raise Exception(u"Unknown sub-field '%s'" % subfield)
+            raise Exception(_(u"Unknown sub-field '%s'") % subfield)
 
         if id is None:
             raise ValueError(
