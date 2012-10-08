@@ -121,7 +121,7 @@
           <para style="terp_tblheader_General_Centre">Start Date</para>
         </td>
         <td>
-          <para style="terp_tblheader_General_Centre">Period Length(days)</para>
+          <para style="terp_tblheader_General_Centre">Period Length (days)</para>
         </td>
         <td>
           <para style="terp_tblheader_General_Centre">Partner's</para>
@@ -150,7 +150,7 @@
           <para style="terp_default_Centre_8">[[ get_partners(data) ]]</para>
         </td>
         <td>
-          <para style="terp_default_Centre_8">[[ data['form']['direction_selection'] ]]</para>
+          <para style="terp_default_Centre_8">[[ get_direction_selection(data) ]]</para>
         </td>
         <td>
           <para style="terp_default_Centre_8">[[ get_target_move(data) ]]</para>
@@ -166,7 +166,8 @@
           <para style="terp_tblheader_Details">Partners</para>
         </td>
         <td>
-          <para style="terp_tblheader_Details_Right">[[ data['form']['direction_selection'] == 'future' and 'Due' or 'Not due' ]]</para>
+          <para style="terp_tblheader_Details_Right">Due[[ data['form']['direction_selection'] == 'future' and ' ' or removeParentNode('para') ]]</para>
+          <para style="terp_tblheader_Details_Right">Not due[[ data['form']['direction_selection'] == 'past' and ' ' or removeParentNode('para') ]]</para>
         </td>
         <td>
           <para style="terp_tblheader_Details_Right">[[ data['form']['4']['name'] ]]</para>

@@ -56,11 +56,11 @@ class report_stock(report_int):
         dt_from = now
         dt_to = now
 
-        names = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, product_ids))
+        names = dict(pooler.get_pool(cr.dbname).get('product.product').name_get(cr, uid, product_ids, context=context),)
         for name in names:
             names[name] = names[name].encode('utf8')
         products = {}
-        prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids)
+        prods = pooler.get_pool(cr.dbname).get('stock.location')._product_all_get(cr, uid, location_id, product_ids, context=context)
 
         for p in prods:
             products[p] = [(now,prods[p])]
@@ -102,7 +102,7 @@ class report_stock(report_int):
         qty = 0
 
         io = StringIO.StringIO()
-        gt = stock_graph.stock_graph(io)
+        gt = stock_graph.stock_graph(io, context.get('lang', 'en_US'), cr)
         for prod_id in products:
             gt.add(prod_id, names.get(prod_id, 'Unknown'), products[prod_id])
         gt.draw()

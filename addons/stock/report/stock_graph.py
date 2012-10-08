@@ -22,19 +22,23 @@ from pychart import *
 import pychart.legend
 import time
 from report.misc import choice_colors
+from tools.translate import _
+import inspect
 
 #
 # Draw a graph for stocks
 #
 class stock_graph(object):
-    def __init__(self, io):
+    def __init__(self, io, lang, cr):
         self._datas = {}
         self._canvas = canvas.init(fname=io, format='pdf')
         self._canvas.set_author("OpenERP")
-        self._canvas.set_title("Stock Level Forecast")
+        self._canvas.set_title(_("Stock Level Forecast"))
         self._names = {}
         self.val_min = ''
         self.val_max = ''
+        self._lang = lang
+        self._cr = cr
 
     def add(self, product_id, product_name, datas):
         if hasattr(product_name, 'replace'):
@@ -90,12 +94,16 @@ class stock_graph(object):
             plot = line_plot.T(label=self._names[product_id], data=datas2, line_style=st)
             plots.append(plot)
 
+        # Cheating to make them available in _(...) calls
+        context = {'lang': self._lang}
+        cr = self._cr
+
         interval = max((val_max-val_min)/15, 86400)
         x_axis = axis.X(format=lambda x:'/a60{}'+time.strftime('%Y-%m-%d',time.gmtime(x)), tic_interval=interval, label=None)
         # For add the report header on the top of the report.
-        tb = text_box.T(loc=(300, 500), text="/hL/15/bStock Level Forecast", line_style=None)
+        tb = text_box.T(loc=(300, 500), text="/hL/15/b%s" % _("Stock Level Forecast"), line_style=None)
         tb.draw()
-        ar = area.T(size = (620,435), x_range=(val_min,val_max+1), y_axis = axis.Y(format="%d", label="Virtual Stock (Unit)"), x_axis=x_axis)
+        ar = area.T(size = (620,435), x_range=(val_min,val_max+1), y_axis = axis.Y(format="%d", label=_("Virtual Stock (Unit)")), x_axis=x_axis)
         for plot in plots:
             ar.add_plot(plot)
         ar.draw(self._canvas)

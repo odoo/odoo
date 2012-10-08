@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
-"PO-Revision-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
+"PO-Revision-Date: 2012-10-08 12:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -200,6 +200,11 @@ msgid "Sun"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr ""
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr ""
@@ -243,11 +248,6 @@ msgid "Categories"
 msgstr ""
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr ""
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr ""
@@ -267,8 +267,12 @@ msgid "September"
 msgstr ""
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+#, python-format
+msgid "December"
 msgstr ""
 
 #. module: hr_timesheet
@@ -296,6 +300,11 @@ msgstr ""
 #. module: hr_timesheet
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
+msgstr ""
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
 msgstr ""
 
 #. module: hr_timesheet
@@ -450,12 +459,8 @@ msgid "My Timesheet"
 msgstr ""
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:40
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
 msgstr ""
 
 #. module: hr_timesheet
@@ -467,9 +472,9 @@ msgid "Cancel"
 msgstr ""
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
 msgstr ""
@@ -494,6 +499,11 @@ msgstr ""
 #: field:hr.sign.in.project,server_date:0
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
+msgstr ""
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
 msgstr ""
 
 #. module: hr_timesheet
@@ -611,6 +621,12 @@ msgstr ""
 #. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
+msgstr ""
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
 msgstr ""
 
 #. module: hr_timesheet

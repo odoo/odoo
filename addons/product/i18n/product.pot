@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: OpenERP Server 6.1rc1\n"
+"Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
-"PO-Revision-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
+"PO-Revision-Date: 2012-10-08 12:29+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -997,6 +997,11 @@ msgid "To Sell"
 msgstr ""
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid "Quantity of products that are planned to leave.\n"
 "In a context with a single Stock Location, this includes goods leaving from this Location, or any of its children.\n"
@@ -1177,12 +1182,6 @@ msgstr ""
 #: view:product.packaging:0
 #: view:product.product:0
 msgid "Pallet Dimension"
-msgstr ""
-
-#. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
 msgstr ""
 
 #. module: product
@@ -1539,6 +1538,12 @@ msgstr ""
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
+msgstr ""
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
 msgstr ""
 
 #. module: product

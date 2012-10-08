@@ -53,7 +53,7 @@ class account_print_journal(osv.osv_memory):
         if context.get('sale_purchase_only'):
             domain ="[('type', 'in', ('sale','purchase','sale_refund','purchase_refund'))]"
         else:
-            domain ="[('type', 'not in', ('sale','purchase','sale_refund','purchase_refund'))]"
+            domain ="[]"
         nodes = doc.xpath("//field[@name='journal_ids']")
         for node in nodes:
             node.set('domain', domain)
