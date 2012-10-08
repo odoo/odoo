@@ -131,6 +131,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 e.preventDefault();
             }
         });
+        self.on('on_rec_create', self, self.on_created);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -778,7 +779,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                return self.on_created({ result : new_id });
+                return self.trigger('on_rec_create',{ result : new_id });
             }).then(function() {
                 return self.to_edit_mode();
             }).then(function() {
@@ -859,7 +860,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (!self.datarecord.id) {
                     // Creation save
                     save_deferral = self.dataset.create(values).pipe(function(r) {
-                        return self.on_created(r, prepend_on_create);
+                        return self.trigger('on_rec_create', r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
                     // Not dirty, noop save
@@ -1622,12 +1623,13 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
         return this;
     },
     start: function() {
+        var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false
         });
         this.form.appendTo(this.$el);
-        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on('on_rec_create', self, this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         return this;
     },

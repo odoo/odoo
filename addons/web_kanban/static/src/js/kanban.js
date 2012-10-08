@@ -195,7 +195,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
         form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on_created.add_last(function(r) {
+        form.on('on_rec_create', self, function(r) {
             (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r.result]).then(function(new_record) {
                 am.dialog.on_close();
                 var domain = self.dataset.domain.slice(0);
@@ -673,7 +673,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
         form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on_saved.add_last(function() {
+        form.on('on_saved', self, function() {
             am.dialog.on_close();
             self.view.do_reload();
         });
