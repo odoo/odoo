@@ -6,7 +6,6 @@ instance.web.ViewManager.include({
         var self = this;
         var _super = this._super();
         this.process_help = this.action ? this.action.help : '';
-        self.process_help = $(this.process_help).text();
         if(this.action) {
             this.process_model = this.action.res_model;
         } else {
