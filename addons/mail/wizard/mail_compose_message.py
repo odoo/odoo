@@ -121,7 +121,7 @@ class mail_compose_message(osv.TransientModel):
         'partner_ids': lambda self, cr, uid, ctx={}: [],
     }
 
-    def notify(self, cr, uid, newid, context=None):
+    def _notify(self, cr, uid, newid, context=None):
         """ Override specific notify method of mail.message, because we do
             not want that feature in the wizard. """
         return

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <!-- Attendee form view-->
-
+        <!-- Attendee form view -->
         <record id="base_calendar_attendee_form_view" model="ir.ui.view">
             <field name="name">calendar.attendee.form</field>
             <field name="model">calendar.attendee</field>
@@ -55,8 +54,7 @@
             </field>
         </record>
 
-        <!--        Attendee tree view-->
-
+        <!-- Attendee tree view -->
         <record id="base_calendar_attendee_tree_view" model="ir.ui.view">
             <field name="name">calendar.attendee.tree</field>
             <field name="model">calendar.attendee</field>
@@ -73,8 +71,7 @@
             </field>
         </record>
 
-        <!--        Attendee search view-->
-
+        <!-- Attendee search view -->
         <record id="base_calendar_attendee_search_view" model="ir.ui.view">
             <field name="name">calendar.attendee.search</field>
             <field name="model">calendar.attendee</field>
@@ -110,18 +107,16 @@
              <field name="context">{'default_sent_by_uid': uid}</field>
          </record>
 
-        <!-- Calenadar's menu -->
+        <!-- Calendar's menu -->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
 
         <!-- Invitation menu -->
-
          <menuitem id="menu_attendee_invitations"
             parent="base.menu_calendar_configuration"
             sequence="10" action="action_view_attendee_form"/>
 
-        <!--        ALARM FORM VIEW-->
-
+        <!-- Alarm form view -->
         <record id="res_alarm_form_view" model="ir.ui.view">
             <field name="name">res.alarm.form</field>
             <field name="model">res.alarm</field>
@@ -140,8 +135,7 @@
             </field>
         </record>
 
-        <!--        ALARM TREE VIEW-->
-
+        <!-- Alarm list view -->
         <record id="res_alarm_tree_view" model="ir.ui.view">
             <field name="name">res.alarm.tree</field>
             <field name="model">res.alarm</field>
@@ -171,15 +165,13 @@
             </field>
         </record>
 
-        <!--        Menu for Alarms-->
-
+        <!-- Alarms menu -->
          <menuitem id="menu_crm_meeting_avail_alarm"
             groups="base.group_no_one"
             action="base_calendar.action_res_alarm_view"
             parent="base.menu_calendar_configuration" sequence="5"/>
 
-        <!-- Event Form View-->
-
+        <!-- Event form view -->
         <record model="ir.ui.view" id="event_form_view">
             <field name="name">Event Form</field>
             <field name="model">calendar.event</field>
@@ -334,8 +326,7 @@
             </field>
         </record>
 
-        <!-- Event Tree View  -->
-
+        <!-- Event list view -->
         <record model="ir.ui.view" id="event_tree_view">
             <field name="name">Event Tree</field>
             <field name="model">calendar.event</field>
@@ -352,8 +343,7 @@
             </field>
         </record>
 
-        <!-- Event Calendar View  -->
-
+        <!-- Event calendar view -->
         <record model="ir.ui.view" id="event_calendar_view">
             <field name="name">Events Calendar</field>
             <field name="model">calendar.event</field>
@@ -367,8 +357,7 @@
             </field>
         </record>
 
-        <!--     Event Search View-->
-
+        <!-- Event search view -->
         <record id="view_calendar_event_filter" model="ir.ui.view">
             <field name="name">Calendar Events Search</field>
             <field name="model">calendar.event</field>
@@ -393,8 +382,7 @@
         </record>
 
 
-        <!-- Event action  -->
-
+        <!-- Event action -->
         <record id="action_view_event" model="ir.actions.act_window">
                 <field name="name">Events</field>
                 <field name="type">ir.actions.act_window</field>
@@ -404,8 +392,7 @@
                 <field name="search_view_id" ref="view_calendar_event_filter"/>
             </record>
 
-        <!-- Event menu  -->
-
+        <!-- Event menu -->
         <menuitem id="menu_events"
                 name="Events" parent="base.menu_calendar_configuration"
                 sequence="15" action="action_view_event"/>
