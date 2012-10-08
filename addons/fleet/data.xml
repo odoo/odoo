@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data noupdate="0">
-      <record forcecreate="True" id="ir_cron_contract_services_reminders" model="ir.cron">
-        <field name="name">Creation ofVehicle Contracts and Services renewals reminders</field>
+      <record forcecreate="True" id="ir_cron_service_services_reminders" model="ir.cron">
+        <field name="name">Creation ofVehicle services and Services renewals reminders</field>
         <field eval="True" name="active" />
         <field name="user_id" ref="base.user_root" />
         <field name="interval_number">1</field>
@@ -14,40 +14,98 @@
         <field eval="'()'" name="args" />
       </record>
 
-      <!--
-      Immatriculation   
-      User  
-      Marque  
-      Type  
-      Opération   
-      Leaser  
-      Date début contrat
-      Date fin contrat   
-      Valeur Catalogue  
-      ATN   
-      Amortissements & Intérets  
-      Taxe de roulage   
-      Assurances  
-      Pneus étés  
-      Réparation & Entretien   
-      Assistance  
-      Véhicule de remplacement  
-      Management Fee   
-      Loyer (htva)  
-      T.M.C   
-      Total Financé HTVA  
-      Valeur résiduelle htva  
-      Valeur résiduelle %  
-      Option d'achat  
-      Emissions   
-      Taxes CO²   
-      N° Chassis  
-      Touring Assistance  
-      Echéance assurance
-      -->
+      <record id="type_service_service_1" model="fleet.service.type">
+          <field name="name">ATN</field>
+          <field name="category">service</field>
+      </record>
 
-      <record id="type_service_1" model="fleet.service.type">
-          <field name="name">A/C Compressor Replacement</field>
+      <record id="type_service_service_2" model="fleet.service.type">
+          <field name="name">Depreciation and Interests</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_3" model="fleet.service.type">
+          <field name="name">Tax roll</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_4" model="fleet.service.type">
+          <field name="name">Insurances</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_5" model="fleet.service.type">
+          <field name="name">Summer tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_6" model="fleet.service.type">
+          <field name="name">Snow tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_7" model="fleet.service.type">
+          <field name="name">Summer tires</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_8" model="fleet.service.type">
+          <field name="name">Repair and maintenance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_9" model="fleet.service.type">
+          <field name="name">Assistance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_10" model="fleet.service.type">
+          <field name="name">Replacement Vehicle</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_11" model="fleet.service.type">
+          <field name="name">Management Fee</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_12" model="fleet.service.type">
+          <field name="name">Rent (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_13" model="fleet.service.type">
+          <field name="name">Entry into service tax</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_14" model="fleet.service.type">
+          <field name="name">Total expenses (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_15" model="fleet.service.type">
+          <field name="name">Residual value (Excluding VAT)</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_16" model="fleet.service.type">
+          <field name="name">Options</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_17" model="fleet.service.type">
+          <field name="name">Emissions</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_18" model="fleet.service.type">
+          <field name="name">Touring Assistance</field>
+          <field name="category">service</field>
+      </record>
+
+      <record id="type_service_service_19" model="fleet.service.type">
+          <field name="name">Residual value in %</field>
           <field name="category">service</field>
       </record>
 
@@ -318,12 +376,12 @@
 
       <record id="type_service_55" model="fleet.service.type">
           <field name="name">Insurance</field>
-          <field name="category">contract</field>
+          <field name="category">service</field>
       </record>
 
       <record id="type_service_56" model="fleet.service.type">
           <field name="name">Leasing</field>
-          <field name="category">contract</field>
+          <field name="category">service</field>
       </record>
 
        <record id="type_service_57" model="fleet.service.type">
