@@ -188,7 +188,12 @@ openerp.hr_timesheet_sheet = function(instance) {
                 attrs: {
                     name: "account",
                     type: "many2one",
-                    domain: [['type','in',['normal', 'contract']], ['state', '<>', 'close'], ['use_timesheets','=',1]],
+                    domain: [
+                        ['type','in',['normal', 'contract']],
+                        ['state', '<>', 'close'],
+                        ['use_timesheets','=',1],
+                        ['id', 'not in', _.pluck(self.accounts, "account")],
+                    ],
                     modifiers: '{"required": true}',
                 },
             });
