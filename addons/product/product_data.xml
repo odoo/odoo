@@ -40,7 +40,7 @@
        <record id="product_uom_dozen" model="product.uom">
             <field name="category_id" ref="product.product_uom_categ_unit"/>
             <field name="name">Dozen</field>
-            <field name="factor" eval="0.083"/>
+            <field name="factor_inv" eval="12"/>
             <field name="uom_type">bigger</field>
         </record>
         <record id="product_uom_kgm" model="product.uom">
@@ -70,7 +70,7 @@
             <!-- 'tonne' is the most common spelling in english-speaking countries,
                  the alternative is 'metric ton' in the US, abbreviated as 'mt' -->
             <field name="name">t</field>
-            <field name="factor" eval="0.001"/>
+            <field name="factor_inv" eval="1000"/>
             <field name="uom_type">bigger</field>
         </record>
         <record id="product_uom_meter" model="product.uom">
@@ -81,7 +81,7 @@
         <record id="product_uom_km" model="product.uom">
             <field name="category_id" ref="uom_categ_length"/>
             <field name="name">km</field>
-            <field name="factor" eval="0.001"/>
+            <field name="factor_inv" eval="1000"/>
             <field name="uom_type">bigger</field>
         </record>
         <record id="product_uom_cm" model="product.uom">
