@@ -530,7 +530,7 @@ function openerp_pos_screens(instance, module){ //module is instance.point_of_sa
         },
         get_product_price: function(){
             var product = this.get_product();
-            return (product ? product.get('list_price') : 0) || 0;
+            return (product ? product.get('price') : 0) || 0;
         },
         get_product_weight: function(){
             return this.weight || 0;

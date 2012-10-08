@@ -368,12 +368,12 @@
                     <img src='' /> <!-- the product thumbnail -->
                     <t t-if="!widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))"/>
                         </span>
                     </t>
                     <t t-if="widget.model.get('to_weight')">
                         <span class="price-tag">
-                            <t t-esc="widget.format_currency(widget.model.get('list_price'))+'/Kg'"/>
+                            <t t-esc="widget.format_currency(widget.model.get('price'))+'/Kg'"/>
                         </span>
                     </t>
                 </div>
