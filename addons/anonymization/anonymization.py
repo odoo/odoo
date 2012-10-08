@@ -64,11 +64,15 @@ class ir_model_fields_anonymization(osv.osv):
             state = 'anonymized' # all fields are anonymized
         else:
             state = 'unstable' # fields are mixed: this should be fixed
+
         return state
 
     def _check_write(self, cr, uid, context=None):
-        # check that the field is created from the menu and not from an database update
-        # otherwise the database update can crash:
+        """check that the field is created from the menu and not from an database update
+           otherwise the database update can crash:"""
+        if context is None:
+            context = {}
+
         if context.get('manual'):
             global_state = self._get_global_state(cr, uid, context=context)
             if global_state == 'anonymized':
@@ -100,12 +104,16 @@ class ir_model_fields_anonymization(osv.osv):
         # check field state: all should be clear before we can add a new field to anonymize:
         self._check_write(cr, uid, context=context)
 
+        global_state = self._get_global_state(cr, uid, context=context)
+
         if 'field_name' in vals and vals['field_name'] and 'model_name' in vals and vals['model_name']:
             vals['model_id'], vals['field_id'] = self._get_model_and_field_ids(cr, uid, vals, context=context)
 
         # check not existing fields:
         if not vals.get('field_id'):
             vals['state'] = 'not_existing'
+        else:
+            vals['state'] = global_state
 
         res = super(ir_model_fields_anonymization, self).create(cr, uid, vals, context=context)
 
@@ -289,10 +297,10 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
 
     def fields_view_get(self, cr, uid, view_id=None, view_type='form', context=None, *args, **kwargs):
         state = self.pool.get('ir.model.fields.anonymization')._get_global_state(cr, uid, context=context)
-        
+
         if context is None:
             context = {}
-        
+
         step = context.get('step', 'new_window')
 
         res = super(ir_model_fields_anonymize_wizard, self).fields_view_get(cr, uid, view_id, view_type, context, *args, **kwargs)
@@ -340,8 +348,9 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 # remove the placeholer:
                 eview.remove(placeholder)
             else:
-                # unstable ?
-                raise
+                msg = "The database anonymization is currently in an unstable state. Some fields are anonymized," + \
+                  " while some fields are not anonymized. You should try to solve this problem before trying to do anything else."
+                raise osv.except_osv('Error !', msg)
 
             res['arch'] = etree.tostring(eview)
 
@@ -354,7 +363,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         })
         raise osv.except_osv(error_type, error_msg)
 
-    def anonymize_database(self,cr, uid, ids, context=None):
+    def anonymize_database(self, cr, uid, ids, context=None):
         """Sets the 'anonymized' state to defined fields"""
 
         # create a new history record:
@@ -489,7 +498,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    def reverse_anonymize_database(self,cr, uid, ids, context=None):
+    def reverse_anonymize_database(self, cr, uid, ids, context=None):
         """Set the 'clear' state to defined fields"""
 
         ir_model_fields_anonymization_model = self.pool.get('ir.model.fields.anonymization')

@@ -69,7 +69,7 @@ class document_directory(osv.osv):
     }
 
 
-    def _get_root_directory(self, cr,uid, context=None):
+    def _get_root_directory(self, cr, uid, context=None):
         objid=self.pool.get('ir.model.data')
         try:
             mid = objid._get_id(cr, uid, 'document', 'dir_root')
@@ -77,9 +77,7 @@ class document_directory(osv.osv):
                 return False
             root_id = objid.read(cr, uid, mid, ['res_id'])['res_id']
             return root_id
-        except Exception, e:
-
-            _logger.warning('Cannot set directory root:'+ str(e))
+        except Exception:
             return False
         return objid.browse(cr, uid, mid, context=context).res_id
 
@@ -223,7 +221,7 @@ class document_directory(osv.osv):
                 pass
         return res
 
-    def _locate_child(self, cr, uid, root_id, uri,nparent, ncontext):
+    def _locate_child(self, cr, uid, root_id, uri, nparent, ncontext):
         """ try to locate the node in uri,
             Return a tuple (node_dir, remaining_path)
         """
@@ -233,10 +231,10 @@ class document_directory(osv.osv):
         if not default:
             default ={}
         name = self.read(cr, uid, [id])[0]['name']
-        default.update({'name': name+ " (copy)"})
+        default.update(name=_("%s (copy)") % (name))
         return super(document_directory,self).copy(cr, uid, id, default, context=context)
 
-    def _check_duplication(self, cr, uid, vals, ids=[], op='create'):
+    def _check_duplication(self, cr, uid, vals, ids=None, op='create'):
         name=vals.get('name',False)
         parent_id=vals.get('parent_id',False)
         ressource_parent_type_id=vals.get('ressource_parent_type_id',False)

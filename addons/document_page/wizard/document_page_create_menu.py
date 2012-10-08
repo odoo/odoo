@@ -65,7 +65,6 @@ class document_page_create_menu(osv.osv_memory):
             'view_id': False,
             'type': 'ir.actions.act_window',
             'target': 'inlineview',
-            'nodestroy': True,
         }
         value['domain'] = "[('parent_id','=',%d)]" % (page.id)
         value['res_id'] = page.id

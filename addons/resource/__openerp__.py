@@ -20,12 +20,12 @@
 ##############################################################################
 
 {
-    "name" : "Resource",
-    "version" : "1.1",
-    "author" : "OpenERP SA",
-    "category" : "Hidden/Dependency",
-    "website" : "http://www.openerp.com",
-    "description": """
+    'name' : 'Resource',
+    'version' : '1.1',
+    'author' : 'OpenERP SA',
+    'category' : 'Hidden/Dependency',
+    'website' : 'http://www.openerp.com',
+    'description': """
 Module for resource management.
 ===============================
 
@@ -36,20 +36,17 @@ associated to every resource. It also manages the leaves of every resource.
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'depends': ['process'],
-    'init_xml': [],
-    'update_xml': [
+    'data': [
         'security/ir.model.access.csv',
         'resource_view.xml',
     ],
-    'demo_xml': ['resource_demo.xml'
-    ],
+    'demo': ['resource_demo.xml'],
     'test': [
         'test/resource.yml',
         'test/duplicate_resource.yml',
     ],
     'installable': True,
     'auto_install': False,
-    'certificate': '00746371192190459469',
     'images': ['images/resource_leaves_calendar.jpeg','images/resource_leaves_form.jpeg'],
 }
 

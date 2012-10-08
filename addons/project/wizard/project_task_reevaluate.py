@@ -26,7 +26,7 @@ from tools.translate import _
 class project_task_reevaluate(osv.osv_memory):
     _name = 'project.task.reevaluate'
 
-    def _get_remaining(self,cr, uid, context=None):
+    def _get_remaining(self, cr, uid, context=None):
         if context is None:
             context = {}
         active_id = context.get('active_id', False)

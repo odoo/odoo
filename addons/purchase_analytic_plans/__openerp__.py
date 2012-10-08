@@ -33,13 +33,11 @@ on a supplier purchase order into several accounts and analytic plans.
     """,
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
-    'images' : ['images/purchase_analytic_distribution.jpeg'],
+    'images': ['images/purchase_analytic_distribution.jpeg'],
     'depends': ['purchase', 'account_analytic_plans'],
-    'init_xml': [],
-    'update_xml': ['purchase_analytic_plans_view.xml'],
-    'demo_xml': [],
+    'data': ['purchase_analytic_plans_view.xml'],
+    'demo': [],
     'installable': True,
     'auto_install': False,
-    'certificate': '0062176518909',
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

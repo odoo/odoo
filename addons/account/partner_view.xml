@@ -12,7 +12,7 @@
                         <field name="active"/>
                         <field name="company_id" widget="selection" groups="base.group_multi_company"/>
                     </group>
-                    <separator string="Mapping"/>
+                    <separator string="Taxes Mapping"/>
                     <field name="tax_ids" widget="one2many_list">
                         <tree string="Tax Mapping" editable="bottom">
                             <field name="tax_src_id" domain="[('parent_id','=',False)]"/>
@@ -23,6 +23,7 @@
                             <field name="tax_dest_id" domain="[('parent_id','=',False)]"/>
                         </form>
                     </field>
+                    <separator string="Accounts Mapping"/>
                     <field name="account_ids" widget="one2many_list">
                         <tree string="Account Mapping" editable="bottom">
                             <field name="account_src_id"/>
@@ -91,32 +92,7 @@
                             <field name="debit"/>
                         </group>
                     </group>
-                    <field name="bank_ids">
-                        <form string="Bank account" version="7.0">
-                            <field name="state"/>
-                            <field name="acc_number"/>
-                            <group>
-                                <group name="owner" string="Bank Account Owner">
-                                    <field name="partner_id" on_change="onchange_partner_id(partner_id)"/>
-                                    <field name="owner_name"/>
-                                    <label for="street" string="Address"/>
-                                    <div>
-                                        <field name="street" placeholder="Street..."/>
-                                        <div>
-                                            <field name="zip" class="oe_inline" placeholder="ZIP"/>
-                                            <field name="city" class="oe_inline" placeholder="City"/>
-                                        </div>
-                                        <field name="state_id" placeholder="State" options='{"no_open": true}'/>
-                                        <field name="country_id" placeholder="Country" options='{"no_open": true}'/>
-                                    </div>
-                                </group>
-                                <group name="bank" string="Information About the Bank">
-                                    <field name="bank" on_change="onchange_bank_id(bank)"/>
-                                    <field name="bank_name"/>
-                                    <field name="bank_bic" placeholder="e.g. GEBABEBB"/>
-                                </group>
-                            </group>
-                        </form>
+                    <field name="bank_ids" context="{'default_partner_id': active_id, 'form_view_ref': 'base.view_partner_bank_form'}">
                         <tree string="Bank Details">
                             <field name="sequence" invisible="1"/>
                             <field name="acc_number"/>
@@ -138,7 +114,7 @@
             context="{'search_default_partner_id':[active_id], 'default_partner_id': active_id}"
             src_model="res.partner"
             view_type="form"
-            view_mode="tree,form,graph,calendar"/>
+            view_mode="tree,form,calendar"/>
 
     </data>
 </openerp>
