@@ -42,6 +42,7 @@
             <field name="name">Dozen</field>
             <field name="factor_inv" eval="12"/>
             <field name="uom_type">bigger</field>
+            <field name="reference_uom_id" ref="product_uom_unit"/>
         </record>
         <record id="product_uom_kgm" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
@@ -53,18 +54,20 @@
             <field name="name">g</field>
             <field name="factor" eval="1000"/>
             <field name="uom_type">smaller</field>
-        </record>
-        <record id="product_uom_hour" model="product.uom">
-            <field name="name">Hour</field>
-            <field eval="uom_categ_wtime" name="category_id"/>
-            <field name="factor" eval="8.0"/>
-            <field name="uom_type">smaller</field>
+            <field name="reference_uom_id" ref="product_uom_kgm"/>
         </record>
         <record id="product_uom_day" model="product.uom">
             <field name="name">Day</field>
             <field eval="uom_categ_wtime" name="category_id"/>
             <field name="factor" eval="1.0"/>
         </record>
+        <record id="product_uom_hour" model="product.uom">
+            <field name="name">Hour</field>
+            <field eval="uom_categ_wtime" name="category_id"/>
+            <field name="factor" eval="8.0"/>
+            <field name="uom_type">smaller</field>
+            <field name="reference_uom_id" ref="product_uom_day"/>
+        </record>        
         <record id="product_uom_ton" model="product.uom">
             <field name="category_id" ref="product_uom_categ_kgm"/>
             <!-- 'tonne' is the most common spelling in english-speaking countries,
@@ -72,6 +75,7 @@
             <field name="name">t</field>
             <field name="factor_inv" eval="1000"/>
             <field name="uom_type">bigger</field>
+            <field name="reference_uom_id" ref="product_uom_kgm"/>
         </record>
         <record id="product_uom_meter" model="product.uom">
             <field name="category_id" ref="uom_categ_length"/>
@@ -83,12 +87,14 @@
             <field name="name">km</field>
             <field name="factor_inv" eval="1000"/>
             <field name="uom_type">bigger</field>
+            <field name="reference_uom_id" ref="product_uom_meter"/>
         </record>
         <record id="product_uom_cm" model="product.uom">
             <field name="category_id" ref="uom_categ_length"/>
             <field name="name">cm</field>
             <field name="factor" eval="100"/>
             <field name="uom_type">smaller</field>
+            <field name="reference_uom_id" ref="product_uom_meter"/>
         </record>
         <record id="product_uom_litre" model="product.uom">
             <field name="name">Litre</field>
