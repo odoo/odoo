@@ -846,10 +846,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
-                for (var g in self.fields) {
-                    if (!self.fields.hasOwnProperty(g)) { continue; }
-                    self.fields[g]._check_css_flags();
-                }
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
@@ -2102,6 +2098,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this._set_required();
         }
         this._check_visibility();
+        this.field_manager.off("change:display_invalid_fields", this, this._check_css_flags);
+        this.field_manager.on("change:display_invalid_fields", this, this._check_css_flags);
         this._check_css_flags();
     },
     /**
@@ -2167,11 +2165,12 @@ instance.web.form.ReinitializeWidgetMixin =  {
         this.initialize_field();
     },
     initialize_field: function() {
-        this.on("change:effective_readonly", this, function() {
-            this.destroy_content();
-            this.renderElement();
-            this.initialize_content();
-        });
+        this.on("change:effective_readonly", this, this.reinitialize);
+        this.initialize_content();
+    },
+    reinitialize: function() {
+        this.destroy_content();
+        this.renderElement();
         this.initialize_content();
     },
     /**
@@ -2192,9 +2191,10 @@ instance.web.form.ReinitializeWidgetMixin =  {
 instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.ReinitializeWidgetMixin, {
     initialize_field: function() {
         instance.web.form.ReinitializeWidgetMixin.initialize_field.call(this);
-        this.on("change:effective_readonly", this, function() {
-            this.render_value();
-        });
+        this.render_value();
+    },
+    reinitialize: function() {
+        instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
         this.render_value();
     },
     /**
@@ -2230,7 +2230,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
             if (this.password) {
                 show_value = new Array(show_value.length + 1).join('*');
             }
-            this.$el.text(show_value);
+            this.$(".oe_form_char_content").text(show_value);
         }
     },
     is_syntax_valid: function() {
@@ -2961,7 +2961,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     title: _t("Open: ") + self.string
                 }
             );
-            pop.on_write_completed.add_last(function() {
+            pop.on('on_write_complete', self, function(){
                 self.display_value = {};
                 self.render_value();
                 self.focus();
@@ -4110,9 +4110,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             title: _t("Open: ") + this.m2m_field.string,
             readonly: this.getParent().get("effective_readonly")
         });
-        pop.on_write_completed.add_last(function() {
-            self.reload_content();
-        });
+        pop.on('on_write_complete', self, self.reload_content);
     }
 });
 
@@ -4359,7 +4357,9 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         };
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
-            return fct.call(this, id, data, options).then(self.on_write_completed);
+            return fct.call(this, id, data, options).then(function() {
+                self.trigger('on_write_complete');
+            });
         };
         this.dataset.parent_view = this.options.parent_view;
         this.dataset.child_name = this.options.child_name;
@@ -4379,7 +4379,6 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.$buttonpane = dialog.$el.dialog("widget").find(".ui-dialog-buttonpane").html("");
         this.start();
     },
-    on_write_completed: function() {},
     setup_form_view: function() {
         var self = this;
         if (this.row_id) {
@@ -4992,6 +4991,38 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
     },
 });
 
+instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
+    template: "FieldMonetary",
+    init: function() {
+        this._super.apply(this, arguments);
+        this.set({"currency": false});
+        if (this.options.currency_field) {
+            this.field_manager.on("field_changed:" + this.options.currency_field, this, function() {
+                this.set({"currency": this.field_manager.get_field_value(this.options.currency_field)});
+            });
+        }
+        this.on("change:currency", this, this.get_currency_info);
+        this.get_currency_info();
+        this.ci_dm = new instance.web.DropMisordered();
+    },
+    start: function() {
+        var tmp = this._super();
+        this.on("change:currency_info", this, this.reinitialize);
+        return tmp;
+    },
+    get_currency_info: function() {
+        var self = this;
+        if (this.get("currency") === false) {
+            this.set({"currency_info": null});
+            return;
+        }
+        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"])
+            .filter([["id", "=", self.get("currency")]]).first()).pipe(function(res) {
+            self.set({"currency_info": res});
+        });
+    },
+});
+
 /**
  * Registry of form fields, called by :js:`instance.web.FormView`.
  *
@@ -5022,7 +5053,8 @@ instance.web.form.widgets = new instance.web.Registry({
     'progressbar': 'instance.web.form.FieldProgressBar',
     'image': 'instance.web.form.FieldBinaryImage',
     'binary': 'instance.web.form.FieldBinaryFile',
-    'statusbar': 'instance.web.form.FieldStatus'
+    'statusbar': 'instance.web.form.FieldStatus',
+    'monetary': 'instance.web.form.FieldMonetary',
 });
 
 /**
