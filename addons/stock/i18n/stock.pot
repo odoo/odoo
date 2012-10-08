@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-24 13:20+0000\n"
-"PO-Revision-Date: 2012-09-24 13:20+0000\n"
+"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"PO-Revision-Date: 2012-10-08 12:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -263,8 +263,10 @@ msgid "Non Inv"
 msgstr ""
 
 #. module: stock
-#: view:stock.tracking:0
-msgid "Pack Identification"
+#: code:addons/stock/wizard/stock_traceability.py:54
+#: view:stock.production.lot:0
+#, python-format
+msgid "Downstream Traceability"
 msgstr ""
 
 #. module: stock
@@ -624,6 +626,16 @@ msgid "Location Name"
 msgstr ""
 
 #. module: stock
+#: model:res.company,overdue_msg:stock.res_company_shop0
+#: model:res.company,overdue_msg:stock.res_company_tinyshop0
+msgid "Our records indicate that the following payments are still due. If the amount\n"
+"has already been paid, please disregard this notice. However, if you have any\n"
+"queries regarding your account, please contact us.\n"
+"Thank you in advance.\n"
+""
+msgstr ""
+
+#. module: stock
 #: view:stock.inventory:0
 msgid "Posted Inventory"
 msgstr ""
@@ -703,6 +715,11 @@ msgstr ""
 #. module: stock
 #: report:stock.picking.list:0
 msgid "Recipient"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.location_refrigerator
+msgid "Refrigerator"
 msgstr ""
 
 #. module: stock
@@ -798,6 +815,11 @@ msgstr ""
 #. module: stock
 #: model:stock.location,name:stock.location_procurement
 msgid "Procurements"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_3
+msgid "IT Suppliers"
 msgstr ""
 
 #. module: stock
@@ -958,8 +980,8 @@ msgid "Please select multiple physical inventories to merge in the list view."
 msgstr ""
 
 #. module: stock
-#: model:ir.actions.report.xml,name:stock.report_picking_list
-msgid "Packing list"
+#: view:stock.picking:0
+msgid "Confirmed Pickings"
 msgstr ""
 
 #. module: stock
@@ -1154,8 +1176,8 @@ msgid "Consume Move"
 msgstr ""
 
 #. module: stock
-#: model:stock.location,name:stock.stock_location_suppliers
-msgid "Suppliers"
+#: model:stock.location,name:stock.stock_location_7
+msgid "European Customers"
 msgstr ""
 
 #. module: stock
@@ -1175,10 +1197,8 @@ msgid "This is used only if you select a chained location type.\n"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/wizard/stock_traceability.py:54
-#: view:stock.production.lot:0
-#, python-format
-msgid "Downstream Traceability"
+#: view:stock.tracking:0
+msgid "Pack Identification"
 msgstr ""
 
 #. module: stock
@@ -1224,9 +1244,8 @@ msgid "To be refunded/invoiced"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:2321
-#, python-format
-msgid "You can only delete draft moves."
+#: model:stock.location,name:stock.stock_location_shop0
+msgid "Shop 1"
 msgstr ""
 
 #. module: stock
@@ -1262,9 +1281,10 @@ msgid "Additional Info"
 msgstr ""
 
 #. module: stock
-#: code:addons/stock/stock.py:1706
-#, python-format
-msgid "Operation forbidden"
+#: field:stock.partial.move.line,move_id:0
+#: field:stock.partial.picking.line,move_id:0
+#: field:stock.return.picking.memory,move_id:0
+msgid "Move"
 msgstr ""
 
 #. module: stock
@@ -1339,6 +1359,11 @@ msgid "Available Pickings"
 msgstr ""
 
 #. module: stock
+#: model:stock.location,name:stock.stock_location_5
+msgid "Generic IT Suppliers"
+msgstr ""
+
+#. module: stock
 #: view:stock.move:0
 msgid "Stock to be receive"
 msgstr ""
@@ -1382,6 +1407,12 @@ msgstr ""
 #: field:res.partner,property_stock_customer:0
 #: selection:stock.location,usage:0
 msgid "Customer Location"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/stock.py:2321
+#, python-format
+msgid "You can only delete draft moves."
 msgstr ""
 
 #. module: stock
@@ -1596,13 +1627,18 @@ msgid "Stock Valuation Account (Incoming)"
 msgstr ""
 
 #. module: stock
+#: model:stock.location,name:stock.stock_location_14
+msgid "Shelf 2"
+msgstr ""
+
+#. module: stock
 #: field:stock.report.tracklots,tracking_id:0
 msgid "Tracking lot"
 msgstr ""
 
 #. module: stock
 #: view:stock.picking:0
-msgid "Confirmed Pickings"
+msgid "Back Orders"
 msgstr ""
 
 #. module: stock
@@ -2193,10 +2229,9 @@ msgid "Delay(Days)"
 msgstr ""
 
 #. module: stock
-#: field:stock.partial.move.line,move_id:0
-#: field:stock.partial.picking.line,move_id:0
-#: field:stock.return.picking.memory,move_id:0
-msgid "Move"
+#: code:addons/stock/stock.py:1706
+#, python-format
+msgid "Operation forbidden"
 msgstr ""
 
 #. module: stock
@@ -2323,6 +2358,11 @@ msgid "Product  '%s' is consumed with '%s' quantity."
 msgstr ""
 
 #. module: stock
+#: model:product.template,description:stock.product_icecream_product_template
+msgid "Ice cream can be mass-produced and thus is widely available in developed parts of the world. Ice cream can be purchased in large cartons (vats and squrounds) from supermarkets and grocery stores, in smaller quantities from ice cream shops, convenience stores, and milk bars, and in individual servings from small carts or vans at public events."
+msgstr ""
+
+#. module: stock
 #: selection:report.stock.inventory,month:0
 #: selection:report.stock.move,month:0
 msgid "July"
@@ -2336,6 +2376,11 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_stock_line_date
 msgid "Display the last inventories done on your products and easily sort them with specific filtering criteria. If you do frequent and partial inventories, you need this report in order to ensure that the stock of each product is controlled at least once a year."
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.location_opening
+msgid "opening"
 msgstr ""
 
 #. module: stock
@@ -2359,6 +2404,11 @@ msgstr ""
 #: selection:report.stock.inventory,location_type:0
 #: selection:stock.location,usage:0
 msgid "Procurement"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_4
+msgid "Maxtor Suppliers"
 msgstr ""
 
 #. module: stock
@@ -2461,8 +2511,9 @@ msgid "Company"
 msgstr ""
 
 #. module: stock
+#: view:stock.move:0
 #: view:stock.picking:0
-msgid "Back Orders"
+msgid "Unit Of Measure"
 msgstr ""
 
 #. module: stock
@@ -2493,8 +2544,8 @@ msgid "Error: The default UOM and the purchase UOM must be in the same category.
 msgstr ""
 
 #. module: stock
-#: field:stock.production.lot.revision,date:0
-msgid "Revision Date"
+#: model:stock.location,name:stock.location_delivery_counter
+msgid "Delivery Counter"
 msgstr ""
 
 #. module: stock
@@ -2820,6 +2871,11 @@ msgid "Corridor (X)"
 msgstr ""
 
 #. module: stock
+#: model:stock.location,name:stock.stock_location_suppliers
+msgid "Suppliers"
+msgstr ""
+
+#. module: stock
 #: field:report.stock.inventory,value:0
 #: field:report.stock.move,value:0
 msgid "Total Value"
@@ -2861,6 +2917,11 @@ msgstr ""
 #. module: stock
 #: field:stock.fill.inventory,recursive:0
 msgid "Include children"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_components
+msgid "Shelf 1"
 msgstr ""
 
 #. module: stock
@@ -2908,14 +2969,13 @@ msgid "Manager"
 msgstr ""
 
 #. module: stock
-#: view:stock.move:0
-#: view:stock.picking:0
-msgid "Unit Of Measure"
+#: report:stock.picking.list:0
+msgid "Total"
 msgstr ""
 
 #. module: stock
-#: report:stock.picking.list:0
-msgid "Total"
+#: model:stock.location,name:stock.stock_location_intermediatelocation0
+msgid "Internal Shippings"
 msgstr ""
 
 #. module: stock
@@ -3011,6 +3071,11 @@ msgid "Reason"
 msgstr ""
 
 #. module: stock
+#: model:product.template,name:stock.product_icecream_product_template
+msgid "Ice Cream"
+msgstr ""
+
+#. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking
 msgid "Partial Picking Processing Wizard"
 msgstr ""
@@ -3052,6 +3117,11 @@ msgstr ""
 #. module: stock
 #: help:product.category,property_stock_account_output_categ:0
 msgid "When doing real-time inventory valuation, counterpart journal items for all outgoing stock moves will be posted in this account, unless there is a specific valuation account set on the destination location. This is the default value for all products in this category. It can also directly be set on each product"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_8
+msgid "Non European Customers"
 msgstr ""
 
 #. module: stock
@@ -3141,6 +3211,11 @@ msgstr ""
 #: code:addons/stock/stock.py:1357
 #, python-format
 msgid "is done."
+msgstr ""
+
+#. module: stock
+#: field:stock.production.lot.revision,date:0
+msgid "Revision Date"
 msgstr ""
 
 #. module: stock
@@ -3298,6 +3373,11 @@ msgid "Chaining Journal"
 msgstr ""
 
 #. module: stock
+#: model:ir.actions.report.xml,name:stock.report_picking_list
+msgid "Packing list"
+msgstr ""
+
+#. module: stock
 #: code:addons/stock/stock.py:744
 #, python-format
 msgid "Not enough stock, unable to reserve the products."
@@ -3423,6 +3503,11 @@ msgstr ""
 #. module: stock
 #: field:stock.picking,auto_picking:0
 msgid "Auto-Picking"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.stock_location_shop1
+msgid "Shop 2"
 msgstr ""
 
 #. module: stock
@@ -3782,6 +3867,16 @@ msgstr ""
 #. module: stock
 #: view:stock.production.lot:0
 msgid "Production Lot Identification"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.location_refrigerator_small
+msgid "Small Refrigerator"
+msgstr ""
+
+#. module: stock
+#: model:stock.location,name:stock.location_convenience_shop
+msgid "Convenient Store"
 msgstr ""
 
 #. module: stock

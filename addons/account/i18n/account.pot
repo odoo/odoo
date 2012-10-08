@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-24 13:21+0000\n"
-"PO-Revision-Date: 2012-09-24 13:21+0000\n"
+"POT-Creation-Date: 2012-10-08 12:28+0000\n"
+"PO-Revision-Date: 2012-10-08 12:28+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -533,6 +533,7 @@ msgid "The accountant confirms the statement."
 msgstr ""
 
 #. module: account
+#: report:account.account.balance:0
 #: selection:account.balance.report,display_account:0
 #: selection:account.common.account.report,display_account:0
 #: report:account.general.ledger_landscape:0
@@ -2468,6 +2469,7 @@ msgid "Account move line reconcile (writeoff)"
 msgstr ""
 
 #. module: account
+#: model:account.account.type,name:account.account_type_tax
 #: report:account.invoice:0
 #: field:account.invoice,amount_tax:0
 #: field:account.move.line,account_tax_id:0
@@ -5923,6 +5925,11 @@ msgid "CashBox"
 msgstr ""
 
 #. module: account
+#: model:account.account.type,name:account.account_type_cash_equity
+msgid "Equity"
+msgstr ""
+
+#. module: account
 #: selection:account.tax,type:0
 #: selection:account.tax.template,type:0
 msgid "Percentage"
@@ -9318,6 +9325,7 @@ msgstr ""
 
 #. module: account
 #: field:account.account,company_id:0
+#: report:account.account.balance:0
 #: field:account.aged.trial.balance,company_id:0
 #: field:account.analytic.journal,company_id:0
 #: field:account.balance.report,company_id:0
