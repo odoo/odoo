@@ -149,7 +149,6 @@ openerp_mail_followers = function(session, mail) {
             var self = this;
             var node_user_list = this.$('ul.oe_mail_followers_display').empty();
             this.$('div.oe_mail_recthread_followers h4').html(this.options.title + (records.length>=5 ? ' (' + records.length + ')' : '') );
-            console.log(records);
             for(var i=0; i<records.length&&i<5; i++) {
                 var record=records[i];
                 record.avatar_url = mail.ChatterUtils.get_image(self.session, 'res.partner', 'image_small', record.id);
