@@ -239,8 +239,7 @@ instance.web.ViewManager.include({
                 title: _t('Process')
             });
         var form_controller = pop.view_form;
-        pop.on_write_completed.add_last(function() {
-                self.initialize_process_view();
+        pop.on('on_write_complete', self, self.initialize_process_view);
         });
     }
 });
