@@ -1453,7 +1453,7 @@ class BaseModel(object):
         Translation = self.pool['ir.translation']
         field_names = dict(
             (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
-                                         context.get('lang', False) or 'en_US')
+                                         context.get('lang'))
                  or column.string or f))
             for f, column in columns.iteritems())
         converters = dict(
