@@ -68,10 +68,13 @@
   background-color: #f0f0f0;
 }
 .openerp thead th {
-  border-right: 1px dotted #afafb6;
+  border-left: 1px solid #dfdfdf;
 }
-.openerp thead th:last-child {
-  border-right: none;
+.openerp thead th:first-child {
+  border-left: none;
+}
+.openerp thead th.null {
+  border-left: none;
 }
 .openerp th, .openerp td {
   padding: 0;
@@ -520,28 +523,6 @@
 }
 .openerp .oe_grey {
   color: #aaaaaa;
-}
-.openerp header {
-  position: relative;
-  border-bottom: 1px solid #cacaca;
-  padding-left: 2px;
-  background-color: #fcfcfc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
-  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
-}
-.openerp header > span {
-  margin-left: 4px;
-}
-.openerp header ul {
-  display: inline-block;
-  float: right;
-}
-.openerp header .oe_button {
-  margin: 3px 2px 1px;
 }
 .openerp .oe_tag {
   border: 1px solid #afafb6;
@@ -1203,7 +1184,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightGray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1228,7 +1209,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightGray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -2043,6 +2024,31 @@
 .openerp .oe_application .oe_form_sheet .oe_notebook_page {
   padding: 0 16px;
 }
+.openerp .oe_form header {
+  position: relative;
+  border-bottom: 1px solid #cacaca;
+  padding-left: 2px;
+  background-color: #fcfcfc;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
+}
+.openerp .oe_form header > span {
+  margin-left: 4px;
+}
+.openerp .oe_form header ul {
+  display: inline-block;
+  float: right;
+}
+.openerp .oe_form header .oe_button {
+  margin: 3px 2px 1px;
+}
+.openerp .oe_form header .oe_button:first-child {
+  margin-left: 6px;
+}
 .openerp .oe_form header .oe_tags {
   margin: 5px 0 0 5px;
   width: 400px;
@@ -2124,7 +2130,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
