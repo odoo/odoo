@@ -5,7 +5,6 @@
     <record id="view_repair_order_tree" model="ir.ui.view">
         <field name="name">mrp.repair.tree</field>
         <field name="model">mrp.repair</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Repairs order" colors="gray:state in ('done','cancel');black:state not in ('done','cancel');blue:state=='draft'">
                 <field name="name" />
@@ -25,9 +24,8 @@
     <record id="view_repair_order_form" model="ir.ui.view">
         <field name="name">mrp.repair.form</field>
         <field name="model">mrp.repair</field>
-        <field name="type">form</field>
         <field name="arch" type="xml">
-            <form version="7.0">
+            <form string="Repair Order" version="7.0">
                <header>
                    <button name="repair_confirm" states="draft" string="Confirm Repair" class="oe_highlight"/>
                    <button name="repair_ready" states="confirmed,ready" string="Start Repair" class="oe_highlight"/>
@@ -192,6 +190,7 @@
                 </sheet>
                 <div class="oe_chatter">
                     <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids" widget="mail_followers"/>
                 </div>
             </form>
         </field>
@@ -202,7 +201,6 @@
     <record id="view_repair_order_form_filter" model="ir.ui.view">
           <field name="name">mrp.repair.select</field>
           <field name="model">mrp.repair</field>
-          <field name="type">search</field>
           <field name="arch" type="xml">
               <search string="Search Reair Orders">
                   <field name="name" string="Reair Orders"/>

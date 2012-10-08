@@ -5,7 +5,6 @@
         <record id="bvr_import_view" model="ir.ui.view">
             <field name="name">BVR Import Wizard</field>
             <field name="model">bvr.import.wizard</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="BVR Import" version="7.0">
                     <group>
@@ -33,7 +32,6 @@
         <record model="ir.ui.view" id="view_bank_statement_form_bvr">
             <field name="name">account.bank.statement.form.inherit</field>
             <field name="model">account.bank.statement</field>
-            <field name="type">form</field>
             <field name="inherit_id" ref="account.view_bank_statement_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[@name='import_buttons']" position="inside">

@@ -30,7 +30,7 @@ class company(osv.osv):
             "today and today+range are skipped for future computation."),
     }
     _defaults = {
-        'schedule_range': 80.0,
+        'schedule_range': 730.0,
     }
 
 company()

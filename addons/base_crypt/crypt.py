@@ -47,7 +47,9 @@ import logging
 magic_md5 = '$1$'
 _logger = logging.getLogger(__name__)
 
-def gen_salt( length=8, symbols=ascii_letters + digits ):
+def gen_salt( length=8, symbols=None):
+    if symbols is None:
+        symbols = ascii_letters + digits
     seed()
     return ''.join( sample( symbols, length ) )
 
@@ -213,7 +215,7 @@ class users(osv.osv):
 
         # Check if the encrypted password matches against the one in the db.
         cr.execute("""UPDATE res_users
-                        SET date=now() AT TIME ZONE 'UTC'
+                        SET login_date=now() AT TIME ZONE 'UTC'
                         WHERE id=%s AND password=%s AND active
                         RETURNING id""",
                    (int(id), encrypted_pw.encode('utf-8')))

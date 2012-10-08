@@ -50,7 +50,7 @@ class specify_partner_terminology(osv.osv_memory):
     def make_translations(self, cr, uid, ids, name, type, src, value, res_id=0, context=None):
         trans_obj = self.pool.get('ir.translation')
         user_obj = self.pool.get('res.users')
-        context_lang = user_obj.browse(cr, uid, uid, context=context).context_lang
+        context_lang = user_obj.browse(cr, uid, uid, context=context).lang
         existing_trans_ids = trans_obj.search(cr, uid, [('name','=',name), ('lang','=',context_lang), ('type','=',type), ('src','=',src), ('res_id','=',res_id)])
         if existing_trans_ids:
             trans_obj.write(cr, uid, existing_trans_ids, {'value': value}, context=context)

@@ -5,7 +5,6 @@
         <record id="view_task_tree" model="ir.ui.view">
             <field name="name">project.task.tree</field>
             <field name="model">project.task</field>
-            <field name="type">tree</field>
             <field eval="99" name="priority"/>
             <field name="arch" type="xml">
                 <tree colors="red:date_deadline&lt;current_date;blue:date_deadline==current_date;black:date_deadline&gt;current_date" string="My Tasks">
@@ -17,7 +16,7 @@
                     <field name="effective_hours" widget="float_time"/>
                     <field name="progress" widget="progressbar"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)"/>
-                    <field name="state" invisible="context.get('set_visible',False)" groups="base.group_no_one"/>
+                    <field name="state" invisible="1"/>
                 </tree>
             </field>
         </record>
@@ -34,7 +33,6 @@
         <record id="board_project_form" model="ir.ui.view">
             <field name="name">board.project.form</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="My Board" version="7.0">
                     <board style="2-1">

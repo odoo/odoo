@@ -6,19 +6,16 @@
         <record  model="ir.ui.view" id="view_mail_alias_form">
             <field name="name">mail.alias.form</field>
             <field name="model">mail.alias</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Alias" version="7.0">
                     <sheet>
                         <label for="alias_name" class="oe_edit_only"/>
-                        <h2><field name="alias_name"  class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
-                        <group colspan="4" col="4">
-                            <field name="alias_model_id" readonly="1"/>
-                            <field name="alias_user_id" readonly="1"/>
-                            <field name="alias_force_thread_id" readonly="1"/>
-                            <newline/>
-                            <separator string="Default Values" colspan="4"/>
-                            <field name="alias_defaults" colspan="4" nolabel="1" readonly="1"/>
+                        <h2><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>
+                        <group>
+                            <field name="alias_model_id"/>
+                            <field name="alias_user_id"/>
+                            <field name="alias_force_thread_id"/>
+                            <field name="alias_defaults"/>
                         </group>
                     </sheet>
                 </form>
@@ -29,7 +26,6 @@
         <record  model="ir.ui.view" id="view_mail_alias_tree">
             <field name="name">mail.alias.tree</field>
             <field name="model">mail.alias</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Alias">
                     <field name="alias_name"/>
@@ -44,7 +40,6 @@
         <record  model="ir.ui.view" id="view_mail_alias_search">
             <field name="name">mail.alias.search</field>
             <field name="model">mail.alias</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search Alias">
                     <field name="alias_name"/>

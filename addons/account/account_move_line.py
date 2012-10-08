@@ -215,8 +215,10 @@ class account_move_line(osv.osv):
     def _default_get(self, cr, uid, fields, context=None):
         if context is None:
             context = {}
-        if not context.get('journal_id', False) and context.get('search_default_journal_id', False):
+        if not context.get('journal_id', False):
             context['journal_id'] = context.get('search_default_journal_id')
+        if not context.get('period_id', False):
+            context['period_id'] = context.get('search_default_period_id')
         account_obj = self.pool.get('account.account')
         period_obj = self.pool.get('account.period')
         journal_obj = self.pool.get('account.journal')
@@ -226,6 +228,9 @@ class account_move_line(osv.osv):
         partner_obj = self.pool.get('res.partner')
         currency_obj = self.pool.get('res.currency')
         context = self.convert_to_period(cr, uid, context)
+        #pass the right context when search_defaul_journal_id
+        if context.get('search_default_journal_id',False):
+            context['journal_id'] = context.get('search_default_journal_id')
         # Compute simple values
         data = super(account_move_line, self).default_get(cr, uid, fields, context=context)
         # Starts: Manual entry from account.move form
@@ -480,7 +485,7 @@ class account_move_line(osv.osv):
         'debit': fields.float('Debit', digits_compute=dp.get_precision('Account')),
         'credit': fields.float('Credit', digits_compute=dp.get_precision('Account')),
         'account_id': fields.many2one('account.account', 'Account', required=True, ondelete="cascade", domain=[('type','<>','view'), ('type', '<>', 'closed')], select=2),
-        'move_id': fields.many2one('account.move', 'Move', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
+        'move_id': fields.many2one('account.move', 'Journal Entry', ondelete="cascade", help="The move of this entry line.", select=2, required=True),
         'narration': fields.related('move_id','narration', type='text', relation='account.move', string='Internal Note'),
         'ref': fields.related('move_id', 'ref', string='Reference', type='char', size=64, store=True),
         'statement_id': fields.many2one('account.bank.statement', 'Statement', help="The bank statement used for bank reconciliation", select=1),
@@ -557,6 +562,7 @@ class account_move_line(osv.osv):
         'journal_id': lambda self, cr, uid, c: c.get('journal_id', False),
         'credit': 0.0,
         'debit': 0.0,
+        'amount_currency': 0.0,
         'account_id': lambda self, cr, uid, c: c.get('account_id', False),
         'period_id': lambda self, cr, uid, c: c.get('period_id', False),
         'company_id': lambda self, cr, uid, c: self.pool.get('res.company')._company_default_get(cr, uid, 'account.move.line', context=c)
@@ -703,7 +709,9 @@ class account_move_line(osv.osv):
             context = {}
         if context and context.get('next_partner_only', False):
             if not context.get('partner_id', False):
-                partner = self.get_next_partner_only(cr, uid, offset, context)
+                partner = self.list_partners_to_reconcile(cr, uid, context=context)
+                if partner:
+                    partner = partner[0]
             else:
                 partner = context.get('partner_id', False)
             if not partner:
@@ -711,26 +719,26 @@ class account_move_line(osv.osv):
             args.append(('partner_id', '=', partner[0]))
         return super(account_move_line, self).search(cr, uid, args, offset, limit, order, context, count)
 
-    def get_next_partner_only(self, cr, uid, offset=0, context=None):
+    def list_partners_to_reconcile(self, cr, uid, context=None):
         cr.execute(
              """
-             SELECT p.id
-             FROM res_partner p
-             RIGHT JOIN (
-                SELECT l.partner_id AS partner_id, SUM(l.debit) AS debit, SUM(l.credit) AS credit
+             SELECT partner_id
+             FROM (
+                SELECT l.partner_id, p.last_reconciliation_date, SUM(l.debit) AS debit, SUM(l.credit) AS credit
                 FROM account_move_line l
-                LEFT JOIN account_account a ON (a.id = l.account_id)
-                    LEFT JOIN res_partner p ON (l.partner_id = p.id)
+                RIGHT JOIN account_account a ON (a.id = l.account_id)
+                RIGHT JOIN res_partner p ON (l.partner_id = p.id)
                     WHERE a.reconcile IS TRUE
                     AND l.reconcile_id IS NULL
                     AND (p.last_reconciliation_date IS NULL OR l.date > p.last_reconciliation_date)
                     AND l.state <> 'draft'
-                    GROUP BY l.partner_id
-                ) AS s ON (p.id = s.partner_id)
+                    GROUP BY l.partner_id, p.last_reconciliation_date
+                ) AS s
                 WHERE debit > 0 AND credit > 0
-                ORDER BY p.last_reconciliation_date LIMIT 1 OFFSET %s""", (offset, )
-            )
-        return cr.fetchone()
+                ORDER BY last_reconciliation_date""")
+        ids = cr.fetchall()
+        ids = len(ids) and [x[0] for x in ids] or []
+        return self.pool.get('res.partner').name_get(cr, uid, ids, context=context)
 
     def reconcile_partial(self, cr, uid, ids, type='auto', context=None, writeoff_acc_id=False, writeoff_period_id=False, writeoff_journal_id=False):
         move_rec_obj = self.pool.get('account.move.reconcile')
@@ -910,8 +918,8 @@ class account_move_line(osv.osv):
 
         if lines and lines[0]:
             partner_id = lines[0].partner_id and lines[0].partner_id.id or False
-            if partner_id and context and context.get('stop_reconcile', False):
-                partner_obj.write(cr, uid, [partner_id], {'last_reconciliation_date': time.strftime('%Y-%m-%d %H:%M:%S')})
+            if not partner_obj.has_something_to_reconcile(cr, uid, partner_id, context=context):
+                partner_obj.mark_as_reconciled(cr, uid, [partner_id], context=context)
         return r_id
 
     def view_header_get(self, cr, user, view_id, view_type, context=None):
@@ -926,6 +934,8 @@ class account_move_line(osv.osv):
             return res
         if (not context.get('journal_id', False)) or (not context.get('period_id', False)):
             return False
+        if context.get('search_default_journal_id', False):
+            context['journal_id'] = context.get('search_default_journal_id')
         cr.execute('SELECT code FROM account_journal WHERE id = %s', (context['journal_id'], ))
         j = cr.fetchone()[0] or ''
         cr.execute('SELECT code FROM account_period WHERE id = %s', (context['period_id'], ))
@@ -1095,7 +1105,7 @@ class account_move_line(osv.osv):
                                 'has been confirmed.') % res[2])
         return res
 
-    def _remove_move_reconcile(self, cr, uid, move_ids=[], context=None):
+    def _remove_move_reconcile(self, cr, uid, move_ids=None, context=None):
         # Function remove move rencocile ids related with moves
         obj_move_line = self.pool.get('account.move.line')
         obj_move_rec = self.pool.get('account.move.reconcile')
@@ -1184,12 +1194,12 @@ class account_move_line(osv.osv):
         jour_period_obj = self.pool.get('account.journal.period')
         cr.execute('SELECT state FROM account_journal_period WHERE journal_id = %s AND period_id = %s', (journal_id, period_id))
         result = cr.fetchall()
+        journal = journal_obj.browse(cr, uid, journal_id, context=context)
+        period = period_obj.browse(cr, uid, period_id, context=context)
         for (state,) in result:
             if state == 'done':
-                raise osv.except_osv(_('Error!'), _('You cannot add/modify entries in a closed journal.'))
+                raise osv.except_osv(_('Error !'), _('You can not add/modify entries in a closed period %s of journal %s.' % (period.name,journal.name)))                
         if not result:
-            journal = journal_obj.browse(cr, uid, journal_id, context=context)
-            period = period_obj.browse(cr, uid, period_id, context=context)
             jour_period_obj.create(cr, uid, {
                 'name': (journal.code or journal.name)+':'+(period.name or ''),
                 'journal_id': journal.id,

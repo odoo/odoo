@@ -2,72 +2,50 @@
 <openerp>
     <data>
 
-        <!-- portal tree view -->
-        <record id="portal_list_view" model="ir.ui.view">
-            <field name="name">Portal List</field>
-            <field name="model">res.portal</field>
-            <field name="type">tree</field>
+        <!-- Top menu item -->
+        <menuitem name="Portal"
+            id="portal_menu"
+            groups="base.group_no_one,portal.group_portal,auth_anonymous.group_anonymous"
+            sequence="20"/>
+
+            <menuitem name="Our company" id="portal_company" parent="portal_menu" sequence="10"/>
+                <menuitem name="News" id="portal_company_news" parent="portal_company" sequence="10" action="action_news"/>
+                <menuitem name="Jobs" id="portal_jobs" parent="portal_company" sequence="20" action="action_jobs"/>
+
+            <!--
+                Create menu items that we'll leave empty for now - they'll be
+                filled up by other portal modules.
+            -->
+            <menuitem name="Orders" id="portal_orders" parent="portal_menu" sequence="20"/>
+            <menuitem name="Invoices and Payments" id="portal_invoices_payements" parent="portal_menu" sequence="30"/>
+            <menuitem name="Projects" id="portal_projects" parent="portal_menu" sequence="40"/>
+            <menuitem name="After Sale Services" id="portal_after_sales" parent="portal_menu" sequence="50"/>
+
+        <!-- extend res.groups search view -->
+        <record id="group_search_view" model="ir.ui.view">
+            <field name="name">Group Search</field>
+            <field name="model">res.groups</field>
+            <field name="inherit_id" ref="base.view_groups_search"/>
             <field name="arch" type="xml">
-                <tree string="Portals">
-                    <field name="name" string="Portal Name"/>
-                </tree>
+                <field name="name" position="after">
+                    <filter name="portal" string="Portal Groups" domain="[('is_portal','=',True)]"/>
+                    <filter name="no_portal" string="Non-Portal Groups" domain="[('is_portal','=',False)]"/>
+                    <separator orientation="vertical"/>
+                </field>
             </field>
         </record>
-        <!-- portal form view -->
-        <record id="portal_form_view" model="ir.ui.view">
+
+        <!-- extend res.groups form view -->
+        <record id="group_form_view" model="ir.ui.view">
             <field name="name">Portal Form</field>
-            <field name="model">res.portal</field>
-            <field name="type">form</field>
+            <field name="model">res.groups</field>
             <field name="inherit_id" ref="base.view_groups_form"/>
             <field name="arch" type="xml">
-                <page string="Users" position="before">
-                    <page string="Portal">
-                        <group>
-                            <group>
-                                <field name="url" widget="url" string="Portal URL"/>
-                                <field name="home_action_id"/>
-                            </group>
-                            <group>
-                                <field name="override_menu"/>
-                                <field name="parent_menu_id"
-                                    context="{'ir.ui.menu.full_list': True}"/>
-                                <label colspan="1"/>
-                                <button name="do_create_menu" type="object"
-                                    string="Create Parent Menu"/>
-                            </group>
-                            <separator string="Widgets Assigned to Users" colspan="2"/>
-                            <field name="widget_ids" nolabel="1" colspan="2">
-                                <tree string="Widgets" editable="bottom">
-                                    <field name="sequence"/>
-                                    <field name="widget_id"/>
-                                </tree>
-                            </field>
-                        </group>
-                    </page>
-                </page>
+                <field name="name" position="after">
+                    <field name="is_portal"/>
+                </field>
             </field>
         </record>
-        <!-- action Administration/Portals/Portals -->
-        <record id="portal_list_action" model="ir.actions.act_window">
-            <field name="name">Portals</field>
-            <field name="res_model">res.portal</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form</field>
-            <!-- a context is necessary to get the right portal form view -->
-            <field name="context">{'form_view_ref': 'portal.portal_form_view'}</field>
-            <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click to create a new portal. 
-              </p><p>
-                A portal helps defining specific views and rules for a group of
-                users (the portal group).  A portal menu, widgets and specific
-                groups may be assigned to the portal's users.
-              </p>
-            </field>
-        </record>
-        <!-- menu Administration/Portals/Portals -->
-        <menuitem name="Portals Settings" id="portal_menu_settings" parent="base.menu_administration" groups="group_portal_manager"/>
-            <menuitem name="Portals" id="portal_list_menu" parent="portal_menu_settings" action="portal_list_action"/>
 
     </data>
 </openerp>

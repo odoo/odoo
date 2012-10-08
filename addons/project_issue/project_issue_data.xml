@@ -32,13 +32,31 @@
         </record>
 
         <!-- notify all employees of module installation -->
-        <function model="mail.group" name="message_append_note">
-            <!-- ids, subject, body, parent_id=False, type='notification', content_subtype='html' -->
-            <value eval="[ref('mail.group_all_employees')]"/>
-            <value>Module Issues Tracker has been installed.</value>
-            <value>Manage the issues you might face in a project, like bugs in a system, client complaints or material breakdowns.  You can record issues, assign them to some responsible person, and keep track of their status as they evolve over time.
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Issue Tracker application installed!</field>
+            <field name="body">Manage the issues you might face in a project, such as bugs in a system, client complaints or material breakdowns.
+You can record issues, assign them to a responsible person, and keep track of their status as they evolve over time.
+Access all issues from the top Project menu, and access the issues of a specific project via the projects gallery view.</field>
+        </record>
 
-You can access issues from the top menu Project, and access the issues of a specific project from the projects gallery view.</value>
-        </function>
+        <!-- Mail subtypes -->
+        <record id="mail.mt_issue_new" model="mail.message.subtype">
+            <field name="name">created</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mt_issue_new" model="mail.message.subtype">
+            <field name="name">stage change</field>
+            <field name="res_model">project.issue</field>
+            <field name="default" eval="False"/>
+        </record>
+        <record id="mail.mt_issue_closed" model="mail.message.subtype">
+            <field name="name">closed</field>
+            <field name="res_model">project.issue</field>
+        </record>
+
     </data>
 </openerp>

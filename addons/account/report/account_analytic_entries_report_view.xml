@@ -4,7 +4,6 @@
     <record id="view_analytic_entries_report_tree" model="ir.ui.view">
         <field name="name">analytic.entries.report.tree</field>
         <field name="model">analytic.entries.report</field>
-        <field name="type">tree</field>
         <field name="arch" type="xml">
             <tree string="Analytic Entries Analysis">
                 <field name="date" invisible="1"/>
@@ -31,7 +30,6 @@
     <record id="view_analytic_entries_report_search" model="ir.ui.view">
         <field name="name">analytic.entries.report.search</field>
         <field name="model">analytic.entries.report</field>
-        <field name="type">search</field>
         <field name="arch" type="xml">
             <search string="Analytic Entries Analysis">
                 <field name="day" string="Day"/>
@@ -59,7 +57,6 @@
     <record id="view_account_analytic_entries_search" model="ir.ui.view">
          <field name="name">account.analytic.entries.graph</field>
          <field name="model">analytic.entries.report</field>
-         <field name="type">graph</field>
          <field name="arch" type="xml">
              <graph string="Analytic Entries Analysis" type="bar">
                 <field name="user_id"/>

@@ -96,22 +96,6 @@ class account_analytic_account(osv.osv):
                 res[row['id']][field] = row[field]
         return self._compute_level_tree(cr, uid, ids, child_ids, res, fields, context)
 
-    def name_get(self, cr, uid, ids, context=None):
-        if isinstance(ids, (int, long)):
-            ids=[ids]
-        if not ids:
-            return []
-        res = []
-        for account in self.browse(cr, uid, ids, context=context):
-            data = []
-            acc = account
-            while acc:
-                data.insert(0, acc.name)
-                acc = acc.parent_id
-            data = ' / '.join(data)
-            res.append((account.id, data))
-        return res
-
     def _complete_name_calc(self, cr, uid, ids, prop, unknow_none, unknow_dict):
         res = self.name_get(cr, uid, ids)
         return dict(res)
@@ -141,7 +125,8 @@ class account_analytic_account(osv.osv):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
                     raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
-        return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
+        if value:
+            return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -153,10 +138,10 @@ class account_analytic_account(osv.osv):
         return result
 
     _columns = {
-        'name': fields.char('Account Name', size=128, required=True),
+        'name': fields.char('Account/Contract Name', size=128, required=True),
         'complete_name': fields.function(_complete_name_calc, type='char', string='Full Account Name'),
-        'code': fields.char('Code/Reference', size=24, select=True),
-        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True, 
+        'code': fields.char('Reference', size=24, select=True),
+        'type': fields.selection([('view','Analytic View'), ('normal','Analytic Account'),('contract','Contract or Project'),('template','Template of Project')], 'Type of Account', required=True,
                                  help="If you select the View Type, it means you won\'t allow to create journal entries using that account.\n"\
                                   "The type 'Analytic account' stands for usual accounts that you only want to use in accounting.\n"\
                                   "If you select Contract or Project, it offers you the possibility to manage the validity and the invoicing options for this account.\n"\
@@ -171,7 +156,7 @@ class account_analytic_account(osv.osv):
         'debit': fields.function(_debit_credit_bal_qtty, type='float', string='Debit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'credit': fields.function(_debit_credit_bal_qtty, type='float', string='Credit', multi='debit_credit_bal_qtty', digits_compute=dp.get_precision('Account')),
         'quantity': fields.function(_debit_credit_bal_qtty, type='float', string='Quantity', multi='debit_credit_bal_qtty'),
-        'quantity_max': fields.float('Maximum Time', help='Sets the higher limit of time to work on the contract.'),
+        'quantity_max': fields.float('Prepaid Units', help='Sets the higher limit of time to work on the contract.'),
         'partner_id': fields.many2one('res.partner', 'Customer'),
         'user_id': fields.many2one('res.users', 'Project Manager'),
         'manager_id': fields.many2one('res.users', 'Account Manager'),
@@ -179,12 +164,12 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
-        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
     }
-    
+
     def on_change_template(self, cr, uid, ids, template_id, context=None):
         if not template_id:
             return {}
@@ -195,7 +180,7 @@ class account_analytic_account(osv.osv):
         res['value']['quantity_max'] = template.quantity_max
         res['value']['description'] = template.description
         return res
-    
+
     def on_change_partner_id(self, cr, uid, ids,partner_id, name, context={}):
         res={}
         if partner_id:
@@ -238,8 +223,11 @@ class account_analytic_account(osv.osv):
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
-        default['code'] = False
-        default['line_ids'] = []
+        analytic = self.browse(cr, uid, id, context=context)
+        default.update(
+            code=False,
+            line_ids=[],
+            name=_("%s (copy)") % (analytic['name']))
         return super(account_analytic_account, self).copy(cr, uid, id, default, context=context)
 
     def on_change_company(self, cr, uid, id, company_id):
@@ -297,8 +285,8 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_subscribe(cr, uid, [obj.id], [obj.user_id.id], context=context)
-            self.message_append_note(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
+                subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()
 

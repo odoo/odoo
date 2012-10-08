@@ -54,7 +54,7 @@ class event_moodle(osv.osv):
         """
         moodle_config_wiz_ids = self.search(cr, uid, [], context=context)
         if not moodle_config_wiz_ids:
-            raise osv.except_osv(('Error!'),("First configure your moodle connection."))
+            raise osv.except_osv(_('Error!'),_("First configure your moodle connection."))
         return moodle_config_wiz_ids[0]
 
     def make_url(self, cr, uid, ids, context=None):
@@ -101,6 +101,8 @@ class event_moodle(osv.osv):
         """
         #connect to moodle
         url = self.browse(cr, uid, id, context=context).url
+        if not url:
+            raise osv.except_osv(_('Error!'),_("You must configure your moodle connection."))
         sock = xmlrpclib.ServerProxy(url)
         return sock.core_course_create_courses(courses)
 
@@ -125,7 +127,7 @@ class event_moodle(osv.osv):
         passwd = passwd + '+'
         return passwd
 
-    def check_email(self,email):
+    def check_email(self, email):
     
         """
         check if email is correct

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
   <data>
-    <record model="ir.actions.url" id="action_document_browse">
+    <record model="ir.actions.act_url" id="action_document_browse">
         <field name="name">Browse Files</field>
         <field name="url">ftp://localhost:8021/</field>
     </record>
@@ -11,7 +11,6 @@
     <record id="view_auto_config_form" model="ir.ui.view">
         <field name="name">FTP Server Configuration</field>
         <field name="model">document.ftp.configuration</field>
-        <field name="type">form</field>
         <field name="inherit_id" ref="base.res_config_view_base"/>
         <field name="arch" type="xml">
           <data>

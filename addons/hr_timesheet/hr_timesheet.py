@@ -46,7 +46,7 @@ class hr_employee(osv.osv):
     def _getEmployeeProduct(self, cr, uid, context=None):
         md = self.pool.get('ir.model.data')
         try:
-            result = md.get_object_reference(cr, uid, 'product', 'product_consultant')
+            result = md.get_object_reference(cr, uid, 'product', 'product_product_consultant')
             return result[1]
         except ValueError:
             pass
@@ -137,11 +137,13 @@ class hr_analytic_timesheet(osv.osv):
         if context is None:
             context = {}
         emp_id = emp_obj.search(cr, uid, [('user_id', '=', context.get('user_id', uid))], context=context)
-        if emp_id:
-            emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
-            if emp.journal_id:
-                return emp.journal_id.id
-        return False
+        if not emp_id :
+            raise osv.except_osv(_('Warning!'), _('Please create an employee for this user, using the menu: Human Resources > Employees.'))
+        emp = emp_obj.browse(cr, uid, emp_id[0], context=context)
+        if emp.journal_id:
+            return emp.journal_id.id
+        else :
+            raise osv.except_osv(_('Warning!'), _('No analytic journal defined for \'%s\'.\nYou should assign an analytic journal on the employee form.')%(emp.name))
 
 
     _defaults = {

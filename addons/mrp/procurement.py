@@ -33,7 +33,7 @@ class procurement_order(osv.osv):
         'property_ids': fields.many2many('mrp.property', 'procurement_property_rel', 'procurement_id','property_id', 'Properties'),
     }
     
-    def check_produce_product(self, cr, uid, procurement, context=[]):
+    def check_produce_product(self, cr, uid, procurement, context=None):
         """ Finds the bill of material for the product from procurement order.
         @return: True or False
         """
@@ -43,7 +43,7 @@ class procurement_order(osv.osv):
             cr.execute('update procurement_order set message=%s where id=%s', (_('No BoM defined for this product !'), procurement.id))
             for (id, name) in self.name_get(cr, uid, procurement.id):
                 message = _("Procurement '%s' has an exception: 'No BoM defined for this product !'") % name
-                self.message_append_note(cr, uid, [procurement.id], body=message, context=context)
+                self.message_post(cr, uid, [procurement.id], body=message, context=context)
             return False
         return True
     

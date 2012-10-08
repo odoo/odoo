@@ -7,7 +7,6 @@
         <record id="view_report_crm_helpdesk_tree" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.tree</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Helpdesk">
                     <field name="name" invisible="1"/>
@@ -35,7 +34,6 @@
         <record id="view_report_crm_helpdesk_graph" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.graph</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph orientation="horizontal" string="Helpdesk" type="bar">
                     <field name="state"/>
@@ -50,7 +48,6 @@
         <record id="view_report_crm_helpdesk_filter" model="ir.ui.view">
             <field name="name">crm.helpdesk.report.select</field>
             <field name="model">crm.helpdesk.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Search">
                     <filter string="New" icon="terp-check" domain="[('state','=','draft')]" />

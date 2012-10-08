@@ -43,6 +43,7 @@ class hr_evaluation_plan(osv.osv):
         'month_next': 12,
         'company_id': lambda s,cr,uid,c: s.pool.get('res.company')._company_default_get(cr, uid, 'account.account', context=c),
     }
+
 hr_evaluation_plan()
 
 class hr_evaluation_plan_phase(osv.osv):
@@ -95,6 +96,7 @@ Thanks,
 
         '''),
     }
+
 hr_evaluation_plan_phase()
 
 class hr_employee(osv.osv):
@@ -141,6 +143,7 @@ hr_employee()
 
 class hr_evaluation(osv.osv):
     _name = "hr_evaluation.evaluation"
+    _inherit = "mail.thread"
     _description = "Employee Appraisal"
     _rec_name = 'employee_id'
     _columns = {
@@ -209,8 +212,6 @@ class hr_evaluation(osv.osv):
                 elif phase.action == "self":
                     children = [evaluation.employee_id]
                 for child in children:
-#                    if not child.user_id:
-#                        continue
 
                     int_id = hr_eval_inter_obj.create(cr, uid, {
                         'evaluation_id': evaluation.id,
@@ -228,9 +229,13 @@ class hr_evaluation(osv.osv):
                         body = phase.mail_body % {'employee_name': child.name, 'user_signature': child.user_id.signature,
                             'eval_name': phase.survey_id.title, 'date': time.strftime('%Y-%m-%d'), 'time': time }
                         sub = phase.email_subject
-                        dest = [child.work_email]
-                        if dest:
-                           mail_message.schedule_with_attach(cr, uid, evaluation.employee_id.work_email, dest, sub, body, context=context)
+                        if child.work_email:
+                            vals = {'state': 'outgoing',
+                                    'subject': sub,
+                                    'body_html': '<pre>%s</pre>' % body,
+                                    'email_to': child.work_email,
+                                    'email_from': evaluation.employee_id.work_email}
+                            self.pool.get('mail.mail').create(cr, uid, vals, context=context)
 
         self.write(cr, uid, ids, {'state':'wait'}, context=context)
         return True
@@ -238,12 +243,14 @@ class hr_evaluation(osv.osv):
     def button_final_validation(self, cr, uid, ids, context=None):
         request_obj = self.pool.get('hr.evaluation.interview')
         self.write(cr, uid, ids, {'state':'progress'}, context=context)
-        for id in self.browse(cr, uid, ids, context=context):
-            if len(id.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', id.id),('state', 'in', ['done','cancel'])], context=context)):
+        for evaluation in self.browse(cr, uid, ids, context=context):
+            if evaluation.employee_id and evaluation.employee_id.parent_id and evaluation.employee_id.parent_id.user_id:
+                self.message_subscribe_users(cr, uid, [evaluation.id], user_ids=[evaluation.employee_id.parent_id.user_id.id], context=context)
+            if len(evaluation.survey_request_ids) != len(request_obj.search(cr, uid, [('evaluation_id', '=', evaluation.id),('state', 'in', ['done','cancel'])], context=context)):
                 raise osv.except_osv(_('Warning!'),_("You cannot change state, because some appraisal(s) are in waiting answer or draft state."))
         return True
 
-    def button_done(self,cr, uid, ids, context=None):
+    def button_done(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids,{'state':'done', 'date_close': time.strftime('%Y-%m-%d')}, context=context)
         return True
 
@@ -259,6 +266,10 @@ class hr_evaluation(osv.osv):
         return True
 
     def write(self, cr, uid, ids, vals, context=None):
+        if vals.get('employee_id'):
+            employee_id = self.pool.get('hr.employee').browse(cr, uid, vals.get('employee_id'), context=context)
+            if employee_id.parent_id and employee_id.parent_id.user_id:
+                vals['message_follower_ids'] = [(4, employee_id.parent_id.user_id.partner_id.id)]
         if 'date' in vals:
             new_vals = {'date_deadline': vals.get('date')}
             obj_hr_eval_iterview = self.pool.get('hr.evaluation.interview')
