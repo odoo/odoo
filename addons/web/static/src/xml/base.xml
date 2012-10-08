@@ -2,12 +2,6 @@
 <!-- vim:fdl=1:
 -->
 <templates id="template" xml:space="preserve">
-<t t-name="ui.Header">
-    <header>
-        <t t-raw="__content__"/>
-    </header>
-</t>
-
 <t t-name="EmptyComponent">
     <div></div>
 </t>
@@ -413,7 +407,7 @@
                 <a class="oe_logo" href="#"><img t-att-src='_s + "/web/static/src/img/logo.png"'/></a>
                 <div class="oe_secondary_menus_container"/>
                 <div class="oe_footer">
-                    Powered by <a href="http://www.openerp.com" target="_blank"><span>Open</span>ERP</a>
+                    Powered by <a href="http://www.openerp.com" target="_blank"><span>OpenERP</span></a>
                 </div>
             </td>
             <td class="oe_application">
@@ -1128,7 +1122,7 @@
                     <td>
                         <t t-call="HiddenInputFile">
                             <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
-                            <t t-set="fileupload_style">width: 83px;</t>
+                            <t t-set="fileupload_style" t-translation="off">width: 83px;</t>
                             <button class="oe_button oe_field_button" type="button">
                                 <img t-att-src='_s + "/web/static/src/img/icons/STOCK_DIRECTORY.png"'/>
                                 <span>Select</span>
@@ -1491,6 +1485,7 @@
 </div>
 <t t-name="SearchView.extended_search.proposition">
     <li>
+        <span class="searchview_extended_prop_or">or</span>
         <select class="searchview_extended_prop_field">
             <t t-foreach="widget.attrs.fields" t-as="field">
                 <option t-att="{'selected': field === widget.attrs.selected ? 'selected' : null}"

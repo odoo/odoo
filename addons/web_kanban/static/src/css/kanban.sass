@@ -37,6 +37,13 @@
     -webkit-transform: $transform
     -o-transform: $transform
     -ms-transform: $transform
+
+@mixin transition($transition: all 200ms linear)
+    -webkit-transition: $transition
+    -moz-transition: $transition
+    -ms-transition: $transition
+    -o-transition: $transition
+    transition: $transition
 // }}}
 
 .openerp .oe_kanban_view
@@ -49,10 +56,12 @@
     .ui-sortable-placeholder
         border: 1px solid rgba(0,0,0,0.1)
         visibility: visible !important
-        height: 60px !important
     .ui-sortable-helper
         @include box-shadow(0 1px 10px rgba(0, 0, 0, 0.3))
         @include transform(rotate(3deg))
+        -webkit-transition: -webkit-transform 100ms linear
+        -moz-transition: -moz-transform 100ms linear
+        transition: transform 100ms linear
     .oe_kanban_left
         float: left
     .oe_kanban_right
@@ -328,8 +337,9 @@
         border-bottom-color: rgba(0,0,0,0.3)
         padding: 8px
         display: block
+        -webkit-transition: -webkit-transform, -webkit-box-shadow, border 200ms linear
         @include radius(4px)
-        &:hover
+        &:not(.ui-sortable-helper):hover
             border: 1px solid #7C7BAD
             @include box-shadow(0 0 4px #7C7BAD)
             .oe_dropdown_kanban > span
@@ -341,7 +351,6 @@
         h3:hover
             text-decoration: none
         .oe_dropdown_kanban
-            margin-top: 4px
             .oe_kanban_project_times
                 li
                     float: left
@@ -404,10 +413,10 @@
     // }}}
     // KanbanDropDown {{{
     .oe_dropdown_kanban
-        position: absolute
-        top: -8px
-        right: 3px
+        float: right
+        clear: both
         cursor: pointer
+        margin-top: -6px
         &:hover
             text-decoration: none
         .oe_dropdown_menu

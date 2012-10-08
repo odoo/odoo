@@ -22,8 +22,6 @@ Contents:
     list-view
     form-notes
 
-    templates
-
     guides/client-action
 
 Indices and tables

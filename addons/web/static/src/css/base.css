@@ -1103,9 +1103,8 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
 }
 .openerp .oe_menu > li > .oe_active {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   text-shadow: black 0px 0px 3px;
-  font-weight: bold;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
@@ -1198,7 +1197,7 @@
   color: white;
   padding: 2px 4px;
   margin: 1px 6px 0 0;
-  border: 1px solid lightGray;
+  border: 1px solid lightgrey;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
@@ -1223,7 +1222,7 @@
   transform: scale(1.1);
 }
 .openerp .oe_secondary_submenu .oe_active {
-  border-top: 1px solid lightGray;
+  border-top: 1px solid lightgrey;
   border-bottom: 1px solid #dedede;
   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), inset 0 -1px 3px rgba(40, 40, 40, 0.2);
@@ -1865,6 +1864,13 @@
   margin: 0;
   white-space: nowrap;
 }
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced li:first-child .searchview_extended_prop_or {
+  visibility: hidden;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced .searchview_extended_prop_or {
+  opacity: 0.5;
+  margin-left: -14px;
+}
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened h4:before {
   content: "▾ ";
   position: relative;
@@ -2117,7 +2123,7 @@
 }
 .openerp .oe_form .oe_form_label_help[for] span, .openerp .oe_form .oe_form_label[for] span {
   font-size: 80%;
-  color: darkGreen;
+  color: darkgreen;
   vertical-align: top;
   position: relative;
   top: -4px;
@@ -2206,16 +2212,12 @@
   min-width: 60px;
   color: #1f1f1f;
 }
-.openerp .oe_form textarea {
-  height: 32px;
-}
 .openerp .oe_form input[readonly], .openerp .oe_form select[readonly], .openerp .oe_form textarea[readonly], .openerp .oe_form input[disabled], .openerp .oe_form select[disabled] {
   background: #e5e5e5 !important;
   color: #666666;
 }
 .openerp .oe_form textarea[disabled] {
   border: none;
-  border-left: 8px solid #eeeeee;
   padding-left: 8px;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -2223,6 +2225,9 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
+}
+.openerp .oe_form textarea.oe_inline[disabled] {
+  border-left: 8px solid #eeeeee;
 }
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
@@ -2241,7 +2246,7 @@
 .openerp .oe_form .oe_datepicker_root {
   display: inline-block;
 }
-.openerp .oe_form .oe_form_required input, .openerp .oe_form .oe_form_required select, .openerp .oe_form .oe_form_required textarea {
+.openerp .oe_form .oe_form_required input:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required select:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required textarea:not([disabled]):not([readonly]) {
   background-color: #d2d2ff !important;
 }
 .openerp .oe_form .oe_form_invalid input, .openerp .oe_form .oe_form_invalid select, .openerp .oe_form .oe_form_invalid textarea {
@@ -2279,7 +2284,7 @@
   position: relative;
   overflow: hidden;
 }
-.openerp .oe_form .oe_form_field_html {
+.openerp .oe_form .oe_form_embedded_html {
   position: relative;
   width: 600px;
   margin-left: 130px;

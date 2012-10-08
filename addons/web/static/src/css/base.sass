@@ -891,9 +891,8 @@ $sheet-max-width: 860px
                     color: white
                     @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
             > .oe_active
-                background: rgba(0,0,0,0.2)
+                background: rgba(0,0,0,0.30)
                 text-shadow: black 0px 0px 3px
-                font-weight: bold
                 @include box-shadow(0 1px 2px rgba(0,0,0,0.4) inset)
 
     .oe_user_menu
@@ -1482,6 +1481,11 @@ $sheet-max-width: 860px
                     list-style: none
                     margin: 0
                     white-space: nowrap
+                    &:first-child .searchview_extended_prop_or
+                        visibility: hidden
+                .searchview_extended_prop_or
+                    opacity: 0.5
+                    margin-left: -14px
             .oe_opened
                 h4:before
                     content: "▾ "
@@ -1753,17 +1757,16 @@ $sheet-max-width: 860px
             background: white
             min-width: 60px
             color: #1f1f1f
-        textarea
-            height: 32px
         input[readonly], select[readonly], textarea[readonly], input[disabled], select[disabled]
             background: #E5E5E5 !important
             color: #666
         textarea[disabled]
             border: none
-            border-left: 8px solid #eee
             padding-left: 8px
             @include box-shadow(none)
             @include radius(0px)
+        textarea.oe_inline[disabled]
+            border-left: 8px solid #eee
         .oe_form_field_url button img
             vertical-align: top
         .oe_form_field_date,
@@ -1776,8 +1779,8 @@ $sheet-max-width: 860px
             display: none
         .oe_datepicker_root
             display: inline-block
-        .oe_form_required
-            input, select, textarea
+        .oe_form_required 
+            input:not([disabled]):not([readonly]), select:not([disabled]):not([readonly]), textarea:not([disabled]):not([readonly])
                 background-color: #D2D2FF !important
         .oe_form_invalid
             input, select, textarea
@@ -1808,7 +1811,7 @@ $sheet-max-width: 860px
             > div
                 position: relative
                 overflow: hidden
-        .oe_form_field_html
+        .oe_form_embedded_html
             position: relative
             width: 600px
             margin-left: 130px
