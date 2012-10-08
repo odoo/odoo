@@ -7,25 +7,6 @@ $(document).ready(function () {
             openerp.session.uid = 42;
         }
     });
-    test('datetime.datetime', function () {
-    });
-    test('datetime.date', function () {
-
-    });
-    test('datetime.timedelta', function () {
-        var d = new Date();
-        d.setUTCDate(d.getUTCDate() - 15);
-        strictEqual(
-            py.eval("(datetime.date.today()" +
-                    "- datetime.timedelta(days=15))" +
-                    ".strftime('%Y-%m-%d')", openerp.web.pyeval.context()),
-            _.str.strftime('%04d-%02d-%02d',
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()));
-
-    });
-    test('relativedelta', function () {
-
-    });
     test('strftime', function () {
         var d = new Date();
         var context = openerp.web.pyeval.context();

@@ -109,27 +109,6 @@ openerp.web.pyeval = function (instance) {
         }
     });
 
-    datetime.timedelta = py.type('timedelta', null, {
-        __init__: function () {
-            var zero = py.float.fromJSON(0);
-            var args = py.PY_parseArgs(arguments,
-                [['days', zero], ['seconds', zero], ['microseconds', zero],
-                 ['milliseconds', zero], ['minutes', zero], ['hours', zero],
-                 ['weeks', zero]]);
-            var ms = args['microseconds'].toJSON()
-                   + 1000 * args['milliseconds'].toJSON();
-            this.milliseconds = ms % 1000000;
-            var sec = Math.floor(ms / 1000000)
-                    + args['seconds'].toJSON()
-                    + 60 * args['minutes'].toJSON()
-                    + 3600 * args['hours'].toJSON();
-            this.seconds = sec % 86400;
-            this.days = Math.floor(sec / 86400)
-                      + args['days'].toJSON()
-                      + 7 * args['weeks'].toJSON();
-        }
-    });
-
     var time = py.PY_call(py.object);
     time.strftime = py.PY_def.fromJSON(function () {
         // FIXME: needs PY_getattr
