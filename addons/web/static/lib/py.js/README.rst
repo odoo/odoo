@@ -1,14 +1,7 @@
 What
 ====
 
-``py.js`` is a parser and evaluator of Python expressions, written in
-pure javascript.
 
-``py.js`` is not intended to implement a full Python interpreter
-(although it could be used for such an effort later on), its
-specification document is the `Python 2.7 Expressions spec
-<http://docs.python.org/reference/expressions.html>`_ (along with the
-lexical analysis part).
 
 Syntax
 ------
@@ -69,7 +62,7 @@ Data model protocols
 
 ``py.js`` currently implements the following protocols (or
 sub-protocols) of the `Python 2.7 data model
-<http://docs.python.org/reference/datamodel.html>`_:
+<>`_:
 
 Rich comparisons
     Pretty much complete (including operator fallbacks), although the

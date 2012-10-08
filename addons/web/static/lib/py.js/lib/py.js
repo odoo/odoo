@@ -369,24 +369,26 @@ var py = {};
             return py.False;
         }
 
-        if (val instanceof py.object
-            || val === py.object
-            || py.issubclass.__call__([val, py.object]) === py.True) {
+        var fn = function () {}
+        fn.prototype = py.object;
+        if (py.PY_call(py.isinstance, [val, py.object]) === py.True
+            || py.PY_call(py.issubclass, [val, py.object]) === py.True) {
             return val;
         }
 
         switch (typeof val) {
         case 'number':
-            return new py.float(val);
+            return py.float.fromJSON(val);
         case 'string':
-            return new py.str(val);
+            return py.str.fromJSON(val);
         case 'function':
-            return new py.def(val);
+            return py.PY_def.fromJSON(val);
         }
 
         switch(val.constructor) {
         case Object:
-            var o = new py.object();
+            // TODO: why py.object instead of py.dict?
+            var o = py.PY_call(py.object);
             for (var prop in val) {
                 if (val.hasOwnProperty(prop)) {
                     o[prop] = val[prop];
@@ -394,40 +396,170 @@ var py = {};
             }
             return o;
         case Array:
-            var a = new py.list();
-            a.values = val;
+            var a = py.PY_call(py.list);
+            a._values = val;
             return a;
         }
 
         throw new Error("Could not convert " + val + " to a pyval");
     }
-    // Builtins
-    py.type = function type(constructor, base, dict) {
-        var proto;
-        if (!base) {
-            base = py.object;
+
+    // JSAPI, JS-level utility functions for implementing new py.js
+    // types
+    py.py = {};
+
+    py.PY_parseArgs = function PY_parseArgs(argument, format) {
+        var out = {};
+        var args = argument[0];
+        var kwargs = {};
+        for (var k in argument[1]) {
+            kwargs[k] = argument[1][k];
         }
-        proto = constructor.prototype = create(base.prototype);
-        proto.constructor = constructor;
-        if (dict) {
-            for(var k in dict) {
-                if (!dict.hasOwnProperty(k)) { continue; }
-                proto[k] = dict[k];
+        if (typeof format === 'string') {
+            format = format.split(/\s+/);
+        }
+        var name = function (spec) {
+            if (typeof spec === 'string') {
+                return spec;
+            } else if (spec instanceof Array && spec.length === 2) {
+                return spec[0];
+            }
+            throw new Error(
+                "TypeError: unknown format specification " +
+                    JSON.stringify(spec));
+        };
+        // TODO: ensure all format arg names are actual names?
+        for(var i=0; i<args.length; ++i) {
+            var spec = format[i];
+            // spec list ended, or specs switching to keyword-only
+            if (!spec || spec === '*') {
+                throw new Error(
+                    "TypeError: function takes exactly " + (i-1) +
+                    " positional arguments (" + args.length +
+                    " given")
+            } else if(/^\*\w/.test(spec)) {
+                // *args, final
+                out[name(spec.slice(1))] = args.slice(i);
+                break;
+            }
+
+            out[name(spec)] = args[i];
+        }
+        for(var j=i; j<format.length; ++j) {
+            var spec = format[j];
+            var n = name(spec);
+
+            if (n in out) {
+                throw new Error(
+                    "TypeError: function got multiple values " + 
+                    "for keyword argument '" + kwarg + "'");
+            }
+            if (/^\*\*\w/.test(n)) {
+                // **kwarg
+                out[n.slice(2)] = kwargs;
+                kwargs = {};
+                break;
+            }
+            if (n in kwargs) {
+                out[n] = kwargs[n];
+                // Remove from args map
+                delete kwargs[n];
             }
         }
-        constructor.__call__ = function () {
-            // create equivalent type with same prototype
-            var instance = create(proto);
-            // call actual constructor
-            var res = constructor.apply(instance, arguments);
-            // return result of constructor if any, otherwise instance
-            return res || instance;
-        };
-        return constructor;
+        // Ensure all keyword arguments were consumed
+        for (var key in kwargs) {
+            throw new Error(
+                "TypeError: function got an unexpected keyword argument '"
+                    + key + "'");
+        }
+
+        // Fixup args count if there's a kwonly flag (or an *args)
+        var kwonly = 0;
+        for(var k = 0; k < format.length; ++k) {
+            if (/^\*/.test(format[k])) { kwonly = 1; break; }
+        }
+        // Check that all required arguments have been matched, add
+        // optional values
+        for(var k = 0; k < format.length; ++k) {
+            var spec = format[k], n = name(spec);
+            // kwonly, va_arg or matched argument
+            if (/^\*/.test(n) || n in out) { continue; }
+            // Unmatched required argument
+            if (!(spec instanceof Array)) {
+                throw new Error(
+                    "TypeError: function takes exactly " + (format.length - kwonly)
+                    + " arguments");
+            }
+            // Set default value
+            out[n] = spec[1];
+        }
+        
+        return out;
+    };
+
+    // Builtins
+    py.PY_call = function (callable, args, kwargs) {
+        if (!args) {
+            args = []; kwargs = {};
+        } else if (typeof args === 'object' && !(args instanceof Array)) {
+            kwargs = args;
+            args = [];
+        } else if (!kwargs) {
+            kwargs = {};
+        }
+        if (callable.__is_type) {
+            // class hack
+            var instance = callable.__new__.call(callable, args, kwargs);
+            var typ = function () {}
+            typ.prototype = callable;
+            if (instance instanceof typ) {
+                instance.__init__.call(instance, args, kwargs);
+            }
+            return instance
+        }
+        return callable.__call__(args, kwargs);
+    };
+    py.type = function type(name, bases, dict) {
+        var proto;
+        if (typeof name !== 'string') {
+            throw new Error("ValueError: a class name should be a string");
+        }
+        if (!bases || bases.length === 0) {
+            bases = [py.object];
+        } else if (bases.length > 1) {
+            throw new Error("ValueError: can't provide multiple bases for a "
+                          + "new type");
+        }
+        var base = bases[0];
+        var ClassObj = create(base);
+        if (dict) {
+            for (var k in dict) {
+                if (!dict.hasOwnProperty(k)) { continue; }
+                ClassObj[k] = dict[k];
+            }
+        }
+        ClassObj.__class__ = ClassObj;
+        ClassObj.__name__ = name;
+        ClassObj.__bases__ = bases;
+        ClassObj.__is_type = true;
+
+        return ClassObj;
+    };
+    py.type.__call__ = function () {
+        var args = py.PY_parseArgs(arguments, ['object']);
+        return args.object.__class__;
     };
 
     var hash_counter = 0;
-    py.object = py.type(function object() {}, {}, {
+    py.object = py.type('object', [{}], {
+        __new__: function () {
+            // If ``this`` isn't the class object, this is going to be
+            // beyond fucked up
+            var inst = create(this);
+            inst.__is_type = false;
+            return inst;
+        },
+        __init__: function () {},
         // Basic customization
         __hash__: function () {
             if (this._hash) {
@@ -466,11 +598,11 @@ var py = {};
                 var val = this[name];
                 if (typeof val === 'object' && '__get__' in val) {
                     // TODO: second argument should be class
-                    return val.__get__(this);
+                    return val.__get__(this, py.PY_call(py.type, [this]));
                 }
                 if (typeof val === 'function' && !this.hasOwnProperty(name)) {
                     // val is a method from the class
-                    return new PY_instancemethod(val, this);
+                    return PY_instancemethod.fromJSON(val, this);
                 }
                 return PY_ensurepy(val);
             }
@@ -492,140 +624,182 @@ var py = {};
             throw new Error(this.constructor.name + ' can not be converted to JSON');
         }
     });
-    var NoneType = py.type(function NoneType() {}, py.object, {
+    var NoneType = py.type('NoneType', null, {
         __nonzero__: function () { return py.False; },
         toJSON: function () { return null; }
     });
-    py.None = new NoneType();
-    var NotImplementedType = py.type(function NotImplementedType(){});
-    py.NotImplemented = new NotImplementedType();
+    py.None = py.PY_call(NoneType);
+    var NotImplementedType = py.type('NotImplementedType', null, {});
+    py.NotImplemented = py.PY_call(NotImplementedType);
     var booleans_initialized = false;
-    py.bool = py.type(function bool(value) {
-        value = (value instanceof Array) ? value[0] : value;
-        // The only actual instance of py.bool should be py.True
-        // and py.False. Return the new instance of py.bool if we
-        // are initializing py.True and py.False, otherwise always
-        // return either py.True or py.False.
-        if (!booleans_initialized) {
-            return;
-        }
-        if (value === undefined) { return py.False; }
-        return value.__nonzero__() === py.True ? py.True : py.False;
-    }, py.object, {
+    py.bool = py.type('bool', null, {
+        __new__: function () {
+            if (!booleans_initialized) {
+                return py.object.__new__.apply(this);
+            }
+
+            var ph = {};
+            var args = py.PY_parseArgs(arguments, [['value', ph]]);
+            if (args.value === ph) {
+                return py.False;
+            }
+            return args.value.__nonzero__() === py.True ? py.True : py.False;
+        },
         __nonzero__: function () { return this; },
         toJSON: function () { return this === py.True; }
     });
-    py.True = new py.bool();
-    py.False = new py.bool();
+    py.True = py.PY_call(py.bool);
+    py.False = py.PY_call(py.bool);
     booleans_initialized = true;
-    py.float = py.type(function float(value) {
-        value = (value instanceof Array) ? value[0] : value;
-        if (value === undefined) { this._value = 0; return; }
-        if (value instanceof py.float) { return value; }
-        if (typeof value === 'number' || value instanceof Number) {
-            this._value = value;
-            return;
-        }
-        if (typeof value === 'string' || value instanceof String) {
-            this._value = parseFloat(value);
-            return;
-        }
-        if (value instanceof py.object && '__float__' in value) {
-            var res = value.__float__();
-            if (res instanceof py.float) {
-                return res;
+    py.float = py.type('float', null, {
+        __init__: function () {
+            var placeholder = {};
+            var args = py.PY_parseArgs(arguments, [['value', placeholder]]);
+            var value = args.value;
+            if (value === placeholder) {
+                this._value = 0; return;
             }
-            throw new Error('TypeError: __float__ returned non-float (type ' +
-                            res.constructor.name + ')');
-        }
-        throw new Error('TypeError: float() argument must be a string or a number');
-    }, py.object, {
+            if (py.PY_call(py.isinstance, [value, py.float]) === py.True) {
+                this._value = value._value;
+            }
+            if (py.PY_call(py.isinstance, [value, py.object]) === py.True
+                    && '__float__' in value) {
+                var res = value.__float__();
+                if (py.PY_call(py.isinstance, [res, py.float]) === py.True) {
+                    this._value = res._value;
+                    return;
+                }
+                throw new Error('TypeError: __float__ returned non-float (type ' +
+                                res.__class__.__name__ + ')');
+            }
+            throw new Error('TypeError: float() argument must be a string or a number');
+        },
         __eq__: function (other) {
             return this._value === other._value ? py.True : py.False;
         },
         __lt__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value < other._value ? py.True : py.False;
         },
         __le__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value <= other._value ? py.True : py.False;
         },
         __gt__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value > other._value ? py.True : py.False;
         },
         __ge__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value >= other._value ? py.True : py.False;
         },
         __add__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
-            return new py.float(this._value + other._value);
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value + other._value);
         },
         __neg__: function () {
-            return new py.float(-this._value);
+            return py.float.fromJSON(-this._value);
         },
         __sub__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
-            return new py.float(this._value - other._value);
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value - other._value);
         },
         __mul__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
-            return new py.float(this._value * other._value);
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value * other._value);
         },
         __div__: function (other) {
-            if (!(other instanceof py.float)) { return py.NotImplemented; }
-            return new py.float(this._value / other._value);
+            if (py.PY_call(py.isinstance, [other, py.float]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value / other._value);
         },
         __nonzero__: function () {
             return this._value ? py.True : py.False;
+        },
+        fromJSON: function (v) {
+            if (!(typeof v === 'number')) {
+                throw new Error('py.float.fromJSON can only take numbers ');
+            }
+            var instance = py.PY_call(py.float);
+            instance._value = v;
+            return instance;
         },
         toJSON: function () {
             return this._value;
         }
     });
-    py.str = py.type(function str(s) {
-        s = (s instanceof Array) ? s[0] : s;
-        if (s === undefined) { this._value = ''; return; }
-        if (s instanceof py.str) { return s; }
-        if (typeof s === 'string' || s instanceof String) {
-            this._value = s;
-            return;
-        }
-        var v = s.__str__();
-        if (v instanceof py.str) { return v; }
-        throw new Error('TypeError: __str__ returned non-string (type ' +
-                        v.constructor.name + ')');
-    }, py.object, {
+    py.str = py.type('str', null, {
+        __init__: function () {
+            var placeholder = {};
+            var args = py.PY_parseArgs(arguments, [['value', placeholder]]);
+            var s = args.value;
+            if (s === placeholder) { this._value = ''; return; }
+            if (py.PY_call(py.isinstance, [s, py.str]) === py.True) {
+                this._value = s._value;
+                return;
+            }
+            var v = s.__str__();
+            if (py.PY_call(py.isinstance, [v, py.str]) === py.True) {
+                this._value = v._value;
+                return;
+            }
+            throw new Error('TypeError: __str__ returned non-string (type ' +
+                            v.__class__.__name__ + ')');
+        },
         __hash__: function () {
             return '\1\0\1' + this._value;
         },
         __eq__: function (other) {
-            if (other instanceof py.str && this._value === other._value) {
+            if (py.PY_call(py.isinstance, [other, py.str]) === py.True
+                    && this._value === other._value) {
                 return py.True;
             }
             return py.False;
         },
         __lt__: function (other) {
-            if (!(other instanceof py.str)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.str]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value < other._value ? py.True : py.False;
         },
         __le__: function (other) {
-            if (!(other instanceof py.str)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.str]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value <= other._value ? py.True : py.False;
         },
         __gt__: function (other) {
-            if (!(other instanceof py.str)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.str]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value > other._value ? py.True : py.False;
         },
         __ge__: function (other) {
-            if (!(other instanceof py.str)) { return py.NotImplemented; }
+            if (py.PY_call(py.isinstance, [other, py.str]) !== py.True) {
+                return py.NotImplemented;
+            }
             return this._value >= other._value ? py.True : py.False;
         },
         __add__: function (other) {
-            if (!(other instanceof py.str)) { return py.NotImplemented; }
-            return new py.str(this._value + other._value);
+            if (py.PY_call(py.isinstance, [other, py.str]) !== py.True) {
+                return py.NotImplemented;
+            }
+            return py.str.fromJSON(this._value + other._value);
         },
         __nonzero__: function () {
             return this._value.length ? py.True : py.False;
@@ -633,40 +807,46 @@ var py = {};
         __contains__: function (s) {
             return (this._value.indexOf(s._value) !== -1) ? py.True : py.False;
         },
+        fromJSON: function (s) {
+            if (typeof s === 'string') {
+                var instance = py.PY_call(py.str);
+                instance._value = s;
+                return instance;
+            };
+            throw new Error("str.fromJSON can only take strings");
+        },
         toJSON: function () {
             return this._value;
         }
     });
-    py.tuple = py.type(function tuple() {}, null, {
+    py.tuple = py.type('tuple', null, {
+        __init__: function () {
+            this._values = [];
+        },
         __contains__: function (value) {
-            for(var i=0, len=this.values.length; i<len; ++i) {
-                if (this.values[i].__eq__(value) === py.True) {
+            for(var i=0, len=this._values.length; i<len; ++i) {
+                if (this._values[i].__eq__(value) === py.True) {
                     return py.True;
                 }
             }
             return py.False;
         },
         __getitem__: function (index) {
-            return PY_ensurepy(this.values[index.toJSON()]);
+            return PY_ensurepy(this._values[index.toJSON()]);
         },
         toJSON: function () {
             var out = [];
-            for (var i=0; i<this.values.length; ++i) {
-                out.push(this.values[i].toJSON());
+            for (var i=0; i<this._values.length; ++i) {
+                out.push(this._values[i].toJSON());
             }
             return out;
         }
     });
     py.list = py.tuple;
-    py.dict = py.type(function dict(d) {
-        this._store = {};
-        for (var k in (d || {})) {
-            if (!d.hasOwnProperty(k)) { continue; }
-            var py_k = new py.str(k);
-            var val = PY_ensurepy(d[k]);
-            this._store[py_k.__hash__()] = [py_k, val];
-        }
-    }, py.object, {
+    py.dict = py.type('dict', null, {
+        __init__: function () {
+            this._store = {};
+        },
         __getitem__: function (key) {
             var h = key.__hash__();
             if (!(h in this._store)) {
@@ -677,13 +857,23 @@ var py = {};
         __setitem__: function (key, value) {
             this._store[key.__hash__()] = [key, value];
         },
-        get: function (args) {
-            var h = args[0].__hash__();
-            var def = args.length > 1 ? args[1] : py.None;
+        get: function () {
+            var args = py.PY_parseArgs(arguments, ['k', ['d', py.None]]);
+            var h = args.k.__hash__();
             if (!(h in this._store)) {
-                return def;
+                return args.d;
             }
             return this._store[h][1];
+        },
+        fromJSON: function (d) {
+            var instance = py.PY_call(py.dict);
+            for (var k in (d || {})) {
+                if (!d.hasOwnProperty(k)) { continue; }
+                instance.__setitem__(
+                    py.str.fromJSON(k),
+                    PY_ensurepy(d[k]));
+            }
+            return instance;
         },
         toJSON: function () {
             var out = {};
@@ -694,30 +884,57 @@ var py = {};
             return out;
         }
     });
-    py.def = py.type(function def(nativefunc) {
-        this._inst = null;
-        this._func = nativefunc;
-    }, py.object, {
-        __call__: function (args, kwargs) {
+    py.PY_def = py.type('function', null, {
+        __call__: function () {
             // don't want to rewrite __call__ for instancemethod
-            return this._func.call(this._inst, args, kwargs);
+            return this._func.apply(this._inst, arguments);
+        },
+        fromJSON: function (nativefunc) {
+            var instance = py.PY_call(py.PY_def);
+            instance._inst = null;
+            instance._func = nativefunc;
+            return instance;
         },
         toJSON: function () {
             return this._func;
         }
     });
-    var PY_instancemethod = py.type(function instancemethod(nativefunc, instance, _cls) {
-        // could also use bind?
-        this._inst = instance;
-        this._func = nativefunc;
-    }, py.def, {});
+    py.classmethod = py.type('classmethod', null, {
+        __init__: function () {
+            var args = py.PY_parseArgs(arguments, 'function');
+            this._func = args['function'];
+        },
+        __get__: function (obj, type) {
+            return PY_instancemethod.fromJSON(this._func, type);
+        },
+        fromJSON: function (func) {
+            return py.PY_call(py.classmethod, [func]);
+        }
+    });
+    var PY_instancemethod = py.type('instancemethod', [py.PY_def], {
+        fromJSON: function (nativefunc, instance) {
+            var inst = py.PY_call(PY_instancemethod);
+            // could also use bind?
+            inst._inst = instance;
+            inst._func = nativefunc;
+            return inst;
+        }
+    });
 
-    py.issubclass = new py.def(function issubclass(args) {
-        var derived = args[0], parent = args[1];
-        // still hurts my brain that this can work
-        return derived.prototype instanceof py.object
-            ? py.True
-            : py.False;
+    py.isinstance = new py.PY_def.fromJSON(function isinstance() {
+        var args = py.PY_parseArgs(arguments, ['object', 'class']);
+        var fn = function () {};
+        fn.prototype = args['class'];
+        return (args.object instanceof fn) ? py.True : py.False;
+    });
+    py.issubclass = new py.PY_def.fromJSON(function issubclass() {
+        var args = py.PY_parseArgs(arguments, ['C', 'B']);
+        var fn = function () {};
+        fn.prototype = args.B;
+        if (args.C === args.B || args.C instanceof fn) {
+            return py.True;
+        }
+        return py.False;
     });
 
 
@@ -726,10 +943,10 @@ var py = {};
         '==': ['eq', 'eq', function (a, b) { return a === b; }],
         '!=': ['ne', 'ne', function (a, b) { return a !== b; }],
         '<>': ['ne', 'ne', function (a, b) { return a !== b; }],
-        '<': ['lt', 'gt', function (a, b) {return a.constructor.name < b.constructor.name;}],
-        '<=': ['le', 'ge', function (a, b) {return a.constructor.name <= b.constructor.name;}],
-        '>': ['gt', 'lt', function (a, b) {return a.constructor.name > b.constructor.name;}],
-        '>=': ['ge', 'le', function (a, b) {return a.constructor.name >= b.constructor.name;}],
+        '<': ['lt', 'gt', function (a, b) {return a.__class__.__name__ < b.__class__.__name__;}],
+        '<=': ['le', 'ge', function (a, b) {return a.__class__.__name__ <= b.__class__.__name__;}],
+        '>': ['gt', 'lt', function (a, b) {return a.__class__.__name__ > b.__class__.__name__;}],
+        '>=': ['ge', 'le', function (a, b) {return a.__class__.__name__ >= b.__class__.__name__;}],
 
         '+': ['add', 'radd'],
         '-': ['sub', 'rsub'],
@@ -772,8 +989,8 @@ var py = {};
         }
         throw new Error(
             "TypeError: unsupported operand type(s) for " + op + ": '"
-                + o1.constructor.name + "' and '"
-                + o2.constructor.name + "'");
+                + o1.__class__.__name__ + "' and '"
+                + o2.__class__.__name__ + "'");
     };
 
     var PY_builtins = {
@@ -787,10 +1004,15 @@ var py = {};
         object: py.object,
         bool: py.bool,
         float: py.float,
+        str: py.str,
+        unicode: py.unicode,
         tuple: py.tuple,
         list: py.list,
         dict: py.dict,
-        issubclass: py.issubclass
+
+        isinstance: py.isinstance,
+        issubclass: py.issubclass,
+        classmethod: py.classmethod,
     };
 
     py.parse = function (toks) {
@@ -825,9 +1047,9 @@ var py = {};
             }
             return PY_ensurepy(val, expr.value);
         case '(string)':
-            return new py.str(expr.value);
+            return py.str.fromJSON(expr.value);
         case '(number)':
-            return new py.float(expr.value);
+            return py.float.fromJSON(expr.value);
         case '(constant)':
             switch (expr.value) {
             case 'None': return py.None;
@@ -876,7 +1098,7 @@ var py = {};
                             py.evaluate(arg.second, context);
                     }
                 }
-                return callable.__call__(args, kwargs);
+                return py.PY_call(callable, args, kwargs);
             }
             var tuple_exprs = expr.first,
                 tuple_values = [];
@@ -884,8 +1106,8 @@ var py = {};
                 tuple_values.push(py.evaluate(
                     tuple_exprs[j], context));
             }
-            var t = new py.tuple();
-            t.values = tuple_values;
+            var t = py.PY_call(py.tuple);
+            t._values = tuple_values;
             return t;
         case '[':
             if (expr.second) {
@@ -897,11 +1119,11 @@ var py = {};
                 list_values.push(py.evaluate(
                     list_exprs[k], context));
             }
-            var l = new py.list();
-            l.values = list_values;
+            var l = py.PY_call(py.list);
+            l._values = list_values;
             return l;
         case '{':
-            var dict_exprs = expr.first, dict = new py.dict;
+            var dict_exprs = expr.first, dict = py.PY_call(py.dict);
             for(var l=0; l<dict_exprs.length; ++l) {
                 dict.__setitem__(
                     py.evaluate(dict_exprs[l][0], context),

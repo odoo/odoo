@@ -1,9 +1,51 @@
 $(document).ready(function () {
     var openerp;
 
+    module("eval.types", {
+        setup: function () {
+            openerp = window.openerp.testing.instanceFor('coresetup');
+            openerp.session.uid = 42;
+        }
+    });
+    test('datetime.datetime', function () {
+    });
+    test('datetime.date', function () {
+
+    });
+    test('datetime.timedelta', function () {
+        var d = new Date();
+        d.setUTCDate(d.getUTCDate() - 15);
+        strictEqual(
+            py.eval("(datetime.date.today()" +
+                    "- datetime.timedelta(days=15))" +
+                    ".strftime('%Y-%m-%d')", openerp.web.pyeval.context()),
+            _.str.strftime('%04d-%02d-%02d',
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()));
+
+    });
+    test('relativedelta', function () {
+
+    });
+    test('strftime', function () {
+        var d = new Date();
+        var context = openerp.web.pyeval.context();
+        strictEqual(
+            py.eval("time.strftime('%Y')", context),
+            String(d.getUTCFullYear()));
+        strictEqual(
+            py.eval("time.strftime('%Y')+'-01-30'", context),
+            String(d.getUTCFullYear()) + '-01-30');
+        strictEqual(
+            py.eval("time.strftime('%Y-%m-%d %H:%M:%S')", context),
+            _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
+                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+    });
+
     module("eval.contexts", {
         setup: function () {
             openerp = window.openerp.testing.instanceFor('coresetup');
+            openerp.session.uid = 42;
         }
     });
     test('context_sequences', function () {
@@ -135,6 +177,7 @@ $(document).ready(function () {
         setup: function () {
             openerp = window.openerp.testing.instanceFor('coresetup');
             window.openerp.web.dates(openerp);
+            openerp.session.uid = 42;
         }
     });
     test('current_date', function () {
@@ -150,6 +193,7 @@ $(document).ready(function () {
     module('eval.groupbys', {
         setup: function () {
             openerp = window.openerp.testing.instanceFor('coresetup');
+            openerp.session.uid = 42;
         }
     });
     test('groupbys_00', function () {

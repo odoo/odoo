@@ -4,66 +4,151 @@
 openerp.web.pyeval = function (instance) {
     instance.web.pyeval = {};
 
+    var obj = function () {};
+    obj.prototype = py.object;
     var asJS = function (arg) {
-        if (arg instanceof py.object) {
+        if (arg instanceof obj) {
             return arg.toJSON();
         }
         return arg;
     };
 
-    var datetime = new py.object();
-    datetime.datetime = new py.type(function datetime() {
-        throw new Error('datetime.datetime not implemented');
+    var datetime = py.PY_call(py.object);
+    datetime.datetime = py.type('datetime', null, {
+        __init__: function () {
+            var zero = py.float.fromJSON(0);
+            var args = py.PY_parseArgs(arguments, [
+                'year', 'month', 'day',
+                ['hour', zero], ['minute', zero], ['second', zero],
+                ['microsecond', zero], ['tzinfo', py.None]
+            ]);
+            for(var key in args) {
+                if (!args.hasOwnProperty(key)) { continue; }
+                this[key] = asJS(args[key]);
+            }
+        },
+        strftime: function () {
+            var self = this;
+            var args = py.PY_parseArgs(arguments, 'format');
+            return py.str.fromJSON(args.format.toJSON()
+                .replace(/%([A-Za-z])/g, function (m, c) {
+                    switch (c) {
+                    case 'Y': return self.year;
+                    case 'm': return _.str.sprintf('%02d', self.month);
+                    case 'd': return _.str.sprintf('%02d', self.day);
+                    case 'H': return _.str.sprintf('%02d', self.hour);
+                    case 'M': return _.str.sprintf('%02d', self.minute);
+                    case 'S': return _.str.sprintf('%02d', self.second);
+                    }
+                    throw new Error('ValueError: No known conversion for ' + m);
+                }));
+        },
+        now: py.classmethod.fromJSON(function () {
+            var d = new Date();
+            return py.PY_call(datetime.datetime,
+                [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
+                 d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(),
+                 d.getUTCMilliseconds() * 1000]);
+        }),
+        today: py.classmethod.fromJSON(function () {
+            var d = new Date();
+            return py.PY_call(datetime.datetime,
+                [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
+        }),
+        combine: py.classmethod.fromJSON(function () {
+            var args = py.PY_parseArgs(arguments, 'date time');
+            return py.PY_call(datetime.datetime, [
+                // FIXME: should use getattr
+                args.date.year,
+                args.date.month,
+                args.date.day,
+                args.time.hour,
+                args.time.minute,
+                args.time.second
+            ]);
+        })
     });
-    var date = datetime.date = new py.type(function date(y, m, d) {
-        if (y instanceof Array) {
-            d = y[2];
-            m = y[1];
-            y = y[0];
-        }
-        this.year = asJS(y);
-        this.month = asJS(m);
-        this.day = asJS(d);
-    }, py.object, {
-        strftime: function (args) {
-            var f = asJS(args[0]), self = this;
-            return new py.str(f.replace(/%([A-Za-z])/g, function (m, c) {
-                switch (c) {
-                case 'Y': return self.year;
-                case 'm': return _.str.sprintf('%02d', self.month);
-                case 'd': return _.str.sprintf('%02d', self.day);
-                }
-                throw new Error('ValueError: No known conversion for ' + m);
-            }));
-        }
+    datetime.date = py.type('date', null, {
+        __init__: function () {
+            var args = py.PY_parseArgs(arguments, 'year month day');
+            this.year = asJS(args.year);
+            this.month = asJS(args.month);
+            this.day = asJS(args.day);
+        },
+        strftime: function () {
+            var self = this;
+            var args = py.PY_parseArgs(arguments, 'format');
+            return py.str.fromJSON(args.format.toJSON()
+                .replace(/%([A-Za-z])/g, function (m, c) {
+                    switch (c) {
+                    case 'Y': return self.year;
+                    case 'm': return _.str.sprintf('%02d', self.month);
+                    case 'd': return _.str.sprintf('%02d', self.day);
+                    }
+                    throw new Error('ValueError: No known conversion for ' + m);
+                }));
+        },
+        today: py.classmethod.fromJSON(function () {
+            var d = new Date();
+            return py.PY_call(
+                datetime.date, [d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()]);
+        })
     });
-    date.__getattribute__ = function (name) {
-        if (name === 'today') {
-            return date.today;
+    datetime.time = py.type('time', null, {
+        __init__: function () {
+            var zero = py.float.fromJSON(0);
+            var args = py.PY_parseArgs(arguments, [
+                ['hour', zero], ['minute', zero], ['second', zero], ['microsecond', zero],
+                ['tzinfo', py.None]
+            ]);
+
+            for(var k in args) {
+                if (!args.hasOwnProperty(k)) { continue; }
+                this[k] = asJS(args[k]);
+            }
         }
-        throw new Error("AttributeError: object 'date' has no attribute '" + name +"'");
-    };
-    date.today = new py.def(function () {
-        var d = new Date();
-        return new date(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
-    });
-    datetime.time = new py.type(function time() {
-        throw new Error('datetime.time not implemented');
     });
 
-    var time = new py.object();
-    time.strftime = new py.def(function (args) {
-        return date.today.__call__().strftime(args);
+    datetime.timedelta = py.type('timedelta', null, {
+        __init__: function () {
+            var zero = py.float.fromJSON(0);
+            var args = py.PY_parseArgs(arguments,
+                [['days', zero], ['seconds', zero], ['microseconds', zero],
+                 ['milliseconds', zero], ['minutes', zero], ['hours', zero],
+                 ['weeks', zero]]);
+            var ms = args['microseconds'].toJSON()
+                   + 1000 * args['milliseconds'].toJSON();
+            this.milliseconds = ms % 1000000;
+            var sec = Math.floor(ms / 1000000)
+                    + args['seconds'].toJSON()
+                    + 60 * args['minutes'].toJSON()
+                    + 3600 * args['hours'].toJSON();
+            this.seconds = sec % 86400;
+            this.days = Math.floor(sec / 86400)
+                      + args['days'].toJSON()
+                      + 7 * args['weeks'].toJSON();
+        }
     });
 
-    var relativedelta = new py.type(function relativedelta(args, kwargs) {
-        if (!_.isEmpty(args)) {
-            throw new Error('Extraction of relative deltas from existing datetimes not supported');
-        }
-        this.ops = kwargs;
-    }, py.object, {
+    var time = py.PY_call(py.object);
+    time.strftime = py.PY_def.fromJSON(function () {
+        // FIXME: needs PY_getattr
+        var d = py.PY_call(datetime.__getattribute__('datetime')
+                                   .__getattribute__('now'));
+        var args = [].slice.call(arguments);
+        return py.PY_call.apply(
+            null, [d.__getattribute__('strftime')].concat(args));
+    });
+
+    var relativedelta = py.type('relativedelta', null, {
+        __init__: function () {
+            this.ops = py.PY_parseArgs(arguments,
+                '* year month day hour minute second microsecond '
+                + 'years months weeks days hours minutes secondes microseconds '
+                + 'weekday leakdays yearday nlyearday');
+        },
         __add__: function (other) {
-            if (!(other instanceof datetime.date)) {
+            if (py.PY_call(py.isinstance, [datetime.date]) !== py.True) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
@@ -96,14 +181,19 @@ openerp.web.pyeval = function (instance) {
             // TODO: leapdays?
             // TODO: hours, minutes, seconds? Not used in XML domains
             // TODO: weekday?
-            return new datetime.date(year, month, day);
+            // FIXME: use date.replace
+            return py.PY_call(datetime.date, [
+                py.float.fromJSON(year),
+                py.float.fromJSON(month),
+                py.float.fromJSON(day)
+            ]);
         },
         __radd__: function (other) {
             return this.__add__(other);
         },
 
         __sub__: function (other) {
-            if (!(other instanceof datetime.date)) {
+            if (py.PY_call(py.isinstance, [datetime.date]) !== py.True) {
                 return py.NotImplemented;
             }
             // TODO: test this whole mess
@@ -136,7 +226,11 @@ openerp.web.pyeval = function (instance) {
             // TODO: leapdays?
             // TODO: hours, minutes, seconds? Not used in XML domains
             // TODO: weekday?
-            return new datetime.date(year, month, day);
+            return py.PY_call(datetime.date, [
+                py.float.fromJSON(year),
+                py.float.fromJSON(month),
+                py.float.fromJSON(day)
+            ]);
         },
         __rsub__: function (other) {
             return this.__sub__(other);
@@ -219,11 +313,12 @@ openerp.web.pyeval = function (instance) {
 
     instance.web.pyeval.context = function () {
         return {
-            uid: new py.float(instance.session.uid),
+            uid: py.float.fromJSON(instance.session.uid),
             datetime: datetime,
             time: time,
             relativedelta: relativedelta,
-            current_date: date.today.__call__().strftime(['%Y-%m-%d']),
+            current_date: py.PY_call(
+                time.strftime, [py.str.fromJSON('%Y-%m-%d')]),
         };
     };
 
