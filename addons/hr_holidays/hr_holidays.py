@@ -212,13 +212,6 @@ class hr_holidays(osv.osv):
         }
         return result
 
-    def onchange_status_id(self, cr, uid, ids, status_id, context=None):
-        double_validation = False
-        if status_id:
-            holiday_status = self.pool.get('hr.holidays.status').browse(cr, uid, status_id, context=context)
-            double_validation = holiday_status.double_validation
-        return {'value': {'double_validation': double_validation}}
-
     def set_to_draft(self, cr, uid, ids, context=None):
         self.write(cr, uid, ids, {
             'state': 'draft',
