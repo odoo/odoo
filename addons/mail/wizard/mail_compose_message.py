@@ -82,7 +82,7 @@ class mail_compose_message(osv.TransientModel):
             vals = self.get_record_data(cr, uid, model, res_id, context=context)
         elif composition_mode == 'mass_mail' and model and active_ids:
             if context.get('default_template_id'):
-                vals = email_template_obj.generate_email(cr, uid, context.get('default_template_id'), res_id, context=context)
+                vals =  self.pool.get('email.template').generate_email(cr, uid, context.get('default_template_id'), res_id, context=context)
                 vals.update({'content_subtype': 'html'})
             else:
                 vals = {'model': model, 'res_id': res_id,  'content_subtype': 'html'}
