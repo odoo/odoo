@@ -846,10 +846,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             }
             if (form_invalid) {
                 self.set({'display_invalid_fields': true});
-                for (var g in self.fields) {
-                    if (!self.fields.hasOwnProperty(g)) { continue; }
-                    self.fields[g]._check_css_flags();
-                }
                 first_invalid_field.focus();
                 self.on_invalid();
                 return $.Deferred().reject();
@@ -2102,6 +2098,8 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
             this._set_required();
         }
         this._check_visibility();
+        this.field_manager.off("change:display_invalid_fields", this, this._check_css_flags);
+        this.field_manager.on("change:display_invalid_fields", this, this._check_css_flags);
         this._check_css_flags();
     },
     /**
