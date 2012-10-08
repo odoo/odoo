@@ -107,10 +107,18 @@ class product_uom(osv.osv):
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
 
+    def _product_uom_name(self, cr, uid, ids, name, arg, context=None):
+        res = {}
+        if context is None:
+            context = {}
+        for p in self.browse(cr, uid, ids, context=context):
+            res[p.id] = p.name
+        return res
+
     _order = "name"
     _columns = {
-        'name': fields.char('Name', size=64, required=True, translate=True),
-        'category_id': fields.many2one('product.uom.categ', 'Unit of Measure Category', required=True, ondelete='cascade',
+        'name': fields.char('Unit of Measure', size=64, required=True, translate=True),
+        'category_id': fields.many2one('product.uom.categ', 'Category', required=True, ondelete='cascade',
             help="Quantity conversions may happen automatically between Units of Measure in the same category, according to their respective ratios."),
         'factor': fields.float('Ratio', required=True,digits=(12, 12),
             help='How many times this Unit of Measure is smaller than the reference Unit of Measure in this category:\n'\
@@ -120,13 +128,15 @@ class product_uom(osv.osv):
             string='Ratio',
             help='How many times this Unit of Measure is bigger than the reference Unit of Measure in this category:\n'\
                     '1 * (this unit) = ratio * (reference unit)', required=True),
-        'rounding': fields.float('Rounding Precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
+        'rounding': fields.float('Rounding precision', digits_compute=dp.get_precision('Product Unit of Measure'), required=True,
             help="The computed quantity will be a multiple of this value. "\
                  "Use 1.0 for a Unit of Measure that cannot be further split, such as a piece."),
         'active': fields.boolean('Active', help="By unchecking the active field you can disable a unit of measure without deleting it."),
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
-                                      ('smaller','Smaller than the reference Unit of Measure')],'Unit of Measure Type', required=1),
+                                      ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
+        'reference_uom_id': fields.many2one('product.uom', 'Reference UoM', readonly=True, help='Reference unit'),
+        'name_ref': fields.function(_product_uom_name, type='char', string='Name'),
     }
 
     _defaults = {
@@ -138,6 +148,14 @@ class product_uom(osv.osv):
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
+
+    def onchange_category_id(self, cr, uid, ids, category_id):
+    	reference_uom = False
+	if category_id:
+            uom_ids = self.search(cr, uid, [('category_id', '=',category_id),('uom_type', '=', 'reference')])
+	    if uom_ids:
+                reference_uom = uom_ids[0]
+	return {'value':{'reference_uom_id': reference_uom}}
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
         if not from_uom_id or not qty or not to_uom_id:
@@ -176,6 +194,11 @@ class product_uom(osv.osv):
         if to_uom_id:
             amount = amount / to_unit.factor
         return amount
+
+    def onchange_name(self, cursor, user, ids, value):
+        if value:
+            return {'value': {'name_ref': value}}
+        return {}
 
     def onchange_type(self, cursor, user, ids, value):
         if value == 'reference':
