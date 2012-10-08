@@ -18,12 +18,8 @@ openerp.mail = function(session) {
 
     session.web.FormView = session.web.FormView.extend({
         do_action: function(action, on_close) {
-            if (action.res_model == 'mail.compose.message' &&
-                action.context && action.context.redirect == true &&
-                this.fields && this.fields.message_ids && this.fields.message_ids.view.get("actual_mode") != 'create') {
-                var thread = this.fields.message_ids.thread;
-
-                thread.refresh(action.context);
+            if (action.res_model == 'mail.compose.message') {
+                $(".openerp_webclient_container .oe_view_manager_current .oe_mail .oe_mail_wall_button_fletch").click();
                 return false;
             }
             else {
@@ -105,27 +101,31 @@ openerp.mail = function(session) {
 
             this.id =           options.parameters.id;
             this.model =        options.parameters.model;
+            this.res_id =       options.parameters.res_id;
             this.is_private =   options.parameters.is_private;
             this.partner_ids =  options.parameters.partner_ids;
 
             this.attachment_ids = [];
             this.show_attachment_delete = true;
-            this.show_attachment_link = false;
+            this.show_attachment_link = true;
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
+
+            this.fileupload_id = _.uniqueId('oe_fileupload_temp');
+            $(window).on(self.fileupload_id, self.on_attachment_loaded);
         },
 
         start: function(){
-            var self = this;
-
             this.display_attachments();
+            this.bind_events();
 
-            self.bind_events();
-
+            //load avatar img
             var user_avatar = mail.ChatterUtils.get_image(this.session, 'res.users', 'image_small', this.session.uid);
             this.$('img.oe_mail_icon').attr('src', user_avatar);
         },
 
+        /* upload the file on the server, add in the attachments list and reload display
+         */
         display_attachments: function(){
             var self = this;
             var render = $(session.web.qweb.render('mail.thread.message.attachments', {'widget': self}));
@@ -139,47 +139,70 @@ openerp.mail = function(session) {
             // event: delete an attachment
             this.$el.on('click', '.oe_mail_attachment_delete', self.on_attachment_delete);
         },
+        on_attachment_change: function (event) {
+            event.stopPropagation();
+            var self = this;
+            var $target = $(event.target);
+            if ($target.val() !== '') {
+
+                for(var i in this.attachment_ids){
+                    if(this.attachment_ids[i].url == $target.val()){
+                        var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
+                        ds_attachment.unlink(this.attachment_ids.id);
+                    }
+                }
+
+                // submit file
+                session.web.blockUI();
+                var form = self.$('form.oe_form_binary_form');
+                form.submit();
+            }
+        },
+        on_attachment_loaded: function (event, result) {
+            session.web.unblockUI();
+            this.attachment_ids.push({
+                'id': result.id,
+                'name': '',
+                'filename': result.filename,
+                'url': mail.ChatterUtils.get_attachment_url(this.session, result)
+            });
+            this.$('input.oe_form_binary_file').empty();
+            this.display_attachments();
+        },
+        /* unlink the file on the server and reload display
+         */
+        on_attachment_delete: function (event) {
+            event.stopPropagation();
+            var attachment_id=$(event.target).data("id");
+            if (attachment_id) {
+                var attachments=[];
+                for(var i in this.attachment_ids){
+                    if(attachment_id!=this.attachment_ids[i].id)
+                        attachments.push(this.attachment_ids[i]);
+                }
+                this.attachment_ids = attachments;
+                this.display_attachments();
+
+                var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
+                ds_attachment.unlink(attachment_id);
+            }
+        },
 
         bind_events: function() {
             var self = this;
-            // event: add a new attachment
-            $(window).on(this.fileupload_id, function() {
-                var args = [].slice.call(arguments).slice(1);
-                var attachment = args[0];
-                attachment['url'] = mail.ChatterUtils.get_attachment_url(self.session, attachment);
-                self.attachment_ids.push(attachment);
-                self.display_attachments();
-                session.web.unblockUI();
-            });
 
             // set the function called when attachments are added
-            this.$el.on('change', 'input.oe_insert_file', self.on_attachment_change );
+            this.$el.on('change', 'input.oe_form_binary_file', self.on_attachment_change );
             this.$el.on('click', 'a.oe_cancel', self.on_cancel );
             this.$el.on('click', 'button.oe_post', function(){self.on_message_post()} );
             this.$el.on('click', 'button.oe_full', function(){self.on_compose_fullmail()} );
         },
 
-        on_attachment_change: function (event) {
-            event.stopPropagation();
-            var $target = $(event.target);
-            if ($target.val() !== '') {
-                //session.web.blockUI();
-                var id = _.uniqueId('oe_fileupload');
-                this.attachment_ids.push({
-                    'url': $target.val(),
-                    'filename' : $target.val().replace(/.*[\/\\]/,''),
-                    'id': id
-                });
-                $newfield = $target.clone();
-                $newfield.insertAfter($target);
-                $target.hide();
-                $target.attr("data-id",id);
-
-                this.display_attachments();
-            }
-        },
-
         on_compose_fullmail: function(){
+            var attachments=[];
+            for(var i in this.attachment_ids){
+                attachments.push(this.attachment_ids[i].id);
+            }
             var action = {
                 type: 'ir.actions.act_window',
                 res_model: 'mail.compose.message',
@@ -194,7 +217,7 @@ openerp.mail = function(session) {
                     'default_is_private': true,
                     'default_parent_id': this.id,
                     'default_body': (this.$('textarea').val() || '').replace(/[\n\r]/g,'<br>'),
-                    'default_attachment_ids': this.attachment_ids
+                    'default_attachment_ids': attachments
                 },
             };
             this.do_action(action);
@@ -209,40 +232,23 @@ openerp.mail = function(session) {
             this.$el.hide();
         },
 
-        on_attachment_delete: function (event) {
-            event.stopPropagation();
-            var id=$(event.target).data("id");
-            if (id) {
-                var attachments=[];
-                for(var i in this.attachment_ids){
-                    if(id!=this.attachment_ids[i].id)
-                        attachments.push(this.attachment_ids[i]);
-                }
-                this.attachment_ids = attachments;
-                this.$("input[data-id='"+id+"'").remove();
-            /*
-                var attachment_id = parseInt(event.target.dataset.id);
-                var idx = _.pluck(this.attachment_ids, 'id').indexOf(attachment_id);
-                if (idx == -1) return false;
-                new session.web.DataSetSearch(this, 'ir.attachment').unlink(attachment_id);
-                this.attachment_ids.splice(idx, 1);
-            */
-                this.display_attachments();
-            }
-        },
-
-
         /*post a message and fletch the message*/
         on_message_post: function (body) {
-            var self = this;
+
             if (! body) {
                 var comment_node = this.$('textarea');
                 var body = comment_node.val();
                 comment_node.val('');
             }
             if(body.match(/\S+/)) {
+
+                var attachments=[];
+                for(var i in this.attachment_ids){
+                    attachments.push(this.attachment_ids[i].id);
+                }
+
                 this.parent_thread.ds_thread.call('message_post_api', [
-                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, undefined])
+                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, attachments])
                     .then(this.parent_thread.proxy('switch_new_message'));
                 this.on_cancel();
             }
@@ -537,7 +543,14 @@ openerp.mail = function(session) {
             if($(event.srcElement).hasClass("oe_read")) this.animated_destroy({fadeTime:250});
             // if this message is read, all childs message display is read
             var ids = [this.id].concat( this.get_child_ids() );
-            this.ds_notification.call('set_message_read', [ids,$(event.srcElement).hasClass("oe_read")]);
+            
+            if($(event.srcElement).hasClass("oe_read")) {
+                this.ds_notification.call('set_message_read', [ids,true]);
+                this.$el.removeClass("oe_mail_unread").addClass("oe_mail_read");
+            } else {
+                this.ds_notification.call('set_message_read', [ids,false]);
+                this.$el.removeClass("oe_mail_read").addClass("oe_mail_unread");
+            }
             return false;
         },
 
@@ -727,24 +740,24 @@ openerp.mail = function(session) {
             this.ComposeMessage.appendTo(this.$(".oe_mail_thread_action:first"));
         },
 
-        /**
-        * Override-hack of do_action: automatically load message on the chatter.
-        * Normally it should be called only when clicking on 'Post/Send'
-        * in the composition form. */
-        do_action: function(action, on_close) {
-            this.message_fletch(false, false, false, [action.id]);
-            return this._super(action, on_close);
-        },
-
         /* this method is runing for first parent thread
         */
         on_first_thread: function(){
             var self=this;
             // fetch and display message, using message_ids if set
-            display_done = this.message_fletch(true);
+            this.message_fletch(true);
 
             $(document).scroll( self.on_scroll );
             window.setTimeout( self.on_scroll, 500 );
+
+            $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$('ul.oe_mail_thread_display'));
+
+            var button_flesh = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){
+                if(event)event.stopPropagation();
+                self.message_fletch(true);
+            });
+            this.$el.prepend(button_flesh);
+
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -841,12 +854,6 @@ openerp.mail = function(session) {
             return false;
         },
 
-        refresh: function (action_context) {
-            var self=this;
-            _(this.messages).each(function(){ self.destroy(); });
-            self.message_fletch();
-        },
-
         /** Fetch messages
          * @param {Bool} initial_mode: initial mode: try to use message_data or
          *  message_ids, if nothing available perform a message_read; otherwise
@@ -891,6 +898,8 @@ openerp.mail = function(session) {
         /** Displays a message or an expandable message  */
         insert_message: function (message) {
             var self=this;
+
+            this.$("li.oe_wall_no_message").remove();
 
             if(message.type=='expandable'){
                 var message = new mail.ThreadExpandable(self, {
@@ -1129,12 +1138,7 @@ openerp.mail = function(session) {
                     'parameters': {},
                 }
             );
-
-            this.$('ul.oe_mail_wall_threads').empty();
-            var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-            $(render_res).appendTo(this.$('ul.oe_mail_wall_threads'));
-
-            return this.thread.appendTo( this.$('li.oe_mail_wall_thread:last') );
+            return this.thread.appendTo( this.$('.oe_mail_wall_threads:first') );
 
         },
 

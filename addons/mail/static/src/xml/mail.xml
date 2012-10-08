@@ -37,8 +37,15 @@
     <t t-name="mail.compose_message.add_attachment">
         <div class="oe_attachment_file">
             <div class="oe_add">
-                <input type="file" class="oe_insert_file"/>
+                <!-- uploader of file -->
                 <button><span class="oe_e">p</span></button>
+                <t t-call="HiddenInputFile">
+                    <t t-set="fileupload_id" t-value="widget.fileupload_id"/>
+                    <t t-set="fileupload_action">/web/binary/upload_attachment</t>
+                    <input type="hidden" name="model" value=""/>
+                    <input type="hidden" name="id" value="0"/>
+                    <input type="hidden" name="session_id" t-att-value="widget.session.session_id"/>
+                </t>
             </div>
         </div>
     </t>
@@ -92,7 +99,8 @@
         wall main template
         Template used to display the communication history in the wall.
         -->
-    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manager_current">
+    <div t-name="mail.wall" class="oe_view_manager oe_mail_wall oe_view_manag
+        er_current">
         <table class="oe_view_manager_header">
           <colgroup>
             <col width="33%"/>
@@ -124,19 +132,18 @@
             </tr>
           </tbody>
         </table>
-        <ul class="oe_mail_wall_threads">
-            <!-- contains threads -->
-        </ul>
+        <!-- placeholder for the wall threads -->
+        <div class="oe_mail_wall_threads"/>
         <div class="oe_mail_wall_aside">
                 <!-- contains currently nothing -->
         </div>
     </div>
 
     <!--
-        wall_thread_container template for the wall
-        Each discussion thread is contained inside this template
+        display message on the wall when there are no message
         -->
-    <li t-name="mail.wall_thread_container" class="oe_mail_wall_thread">
+    <li t-name="mail.wall_no_message" class="oe_wall_no_message">
+        You have no messages
     </li>
 
     <!--
@@ -172,8 +179,8 @@
             <!-- message actions (read/unread, reply, delete...) -->
             <ul class="oe_header">
                 <li class="placeholder-mail-vote"><t t-call="mail.thread.message.vote"/></li>
-                <li t-if="!widget.options.thread.display_on_flat and widget.unread" title="Read"><a class="oe_read oe_e">W</a></li>
-                <li t-if="!widget.options.thread.display_on_flat and !widget.unread" title="Set back to unread"><a class="oe_unread oe_e">h</a></li>
+                <li t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
+                <li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
                 <t t-if="(widget.options.message.show_reply || widget.options.message.show_reply_by_email || (widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email')">
                     <li>

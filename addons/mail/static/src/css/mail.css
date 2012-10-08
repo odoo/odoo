@@ -195,6 +195,10 @@
     margin-left: 66px;
 }
 
+.openerp li.oe_mail_thread_msg {
+    width: 560px;
+}
+
 .openerp div.oe_thread_placeholder li.oe_mail_thread_msg:last-child {
     margin-bottom: 8px;
 }
@@ -212,11 +216,16 @@
 
 .openerp li.oe_mail_thread_msg.oe_mail_read,
 .openerp li.oe_mail_thread_msg.oe_mail_read div {
-    background-color: #F0F0F0;
+    border-left: #F0F0F0;
 }
 .openerp li.oe_mail_thread_msg.oe_mail_read li.oe_mail_thread_msg.oe_mail_unread,
 .openerp li.oe_mail_thread_msg.oe_mail_read li.oe_mail_thread_msg.oe_mail_unread div {
     background-color: #F6F6F6;
+}
+
+.openerp li.oe_mail_thread_msg.oe_mail_unread>div>ul>li.oe_unread,
+.openerp li.oe_mail_thread_msg.oe_mail_read>div>ul>li.oe_read {
+    display: none;
 }
 
 .openerp li.oe_mail_thread_msg > div:after {
@@ -236,7 +245,6 @@
 .openerp .oe_mail_msg_email {
     padding: 8px;
     background: white;
-    border-top: 1px solid #ebebeb;
 }
 
 .openerp .oe_mail_msg_notification:after, 
@@ -248,7 +256,7 @@
 }
 
 .openerp div.oe_mail_msg_content {
-    float: right;
+    float: left;
     position: relative;
     width: 486px;
 }
@@ -333,33 +341,26 @@
 
 /* Dropdown menu */
 
-.openerp .oe_mail .oe_semantic_html_override {
+.openerp .oe_mail ul.oe_mail_thread_display ul.oe_mail_thread_display {
     position: relative;
+    border-left: 1px #DDD dashed;
 }
 
 .openerp .oe_mail ul.oe_header {
     position: absolute;
     right: 3px;
     top: -6px;
-    display: none;
     z-index: 10;
-    height: 18px;
 }
 
 .openerp .oe_mail ul.oe_header a {
     text-decoration: none;
 }
 
-.openerp .oe_mail .oe_semantic_html_override:hover > ul.oe_header {
-    display: block;
-}
-
 .openerp .oe_mail ul.oe_header>li {
     display: inline-block;
-}
-
-.openerp .oe_mail_msg_content .oe_dropdown_arrow:after {
-    border-top: 4px solid #404040;
+    height: 20px;
+    text-align: right;
 }
 
 /* Message footer */
