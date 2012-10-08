@@ -49,6 +49,9 @@ class test_portal(test_mail.TestMailMockups):
         self.user_chell = self.res_users.browse(cr, uid, self.user_chell_id)
         self.partner_chell_id = self.user_chell.partner_id.id
 
+        # Set an email address for the user running the tests, used as Sender for outgoing mails
+        self.res_users.write(cr, uid, uid, {'email': 'test@localhost'})
+
     def test_00_access_rights(self):
         """ Test basic mail_message and mail_group access rights for portal users. """
         cr, uid = self.cr, self.uid
