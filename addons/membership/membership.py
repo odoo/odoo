@@ -323,7 +323,7 @@ class Partner(osv.osv):
                     help = 'The price negotiated by the partner'),
         'membership_state': fields.function(
                     __get_membership_state,
-                    string = 'Current Membership State', type = 'selection',
+                    string = 'Current Membership Status', type = 'selection',
                     selection = STATE,
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
