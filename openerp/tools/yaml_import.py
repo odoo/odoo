@@ -313,13 +313,13 @@ class YamlInterpreter(object):
             #context = self.get_context(record, self.eval_context)
             #TOFIX: record.context like {'withoutemployee':True} should pass from self.eval_context. example: test_project.yml in project module
             context = record.context
+            view_info = False
             if view_id:
                 varg = view_id
                 if view_id is True: varg = False
-                view = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
-                view_id = etree.fromstring(view['arch'].encode('utf-8'))
+                view_info = model.fields_view_get(self.cr, SUPERUSER_ID, varg, 'form', context)
 
-            record_dict = self._create_record(model, fields, view_id, default=default)
+            record_dict = self._create_record(model, fields, view_info, default=default)
             _logger.debug("RECORD_DICT %s" % record_dict)
             id = self.pool.get('ir.model.data')._update(self.cr, SUPERUSER_ID, record.model, \
                     self.module, record_dict, record.id, noupdate=self.isnoupdate(record), mode=self.mode, context=context)
@@ -327,16 +327,18 @@ class YamlInterpreter(object):
             if config.get('import_partial'):
                 self.cr.commit()
 
-    def _create_record(self, model, fields, view=False, parent={}, default=True):
-        if view is not False:
-            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
-            fg = model.fields_get(self.cr, SUPERUSER_ID, context=self.context)
-        else:
-            defaults = {}
-            fg = {}
-        record_dict = {}
-        fields = fields or {}
-
+    def _create_record(self, model, fields, view_info=False, parent={}, default=True):
+        """This function processes the !record tag in yalm files. It simulates the record creation through an xml
+            view (either specified on the !record tag or the default one for this object), including the calls to
+            on_change() functions.
+            :param model: model instance
+            :param fields: dictonary mapping the field names and their values
+            :param view_info: result of fields_view_get() called on the object
+            :param parent: dictionary containing the values already computed for the parent, in case of one2many fields
+            :param default: if True, the default values must be processed too or not
+            :return: dictionary mapping the field names and their values, ready to use when calling the create() function
+            :rtype: dict
+        """
         def process_val(key, val):
             if fg[key]['type']=='many2one':
                 if type(val) in (tuple,list):
@@ -348,63 +350,75 @@ class YamlInterpreter(object):
                     val = map(lambda x: (0,0,x), val)
             return val
 
-        # Process all on_change calls
-        nodes = (view is not False) and [view] or []
-        while nodes:
-            el = nodes.pop(0)
-            if el.tag=='field':
-                field_name = el.attrib['name']
-                assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
-                if field_name in fields:
-                    view2 = None
-                    # if the form view is not inline, we call fields_view_get
-                    if (view is not False) and (fg[field_name]['type']=='one2many'):
-                        view2 = view.find("field[@name='%s']/form"%(field_name,))
-                        if not view2:
-                            view2 = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
-                            view2 = etree.fromstring(view2['arch'].encode('utf-8'))
+        view = view_info and etree.fromstring(view_info['arch'].encode('utf-8')) or False
+        fields = fields or {}
+        if view is not False:
+            fg = view_info['fields']
+            # gather the default values on the object. (Can't use `fields´ as parameter instead of {} because we may
+            # have references like `base.main_company´ in the yaml file and it's not compatible with the function)
+            defaults = default and model._add_missing_default_values(self.cr, SUPERUSER_ID, {}, context=self.context) or {}
 
-                    field_value = self._eval_field(model, field_name, fields[field_name], view2, parent=record_dict, default=default)
-                    record_dict[field_name] = field_value
-                    #if (field_name in defaults) and defaults[field_name] == field_value:
-                    #    print '*** You can remove these lines:', field_name, field_value
-                elif (field_name in defaults):
-                    if (field_name not in record_dict):
-                        record_dict[field_name] = process_val(field_name, defaults[field_name])
-                else:
-                    continue
+            # copy the default values in record_dict, only if they are in the view (because that's what the client does)
+            # the other default values will be added later on by the create().
+            record_dict = dict([(key, val) for key, val in defaults.items() if key in fg])
 
-                if not el.attrib.get('on_change', False):
-                    continue
-                match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
-                assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+            # Process all on_change calls
+            nodes = [view]
+            while nodes:
+                el = nodes.pop(0)
+                if el.tag=='field':
+                    field_name = el.attrib['name']
+                    assert field_name in fg, "The field '%s' is defined in the form view but not on the object '%s'!" % (field_name, model._name)
+                    if field_name in fields:
+                        one2many_form_view = None
+                        if (view is not False) and (fg[field_name]['type']=='one2many'):
+                            # for one2many fields, we want to eval them using the inline form view defined on the parent
+                            one2many_form_view = view_info['fields'][field_name]['views'].get('form')
+                            # if the form view is not defined inline, we call fields_view_get()
+                            if not one2many_form_view:
+                                one2many_form_view = self.pool.get(fg[field_name]['relation']).fields_view_get(self.cr, SUPERUSER_ID, False, 'form', self.context)
 
-                # creating the context
-                class parent2(object):
-                    def __init__(self, d):
-                        self.d = d
-                    def __getattr__(self, name):
-                        return self.d.get(name, False)
+                        field_value = self._eval_field(model, field_name, fields[field_name], one2many_form_view or view_info, parent=record_dict, default=default)
+                        record_dict[field_name] = field_value
+                        #if (field_name in defaults) and defaults[field_name] == field_value:
+                        #    print '*** You can remove these lines:', field_name, field_value
 
-                ctx = record_dict.copy()
-                ctx['context'] = self.context
-                ctx['uid'] = 1
-                ctx['parent'] = parent2(parent)
-                for a in fg:
-                    if a not in ctx:
-                        ctx[a]=process_val(a, defaults.get(a, False))
+                    #if field_name has a default value or a value is given in the yaml file, we must call its on_change()
+                    elif field_name not in defaults:
+                        continue
 
-                # Evaluation args
-                args = map(lambda x: eval(x, ctx), match.group(2).split(','))
-                result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
-                for key, val in (result or {}).get('value', {}).items():
-                    if key not in fields:
-                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist on the object '%s'" % (key, match.group(1), model._name)
+                    if not el.attrib.get('on_change', False):
+                        continue
+                    match = re.match("([a-z_1-9A-Z]+)\((.*)\)", el.attrib['on_change'])
+                    assert match, "Unable to parse the on_change '%s'!" % (el.attrib['on_change'], )
+
+                    # creating the context
+                    class parent2(object):
+                        def __init__(self, d):
+                            self.d = d
+                        def __getattr__(self, name):
+                            return self.d.get(name, False)
+
+                    ctx = record_dict.copy()
+                    ctx['context'] = self.context
+                    ctx['uid'] = SUPERUSER_ID
+                    ctx['parent'] = parent2(parent)
+                    for a in fg:
+                        if a not in ctx:
+                            ctx[a]=process_val(a, defaults.get(a, False))
+
+                    # Evaluation args
+                    args = map(lambda x: eval(x, ctx), match.group(2).split(','))
+                    result = getattr(model, match.group(1))(self.cr, SUPERUSER_ID, [], *args)
+                    for key, val in (result or {}).get('value', {}).items():
+                        assert key in fg, "The returning field '%s' from your on_change call '%s' does not exist either on the object '%s', either in the view '%s' used for the creation" % (key, match.group(1), model._name, view_info['name'])
                         record_dict[key] = process_val(key, val)
                         #if (key in fields) and record_dict[key] == process_val(key, val):
                         #    print '*** You can remove these lines:', key, val
-            else:
-                nodes = list(el) + nodes
+                else:
+                    nodes = list(el) + nodes
+        else:
+            record_dict = {}
 
         for field_name, expression in fields.items():
             if field_name in record_dict:
@@ -440,7 +454,7 @@ class YamlInterpreter(object):
     def process_eval(self, node):
         return eval(node.expression, self.eval_context)
 
-    def _eval_field(self, model, field_name, expression, view=False, parent={}, default=True):
+    def _eval_field(self, model, field_name, expression, view_info=False, parent={}, default=True):
         # TODO this should be refactored as something like model.get_field() in bin/osv
         if field_name in model._columns:
             column = model._columns[field_name]
@@ -461,7 +475,7 @@ class YamlInterpreter(object):
             value = self.get_id(expression)
         elif column._type == "one2many":
             other_model = self.get_model(column._obj)
-            value = [(0, 0, self._create_record(other_model, fields, view, parent, default=default)) for fields in expression]
+            value = [(0, 0, self._create_record(other_model, fields, view_info, parent, default=default)) for fields in expression]
         elif column._type == "many2many":
             ids = [self.get_id(xml_id) for xml_id in expression]
             value = [(6, 0, ids)]

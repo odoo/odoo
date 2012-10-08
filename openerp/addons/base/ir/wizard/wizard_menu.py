@@ -47,25 +47,6 @@ class wizard_model_menu(osv.osv_memory):
                 'icon': 'STOCK_INDENT'
             }, context)
         return {'type':'ir.actions.act_window_close'}
-wizard_model_menu()
-
-class wizard_model_menu_line(osv.osv_memory):
-    _name = 'wizard.ir.model.menu.create.line'
-    _columns = {
-        'wizard_id': fields.many2one('wizard.ir.model.menu.create','Wizard'),
-        'sequence': fields.integer('Sequence'),
-        'view_type': fields.selection([
-            ('tree','Tree'),
-            ('form','Form'),
-            ('graph','Graph'),
-            ('calendar','Calendar'),
-            ('gantt','Gantt')],'View Type',required=True),
-        'view_id': fields.many2one('ir.ui.view', 'View'),
-    }
-    _defaults = {
-        'view_type': lambda self,cr,uid,ctx: 'tree'
-    }
-wizard_model_menu_line()
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
