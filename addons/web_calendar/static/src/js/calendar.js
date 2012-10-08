@@ -41,7 +41,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     start: function() {
         this._super();
-        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}).then(this.on_loaded);
     },
     destroy: function() {
         scheduler.clearAll();
