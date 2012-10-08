@@ -63,10 +63,12 @@ class mail_mail(osv.Model):
     }
 
     def _get_default_from(self, cr, uid, context=None):
-        cur = self.pool.get('res.users').browse(cr, uid, uid, context=context)
-        if not cur.alias_domain:
-            raise osv.except_osv(_('Invalid Action!'), _('Unable to send email, set an alias domain in your server settings.'))
-        return cur.alias_name + '@' + cur.alias_domain
+        this = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+        if this.alias_domain:
+            return '%s@%s' % (this.alias, this.alias_domain)
+        elif this.email:
+            return this.email
+        raise osv.except_osv(_('Invalid Action!'), _("Unable to send email, please configure the sender's email address or alias."))
 
     _defaults = {
         'state': 'outgoing',
