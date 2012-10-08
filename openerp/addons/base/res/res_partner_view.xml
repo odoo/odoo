@@ -47,7 +47,7 @@
         -->
 
         <record id="action_partner_title_partner" model="ir.actions.act_window">
-            <field name="name">Partner Titles</field>
+            <field name="name">Titles</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner.title</field>
             <field name="view_type">form</field>
@@ -247,9 +247,9 @@
                             </field>
                         </page>
                         <page string="Internal Notes">
-                            <field name="comment" placeholder="Internal notes about this customer..."/>
+                            <field name="comment" placeholder="Put an internal note..."/>
                         </page>
-                        <page string="Sales &amp; Purchases" attrs="{'invisible': [('customer', '=', False), ('supplier', '=', False)]}">
+                        <page string="Sales &amp; Purchases">
                             <group>
                                 <group>
                                     <field name="user_id"/>
