@@ -297,7 +297,7 @@ class ir_fields_converter(orm.Model):
                 cr, uid, model, column, subfield, reference, context=context)
             ids.append(id)
             warnings.extend(ws)
-        return [(6, 0, ids)], warnings
+        return REPLACE_WITH(ids), warnings
 
     def _str_to_one2many(self, cr, uid, model, column, records, context=None):
         commands = []
