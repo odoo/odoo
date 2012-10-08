@@ -173,7 +173,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
-            action = result.result,
+            action = result,
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
