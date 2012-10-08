@@ -450,6 +450,11 @@ $sheet-max-width: 860px
             text-decoration: none
         .oe_star_on
             color: gold
+    p.oe_grey
+        max-width: 650px
+    .oe_grey
+        color: #aaa
+
     // }}}
 
     // Generic blocks {{{
@@ -825,7 +830,7 @@ $sheet-max-width: 860px
             vertical-align: top
             text-shadow: 0 1px 1px rgba(0,0,0,0.2)
             @include transition(all 0.2s ease-out)
-            &:hover,
+            &:hover
                 background: rgba(0,0,0,0.2)
                 text-shadow: black 0px 0px 3px
                 color: white
@@ -885,7 +890,7 @@ $sheet-max-width: 860px
                 vertical-align: top
                 text-shadow: 0 1px 1px rgba(0,0,0,0.2)
                 @include transition(all 0.2s ease-out)
-                &:hover,
+                &:hover
                     background: rgba(0,0,0,0.2)
                     text-shadow: black 0px 0px 3px
                     color: white
@@ -1623,10 +1628,6 @@ $sheet-max-width: 860px
             max-width: $sheet-max-width
             margin: 0 auto
             padding: 16px 0 48px
-        .oe_grey
-            color: #aaa
-            max-width: 650px
-            margin: 0 0 10px 0
         div.oe_form_configuration
             p, ul, ol
                 color: #aaa
