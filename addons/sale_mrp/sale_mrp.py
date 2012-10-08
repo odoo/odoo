@@ -69,8 +69,13 @@ class mrp_production(osv.osv):
                         res[production.id] = move.sale_line_id and move.sale_line_id.order_id.client_order_ref or False
         return res
 
+    def _sale_name_search(self, cursor, user, obj, name, args, domain=None, context=None):
+        if context is None:
+            context = {}
+        return []
+
     _columns = {
-        'sale_name': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Name', help='Indicate the name of sales order.'),
+        'sale_name': fields.function(_ref_calc, multi='sale_name', fnct_search=_sale_name_search, type='char', string='Sale Name', help='Indicate the name of sales order.'),
         'sale_ref': fields.function(_ref_calc, multi='sale_name', type='char', string='Sale Reference', help='Indicate the Customer Reference from sales order.'),
     }
 
