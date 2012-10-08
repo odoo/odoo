@@ -5017,7 +5017,8 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
             this.set({"currency_info": null});
             return;
         }
-        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"]).first()).pipe(function(res) {
+        return this.ci_dm.add(new instance.web.Model("res.currency").query(["symbol", "position"])
+            .filter([["id", "=", self.get("currency")]]).first()).pipe(function(res) {
             self.set({"currency_info": res});
         });
     },
