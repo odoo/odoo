@@ -43,14 +43,14 @@ class crm_meeting(base_state, osv.Model):
     _name = 'crm.meeting'
     _description = "Meeting"
     _order = "id desc"
-    _inherit = ["calendar.event", "mail.thread", 'ir.needaction_mixin']
+    _inherit = ["calendar.event", "mail.thread", "ir.needaction_mixin"]
     _columns = {
         # base_state required fields
         'create_date': fields.datetime('Creation Date', readonly=True),
         'write_date': fields.datetime('Write Date', readonly=True),
         'date_open': fields.datetime('Confirmed', readonly=True),
         'date_closed': fields.datetime('Closed', readonly=True),
-        'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id','partner_id',
+        'partner_ids': fields.many2many('res.partner', 'crm_meeting_partner_rel', 'meeting_id', 'partner_id',
             string='Attendees', states={'done': [('readonly', True)]}),
         'state': fields.selection(
                     [('draft', 'Unconfirmed'), ('open', 'Confirmed')],
@@ -115,5 +115,3 @@ class crm_meeting(base_state, osv.Model):
 
     def case_close_send_note(self, cr, uid, ids, context=None):
         return self.message_post(cr, uid, ids, body=_("Meeting <b>completed</b>."), context=context)
-
-
