@@ -63,6 +63,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             // don't render anything until we have date_to and date_from
             if (!self.get("date_to") || !self.get("date_from"))
                 return;
+            this.destroy_content();
 
             // it's important to use those vars to avoid race conditions
             var dates;
@@ -118,8 +119,6 @@ openerp.hr_timesheet_sheet = function(instance) {
                             return day;
                         });
                         return {account: account_id, days: days, account_defaults: account_defaults};
-                    }).sortBy(function(account) {
-                        return account.account;
                     }).value();
 
                     // we need the name_get of the analytic accounts
@@ -129,6 +128,9 @@ openerp.hr_timesheet_sheet = function(instance) {
                         _.each(result, function(el) {
                             account_names[el[0]] = el[1];
                         });
+                        accounts = _.sortBy(accounts, function(el) {
+                            return account_names[el.account];
+                        });
                     });;
                 });
             })).pipe(function(result) {
@@ -136,6 +138,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                 self.dates = dates;
                 self.accounts = accounts;
                 self.account_names = account_names;
+                self.default_get = default_get;
                 //real rendering
                 self.display_data();
             });
@@ -168,22 +171,45 @@ openerp.hr_timesheet_sheet = function(instance) {
                 });
             });
             self.display_totals();
-            self.$(".oe_timesheet_weekly_adding button").click(function() {
-                self.$(".oe_timesheet_weekly_add_row").show();
-                self.dfm = new instance.web.form.DefaultFieldManager(self);
-                self.dfm.extend_field_desc({
-                    account: {
-                        relation: "account.analytic.account",
-                    },
+            self.$(".oe_timesheet_weekly_adding button").click(_.bind(this.init_add_account, this));
+        },
+        init_add_account: function() {
+            var self = this;
+            if (self.dfm)
+                return;
+            self.$(".oe_timesheet_weekly_add_row").show();
+            self.dfm = new instance.web.form.DefaultFieldManager(self);
+            self.dfm.extend_field_desc({
+                account: {
+                    relation: "account.analytic.account",
+                },
+            });
+            self.account_m2o = new instance.web.form.FieldMany2One(self.dfm, {
+                attrs: {
+                    name: "account",
+                    type: "many2one",
+                    domain: [['type','in',['normal', 'contract']], ['state', '<>', 'close'], ['use_timesheets','=',1]],
+                    modifiers: '{"required": true}',
+                },
+            });
+            self.account_m2o.prependTo(self.$(".oe_timesheet_weekly_add_row td"));
+            self.$(".oe_timesheet_weekly_add_row button").click(function() {
+                var id = self.account_m2o.get_value();
+                if (id === false) {
+                    self.dfm.set({display_invalid_fields: true});
+                    return;
+                }
+                var ops = self.generate_o2m_value();
+                new instance.web.Model("hr.analytic.timesheet").call("on_change_account_id", [[], id]).pipe(function(res) {
+                    var def = _.extend({}, self.default_get, res.value, {
+                        name: self.description_line,
+                        unit_amount: 0,
+                        date: instance.web.date_to_str(self.dates[0]),
+                        account_id: id,
+                    });
+                    ops.push(def);
+                    self.set({"sheets": ops});
                 });
-                self.account_m2o = new instance.web.form.FieldMany2One(self.dfm, {
-                    attrs: {
-                        name: "account",
-                        type: "many2one",
-                        domain: [['type','in',['normal', 'contract']], ['state', '<>', 'close'], ['use_timesheets','=',1]],
-                    },
-                });
-                self.account_m2o.appendTo(self.$(".oe_timesheet_weekly_add_row td"));
             });
         },
         get_box: function(account, day_count) {
@@ -225,6 +251,11 @@ openerp.hr_timesheet_sheet = function(instance) {
             self.get_super_total().html(super_tot);
         },
         sync: function() {
+            self.setting = true;
+            self.set({sheets: this.generate_o2m_value()});
+            self.setting = false;
+        },
+        generate_o2m_value: function() {
             var self = this;
             var ops = [];
 
@@ -253,9 +284,7 @@ openerp.hr_timesheet_sheet = function(instance) {
                     });
                 });
             });
-            self.setting = true;
-            self.set({sheets: ops});
-            self.setting = false;
+            return ops;
         },
     });
 
