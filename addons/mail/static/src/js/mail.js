@@ -104,6 +104,8 @@ openerp.mail = function(session) {
             this.res_id =       options.parameters.res_id;
             this.is_private =   options.parameters.is_private;
             this.partner_ids =  options.parameters.partner_ids;
+            this.show_header_compose =  options.parameters.options.thread.show_header_compose;
+            this.display_on_flat =  options.parameters.options.thread.display_on_flat;
 
             this.attachment_ids = [];
             this.show_attachment_delete = true;
@@ -229,7 +231,9 @@ openerp.mail = function(session) {
             this.$('input[data-id]').remove();
             this.attachment_ids=[];
             this.display_attachments();
-            this.$el.hide();
+            if(!this.show_header_compose || !this.display_on_flat){
+                this.$el.hide();
+            }
         },
 
         /*post a message and fletch the message*/
@@ -248,7 +252,7 @@ openerp.mail = function(session) {
                 }
 
                 this.parent_thread.ds_thread.call('message_post_api', [
-                    [this.context.default_res_id], body, false, 'comment', false, this.context.default_parent_id, attachments])
+                    this.context.default_res_id, body, false, 'comment', false, this.context.default_parent_id, attachments])
                     .then(this.parent_thread.proxy('switch_new_message'));
                 this.on_cancel();
             }
@@ -752,12 +756,16 @@ openerp.mail = function(session) {
 
             $(session.web.qweb.render('mail.wall_no_message', {})).appendTo(this.$('ul.oe_mail_thread_display'));
 
+            if(this.options.thread.show_header_compose){
+                this.ComposeMessage.$el.show();
+            }
+
             var button_flesh = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){
                 if(event)event.stopPropagation();
                 self.message_fletch(true);
             });
             this.$el.prepend(button_flesh);
-
+            this.$el.addClass("oe_mail_wall_first_thread");
         },
 
         /* When the expandable object is visible on screen (with scrolling)
@@ -932,7 +940,7 @@ openerp.mail = function(session) {
             var parent_older = false;
             for(var i in thread.messages){
                 if(thread.messages[i].id > message.id){
-                    if(!parent_newer || parent_newer.id>thread.messages[i].id)
+                    if(!parent_newer || parent_newer.id>=thread.messages[i].id)
                         parent_newer = thread.messages[i];
                 } else if(thread.messages[i].id>0 && thread.messages[i].id < message.id) {
                     if(!parent_older || parent_older.id<thread.messages[i].id)
@@ -940,13 +948,24 @@ openerp.mail = function(session) {
                 }
             }
 
-            if(parent_older)
-                message.insertBefore(parent_older.$el);
-            else if(parent_newer)
-                message.insertAfter(parent_newer.$el);
-            else 
-                message.prependTo(thread.list_ul);
-
+            if(parent_older){
+                if(self.options.thread.display_on_flat)
+                    message.insertAfter(parent_older.$el);
+                else
+                    message.insertBefore(parent_older.$el);
+            }
+            else if(parent_newer){
+                if(self.options.thread.display_on_flat)
+                    message.insertBefore(parent_newer.$el);
+                else
+                    message.insertAfter(parent_newer.$el);
+            }
+            else {
+                if(self.options.thread.display_on_flat)
+                    message.appendTo(thread.list_ul);
+                else
+                    message.prependTo(thread.list_ul);
+            }
             return message
         },
 
@@ -1022,24 +1041,18 @@ openerp.mail = function(session) {
                     'options':{
                         'thread':{
                             'thread_level': this.options.thread_level,
-                            'show_header_compose': 0, //show_header_compose,
+                            'show_header_compose': show_header_compose,
                             'use_composer': show_header_compose,
                             'display_on_flat':true
                         },
                         'message':{
-                            'show_dd_delete': true,
-                            'show_reply_by_email': show_header_compose,
+                            'show_dd_delete': true
                         }
                     },
                     'parameters': {},
                 }
             );
-
-            this.$('ul.oe_mail_wall_threads').empty();
-            var render_res = session.web.qweb.render('mail.wall_thread_container', {});
-            $(render_res).appendTo(this.$('ul.oe_mail_wall_threads'));
-
-            return this.thread.appendTo( this.$('li.oe_mail_wall_thread:last') );
+            return this.thread.appendTo( this.$('.oe_mail_wall_threads:first') );
         },
     });
 
@@ -1128,7 +1141,7 @@ openerp.mail = function(session) {
                         'thread' :{
                             'thread_level': this.options.thread_level,
                             'use_composer': true,
-                            'show_header_compose': 0,
+                            'show_header_compose': true,
                         },
                         'message': {
                             'show_reply': this.options.thread_level > 0,

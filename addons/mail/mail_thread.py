@@ -701,19 +701,16 @@ class mail_thread(osv.AbstractModel):
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             thread_id = user.partner_id.id
 
-        if attachments and attachments[0]==None:
-            attachments=[]
-        
         added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
-                        subtype=subtype, parent_id=parent_id, attachments=[], context=context)
+                        subtype=subtype, parent_id=parent_id, context=context)
 
         attachment_ids=[]
-        if attachments:
+        if attachments and attachments[0]!=None:
             ir_attachment = self.pool.get('ir.attachment')
             attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', ""), ('res_id', '=', ""), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
                 self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
-                self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': attachment_ids} )
+                self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
         
             
         added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
