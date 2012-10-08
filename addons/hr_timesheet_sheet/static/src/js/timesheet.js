@@ -256,6 +256,7 @@ openerp.hr_timesheet_sheet = function(instance) {
             self.get_super_total().html(super_tot);
         },
         sync: function() {
+            var self = this;
             self.setting = true;
             self.set({sheets: this.generate_o2m_value()});
             self.setting = false;
