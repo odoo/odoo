@@ -690,9 +690,11 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
 
 instance.web.DataSetStatic =  instance.web.DataSet.extend({
     init: function(parent, model, context, ids) {
+        var self = this;
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
+        self.on("on_rec_unlink", self, self.on_unlink);
     },
     read_slice: function (fields, options) {
         options = options || {};
@@ -711,7 +713,7 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         }
     },
     unlink: function(ids) {
-        this.on_unlink(ids);
+        this.trigger('on_rec_unlink', ids);
         return $.Deferred().resolve({result: true});
     },
     on_unlink: function(ids) {
