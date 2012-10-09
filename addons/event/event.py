@@ -435,22 +435,6 @@ class event_registration(osv.osv):
             'phone':contact_id.phone,
             }}
 
-    def onchange_event(self, cr, uid, ids, event_id, context=None):
-        """This function returns value of Product Name, Unit Price based on Event.
-        """
-        if context is None:
-            context = {}
-        if not event_id:
-            return {}
-        event_obj = self.pool.get('event.event')
-        data_event =  event_obj.browse(cr, uid, event_id, context=context)
-        return {'value':
-                    {'event_begin_date': data_event.date_begin,
-                     'event_end_date': data_event.date_end,
-                     'company_id': data_event.company_id and data_event.company_id.id or False,
-                    }
-               }
-
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         res_obj = self.pool.get('res.partner')
         data = {}
