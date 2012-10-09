@@ -104,12 +104,13 @@ openerp.mail = function(session) {
             this.res_id =       options.parameters.res_id;
             this.is_private =   options.parameters.is_private;
             this.partner_ids =  options.parameters.partner_ids;
-            this.show_header_compose =  options.parameters.options.thread.show_header_compose;
-            this.display_on_flat =  options.parameters.options.thread.display_on_flat;
+            this.options={thread:{}};
+            this.options.thread.show_header_compose =  options.parameters.options.thread.show_header_compose;
+            this.options.thread.display_on_flat =  options.parameters.options.thread.display_on_flat;
 
             this.attachment_ids = [];
-            this.show_attachment_delete = true;
-            this.show_attachment_link = true;
+            this.options.thread.show_attachment_delete = true;
+            this.options.thread.show_attachment_link = true;
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
@@ -147,12 +148,17 @@ openerp.mail = function(session) {
             var $target = $(event.target);
             if ($target.val() !== '') {
 
+                // if the files exits for this answer, delete the file before upload
+                var attachments=[];
                 for(var i in this.attachment_ids){
                     if(this.attachment_ids[i].url == $target.val()){
                         var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
-                        ds_attachment.unlink(this.attachment_ids.id);
+                        ds_attachment.unlink([this.attachment_ids.id]);
+                    } else {
+                        attachments.push(this.attachment_ids[i]);
                     }
                 }
+                this.attachment_ids = attachments;
 
                 // submit file
                 session.web.blockUI();
@@ -186,7 +192,7 @@ openerp.mail = function(session) {
                 this.display_attachments();
 
                 var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
-                ds_attachment.unlink(attachment_id);
+                ds_attachment.unlink([attachment_id]);
             }
         },
 
@@ -231,7 +237,7 @@ openerp.mail = function(session) {
             this.$('input[data-id]').remove();
             this.attachment_ids=[];
             this.display_attachments();
-            if(!this.show_header_compose || !this.display_on_flat){
+            if(!this.options.thread.show_header_compose || !this.options.thread.display_on_flat){
                 this.$el.hide();
             }
         },
@@ -455,10 +461,10 @@ openerp.mail = function(session) {
          * in the function. */
         bind_events: function() {
             var self = this;
+
             // event: click on 'Attachment(s)' in msg
-            this.$el.on('click', 'a.oe_mail_msg_view_attachments', function (event) {
-                var act_dom = $(this).parent().parent().parent().find('.oe_mail_msg_attachments');
-                act_dom.toggle();
+            this.$('a.oe_mail_msg_view_attachments:first').on('click', function (event) {
+                self.$('.oe_mail_msg_attachments:first').toggle();
             });
             // event: click on icone 'Read' in header
             this.$el.on('click', 'a.oe_read', this.on_message_read_unread);

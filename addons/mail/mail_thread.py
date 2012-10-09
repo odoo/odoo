@@ -697,7 +697,7 @@ class mail_thread(osv.AbstractModel):
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
         # if the user write on his wall
-        if self._name=='res.partner' and (not thread_id or not thread_id[0]):
+        if self._name=='res.partner' and not thread_id:
             user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
             thread_id = user.partner_id.id
 

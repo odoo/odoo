@@ -154,6 +154,7 @@ class document_file(osv.osv):
         parent_id = vals.get('parent_id', False)
         res_model = vals.get('res_model', False)
         res_id = vals.get('res_id', 0)
+
         if op == 'write':
             for file in self.browse(cr, uid, ids): # FIXME fields_only
                 if not name:
@@ -164,11 +165,11 @@ class document_file(osv.osv):
                     res_model = file.res_model and file.res_model or False
                 if not res_id:
                     res_id = file.res_id and file.res_id or 0
-                res = self.search(cr, uid, [('id', '<>', file.id), ('name', '=', name), ('parent_id', '=', parent_id), ('res_model', '=', res_model), ('res_id', '=', res_id)])
+                res = self.search(cr, uid, [('id', '<>', file.id), ('name', '=', name), ('parent_id', '=', parent_id), ('res_model', '=', res_model), ('res_model', '!=', ''), ('res_id', '=', res_id)])
                 if len(res):
                     return False
         if op == 'create':
-            res = self.search(cr, uid, [('name', '=', name), ('parent_id', '=', parent_id), ('res_id', '=', res_id), ('res_model', '=', res_model)])
+            res = self.search(cr, uid, [('name', '=', name), ('parent_id', '=', parent_id), ('res_id', '=', res_id), ('res_model', '=', res_model), ('res_model', '!=', '')])
             if len(res):
                 return False
         return True
@@ -219,7 +220,11 @@ class document_file(osv.osv):
         res = self.search(cr, uid, [('id', 'in', ids)])
         if not len(res):
             return False
-        if not self._check_duplication(cr, uid, vals, ids, 'write'):
+
+        # when a user write a mail, there are no model
+        # don't check the duplication for the mails
+        res_mail = self.search(cr, uid, [('id', 'in', ids), ('res_model', '=', '')])
+        if res!=res_mail and not self._check_duplication(cr, uid, vals, ids, 'write'):
             raise osv.except_osv(_('ValidateError'), _('File name must be unique!'))
 
         # if nodes call this write(), they must skip the code below

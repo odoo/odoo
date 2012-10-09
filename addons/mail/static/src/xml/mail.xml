@@ -55,14 +55,14 @@
         Template used to display attachments in a mail.message
         -->
     <t t-name="mail.thread.message.attachments">
-        <ul t-attf-class="oe_mail_msg_attachments #{widget.attachment_ids[0]?'':'oe_hidden'}">
+        <ul t-attf-class="oe_mail_msg_attachments #{widget.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
             <t t-foreach="widget.attachment_ids" t-as="attachment">
                 <li>
-                    <a t-if="widget.show_attachment_link" t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a>
-                    <span t-if="!widget.show_attachment_link"><t t-raw="attachment.name || attachment.filename"/></span>
-                    <t t-if="widget.show_attachment_delete">
+                    <a t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a>
+                    <t t-if="widget.options.thread.show_attachment_delete">
                         <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
                     </t>
+
                 </li>
             </t>
         </ul>
@@ -214,7 +214,6 @@
                     <ul class="oe_mail_msg_footer">
                         <li t-if="widget.author_id"><a t-attf-href="#model=res.partner&amp;id=#{widget.author_id[0]}"><t t-raw="widget.author_id[1]"/></a></li>
                         <li><span t-att-title="widget.date"><t t-raw="widget.timerelative"/></span></li>
-                        
                         <li t-if="widget.attachment_ids.length > 0">
                             <a class="oe_mail_msg_view_attachments">
                                 <t t-if="widget.attachment_ids.length == 1">1 Attachment</t>
