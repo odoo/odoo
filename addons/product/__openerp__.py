@@ -67,5 +67,6 @@ Print product labels with barcode.
     'installable': True,
     'auto_install': False,
     'images': ['images/product_uom.jpeg','images/product_pricelists.jpeg','images/products_categories.jpeg', 'images/products_form.jpeg'],
+    'css': ['static/css/product.css']
 }
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
