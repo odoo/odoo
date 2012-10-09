@@ -586,26 +586,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback
      * @returns {$.Deferred}
      */
-    call: function (method, args, callback, error_callback) {
-        return this._model.call(method, args).then(callback, error_callback);
-    },
-    /**
-     * Calls an arbitrary method, with more crazy
-     *
-     * @param {String} method
-     * @param {Array} [args]
-     * @param {Number} [domain_index] index of a domain to evaluate in the args array
-     * @param {Number} [context_index] index of a context to evaluate in the args array
-     * @returns {$.Deferred}
-     */
-    call_and_eval: function (method, args, domain_index, context_index) {
-        return instance.session.rpc('/web/dataset/call', {
-            model: this.model,
-            method: method,
-            domain_id: domain_index == undefined ? null : domain_index,
-            context_id: context_index == undefined ? null : context_index,
-            args: args || []
-        });
+    call: function (method, args) {
+        return this._model.call(method, args);
     },
     /**
      * Calls a button method, usually returning some sort of action

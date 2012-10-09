@@ -568,7 +568,27 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body></body>
+    <body>
+        <!--[if lte IE 8]>
+        <script type="text/javascript" 
+            src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script>
+            var test = function() {
+                CFInstall.check({
+                    mode: "overlay"
+                });
+            };
+            if (window.localStorage && false) {
+                if (! localStorage.getItem("hasShownGFramePopup")) {
+                    test();
+                    localStorage.setItem("hasShownGFramePopup", true);
+                }
+            } else {
+                test();
+            }
+        </script>
+        <![endif]-->
+    </body>
 </html>
 """
 
@@ -1209,8 +1229,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return {'result': clean_action(req, action)}
-        return {'result': False}
+            return clean_action(req, action)
+        return False
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -1622,7 +1642,7 @@ class Action(openerpweb.Controller):
             action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
-        return {'result': value}
+        return value
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):

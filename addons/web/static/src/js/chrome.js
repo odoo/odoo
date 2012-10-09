@@ -146,8 +146,8 @@ instance.web.Dialog = instance.web.Widget.extend({
             this.$buttons = $('<div class="ui-dialog-buttonpane ui-widget-content ui-helper-clearfix" />');
             this.$el.dialog("widget").append(this.$buttons);
         }
-        var res = this.start();
         this.dialog_inited = true;
+        var res = this.start();
         return res;
     },
     close: function() {
@@ -392,7 +392,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_create: function(form) {
         var self = this;
         var fields = $(form).serializeArray();
-        self.rpc("/web/database/create", {'fields': fields}, function(result) {
+        self.rpc("/web/database/create", {'fields': fields}).then(function(result) {
             var form_obj = self.to_object(fields);
             var client_action = {
                 type: 'ir.actions.client',
@@ -418,7 +418,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
             return;
         }
-        self.rpc("/web/database/drop", {'fields': fields}, function(result) {
+        self.rpc("/web/database/drop", {'fields': fields}).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -481,7 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var self = this;
         self.rpc("/web/database/change_password", {
             'fields': $(form).serializeArray()
-        }, function(result) {
+        }).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -660,7 +660,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
-                }, function(result) {
+                }).then(function(result) {
                     if (result.error) {
                         self.display_error(result);
                         return;
@@ -886,8 +886,8 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         var self = this;
         if (!this.getParent().has_uncommitted_changes()) {
             self.rpc("/web/action/load", { action_id: "base.action_res_users_my" }, function(result) {
-                result.result.res_id = instance.session.uid;
-                self.getParent().action_manager.do_action(result.result);
+                result.res_id = instance.session.uid;
+                self.getParent().action_manager.do_action(result);
             });
         }
     },
@@ -1121,7 +1121,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         return this.rpc("/web/action/load", { action_id: options.action_id })
             .pipe(function (result) {
-                var action = result.result;
+                var action = result;
                 if (options.needaction) {
                     action.context.search_default_needaction_pending = true;
                 }
@@ -1165,8 +1165,8 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         var self = this;
         return $.when(this._super()).pipe(function() {
             return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
-                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
-                    var action = result.result;
+                return self.rpc("/web/action/load", { action_id: self.action_id }).then(function(result) {
+                    var action = result;
                     action.flags = _.extend({
                         //views_switcher : false,
                         search_view : false,
