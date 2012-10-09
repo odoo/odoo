@@ -240,9 +240,9 @@ instance.web.DiagramView = instance.web.View.extend({
                 }
             );
 
-        pop.on_write.add(function() {
+        pop.on('on_write_complete',self,function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
-            });
+        });
 
         var form_fields = [self.parent_field];
         var form_controller = pop.view_form;
@@ -303,7 +303,7 @@ instance.web.DiagramView = instance.web.View.extend({
                 title: _t("Open: ") + title
             }
         );
-        pop.on_write.add(function() {
+        pop.on('on_write_complete',self,function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
     },
