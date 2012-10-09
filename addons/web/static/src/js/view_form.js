@@ -380,7 +380,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             field._inhibit_on_change_flag = false;
             set_values.push(result);
         });
-        console.log("on_record_loaded");
         return $.when.apply(null, set_values).pipe(function() {
             if (!record.id) {
                 // New record: Second pass in order to trigger the onchanges
@@ -755,7 +754,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.trigger('history_back');
             } else {
                 this.to_view_mode();
-                self.trigger('record_load',this.datarecord);
+                this.trigger('record_load',this.datarecord);
             }
         }
         return false;
