@@ -711,8 +711,7 @@ class mail_thread(osv.AbstractModel):
             if attachment_ids:
                 self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
                 self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
-        
-            
+          
         added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
         return added_message
 

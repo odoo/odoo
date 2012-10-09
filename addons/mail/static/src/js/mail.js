@@ -164,6 +164,7 @@ openerp.mail = function(session) {
                 session.web.blockUI();
                 var form = self.$('form.oe_form_binary_form');
                 form.submit();
+                $target.after($target.clone(true)).remove();
             }
         },
         on_attachment_loaded: function (event, result) {
@@ -185,15 +186,25 @@ openerp.mail = function(session) {
             if (attachment_id) {
                 var attachments=[];
                 for(var i in this.attachment_ids){
-                    if(attachment_id!=this.attachment_ids[i].id)
+                    if(attachment_id!=this.attachment_ids[i].id){
                         attachments.push(this.attachment_ids[i]);
+                    }
+                    else {
+                        var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
+                        ds_attachment.unlink([attachment_id]);
+                    }
                 }
                 this.attachment_ids = attachments;
                 this.display_attachments();
-
-                var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
-                ds_attachment.unlink([attachment_id]);
             }
+        },
+
+        set_free_attachments: function(){
+            var self=this;
+            this.parent_thread.ds_message.call('user_free_attachment').then(function(attachments){
+                self.attachment_ids=attachments;
+                self.display_attachments();
+            });
         },
 
         bind_events: function() {
@@ -764,6 +775,7 @@ openerp.mail = function(session) {
 
             if(this.options.thread.show_header_compose){
                 this.ComposeMessage.$el.show();
+                this.ComposeMessage.set_free_attachments();
             }
 
             var button_flesh = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){

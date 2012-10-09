@@ -343,6 +343,16 @@ class mail_message(osv.Model):
 
         return result
 
+    def user_free_attachment(self, cr, uid, context=None):
+        attachment_list = []
+
+        attachment = self.pool.get('ir.attachment')
+        attachment_ids = attachment.search(cr, uid, [('res_model','=',''),('create_uid','=',uid)])
+        if len(attachment_ids):
+            attachment_list = [{'id': attach[0], 'name': attach[1]} for attach in attachment.name_get(cr, uid, attachment_ids, context=context)]
+
+        return attachment_list
+    
     #------------------------------------------------------
     # Email api
     #------------------------------------------------------
