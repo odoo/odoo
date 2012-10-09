@@ -271,8 +271,8 @@
                               <t t-if="record.country_id.raw_value">@<field name="country_id"/><br/></t>
                               <t t-if="record.user_id.raw_value">Organized by <field name="user_id"/><br/></t>
                               <t t-if="record.register_avail.raw_value lte 10 and record.register_avail.raw_value gt 0"><i>Only</i></t>
-                              <t t-if="record.register_avail.raw_value == 0"><i>No ticket available.</i></t>
-                              <t t-if="record.register_avail.raw_value != 0">
+                              <t t-if="record.register_avail.raw_value == 9999"><i>No ticket available.</i></t>
+                              <t t-if="record.register_avail.raw_value != 9999">
                                 <i><b><t t-if="record.register_avail.raw_value != 9999"><field name="register_avail"/></t></b></i>
                                 <i>
                                     <t t-if="record.register_avail.raw_value > 1">tickets </t>
