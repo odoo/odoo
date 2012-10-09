@@ -1189,6 +1189,15 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
+        """
+        onchange handler for product_id.
+
+        :param dict context: 'uom_change' key in context override default onchange
+                             behaviour which force product's UoM, allowing to
+                             specify an 'uom_id' of the same category as product's
+                             UoM (ex: set when called from product_uom's onchange).
+
+        """
         if context is None:
             context = {}
         lang = lang or context.get('lang',False)

@@ -732,6 +732,11 @@ class purchase_order_line(osv.osv):
             name=False, price_unit=False, notes=False, context=None):
         """
         onchange handler of product_id.
+
+        :param dict context: 'uom_change' key in context override default onchange
+                             behaviour which force product's UoM, allowing to
+                             specify an 'uom_id' of the same category as product's
+                             UoM (ex: set when called from product_uom's onchange).
         """
         if context is None:
             context = {}
