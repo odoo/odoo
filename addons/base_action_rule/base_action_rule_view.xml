@@ -12,59 +12,61 @@
             <field name="model">base.action.rule</field>
             <field name="arch" type="xml">
                 <form string="Action Rule" version="7.0">
-                    <group col="4">
-                        <field name="name"/>
-                        <field name="model_id"/>
-                        <field name="model" invisible="1"/>
-                        <field name="filter_id" domain="[('model_id','=',model)]" context="{'default_model_id': model}"/>
-                        <field name="sequence"/>
-                        <field name="active"/>
-                    </group>
-                    <notebook>
-                        <page string="Conditions">
-                            <group>
-                                <group name="model" string="Conditions on Model Fields">
-                                    <field name="regex_name"/>
-                                    <field name="trg_user_id"/>
+                    <sheet>
+                        <group col="4">
+                            <field name="name"/>
+                            <field name="model_id"/>
+                            <field name="model" invisible="1"/>
+                            <field name="filter_id" domain="[('model_id','=',model)]" context="{'default_model_id': model}"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <notebook>
+                            <page string="Conditions">
+                                <group>
+                                    <group name="model" string="Conditions on Model Fields">
+                                        <field name="regex_name"/>
+                                        <field name="trg_user_id"/>
+                                    </group>
+                                    <group name="partner" string="Conditions on Model Partner">
+                                        <field name="trg_partner_id"/>
+                                        <field name="trg_partner_categ_id"/>
+                                    </group>
+                                    <group name="state" string="Conditions on Status">
+                                        <field name="trg_state_from"/>
+                                        <field name="trg_state_to"/>
+                                    </group>
+                                    <group name="timing" string="Conditions on Timing">
+                                        <field name="trg_date_type"/>
+                                        <field name="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
+                                        <field name="trg_date_range_type" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
+                                    </group>
                                 </group>
-                                <group name="partner" string="Conditions on Model Partner">
-                                    <field name="trg_partner_id"/>
-                                    <field name="trg_partner_categ_id"/>
+                                <group string="Note">
+                                    <label string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action  described in the 'Actions' tab." />
                                 </group>
-                                <group name="state" string="Conditions on Status">
-                                    <field name="trg_state_from"/>
-                                    <field name="trg_state_to"/>
+                            </page>
+                            <page string="Actions">
+                                <group name="action_followers">
+                                    <field name="act_followers" widget="many2many_tags"/>
                                 </group>
-                                <group name="timing" string="Conditions on Timing">
-                                    <field name="trg_date_type"/>
-                                    <field name="trg_date_range" string="Delay After Trigger Date" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
-                                    <field name="trg_date_range_type" attrs="{'invisible': [('trg_date_type', '=', 'none')]}"/>
+                                <group name="action_field" col="4" string="Fields to Change">
+                                    <field name="act_user_id"/>
+                                    <field name="act_state"/>
                                 </group>
-                            </group>
-                            <group string="Note">
-                                <label string="The rule uses the AND operator. The model must match all non-empty fields so that the rule executes the action described in the 'Actions' tab." />
-                            </group>
-                        </page>
-                        <page string="Actions">
-                            <group name="action_followers">
-                                <field name="act_followers" widget="many2many_tags"/>
-                            </group>
-                            <group name="action_field" col="4" string="Fields to Change">
-                                <field name="act_user_id"/>
-                                <field name="act_state"/>
-                            </group>
-                            <group name="action_server" string="Server Actions to be Triggered (eg. Email Reminder, Call Object Method, etc...)" >
-                                <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1" context="{'default_model_id': model_id}">
-                                    <tree string="Server Actions">
-                                        <field name="sequence"/>
-                                        <field name="name"/>
-                                        <field name="state"/>
-                                    </tree>
-                                </field>
-                            </group>
-                            
-                        </page>
-                    </notebook>
+                                <group name="action_server" string="Server Actions to be Triggered (eg. Email Reminder, Call Object Method, etc...)" >
+                                    <field name="server_action_ids" domain="[('model_id','=', model_id)]" nolabel="1" context="{'default_model_id': model_id}">
+                                        <tree string="Server Actions">
+                                            <field name="sequence"/>
+                                            <field name="name"/>
+                                            <field name="state"/>
+                                        </tree>
+                                    </field>
+                                </group>
+                                
+                           </page>
+                       </notebook>
+                    </sheet>
                 </form>
             </field>
            </record>
