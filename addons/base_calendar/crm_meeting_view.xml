@@ -280,7 +280,7 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
-                <filter string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter string="My Meetings" help="My Meetings" domain="[('user_id','=',uid)]"/>
                 <field name="user_id"/>
