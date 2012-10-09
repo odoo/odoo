@@ -152,10 +152,10 @@ class product_uom(osv.osv):
     def onchange_category_id(self, cr, uid, ids, category_id):
     	reference_uom = False
 	if category_id:
-            uom_ids = self.search(cr, uid, [('category_id', '=',category_id),('uom_type', '=', 'reference')])
+	    uom_ids = self.search(cr, uid, [('category_id', '=',category_id),('uom_type', '=', 'reference')])
 	    if uom_ids:
-                reference_uom = uom_ids[0]
-	return {'value':{'reference_uom_id': reference_uom}}
+	        reference_uom = uom_ids[0]
+    return {'value':{'reference_uom_id': reference_uom}}
 
     def _compute_qty(self, cr, uid, from_uom_id, qty, to_uom_id=False):
         if not from_uom_id or not qty or not to_uom_id:

@@ -461,7 +461,7 @@
                     <group>
                         <group>
                             <field name="name" on_change="onchange_name(name)"/>
-			                <field name="category_id" on_change="onchange_category_id(category_id)"/>
+                            <field name="category_id" on_change="onchange_category_id(category_id)"/>
                             <field name="active"/>
                         </group>
                         <group>
@@ -471,8 +471,8 @@
                             <div style="margin-left: -12px;">
                                 <field name="factor_inv" class="oe_inline" attrs="{'invisible':[('uom_type','!=','bigger')]}" String="Computation" nolabel="1"/>
                                 <label string="1" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                			    <field class="oe_inline" name="reference_uom_id" attrs="{'invisible':[('uom_type','=','reference')]}" nolabel="1"/>
-                			    <label string="="/>                                
+                                <field class="oe_inline" name="reference_uom_id" attrs="{'invisible':[('uom_type','=','reference')]}" nolabel="1"/>
+                                <label string="="/>
                                 <field class="oe_inline" name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}" String="Computation" nolabel="1"/>
                                 <label string="1" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                                 <field class="oe_inline" name="name_ref" nolabel="1" attrs="{'readonly': True}" width="1"/>
