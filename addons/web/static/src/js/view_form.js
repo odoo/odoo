@@ -2068,7 +2068,11 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.field = this.field_manager.get_field_desc(this.name);
         this.widget = this.node.attrs.widget;
         this.string = this.node.attrs.string || this.field.string || this.name;
-        this.options = JSON.parse(this.node.attrs.options || '{}');
+        try {
+            this.options = JSON.parse(this.node.attrs.options || '{}');
+        } catch (e) {
+            throw new Error(_.str.sprintf(_t("Widget options for field '%s' are not valid JSON."), this.name));
+        }
         this.set({'value': false});
 
         this.on("change:value", this, function() {
