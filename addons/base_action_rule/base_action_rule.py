@@ -184,20 +184,24 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         """
         This Function is call by scheduler.
         """
-        rule_pool = self.pool.get('base.action.rule')
-        rule_ids = rule_pool.search(cr, uid, [], context=context)
+        rule_ids = self.search(cr, uid, [], context=context)
         self._register_hook(cr, uid, rule_ids, context=context)
-
-        rules = self.browse(cr, uid, rule_ids, context=context)
-        for rule in rules:
+        if context is None:
+            context = {}
+        for rule in self.browse(cr, uid, rule_ids, context=context):
             model = rule.model_id.model
             model_pool = self.pool.get(model)
             last_run = False
             if rule.last_run:
                 last_run = get_datetime(rule.last_run)
             now = datetime.now()
-            for obj_id in model_pool.search(cr, uid, [], context=context):
-                obj = model_pool.browse(cr, uid, obj_id, context=context)
+            ctx = dict(context)            
+            if rule.filter_id and rule.model_id.model == rule.filter_id.model_id:
+                ctx.update(eval(rule.filter_id.context))
+                obj_ids = model_pool.search(cr, uid, eval(rule.filter_id.domain), context=ctx)
+            else:
+                obj_ids = model_pool.search(cr, uid, [], context=ctx)
+            for obj in model_pool.browse(cr, uid, obj_ids, context=ctx):
                 # Calculate when this action should next occur for this object
                 base = False
                 if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
@@ -229,23 +233,21 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                     delay = fnct[rule.trg_date_range_type](rule.trg_date_range)
                     action_date = base + delay
                     if (not last_run or (last_run <= action_date < now)):
-                        self._action(cr, uid, [rule.id], [obj], context=context)
-            rule_pool.write(cr, uid, [rule.id], {'last_run': now},
-                            context=context)
+                        try:
+                            self._action(cr, uid, rule, obj, context=ctx)
+                            self.write(cr, uid, [rule.id], {'last_run': now}, context=context)
+                        except Exception, e:
+                            import traceback
+                            print traceback.format_exc()
+                        
+                        
 
     def do_check(self, cr, uid, action, obj, context=None):
         """ check Action """
         if context is None:
             context = {}
         ok = True
-        if action.filter_id:
-            if action.model_id.model == action.filter_id.model_id:
-                context.update(eval(action.filter_id.context))
-                obj_ids = obj._table.search(cr, uid, eval(action.filter_id.domain), context=context)
-                if not obj.id in obj_ids:
-                    ok = False
-            else:
-                ok = False
+        
         if getattr(obj, 'user_id', False):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
         if getattr(obj, 'partner_id', False):
@@ -276,14 +278,15 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         ok = ok and regex_n
         return ok
 
-    def do_action(self, cr, uid, action, model_obj, obj, context=None):
+    def do_action(self, cr, uid, action, obj, context=None):
         """ Do Action """
         if context is None:
             context = {}
         ctx = dict(context)
+        model_obj = self.pool.get(action.model_id.model)
         action_server_obj = self.pool.get('ir.actions.server')
         if action.server_action_ids:
-            ctx.update({'active_id':obj.id, 'active_ids':[obj.id]})
+            ctx.update({'active_model': action.model_id.model, 'active_id':obj.id, 'active_ids':[obj.id]})
             action_server_obj.run(cr, uid, [x.id for x in action.server_action_ids], context=ctx)
 
         write = {}
@@ -305,7 +308,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
         return True
 
-    def _action(self, cr, uid, ids, objects, scrit=None, context=None):
+    def _action(self, cr, uid, action, obj, scrit=None, context=None):
         """ Do Action """
         if context is None:
             context = {}
@@ -314,11 +317,8 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         if not scrit:
             scrit = []
 
-        for action in self.browse(cr, uid, ids, context=context):
-            for obj in objects:
-                if self.do_check(cr, uid, action, obj, context=context):
-                    model_obj = self.pool.get(action.model_id.model)
-                    self.do_action(cr, uid, action, model_obj, obj, context=context)
+        if self.do_check(cr, uid, action, obj, context=context):
+            self.do_action(cr, uid, action, obj, context=context)
 
         context.update({'action': False})
         return True

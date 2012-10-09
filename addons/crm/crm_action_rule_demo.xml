@@ -9,11 +9,11 @@
             <field name="type">ir.actions.server</field>
             <field name="state">email</field>
             <field name="email">object.user_id.email</field>
-            <field name="subject">Reminder on Lead: [[object.name ]] of [[object.partner_id.name]]</field>
+            <field name="subject">Reminder on Lead: [[object.id ]] of [[object.partner_id.name]]</field>
             <field name="message">Hello [[object.user_id.name]], 
 can you check following lead, it's inactive since 5 days ?
 
-Lead Id: [[object.id ]]
+Lead: [[object.id ]]
 Customer: [[object.partner_id.name]]
 
     [[object.description]]
@@ -29,11 +29,11 @@ Thanks,
             <field name="type">ir.actions.server</field>
             <field name="state">email</field>
             <field name="email">object.email_from</field>
-            <field name="subject">Reminder on Lead: [[object.name ]]</field>
+            <field name="subject">Reminder on Lead: [[object.id ]]</field>
             <field name="message">Hello [[object.partner_id.name]], 
 your following lead inactive since 5 days.
 
-Lead Id: [[object.id ]]
+Lead: [[object.id ]]
 Customer: [[object.partner_id.name]]
 
     [[object.description]]
@@ -60,7 +60,7 @@ Thanks,
         </record>
 
         <record id="rule_set_followers_lead" model="base.action.rule">
-            <field name="name">Set Auto Followers on leads which are come from USA.</field>
+            <field name="name">Set Auto Followers on leads which are urgent and come from USA.</field>
             <field name="model_id" ref="model_crm_lead"/>
             <field name="sequence">2</field>
             <field name="regex_name">urgent.*</field>
@@ -68,6 +68,9 @@ Thanks,
             <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
             <field name="act_user_id" ref="base.user_root"/>
             <field name="act_section_id" ref="section_sales_department"/>
+            <field name="trg_date_type">create</field>
+            <field name="trg_date_range">0</field>
+            <field name="trg_date_range_type">minutes</field>
         </record>
     </data>
 </openerp>

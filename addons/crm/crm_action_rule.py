@@ -71,8 +71,9 @@ class base_action_rule(osv.osv):
             ok = ok and res_count
         return ok
 
-    def do_action(self, cr, uid, action, model_obj, obj, context=None):
-        res = super(base_action_rule, self).do_action(cr, uid, action, model_obj, obj, context=context)
+    def do_action(self, cr, uid, action, obj, context=None):
+        res = super(base_action_rule, self).do_action(cr, uid, action, obj, context=context)
+        model_obj = self.pool.get(action.model_id.model)
         write = {}
         if hasattr(action, 'act_section_id') and action.act_section_id:
             write['section_id'] = action.act_section_id.id
