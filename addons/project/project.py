@@ -19,12 +19,14 @@
 #
 ##############################################################################
 
-from base_status.base_stage import base_stage
-from datetime import datetime, date
+import time
 from lxml import etree
+from datetime import datetime, date
+
+import tools
+from base_status.base_stage import base_stage
 from osv import fields, osv
 from openerp.addons.resource.faces import task as Task
-import time
 from tools.translate import _
 from openerp import SUPERUSER_ID
 
