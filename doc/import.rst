@@ -22,7 +22,7 @@ This document attempts to explain the behavior and limitations of
 :meth:`~openerp.osv.orm.BaseModel.load`.
 
 Data
-====
+----
 
 The input ``data`` is a regular row-major matrix of strings (in Python
 datatype terms, a ``list`` of rows, each row being a ``list`` of
@@ -38,7 +38,7 @@ and each cell of a row yields a value for the corresponding field of
 the row's record. There is currently one exception for this rule:
 
 One to Many fields
-------------------
+++++++++++++++++++
 
 Because O2M fields contain multiple records "embedded" in the main
 one, and these sub-records are fully dependent on the main record (are
@@ -53,14 +53,14 @@ fields. During parsing, they are extracted into their own ``data``
 matrix for the o2m field they correspond to.
 
 Import process
-==============
+--------------
 
 Here are the phases of import. Note that the concept of "phases" is
 fuzzy as it's currently more of a pipeline, each record moves through
 the entire pipeline before the next one is processed.
 
 Extraction
-----------
+++++++++++
 
 The first phase of the import is the extraction of the current row
 (and potentially a section of rows following it if it has One to Many
@@ -74,7 +74,7 @@ This phase also generates the ``rows`` indexes for any
 :ref:`import-message` produced thereafter.
 
 Conversion
-----------
+++++++++++
 
 This second phase takes the record dicts, extracts the :ref:`dbid` and
 :ref:`xid` if present and attempts to convert each field to a type
@@ -91,12 +91,12 @@ matching what OpenERP expects to write.
           the import in two phases.
 
 Char, text and binary fields
-++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Are returned as-is, without any alteration.
 
 Boolean fields
-++++++++++++++
+~~~~~~~~~~~~~~
 
 The string value is compared (in a case-insensitive manner) to ``0``,
 ``false`` and ``no`` as well of any translation thereof loaded in the
@@ -109,14 +109,14 @@ any translation of these in the database). The field is always set to
 also be output.
 
 Integers and float fields
-+++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The field is parsed with Python's built-in conversion routines
 (``int`` and ``float`` respectively), if the conversion fails an error
 is generated.
 
 Selection fields
-++++++++++++++++
+~~~~~~~~~~~~~~~~
 
 The field is compared to 1. the values of the selection (first part of
 each selection tuple) and 2. all translations of the selection label
@@ -131,7 +131,7 @@ The same process applies to both list-type and function-type selection
 fields.
 
 Many to One field
-+++++++++++++++++
+~~~~~~~~~~~~~~~~~
 
 If the specified field is the relational field itself (``m2o``), the
 value is used in a ``name_search``. The first record returned by
@@ -151,14 +151,14 @@ the same as for external ids (on database identifiers instead of
 external ones).
 
 Many to Many field
-++++++++++++++++++
+~~~~~~~~~~~~~~~~~~
 
 The field's value is interpreted as a comma-separated list of names,
 external ids or database ids. For each one, the process previously
 used for the many to one field is applied.
 
 One to Many field
-+++++++++++++++++
+~~~~~~~~~~~~~~~~~
 
 For each o2m record extracted, if the record has a ``name``,
 :ref:`xid` or :ref:`dbid` the :ref:`dbid` is looked up and checked
@@ -170,13 +170,13 @@ an UPDATE with the non-db values for the relational field.
 Otherwise a CREATE command is emmitted.
 
 Create/Write
-------------
+++++++++++++
 
 If the conversion was successful, the converted record is then saved
 to the database via ``(ir.model.data)._update``.
 
 Error handling
---------------
+++++++++++++++
 
 The import process will only catch 2 types of exceptions to convert
 them to error messages: ``ValueError`` during the conversion process,
@@ -199,7 +199,7 @@ The import process uses savepoint to:
 .. _import-messages:
 
 Messages
-========
+--------
 
 A message is a dictionary with 5 mandatory keys and one optional key:
 
