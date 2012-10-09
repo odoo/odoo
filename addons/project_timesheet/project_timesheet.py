@@ -62,8 +62,8 @@ class project_project(osv.osv):
             # if the user do not have access rights on the partner
             pass
 
-        result = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
-        id = result and result[1] or False
+        res = mod_obj.get_object_reference(cr, uid, 'hr_timesheet', 'act_hr_timesheet_line_evry1_all_form')
+        id = res and res[1] or False
         result = act_obj.read(cr, uid, [id], context=context)[0]
         result['name'] = _('Timesheets')
         result['context'] = view_context
