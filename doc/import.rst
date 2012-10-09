@@ -169,6 +169,31 @@ an UPDATE with the non-db values for the relational field.
 
 Otherwise a CREATE command is emmitted.
 
+Date fields
+~~~~~~~~~~~
+
+The value's format is checked against
+:data:`~openerp.tools.misc.DEFAULT_SERVER_DATE_FORMAT`, an error is
+generated if it does not match the specified format.
+
+Datetime fields
+~~~~~~~~~~~~~~~
+
+The value's format is checked against
+:data:`~openerp.tools.misc.DEFAULT_SERVER_DATETIME_FORMAT`, an error
+is generated if it does not match.
+
+The value is then interpreted as a datetime in the user's
+timezone. The timezone is specified thus:
+
+* If the import ``context`` contains a ``tz`` key with a valid
+  timezone name, this is the timezone of the datetime.
+
+* Otherwise if the user performing the import has a ``tz`` attribute
+  set to a valid timezone name, this is the timezone of the datetime.
+
+* Otherwise interpret the datetime as being in the ``UTC`` timezone.
+
 Create/Write
 ++++++++++++
 
