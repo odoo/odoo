@@ -459,7 +459,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.$pager.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
-            self.on_pager_action(action);
+            self.trigger('pager_action',self.on_pager_action(action));
         });
         this.do_update_pager();
     },
@@ -3372,9 +3372,8 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 controller.on_record_loaded.add_last(function() {
                     once.resolve();
                 });
-                controller.on_pager_action.add_first(function() {
-                    self.save_any_view();
-                });
+                controller.on('pager_action',self,self.save_any_view);
+
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
