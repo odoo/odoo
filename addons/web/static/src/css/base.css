@@ -68,10 +68,13 @@
   background-color: #f0f0f0;
 }
 .openerp thead th {
-  border-right: 1px dotted #afafb6;
+  border-left: 1px solid #dfdfdf;
 }
-.openerp thead th:last-child {
-  border-right: none;
+.openerp thead th:first-child {
+  border-left: none;
+}
+.openerp thead th.null {
+  border-left: none;
 }
 .openerp th, .openerp td {
   padding: 0;
@@ -515,27 +518,11 @@
 .openerp .oe_webclient .oe_star_on {
   color: gold;
 }
-.openerp header {
-  position: relative;
-  border-bottom: 1px solid #cacaca;
-  padding-left: 2px;
-  background-color: #fcfcfc;
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
-  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
-  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
+.openerp p.oe_grey {
+  max-width: 650px;
 }
-.openerp header > span {
-  margin-left: 4px;
-}
-.openerp header ul {
-  display: inline-block;
-  float: right;
-}
-.openerp header .oe_button {
-  margin: 3px 2px 1px;
+.openerp .oe_grey {
+  color: #aaaaaa;
 }
 .openerp .oe_tag {
   border: 1px solid #afafb6;
@@ -2037,6 +2024,31 @@
 .openerp .oe_application .oe_form_sheet .oe_notebook_page {
   padding: 0 16px;
 }
+.openerp .oe_form header {
+  position: relative;
+  border-bottom: 1px solid #cacaca;
+  padding-left: 2px;
+  background-color: #fcfcfc;
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#fcfcfc), to(#dedede));
+  background-image: -webkit-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -moz-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -ms-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: -o-linear-gradient(top, #fcfcfc, #dedede);
+  background-image: linear-gradient(to bottom, #fcfcfc, #dedede);
+}
+.openerp .oe_form header > span {
+  margin-left: 4px;
+}
+.openerp .oe_form header ul {
+  display: inline-block;
+  float: right;
+}
+.openerp .oe_form header .oe_button {
+  margin: 3px 2px 1px;
+}
+.openerp .oe_form header .oe_button:first-child {
+  margin-left: 6px;
+}
 .openerp .oe_form header .oe_tags {
   margin: 5px 0 0 5px;
   width: 400px;
@@ -2047,11 +2059,6 @@
   max-width: 860px;
   margin: 0 auto;
   padding: 16px 0 48px;
-}
-.openerp .oe_form header .oe_tags .oe_grey {
-  color: #aaaaaa;
-  max-width: 650px;
-  margin: 0 0 10px 0;
 }
 .openerp .oe_form header .oe_tags div.oe_form_configuration p, .openerp .oe_form header .oe_tags div.oe_form_configuration ul, .openerp .oe_form header .oe_tags div.oe_form_configuration ol {
   color: #aaaaaa;
@@ -2292,16 +2299,16 @@
   margin-bottom: 32px;
   text-align: justify;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_integer {
+.openerp .oe_form_editable .oe_form .oe_form_field_integer input {
   width: 6em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_float {
+.openerp .oe_form_editable .oe_form .oe_form_field_float input {
   width: 7em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_date {
+.openerp .oe_form_editable .oe_form .oe_form_field_date input {
   width: 7.5em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_datetime {
+.openerp .oe_form_editable .oe_form .oe_form_field_datetime input {
   width: 11.5em !important;
 }
 .openerp .oe_hidden_input_file {

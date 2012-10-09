@@ -568,7 +568,27 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body></body>
+    <body>
+        <!--[if lte IE 8]>
+        <script type="text/javascript" 
+            src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script>
+            var test = function() {
+                CFInstall.check({
+                    mode: "overlay"
+                });
+            };
+            if (window.localStorage && false) {
+                if (! localStorage.getItem("hasShownGFramePopup")) {
+                    test();
+                    localStorage.setItem("hasShownGFramePopup", true);
+                }
+            } else {
+                test();
+            }
+        </script>
+        <![endif]-->
+    </body>
 </html>
 """
 

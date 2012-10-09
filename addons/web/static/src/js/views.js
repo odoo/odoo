@@ -1059,11 +1059,11 @@ instance.web.Sidebar = instance.web.Widget.extend({
                 action_id: item.action.id,
                 context: additional_context
             }).then(function(result) {
-                result.result.context = _.extend(result.result.context || {},
+                result.context = _.extend(result.context || {},
                     additional_context);
-                result.result.flags = result.result.flags || {};
-                result.result.flags.new_window = true;
-                self.do_action(result.result, function () {
+                result.flags = result.flags || {};
+                result.flags.new_window = true;
+                self.do_action(result, function () {
                     // reload view
                     self.getParent().reload();
                 });
