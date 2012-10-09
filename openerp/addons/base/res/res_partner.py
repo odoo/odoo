@@ -157,7 +157,7 @@ def _lang_get(self, cr, uid, context=None):
     lang_pool = self.pool.get('res.lang')
     ids = lang_pool.search(cr, uid, [], context=context)
     res = lang_pool.read(cr, uid, ids, ['code', 'name'], context)
-    return [(r['code'], r['name']) for r in res] + [('','')]
+    return [(r['code'], r['name']) for r in res]
 
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
