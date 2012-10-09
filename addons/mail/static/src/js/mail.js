@@ -69,6 +69,15 @@ openerp.mail = function(session) {
             }
             return string;
         },
+
+        /* replace textarea text into html text
+         * (add <p>, <a>)
+        */
+        get_text2html: function(text){
+            return text
+                .replace(/[\n\r]/g,'<br/>')
+                .replace(/((?:https?|ftp):\/\/[\S]+)/g,'<a href="$1">$1</a> ')
+        }
     };
 
 
@@ -201,7 +210,6 @@ openerp.mail = function(session) {
             });
 
             var progress=function(event) {
-                console.log('xhr progress :', Math.floor(event.loaded / event.total*100), event);
                 self.$("span[name='"+filename+"'] div:lt("+Math.floor(event.loaded / event.total*5)+")").show();
             };
 
@@ -316,7 +324,7 @@ openerp.mail = function(session) {
                     'default_content_subtype': 'html',
                     'default_is_private': true,
                     'default_parent_id': this.id,
-                    'default_body': (this.$('textarea').val() || '').replace(/[\n\r]/g,'<br>'),
+                    'default_body': mail.ChatterUtils.get_text2html(this.$('textarea').val() || ''),
                     'default_attachment_ids': attachments
                 },
             };
@@ -354,8 +362,14 @@ openerp.mail = function(session) {
 
             if(body.match(/\S+/)) {
                 this.parent_thread.ds_thread.call('message_post_api', [
-                    this.context.default_res_id, body, false, 'comment', false, this.context.default_parent_id, attachments])
-                    .then(this.parent_thread.proxy('switch_new_message'));
+                        this.context.default_res_id, 
+                        mail.ChatterUtils.get_text2html(body), 
+                        false, 
+                        'comment', 
+                        false, 
+                        this.context.default_parent_id, 
+                        attachments]
+                    ).then(this.parent_thread.proxy('switch_new_message'));
                 this.attachment_ids=[];
                 this.on_cancel();
                 return true;
@@ -460,8 +474,6 @@ openerp.mail = function(session) {
          *              display before having a "show more" link; note that the text
          *              will not be truncated if it does not have 110% of the parameter
          *          @param {Boolean} [show_record_name]
-         *          @param {Boolean} [show_reply]
-         *          @param {Boolean} [show_reply_by_email]
          *          @param {Boolean} [show_dd_delete]
          *          @param {Boolean} [show_dd_hide]
          */
@@ -507,8 +519,6 @@ openerp.mail = function(session) {
                     'message_ids':            options.options.message.message_ids || null,
                     'message_data':           options.options.message.message_data || null,
                     'show_record_name':       options.options.message.show_record_name != undefined ? options.options.message.show_record_name: true,
-                    'show_reply':             options.options.message.show_reply || false,
-                    'show_reply_by_email':    options.options.message.show_reply_by_email || false,
                     'show_dd_delete':         options.options.message.show_dd_delete || false,
                     'show_dd_hide':           options.options.message.show_dd_hide || false,
                     'truncate_limit':         options.options.message.truncate_limit || 250,
@@ -1240,6 +1250,7 @@ openerp.mail = function(session) {
                         'message': {
                             'show_reply': this.options.thread_level > 0,
                             'show_dd_hide': true,
+                            'show_dd_delete': true,
                         },
                     },
                     'parameters': {},

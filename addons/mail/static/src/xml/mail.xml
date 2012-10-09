@@ -194,7 +194,7 @@
                 <li t-if="!widget.options.thread.display_on_flat" title="Read" class="oe_read"><a class="oe_read oe_e">W</a></li>
                 <li t-if="!widget.options.thread.display_on_flat" title="Set back to unread" class="oe_unread"><a class="oe_unread oe_e">h</a></li>
                 <li title="Quick reply"><a class="oe_reply oe_e">)</a></li>
-                <t t-if="(widget.is_author and widget.options.message.show_dd_delete) || widget.type == 'email'">
+                <t t-if="(widget.is_author and widget.options.message.show_dd_delete) or widget.type == 'email'">
                     <li>
                         <span class="oe_dropdown_toggle">
                             <a class="oe_e" title="More options">í</a>
