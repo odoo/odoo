@@ -2214,7 +2214,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         var $input = this.$el.find('input');
         $input.change(function() {
-            self.set({'value': instance.web.parse_value($input.val(), self)});
+            self.set({'value': self.parse_value($input.val())});
         });
         this.setupFocus($input);
     },
@@ -2223,7 +2223,7 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         this.render_value();
     },
     render_value: function() {
-        var show_value = instance.web.format_value(this.get('value'), this, '');
+        var show_value = this.format_value(this.get('value'), '');
         if (!this.get("effective_readonly")) {
             this.$el.find('input').val(show_value);
         } else {
@@ -2236,13 +2236,19 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
     is_syntax_valid: function() {
         if (!this.get("effective_readonly")) {
             try {
-                var value_ = instance.web.parse_value(this.$el.find('input').val(), this, '');
+                var value_ = this.parse_value(this.$el.find('input').val(), '');
                 return true;
             } catch(e) {
                 return false;
             }
         }
         return true;
+    },
+    parse_value: function(val, def) {
+        return instance.web.parse_value(val, this, def);
+    },
+    format_value: function(val, def) {
+        return instance.web.format_value(val, this, def);
     },
     is_false: function() {
         return this.get('value') === '' || this._super();
@@ -5020,6 +5026,12 @@ instance.web.form.FieldMonetary = instance.web.form.FieldFloat.extend({
             .filter([["id", "=", self.get("currency")]]).first()).pipe(function(res) {
             self.set({"currency_info": res});
         });
+    },
+    parse_value: function(val, def) {
+        return instance.web.parse_value(val, {type: "float"}, def);
+    },
+    format_value: function(val, def) {
+        return instance.web.format_value(val, {type: "float"}, def);
     },
 });
 
