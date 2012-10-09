@@ -150,7 +150,7 @@ class membership_line(osv.osv):
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
-                        string='Membership State', type='selection',
+                        string='Membership Status', type='selection',
                         selection=STATE, store = {
                         'account.invoice': (_get_membership_lines, ['state'], 10),
                         'res.partner': (_get_partners, ['membership_state'], 12),
