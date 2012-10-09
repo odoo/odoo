@@ -356,6 +356,7 @@ openerp.mail = function(session) {
                 this.parent_thread.ds_thread.call('message_post_api', [
                     this.context.default_res_id, body, false, 'comment', false, this.context.default_parent_id, attachments])
                     .then(this.parent_thread.proxy('switch_new_message'));
+                this.attachment_ids=[];
                 this.on_cancel();
                 return true;
             }
@@ -1034,38 +1035,30 @@ openerp.mail = function(session) {
                 });
             }
 
-            var thread = self.options.thread.display_on_flat ? self.options.thread._parents[0] : this;
+            var thread_messages = (self.options.thread.display_on_flat ? self.options.thread._parents[0].messages : []).concat(self.messages);
+            var thread = (self.options.thread.display_on_flat ? self.options.thread._parents[0] : self);
 
             // check older and newer message for insert
             var parent_newer = false;
             var parent_older = false;
-            for(var i in thread.messages){
-                if(thread.messages[i].id > message.id){
-                    if(!parent_newer || parent_newer.id>=thread.messages[i].id)
-                        parent_newer = thread.messages[i];
-                } else if(thread.messages[i].id>0 && thread.messages[i].id < message.id) {
-                    if(!parent_older || parent_older.id<thread.messages[i].id)
-                        parent_older = thread.messages[i];
+            for(var i in thread_messages){
+                if(thread_messages[i].id > message.id){
+                    if(!parent_newer || parent_newer.id>=thread_messages[i].id)
+                        parent_newer = thread_messages[i];
+                } else if(thread_messages[i].id>0 && thread_messages[i].id < message.id) {
+                    if(!parent_older || parent_older.id<thread_messages[i].id)
+                        parent_older = thread_messages[i];
                 }
             }
 
             if(parent_older){
-                if(self.options.thread.display_on_flat)
-                    message.insertAfter(parent_older.$el);
-                else
-                    message.insertBefore(parent_older.$el);
+                message.insertBefore(parent_older.$el);
             }
             else if(parent_newer){
-                if(self.options.thread.display_on_flat)
-                    message.insertBefore(parent_newer.$el);
-                else
-                    message.insertAfter(parent_newer.$el);
+                message.insertAfter(parent_newer.$el);
             }
             else {
-                if(self.options.thread.display_on_flat)
-                    message.appendTo(thread.list_ul);
-                else
-                    message.prependTo(thread.list_ul);
+                message.prependTo(thread.list_ul);
             }
             return message
         },

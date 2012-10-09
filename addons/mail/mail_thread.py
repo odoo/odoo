@@ -705,7 +705,7 @@ class mail_thread(osv.AbstractModel):
                         subtype=subtype, parent_id=parent_id, context=context)
 
         attachment_ids=[]
-        if attachments and attachments[0]!=None:
+        if attachments:
             ir_attachment = self.pool.get('ir.attachment')
             attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', ""), ('res_id', '=', ""), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
