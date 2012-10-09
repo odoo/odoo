@@ -15,31 +15,12 @@
                 </field>
         </record>
 
-        <record id="view_partners_tree_crm2" model="ir.ui.view">
-                <field name="name">view.res.partner.tree.crm.inherited2</field>
-                <field name="model">res.partner</field>
-                <field name="inherit_id" ref="base.view_partner_tree"/>
-                <field eval="18" name="priority"/>
-                <field name="arch" type="xml">
-                    <field name="phone" position="after">
-                        <field name="section_id" completion="1" invisible="context.get('invisible_section', True)"/>
-                    </field>
-                </field>
-        </record>
-
         <record id="view_partners_form_crm3" model="ir.ui.view">
                 <field name="name">view.res.partner.search.crm.inherited3</field>
                 <field name="model">res.partner</field>
                 <field name="inherit_id" ref="base.view_res_partner_filter"/>
                 <field eval="18" name="priority"/>
                 <field name="arch" type="xml">
-                    <field name="category_id" position="after">
-                        <field name="section_id" completion="1"/>
-                        <field name="section_id" completion="1" widget="selection" context="{'invisible_section': False}"/>
-                    </field>
-                    <xpath expr="//field[@name='user_id']" position="after">
-                        <field name="country_id"/>
-                    </xpath>
                     <xpath expr="//group[@string='Group By...']" position="after">
                         <group string="Display">
                             <filter string="Show Sales Team" context="{'invisible_section': False}"/>
