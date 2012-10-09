@@ -5,6 +5,7 @@ OpenERP Server
 .. toctree::
    :maxdepth: 1
 
+   module-versioning
    test-framework
 
 Changed in 7.0
