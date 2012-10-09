@@ -19,11 +19,10 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta, date
+from datetime import datetime, timedelta
 from osv import fields, osv
 from tools.translate import _
 from openerp import SUPERUSER_ID
-import time
 
 class event_type(osv.osv):
     """ Event Type """
@@ -291,12 +290,16 @@ class event_event(osv.osv):
         return {'value' : values}
 
     def onchange_start_date(self, cr, uid, ids, date_end=False, date_begin=False, context=None):
-        value = {}
-        if type(date_begin) is str:
+        res = {'value':{}}
+        if date_end:
+            return res
+        if isinstance(date_begin, str):
             date_begin = datetime.strptime(date_begin, "%Y-%m-%d %H:%M:%S")
-            date_end = date_begin + timedelta(hours=1.00)
-            return {'value': {'date_end':date_end.strftime("%Y-%m-%d %H:%M:%S")}}
-        return {}
+        if isinstance(date_end, str):
+            date_end = datetime.strptime(date_end, "%Y-%m-%d %H:%M:%S")
+        date_end = date_begin + timedelta(hours=1)
+        res['value'] = {'date_end': date_end.strftime("%Y-%m-%d %H:%M:%S")}
+        return res
 
     # ----------------------------------------
     # OpenChatter methods and notifications
