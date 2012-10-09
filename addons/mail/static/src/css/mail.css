@@ -391,7 +391,25 @@
 }
 .openerp .oe_mail_msg_content ul.oe_mail_msg_attachments li {
     float: none;
+    height: 20px;
+    line-height: 20px;
     margin: 0;
     padding: 0;
     list-style-type: square;
+}
+.openerp .oe_mail_msg_content ul.oe_mail_msg_attachments .oe_upload_in_process {
+    float: right;
+    width: 200px;
+    height: 16px;
+}
+.openerp .oe_mail_msg_content ul.oe_mail_msg_attachments .oe_upload_in_process div {
+    float: left;
+    width: 38px;
+    height: 16px;
+    margin-right: 2px;
+    background: #66FF66;
+}
+.openerp .oe_mail_msg_content ul.oe_mail_msg_attachments .oe_upload_in_process span {
+    color: #aaaaaa;
+    position: absolute;
 }

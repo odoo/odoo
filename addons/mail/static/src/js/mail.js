@@ -114,6 +114,8 @@ openerp.mail = function(session) {
 
             this.parent_thread= parent.messages!= undefined ? parent : false;
 
+
+            this.ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
             this.fileupload_id = _.uniqueId('oe_fileupload_temp');
             $(window).on(self.fileupload_id, self.on_attachment_loaded);
         },
@@ -148,12 +150,16 @@ openerp.mail = function(session) {
             var $target = $(event.target);
             if ($target.val() !== '') {
 
+                var filename = $target.val().replace(/.*[\\\/]/,'');
+
                 // if the files exits for this answer, delete the file before upload
                 var attachments=[];
                 for(var i in this.attachment_ids){
-                    if(this.attachment_ids[i].url == $target.val()){
-                        var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
-                        ds_attachment.unlink([this.attachment_ids.id]);
+                    if((this.attachment_ids[i].filename || this.attachment_ids[i].name) == filename){
+                        if(this.attachment_ids[i].upload){
+                            return false;
+                        }
+                        this.ds_attachment.unlink([this.attachment_ids[i].id]);
                     } else {
                         attachments.push(this.attachment_ids[i]);
                     }
@@ -161,22 +167,87 @@ openerp.mail = function(session) {
                 this.attachment_ids = attachments;
 
                 // submit file
-                session.web.blockUI();
-                var form = self.$('form.oe_form_binary_form');
-                form.submit();
-                $target.after($target.clone(true)).remove();
+                //session.web.blockUI();
+                self.$('form.oe_form_binary_form').submit();
+                //self.submit_ajax_attachment();
+
+                this.$(".oe_attachment_file").hide();
+
+                this.attachment_ids.push({
+                    'id': 0,
+                    'name': filename,
+                    'filename': filename,
+                    'url': '',
+                    'upload': true
+                });
+                this.display_attachments();
             }
         },
-        on_attachment_loaded: function (event, result) {
-            session.web.unblockUI();
-            this.attachment_ids.push({
-                'id': result.id,
-                'name': '',
-                'filename': result.filename,
-                'url': mail.ChatterUtils.get_attachment_url(this.session, result)
+        
+        submit_ajax_attachment: function(){
+            var self=this;
+            var $form = self.$('form.oe_form_binary_form');
+            var filename = this.$('input.oe_form_binary_file').val().replace(/.*[\\\/]/,'');
+
+            // create form data
+            var fomdata = new FormData();
+            $.each($form.find('input'), function(i, field) {
+                var $field=$(field);
+                if($field.attr('type')!='file'){
+                    fomdata.append($field.attr('name'), $field.val());
+                } else {
+                    fomdata.append($field.attr('name'), field.files[0]);
+                }
             });
-            this.$('input.oe_form_binary_file').empty();
+
+            var progress=function(event) {
+                console.log('xhr progress :', Math.floor(event.loaded / event.total*100), event);
+                self.$("span[name='"+filename+"'] div:lt("+Math.floor(event.loaded / event.total*5)+")").show();
+            };
+
+            $.ajax({
+                url: $form.attr("action"),
+                data: fomdata,
+                cache: false,
+                contentType: false,
+                processData: false,
+                type: 'POST',
+                enctype: 'multipart/form-data',
+                xhr: function() {
+                    // custom xhr
+                    myXhr = $.ajaxSettings.xhr();
+                    if(myXhr.upload){
+                        // for handling the progress of the upload
+                        myXhr.upload.addEventListener('progress', progress, false);
+                    }
+                    myXhr.addEventListener('progress', progress, false);
+                    return myXhr;
+                },
+                success: function(data){
+                    $iframe=$('<iframe style="display:none;"/>').html(data);
+                    $iframe.appendTo(self.$el);
+                    $iframe.remove();
+                }
+            });
+        },
+        
+        on_attachment_loaded: function (event, result) {
+            //session.web.unblockUI();
+            for(var i in this.attachment_ids){
+                if(this.attachment_ids[i].filename == result.filename && this.attachment_ids[i].upload){
+                    this.attachment_ids[i]={
+                        'id': result.id,
+                        'name': result.name,
+                        'filename': result.filename,
+                        'url': mail.ChatterUtils.get_attachment_url(this.session, result)
+                    };
+                }
+            }
             this.display_attachments();
+
+            var $input = this.$('input.oe_form_binary_file');
+            $input.after($input.clone(true)).remove();
+            this.$(".oe_attachment_file").show();
         },
         /* unlink the file on the server and reload display
          */
@@ -190,8 +261,7 @@ openerp.mail = function(session) {
                         attachments.push(this.attachment_ids[i]);
                     }
                     else {
-                        var ds_attachment = new session.web.DataSetSearch(this, 'ir.attachment');
-                        ds_attachment.unlink([attachment_id]);
+                        this.ds_attachment.unlink([attachment_id]);
                     }
                 }
                 this.attachment_ids = attachments;
@@ -199,10 +269,21 @@ openerp.mail = function(session) {
             }
         },
 
+        /* to avoid having unsorted file on the server.
+            we will show the users files of the first message post
+         */
         set_free_attachments: function(){
             var self=this;
             this.parent_thread.ds_message.call('user_free_attachment').then(function(attachments){
-                self.attachment_ids=attachments;
+                this.attachment_ids=[];
+                for(var i in attachments){
+                    self.attachment_ids[i]={
+                        'id': attachments[i].id,
+                        'name': attachments[i].name,
+                        'filename': attachments[i].filename,
+                        'url': mail.ChatterUtils.get_attachment_url(self.session, attachments[i])
+                    };
+                }
                 self.display_attachments();
             });
         },
@@ -246,7 +327,7 @@ openerp.mail = function(session) {
             event.stopPropagation();
             this.$('textarea').val("");
             this.$('input[data-id]').remove();
-            this.attachment_ids=[];
+            //this.attachment_ids=[];
             this.display_attachments();
             if(!this.options.thread.show_header_compose || !this.options.thread.display_on_flat){
                 this.$el.hide();
@@ -261,20 +342,22 @@ openerp.mail = function(session) {
                 var body = comment_node.val();
                 comment_node.val('');
             }
-            if(body.match(/\S+/)) {
 
-                var attachments=[];
-                for(var i in this.attachment_ids){
-                    attachments.push(this.attachment_ids[i].id);
+            var attachments=[];
+            for(var i in this.attachment_ids){
+                if(this.attachment_ids[i].upload){
+                    session.web.dialog($('<div>' + session.web.qweb.render('CrashManager.warning', {message: 'Please, wait while the file is uploading.'}) + '</div>'));
+                    return false;
                 }
+                attachments.push(this.attachment_ids[i].id);
+            }
 
+            if(body.match(/\S+/)) {
                 this.parent_thread.ds_thread.call('message_post_api', [
                     this.context.default_res_id, body, false, 'comment', false, this.context.default_parent_id, attachments])
                     .then(this.parent_thread.proxy('switch_new_message'));
                 this.on_cancel();
-            }
-            else {
-                return false;
+                return true;
             }
         },
     });

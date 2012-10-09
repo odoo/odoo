@@ -349,10 +349,10 @@ class mail_message(osv.Model):
         attachment = self.pool.get('ir.attachment')
         attachment_ids = attachment.search(cr, uid, [('res_model','=',''),('create_uid','=',uid)])
         if len(attachment_ids):
-            attachment_list = [{'id': attach[0], 'name': attach[1]} for attach in attachment.name_get(cr, uid, attachment_ids, context=context)]
+            attachment_list = [{'id': attach.id, 'name': attach.name, 'date': attach.create_date} for attach in attachment.browse(cr, uid, attachment_ids, context=context)]
 
         return attachment_list
-    
+
     #------------------------------------------------------
     # Email api
     #------------------------------------------------------

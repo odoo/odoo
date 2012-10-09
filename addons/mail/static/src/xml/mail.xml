@@ -58,8 +58,21 @@
         <ul t-attf-class="oe_mail_msg_attachments #{widget.attachment_ids[0] and widget.options.thread.show_attachment_link?'':'oe_hidden'}">
             <t t-foreach="widget.attachment_ids" t-as="attachment">
                 <li>
-                    <a t-att-href="attachment.url"><t t-raw="attachment.name || attachment.filename"/></a>
-                    <t t-if="widget.options.thread.show_attachment_delete">
+                    <span t-if="(attachment.upload or attachment.percent_loaded&lt;100)" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}" t-attf-name="{attachment.name || attachment.filename}">
+                        <div class="oe_upload_in_process">
+                            <span>...wait upload...</span>
+                            <div t-attf-style="{attachment.percent_loaded&gt;0?'':'display:none;'}"/>
+                            <div t-attf-style="{attachment.percent_loaded&gt;20?'':'display:none;'}"/>
+                            <div t-attf-style="{attachment.percent_loaded&gt;40?'':'display:none;'}"/>
+                            <div t-attf-style="{attachment.percent_loaded&gt;60?'':'display:none;'}"/>
+                            <div t-attf-style="{attachment.percent_loaded&gt;80?'':'display:none;'}"/>
+                        </div>
+                        <t t-raw="attachment.name || attachment.filename"/>
+                    </span>
+                    <a t-if="(!attachment.upload or attachment.percent_loaded&gt;=100)" t-att-href="attachment.url" t-attf-title="{(attachment.name || attachment.filename) + (attachment.date?' \n('+attachment.date+')':'' )}">
+                        <t t-raw="attachment.name || attachment.filename"/>
+                    </a>
+                    <t t-if="widget.options.thread.show_attachment_delete and (!attachment.upload or attachment.percent_loaded&gt;=100)">
                         <a class="oe_right oe_mail_attachment_delete" title="Delete this attachmentt" t-attf-data-id="{attachment.id}">x</a>
                     </t>
 
@@ -67,7 +80,6 @@
             </t>
         </ul>
     </t>
-
 
     <t t-name="mail.thread.message.private">
         <div>
