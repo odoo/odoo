@@ -234,7 +234,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                     action_date = base + delay
                     if (not last_run or (last_run <= action_date < now)):
                         try:
-                            self._action(cr, uid, rule, obj, context=ctx)
+                            self._action(cr, uid, [rule.id], obj, context=ctx)
                             self.write(cr, uid, [rule.id], {'last_run': now}, context=context)
                         except Exception, e:
                             import traceback
@@ -308,7 +308,7 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 model_obj.message_subscribe(cr, uid, [obj.id], new_followers, context=context)
         return True
 
-    def _action(self, cr, uid, action, obj, scrit=None, context=None):
+    def _action(self, cr, uid, ids, objects, scrit=None, context=None):
         """ Do Action """
         if context is None:
             context = {}
@@ -316,9 +316,12 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         context.update({'action': True})
         if not scrit:
             scrit = []
-
-        if self.do_check(cr, uid, action, obj, context=context):
-            self.do_action(cr, uid, action, obj, context=context)
+        if not isinstance(objects, list):
+            objects = [objects]
+        for action in self.browse(cr, uid, ids, context=context):
+            for obj in objects:
+                if self.do_check(cr, uid, action, obj, context=context):
+                    self.do_action(cr, uid, action, obj, context=context)
 
         context.update({'action': False})
         return True
