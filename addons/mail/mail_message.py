@@ -180,7 +180,6 @@ class mail_message(osv.Model):
             fields allow to have the foreign record name without having
             to check external access rights).
         """
-        child_nbr = len(msg.child_ids)
         has_voted = False
         vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
@@ -194,7 +193,7 @@ class mail_message(osv.Model):
         try:
             author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
             is_author = uid == msg.author_id.user_ids[0].id
-        except (orm.except_orm, osv.except_osv):
+        except Exception:
             author_id = False
             is_author = False
         try:
