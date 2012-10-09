@@ -501,7 +501,7 @@ class mail_message(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
-            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         newid = super(mail_message, self).create(cr, uid, values, context)
         self._notify(cr, SUPERUSER_ID, newid, context=context)
         return newid
