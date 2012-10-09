@@ -417,7 +417,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this._super();
         var self = this;
         this.$el.find('.oe_view_manager_switch a').click(function() {
-            self.on_mode_switch($(this).data('view-type'));
+            self.trigger('on_mode_switch', $(this).data('view-type'));
         }).tipsy();
         var views_ids = {};
         _.each(this.views_src, function(view) {
@@ -439,16 +439,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.on_mode_switch(default_view);
+        this.on('on_mode_switch', self, function(view_type, no_store, view_options) {
+            self.switch_mode(view_type, no_store, view_options);
+        });
+        return this.trigger('on_mode_switch', default_view);
     },
-    /**
-     * Asks the view manager to switch visualization mode.
-     *
-     * @param {String} view_type type of view to display
-     * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
-     * @returns {jQuery.Deferred} new view loading promise
-     */
-    on_mode_switch: function(view_type, no_store, view_options) {
+    switch_mode: function(view_type, no_store, view_options) {
         var self = this;
         var view = this.views[view_type];
         var view_promise;
@@ -552,7 +548,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     add_breadcrumb: function(on_reverse_breadcrumb) {
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
-        this.on('on_mode_switch',self,function(mode) { 
+        this.on('on_mode_switch',self,function(mode) {
             var last = views.slice(-1)[0];
             if (mode !== last) {
                 if (mode !== 'form') {
@@ -568,7 +564,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 var view_to_select = views[index];
                 self.$el.show();
                 if (self.active_view !== view_to_select) {
-                    self.on_mode_switch(view_to_select);
+                    self.trigger('on_mode_switch', view_to_select);
                 }
             },
             get_title: function() {
@@ -604,7 +600,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
      * consist to switch to the asked view.
      */
     switch_view: function(view_type, no_store, options) {
-        return this.on_mode_switch(view_type, no_store, options);
+        return this.trigger('on_mode_switch', view_type, no_store, options);
     },
     /**
      * Returns to the view preceding the caller view in this manager's
@@ -623,12 +619,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
-            return this.on_mode_switch('form');
+            return this.trigger('on_mode_switch', 'form');
         } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
-            return this.on_mode_switch('form');
+            return this.trigger('on_mode_switch', 'form');
         }
-        return this.on_mode_switch(previous_view, true);
+        return this.trigger('on_mode_switch', previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -897,7 +893,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         }, action || {});
         this.do_action(action);
     },
-    on_mode_switch: function (view_type, no_store, options) {
+    switch_mode: function (view_type, no_store, options) {
         var self = this;
 
         return $.when(this._super.apply(this, arguments)).then(function () {
@@ -932,7 +928,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         if (state.view_type && state.view_type !== this.active_view) {
             defs.push(
                 this.views[this.active_view].deferred.pipe(function() {
-                    return self.on_mode_switch(state.view_type, true);
+                    return self.trigger('on_mode_switch', state.view_type, true)
                 })
             );
         } 
