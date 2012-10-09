@@ -78,10 +78,17 @@ Conversion
 
 This second phase takes the record dicts, extracts the :ref:`dbid` and
 :ref:`xid` if present and attempts to convert each field to a type
-matching what OpenERP expects to write. Empty fields (empty strings)
-are replaced with the ``False`` value, and non-empty fields are
-converted through
-:class:`~openerp.addons.base.ir.ir_fields.ir_fields_converter`:
+matching what OpenERP expects to write.
+
+* Empty fields (empty strings) are replaced with the ``False`` value
+
+* Non-empty fields are converted through
+  :class:`~openerp.addons.base.ir.ir_fields.ir_fields_converter`
+
+.. note:: if a field is specified in the import, its default will *never* be
+          used. If some records need to have a value and others need to use
+          the model's default, either specify that default explicitly or do
+          the import in two phases.
 
 Char, text and binary fields
 ++++++++++++++++++++++++++++
