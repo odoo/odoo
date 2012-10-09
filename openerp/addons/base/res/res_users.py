@@ -488,13 +488,6 @@ class res_users(osv.osv):
             'tag': 'reload',
         }
 
-    def preference_change_password(self, cr, uid, ids, context=None):
-        return {
-            'type': 'ir.actions.client',
-            'tag': 'change_password',
-            'target': 'new',
-        }
-
     def has_group(self, cr, uid, group_ext_id):
         """Checks whether user belongs to given group.
 
