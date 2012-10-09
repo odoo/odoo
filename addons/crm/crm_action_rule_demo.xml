@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<openerp>
+    <data noupdate="1">
+        <!-- email server actions -->
+        <record id="action_email_reminder_lead" model="ir.actions.server">
+            <field name="name">Reminder to User</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">email</field>
+            <field name="email">object.user_id.email</field>
+            <field name="subject">Reminder on Lead: [[object.name ]] of [[object.partner_id.name]]</field>
+            <field name="message">Hello [[object.user_id.name]], 
+can you check following lead, it's inactive since 5 days ?
+
+Lead Id: [[object.id ]]
+Customer: [[object.partner_id.name]]
+
+    [[object.description]]
+
+Thanks,
+</field>
+        </record>
+
+        <record id="action_email_reminder_customer_lead" model="ir.actions.server">
+            <field name="name">Reminder to Customer</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="condition">True</field>
+            <field name="type">ir.actions.server</field>
+            <field name="state">email</field>
+            <field name="email">object.email_from</field>
+            <field name="subject">Reminder on Lead: [[object.name ]]</field>
+            <field name="message">Hello [[object.partner_id.name]], 
+your following lead inactive since 5 days.
+
+Lead Id: [[object.id ]]
+Customer: [[object.partner_id.name]]
+
+    [[object.description]]
+
+Thanks,
+            </field>
+        </record>
+
+        <!-- automated actions -->
+        <record id="rule_set_reminder_lead" model="base.action.rule">
+            <field name="name">Set Auto Reminder on leads which are inactive since 5 days.</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="sequence">1</field>
+            <field name="trg_date_type">write</field>
+            <field name="trg_date_range">5</field>
+            <field name="trg_date_range_type">day</field>
+            <field name="server_action_ids" eval="[(6,0,[ref('action_email_reminder_customer_lead'), ref('action_email_reminder_lead')])]"/>
+        </record>
+
+        <record id="filter_usa_lead" model="ir.filters">
+            <field name="name">Filter on leads which come from USA.</field>
+            <field name="model_id">crm.lead</field>
+            <field name="domain">[('country_id','=','United States')]</field>
+        </record>
+
+        <record id="rule_set_followers_lead" model="base.action.rule">
+            <field name="name">Set Auto Followers on leads which are come from USA.</field>
+            <field name="model_id" ref="model_crm_lead"/>
+            <field name="sequence">2</field>
+            <field name="regex_name">urgent.*</field>
+            <field name="filter_id" ref="filter_usa_lead"/>
+            <field name="act_followers" eval="[(6,0,[ref('base.res_partner_4'), ref('base.res_partner_5'), ref('base.res_partner_6')])]"/>
+            <field name="act_user_id" ref="base.user_root"/>
+            <field name="act_section_id" ref="section_sales_department"/>
+        </record>
+    </data>
+</openerp>

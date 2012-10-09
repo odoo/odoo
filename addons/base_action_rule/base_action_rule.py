@@ -63,6 +63,7 @@ class base_action_rule(osv.osv):
     _columns = {
         'name':  fields.char('Rule Name', size=64, required=True),
         'model_id': fields.many2one('ir.model', 'Related Document Model', required=True, domain=[('osv_memory','=', False)]),
+        'model': fields.related('model_id', 'model', type="char", size=256, string='Model'),
         'create_date': fields.datetime('Create Date', readonly=1),
         'active': fields.boolean('Active', help="If the active field is set to False,\
  it will allow you to hide the rule without removing it."),
@@ -71,6 +72,7 @@ when displaying a list of rules."),
         'trg_date_type':  fields.selection([
             ('none', 'None'),
             ('create', 'Creation Date'),
+            ('write', 'Last Modified Date'),
             ('action_last', 'Last Action Date'),
             ('date', 'Date'),
             ('deadline', 'Deadline'),
@@ -93,15 +95,15 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         'regex_name': fields.char('Regex on Resource Name', size=128, help="Regular expression for matching name of the resource\
 \ne.g.: 'urgent.*' will search for records having name starting with the string 'urgent'\
 \nNote: This is case sensitive search."),
-        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."),
-        'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model)]
+        'server_action_ids': fields.one2many('ir.actions.server', 'action_rule_id', 'Server Action', help="Define Server actions.\neg:Email Reminders, Call Object Service, etc.."), #TODO: set domain [('model_id','=',model_id)]
+        'filter_id':fields.many2one('ir.filters', 'Filter', required=False), #TODO: set domain [('model_id','=',model_id.model)]
         'last_run': fields.datetime('Last Run', readonly=1),
     }
 
     _defaults = {
-        'active': lambda *a: True,
-        'trg_date_type': lambda *a: 'none',
-        'trg_date_range_type': lambda *a: 'day',
+        'active': True,
+        'trg_date_type': 'none',
+        'trg_date_range_type': 'day',
     }
 
     _order = 'sequence'
@@ -200,6 +202,8 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
                 base = False
                 if rule.trg_date_type=='create' and hasattr(obj, 'create_date'):
                     base = obj.create_date
+                elif rule.trg_date_type=='write' and hasattr(obj, 'write_date'):
+                    base = obj.write_date
                 elif (rule.trg_date_type=='action_last'
                         and hasattr(obj, 'create_date')):
                     if hasattr(obj, 'date_action_last') and obj.date_action_last:
