@@ -15,7 +15,7 @@
             id="event_main_menu"
             groups="base.group_user"
             sequence="80"/>
-        <menuitem name="Events Organisation" id="base.menu_event_main" parent="event_main_menu"/>
+        <menuitem name="Events Organization" id="base.menu_event_main" parent="event_main_menu"/>
 
         <!-- EVENTS  -->
 
@@ -223,7 +223,7 @@
             <field name="arch" type="xml">
                 <tree string="Events" fonts="bold:message_unread==True" colors="red:(register_min and register_min&gt;register_current) or (register_max and register_max&lt;register_current);grey:state=='cancel'">
                     <field name="name" string="Name"/>
-                    <field name="type"/>
+                    <field name="type" string="Event Category"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
                     <field name="register_current"/>
