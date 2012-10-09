@@ -60,7 +60,8 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
-from openerp.tools.safe_eval import const_eval, safe_eval as eval
+from openerp.tools.safe_eval import safe_eval as eval
+from ast import literal_eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
@@ -1734,7 +1735,7 @@ class BaseModel(object):
                     transfer_field_to_modifiers(field, modifiers)
                 if node.get('options'):
                     try:
-                        node.set('options', simplejson.dumps(const_eval(node.get('options'))))
+                        node.set('options', simplejson.dumps(literal_eval(node.get('options'))))
                     except Exception, msg:
                         raise except_orm('Invalide Python code in %s'%(node.get('options')), msg[0])
 
