@@ -3372,7 +3372,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     $(".oe_form_buttons", controller.$el).children().remove();
                 }
                 controller.on("record_load", self, function(){
-                    console.log("view manager form");
                      once.resolve();
                  });
                 controller.on_pager_action.add_first(function() {
