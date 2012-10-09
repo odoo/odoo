@@ -800,6 +800,7 @@ class sale_order_line(osv.osv):
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             res = {
                 'name': line.name,
+                'sequence': line.sequence,
                 'origin': line.order_id.name,
                 'account_id': account_id,
                 'price_unit': pu,
