@@ -63,9 +63,13 @@ class account_analytic_journal_report(osv.osv_memory):
         if context is None:
             context = {}
         res = super(account_analytic_journal_report, self).default_get(cr, uid, fields, context=context)
-        journal = self.pool.get('account.analytic.journal').search(cr, uid, [], context=context)
+        if not context.has_key('active_ids'):
+            journal_ids = self.pool.get('account.analytic.journal').search(cr, uid, [], context=context)
+        else:
+            journal_ids = context.get('active_ids')
+        print context
         if 'analytic_account_journal_id' in fields:
-            res.update({'analytic_account_journal_id': journal})
+            res.update({'analytic_account_journal_id': journal_ids})
         return res
 
 account_analytic_journal_report()
