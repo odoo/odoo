@@ -21,7 +21,6 @@
 
 from openerp import SUPERUSER_ID
 from openerp.modules.registry import RegistryManager
-from openerp.addons.web.controllers.main import login_and_redirect
 import openerp.addons.web.common.http as openerpweb
 
 import werkzeug
@@ -30,34 +29,24 @@ import logging
 _logger = logging.getLogger(__name__)
 
 class Controller(openerpweb.Controller):
-    _cp_path = '/auth_signup'
-
-    @openerpweb.jsonrequest
-    def retrieve(self, req, dbname, token):
-        """ retrieve the user info (name, login or email) corresponding to a signup token """
-        registry = RegistryManager.get(dbname)
-        user_info = None
-        with registry.cursor() as cr:
-            res_partner = registry.get('res.partner')
-            user_info = res_partner.signup_retrieve_info(cr, SUPERUSER_ID, token)
-        return user_info
+    _cp_path = '/auth_reset_password'
 
     @openerpweb.httprequest
-    def signup(self, req, dbname, token, name, login, password):
-        """ sign up a user (new or existing), and log it in """
+    def reset_password(self, req, dbname, login):
+        """ retrieve user, and perform reset password """
         url = '/'
         registry = RegistryManager.get(dbname)
         with registry.cursor() as cr:
             try:
                 res_users = registry.get('res.users')
-                values = {'name': name, 'login': login, 'password': password}
-                credentials = res_users.signup(cr, SUPERUSER_ID, values, token)
+                res_users.reset_password(cr, SUPERUSER_ID, login)
                 cr.commit()
-                return login_and_redirect(req, *credentials)
+                message = 'An email has been sent with credentials to reset your password'
             except Exception as e:
                 # signup error
-                _logger.exception('error when signup')
-                url = "/#action=login&error_message=%s" % werkzeug.urls.url_quote(e.message)
+                _logger.exception('error when resetting password')
+                message = e.message
+        url = "/#action=login&error_message=%s" % werkzeug.urls.url_quote(message)
         return werkzeug.utils.redirect(url)
 
 # vim:expandtab:tabstop=4:softtabstop=4:shiftwidth=4:
