@@ -161,10 +161,10 @@
                                 <field name="street2"/>
                                 <div class="address_format">
                                     <field name="city" placeholder="City" style="width: 40%%"/>
-                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": true}'/>
+                                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>
                                     <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                 </div>
-                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
+                                <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
                             </div>
                             <field name="website" widget="url" placeholder="e.g. www.openerp.com"/>
                         </group>
@@ -177,7 +177,7 @@
                             <field name="email" widget="email"/>
                             <field name="title" domain="[('domain', '=', 'contact')]"
                                 groups="base.group_no_one"
-                                options='{"no_open": true}' attrs="{'invisible': [('is_company','=', True)]}" />
+                                options='{"no_open": True}' attrs="{'invisible': [('is_company','=', True)]}" />
                         </group>
                     </group>
 

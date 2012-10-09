@@ -60,7 +60,7 @@ import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
-from openerp.tools.safe_eval import safe_eval as eval
+from openerp.tools.safe_eval import const_eval, safe_eval as eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
@@ -1732,7 +1732,11 @@ class BaseModel(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
-
+                if node.get('options'):
+                    try:
+                        node.set('options', simplejson.dumps(const_eval(node.get('options'))))
+                    except Exception, msg:
+                        raise except_orm('Invalide Python code in %s'%(node.get('options')), msg[0])
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
