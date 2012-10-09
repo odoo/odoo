@@ -1190,7 +1190,15 @@ class sale_order_line(osv.osv):
     def product_id_change(self, cr, uid, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        context = context or {}
+        """
+        onchange handler for product_id.
+
+        :param dict context: 'force_product_uom' key in context override
+                             default onchange behaviour to force using the UoM
+                             defined on the provided product
+        """
+        if context is None:
+            context = {}
         lang = lang or context.get('lang',False)
         if not  partner_id:
             raise osv.except_osv(_('No Customer Defined !'), _('You have to select a customer in the sales form !\nPlease set one customer before choosing a product.'))
@@ -1198,10 +1206,10 @@ class sale_order_line(osv.osv):
         product_uom_obj = self.pool.get('product.uom')
         partner_obj = self.pool.get('res.partner')
         product_obj = self.pool.get('product.product')
-        context = {'lang': lang, 'partner_id': partner_id}
+        context = dict(context, lang=lang, partner_id=partner_id)
         if partner_id:
-            lang = partner_obj.browse(cr, uid, partner_id).lang
-        context_partner = {'lang': lang, 'partner_id': partner_id}
+            lang = partner_obj.browse(cr, uid, partner_id, context=context).lang
+        context_partner = dict(context, lang=lang)
 
         if not product:
             return {'value': {'th_weight': 0, 'product_packaging': False,
@@ -1217,19 +1225,20 @@ class sale_order_line(osv.osv):
 
         uom2 = False
         if uom:
-            uom2 = product_uom_obj.browse(cr, uid, uom)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id:
+            uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
+            if product_obj.uom_id.category_id.id != uom2.category_id.id or context.get('force_product_uom'):
                 uom = False
+                uom2 = False
         if uos:
             if product_obj.uos_id:
-                uos2 = product_uom_obj.browse(cr, uid, uos)
+                uos2 = product_uom_obj.browse(cr, uid, uos, context=context)
                 if product_obj.uos_id.category_id.id != uos2.category_id.id:
                     uos = False
             else:
                 uos = False
         if product_obj.description_sale:
             result['notes'] = product_obj.description_sale
-        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
+        fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position, context=context) or False
         if update_tax: #The quantity only have changed
             result['delay'] = (product_obj.sale_delay or 0.0)
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
@@ -1287,10 +1296,10 @@ class sale_order_line(osv.osv):
             warning_msgs += _("No Pricelist ! : ") + warn_msg +"\n\n"
         else:
             price = self.pool.get('product.pricelist').price_get(cr, uid, [pricelist],
-                    product, qty or 1.0, partner_id, {
-                        'uom': uom or result.get('product_uom'),
-                        'date': date_order,
-                        })[pricelist]
+                    product, qty or 1.0, partner_id, dict(context,
+                        uom=uom or result.get('product_uom'),
+                        date=date_order,
+                        ))[pricelist]
             if price is False:
                 warn_msg = _("Couldn't find a pricelist line matching this product and quantity.\n"
                         "You have to change either the product, the quantity or the pricelist.")
@@ -1308,8 +1317,9 @@ class sale_order_line(osv.osv):
     def product_uom_change(self, cursor, user, ids, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, context=None):
-        context = context or {}
-        lang = lang or ('lang' in context and context['lang'])
+        if context is None:
+            context = {}
+        lang = lang or context.get('lang',False)
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,

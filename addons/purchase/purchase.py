@@ -729,6 +729,10 @@ class purchase_order_line(osv.osv):
             name=False, price_unit=False, notes=False, context=None):
         """
         onchange handler of product_id.
+
+        :param dict context: 'force_product_uom' key in context override
+                             default onchange behaviour to force using the UoM
+                             defined on the provided product
         """
         if context is None:
             context = {}
@@ -762,7 +766,7 @@ class purchase_order_line(osv.osv):
 
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
-        if not uom_id:
+        if not uom_id or context.get('force_product_uom'):
             uom_id = product_uom_po_id
         
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:
