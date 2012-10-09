@@ -703,9 +703,6 @@ class purchase_order_line(osv.osv):
         """
         onchange handler of product_uom.
         """
-        if context is None:
-            context = {}
-        context = dict(context, uom_change=True)
         if not uom_id:
             return {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'notes': notes or'', 'product_uom' : uom_id or False}}
         return self.onchange_product_id(cr, uid, ids, pricelist_id, product_id, qty, uom_id,
@@ -733,10 +730,9 @@ class purchase_order_line(osv.osv):
         """
         onchange handler of product_id.
 
-        :param dict context: 'uom_change' key in context override default onchange
-                             behaviour which force product's UoM, allowing to
-                             specify an 'uom_id' of the same category as product's
-                             UoM (ex: set when called from product_uom's onchange).
+        :param dict context: 'force_product_uom' key in context override
+                             default onchange behaviour to force using the UoM
+                             defined on the provided product
         """
         if context is None:
             context = {}
@@ -770,7 +766,7 @@ class purchase_order_line(osv.osv):
 
         # - check that uom and product uom belong to the same category
         product_uom_po_id = product.uom_po_id.id
-        if not uom_id or not context.get('uom_change'):
+        if not uom_id or context.get('force_product_uom'):
             uom_id = product_uom_po_id
         
         if product.uom_id.category_id.id != product_uom.browse(cr, uid, uom_id, context=context).category_id.id:

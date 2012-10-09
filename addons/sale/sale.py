@@ -1192,11 +1192,9 @@ class sale_order_line(osv.osv):
         """
         onchange handler for product_id.
 
-        :param dict context: 'uom_change' key in context override default onchange
-                             behaviour which force product's UoM, allowing to
-                             specify an 'uom_id' of the same category as product's
-                             UoM (ex: set when called from product_uom's onchange).
-
+        :param dict context: 'force_product_uom' key in context override
+                             default onchange behaviour to force using the UoM
+                             defined on the provided product
         """
         if context is None:
             context = {}
@@ -1227,7 +1225,7 @@ class sale_order_line(osv.osv):
         uom2 = False
         if uom:
             uom2 = product_uom_obj.browse(cr, uid, uom, context=context)
-            if product_obj.uom_id.category_id.id != uom2.category_id.id or not context.get('uom_change',False):
+            if product_obj.uom_id.category_id.id != uom2.category_id.id or context.get('force_product_uom'):
                 uom = False
                 uom2 = False
         if uos:
@@ -1321,7 +1319,6 @@ class sale_order_line(osv.osv):
         if context is None:
             context = {}
         lang = lang or context.get('lang',False)
-        context = dict(context, uom_change=True)
         res = self.product_id_change(cursor, user, ids, pricelist, product,
                 qty=qty, uom=uom, qty_uos=qty_uos, uos=uos, name=name,
                 partner_id=partner_id, lang=lang, update_tax=update_tax,
