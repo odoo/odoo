@@ -1173,11 +1173,10 @@ class task(base_stage, osv.osv):
         """ Override to updates the document according to the email. """
         if custom_values is None: custom_values = {}
         custom_values.update({
-            'name': subject,
+            'name': msg.get('subject'),
             'planned_hours': 0.0,
-            'subject': msg.get('subject'),
         })
-        return super(project_tasks,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
+        return super(task,self).message_new(cr, uid, msg, custom_values=custom_values, context=context)
 
     def message_update(self, cr, uid, ids, msg, update_vals=None, context=None):
         """ Override to update the task according to the email. """
@@ -1202,7 +1201,7 @@ class task(base_stage, osv.osv):
                     act = 'do_%s' % res.group(2).lower()
         if act:
             getattr(self,act)(cr, uid, ids, context=context)
-        return super(project_tasks,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
+        return super(task,self).message_update(cr, uid, msg, update_vals=update_vals, context=context)
 
     # ---------------------------------------------------
     # OpenChatter methods and notifications
