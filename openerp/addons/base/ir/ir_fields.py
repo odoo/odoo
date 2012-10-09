@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
+import datetime
 import functools
 import operator
 import itertools
-import psycopg2
 import time
-from openerp.osv import orm, fields
+
+import psycopg2
+import pytz
+
+from openerp.osv import orm
 from openerp.tools.translate import _
 from openerp.tools.misc import DEFAULT_SERVER_DATE_FORMAT,\
                                DEFAULT_SERVER_DATETIME_FORMAT
@@ -131,15 +135,41 @@ class ir_fields_converter(orm.Model):
                     'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"
                 })
 
+    def _input_tz(self, cr, uid, context):
+        # if there's a tz in context, try to use that
+        if context.get('tz'):
+            try:
+                return pytz.timezone(context['tz'])
+            except pytz.UnknownTimeZoneError:
+                pass
+
+        # if the current user has a tz set, try to use that
+        user = self.pool['res.users'].read(
+            cr, uid, [uid], ['tz'], context=context)[0]
+        if user['tz']:
+            try:
+                return pytz.timezone(user['tz'])
+            except pytz.UnknownTimeZoneError:
+                pass
+
+        # fallback if no tz in context or on user: UTC
+        return pytz.UTC
+
     def _str_to_datetime(self, cr, uid, model, column, value, context=None):
+        if context is None: context = {}
         try:
-            time.strptime(value, DEFAULT_SERVER_DATETIME_FORMAT)
-            return value, []
+            parsed_value = datetime.datetime.strptime(
+                value, DEFAULT_SERVER_DATETIME_FORMAT)
         except ValueError:
             raise ValueError(
                 _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'") % value, {
                     'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"
                 })
+
+        input_tz = self._input_tz(cr, uid, context)# Apply input tz to the parsed naive datetime
+        dt = input_tz.localize(parsed_value, is_dst=False)
+        # And convert to UTC before reformatting for writing
+        return dt.astimezone(pytz.UTC).strftime(DEFAULT_SERVER_DATETIME_FORMAT), []
 
     def _get_translations(self, cr, uid, types, src, context):
         types = tuple(types)

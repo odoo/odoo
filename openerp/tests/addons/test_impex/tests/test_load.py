@@ -1039,5 +1039,54 @@ class test_datetime(ImporterCase):
                     moreinfo=u"Use the format '2012-12-31 23:59:59'")])
         self.assertIs(result['ids'], False)
 
-# function, related, reference: written to db as-is...
-# => function uses @type for value coercion/conversion
+    def test_checktz1(self):
+        """ Imported date should be interpreted as being in the tz provided by
+        the context
+        """
+        # write dummy tz in user (Asia/Hovd UTC+0700), should be superseded by
+        # context
+        self.registry('res.users').write(
+            self.cr, openerp.SUPERUSER_ID, [openerp.SUPERUSER_ID],
+            {'tz': 'Asia/Hovd'})
+
+        # UTC+1400
+        result = self.import_(
+            ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Kiritimati'})
+        self.assertFalse(result['messages'])
+        self.assertEqual(
+            values(self.read(domain=[('id', 'in', result['ids'])])),
+            ['2012-02-02 21:11:11'])
+
+        # UTC-0930
+        result = self.import_(
+            ['value'], [['2012-02-03 11:11:11']], {'tz': 'Pacific/Marquesas'})
+        self.assertFalse(result['messages'])
+        self.assertEqual(
+            values(self.read(domain=[('id', 'in', result['ids'])])),
+            ['2012-02-03 20:41:11'])
+
+    def test_usertz(self):
+        """ If the context does not hold a timezone, the importing user's tz
+        should be used
+        """
+        # UTC +1000
+        self.registry('res.users').write(
+            self.cr, openerp.SUPERUSER_ID, [openerp.SUPERUSER_ID],
+            {'tz': 'Asia/Yakutsk'})
+
+        result = self.import_(
+            ['value'], [['2012-02-03 11:11:11']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(
+            values(self.read(domain=[('id', '=', result['ids'])])),
+            ['2012-02-03 01:11:11'])
+
+    def test_notz(self):
+        """ If there is no tz either in the context or on the user, falls back
+        to UTC
+        """
+        result = self.import_(['value'], [['2012-02-03 11:11:11']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(
+            values(self.read(domain=[('id', '=', result['ids'])])),
+            ['2012-02-03 11:11:11'])
