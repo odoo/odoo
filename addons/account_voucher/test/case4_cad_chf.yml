@@ -164,7 +164,7 @@
 -
   I check that my currency rate difference is correct. 0 in debit with no amount_currency
 -
-  I check that my writeoff is correct. 11.05 credit and 13.26 amount_currency
+  I check that my writeoff is correct. 11.05 credit and -13.26 amount_currency
 -
   !python {model: account.voucher}: |
     voucher = self.search(cr, uid, [('name', '=', 'First payment: Case 4'), ('partner_id', '=', ref('base.res_partner_19'))])
@@ -179,7 +179,7 @@
         elif move_line.debit == 0.00 and move_line.credit == 0.00:
             assert move_line.amount_currency == 0.00, "Incorrect Currency Difference."
         elif move_line.credit == 10.61:
-            assert move_line.amount_currency == 13.26, "Writeoff amount is wrong."
+            assert move_line.amount_currency == -13.26, "Writeoff amount is wrong."
         else:
             assert False, "Wrong entry"
 -

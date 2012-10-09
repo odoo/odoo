@@ -16,10 +16,13 @@ class OAuthController(openerpweb.Controller):
 
     @openerpweb.jsonrequest
     def list_providers(self, req, dbname):
-        registry = openerp.modules.registry.RegistryManager.get(dbname)
-        with registry.cursor() as cr:
-            providers = registry.get('auth.oauth.provider')
-            l = providers.read(cr, SUPERUSER_ID, providers.search(cr, SUPERUSER_ID, [('enabled','=',True)]))
+        try:
+            registry = openerp.modules.registry.RegistryManager.get(dbname)
+            with registry.cursor() as cr:
+                providers = registry.get('auth.oauth.provider')
+                l = providers.read(cr, SUPERUSER_ID, providers.search(cr, SUPERUSER_ID, [('enabled','=',True)]))
+        except Exception:
+            l = []
         return l
 
     @openerpweb.httprequest

@@ -72,7 +72,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
         'HTML' : 'html'
     }
 
-    def __init__(self,ctx):
+    def __init__(self, ctx):
         self.ctx     = ctx
         self.module  = "openerp_report"
         self.version = "0.1"
@@ -136,10 +136,10 @@ class SendtoServer(unohelper.Base, XJobExecutor):
 
         self.win.doModalDialog("lstResourceType", self.Kind.keys()[0])
 
-    def lstbox_selected(self,oItemEvent):
+    def lstbox_selected(self, oItemEvent):
         pass
 
-    def btnCancel_clicked( self, oActionEvent ):
+    def btnCancel_clicked(self, oActionEvent):
         self.win.endExecute()
 
     def btnOk_clicked(self, oActionEvent):
@@ -221,7 +221,7 @@ class SendtoServer(unohelper.Base, XJobExecutor):
         id=self.sock.execute(database, uid, self.password, 'ir.actions.report.xml' ,'create', params)
         return id
 
-    def getInverseFieldsRecord(self,nVal):
+    def getInverseFieldsRecord(self, nVal):
         desktop=getDesktop()
         doc = desktop.getCurrentComponent()
         count=0

@@ -311,7 +311,6 @@ class crm_lead(base_stage, format_address, osv.osv):
             }
         return {'value' : values}
 
-
     def _check(self, cr, uid, ids=False, context=None):
         """ Override of the base.stage method.
             Function called by the scheduler to process cases for date actions
@@ -801,7 +800,7 @@ class crm_lead(base_stage, format_address, osv.osv):
             if section_id:
                 vals.setdefault('message_follower_ids', [])
                 vals['message_follower_ids'] += [(4, follower.id) for follower in section_id.message_follower_ids]
-        return super(crm_lead,self).write(cr, uid, ids, vals, context) 
+        return super(crm_lead,self).write(cr, uid, ids, vals, context)
 
     # ----------------------------------------
     # Mail Gateway
