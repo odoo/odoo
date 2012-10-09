@@ -128,8 +128,10 @@ class SelectionWithDefault(orm.Model):
     _name = 'export.selection.withdefault'
 
     _columns = {
-        'value': fields.selection([(1, "Foo"), (2, "Bar")], required=True),
+        'const': fields.integer(),
+        'value': fields.selection([(1, "Foo"), (2, "Bar")]),
     }
     _defaults = {
+        'const': 4,
         'value': 2,
     }

@@ -476,11 +476,21 @@ class test_selection(ImporterCase):
 class test_selection_with_default(ImporterCase):
     model_name = 'export.selection.withdefault'
 
-    def test_skip_empty(self):
-        """ Empty cells should be entirely skipped so that default values can
-        be inserted by the ORM
+    def test_empty(self):
+        """ Empty cells should set corresponding field to False
         """
         result = self.import_(['value'], [['']])
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+
+        self.assertEqual(
+            values(self.read()),
+            [False])
+
+    def test_default(self):
+        """ Non-provided cells should set corresponding field to default
+        """
+        result = self.import_(['const'], [['42']])
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 1)
 
