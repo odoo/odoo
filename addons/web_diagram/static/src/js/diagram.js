@@ -247,7 +247,6 @@ instance.web.DiagramView = instance.web.View.extend({
         var form_controller = pop.view_form;
 
        form_controller.on("record_load", self, function(){
-            console.log("web diagram add_first");
             _.each(form_fields, function(fld) {
                 if (!(fld in form_controller.fields)) { return; }
                 var field = form_controller.fields[fld];
