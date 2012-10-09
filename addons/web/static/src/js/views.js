@@ -552,7 +552,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     add_breadcrumb: function(on_reverse_breadcrumb) {
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
-        this.on_mode_switch.add(function(mode) {
+        this.on('on_mode_switch',self,function(mode) { 
             var last = views.slice(-1)[0];
             if (mode !== last) {
                 if (mode !== 'form') {
