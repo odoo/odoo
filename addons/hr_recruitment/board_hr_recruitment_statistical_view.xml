@@ -6,12 +6,13 @@
         <field name="name">applicants.status.tree</field>
         <field name="model">hr.applicant</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';black:state in ('open','pending','done','cancel');" string="Applicants Status">
+            <tree  string="Applicants Status">
                 <field name="create_date"/>
                 <field name="job_id"/>
                 <field name="partner_name"/>
                 <field name="stage_id"/>
-                <field name="state" groups="base.group_no_one"/>
+                <field name="partner_phone"/>
+                <field name="user_id"/>
             </tree>
         </field>
     </record>
@@ -32,7 +33,7 @@
         <field name="inherit_id" ref="hr.board_hr_form"/>
         <field name="arch" type="xml">
             <xpath expr="/form/board/column[1]" position="inside">
-                <action name="%(action_applicants_status)d" string="Applicants To be Processed"/>
+                <action name="%(action_applicants_status)d" string="Applications to be Processed"/>
             </xpath>
         </field>
     </record>
