@@ -633,13 +633,10 @@
                                 <field name="period_id" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
+                            <field name="currency" invisible="1"/>
                         </group><group>
-                            <label for="balance_start"/>
-                            <div>
-                                <field name="balance_start" class="oe_inline"/>
-                                <field name="currency" class="oe_inline"/>
-                            </div>
-                            <field name="balance_end_real"/>
+                            <field name="balance_start" widget="monetary" options='{"currency_field" : "currency"}'/>
+                            <field name="balance_end_real" widget="monetary" options='{"currency_field" : "currency"}'/>
                         </group>
                     </group>
 
