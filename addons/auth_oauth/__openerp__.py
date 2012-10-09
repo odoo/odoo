@@ -34,6 +34,7 @@ Allow users to login through Google OAuth2.
     'depends': ['base', 'web', 'base_setup'],
     'data': [
         'auth_oauth_data.xml',
+        'auth_oauth_data.yml',
         'auth_oauth_view.xml',
         'security/ir.model.access.csv'
     ],
