@@ -1367,9 +1367,9 @@ class account_move(osv.osv):
 
     def onchange_line_id(self, cr, uid, ids, line_ids, context=None):
         balance = 0.0
+        line_ids = self.resolve_o2m_commands_to_record_dicts(cr, uid, 'line_id', line_ids, context=context)
         for line in line_ids:
-            if line[2]:
-                balance += (line[2]['debit'] or 0.00)- (line[2]['credit'] or 0.00)
+            balance += (line['debit'] or 0.00)- (line['credit'] or 0.00)
         return {'value': {'balance': balance}}
 
     def write(self, cr, uid, ids, vals, context=None):
