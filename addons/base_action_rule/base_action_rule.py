@@ -247,7 +247,11 @@ trigger date, like sending a reminder 15 minutes before a meeting."),
         if context is None:
             context = {}
         ok = True
-        
+        if action.filter_id and action.model_id.model == action.filter_id.model_id:
+            ctx = dict(context)
+            ctx.update(eval(action.filter_id.context))
+            obj_ids = self.pool.get(action.model_id.model).search(cr, uid, eval(action.filter_id.domain), context=ctx)
+            ok = ok and obj.id in obj_ids
         if getattr(obj, 'user_id', False):
             ok = ok and (not action.trg_user_id.id or action.trg_user_id.id==obj.user_id.id)
         if getattr(obj, 'partner_id', False):
