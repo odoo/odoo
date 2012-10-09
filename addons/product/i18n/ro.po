@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-05-28 12:23+0000\n"
 "Last-Translator: Fekete Mihai <mihai@erpsystems.ro>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:26+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -70,7 +70,7 @@ msgstr ""
 "introdusa ca 'interna'."
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Se poate vinde"
 
@@ -507,7 +507,7 @@ msgstr ""
 "Data pana la care este valabila aceasta versiune a listei de preturi."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Toate produsele"
 
@@ -827,7 +827,7 @@ msgstr ""
 "sau, daca nu exista, pentru UdM implicita a produsului"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Accesorii"
 
@@ -1175,6 +1175,11 @@ msgid "To Sell"
 msgstr "De vanzare"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1360,7 +1365,7 @@ msgstr ""
 "Furnizorul principal care are cea mai mare prioritate in Lista cu Furnizori."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Servicii"
@@ -1403,12 +1408,6 @@ msgid "Pallet Dimension"
 msgstr "Dimensiunea paletului"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (copie)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Parteneri"
@@ -1449,7 +1448,7 @@ msgid "Minimal Quantity"
 msgstr "Cantitatea minima"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1814,6 +1813,12 @@ msgstr "Produceti"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Facut la comanda"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2495,7 +2500,7 @@ msgid "Category Type"
 msgstr "Tipul Categoriei"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Personal"
 
@@ -2517,3 +2522,7 @@ msgstr "Eroare ! Nu puteti crea membri asociati recursiv."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Reduceri de pret"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (copie)"

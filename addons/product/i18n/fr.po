@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-03-04 20:49+0000\n"
 "Last-Translator: t.o <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -70,7 +70,7 @@ msgstr ""
 "de stock de type \"interne\""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "En vente"
 
@@ -506,7 +506,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Date de fin pour la validité de cette liste de prix."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Tous les produits"
 
@@ -827,7 +827,7 @@ msgstr ""
 "est définie ou pour l'unité de mesure par défaut sinon."
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Accessoires"
 
@@ -1178,6 +1178,11 @@ msgid "To Sell"
 msgstr "À vendre"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1362,7 +1367,7 @@ msgstr ""
 "fournisseurs."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Services"
@@ -1403,12 +1408,6 @@ msgstr "Le mode pour calculer le prix pour cette règle."
 #: view:product.product:0
 msgid "Pallet Dimension"
 msgstr "Dimension d'une Palette"
-
-#. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (copie)"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1452,7 +1451,7 @@ msgid "Minimal Quantity"
 msgstr "Quantité minimale"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1815,6 +1814,12 @@ msgstr "Produire"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Production à la demande"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2490,7 +2495,7 @@ msgid "Category Type"
 msgstr "Type de catégorie"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Privé"
 
@@ -2513,3 +2518,7 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Réduction sur le prix"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (copie)"

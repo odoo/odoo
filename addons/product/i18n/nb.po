@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-09-04 14:07+0000\n"
 "Last-Translator: Kjell H. Skalmeraas (adEgo) <Unknown>\n"
 "Language-Team: Norwegian Bokmal <nb@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-05 05:07+0000\n"
-"X-Generator: Launchpad (build 15901)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:26+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -60,7 +60,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Salgbar"
 
@@ -479,7 +479,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Sluttdato for gyldighet på, denne prislisteversjonen."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Alle produkter"
 
@@ -784,7 +784,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Tilbehør"
 
@@ -1128,6 +1128,11 @@ msgid "To Sell"
 msgstr "Å selge"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1305,7 +1310,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Hovedleverandør som har høyeste prioritet i leverandørlisten"
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Tjenester"
@@ -1348,12 +1353,6 @@ msgid "Pallet Dimension"
 msgstr "Pallstørrelse"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (kopier)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Klienter"
@@ -1394,7 +1393,7 @@ msgid "Minimal Quantity"
 msgstr "Minimum antall"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1749,6 +1748,12 @@ msgstr "Produser"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Anskaff til ordre (Make To Order)"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2421,7 +2426,7 @@ msgid "Category Type"
 msgstr "Kategoritype"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Privat"
 
@@ -2443,3 +2448,7 @@ msgstr "Feil! Du kan ikke lage uendelig struktur av assosierte medlemmer."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Prisrabatt"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopier)"

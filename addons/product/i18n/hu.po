@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-09-10 17:13+0000\n"
 "Last-Translator: Herczeg Péter <herczegp@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-09-11 05:18+0000\n"
-"X-Generator: Launchpad (build 15924)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -59,7 +59,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Értékesíthető"
 
@@ -481,7 +481,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Záró dátum, ameddig ez az árlista verzió érvényes."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Minden termék"
 
@@ -788,7 +788,7 @@ msgstr ""
 "alapértelmezett mértékegysége vagy bármely mértékegysége más."
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Kiegészítők"
 
@@ -1134,6 +1134,11 @@ msgid "To Sell"
 msgstr "Eladás"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1306,7 +1311,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Főszállító, aki a legelső a sorban a szállítók listáján."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Szolgáltatások"
@@ -1349,12 +1354,6 @@ msgid "Pallet Dimension"
 msgstr "Raklapméret"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (másolat)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Partnerek"
@@ -1395,7 +1394,7 @@ msgid "Minimal Quantity"
 msgstr "Minimum mennyiség"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1758,6 +1757,12 @@ msgstr "Gyártás"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Ellátás rendelésből"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2435,7 +2440,7 @@ msgid "Category Type"
 msgstr "Kategóriatípus"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Privát"
 
@@ -2457,3 +2462,7 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Árengedmény"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (másolat)"

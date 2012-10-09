@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-10-08 12:28+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Jeff Wang <wjfonhand@hotmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:45+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -27,7 +27,8 @@ msgid "Allocation Type"
 msgstr "分配类型"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "等待第二次审批"
 
@@ -52,7 +53,8 @@ msgid "Allocation Mode"
 msgstr "分配模式"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,department_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "部门"
 
@@ -62,7 +64,8 @@ msgid "Requests Approve"
 msgstr "需要审批"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "已拒绝"
 
@@ -87,6 +90,16 @@ msgid "Remaining Days"
 msgstr "剩余天数"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "of the"
+msgstr ""
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Off-Days' Summary"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
 msgstr "按员工"
@@ -102,6 +115,11 @@ msgstr "如果这准假分配给所有员工，准假管理者允许这字段为
 #: view:hr.holidays:0
 msgid "Set to Draft"
 msgstr "设为草稿"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "to"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -134,7 +152,8 @@ msgid "Summary Of Leaves"
 msgstr "准假摘要"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0
+#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "已审批"
@@ -143,6 +162,11 @@ msgstr "已审批"
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
 msgstr "最近连接时间"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Search Leave"
+msgstr "查找准假"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -180,9 +204,9 @@ msgid "Leaves"
 msgstr "假期"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "准假"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
@@ -195,7 +219,8 @@ msgid "Leaves by Department"
 msgstr "部门的准假"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "已取消"
 
@@ -245,7 +270,8 @@ msgstr "这个字段会被自动填充，值是审批这个请假申请的用户
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0
+#: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -295,12 +321,18 @@ msgid "Leave Request for %s"
 msgstr "%s 的请假申请"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Sum"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
 msgid "Remaining Leaves"
 msgstr "剩余准假"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,state:0
+#: view:hr.holidays:0
+#: field:hr.holidays,state:0
 msgid "State"
 msgstr "状态"
 
@@ -310,14 +342,17 @@ msgid "Total holidays by type"
 msgstr "这类型假期的合计"
 
 #. module: hr_holidays
-#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
+#: view:hr.employee:0
+#: view:hr.holidays:0
+#: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "员工"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "New"
 msgstr "新建"
 
@@ -358,7 +393,8 @@ msgid "Allocation for %s"
 msgstr "%s 的年假"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0
+#: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "天数"
@@ -397,7 +433,8 @@ msgid ""
 msgstr "如果为真，分配 / 申请要二次审核才能生效。"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "等待审批"
 
@@ -429,6 +466,7 @@ msgid "Lavender"
 msgstr "淡紫色"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
 msgid "Month"
 msgstr "月"
@@ -452,7 +490,8 @@ msgid "Employee's Holidays"
 msgstr "员工假期"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,category_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "分类"
 
@@ -495,7 +534,8 @@ msgid "Holiday"
 msgstr "假期"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0
+#: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr "会议"
 
@@ -514,6 +554,11 @@ msgstr "生效和确认"
 #: field:hr.holidays.status,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr "准假已通过"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "holidays."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -542,7 +587,8 @@ msgid "Error ! You cannot create recursive Hierarchy of Employees."
 msgstr "错误！您不能创建循环的员工等级。"
 
 #. module: hr_holidays
-#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr "剩余的法定假期"
 
@@ -622,9 +668,9 @@ msgid "Compensatory Days"
 msgstr "补偿日数"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,notes:0
-msgid "Reasons"
-msgstr "原因"
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Yellow"
+msgstr "浅黄色"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
@@ -633,7 +679,8 @@ msgid "Leaves Analysis"
 msgstr "准假分析"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "取消"
 
@@ -645,13 +692,15 @@ msgid ""
 msgstr "这颜色将用在准假摘要位置在：报告/部门准假。"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
 msgstr "已生效"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "分配准假"
 
@@ -667,7 +716,13 @@ msgid "Apply Double Validation"
 msgstr "要两次生效"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: xsl:holidays.summary:0
+msgid "Holiday Type"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "打印"
 
@@ -688,7 +743,8 @@ msgid "By Employee Category"
 msgstr "按员工分类"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "准假申请"
 
@@ -722,8 +778,9 @@ msgstr "您不能删除这个准假，因为它不是在草稿状态。"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Search Leave"
-msgstr "查找准假"
+#: field:hr.holidays,notes:0
+msgid "Reasons"
+msgstr "原因"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
@@ -809,9 +866,15 @@ msgid "Approve"
 msgstr "审批"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,date_from:0
+#: view:hr.holidays:0
+#: field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "开始日期"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "准假"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -821,9 +884,9 @@ msgid "Allocation Requests"
 msgstr "分配准假"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Yellow"
-msgstr "浅黄色"
+#: xsl:holidays.summary:0
+msgid "Color"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

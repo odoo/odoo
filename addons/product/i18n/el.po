@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Dimitris Andavoglou <dimitrisand@gmail.com>\n"
 "Language-Team: Greek <el@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -60,7 +60,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Πωλείται"
 
@@ -479,7 +479,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Ημερομηνία λήξης της ισχύς του τιμοκαταλόγου."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Όλα τα προϊόντα"
 
@@ -775,7 +775,7 @@ msgstr ""
 "προεπιλεγμένη Μονάδα Μέτρησης του προϊόντος"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Αξεσουάρ"
 
@@ -1107,6 +1107,11 @@ msgid "To Sell"
 msgstr "Επιτρέπεται η πώληση"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1275,7 +1280,7 @@ msgstr ""
 "Κύριος Προμηθευτής που έχει υψηλή προτεραιότητα στην Λίστα Προμηθευτών"
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Υπηρεσίες"
@@ -1318,12 +1323,6 @@ msgid "Pallet Dimension"
 msgstr "Διαστάσεις παλέτας"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (αντίγραφο)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Συνεργάτες"
@@ -1362,7 +1361,7 @@ msgid "Minimal Quantity"
 msgstr "Ελάχιστη Ποσότητα"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1707,6 +1706,12 @@ msgstr "Παραγωγή"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Προς Παραγγελία"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2374,7 +2379,7 @@ msgid "Category Type"
 msgstr "Τύπος Κατηγορίας"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Private"
 
@@ -2394,3 +2399,7 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Έκπτωση Τιμής"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (αντίγραφο)"

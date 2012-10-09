@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Fabien (Open ERP) <fp@tinyerp.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 "X-Poedit-Language: Czech\n"
 
 #. module: product
@@ -59,7 +59,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Prodejné"
 
@@ -468,7 +468,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Datum platnosti pro tuto verzi ceníku do kdy je platný."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Všechny výrobky"
 
@@ -762,7 +762,7 @@ msgstr ""
 "výchozí Měrná jednotka pro výrobek"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Příslušenství"
 
@@ -1093,6 +1093,11 @@ msgid "To Sell"
 msgstr "K prodeji"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1253,7 +1258,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Hlavní dodavatel, který má nejvyšší prioritu v Seznamu dodavatelů."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Služby"
@@ -1296,12 +1301,6 @@ msgid "Pallet Dimension"
 msgstr "Rozměry palety"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (kopie)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Partneři"
@@ -1342,7 +1341,7 @@ msgid "Minimal Quantity"
 msgstr "Minimální množství"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1681,6 +1680,12 @@ msgstr "Vyrobit"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Vytvořit objednávku"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2336,7 +2341,7 @@ msgid "Category Type"
 msgstr "Typ kategorie"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Soukromé"
 
@@ -2356,3 +2361,7 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Sleva"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopie)"

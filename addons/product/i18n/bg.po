@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -58,7 +58,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Продаваем"
 
@@ -477,7 +477,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Крайна дата на валидност на тази версия на ценоразпис."
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Всички продукти"
 
@@ -776,7 +776,7 @@ msgstr ""
 "такива или в противен случай мерните единице по подразбиране за продукта"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Аксесоари"
 
@@ -1108,6 +1108,11 @@ msgid "To Sell"
 msgstr "За продажба"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1281,7 +1286,7 @@ msgstr ""
 "Основен доставчик, който е най-висок приоритет в списък на доставчиците."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Услуги"
@@ -1322,12 +1327,6 @@ msgstr "Режимът за калкулиране центата за това 
 #: view:product.product:0
 msgid "Pallet Dimension"
 msgstr "Размери на пале"
-
-#. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (копие)"
 
 #. module: product
 #: field:product.template,seller_ids:0
@@ -1371,7 +1370,7 @@ msgid "Minimal Quantity"
 msgstr "Минимално количество"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1720,6 +1719,12 @@ msgstr "Продукция"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Произведи за поръчка"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2387,7 +2392,7 @@ msgid "Category Type"
 msgstr "Вид категория"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Лично"
 
@@ -2407,3 +2412,7 @@ msgstr ""
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Отстъпка от цената"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (копие)"

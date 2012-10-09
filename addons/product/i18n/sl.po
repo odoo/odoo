@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:37+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-04-24 12:45+0000\n"
 "Last-Translator: STANKO ZVONAR <stanko.zvonar@mentis.si>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:55+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:26+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -60,7 +60,7 @@ msgstr ""
 "Predvidena količina(izračunana kot:razpoložliva količina+prihodi-odhodi)"
 
 #. module: product
-#: model:product.category,name:product.product_category_1
+#: model:product.category,name:product.cat1
 msgid "Sellable"
 msgstr "Možno prodati"
 
@@ -479,7 +479,7 @@ msgid "Ending date for this pricelist version to be valid."
 msgstr "Datum do katerega velja cenik"
 
 #. module: product
-#: model:product.category,name:product.product_category_0
+#: model:product.category,name:product.cat0
 msgid "All products"
 msgstr "Vsi proizvodi"
 
@@ -783,7 +783,7 @@ msgstr ""
 "nabavna EM ni vpisana"
 
 #. module: product
-#: model:product.category,name:product.product_category_5
+#: model:product.category,name:product.product_category_accessories
 msgid "Accessories"
 msgstr "Pripomočki"
 
@@ -1124,6 +1124,11 @@ msgid "To Sell"
 msgstr "Prodati"
 
 #. module: product
+#: help:product.product,ean13:0
+msgid "Barcode"
+msgstr ""
+
+#. module: product
 #: help:product.product,outgoing_qty:0
 msgid ""
 "Quantity of products that are planned to leave.\n"
@@ -1296,7 +1301,7 @@ msgstr ""
 "Glavni dobavitelj, ki ima največjo prednost iz  seznama dobaviteljev."
 
 #. module: product
-#: model:product.category,name:product.product_category_6
+#: model:product.category,name:product.product_category_services
 #: view:product.product:0
 msgid "Services"
 msgstr "Storitve"
@@ -1339,12 +1344,6 @@ msgid "Pallet Dimension"
 msgstr "Dimenzija palete"
 
 #. module: product
-#: code:addons/product/product.py:668
-#, python-format
-msgid " (copy)"
-msgstr " (kopija)"
-
-#. module: product
 #: field:product.template,seller_ids:0
 msgid "Partners"
 msgstr "Partnerji"
@@ -1385,7 +1384,7 @@ msgid "Minimal Quantity"
 msgstr "Minimalna količina"
 
 #. module: product
-#: model:product.category,name:product.product_category_9
+#: model:product.category,name:product.product_category_pc
 msgid "PC"
 msgstr "PC"
 
@@ -1734,6 +1733,12 @@ msgstr "Proizvedi"
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
 msgstr "Naroči"
+
+#. module: product
+#: code:addons/product/report/product_pricelist.py:49
+#, python-format
+msgid "units"
+msgstr ""
 
 #. module: product
 #: help:product.template,supply_method:0
@@ -2397,7 +2402,7 @@ msgid "Category Type"
 msgstr "Vrsta kategorije"
 
 #. module: product
-#: model:product.category,name:product.product_category_2
+#: model:product.category,name:product.cat2
 msgid "Private"
 msgstr "Zasebno"
 
@@ -2419,3 +2424,7 @@ msgstr "Napaka! Ne morete ustvariti rekurzivne povezane člane."
 #: field:product.pricelist.item,price_discount:0
 msgid "Price Discount"
 msgstr "Popust"
+
+#, python-format
+#~ msgid " (copy)"
+#~ msgstr " (kopija)"

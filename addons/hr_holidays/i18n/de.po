@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 01:37+0100\n"
+"POT-Creation-Date: 2012-10-08 12:28+0000\n"
 "PO-Revision-Date: 2012-02-17 09:10+0000\n"
 "Last-Translator: Ferdinand @ Camptocamp <Unknown>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:45+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:24+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -27,7 +27,8 @@ msgid "Allocation Type"
 msgstr "Typ Anspruch"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Second Approval"
 msgstr "Zweite Genehmigung"
 
@@ -52,7 +53,8 @@ msgid "Allocation Mode"
 msgstr "Zuteilungsmethode"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,department_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,department_id:0
 msgid "Department"
 msgstr "Abteilung"
 
@@ -62,7 +64,8 @@ msgid "Requests Approve"
 msgstr "Anfragen Genehmigung"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Refused"
 msgstr "Abgelehnt"
 
@@ -87,6 +90,16 @@ msgid "Remaining Days"
 msgstr "Resturlaub"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "of the"
+msgstr ""
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Off-Days' Summary"
+msgstr ""
+
+#. module: hr_holidays
 #: selection:hr.holidays,holiday_type:0
 msgid "By Employee"
 msgstr "Nach Mitarbeiter"
@@ -104,6 +117,11 @@ msgstr ""
 #: view:hr.holidays:0
 msgid "Set to Draft"
 msgstr "Setze auf Entwurf"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "to"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0
@@ -141,7 +159,8 @@ msgid "Summary Of Leaves"
 msgstr "Überblick Urlaub"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 view:hr.holidays:0
+#: selection:hr.employee,current_leave_state:0
+#: view:hr.holidays:0
 #: selection:hr.holidays,state:0
 msgid "Approved"
 msgstr "Genehmigt"
@@ -150,6 +169,11 @@ msgstr "Genehmigt"
 #: field:hr.employee,last_login:0
 msgid "Latest Connection"
 msgstr "Letzte Verbindung"
+
+#. module: hr_holidays
+#: view:hr.holidays:0
+msgid "Search Leave"
+msgstr "Suche Abwesenheit"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -190,9 +214,9 @@ msgid "Leaves"
 msgstr "Urlaubstage"
 
 #. module: hr_holidays
-#: model:ir.model,name:hr_holidays.model_hr_holidays
-msgid "Leave"
-msgstr "Urlaub"
+#: xsl:holidays.summary:0
+msgid "Analyze from"
+msgstr ""
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_request_approve_holidays
@@ -205,7 +229,8 @@ msgid "Leaves by Department"
 msgstr "Urlaub nach Abteilung"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Cancelled"
 msgstr "Abgebrochen"
 
@@ -260,7 +285,8 @@ msgstr ""
 #. module: hr_holidays
 #: field:hr.holidays,holiday_status_id:0
 #: field:hr.holidays.remaining.leaves.user,leave_type:0
-#: view:hr.holidays.status:0 field:hr.holidays.status,name:0
+#: view:hr.holidays.status:0
+#: field:hr.holidays.status,name:0
 #: field:hr.holidays.summary.dept,holiday_type:0
 #: model:ir.actions.act_window,name:hr_holidays.open_view_holiday_status
 #: model:ir.model,name:hr_holidays.model_hr_holidays_status
@@ -310,12 +336,18 @@ msgid "Leave Request for %s"
 msgstr "Abwesenheitsanfrage für %s"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "Sum"
+msgstr ""
+
+#. module: hr_holidays
 #: field:hr.holidays.status,remaining_leaves:0
 msgid "Remaining Leaves"
 msgstr "Resturlaub"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,state:0
+#: view:hr.holidays:0
+#: field:hr.holidays,state:0
 msgid "State"
 msgstr "Status"
 
@@ -325,14 +357,17 @@ msgid "Total holidays by type"
 msgstr "Gesamte Urlaube je Typ"
 
 #. module: hr_holidays
-#: view:hr.employee:0 view:hr.holidays:0 field:hr.holidays,employee_id:0
+#: view:hr.employee:0
+#: view:hr.holidays:0
+#: field:hr.holidays,employee_id:0
 #: field:hr.holidays.remaining.leaves.user,name:0
 #: model:ir.model,name:hr_holidays.model_hr_employee
 msgid "Employee"
 msgstr "Mitabeiter"
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "New"
 msgstr "Neu"
 
@@ -374,7 +409,8 @@ msgid "Allocation for %s"
 msgstr "Zuteilung für %s"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,number_of_days:0
+#: view:hr.holidays:0
+#: field:hr.holidays,number_of_days:0
 #: field:hr.holidays,number_of_days_temp:0
 msgid "Number of Days"
 msgstr "Anzahl Tage"
@@ -421,7 +457,8 @@ msgstr ""
 "Vorgesetzten, z.B. Projektmanager oder Personalleiter genehmigt werden."
 
 #. module: hr_holidays
-#: selection:hr.employee,current_leave_state:0 selection:hr.holidays,state:0
+#: selection:hr.employee,current_leave_state:0
+#: selection:hr.holidays,state:0
 msgid "Waiting Approval"
 msgstr "Erwarte Genehmigung"
 
@@ -455,6 +492,7 @@ msgid "Lavender"
 msgstr "Lavendel"
 
 #. module: hr_holidays
+#: xsl:holidays.summary:0
 #: view:hr.holidays:0
 msgid "Month"
 msgstr "Monat"
@@ -478,7 +516,8 @@ msgid "Employee's Holidays"
 msgstr "Mitarbeiter Urlaub"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,category_id:0
+#: view:hr.holidays:0
+#: field:hr.holidays,category_id:0
 msgid "Category"
 msgstr "Kategorie"
 
@@ -523,7 +562,8 @@ msgid "Holiday"
 msgstr "Urlaub"
 
 #. module: hr_holidays
-#: field:hr.holidays,case_id:0 field:hr.holidays.status,categ_id:0
+#: field:hr.holidays,case_id:0
+#: field:hr.holidays.status,categ_id:0
 msgid "Meeting"
 msgstr "Meeting"
 
@@ -542,6 +582,11 @@ msgstr "Bestätigt und Genehmigt"
 #: field:hr.holidays.status,leaves_taken:0
 msgid "Leaves Already Taken"
 msgstr "Beanspruchter Uralub"
+
+#. module: hr_holidays
+#: xsl:holidays.summary:0
+msgid "holidays."
+msgstr ""
 
 #. module: hr_holidays
 #: field:hr.holidays,user_id:0
@@ -571,7 +616,8 @@ msgstr ""
 "Fehler ! Sie können keine rekursive Hierachie bei Mitarbeitern definieren."
 
 #. module: hr_holidays
-#: view:hr.employee:0 field:hr.employee,remaining_leaves:0
+#: view:hr.employee:0
+#: field:hr.employee,remaining_leaves:0
 msgid "Remaining Legal Leaves"
 msgstr "Verbleibende gesetzlicher Urlaub"
 
@@ -653,9 +699,9 @@ msgid "Compensatory Days"
 msgstr "Augleichstage"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,notes:0
-msgid "Reasons"
-msgstr "Abwesenheitsgrund"
+#: selection:hr.holidays.status,color_name:0
+msgid "Light Yellow"
+msgstr "Hellgelb"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_available_holidays_report
@@ -664,7 +710,8 @@ msgid "Leaves Analysis"
 msgstr "Analyse Abwesenheit"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Cancel"
 msgstr "Abbrechen"
 
@@ -679,13 +726,15 @@ msgstr ""
 "  Auswertungen/Urlaub nach Abteilungen auffinden."
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays.summary.dept,holiday_type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays.summary.dept,holiday_type:0
 #: selection:hr.holidays.summary.employee,holiday_type:0
 msgid "Validated"
 msgstr "Bestätigt"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Allocation Request"
 msgstr "Urlaubsanspruch"
 
@@ -701,7 +750,13 @@ msgid "Apply Double Validation"
 msgstr "Doppelte Genehmigung"
 
 #. module: hr_holidays
-#: view:hr.holidays.summary.dept:0 view:hr.holidays.summary.employee:0
+#: xsl:holidays.summary:0
+msgid "Holiday Type"
+msgstr ""
+
+#. module: hr_holidays
+#: view:hr.holidays.summary.dept:0
+#: view:hr.holidays.summary.employee:0
 msgid "Print"
 msgstr "Druck"
 
@@ -722,7 +777,8 @@ msgid "By Employee Category"
 msgstr "Nach Mitarbeiter Kategorie"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 selection:hr.holidays,type:0
+#: view:hr.holidays:0
+#: selection:hr.holidays,type:0
 msgid "Leave Request"
 msgstr "Urlaubsanfrage"
 
@@ -758,8 +814,9 @@ msgstr "Sie können keine Abweseneitszeiten im Draft State erlauben !"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
-msgid "Search Leave"
-msgstr "Suche Abwesenheit"
+#: field:hr.holidays,notes:0
+msgid "Reasons"
+msgstr "Abwesenheitsgrund"
 
 #. module: hr_holidays
 #: field:hr.holidays.summary.employee,holiday_type:0
@@ -854,9 +911,15 @@ msgid "Approve"
 msgstr "Genehmige"
 
 #. module: hr_holidays
-#: view:hr.holidays:0 field:hr.holidays,date_from:0
+#: view:hr.holidays:0
+#: field:hr.holidays,date_from:0
 msgid "Start Date"
 msgstr "Start am"
+
+#. module: hr_holidays
+#: model:ir.model,name:hr_holidays.model_hr_holidays
+msgid "Leave"
+msgstr "Urlaub"
 
 #. module: hr_holidays
 #: view:hr.holidays:0
@@ -866,9 +929,9 @@ msgid "Allocation Requests"
 msgstr "Anfrage Urlaubsanspruch"
 
 #. module: hr_holidays
-#: selection:hr.holidays.status,color_name:0
-msgid "Light Yellow"
-msgstr "Hellgelb"
+#: xsl:holidays.summary:0
+msgid "Color"
+msgstr ""
 
 #. module: hr_holidays
 #: selection:hr.holidays.status,color_name:0

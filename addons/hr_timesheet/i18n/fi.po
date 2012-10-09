@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: openobject-addons\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-03-30 10:21+0000\n"
 "Last-Translator: Juha Kotamäki <Unknown>\n"
 "Language-Team: Finnish <fi@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -210,6 +210,11 @@ msgid "Sun"
 msgstr "Su"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Summa"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Analyyttinen tili"
@@ -253,11 +258,6 @@ msgid "Categories"
 msgstr "Kategoriat"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr "Et voi muuttaa vientiä vahvistetussa/valmiissa tuntilistassa!"
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr "Määritä tuote työntekijälle. Tuotteen tyyppi 'palvelu'."
@@ -277,9 +277,13 @@ msgid "September"
 msgstr "Syyskuu"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Aikataulurivi"
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+#, python-format
+msgid "December"
+msgstr "Joulukuu"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -307,6 +311,11 @@ msgstr "Työnkuvaus"
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
 msgstr "Laskuanalyysi"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -464,13 +473,9 @@ msgid "My Timesheet"
 msgstr "Minun tuntikortti"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:40
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "Joulukuu"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr "Et voi muuttaa vientiä vahvistetussa/valmiissa tuntilistassa!"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -481,9 +486,9 @@ msgid "Cancel"
 msgstr "Peruuta"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
 msgstr "Työntekijän tuntilista"
@@ -513,6 +518,11 @@ msgstr ""
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
 msgstr "Nykyinen päivämäärä"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Aikataulurivi"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -631,6 +641,12 @@ msgstr "Vuosi"
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr "Kirjanpito"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Yhteensä"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

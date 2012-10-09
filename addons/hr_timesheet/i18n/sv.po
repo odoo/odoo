@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 5.0.14\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-06-04 17:21+0000\n"
 "Last-Translator: Anders Wallenquist <anders.wallenquist@vertel.se>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:47+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -215,6 +215,11 @@ msgid "Sun"
 msgstr "Sun"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Summa"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Objektkonto"
@@ -258,11 +263,6 @@ msgid "Categories"
 msgstr "Kategorier"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr "Du kan inte ändra en post i en bekräftad/färdig tidrapport !"
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr "Anger den anställda som en produkt av typen 'tjänst'"
@@ -282,9 +282,13 @@ msgid "September"
 msgstr "September"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Tidrapportrad"
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+#, python-format
+msgid "December"
+msgstr "December"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -312,6 +316,11 @@ msgstr "Arbetsbeskrivning"
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
 msgstr "Fakturaanalys"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -474,13 +483,9 @@ msgid "My Timesheet"
 msgstr "Min tidsrapport"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:40
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "December"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr "Du kan inte ändra en post i en bekräftad/färdig tidrapport !"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -491,9 +496,9 @@ msgid "Cancel"
 msgstr "Avbryt"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
 msgstr "Den anställdes tidrapport"
@@ -523,6 +528,11 @@ msgstr ""
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
 msgstr "Aktuellt datum"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Tidrapportrad"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -643,6 +653,12 @@ msgstr "År"
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr "Redovisning"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Totalt"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0

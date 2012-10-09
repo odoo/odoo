@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev_rc3\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
-"POT-Creation-Date: 2012-02-08 00:36+0000\n"
+"POT-Creation-Date: 2012-10-08 12:29+0000\n"
 "PO-Revision-Date: 2012-05-12 09:50+0000\n"
 "Last-Translator: Łukasz Beczek <lukbec@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-08-28 09:46+0000\n"
-"X-Generator: Launchpad (build 15864)\n"
+"X-Launchpad-Export-Date: 2012-10-09 05:25+0000\n"
+"X-Generator: Launchpad (build 16112)\n"
 
 #. module: hr_timesheet
 #: code:addons/hr_timesheet/report/user_timesheet.py:43
@@ -215,6 +215,11 @@ msgid "Sun"
 msgstr "Nie"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Sum"
+msgstr "Suma"
+
+#. module: hr_timesheet
 #: view:hr.analytic.timesheet:0
 msgid "Analytic account"
 msgstr "Konto analityczne"
@@ -258,12 +263,6 @@ msgid "Categories"
 msgstr "Kategorie"
 
 #. module: hr_timesheet
-#: constraint:hr.analytic.timesheet:0
-msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
-msgstr ""
-"Nie możesz zmieniać zapisów w potwierdzonej/wykonanej karcie czasu pracy"
-
-#. module: hr_timesheet
 #: help:hr.employee,product_id:0
 msgid "Specifies employee's designation as a product with type 'service'."
 msgstr "Określa powiązanie pracownika z produktem typu 'usługa'."
@@ -283,9 +282,13 @@ msgid "September"
 msgstr "Wrzesień"
 
 #. module: hr_timesheet
-#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
-msgid "Timesheet Line"
-msgstr "Pozycja karty czasu pracy"
+#: code:addons/hr_timesheet/report/user_timesheet.py:40
+#: code:addons/hr_timesheet/report/users_timesheet.py:73
+#: selection:hr.analytical.timesheet.employee,month:0
+#: selection:hr.analytical.timesheet.users,month:0
+#, python-format
+msgid "December"
+msgstr "Grudzień"
 
 #. module: hr_timesheet
 #: field:hr.analytical.timesheet.users,employee_ids:0
@@ -313,6 +316,11 @@ msgstr "Opis pracy"
 #: view:account.analytic.account:0
 msgid "Invoice Analysis"
 msgstr "Analiza faktur"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+msgid "Timesheet by Employee"
+msgstr ""
 
 #. module: hr_timesheet
 #: model:ir.actions.report.xml,name:hr_timesheet.report_user_timesheet
@@ -475,13 +483,10 @@ msgid "My Timesheet"
 msgstr "Moja karta czasu pracy"
 
 #. module: hr_timesheet
-#: code:addons/hr_timesheet/report/user_timesheet.py:40
-#: code:addons/hr_timesheet/report/users_timesheet.py:73
-#: selection:hr.analytical.timesheet.employee,month:0
-#: selection:hr.analytical.timesheet.users,month:0
-#, python-format
-msgid "December"
-msgstr "Grudzień"
+#: constraint:hr.analytic.timesheet:0
+msgid "You cannot modify an entry in a Confirmed/Done timesheet !."
+msgstr ""
+"Nie możesz zmieniać zapisów w potwierdzonej/wykonanej karcie czasu pracy"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -492,9 +497,9 @@ msgid "Cancel"
 msgstr "Anuluj"
 
 #. module: hr_timesheet
+#: xsl:hr.analytical.timesheet_users:0
 #: model:ir.actions.act_window,name:hr_timesheet.action_hr_timesheet_users
 #: model:ir.actions.report.xml,name:hr_timesheet.report_users_timesheet
-#: model:ir.actions.wizard,name:hr_timesheet.wizard_hr_timesheet_users
 #: model:ir.ui.menu,name:hr_timesheet.menu_hr_timesheet_users
 msgid "Employees Timesheet"
 msgstr "Karty czasu pracy pracowników"
@@ -523,6 +528,11 @@ msgstr ""
 #: field:hr.sign.out.project,server_date:0
 msgid "Current Date"
 msgstr "Bieżąca data"
+
+#. module: hr_timesheet
+#: model:ir.model,name:hr_timesheet.model_hr_analytic_timesheet
+msgid "Timesheet Line"
+msgstr "Pozycja karty czasu pracy"
 
 #. module: hr_timesheet
 #: view:hr.analytical.timesheet.employee:0
@@ -643,6 +653,12 @@ msgstr "Rok"
 #: view:hr.analytic.timesheet:0
 msgid "Accounting"
 msgstr "Księgowość"
+
+#. module: hr_timesheet
+#: xsl:hr.analytical.timesheet:0
+#: xsl:hr.analytical.timesheet_users:0
+msgid "Total"
+msgstr "Suma"
 
 #. module: hr_timesheet
 #: view:hr.sign.out.project:0
