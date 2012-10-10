@@ -41,7 +41,7 @@ class res_users(osv.Model):
 
         validation = self.auth_oauth_rpc(cr, uid, p.validation_endpoint, access_token)
         if validation.get("error"):
-            raise openerp.exceptions.AccessDenied
+            raise Exception(validation['error'])
         if p.data_endpoint:
             data = self.auth_oauth_rpc(cr, uid, p.data_endpoint, access_token)
             validation.update(data)
