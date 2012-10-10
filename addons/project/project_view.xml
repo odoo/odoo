@@ -163,7 +163,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="complete_name" string="Project Name"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                     <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
@@ -619,7 +619,7 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                     <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>
