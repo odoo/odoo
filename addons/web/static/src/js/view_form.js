@@ -784,7 +784,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                return self.on_created({ result : new_id });
+                return self.record_created({ result : new_id });
             }).then(function() {
                 return self.to_edit_mode();
             }).then(function() {
@@ -861,7 +861,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (!self.datarecord.id) {
                     // Creation save
                     save_deferral = self.dataset.create(values).pipe(function(r) {
-                        return self.on_created(r, prepend_on_create);
+                        return self.record_created(r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
                     // Not dirty, noop save
@@ -920,9 +920,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Boolean} [prepend_on_create=false] adds the newly created record
      * at the beginning of the dataset instead of the end
      */
-    on_created: function(r, prepend_on_create) {
+    record_created: function(r, prepend_on_create) {
+        var self = this;
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
+            this.trigger('record_created', r);
             return $.Deferred().reject();
         } else {
             this.datarecord.id = r;
@@ -936,9 +938,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.do_update_pager();
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
-            }
+            }            
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             return $.when(this.reload()).pipe(function () {
+                self.trigger('record_created', r);
                 return _.extend(r, {created: true});
             });
         }
@@ -1630,12 +1633,13 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
         return this;
     },
     start: function() {
+        var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false
         });
         this.form.appendTo(this.$el);
-        this.form.on_created.add_last(this.on_form_dialog_saved);
+        this.form.on('record_created', self, this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         return this;
     },
