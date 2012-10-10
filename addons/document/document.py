@@ -36,7 +36,7 @@ DMS_ROOT_PATH = tools.config.get('document_path', os.path.join(tools.config['roo
 
 class document_file(osv.osv):
     _inherit = 'ir.attachment'
-    _rec_name = 'datas_fname'
+    _rec_name = 'name'
 
 
     def _attach_parent_id(self, cr, uid, ids=None, context=None):
