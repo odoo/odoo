@@ -1114,19 +1114,43 @@ class account_invoice(osv.osv):
             ids = self.search(cr, user, [('name',operator,name)] + args, limit=limit, context=context)
         return self.name_get(cr, user, ids, context)
 
+    def _prepare_cleanup_fields(self, cr, uid, context=None):
+        """Prepare the list of the fields to use to create the refund lines
+            with the method _refund_cleanup_lines(). This method may be
+            overriden to add or remove fields to customize the refund lines
+            generetion (making sure to call super() to establish
+            a clean extension chain).
+            
+            retrun: tuple of fields to create() the refund lines
+        """
+        return ('company_id', 'partner_id', 'account_id', 'product_id',
+                          'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id')
+
     def _refund_cleanup_lines(self, cr, uid, lines, context=None):
         for line in lines:
             del line['id']
             del line['invoice_id']
-            for field in ('company_id', 'partner_id', 'account_id', 'product_id',
-                          'uos_id', 'account_analytic_id', 'tax_code_id', 'base_code_id'):
+            for field in self._prepare_cleanup_fields(cr, uid, context=context):
                 if line.get(field):
                     line[field] = line[field][0]
             if 'invoice_line_tax_id' in line:
                 line['invoice_line_tax_id'] = [(6,0, line.get('invoice_line_tax_id', [])) ]
         return map(lambda x: (0,0,x), lines)
 
-    def _prepare_refund(self, cr, uid, refund_id, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
+    def _prepare_refund(self, cr, uid, invoice_id, invoice, date=None, period_id=None, description=None, journal_id=None, context=None):
+        """Prepare the dict of values to create the new refund from the invoice.
+            This method may be overridden to implement custom
+            refund generation (making sure to call super() to establish
+            a clean extension chain).
+
+            :param integer invoice_id: id of the invoice to refund
+            :param dict invoice: read of the invoice to refund
+            :param date date: refund creation date from the wizard
+            :param integer period_id: force account.period from the wizard
+            :param char description: description of the refund from the wizard
+            :param integer journal_id: account.journal from the wizard
+            :return: dict of value to create() the refund
+        """
         obj_invoice_line = self.pool.get('account.invoice.line')
         obj_invoice_tax = self.pool.get('account.invoice.tax')
         obj_journal = self.pool.get('account.journal')
