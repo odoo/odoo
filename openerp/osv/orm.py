@@ -52,6 +52,7 @@ import pickle
 import re
 import simplejson
 import time
+import traceback
 import types
 
 import psycopg2
@@ -65,6 +66,7 @@ import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
+from ast import literal_eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
@@ -375,8 +377,10 @@ class browse_record(object):
                 else:
                     return attr
             else:
-                error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
+                error_msg = "Field '%s' does not exist in object '%s'" % (name, self)
                 self.__logger.warning(error_msg)
+                if self.__logger.isEnabledFor(logging.DEBUG):
+                    self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
@@ -713,7 +717,7 @@ class BaseModel(object):
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
         return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
@@ -903,7 +907,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
-                                    
+
                                     new[c2] = c
                                     exist = True
                                     break
@@ -1672,7 +1676,7 @@ class BaseModel(object):
     def user_has_groups(self, cr, uid, groups, context=None):
         """Return true if the user is at least member of one of the groups
            in groups_str. Typically used to resolve ``groups`` attribute
-           in view and model definitions. 
+           in view and model definitions.
 
            :param str groups: comma-separated list of fully-qualified group
                               external IDs, e.g.: ``base.group_user,base.group_system``
@@ -1715,7 +1719,7 @@ class BaseModel(object):
                  the field should be completely removed from the view, as it is
                  completely unavailable for non-members
 
-               :return: True if field should be included in the result of fields_view_get 
+               :return: True if field should be included in the result of fields_view_get
             """
             if node.tag == 'field' and node.get('name') in self._all_columns:
                 column = self._all_columns[node.get('name')].column
@@ -1808,7 +1812,13 @@ class BaseModel(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
-
+                #evaluate the options as python code, but send it as json to the client
+                if node.get('options'):
+                    try:
+                        node.set('options', simplejson.dumps(literal_eval(node.get('options'))))
+                    except Exception, e:
+                        _logger.exception('Invalid `options´ attribute, should be a valid python expression: %r', node.get('options'))
+                        raise except_orm('Invalid options', 'Invalid options: %r %s' % (node.get('options'), e))
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1990,7 +2000,7 @@ class BaseModel(object):
     def _get_default_calendar_view(self, cr, user, context=None):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
-        
+
         :param cr: database cursor
         :param int user: user id
         :param dict context: connection context
@@ -2069,7 +2079,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
+            error_msg = error_msg % {'parent_xml_id': view.xml_id}
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2105,7 +2115,7 @@ class BaseModel(object):
                 if all(node.get(attr) == spec.get(attr) \
                         for attr in spec.attrib
                             if attr not in ('position','version')):
-                    # Version spec should match parent's root element's version 
+                    # Version spec should match parent's root element's version
                     if spec.get('version') and spec.get('version') != source.get('version'):
                         return None
                     return node
@@ -2179,7 +2189,7 @@ class BaseModel(object):
                         raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
                                             (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-                    
+
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -2394,7 +2404,7 @@ class BaseModel(object):
                                 or ``'='``.
            :param int limit: optional max number of records to return
            :rtype: list
-           :return: list of pairs ``(id,text_repr)`` for all matching records. 
+           :return: list of pairs ``(id,text_repr)`` for all matching records.
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
@@ -2524,7 +2534,7 @@ class BaseModel(object):
         # This is useful to implement kanban views for instance, where all columns
         # should be displayed even if they don't contain any record.
 
-        # Grab the list of all groups that should be displayed, including all present groups 
+        # Grab the list of all groups that should be displayed, including all present groups
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
         all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
                                                   read_group_order=read_group_order,
@@ -2900,28 +2910,28 @@ class BaseModel(object):
 
     def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
         # Find FK constraint(s) currently established for the m2o field,
-        # and see whether they are stale or not 
+        # and see whether they are stale or not
         cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
                              cl2.relname as foreign_table
                       FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
                            pg_attribute as att1, pg_attribute as att2
-                      WHERE con.conrelid = cl1.oid 
-                        AND cl1.relname = %s 
-                        AND con.confrelid = cl2.oid 
-                        AND array_lower(con.conkey, 1) = 1 
-                        AND con.conkey[1] = att1.attnum 
-                        AND att1.attrelid = cl1.oid 
-                        AND att1.attname = %s 
-                        AND array_lower(con.confkey, 1) = 1 
-                        AND con.confkey[1] = att2.attnum 
-                        AND att2.attrelid = cl2.oid 
-                        AND att2.attname = %s 
+                      WHERE con.conrelid = cl1.oid
+                        AND cl1.relname = %s
+                        AND con.confrelid = cl2.oid
+                        AND array_lower(con.conkey, 1) = 1
+                        AND con.conkey[1] = att1.attnum
+                        AND att1.attrelid = cl1.oid
+                        AND att1.attname = %s
+                        AND array_lower(con.confkey, 1) = 1
+                        AND con.confkey[1] = att2.attnum
+                        AND att2.attrelid = cl2.oid
+                        AND att2.attname = %s
                         AND con.contype = 'f'""", (source_table, source_field, 'id'))
         constraints = cr.dictfetchall()
         if constraints:
             if len(constraints) == 1:
                 # Is it the right constraint?
-                cons, = constraints 
+                cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
@@ -3043,14 +3053,14 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                            if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
-                                    self._table, k, f_pg_size, f.size)
+                                    self._table, k, f_pg_size or 'unlimited', f.size or 'unlimited')
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
                                     if f_pg_type != f_obj_type:
@@ -3283,8 +3293,7 @@ class BaseModel(object):
         # attlen is the number of bytes necessary to represent the type when
         # the type has a fixed size. If the type has a varying size attlen is
         # -1 and atttypmod is the size limit + 4, or -1 if there is no limit.
-        # Thus the query can return a negative size for a unlimited varchar.
-        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size " \
            "FROM pg_class c,pg_attribute a,pg_type t " \
            "WHERE c.relname=%s " \
            "AND c.oid=a.attrelid " \
@@ -3294,7 +3303,7 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
-        
+
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
@@ -3811,7 +3820,7 @@ class BaseModel(object):
            the length of `ids`, and raise an appropriate exception if it does not.
         """
         if cr.rowcount != len(ids):
-            # Attempt to distinguish record rule restriction vs deleted records, 
+            # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
             if cr.rowcount != len(ids):
@@ -3866,13 +3875,13 @@ class BaseModel(object):
                     self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """Call given workflow trigger as a result of a CRUD operation""" 
+        """Call given workflow trigger as a result of a CRUD operation"""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
 
     def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        """Send given workflow signal""" 
+        """Send given workflow signal"""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             wf_service.trg_validate(uid, self._name, res_id, signal, cr)
@@ -3903,7 +3912,7 @@ class BaseModel(object):
         self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
-        
+
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
@@ -4823,56 +4832,45 @@ class BaseModel(object):
         else:
             raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
-        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        fields = self.fields_get(cr, uid, context=context)
-        for f in fields:
-            ftype = fields[f]['type']
+        # build a black list of fields that should not be copied
+        blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
+        def blacklist_given_fields(obj):
+            # blacklist the fields that are given by inheritance
+            for other, field_to_other in obj._inherits.items():
+                blacklist.add(field_to_other)
+                if field_to_other in default:
+                    # all the fields of 'other' are given by the record: default[field_to_other],
+                    # except the ones redefined in self
+                    blacklist.update(set(self.pool.get(other)._all_columns) - set(self._columns))
+                else:
+                    blacklist_given_fields(self.pool.get(other))
+        blacklist_given_fields(self)
 
-            if self._log_access and f in LOG_ACCESS_COLUMNS:
-                del data[f]
-
+        res = dict(default)
+        for f, colinfo in self._all_columns.items():
+            field = colinfo.column
             if f in default:
-                data[f] = default[f]
-            elif 'function' in fields[f]:
-                del data[f]
-            elif ftype == 'many2one':
-                try:
-                    data[f] = data[f] and data[f][0]
-                except:
-                    pass
-            elif ftype == 'one2many':
-                res = []
-                rel = self.pool.get(fields[f]['relation'])
-                if data[f]:
-                    # duplicate following the order of the ids
-                    # because we'll rely on it later for copying
-                    # translations in copy_translation()!
-                    data[f].sort()
-                    for rel_id in data[f]:
-                        # the lines are first duplicated using the wrong (old)
-                        # parent but then are reassigned to the correct one thanks
-                        # to the (0, 0, ...)
-                        d = rel.copy_data(cr, uid, rel_id, context=context)
-                        if d:
-                            res.append((0, 0, d))
-                data[f] = res
-            elif ftype == 'many2many':
-                data[f] = [(6, 0, data[f])]
+                pass
+            elif f in blacklist:
+                pass
+            elif isinstance(field, fields.function):
+                pass
+            elif field._type == 'many2one':
+                res[f] = data[f] and data[f][0]
+            elif field._type == 'one2many':
+                other = self.pool.get(field._obj)
+                # duplicate following the order of the ids because we'll rely on
+                # it later for copying translations in copy_translation()!
+                lines = [other.copy_data(cr, uid, line_id, context=context) for line_id in sorted(data[f])]
+                # the lines are duplicated using the wrong (old) parent, but then
+                # are reassigned to the correct one thanks to the (0, 0, ...)
+                res[f] = [(0, 0, line) for line in lines if line]
+            elif field._type == 'many2many':
+                res[f] = [(6, 0, data[f])]
+            else:
+                res[f] = data[f]
 
-        del data['id']
-
-        # make sure we don't break the current parent_store structure and
-        # force a clean recompute!
-        for parent_column in ['parent_left', 'parent_right']:
-            data.pop(parent_column, None)
-        # Remove _inherits field's from data recursively, missing parents will
-        # be created by create() (so that copy() copy everything).
-        def remove_ids(inherits_dict):
-            for parent_table in inherits_dict:
-                del data[inherits_dict[parent_table]]
-                remove_ids(self.pool.get(parent_table)._inherits)
-        remove_ids(self._inherits)
-        return data
+        return res
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
         if context is None:
@@ -5031,7 +5029,7 @@ class BaseModel(object):
 
         :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
-                 (to be usable as a function field), 
+                 (to be usable as a function field),
                  e.g.::
 
                      { 'id': 'module.ext_id',
