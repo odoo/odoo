@@ -4824,9 +4824,9 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         this._super();
         if (this.get("effective_readonly")) {
             var self = this;
-            this.$el.find('a').click(function() {
+            this.$el.find('a').click(function(ev) {
                 if (self.get('value')) {
-                    self.on_save_as();
+                    self.on_save_as(ev);
                 }
                 return false;
             });
