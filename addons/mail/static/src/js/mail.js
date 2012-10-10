@@ -20,35 +20,28 @@ openerp.mail = function(session) {
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message') {
 
-                if(action.action_from != 'mail.ThreadComposeMessage' && action.type != 'ir.actions.act_window_close'){
-                    // destroy wall before reload
-                    $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_destroy').click();
+                /* hack for stop context propagation of wrong value
+                 * delete this hack when a global method to clean context is create
+                */
+                for(var key in action.context){
+                    if( key!='default_template_id' &&
+                        key!='default_use_template' &&
+                        key!='default_is_private' &&
+                        key!='default_model' &&
+                        key!='default_res_id' &&
+                        key!='default_subtype' &&
+                        key!='active_id' &&
+                        key!='lang' &&
+                        key!='bin_raw' &&
+                        key!='tz' &&
+                        key!='active_model' &&
+                        key!='edi_web_url_view' &&
+                        key!='active_ids')
+                    action.context[key]=null;
+                };
+                /* end hack */
 
-
-                    /* hack for stop context propagation of wrong value
-                     * delete this hack when a global method to clean context is create
-                    */
-                    for(var key in action.context){
-                        if( key!='default_template_id' &&
-                            key!='default_use_template' &&
-                            key!='default_model' &&
-                            key!='default_res_id' &&
-                            key!='default_subtype' &&
-                            key!='active_id' &&
-                            key!='lang' &&
-                            key!='bin_raw' &&
-                            key!='tz' &&
-                            key!='active_model' &&
-                            key!='edi_web_url_view' &&
-                            key!='active_ids')
-                        action.context[key]=null;
-                    };
-                    /* end hack */
-
-
-                } else {
-                    $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_fletch').click();
-                }
+                $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_fetch').click();
 
             }
             return this._super(action, on_close);
@@ -370,7 +363,7 @@ openerp.mail = function(session) {
             }
         },
 
-        /*post a message and fletch the message*/
+        /*post a message and fetch the message*/
         on_message_post: function (body) {
 
             if (! body) {
@@ -459,7 +452,7 @@ openerp.mail = function(session) {
         */
         on_expandable: function (event) {
             if(event)event.stopPropagation();
-            this.parent_thread.message_fletch(false, this.domain, this.context);
+            this.parent_thread.message_fetch(false, this.domain, this.context);
             this.destroy();
             return false;
         },
@@ -495,7 +488,7 @@ openerp.mail = function(session) {
          * @param {Object} [options]
          *      @param {Object} [thread] read obout mail.Thread object
          *      @param {Object} [message]
-         *          @param {Number} [message_ids=null] ids for message_fletch
+         *          @param {Number} [message_ids=null] ids for message_fetch
          *          @param {Number} [message_data=null] already formatted message data, 
          *              for subthreads getting data from their parent
          *          @param {Number} [truncate_limit=250] number of character to
@@ -804,7 +797,7 @@ openerp.mail = function(session) {
          *          @param {Boolean} [display_on_flat] display all thread
          *              on the wall thread level (no hierarchy)
          *          @param {Array} [parents] liked with the parents thread
-         *              use with browse, fletch... [O]= top parent
+         *              use with browse, fetch... [O]= top parent
          */
         init: function(parent, options) {
             this._super(parent);
@@ -888,7 +881,7 @@ openerp.mail = function(session) {
         on_first_thread: function(){
             var self=this;
             // fetch and display message, using message_ids if set
-            this.message_fletch();
+            this.message_fetch();
 
             $(document).scroll( self.on_scroll );
             window.setTimeout( self.on_scroll, 500 );
@@ -900,15 +893,11 @@ openerp.mail = function(session) {
                 this.ComposeMessage.set_free_attachments();
             }
 
-            var button_destroy = $('<button style="display:none;" class="oe_mail_wall_button_destroy"/>').click(function(event){
+            var button_fetch = $('<button style="display:none;" class="oe_mail_wall_button_fetch"/>').click(function(event){
                 if(event)event.stopPropagation();
-                self.destroy();
+                self.message_fetch();
             });
-            var button_fletch = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){
-                if(event)event.stopPropagation();
-                self.message_fletch();
-            });
-            this.$el.prepend(button_destroy,button_fletch);
+            this.$el.prepend(button_fetch);
             this.$el.addClass("oe_mail_wall_first_thread");
         },
 
@@ -1013,7 +1002,7 @@ openerp.mail = function(session) {
          * @param {Array} replace_domain: added to this.domain
          * @param {Object} replace_context: added to this.context
          */
-        message_fletch: function (initial_mode, replace_domain, replace_context, ids) {
+        message_fetch: function (initial_mode, replace_domain, replace_context, ids) {
             var self = this;
 
             // initial mode: try to use message_data or message_ids
@@ -1154,6 +1143,10 @@ openerp.mail = function(session) {
             this.$el.toggle(this.view.get("actual_mode") !== "create");
         },
 
+        /**
+         * Reinitialize the widget field and Display the threads
+         * @param {Object} new_context: context of the refresh
+          */
         set_value: function() {
             var self = this;
             this._super.apply(this, arguments);
@@ -1171,6 +1164,9 @@ openerp.mail = function(session) {
             var show_header_compose = this.view.is_action_enabled('edit') ||
                 (this.getParent().fields.message_is_follower && this.getParent().fields.message_is_follower.get_value());
 
+            if(this.thread){
+                this.thread.destroy();
+            }
             this.thread = new mail.Thread(self, {
                     'domain': domain,
                     'context': this.options.context,
@@ -1268,7 +1264,10 @@ openerp.mail = function(session) {
             });
         },
 
-        /** Clean and display the threads */
+
+        /**
+         * Display the threads
+          */
         message_render: function (search) {
             this.thread = new mail.Thread(this, {
                     'domain' : this.options.domain.concat(this.search_results['domain']),
