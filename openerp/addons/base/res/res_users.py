@@ -341,14 +341,12 @@ class res_users(osv.osv):
 
     def copy(self, cr, uid, id, default=None, context=None):
         user2copy = self.read(cr, uid, [id], ['login','name'])[0]
-        if default is None:
-            default = {}
-        copy_pattern = _("%s (copy)")
-        copydef = dict(login=(copy_pattern % user2copy['login']),
-                       name=(copy_pattern % user2copy['name']),
-                       )
-        copydef.update(default)
-        return super(res_users, self).copy(cr, uid, id, copydef, context)
+        default = dict(default or {})
+        if ('name' not in default) and ('partner_id' not in default):
+            default['name'] = _("%s (copy)") % user2copy['name']
+        if 'login' not in default:
+            default['login'] = _("%s (copy)") % user2copy['login']
+        return super(res_users, self).copy(cr, uid, id, default, context)
 
     def context_get(self, cr, uid, context=None):
         user = self.browse(cr, SUPERUSER_ID, uid, context)
