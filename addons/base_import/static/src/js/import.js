@@ -73,7 +73,8 @@ openerp.base_import = function (instance) {
         ],
         events: {
             // 'change .oe_import_grid input': 'import_dryrun',
-            'change input.oe_import_file': 'loaded_file',
+            'change .oe_import_file': 'loaded_file',
+            'click .oe_import_file_reload': 'loaded_file',
             'change input.oe_import_has_header, .oe_import_options input': 'settings_changed',
             'click a.oe_import_toggle': function (e) {
                 e.preventDefault();
