@@ -34,13 +34,10 @@ import openerp
 import nonliterals
 import session
 
-__all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
-           'WebRequest', 'JsonRequest', 'HttpRequest']
-
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
-# OpenERP Web RequestHandler
+# RequestHandler
 #----------------------------------------------------------
 class WebRequest(object):
     """ Parent class for all OpenERP Web request types, mostly deals with
@@ -327,7 +324,7 @@ def httprequest(f):
     return http_handler
 
 #----------------------------------------------------------
-# OpenERP Web Controller registration with a metaclass
+# Controller registration with a metaclass
 #----------------------------------------------------------
 addons_module = {}
 addons_manifest = {}
@@ -344,7 +341,7 @@ class Controller(object):
     __metaclass__ = ControllerType
 
 #----------------------------------------------------------
-# OpenERP Web Session context manager
+# Session context manager
 #----------------------------------------------------------
 STORES = {}
 
@@ -415,7 +412,7 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
             session_store.save(request.session)
 
 #----------------------------------------------------------
-# OpenERP Web WSGI Application
+# WSGI Application
 #----------------------------------------------------------
 # Add potentially missing (older ubuntu) font mime types
 mimetypes.add_type('application/font-woff', '.woff')
@@ -556,6 +553,5 @@ class Root(object):
 
 def wsgi_postload():
     openerp.wsgi.register_wsgi_handler(Root())
-
 
 # vim:et:ts=4:sw=4:

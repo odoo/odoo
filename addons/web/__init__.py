@@ -1,4 +1,4 @@
-import common
+import http
 import controllers
 
-wsgi_postload = common.http.wsgi_postload
+wsgi_postload = http.wsgi_postload
