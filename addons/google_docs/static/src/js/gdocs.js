@@ -3,7 +3,7 @@ var _t = instance.web._t;
 
     instance.web.Sidebar = instance.web.Sidebar.extend({
         on_attachments_loaded: function(attachments) {
-            self = this
+            var self = this;
             self._super(attachments);
             // if attachment contains a google doc url do nothing
             // else display a button to create a google doc
@@ -13,7 +13,7 @@ var _t = instance.web._t;
             });
             if (! flag) {
                 this.add_items('files', [
-                    { label: _t('Google Doc'), callback: self.on_google_doc },
+                    { label: _t('Add Google Doc...'), callback: self.on_google_doc },
                 ]);
             }
         },

@@ -26,7 +26,7 @@ class hired_employee(osv.osv_memory):
     _name = 'hired.employee'
     _description = 'Create Employee'
 
-    def case_close(self, cr, uid,ids, context=None):
+    def case_close(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,
@@ -39,7 +39,7 @@ class hired_employee(osv.osv_memory):
         self.pool.get('hr.applicant').case_close(cr, uid,context.get('active_ids',[]))
         return {}
 
-    def case_close_with_emp(self, cr, uid,ids, context=None):
+    def case_close_with_emp(self, cr, uid, ids, context=None):
         """
         @param self: The object pointer
         @param cr: the current row, from the database cursor,

@@ -209,12 +209,10 @@ class account_followup_print_all(osv.osv_memory):
                 to_update[str(id)]= {'level': fups[followup_line_id][1], 'partner_id': stat_line_id}
         return {'partner_ids': partner_list, 'to_update': to_update}
 
-    def do_mail(self ,cr, uid, ids, context=None):
+    def do_mail(self, cr, uid, ids, context=None):
         mod_obj = self.pool.get('ir.model.data')
         move_obj = self.pool.get('account.move.line')
         user_obj = self.pool.get('res.users')
-        line_obj = self.pool.get('account_followup.stat')
-        mail_message = self.pool.get('mail.message')
 
         if context is None:
             context = {}
@@ -235,13 +233,7 @@ class account_followup_print_all(osv.osv_memory):
                     total_amt += line.debit - line.credit
                 dest = False
                 if partner:
-                    if partner.type=='contact':
-                        if adr.email:
-                            dest = [partner.email]
-                    if (not dest) and partner.type=='default':
-                        if partner.email:
-                            dest = [partner.email]
-                src = tools.config.options['email_from']
+                    dest = [partner.email]
                 if not data.partner_lang:
                     body = data.email_body
                 else:
@@ -281,7 +273,12 @@ class account_followup_print_all(osv.osv_memory):
                 msg = ''
                 if dest:
                     try:
-                        mail_message.schedule_with_attach(cr, uid, src, dest, sub, body, context=context)
+                        vals = {'state': 'outgoing',
+                                'subject': sub,
+                                'body_html': '<pre>%s</pre>' % body,
+                                'email_to': dest,
+                                'email_from': data_user.email or tools.config.options['email_from']}
+                        self.pool.get('mail.mail').create(cr, uid, vals, context=context)
                         msg_sent += partner.name + '\n'
                     except Exception, e:
                         raise osv.except_osv('Error !', e )

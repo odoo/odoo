@@ -26,12 +26,16 @@ class res_partner(osv.osv):
     _inherit = 'res.partner'
 
     def _opportunity_meeting_count(self, cr, uid, ids, field_name, arg, context=None):
-        res = {}
-        for partner in self.browse(cr, uid, ids, context):
-            res[partner.id] = {
-                'opportunity_count': len(partner.opportunity_ids),
-                'meeting_count': len(partner.meeting_ids),
-            }
+        res = dict(map(lambda x: (x,{'opportunity_count': 0, 'meeting_count': 0}), ids))
+        # the user may not have access rights for opportunities or meetings
+        try:
+            for partner in self.browse(cr, uid, ids, context):
+                res[partner.id] = {
+                    'opportunity_count': len(partner.opportunity_ids),
+                    'meeting_count': len(partner.meeting_ids),
+                }
+        except:
+            pass
         return res
 
     _columns = {
@@ -45,6 +49,14 @@ class res_partner(osv.osv):
         'opportunity_count': fields.function(_opportunity_meeting_count, string="Opportunity", type='integer', multi='opp_meet'),
         'meeting_count': fields.function(_opportunity_meeting_count, string="Meeting", type='integer', multi='opp_meet'),
     }
+
+    def copy(self, cr, uid, record_id, default=None, context=None):
+        if default is None:
+            default = {}
+
+        default.update({'opportunity_ids': [], 'meeting_ids' : [], 'phonecall_ids' : []})
+
+        super(res_partner, self).copy(cr, uid, record_id, default, context)
 
     def redirect_partner_form(self, cr, uid, partner_id, context=None):
         search_view = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'view_res_partner_filter')
@@ -74,7 +86,7 @@ class res_partner(osv.osv):
                 'planned_revenue' : planned_revenue,
                 'probability' : probability,
                 'partner_id' : partner_id,
-                'categ_id' : categ_ids and categ_ids[0] or '',
+                'categ_ids' : categ_ids and categ_ids[0:1] or [],
                 'state' :'draft',
                 'type': 'opportunity'
             }, context=context)

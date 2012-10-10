@@ -46,7 +46,7 @@ class account_move_bank_reconcile(osv.osv_memory):
                         from account_journal where id=%s', (data['journal_id'],))
         account_id = cr.fetchone()[0]
         if not account_id:
-             raise osv.except_osv(_('Error'), _('You have to define \
+             raise osv.except_osv(_('Error!'), _('You have to define \
 the bank account\nin the journal definition for reconciliation.'))
         return {
             'domain': "[('journal_id','=',%d), ('account_id','=',%d), ('state','<>','draft')]" % (data['journal_id'], account_id),

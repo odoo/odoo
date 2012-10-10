@@ -4,7 +4,6 @@
         <record id="view_stock_invoice_onshipping" model="ir.ui.view">
             <field name="name">Stock Invoice Onshipping</field>
             <field name="model">stock.invoice.onshipping</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
               <form string="Create invoice" version="7.0">
                   <group string="Create Invoice">
@@ -22,9 +21,19 @@
         </record>
 
 
-        <act_window name="Create invoice"
+        <act_window name="Create Invoice"
             res_model="stock.invoice.onshipping"
             src_model="stock.picking.out"
+            key2="client_action_multi"
+            multi="True"
+            view_mode="form"
+            view_type="form"
+            target="new"
+            id="action_stock_invoice_onshipping"/>
+
+        <act_window name="Create Draft Invoices"
+            res_model="stock.invoice.onshipping"
+            src_model="stock.picking.in"
             key2="client_action_multi"
             multi="True"
             view_mode="form"

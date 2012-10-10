@@ -71,8 +71,8 @@ class payment_order(osv.osv):
     #dead code
     def get_wizard(self, type):
         logger = netsvc.Logger()
-        logger.notifyChannel("warning", netsvc.LOG_WARNING,
-                "No wizard found for the payment type '%s'." % type)
+        logger.notifyChannel("Warning!", netsvc.LOG_WARNING,
+                "No wizard is found for the payment type '%s'." % type)
         return None
 
     def _total(self, cursor, user, ids, name, args, context=None):
@@ -139,7 +139,9 @@ class payment_order(osv.osv):
         wf_service.trg_validate(uid, 'payment.order', ids[0], 'done', cr)
         return True
 
-    def copy(self, cr, uid, id, default={}, context=None):
+    def copy(self, cr, uid, id, default=None, context=None):
+        if default is None:
+            default = {}
         default.update({
             'state': 'draft',
             'line_ids': [],

@@ -54,7 +54,6 @@ class procurement_order(osv.osv):
         '''
         if context is None:
             context = {}
-
         try:
             if use_new_cursor:
                 cr = pooler.get_db(use_new_cursor).cursor()
@@ -119,19 +118,6 @@ class procurement_order(osv.osv):
                 offset += len(ids)
                 if not ids: break
             end_date = fields.datetime.now()
-            if uid:
-                # Chatter: old res.request is now a chatter on res.users, id=uid
-                summary = _("""Here is the procurement scheduling report.
-
-        Start Time: %s 
-        End Time: %s 
-        Total Procurements processed: %d 
-        Procurements with exceptions: %d 
-        Skipped Procurements (scheduled date outside of scheduler range) %d 
-
-        Exceptions:\n""") % (start_date, end_date, report_total, report_except, report_later)
-                summary += '\n'.join(report)
-                self.pool.get('res.users').message_append_note(cr, uid, [uid], body=summary, context=context)
 
             if use_new_cursor:
                 cr.commit()
@@ -234,7 +220,6 @@ class procurement_order(osv.osv):
         location_obj = self.pool.get('stock.location')
         procurement_obj = self.pool.get('procurement.order')
         wf_service = netsvc.LocalService("workflow")
-        report = []
         offset = 0
         ids = [1]
         if automatic:
@@ -243,8 +228,9 @@ class procurement_order(osv.osv):
             ids = orderpoint_obj.search(cr, uid, [], offset=offset, limit=100)
             for op in orderpoint_obj.browse(cr, uid, ids, context=context):
                 if op.procurement_id.state != 'exception':
-                    if op.procurement_id and op.procurement_id.purchase_id and op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
-                        continue
+                    if op.procurement_id and hasattr(op.procurement_id, 'purchase_id'):
+                        if op.procurement_id.purchase_id.state in ('draft', 'confirmed'):
+                            continue
                 prods = location_obj._product_virtual_get(cr, uid,
                         op.location_id.id, [op.product_id.id],
                         {'uom': op.product_uom.id})[op.product_id.id]
@@ -287,9 +273,6 @@ class procurement_order(osv.osv):
             offset += len(ids)
             if use_new_cursor:
                 cr.commit()
-        if user_id and report:
-            # Chatter: old res.request is now a chatter on res.users, id=uid
-            self.pool.get('res.users').message_append_note(cr, uid, [user_id], body='\n'.join(report), subject=_('Orderpoint report'), context=context)
         if use_new_cursor:
             cr.commit()
             cr.close()

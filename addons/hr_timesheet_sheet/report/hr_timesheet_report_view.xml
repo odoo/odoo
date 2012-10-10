@@ -4,7 +4,6 @@
         <record id="view_hr_timesheet_report_graph" model="ir.ui.view">
             <field name="name">hr.timesheet.report.graph</field>
             <field name="model">hr.timesheet.report</field>
-            <field name="type">graph</field>
             <field name="arch" type="xml">
                 <graph string="Timesheet" type="bar">
                     <field name="user_id" />
@@ -15,7 +14,6 @@
         <record id="view_hr_timesheet_report_tree" model="ir.ui.view">
             <field name="name">hr.timesheet.report.tree</field>
             <field name="model">hr.timesheet.report</field>
-            <field name="type">tree</field>
             <field name="arch" type="xml">
                 <tree string="Timesheet Analysis">
                     <field name="year" invisible="1"/>
@@ -37,32 +35,23 @@
         <record id="view_hr_timesheet_report_search" model="ir.ui.view">
             <field name="name">hr.timesheet.report.search</field>
             <field name="model">hr.timesheet.report</field>
-            <field name="type">search</field>
             <field name="arch" type="xml">
                 <search string="Timesheet">
-                    <group>
-                        <field name="account_id" groups="analytic.group_analytic_accounting"/>
-                        <field name="user_id"/>
-                    </group>
-                    <newline/>
+                    <field name="account_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="user_id"/>
                     <group expand="0" string="Extended Filters...">
                         <field name="general_account_id"/>
                         <field name="product_id"/>
                         <field name="journal_id"/>
-                        <separator orientation="vertical"/>
-                        <field name="company_id" widget="selection" groups="base.group_multi_company"/>
-                        <newline/>
+                        <field name="company_id" groups="base.group_multi_company"/>
                         <field name="date" />
                     </group>
-                    <newline/>
                     <group expand="1" string="Group By...">
                         <filter string="User" name="group_user_id" icon="terp-personal" context="{'group_by':'user_id'}"/>
                         <filter string="Product" icon="terp-accessories-archiver" context="{'group_by':'product_id'}"/>
-                        <separator orientation="vertical" groups="analytic.group_analytic_accounting"/>
                         <filter string="Analytic Account" icon="terp-folder-green" context="{'group_by':'account_id'}" groups="analytic.group_analytic_accounting"/>
                         <filter string="General Account" icon="terp-folder-orange" context="{'group_by':'general_account_id'}"/>
                         <filter string="Company" icon="terp-go-home" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <separator orientation="vertical"/>
                         <filter string="Day" icon="terp-go-today" context="{'group_by':'day'}" help="Group by day of date"/>
                         <filter string="Month" icon="terp-go-month" context="{'group_by':'month'}" help="Group by month of date"/>
                         <filter string="Year" icon="terp-go-year" context="{'group_by':'year'}" help="Group by year of date"/>
@@ -77,7 +66,14 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,graph</field>
             <field name="context">{'search_default_year':1,'search_default_month':1,'search_default_group_user_id':1,'group_by_no_leaf':1,'group_by':[]}</field>
-            <field name="help">This report performs analysis on timesheets created by your human resources in the system. It allows you to have a full overview of  entries done by your employees. You can group them by specific selection criteria thanks to the search tool.</field>
+            <field name="help" type="html">
+              <p>
+                This report performs analysis on timesheets created by your
+                human resources in the system. It allows you to have a full
+                overview of  entries done by your employees. You can group them
+                by specific selection criteria thanks to the search tool.
+              </p>
+            </field>
         </record>
         <menuitem
             action="action_hr_timesheet_report_stat_all"

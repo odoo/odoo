@@ -77,7 +77,7 @@ def _get_parents(cr, uid, ids):
     return ids_to_check
 
 
-def test_prof(cr, uid, seg_id, pid, answers_ids = []):
+def test_prof(cr, uid, seg_id, pid, answers_ids=None):
 
     """ return True if the partner pid fetch the segmentation rule seg_id
         @param cr: the current row, from the database cursor,
@@ -234,7 +234,7 @@ class crm_segmentation(osv.osv):
         }
 
     _constraints = [
-        (osv.osv._check_recursion, 'Error ! You can not create recursive profiles.', ['parent_id'])
+        (osv.osv._check_recursion, 'Error ! You cannot create recursive profiles.', ['parent_id'])
     ]
 
     def process_continue(self, cr, uid, ids, start=False):

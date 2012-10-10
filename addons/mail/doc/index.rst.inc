@@ -11,3 +11,4 @@ Mail Module documentation topics
    mail_needaction_howto
    mail_partner
    mail_state
+   mail_subtype

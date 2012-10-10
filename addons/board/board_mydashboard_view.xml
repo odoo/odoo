@@ -1,11 +1,10 @@
 <?xml version="1.0"?>
 <openerp>
-    <data>
+    <data noupdate="1">
         <!--My Dashboard-->
         <record model="ir.ui.view" id="board_my_dash_view">
             <field name="name">My Dashboard</field>
             <field name="model">board.board</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="My Dashboard" version="7.0">
                     <board style="2-1">
@@ -24,14 +23,19 @@
             <field name="view_mode">form</field>
             <field name="usage">menu</field>
             <field name="view_id" ref="board_my_dash_view"/>
-            <field name="help">
-                This is your personal dashboard.
-                To customize it, go to any view in OpenERP, fill in the desired search filter,
-                and click on 'Add to Dashboard' in the search options.
-                The view will appear as an element in your dashboard.
-                &lt;p&gt;
-                You can drag and drop the elements to get your preferred dashboard layout.
-                Click on the cross (in the upper right corner) to remove an element.
+            <field name="help" type="html">
+              <div class="oe_empty_custom_dashboard">
+                  <p>
+                    <b>Your personal dashboard is empty.</b>
+                  </p><p>
+                    To add your first report into this dashboard, go to any
+                    menu, switch to list or graph view, and click <i>'Add to
+                    Dashboard'</i> in the extended search options.
+                  </p><p>
+                    You can filter and group data before inserting into the
+                    dashboard using the search options.
+                  </p>
+              </div>
             </field>
         </record> 
 

@@ -1,6 +1,21 @@
 <?xml version="1.0"?>
 <openerp>
     <data noupdate="1">
+        <!-- After installation of the module, open the related menu -->
+        <record id="base.open_menu" model="ir.actions.todo">
+            <field name="action_id" ref="hr.action_client_hr_menu"/>
+            <field name="state">open</field>
+        </record>
+        <!-- notify all employees of module installation -->
+        <record model="mail.message" id="module_install_notification">
+            <field name="model">mail.group</field>
+            <field name="res_id" ref="mail.group_all_employees"/>
+            <field name="type">notification</field>
+            <field name="subject">Employee Appraisals application installed!</field>
+            <field name="body">Manage employee reviews: you can define an appraisal campaign with several steps, with specific evaluation surveys according to hierarchy levels.
+Evaluations filled by employees may be exported as pdf files.</field>
+        </record>
+
         <record id="survey_2" model="survey">
             <field name="title">Self Appraisal</field>
             <field name="max_response_limit">20</field>
@@ -376,12 +391,6 @@ Once the form had been filled, the employee send it to his supervisor.
             <field name="question_id" ref="survey_question_2"/>
             <field name="type">char</field>
             <field eval="5" name="sequence"/>
-        </record>
-        <record id="survey_answer_98" model="survey.answer">
-            <field name="answer">Title</field>
-            <field name="question_id" ref="survey_question_2"/>
-            <field name="type">char</field>
-            <field eval="6" name="sequence"/>
         </record>
         <record id="survey_question_column_heading_4" model="survey.question.column.heading">
             <field name="in_visible_rating_weight">1</field>

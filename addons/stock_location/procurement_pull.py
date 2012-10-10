@@ -45,7 +45,7 @@ class procurement_order(osv.osv):
                     return (line.type_proc=='move') and (line.location_src_id)
         return False
 
-    def action_move_create(self, cr, uid, ids,context=None):
+    def action_move_create(self, cr, uid, ids, context=None):
         proc_obj = self.pool.get('procurement.order')
         move_obj = self.pool.get('stock.move')
         picking_obj=self.pool.get('stock.picking')
@@ -55,7 +55,7 @@ class procurement_order(osv.osv):
             for line in proc.product_id.flow_pull_ids:
                 if line.location_id == proc.location_id:
                     break
-            assert line, 'Line can not be False if we are on this state of the workflow'
+            assert line, 'Line cannot be False if we are on this state of the workflow'
             origin = (proc.origin or proc.name or '').split(':')[0] +':'+line.name
             picking_id = picking_obj.create(cr, uid, {
                 'origin': origin,

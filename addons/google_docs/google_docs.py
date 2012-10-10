@@ -27,7 +27,7 @@ try:
     from gdata.docs.service import DOCUMENT_LABEL
     import gdata.auth
 except ImportError:
-    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list'))
+    raise osv.except_osv(_('Google Docs Error!'), _('Please install gdata-python-client from http://code.google.com/p/gdata-python-client/downloads/list.'))
 
 class google_docs_ir_attachment(osv.osv):
     _inherit = 'ir.attachment'
@@ -46,7 +46,7 @@ class google_docs_ir_attachment(osv.osv):
         #login gmail account
         client = google_pool.google_login( user_config['user'], user_config['password'], type='docs_client', context=context)
         if not client:
-            raise osv.except_osv( _('Google Docs Error!'), _("Check your google configuration in users/synchronization"))
+            raise osv.except_osv( _('Google Docs Error!'), _("Check your google configuration in Users/Users/Synchronization tab."))
         return client
 
     def create_empty_google_doc(self, cr, uid, res_model, res_id, context=None):
@@ -88,7 +88,7 @@ class google_docs_ir_attachment(osv.osv):
             #copy the document you choose in the configuration
             copy_resource = client.copy_resource(original_resource, 'copy_%s' % original_resource.title.text)
         except:
-            raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL"))
+            raise osv.except_osv(_('Google Docs Error!'), _("Your resource id is not correct. You can find the id in the google docs URL."))
         # create an ir.attachment
         self.create(cr, uid, {
             'res_model': res_model,
@@ -134,8 +134,8 @@ class config(osv.osv):
     _description = "Google Docs templates config"
 
     _columns = {
-        'model_id': fields.many2one('ir.model', 'Model'),
-        'gdocs_resource_id': fields.char('Google resource ID', size=64,help='''
+        'model_id': fields.many2one('ir.model', 'Model', required=True),
+        'gdocs_resource_id': fields.char('Google Resource ID to Use as Template', size=64,help='''
 This is the id of the template document, on google side. You can find it thanks to its URL: 
 *for a text document with url like `https://docs.google.com/a/openerp.com/document/d/123456789/edit`, the ID is `document:123456789`
 *for a spreadsheet document with url like `https://docs.google.com/a/openerp.com/spreadsheet/ccc?key=123456789#gid=0`, the ID is `spreadsheet:123456789`
@@ -143,7 +143,7 @@ This is the id of the template document, on google side. You can find it thanks 
 *for a drawing document with url like `https://docs.google.com/a/openerp.com/drawings/d/123456789/edit`, the ID is `drawings:123456789`
 ...
 '''),
-        'name_template': fields.char('GDoc name template ', size=64, help='This is the name which appears on google side'),
+        'name_template': fields.char('Google Doc Name Pattern', size=64, help='Choose how the new google docs will be named, on google side'),
     }
 
     _defaults = {

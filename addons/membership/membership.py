@@ -146,7 +146,7 @@ class membership_line(osv.osv):
         'date_to': fields.date('To', readonly=True),
         'date_cancel': fields.date('Cancel date'),
         'date': fields.date('Join Date', help="Date on which member has joined the membership"),
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price'), required=True,  help='Amount for the membership'),
+        'member_price': fields.float('Membership Fee', digits_compute= dp.get_precision('Product Price'), required=True, help='Amount for the membership'),
         'account_invoice_line': fields.many2one('account.invoice.line', 'Account Invoice line', readonly=True),
         'account_invoice_id': fields.related('account_invoice_line', 'invoice_id', type='many2one', relation='account.invoice', string='Invoice', readonly=True),
         'state': fields.function(_state,
@@ -338,7 +338,7 @@ class Partner(osv.osv):
                     -Paid Member: A member who has paid the membership amount."""),
         'membership_start': fields.function(
                     _membership_date, multi = 'membeship_start',
-                    string = 'Start Membership Date', type = 'date',
+                    string = 'Membership Start Date', type = 'date',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10, ),
@@ -346,7 +346,7 @@ class Partner(osv.osv):
                     }, help="Date from which membership becomes active."),
         'membership_stop': fields.function(
                     _membership_date,
-                    string = 'Stop Membership Date', type='date', multi='membership_stop',
+                    string = 'Membership End Date', type='date', multi='membership_stop',
                     store = {
                         'account.invoice': (_get_invoice_partner, ['state'], 10),
                         'membership.membership_line': (_get_partner_id, ['state'], 10),
@@ -407,10 +407,10 @@ class Partner(osv.osv):
             fpos_id = partner.property_account_position and partner.property_account_position.id or False
             addr = self.address_get(cr, uid, [partner.id], ['invoice'])
             if partner.free_member:
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _("Partner is a free Member."))
             if not addr.get('invoice', False):
-                raise osv.except_osv(_('Error !'),
+                raise osv.except_osv(_('Error!'),
                         _("Partner doesn't have an address to make the invoice."))
             quantity = 1
             line_value =  {
@@ -443,14 +443,6 @@ class Partner(osv.osv):
         return invoice_list
 
 Partner()
-
-class product_template(osv.osv):
-    _inherit = 'product.template'
-    _columns = {
-        'member_price': fields.float('Member Price', digits_compute= dp.get_precision('Sale Price')),
-    }
-
-product_template()
 
 class Product(osv.osv):
 

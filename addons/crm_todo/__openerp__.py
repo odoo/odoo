@@ -23,18 +23,15 @@
 {
     'name': 'Tasks on CRM',
     'version': '1.0',
-    "category": 'Customer Relationship Management',
+    'category': 'Customer Relationship Management',
     'description': """
 Todo list for CRM leads and opportunities.
+==========================================
     """,
     'author': 'OpenERP SA',
     'depends': ['crm','project_gtd'],
-    'update_xml': [
-        'crm_todo_view.xml',
-    ],
-    'demo': [
-        'crm_todo_demo.xml',
-    ],
+    'data': ['crm_todo_view.xml'],
+    'demo': ['crm_todo_demo.xml'],
     'installable': True,
     'auto_install': False,
 }

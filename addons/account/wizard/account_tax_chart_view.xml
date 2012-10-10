@@ -5,7 +5,6 @@
         <record id="view_account_tax_chart" model="ir.ui.view">
             <field name="name">account.tax.chart.form</field>
             <field name="model">account.tax.chart</field>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <form string="Account tax charts" version="7.0">
                     <group>
@@ -32,7 +31,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[]</field>
             <field name="view_id" ref="view_account_tax_chart"/>
-            <field name="help">Chart of Taxes is a tree view reflecting the structure of the Tax Cases (or tax codes) and shows the current tax situation. The tax chart represents the amount of each area of the tax declaration for your country. It’s presented in a hierarchical structure, which can be modified to fit your needs.</field>
             <field name="target">new</field>
         </record>
 
