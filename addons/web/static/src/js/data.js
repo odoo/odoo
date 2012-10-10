@@ -575,6 +575,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
+        this.trigger('unlink', ids);
         return this._model.call('unlink', [ids], {context: this._model.context()});
     },
     /**
@@ -694,7 +695,6 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
-        self.on("on_rec_unlink", self, self.on_unlink);
     },
     read_slice: function (fields, options) {
         options = options || {};
@@ -713,12 +713,10 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         }
     },
     unlink: function(ids) {
-        this.trigger('on_rec_unlink', ids);
+        this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
+        this.trigger('unlink', ids);
         return $.Deferred().resolve({result: true});
     },
-    on_unlink: function(ids) {
-        this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
-    }
 });
 
 instance.web.DataSetSearch =  instance.web.DataSet.extend({
