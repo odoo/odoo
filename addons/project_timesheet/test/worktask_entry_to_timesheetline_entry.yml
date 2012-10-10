@@ -45,7 +45,6 @@
   Create a timesheet sheet for HR manager
 -
   !record {model: hr_timesheet_sheet.sheet, id: hr_timesheet_sheet_sheet_sheetforhrmanager0}:
-    date_current: !eval time.strftime('%Y-05-%d')
     date_from: !eval "'%s-05-01' %(datetime.now().year)"
     date_to: !eval "'%s-05-31' %(datetime.now().year)"
     name: Sheet for hr manager
