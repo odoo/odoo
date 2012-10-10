@@ -46,6 +46,7 @@ class timesheet_report(osv.osv):
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
         'date_to': fields.date('Date to',readonly=True),
+        'date_current': fields.date('Current date', required=True),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),
@@ -64,6 +65,9 @@ class timesheet_report(osv.osv):
                         htss.name,
                         htss.date_from,
                         htss.date_to,
+                        to_char(htss.date_from, 'YYYY-MM-DD') as day,
+                        to_char(htss.date_from, 'YYYY') as year,
+                        to_char(htss.date_from, 'MM') as month,
                         count(*) as nbr,
                         aal.unit_amount as quantity,
                         aal.amount as cost,
@@ -105,6 +109,7 @@ class timesheet_report(osv.osv):
                         htss.id,
                         htss.department_id,
                         htss.user_id
+
             )
         """)
 timesheet_report()
