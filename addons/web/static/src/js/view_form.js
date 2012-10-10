@@ -3566,7 +3566,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         });
         this.__ignore_blur = false;
     },
-    do_switch_view: function(mode, unused) {
+    switch_mode: function(mode, unused) {
         if (mode !== 'form') {
             return this._super(mode, unused);
         }
@@ -4204,7 +4204,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             self.initial_is_loaded.resolve();
             loaded.resolve();
         });
-        this.kanban_view.do_switch_view.add_last(_.bind(this.open_popup, this));
+        this.kanban_view.on('switch_mode', this, this.open_popup);
         $.async_when().then(function () {
             self.kanban_view.appendTo(self.$el);
         });
