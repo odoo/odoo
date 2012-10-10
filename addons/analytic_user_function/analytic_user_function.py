@@ -66,7 +66,7 @@ class hr_analytic_timesheet(osv.osv):
 
 
 
-    def on_change_account_id(self, cr, uid, ids, account_id, user_id, unit_amount=0):
+    def on_change_account_id(self, cr, uid, ids, account_id, user_id=False, unit_amount=0):
         res = {}
         if not (account_id):
             #avoid a useless call to super
