@@ -893,7 +893,7 @@
                             <field name="cash_control" invisible="1" />
                             <group>
                                 <field name="user_id"/>
-                                <field name="config_id" attrs="{'invisible' : [('config_id', '!=', False)]}"/>
+                                <field name="config_id"/>
                             </group>
                             <group>
                                 <field name="start_at" attrs="{'invisible' : [('state', '=', 'opening_control')]}"/>
