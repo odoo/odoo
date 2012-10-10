@@ -292,7 +292,6 @@ class mail_message(osv.Model):
             well formed threads.
 
             :param domain: optional domain for searching ids
-            :param level: level of threads to display, 0 being flat
             :param limit: number of messages to fetch
             :param parent_id: if parent_id reached, stop searching for
                 further parents

@@ -138,7 +138,7 @@
                         Compose a new message
                     </button>
                     <button type="button" class="oe_write_onwall" help="Your followers can read this message">
-                        Write on your wall
+                        Write to your followers
                     </button>
                 </td>
             </tr>
@@ -233,7 +233,7 @@
                     </ul>
                     <div class="oe_clear"/>
                     <div class="oe_mail_msg_body">
-                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and widget.options.thread._parents.length&lt;=widget.options.thread.thread_level and widget.model!='res.partner'">
+                        <t t-if="widget.options.message.show_record_name and widget.record_name and (!widget.subject) and !widget.options.thread.thread_level and !widget.options.thread.display_on_flat and widget.model!='res.partner'">
                             <a class="oe_mail_action_model" t-attf-href="#model=#{widget.model}&amp;id=#{widget.res_id}"><t t-raw="widget.record_name"/></a>
                         </t>
                         <t t-raw="widget.body"/>

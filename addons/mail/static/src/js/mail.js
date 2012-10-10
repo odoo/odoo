@@ -403,8 +403,7 @@ openerp.mail = function(session) {
      * Thread Message Expandable Widget
      * ------------------------------------------------------------
      *
-     * This widget handles the display the expandable message in a thread. The
-     * [thread_level] parameter sets the thread level number:
+     * This widget handles the display the expandable message in a thread.
      * - thread
      * - - visible message
      * - - expandable
@@ -468,7 +467,7 @@ openerp.mail = function(session) {
      * - record.timerelative: relative time givein by timeago lib
      * - record.avatar: image url
      * - record.attachment_ids[].url: url of each attachmentThe
-     * [thread_level] parameter sets the thread level number:
+     * thread view :
      * - root thread
      * - - sub message (parent_id = root message)
      * - - - sub thread
@@ -769,11 +768,13 @@ openerp.mail = function(session) {
      * ------------------------------------------------------------
      *
      * This widget handles the display of a thread of messages. The
-     * [thread_level] parameter sets the thread level number:
-     * - root message
+     * thread view:
+     * - root thread
      * - - sub message (parent_id = root message)
-     * - - - sub sub message (parent id = sub message)
+     * - - - sub thread
+     * - - - - sub sub message (parent id = sub thread)
      * - - sub message (parent_id = root message)
+     * - - - sub thread
      */
     mail.Thread = session.web.Widget.extend({
         template: 'mail.thread',
@@ -787,7 +788,6 @@ openerp.mail = function(session) {
          * @param {Object} [options]
          *      @param {Object} [message] read about mail.ThreadMessage object
          *      @param {Object} [thread]
-         *          @param {Number} [thread_level=0] number of thread levels
          *          @param {Boolean} [use_composer] use the advanced composer, or
          *              the default basic textarea if not set
          *          @param {Number} [expandable_number=5] number message show
@@ -810,7 +810,7 @@ openerp.mail = function(session) {
             // options
             this.options={
                 'thread' : {
-                    'thread_level':         options.options.thread.thread_level || 0,
+                    'thread_level':         (options.options.thread.thread_level+1) || 0,
                     'show_header_compose':  (options.options.thread.show_header_compose != undefined ? options.options.thread.show_header_compose: false),
                     'use_composer':         options.options.thread.use_composer || false,
                     'expandable_number':    options.options.thread.expandable_number || 5,
@@ -890,7 +890,7 @@ openerp.mail = function(session) {
 
             if(this.options.thread.show_header_compose){
                 this.ComposeMessage.$el.show();
-                this.ComposeMessage.set_free_attachments();
+                //this.ComposeMessage.set_free_attachments();
             }
 
             var button_fetch = $('<button style="display:none;" class="oe_mail_wall_button_fetch"/>').click(function(event){
@@ -1014,7 +1014,7 @@ openerp.mail = function(session) {
             fetch_context = replace_context ? replace_context : this.context;
             fetch_context.message_loaded= [this.id||0].concat( self.options.thread._parents[0].get_child_ids() );
 
-            return this.ds_message.call('message_read', [ids, fetch_domain, (this.options.thread.thread_level+1), fetch_context, this.context.default_parent_id || undefined]
+            return this.ds_message.call('message_read', [ids, fetch_domain, fetch_context, 0, this.context.default_parent_id || undefined]
                 ).then(this.proxy('switch_new_message'));
         },
 
@@ -1066,8 +1066,8 @@ openerp.mail = function(session) {
                 });
             }
 
-            var thread_messages = (self.options.thread.display_on_flat ? self.options.thread._parents[0].messages : []).concat(self.messages);
-            var thread = (self.options.thread.display_on_flat ? self.options.thread._parents[0] : self);
+            var thread_messages = (self.options.thread.display_on_flat && self.options.thread.thread_level ? self.options.thread._parents[0].messages : []).concat(self.messages);
+            var thread = (self.options.thread.display_on_flat && self.options.thread.thread_level ? self.options.thread._parents[0] : self);
 
             // check older and newer message for insert
             var parent_newer = false;
@@ -1082,14 +1082,28 @@ openerp.mail = function(session) {
                 }
             }
 
+            var sort = self.options.thread.thread_level==0 || (self.options.thread.display_on_flat && self.options.thread.thread_level<=1);
+
             if(parent_older){
-                message.insertBefore(parent_older.$el);
+                if(sort){
+                    message.insertBefore(parent_older.$el);
+                } else {
+                    message.insertAfter(parent_older.$el);
+                }
             }
             else if(parent_newer){
-                message.insertAfter(parent_newer.$el);
+                if(sort){
+                    message.insertAfter(parent_newer.$el);
+                } else {
+                    message.insertBefore(parent_newer.$el);
+                }
             }
             else {
-                message.prependTo(thread.list_ul);
+                if(sort){
+                    message.prependTo(thread.list_ul);
+                } else {
+                    message.appendTo(thread.list_ul);
+                }
             }
             return message
         },
@@ -1129,7 +1143,6 @@ openerp.mail = function(session) {
             this._super.apply(this, arguments);
             this.options.domain = this.options.domain || [];
             this.options.context = {'default_model': 'mail.thread', 'default_res_id': false};
-            this.options.thread_level = this.options.thread_level || 0;
         },
 
         start: function() {
@@ -1172,7 +1185,6 @@ openerp.mail = function(session) {
                     'context': this.options.context,
                     'options':{
                         'thread':{
-                            'thread_level': this.options.thread_level,
                             'show_header_compose': show_header_compose,
                             'use_composer': show_header_compose,
                             'display_on_flat':true
@@ -1216,7 +1228,6 @@ openerp.mail = function(session) {
             this.options = options || {};
             this.options.domain = options.domain || [];
             this.options.context = options.context || {};
-            this.options.thread_level = options.thread_level || 1;
             this.search_results = {'domain': [], 'context': {}, 'groupby': {}}
             this.ds_msg = new session.web.DataSetSearch(this, 'mail.message');
         },
@@ -1274,12 +1285,11 @@ openerp.mail = function(session) {
                     'context' : _.extend(this.options.context, search&&search.search_results['context'] ? search.search_results['context'] : {}),
                     'options': {
                         'thread' :{
-                            'thread_level': this.options.thread_level,
                             'use_composer': true,
-                            'show_header_compose': true,
+                            'show_header_compose': false,
                         },
                         'message': {
-                            'show_reply': this.options.thread_level > 0,
+                            'show_reply': true,
                             'show_dd_hide': true,
                             'show_dd_delete': true,
                         },

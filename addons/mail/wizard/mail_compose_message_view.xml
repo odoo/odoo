@@ -20,10 +20,7 @@
                     </group>
                     <notebook>
                         <page string="Body">
-                            <field name="body_text" nolabel="1"
-                                attrs="{'invisible':[('content_subtype', '=', 'html')]}"/>
-                            <field name="body" nolabel="1"
-                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                            <field name="body" nolabel="1"/>
                         </page>
                         <page string="Attachments">
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
