@@ -66,7 +66,7 @@ class res_users(osv.Model):
                 'oauth_access_token': access_token,
                 'active': True,
             }
-            self.auth_signup_create(cr, uid, new_user)
+            self._signup_create_user(cr, uid, new_user)
         credentials = (cr.dbname, email, access_token)
         return credentials
 
