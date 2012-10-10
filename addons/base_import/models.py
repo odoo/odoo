@@ -128,8 +128,8 @@ class ir_import(orm.TransientModel):
         """
         csv_iterator = csv.reader(
             StringIO(record.file),
-            quotechar=options['quoting'],
-            delimiter=options['separator'])
+            quotechar=str(options['quoting']),
+            delimiter=str(options['separator']))
         csv_nonempty = itertools.ifilter(None, csv_iterator)
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
