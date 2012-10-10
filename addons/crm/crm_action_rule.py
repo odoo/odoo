@@ -79,7 +79,7 @@ class base_action_rule(osv.osv):
             write['section_id'] = action.act_section_id.id
 
         if hasattr(action, 'act_categ_id') and action.act_categ_id:
-            write['categ_ids'] = [4, action.act_categ_id]                        
+            write['categ_ids'] = [4, action.act_categ_id.id]                        
 
         model_obj.write(cr, uid, [obj.id], write, context)
         return res
