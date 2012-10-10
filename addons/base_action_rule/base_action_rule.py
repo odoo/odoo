@@ -397,10 +397,6 @@ the rule to mark CC(mail to any other person defined in actions)."),
             obj.state = action.act_state
             write['state'] = action.act_state
 
-        if hasattr(obj, 'categ_id') and action.act_categ_id:
-            obj.categ_id = action.act_categ_id
-            write['categ_id'] = action.act_categ_id.id
-
         model_obj.write(cr, uid, [obj.id], write, context)
 
         if hasattr(model_obj, 'remind_user') and action.act_remind_user:
