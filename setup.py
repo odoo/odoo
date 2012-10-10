@@ -97,6 +97,7 @@ setuptools.setup(
           'gdata',
           'lxml < 3',
           'mako',
+          'psutil',
           'psycopg2',
           'pydot',
           'python-dateutil < 2',

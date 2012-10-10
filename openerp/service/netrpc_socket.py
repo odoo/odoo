@@ -23,13 +23,10 @@ import socket
 import cPickle
 import cStringIO
 
-import netsvc
-
-#.apidoc title: Net-RPC classes
+import openerp.netsvc as netsvc
 
 # Pickle protocol version 2 is optimized compared to default (version 0)
 PICKLE_PROTOCOL = 2
-
 
 class Myexception(Exception):
     """

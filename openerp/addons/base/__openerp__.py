@@ -44,6 +44,7 @@ The kernel of OpenERP, needed for all installation.
         'data/res.country.state.csv',
         'ir/wizard/wizard_menu_view.xml',
         'ir/ir.xml',
+        'ir/ir_translation_view.xml',
         'ir/ir_filters.xml',
         'ir/ir_config_parameter_view.xml',
         'ir/workflow/workflow_view.xml',
@@ -98,7 +99,6 @@ The kernel of OpenERP, needed for all installation.
     ],
     'installable': True,
     'auto_install': True,
-    'certificate': '0076807797149',
     'css': ['static/src/css/modules.css'],
     'js': [
         'static/src/js/apps.js',

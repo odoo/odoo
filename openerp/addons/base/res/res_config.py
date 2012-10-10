@@ -37,7 +37,6 @@ class res_config_configurable(osv.osv_memory):
     their view inherit from the related res_config_view_base view.
     '''
     _name = 'res.config'
-    _inherit = 'ir.wizard.screen'
 
     def _next_action(self, cr, uid, context=None):
         Todos = self.pool['ir.actions.todo']

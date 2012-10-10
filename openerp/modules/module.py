@@ -331,7 +331,6 @@ def load_information_from_description_file(module):
                 'author': '',
                 'auto_install': False,
                 'category': 'Uncategorized',
-                'certificate': None,
                 'depends': [],
                 'description': '',
                 'icon': get_module_icon(module),

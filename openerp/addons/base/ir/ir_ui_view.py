@@ -192,7 +192,6 @@ class view(osv.osv):
     def write(self, cr, uid, ids, vals, context=None):
         if not isinstance(ids, (list, tuple)):
             ids = [ids]
-        result = super(view, self).write(cr, uid, ids, vals, context)
 
         # drop the corresponding view customizations (used for dashboards for example), otherwise
         # not all users would see the updated views
@@ -200,7 +199,7 @@ class view(osv.osv):
         if custom_view_ids:
             self.pool.get('ir.ui.view.custom').unlink(cr, uid, custom_view_ids)
 
-        return result
+        return super(view, self).write(cr, uid, ids, vals, context)
 
     def graph_get(self, cr, uid, id, model, node_obj, conn_obj, src_node, des_node, label, scale, context=None):
         nodes=[]

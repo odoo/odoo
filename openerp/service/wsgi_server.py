@@ -38,10 +38,13 @@ import sys
 import threading
 import traceback
 
+import werkzeug.serving
+import werkzeug.contrib.fixers
+
 import openerp
 import openerp.modules
 import openerp.tools.config as config
-from ..service import websrv_lib
+import websrv_lib
 
 _logger = logging.getLogger(__name__)
 
@@ -221,9 +224,6 @@ def wsgi_xmlrpc_legacy(environ, start_response):
         params, method = xmlrpclib.loads(data)
         return xmlrpc_return(start_response, path, method, params, True)
 
-def wsgi_jsonrpc(environ, start_response):
-    pass
-
 def wsgi_webdav(environ, start_response):
     pi = environ['PATH_INFO']
     if environ['REQUEST_METHOD'] == 'OPTIONS' and pi in ['*','/']:
@@ -382,27 +382,30 @@ def register_wsgi_handler(handler):
     """
     module_handlers.append(handler)
 
-def application(environ, start_response):
+def application_unproxied(environ, start_response):
     """ WSGI entry point."""
+    openerp.service.start_internal()
 
     # Try all handlers until one returns some result (i.e. not None).
-    wsgi_handlers = [
-        wsgi_xmlrpc_1,
-        wsgi_xmlrpc,
-        wsgi_jsonrpc,
-        wsgi_xmlrpc_legacy,
-        wsgi_webdav
-        ] + module_handlers
+    wsgi_handlers = [wsgi_xmlrpc_1, wsgi_xmlrpc, wsgi_xmlrpc_legacy, wsgi_webdav]
+    wsgi_handlers += module_handlers
     for handler in wsgi_handlers:
         result = handler(environ, start_response)
         if result is None:
             continue
         return result
 
+
     # We never returned from the loop.
     response = 'No handler found.\n'
     start_response('404 Not Found', [('Content-Type', 'text/plain'), ('Content-Length', str(len(response)))])
     return [response]
+
+def application(environ, start_response):
+    if config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
+        return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
+    else:
+        return application_unproxied(environ, start_response)
 
 # The WSGI server, started by start_server(), stopped by stop_server().
 httpd = None
@@ -421,25 +424,8 @@ def serve():
     # TODO Change the xmlrpc_* options to http_*
     interface = config['xmlrpc_interface'] or '0.0.0.0'
     port = config['xmlrpc_port']
-    try:
-        import werkzeug.serving
-        if config['proxy_mode']:
-            from werkzeug.contrib.fixers import ProxyFix
-            app = ProxyFix(application)
-            suffix = ' (in proxy mode)'
-        else:
-            app = application
-            suffix = ''
-        httpd = werkzeug.serving.make_server(interface, port, app, threaded=True)
-        _logger.info('HTTP service (werkzeug) running on %s:%s%s', interface, port, suffix)
-    except ImportError:
-        import wsgiref.simple_server
-        _logger.warning('Werkzeug module unavailable, falling back to wsgiref.')
-        if config['proxy_mode']:
-            _logger.warning('Werkzeug module unavailable, not using proxy mode.')
-        httpd = wsgiref.simple_server.make_server(interface, port, application)
-        _logger.info('HTTP service (wsgiref) running on %s:%s', interface, port)
-
+    httpd = werkzeug.serving.make_server(interface, port, application, threaded=True)
+    _logger.info('HTTP service (werkzeug) running on %s:%s', interface, port)
     httpd.serve_forever()
 
 def start_server():
@@ -457,88 +443,5 @@ def stop_server():
     if httpd:
         httpd.shutdown()
         openerp.netsvc.close_socket(httpd.socket)
-
-# Master process id, can be used for signaling.
-arbiter_pid = None
-
-# Application setup before we can spawn any worker process.
-# This is suitable for e.g. gunicorn's on_starting hook.
-def on_starting(server):
-    global arbiter_pid
-    arbiter_pid = os.getpid() # TODO check if this is true even after replacing the executable
-    #openerp.tools.cache = kill_workers_cache
-    openerp.netsvc.init_logger()
-    openerp.osv.osv.start_object_proxy()
-    openerp.service.web_services.start_web_services()
-    openerp.modules.module.initialize_sys_path()
-    openerp.modules.loading.open_openerp_namespace()
-    for m in openerp.conf.server_wide_modules:
-        try:
-            openerp.modules.module.load_openerp_module(m)
-        except Exception:
-            msg = ''
-            if m == 'web':
-                msg = """
-The `web` module is provided by the addons found in the `openerp-web` project.
-Maybe you forgot to add those addons in your addons_path configuration."""
-            _logger.exception('Failed to load server-wide module `%s`.%s', m, msg)
-
-# Install our own signal handler on the master process.
-def when_ready(server):
-    # Hijack gunicorn's SIGWINCH handling; we can choose another one.
-    signal.signal(signal.SIGWINCH, make_winch_handler(server))
-
-# Install limits on virtual memory and CPU time consumption.
-def pre_request(worker, req):
-    import os
-    import psutil
-    import resource
-    import signal
-    # VMS and RLIMIT_AS are the same thing: virtual memory, a.k.a. address space
-    rss, vms = psutil.Process(os.getpid()).get_memory_info()
-    soft, hard = resource.getrlimit(resource.RLIMIT_AS)
-    resource.setrlimit(resource.RLIMIT_AS, (config['virtual_memory_limit'], hard))
-
-    r = resource.getrusage(resource.RUSAGE_SELF)
-    cpu_time = r.ru_utime + r.ru_stime
-    signal.signal(signal.SIGXCPU, time_expired)
-    soft, hard = resource.getrlimit(resource.RLIMIT_CPU)
-    resource.setrlimit(resource.RLIMIT_CPU, (cpu_time + config['cpu_time_limit'], hard))
-
-# Reset the worker if it consumes too much memory (e.g. caused by a memory leak).
-def post_request(worker, req, environ):
-    import os
-    import psutil
-    rss, vms = psutil.Process(os.getpid()).get_memory_info()
-    if vms > config['virtual_memory_reset']:
-        _logger.info('Virtual memory consumption '
-            'too high, rebooting the worker.')
-        worker.alive = False # Commit suicide after the request.
-
-# Our signal handler will signal a SGIQUIT to all workers.
-def make_winch_handler(server):
-    def handle_winch(sig, fram):
-        server.kill_workers(signal.SIGQUIT) # This is gunicorn specific.
-    return handle_winch
-
-# SIGXCPU (exceeded CPU time) signal handler will raise an exception.
-def time_expired(n, stack):
-    _logger.info('CPU time limit exceeded.')
-    raise Exception('CPU time limit exceeded.') # TODO one of openerp.exception
-
-# Kill gracefuly the workers (e.g. because we want to clear their cache).
-# This is done by signaling a SIGWINCH to the master process, so it can be
-# called by the workers themselves.
-def kill_workers():
-    try:
-        os.kill(arbiter_pid, signal.SIGWINCH)
-    except OSError, e:
-        if e.errno == errno.ESRCH: # no such pid
-            return
-        raise
-
-class kill_workers_cache(openerp.tools.ormcache):
-    def clear(self, dbname, *args, **kwargs):
-        kill_workers()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
