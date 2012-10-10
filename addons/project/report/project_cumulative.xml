@@ -18,10 +18,12 @@
                 </tree>
             </field>
         </record>
+
         <record id="view_task_history_graph" model="ir.ui.view">
             <field name="name">project.task.history.cumulative.graph</field>
             <field name="model">project.task.history.cumulative</field>
             <field name="arch" type="xml">
+                <!-- <field name="project_id"/> -->
                 <graph string="Project Tasks" type="bar">
                     <field name="date"/>
                     <field name="planned_hours" operator="+"/>
@@ -36,16 +38,18 @@
             <field name="arch" type="xml">
                 <search string="Task's Analysis">
                     <field name="date"/>
-                    <filter name="open" string="In Progress" domain="[('state','in',('open','draft'))]" help="In Progress Tasks" icon="terp-camera_test"/>
-                    <filter string="Pending" domain="[('state','=','pending')]" context="{'show_delegated':False}" help="Pending Tasks" icon="terp-gtk-media-pause"/>
-                    <separator/>
-                    <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]" icon="terp-gtk-media-pause"/>
-                    <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]" icon="terp-camera_test"/>
-                    <separator/>
-                    <filter string="My Tasks" domain="[('user_id','=',uid)]" help="My Tasks" icon="terp-personal" />
-                    <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"  help="Unassigned Tasks" icon="terp-personal-" />
-                    <separator/>
+                    <field name="project_id"/>
                     <field name="user_id"/>
+                    <filter name="open" string="In Progress Tasks" domain="[('state','in',('open','draft'))]"/>
+                    <filter string="Pending Tasks" domain="[('state','=','pending')]" context="{'show_delegated':False}"/>
+                    <separator/>
+                    <filter name="kanban_blocked" string="Blocked" domain="[('kanban_state','=','blocked')]"/>
+                    <filter name="kanban_ready" string="Ready" domain="[('kanban_state','=','done')]"/>
+                    <separator/>
+                    <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
+                    <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"/>
+                    <separator/>
+                    <filter string="My Projects" domain="[('project_id','=',uid)]"/>
                 </search>
             </field>
         </record>
@@ -56,12 +60,12 @@
             <field name="view_type">form</field>
             <field name="view_mode">graph,tree</field>
             <field name="view_id" ref="view_task_history_graph"/>
-            <field eval="False" name="filter"/>
+            <field name="filter" eval="False"/>
             <field name="context">{"search_default_open":1, "search_default_this_month": 1}</field>
         </record>
         <menuitem action="action_view_task_history_cumulative"
             id="menu_action_view_task_history_cumulative"
-            parent="base.menu_project_report" />
+            parent="base.menu_project_report"/>
 
     </data>
 </openerp>
