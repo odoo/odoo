@@ -15,13 +15,17 @@ class res_users(osv.Model):
     _inherit = 'res.users'
 
     _columns = {
-        'oauth_provider_id': fields.many2one('auth.oauth.provider','OAuth Provider'),
+        'oauth_provider_id': fields.many2one('auth.oauth.provider', 'OAuth Provider'),
         'oauth_uid': fields.char('OAuth User ID', help="Oauth Provider user_id"),
-        'oauth_access_token': fields.char('OAuth Token', readonly=True),
+        'oauth_access_token': fields.char('OAuth Access Token', readonly=True),
     }
 
+    _sql_constraints = [
+        ('uniq_users_oauth_provider_oauht_uid', 'unique(auth_provider_id, auth_uid)', 'OAuth UID must be unique per provider'),
+    ]
+
     def auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
-        params = urllib.urlencode({ 'access_token': access_token })
+        params = urllib.urlencode({'access_token': access_token})
         if urlparse.urlparse(endpoint)[4]:
             url = endpoint + '&' + params
         else:
@@ -48,15 +52,19 @@ class res_users(osv.Model):
         # required
         oauth_uid = validation['user_id']
         if not oauth_uid:
-            raise openerp.exceptions.AccessDenied
+            raise openerp.exceptions.AccessDenied()
         email = validation.get('email', 'provider_%d_user_%d' % (p.id, oauth_uid))
         # optional
         name = validation.get('name', email)
-        res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid)])
+        res = self.search(cr, uid, [("oauth_uid", "=", oauth_uid), ('oauth_provider_id', '=', provider)])
         if res:
-            self.write(cr, uid, res[0], { 'oauth_access_token': access_token })
+            assert len(res) == 1
+            self.write(cr, uid, res[0], {'oauth_access_token': access_token})
         else:
-            # New user
+            # New user if signup module available
+            if not hasattr(self, '_signup_create_user'):
+                raise openerp.exceptions.AccessDenied()
+
             new_user = {
                 'name': name,
                 'login': email,
@@ -66,7 +74,9 @@ class res_users(osv.Model):
                 'oauth_access_token': access_token,
                 'active': True,
             }
+            # TODO pass signup token to allow attach new user to right partner
             self._signup_create_user(cr, uid, new_user)
+
         credentials = (cr.dbname, email, access_token)
         return credentials
 
@@ -74,7 +84,7 @@ class res_users(osv.Model):
         try:
             return super(res_users, self).check_credentials(cr, uid, password)
         except openerp.exceptions.AccessDenied:
-            res = self.search(cr, SUPERUSER_ID, [('id','=',uid),('oauth_access_token','=',password)])
+            res = self.search(cr, SUPERUSER_ID, [('id', '=', uid), ('oauth_access_token', '=', password)])
             if not res:
                 raise
 
