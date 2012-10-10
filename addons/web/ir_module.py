@@ -1,5 +1,5 @@
 from openerp.osv import osv
-import openerp.wsgi.core as oewsgi
+import openerp.service.wsgi_server as oewsgi
 
 from common.http import Root
 
