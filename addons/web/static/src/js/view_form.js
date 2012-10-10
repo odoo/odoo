@@ -173,10 +173,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         } else {
             this.$el.find('.oe_form_buttons').replaceWith(this.$buttons);
         }
-        this.$buttons.on('click','.oe_form_button_create',this.on_button_create);
-        this.$buttons.on('click','.oe_form_button_edit',this.on_button_edit);
-        this.$buttons.on('click','.oe_form_button_save',this.on_button_save);
-        this.$buttons.on('click','.oe_form_button_cancel',this.on_button_cancel);
+        this.$buttons.on('click', '.oe_form_button_create', this.on_button_create);
+        this.$buttons.on('click', '.oe_form_button_edit', this.on_button_edit);
+        this.$buttons.on('click', '.oe_form_button_save', this.on_button_save);
+        this.$buttons.on('click', '.oe_form_button_cancel', this.on_button_cancel);
 
         this.$sidebar = this.options.$sidebar || this.$el.find('.oe_form_sidebar');
         if (!this.sidebar && this.options.$sidebar) {
@@ -760,6 +760,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.trigger('load_record', this.datarecord);
             }
         }
+        this.trigger('on_button_cancel');
         return false;
     },
     on_button_new: function() {
