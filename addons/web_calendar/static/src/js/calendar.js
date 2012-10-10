@@ -458,7 +458,7 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
             pager: false
         });
         var def = this.form.appendTo(this.$el);
-        this.form.on('on_rec_create', self, this.on_form_dialog_saved);
+        this.form.on('record_created', self, this.on_form_dialog_saved);
         this.form.on_saved.add_last(this.on_form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();

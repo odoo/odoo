@@ -195,8 +195,8 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
         form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on('on_rec_create', self, function(r) {
-            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r.result]).then(function(new_record) {
+        form.on('record_created', self, function(r) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).then(function(new_record) {
                 am.dialog.on_close();
                 var domain = self.dataset.domain.slice(0);
                 domain.push([self.group_by, '=', new_record[0][0]]);
