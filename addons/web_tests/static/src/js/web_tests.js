@@ -23,14 +23,14 @@ openerp.web_tests = function (instance) {
         on_everything_loaded: function (slice) {
             var records = slice[0].records;
             if (!records.length) {
-                this.form.trigger("record_load",{});
+                this.form.trigger("load_record", {});
                 return;
             }
-            this.form.trigger("record_load", records[0])
+            this.form.trigger("load_record", records[0]);
             _(records.slice(1)).each(function (record, index) {
                 this.dataset.index = index+1;
                 this.form.reposition($('<div>').appendTo(this.$el));
-                this.form.trigger("record_load", record)
+                this.form.trigger("load_record", record);
             }, this);
         }
     });

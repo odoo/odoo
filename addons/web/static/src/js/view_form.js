@@ -126,7 +126,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             self.on("change:actual_mode", self, self.init_pager);
             self.init_pager();
         });
-        self.on("record_load", self, self.on_record_loaded);
+        self.on("load_record", self, self.load_record);
         instance.web.bus.on('clear_uncommitted_changes', this, function(e) {
             if (!this.can_be_discarded()) {
                 e.preventDefault();
@@ -332,7 +332,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 fields.push('display_name');
                 return self.dataset.read_index(fields, {
                     context: { 'bin_size': true, 'future_display_name' : true }
-                }).pipe(function(r){self.trigger('record_load',r)});
+                }).pipe(function(r) {
+                    self.trigger('load_record', r);
+                });
             });
         }
         return shown.pipe(function() {
@@ -355,7 +357,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this._super();
     },
-    on_record_loaded: function(record) {
+    load_record: function(record) {
         var self = this, set_values = [];
         if (!record) {
             this.set({ 'title' : undefined });
@@ -417,10 +419,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var self = this;
         var keys = _.keys(this.fields_view.fields);
         if (keys.length) {
-            return this.dataset.default_get(keys)
-                    .pipe(function(r){self.trigger('record_load',r)});
+            return this.dataset.default_get(keys).pipe(function(r) {
+                self.trigger('load_record', r);
+            });
         }
-        return self.trigger('record_load',{});
+        return self.trigger('load_record', {});
     },
     on_form_changed: function() {
         this.trigger("view_content_has_changed");
@@ -754,7 +757,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 this.trigger('history_back');
             } else {
                 this.to_view_mode();
-                this.trigger('record_load',this.datarecord);
+                this.trigger('load_record', this.datarecord);
             }
         }
         return false;
@@ -954,9 +957,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             } else {
                 var fields = _.keys(self.fields_view.fields);
                 fields.push('display_name');
-                return self.dataset.read_index(fields, {
-                    context : { 'bin_size' : true, 'future_display_name' : true }
-                }).pipe(function(r){self.trigger('record_load',r)});
+                return self.dataset.read_index(fields,
+                    {
+                        context: {
+                            'bin_size': true,
+                            'future_display_name': true
+                        }
+                    }).pipe(function(r) {
+                        self.trigger('load_record', r);
+                    });
             }
         });
     },
@@ -3371,7 +3380,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 if (self.get("effective_readonly")) {
                     $(".oe_form_buttons", controller.$el).children().remove();
                 }
-                controller.on("record_load", self, function(){
+                controller.on("load_record", self, function(){
                      once.resolve();
                  });
                 controller.on_pager_action.add_first(function() {

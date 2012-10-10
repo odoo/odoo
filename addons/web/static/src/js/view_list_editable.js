@@ -626,7 +626,7 @@ openerp.web.list_editable = function (instance) {
         },
         start: function () {
             var self = this;
-            var _super = this._super();
+            var _super = this._super();            
             this.form.embedded_view = this._validate_view(
                     this.delegate.edition_view(this));
             var form_ready = this.form.appendTo(this.$el).then(
@@ -708,10 +708,9 @@ openerp.web.list_editable = function (instance) {
             var self = this;
             var form = self.form;
             var loaded = record
-                ? form.on_record_loaded(_.extend({}, record))
+                ? form.trigger('load_record', _.extend({}, record))
                 : form.load_defaults();
-
-            return loaded.pipe(function () {
+            return $.when(loaded).pipe(function () {
                 return form.do_show({reload: false});
             }).pipe(function () {
                 self.record = form.datarecord;
