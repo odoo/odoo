@@ -46,7 +46,6 @@ class timesheet_report(osv.osv):
         'department_id':fields.many2one('hr.department','Department',readonly=True),
         'date_from': fields.date('Date from',readonly=True,),
         'date_to': fields.date('Date to',readonly=True),
-        'date_current': fields.date('Current date', required=True),
         'state' : fields.selection([
             ('new', 'New'),
             ('draft','Draft'),
@@ -62,13 +61,9 @@ class timesheet_report(osv.osv):
             create or replace view timesheet_report as (
                     select
                         min(aal.id) as id,
-                        htss.date_current,
                         htss.name,
                         htss.date_from,
                         htss.date_to,
-                        to_char(htss.date_current,'YYYY') as year,
-                        to_char(htss.date_current,'MM') as month,
-                        to_char(htss.date_current, 'YYYY-MM-DD') as day,
                         count(*) as nbr,
                         aal.unit_amount as quantity,
                         aal.amount as cost,
@@ -77,18 +72,15 @@ class timesheet_report(osv.osv):
                         (SELECT   sum(day.total_difference)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_diff,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_diff,
                         (SELECT sum(day.total_timesheet)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_timesheet,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_timesheet,
                         (SELECT sum(day.total_attendance)
                             FROM hr_timesheet_sheet_sheet AS sheet 
                             LEFT JOIN hr_timesheet_sheet_sheet_day AS day 
-                            ON (sheet.id = day.sheet_id 
-                            AND day.name = sheet.date_current) where sheet.id=htss.id) as total_attendance,
+                            ON (sheet.id = day.sheet_id) where sheet.id=htss.id) as total_attendance,
                         aal.to_invoice,
                         aal.general_account_id,
                         htss.user_id,
@@ -99,15 +91,11 @@ class timesheet_report(osv.osv):
                     left join hr_analytic_timesheet as hat ON (hat.line_id=aal.id)
                     left join hr_timesheet_sheet_sheet as htss ON (hat.line_id=htss.id)
                     group by
-                        to_char(htss.date_current,'YYYY'),
-                        to_char(htss.date_current,'MM'),
-                        to_char(htss.date_current, 'YYYY-MM-DD'),
                         aal.account_id,
                         htss.date_from,
                         htss.date_to,
                         aal.unit_amount,
                         aal.amount,
-                        htss.date_current,
                         aal.to_invoice,
                         aal.product_id,
                         aal.general_account_id,
