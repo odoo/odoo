@@ -239,23 +239,23 @@ instance.web.DiagramView = instance.web.View.extend({
                     title: _t("Open: ") + title
                 }
             );
-
-        pop.on_write.add(function() {
+        pop.on('on_write_complete', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
             });
-
+        
         var form_fields = [self.parent_field];
         var form_controller = pop.view_form;
 
-        form_controller.on_record_loaded.add_first(function() {
+       form_controller.on("load_record", self, function(){
             _.each(form_fields, function(fld) {
                 if (!(fld in form_controller.fields)) { return; }
                 var field = form_controller.fields[fld];
                 field.$input.prop('disabled', true);
                 field.$drop_down.unbind();
-                field.$menu_btn.unbind();
             });
-        });
+         });
+
+       
     },
 
     // Creates a popup to add a node to the diagram
@@ -280,7 +280,7 @@ instance.web.DiagramView = instance.web.View.extend({
         var form_controller = pop.view_form;
         var form_fields = [this.parent_field];
 
-        form_controller.on_record_loaded.add_last(function() {
+        form_controller.on("load_record", self, function(){
             _.each(form_fields, function(fld) {
                 if (!(fld in form_controller.fields)) { return; }
                 var field = form_controller.fields[fld];
@@ -303,7 +303,7 @@ instance.web.DiagramView = instance.web.View.extend({
                 title: _t("Open: ") + title
             }
         );
-        pop.on_write.add(function() {
+        pop.on('on_write_complete', self, function() {
             self.dataset.read_index(_.keys(self.fields_view.fields)).pipe(self.on_diagram_loaded);
         });
     },
@@ -339,12 +339,13 @@ instance.web.DiagramView = instance.web.View.extend({
 
         var form_controller = pop.view_form;
 
-        form_controller.on_record_loaded.add_last(function () {
+
+       form_controller.on("load_record", self, function(){
             form_controller.fields[self.connectors.attrs.source].set_value(node_source_id);
             form_controller.fields[self.connectors.attrs.source].dirty = true;
             form_controller.fields[self.connectors.attrs.destination].set_value(node_dest_id);
             form_controller.fields[self.connectors.attrs.destination].dirty = true;
-        });
+       });
     },
 
     on_pager_action: function(action) {
