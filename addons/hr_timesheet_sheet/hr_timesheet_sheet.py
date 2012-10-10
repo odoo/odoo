@@ -155,7 +155,6 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
-        print "------------vvvvvvvvvals",vals
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
@@ -390,7 +389,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
-        return dict([(el, self.on_change_account_id(cr, uid, ids, el)) for el in account_ids])
+        return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', uid))) for el in account_ids])
 
 
 hr_timesheet_line()
