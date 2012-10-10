@@ -307,7 +307,9 @@ openerp.web.pyeval = function (instance) {
      * @param {Object} [context] evaluation context
      */
     instance.web.pyeval.eval = function (type, object, context) {
-        if (!context) { context = instance.web.pyeval.context()}
+        context = _.extend(instance.web.pyeval.context(), context || {});
+        context['context'] = py.dict.fromJSON(context);
+
         switch(type) {
         case 'contexts': return eval_contexts(object, context);
         case 'domains': return eval_domains(object, context);

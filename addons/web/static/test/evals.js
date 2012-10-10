@@ -29,6 +29,21 @@ $(document).ready(function () {
             openerp.session.uid = 42;
         }
     });
+    test('context_recursive', function () {
+        var context_to_eval = [{
+            __ref: 'context',
+            __debug: '{"foo": context.get("bar", "qux")}'
+        }];
+        deepEqual(
+            openerp.web.pyeval.eval('contexts', context_to_eval, {bar: "ok"}),
+            {foo: 'ok'});
+        deepEqual(
+            openerp.web.pyeval.eval('contexts', context_to_eval, {bar: false}),
+            {foo: false});
+        deepEqual(
+            openerp.web.pyeval.eval('contexts', context_to_eval),
+            {foo: 'qux'});
+    });
     test('context_sequences', function () {
         // Context n should have base evaluation context + all of contexts
         // 0..n-1 in its own evaluation context
@@ -169,6 +184,21 @@ $(document).ready(function () {
             ['name', '>=', current_date],
             ['name', '<=', current_date]
         ]);
+    });
+    test('context_freevar', function () {
+        var domains_to_eval = [{
+            __ref: 'domain',
+            __debug: '[("foo", "=", context.get("bar", "qux"))]'
+        }, [['bar', '>=', 42]]];
+        deepEqual(
+            openerp.web.pyeval.eval('domains', domains_to_eval, {bar: "ok"}),
+            [['foo', '=', 'ok'], ['bar', '>=', 42]]);
+        deepEqual(
+            openerp.web.pyeval.eval('domains', domains_to_eval, {bar: false}),
+            [['foo', '=', false], ['bar', '>=', 42]]);
+        deepEqual(
+            openerp.web.pyeval.eval('domains', domains_to_eval),
+            [['foo', '=', 'qux'], ['bar', '>=', 42]]);
     });
 
     module('eval.groupbys', {
