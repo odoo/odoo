@@ -405,7 +405,6 @@ class hr_attendance(osv.osv):
         return time.strftime('%Y-%m-%d %H:%M:%S')
 
     def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
-        print "-----------get_hr_time sheet"
         attendance_ids = []
         for ts in self.browse(cr, uid, ids, context=context):
             cr.execute("""
@@ -472,7 +471,6 @@ class hr_attendance(osv.osv):
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
-        print "------------write "
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
