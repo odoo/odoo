@@ -679,6 +679,7 @@ class mail_thread(osv.AbstractModel):
             'subtype_id': subtype_id,
         })
 
+        # if the parent is private, the message must be private
         if parent_id:
             msg = messages.browse(cr, uid, parent_id, context=context)
             if msg.is_private:
