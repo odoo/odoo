@@ -47,31 +47,35 @@ openerp.base_import = function (instance) {
             this._super.apply(this, arguments);
             if(add_button) {
                 this.$buttons.on('click', '.oe_list_button_import', function() {
-                    new instance.web.DataImport(self, self.dataset).open();
+                    self.do_action({
+                        type: 'ir.actions.client',
+                        tag: 'import',
+                        params: {
+                            model: self.dataset.model
+                        }
+                    }, void 0, void 0, function () {
+                        self.reload();
+                    });
                     return false;
                 });
             }
         }
     });
 
-    instance.web.DataImport = instance.web.Dialog.extend({
+    instance.web.client_actions.add(
+        'import', 'instance.web.DataImport');
+    instance.web.DataImport = instance.web.Widget.extend({
         template: 'ImportView',
-        dialog_title: _lt("Import Data"),
         opts: [
             {name: 'encoding', label: _lt("Encoding:"), value: 'utf-8'},
             {name: 'separator', label: _lt("Separator:"), value: ','},
             {name: 'quoting', label: _lt("Quoting:"), value: '"'}
         ],
         events: {
-            'change .oe_import_grid input': 'import_dryrun',
-            'change input.oe_import_file': 'file_update',
-            'change input.oe_import_has_header, .oe_import_options input': 'settings_updated',
-            'click a.oe_import_csv': function (e) {
-                e.preventDefault();
-            },
-            'click a.oe_import_export': function (e) {
-                e.preventDefault();
-            },
+            // 'change .oe_import_grid input': 'import_dryrun',
+            'change .oe_import_file': 'loaded_file',
+            'click .oe_import_file_reload': 'loaded_file',
+            'change input.oe_import_has_header, .oe_import_options input': 'settings_changed',
             'click a.oe_import_toggle': function (e) {
                 e.preventDefault();
                 var $el = $(e.target);
@@ -79,30 +83,84 @@ openerp.base_import = function (instance) {
                         ? $el.next()
                         : $el.parent().next())
                     .toggle();
+            },
+            'click .oe_import_report a.oe_import_report_count': function (e) {
+                e.preventDefault();
+                $(e.target).parent().toggleClass('oe_import_report_showmore');
+            },
+            'click .oe_import_moreinfo_action a': function (e) {
+                e.preventDefault();
+                // #data will parse the attribute on its own, we don't like
+                // that sort of things
+                var action = JSON.parse($(e.target).attr('data-action'));
+                // FIXME: when JS-side clean_action
+                action.views = _(action.views).map(function (view) {
+                    var id = view[0], type = view[1];
+                    return [
+                        id,
+                        type !== 'tree' ? type
+                          : action.view_type === 'form' ? 'list'
+                          : 'tree'
+                    ];
+                });
+                this.do_action(_.extend(action, {
+                    target: 'new',
+                    flags: {
+                        search_view: true,
+                        display_title: true,
+                        pager: true,
+                        list: {selectable: false}
+                    }
+                }));
+            },
+            // buttons
+            'click .oe_import_validate': 'validate',
+            'click .oe_import_import': 'import',
+            'click .oe_import_cancel': function (e) {
+                e.preventDefault();
+                this.exit();
             }
         },
-        init: function (parent, dataset) {
+        init: function (parent, params) {
             var self = this;
-            this._super(parent, {
-                buttons: [
-                    {text: _t("Import File"), click: function () {
-                        self.do_import();
-                    }, 'class': 'oe_import_dialog_button'}
-                ]
-            });
-            this.res_model = parent.model;
+            this._super.apply(this, arguments);
+            this.res_model = params.model;
             // import object id
             this.id = null;
             this.Import = new instance.web.Model('base_import.import');
         },
         start: function () {
             var self = this;
-            return this.Import.call('create', [{
-                'res_model': this.res_model
-            }]).then(function (id) {
-                self.id = id;
-                self.$('input[name=import_id]').val(id);
-            });
+            this.setup_encoding_picker();
+
+            return $.when(
+                this._super(),
+                this.Import.call('create', [{
+                    'res_model': this.res_model
+                }]).then(function (id) {
+                    self.id = id;
+                    self.$('input[name=import_id]').val(id);
+                })
+            )
+        },
+        setup_encoding_picker: function () {
+            this.$('input.oe_import_encoding').select2({
+                width: '160px',
+                query: function (q) {
+                    var make = function (term) { return {id: term, text: term}; };
+                    var suggestions = _.map(
+                        ('utf-8 utf-16 windows-1252 latin1 latin2 big5 ' +
+                         'gb18030 shift_jis windows-1251 koir8_r').split(/\s+/),
+                        make);
+                    if (q.term) {
+                        suggestions.unshift(make(q.term));
+                    }
+                    q.callback({results: suggestions});
+                },
+                initSelection: function (e, c) {
+                    return c({id: 'utf-8', text: 'utf-8'});
+                }
+            }).select2('val', 'utf-8');
         },
 
         import_options: function () {
@@ -118,33 +176,51 @@ openerp.base_import = function (instance) {
         },
 
         //- File & settings change section
-        file_update: function (e) {
+        onfile_loaded: function () {
+            this.$('.oe_import_button').prop('disabled', true);
             if (!this.$('input.oe_import_file').val()) { return; }
 
             this.$el.removeClass('oe_import_preview oe_import_error');
             jsonp(this.$el, {
                 url: '/base_import/set_file'
-            }, this.proxy('settings_updated'));
+            }, this.proxy('settings_changed'));
         },
-        settings_updated: function () {
+        onpreviewing: function () {
+            var self = this;
+            this.$('.oe_import_button').prop('disabled', true);
             this.$el.addClass('oe_import_with_file');
             // TODO: test that write // succeeded?
-            this.Import.call(
-                'parse_preview', [this.id, this.import_options()])
-                .then(this.proxy('preview'));
-        },
-        preview: function (result) {
+            this.$el.removeClass('oe_import_preview_error oe_import_error');
             this.$el.toggleClass(
                 'oe_import_noheaders',
                 !this.$('input.oe_import_has_header').prop('checked'));
-            if (result.error) {
-                this.$el.addClass('oe_import_error');
-                this.$('.oe_import_error_report').html(
+            this.Import.call(
+                'parse_preview', [this.id, this.import_options()])
+                .then(function (result) {
+                    var signal = result.error ? 'preview_failed' : 'preview_succeeded';
+                    self[signal](result);
+                });
+        },
+        onpreview_error: function (event, from, to, result) {
+            this.$('.oe_import_options').show();
+            this.$el.addClass('oe_import_preview_error oe_import_error');
+            this.$('.oe_import_error_report').html(
                     QWeb.render('ImportView.preview.error', result));
-                return;
-            }
+        },
+        onpreview_success: function (event, from, to, result) {
+            this.$('.oe_import_import').removeClass('oe_highlight');
+            this.$('.oe_import_validate').addClass('oe_highlight');
+            this.$('.oe_import_button').prop('disabled', false);
             this.$el.addClass('oe_import_preview');
             this.$('table').html(QWeb.render('ImportView.preview', result));
+
+            if (result.headers.length === 1) {
+                this.$('.oe_import_options').show();
+                this.onresults(null, null, null, [{
+                    type: 'warning',
+                    message: _t("A single column was found in the file, this often means the file separator is incorrect")
+                }]);
+            }
 
             var $fields = this.$('.oe_import_fields input');
             this.render_fields_matches(result, $fields);
@@ -180,7 +256,6 @@ openerp.base_import = function (instance) {
                 width: 'resolve',
                 dropdownCssClass: 'oe_import_selector'
             });
-            this.import_dryrun();
         },
         generate_fields_completion: function (root) {
             var basic = [];
@@ -252,40 +327,116 @@ openerp.base_import = function (instance) {
 
         //- import itself
         call_import: function (options) {
-            var self = this;
             var fields = this.$('.oe_import_fields input.oe_import_match_field').map(function (index, el) {
                 return $(el).select2('val') || false;
             }).get();
             return this.Import.call(
                 'do', [this.id, fields, this.import_options()], options);
         },
-        import_dryrun: function () {
-//            this.call_import({ dryrun: true })
-//                .then(this.proxy('render_import_errors'));
+        onvalidate: function () {
+            return this.call_import({ dryrun: true })
+                .then(this.proxy('validated'));
         },
-        do_import: function () {
+        onimport: function () {
             var self = this;
-            this.call_import({ dryrun: false }).then(function (errors) {
-                if (_.isEmpty(errors)) {
-                    if (self.getParent().reload_content) {
-                        self.getParent().reload_content();
-                    }
-                    self.close();
+            return this.call_import({ dryrun: false }).then(function (message) {
+                if (!_.any(message, function (message) {
+                        return message.type === 'error' })) {
+                    self['import_succeeded']();
                     return;
                 }
-                self.render_import_errors(errors);
+                self['import_failed'](message);
             });
         },
-        render_import_errors: function (errors) {
-            if (_.isEmpty(errors)) {
-                this.$el.removeClass('oe_import_error');
-                return;
+        onimported: function () {
+            this.exit();
+        },
+        exit: function () {
+            this.do_action({
+                type: 'ir.actions.client',
+                tag: 'history_back'
+            });
+        },
+        onresults: function (event, from, to, message) {
+            var no_messages = _.isEmpty(message);
+            this.$('.oe_import_import').toggleClass('oe_highlight', no_messages);
+            this.$('.oe_import_validate').toggleClass('oe_highlight', !no_messages);
+            if (no_messages) {
+                message.push({
+                    type: 'info',
+                    message: _t("Everything seems valid.")
+                });
             }
-            // import failed (or maybe just warnings, if we ever get
-            // warnings?)
+            // row indexes come back 0-indexed, spreadsheets
+            // display 1-indexed.
+            var offset = 1;
+            // offset more if header
+            if (this.import_options().headers) { offset += 1; }
+
             this.$el.addClass('oe_import_error');
             this.$('.oe_import_error_report').html(
-                QWeb.render('ImportView.error', {errors: errors}));
+                QWeb.render('ImportView.error', {
+                    errors: _(message).groupBy('message'),
+                    at: function (rows) {
+                        var from = rows.from + offset;
+                        var to = rows.to + offset;
+                        if (from === to) {
+                            return _.str.sprintf(_t("at row %d"), from);
+                        }
+                        return _.str.sprintf(_t("between rows %d and %d"),
+                                             from, to);
+                    },
+                    more: function (n) {
+                        return _.str.sprintf(_t("(%d more)"), n);
+                    },
+                    info: function (msg) {
+                        if (typeof msg === 'string') {
+                            return _.str.sprintf(
+                                '<div class="oe_import_moreinfo oe_import_moreinfo_message">%s</div>',
+                                _.str.escapeHTML(msg));
+                        }
+                        if (msg instanceof Array) {
+                            return _.str.sprintf(
+                                '<div class="oe_import_moreinfo oe_import_moreinfo_choices">%s <ul>%s</ul></div>',
+                                _.str.escapeHTML(_t("Here are the possible values:")),
+                                _(msg).map(function (msg) {
+                                    return '<li>'
+                                        + _.str.escapeHTML(msg)
+                                    + '</li>';
+                                }).join(''));
+                        }
+                        // Final should be object, action descriptor
+                        return [
+                            '<div class="oe_import_moreinfo oe_import_moreinfo_action">',
+                                _.str.sprintf('<a href="#" data-action="%s">',
+                                        _.str.escapeHTML(JSON.stringify(msg))),
+                                    _.str.escapeHTML(
+                                        _t("Get all possible values")),
+                                '</a>',
+                            '</div>'
+                        ].join('')
+                    },
+                })).get(0).scrollIntoView();
         },
     });
+    // FSM-ize DataImport
+    StateMachine.create({
+        target: instance.web.DataImport.prototype,
+        events: [
+            { name: 'loaded_file',
+              from: ['none', 'file_loaded', 'preview_error', 'preview_success', 'results'],
+              to: 'file_loaded' },
+            { name: 'settings_changed',
+              from: ['file_loaded', 'preview_error', 'preview_success', 'results'],
+              to: 'previewing' },
+            { name: 'preview_failed', from: 'previewing', to: 'preview_error' },
+            { name: 'preview_succeeded', from: 'previewing', to: 'preview_success' },
+            { name: 'validate', from: 'preview_success', to: 'validating' },
+            { name: 'validate', from: 'results', to: 'validating' },
+            { name: 'validated', from: 'validating', to: 'results' },
+            { name: 'import', from: ['preview_success', 'results'], to: 'importing' },
+            { name: 'import_succeeded', from: 'importing', to: 'imported'},
+            { name: 'import_failed', from: 'importing', to: 'results' }
+        ]
+    })
 };
