@@ -3827,7 +3827,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
             colspan: columns,
             'class': 'oe_form_field_one2many_list_row_add'
         }).append(
-            $('<a>', {href: '#'}).text(_t("Add a row"))
+            $('<a>', {href: '#'}).text(_t("Add an item"))
                 .mousedown(function () {
                     // FIXME: needs to be an official API somehow
                     if (self.view.editor.is_editing()) {
