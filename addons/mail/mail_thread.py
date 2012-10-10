@@ -146,25 +146,26 @@ class mail_thread(osv.AbstractModel):
         old = set(fol.partner_id.id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids))
         new = set(old)
 
-        for command in value:
-            if isinstance(command, (int, long)):
-                new.add(command)
-            elif command[0] == 0:
-                new.add(partner_obj.create(cr, uid, command[2], context=context))
-            elif command[0] == 1:
-                partner_obj.write(cr, uid, [command[1]], command[2], context=context)
-                new.add(command[1])
-            elif command[0] == 2:
-                partner_obj.unlink(cr, uid, [command[1]], context=context)
-                new.discard(command[1])
-            elif command[0] == 3:
-                new.discard(command[1])
-            elif command[0] == 4:
-                new.add(command[1])
-            elif command[0] == 5:
-                new.clear()
-            elif command[0] == 6:
-                new = set(command[2])
+        if value:
+            for command in value:
+                if isinstance(command, (int, long)):
+                    new.add(command)
+                elif command[0] == 0:
+                    new.add(partner_obj.create(cr, uid, command[2], context=context))
+                elif command[0] == 1:
+                    partner_obj.write(cr, uid, [command[1]], command[2], context=context)
+                    new.add(command[1])
+                elif command[0] == 2:
+                    partner_obj.unlink(cr, uid, [command[1]], context=context)
+                    new.discard(command[1])
+                elif command[0] == 3:
+                    new.discard(command[1])
+                elif command[0] == 4:
+                    new.add(command[1])
+                elif command[0] == 5:
+                    new.clear()
+                elif command[0] == 6:
+                    new = set(command[2])
 
         # remove partners that are no longer followers
         fol_ids = fol_obj.search(cr, SUPERUSER_ID,
