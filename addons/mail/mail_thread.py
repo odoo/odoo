@@ -138,6 +138,8 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _set_followers(self, cr, uid, id, name, value, arg, context=None):
+        if not value:
+            return
         partner_obj = self.pool.get('res.partner')
         fol_obj = self.pool.get('mail.followers')
 
@@ -420,12 +422,12 @@ class mail_thread(osv.AbstractModel):
             model_pool = self.pool.get(model)
             assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                 "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                    (msg['message-id'], model)
+                    (msg['message_id'], model)
             if thread_id and hasattr(model_pool, 'message_update'):
                 model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            self.message_post(cr, uid, [thread_id], context=context, **msg)
+            model_pool.message_post(cr, uid, [thread_id], context=context, **msg)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -536,7 +538,7 @@ class mail_thread(osv.AbstractModel):
                     field may not be present if missing in original
                     message::
 
-                    { 'message-id': msg_id,
+                    { 'message_id': msg_id,
                       'subject': subject,
                       'from': from,
                       'to': to,
