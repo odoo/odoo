@@ -198,7 +198,7 @@
                 <search string="Issue Tracker Search">
                     <field name="name" string="Issue" filter_domain="['|', '|',('partner_id','ilike',self),('email_from','ilike',self),('name','ilike',self)]"/>
                     <field name="id"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter string="New" icon="terp-document-new" domain="[('state','=','draft')]" help="New Issues"/>
                     <filter string="To Do" domain="[('state','=','open')]" help="To Do Issues" icon="terp-check"/>
