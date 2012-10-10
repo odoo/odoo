@@ -4030,7 +4030,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
 
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
-        this.dataset.on_unlink.add_last(function(ids) {
+        this.dataset.on('unlink', self, function(ids) {
             self.dataset_changed();
         });
 
@@ -4163,7 +4163,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
 
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
-        this.dataset.on_unlink.add_last(function(ids) {
+        this.dataset.on('unlink', self, function(ids) {
             self.dataset_changed();
         });
 
