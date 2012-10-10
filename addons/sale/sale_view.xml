@@ -144,7 +144,7 @@
         <record id="view_quotation_tree" model="ir.ui.view">
             <field name="name">sale.order.tree</field>
             <field name="model">sale.order</field>
-            <field name="priority">2</field>
+            <field name="priority">4</field>
             <field name="arch" type="xml">
                 <tree string="Quotation" fonts="bold:message_unread==True" colors="grey:state=='cancel';blue:state in ('waiting_date','manual');red:state in ('invoice_except','shipping_except')">
                     <field name="message_unread" invisible="1"/>
