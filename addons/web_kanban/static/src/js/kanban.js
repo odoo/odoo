@@ -672,13 +672,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-<<<<<<< TREE
         form.on("on_button_cancel", self, am.dialog.on_close);
         form.on_saved.add_last(function() {
-=======
-        form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on('on_saved', self, function() {
->>>>>>> MERGE-SOURCE
             am.dialog.on_close();
             self.view.do_reload();
         });
