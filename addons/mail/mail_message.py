@@ -496,9 +496,7 @@ class mail_message(osv.Model):
         other_ids = set(ids).difference(set(notified_ids), set(author_ids), set(doc_follower_ids), set(document_related_ids))
         if not other_ids:
             return
-        raise orm.except_orm(_('Access Denied'),
-                            _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % \
-                            (self._description, operation))
+        return False
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
