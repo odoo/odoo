@@ -50,6 +50,16 @@ class sale_order(osv.osv):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = "Sales Order"
 
+    def onchange_shop_id(self, cr, uid, ids, shop_id, context=None):
+        v = {}
+        if shop_id:
+            shop = self.pool.get('sale.shop').browse(cr, uid, shop_id, context=context)
+            if shop.project_id.id:
+                v['project_id'] = shop.project_id.id
+            if shop.pricelist_id.id:
+                v['pricelist_id'] = shop.pricelist_id.id
+        return {'value': v}
+
     def copy(self, cr, uid, id, default=None, context=None):
         if not default:
             default = {}
@@ -783,6 +793,7 @@ class sale_order_line(osv.osv):
                             _('There is no Fiscal Position defined or Income category account defined for default properties of Product categories.'))
             res = {
                 'name': line.name,
+                'sequence': line.sequence,
                 'origin': line.order_id.name,
                 'account_id': account_id,
                 'price_unit': pu,
@@ -900,7 +911,6 @@ class sale_order_line(osv.osv):
         fpos = fiscal_position and self.pool.get('account.fiscal.position').browse(cr, uid, fiscal_position) or False
         if update_tax: #The quantity only have changed
             result['tax_id'] = self.pool.get('account.fiscal.position').map_tax(cr, uid, fpos, product_obj.taxes_id)
-            result.update({'type': product_obj.procure_method})
 
         if not flag:
             result['name'] = self.pool.get('product.product').name_get(cr, uid, [product_obj.id], context=context_partner)[0][1]

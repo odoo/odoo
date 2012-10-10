@@ -1,7 +1,8 @@
 -
   In order to check account voucher module in OpenERP I create a customer voucher
 -
-  !record {model: account.voucher, id: account_voucher_voucherforaxelor0}:
+  !record {model: account.voucher, id: account_voucher_voucherforaxelor0, view: view_sale_receipt_form}:
+    type: sale
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company
@@ -47,7 +48,8 @@
 -
   Now I create a Vendor Voucher
 -
-  !record {model: account.voucher, id: account_voucher_voucheraxelor0, view: False}:
+  !record {model: account.voucher, id: account_voucher_voucheraxelor0, view: view_voucher_filter_vendor}:
+    type: purchase
     account_id: account.cash
     amount: 1000.0
     company_id: base.main_company

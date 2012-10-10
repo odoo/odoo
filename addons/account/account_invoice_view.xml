@@ -189,7 +189,7 @@
                     </group>
                     <notebook>
                         <page string="Invoice">
-                            <field context="{'partner_id': partner_id, 'price_type': 'price_type' in dir() and price_type or False, 'type': type}" name="invoice_line">
+                            <field context="{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type}" name="invoice_line">
                                 <tree string="Invoice lines" editable="bottom">
                                     <field name="product_id"
                                         on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, context, parent.company_id)"/>
@@ -458,7 +458,6 @@
                     <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
                     <field name="partner_id"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="journal_id"/>
                     <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>
