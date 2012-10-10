@@ -82,9 +82,13 @@
     overflow: auto;
 }
 
-.openerp .oe_mail_record_wall > .oe_mail_wall_threads {
+.openerp .oe_mail_record_wall {
     margin: auto;
     width: 560px;
+}
+
+.openerp .oe_mail_record_wall > .oe_mail_wall_threads {
+    float: left;
 }
 
 .openerp div.oe_mail_recthread_aside {
@@ -145,6 +149,10 @@
     z-index: 5;
 }
 .openerp .oe_mouse_subtypes .oe_recthread_subtypes {
+    background: #fff;
+    padding: 2px;
+    border: 1px solid #aaaaaa;
+    border-top: 0px;
     position: absolute;
     z-index: 2;
 }

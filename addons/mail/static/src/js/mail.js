@@ -19,12 +19,39 @@ openerp.mail = function(session) {
     session.web.FormView = session.web.FormView.extend({
         do_action: function(action, on_close) {
             if (action.res_model == 'mail.compose.message') {
-                $(".openerp_webclient_container .oe_view_manager_current .oe_mail .oe_mail_wall_button_fletch").click();
-                return false;
+
+                if(action.action_from != 'mail.ThreadComposeMessage' && action.type != 'ir.actions.act_window_close'){
+                    // destroy wall before reload
+                    $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_destroy').click();
+
+
+                    /* hack for stop context propagation of wrong value
+                     * delete this hack when a global method to clean context is create
+                    */
+                    for(var key in action.context){
+                        if( key!='default_template_id' &&
+                            key!='default_use_template' &&
+                            key!='default_model' &&
+                            key!='default_res_id' &&
+                            key!='default_subtype' &&
+                            key!='active_id' &&
+                            key!='lang' &&
+                            key!='bin_raw' &&
+                            key!='tz' &&
+                            key!='active_model' &&
+                            key!='edi_web_url_view' &&
+                            key!='active_ids')
+                        action.context[key]=null;
+                    };
+                    /* end hack */
+
+
+                } else {
+                    $('.openerp .oe_mail_wall_threads .oe_mail_thread button.oe_mail_wall_button_fletch').click();
+                }
+
             }
-            else {
-                return this._super(action, on_close);
-            }
+            return this._super(action, on_close);
         },
     });
 
@@ -90,7 +117,7 @@ openerp.mail = function(session) {
      * This form is a mail.compose.message form_view.
      */
     
-    mail.ComposeMessage = session.web.Widget.extend({
+    mail.ThreadComposeMessage = session.web.Widget.extend({
         template: 'mail.compose_message',
 
         /**
@@ -316,11 +343,12 @@ openerp.mail = function(session) {
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 view_type: 'form',
+                action_from: 'mail.ThreadComposeMessage',
                 views: [[false, 'form']],
                 target: 'new',
                 context: {
-                    'default_res_model': this.model,
-                    'default_res_id': this.res_id,
+                    'default_res_model': this.context.default_res_model,
+                    'default_res_id': this.context.default_res_id,
                     'default_content_subtype': 'html',
                     'default_is_private': true,
                     'default_parent_id': this.id,
@@ -847,7 +875,7 @@ openerp.mail = function(session) {
 
         instantiate_ComposeMessage: function(){
             // add message composition form view
-            this.ComposeMessage = new mail.ComposeMessage(this,{
+            this.ComposeMessage = new mail.ThreadComposeMessage(this,{
                 'context': this.context,
                 'parameters': this,
                 'show_attachment_delete': true,
@@ -860,7 +888,7 @@ openerp.mail = function(session) {
         on_first_thread: function(){
             var self=this;
             // fetch and display message, using message_ids if set
-            this.message_fletch(true);
+            this.message_fletch();
 
             $(document).scroll( self.on_scroll );
             window.setTimeout( self.on_scroll, 500 );
@@ -872,11 +900,15 @@ openerp.mail = function(session) {
                 this.ComposeMessage.set_free_attachments();
             }
 
-            var button_flesh = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){
+            var button_destroy = $('<button style="display:none;" class="oe_mail_wall_button_destroy"/>').click(function(event){
                 if(event)event.stopPropagation();
-                self.message_fletch(true);
+                self.destroy();
             });
-            this.$el.prepend(button_flesh);
+            var button_fletch = $('<button style="display:none;" class="oe_mail_wall_button_fletch"/>').click(function(event){
+                if(event)event.stopPropagation();
+                self.message_fletch();
+            });
+            this.$el.prepend(button_destroy,button_fletch);
             this.$el.addClass("oe_mail_wall_first_thread");
         },
 
