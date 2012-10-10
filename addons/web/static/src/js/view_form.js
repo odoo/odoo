@@ -2982,7 +2982,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     title: _t("Open: ") + self.string
                 }
             );
-            pop.on('on_write_complete', self, function(){
+            pop.on('write_completed', self, function(){
                 self.display_value = {};
                 self.render_value();
                 self.focus();
@@ -4134,7 +4134,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             title: _t("Open: ") + this.m2m_field.string,
             readonly: this.getParent().get("effective_readonly")
         });
-        pop.on('on_write_complete', self, self.reload_content);
+        pop.on('write_completed', self, self.reload_content);
     }
 });
 
@@ -4382,7 +4382,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         this.dataset.write_function = function(id, data, options, sup) {
             var fct = self.options.write_function || sup;
             return fct.call(this, id, data, options).then(function() {
-                self.trigger('on_write_complete');
+                self.trigger('write_completed');
             });
         };
         this.dataset.parent_view = this.options.parent_view;
