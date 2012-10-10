@@ -54,6 +54,8 @@ class report_event_registration(osv.osv):
         Initialize the sql view for the event registration
         """
         tools.drop_view_if_exists(cr, 'report_event_registration')
+
+        # TOFIX this request won't select events that have no registration
         cr.execute(""" CREATE OR REPLACE view report_event_registration AS (
             SELECT
                 event_id,
