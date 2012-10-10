@@ -61,6 +61,7 @@ import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
 from openerp.tools.safe_eval import safe_eval as eval
+from ast import literal_eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
@@ -1732,7 +1733,13 @@ class BaseModel(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
-
+                #evaluate the options as python code, but send it as json to the client
+                if node.get('options'):
+                    try:
+                        node.set('options', simplejson.dumps(literal_eval(node.get('options'))))
+                    except Exception, e:
+                        _logger.exception('Invalid `options´ attribute, should be a valid python expression: %r', node.get('options'))
+                        raise except_orm('Invalid options', 'Invalid options: %r %s' % (node.get('options'), e))
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
