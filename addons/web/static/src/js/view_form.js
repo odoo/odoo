@@ -3565,7 +3565,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
         });
         this.__ignore_blur = false;
     },
-    switch_view: function(mode, unused) {
+    do_switch_view: function(mode, unused) {
         if (mode !== 'form') {
             return this._super(mode, unused);
         }
