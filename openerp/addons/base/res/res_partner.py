@@ -22,23 +22,58 @@
 import math
 import openerp
 from osv import osv, fields
+from openerp import SUPERUSER_ID
 import re
 import tools
 from tools.translate import _
 import logging
 import pooler
 import pytz
+from lxml import etree
+
+class format_address(object):
+    def fields_view_get_address(self, cr, uid, arch, context={}):
+        user_obj = self.pool.get('res.users')
+        fmt = user_obj.browse(cr, SUPERUSER_ID, uid, context).company_id.country_id
+        fmt = fmt and fmt.address_format
+        layouts = {
+            '%(city)s %(state_code)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City" style="width: 50%%"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" style="width: 47%%" options='{"no_open": true}'/>
+                    <br/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """,
+            '%(zip)s %(city)s': """
+                <div class="address_format">
+                    <field name="zip" placeholder="ZIP" style="width: 40%%"/>
+                    <field name="city" placeholder="City" style="width: 57%%"/>
+                    <br/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                </div>
+            """,
+            '%(city)s\n%(state_name)s\n%(zip)s': """
+                <div class="address_format">
+                    <field name="city" placeholder="City"/>
+                    <field name="state_id" class="oe_no_button" placeholder="State" options='{"no_open": true}'/>
+                    <field name="zip" placeholder="ZIP"/>
+                </div>
+            """
+        }
+        for k,v in layouts.items():
+            if fmt and (k in fmt):
+                doc = etree.fromstring(arch)
+                for node in doc.xpath("//div[@class='address_format']"):
+                    tree = etree.fromstring(v)
+                    node.getparent().replace(node, tree)
+                arch = etree.tostring(doc)
+                break
+        return arch
+
 
 def _tz_get(self,cr,uid, context=None):
     return [(x, x) for x in pytz.all_timezones]
-
-class res_payterm(osv.osv):
-    _description = 'Payment term'
-    _name = 'res.payterm'
-    _order = 'name'
-    _columns = {
-        'name': fields.char('Payment Term (short name)', size=64),
-    }
 
 class res_partner_category(osv.osv):
 
@@ -127,7 +162,7 @@ def _lang_get(self, cr, uid, context=None):
 POSTAL_ADDRESS_FIELDS = ('street', 'street2', 'zip', 'city', 'state_id', 'country_id')
 ADDRESS_FIELDS = POSTAL_ADDRESS_FIELDS + ('email', 'phone', 'fax', 'mobile', 'website', 'ref', 'lang')
 
-class res_partner(osv.osv):
+class res_partner(osv.osv, format_address):
     _description = 'Partner'
     _name = "res.partner"
 
@@ -151,28 +186,31 @@ class res_partner(osv.osv):
         'name': fields.char('Name', size=128, required=True, select=True),
         'date': fields.date('Date', select=1),
         'title': fields.many2one('res.partner.title', 'Title'),
-        'parent_id': fields.many2one('res.partner', 'Owned by'),
+        'parent_id': fields.many2one('res.partner', 'Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
         'lang': fields.selection(_lang_get, 'Language',
-            help="If the selected language is loaded in the system, all documents related to this partner will be printed in this language. If not, it will be english."),
+            help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
                  "It is important to set a value for this field. You should use the same timezone "
                  "that is otherwise used to pick and render date and time values: your computer's timezone."),
-        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this partner if any.'),
-        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if the partner is subjected to taxes. Used by the some of the legal statements."),
+        'user_id': fields.many2one('res.users', 'Salesperson', help='The internal user that is in charge of communicating with this contact if any.'),
+        'vat': fields.char('TIN', size=32, help="Tax Identification Number. Check the box if this contact is subjected to taxes. Used by the some of the legal statements."),
         'bank_ids': fields.one2many('res.partner.bank', 'partner_id', 'Banks'),
         'website': fields.char('Website', size=64, help="Website of Partner or Company"),
         'comment': fields.text('Notes'),
-        'address': fields.one2many('res.partner.address', 'partner_id', 'Contacts'),   # should be removed in version 7, but kept until then for backward compatibility
+        'address': fields.one2many('res.partner.address', 'partner_id', 'Addresses',
+                deprecated="The address information is now directly stored on each Partner record. "\
+                           "Multiple contacts with their own address can be added via the child_ids relationship. "\
+                           "This field will be removed as of OpenERP 7.1."),
         'category_id': fields.many2many('res.partner.category', id1='partner_id', id2='category_id', string='Tags'),
         'credit_limit': fields.float(string='Credit Limit'),
         'ean13': fields.char('EAN13', size=13),
         'active': fields.boolean('Active'),
-        'customer': fields.boolean('Customer', help="Check this box if the partner is a customer."),
-        'supplier': fields.boolean('Supplier', help="Check this box if the partner is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
-        'employee': fields.boolean('Employee', help="Check this box if the partner is an Employee."),
+        'customer': fields.boolean('Customer', help="Check this box if this contact is a customer."),
+        'supplier': fields.boolean('Supplier', help="Check this box if this contact is a supplier. If it's not checked, purchase people will not see it when encoding a purchase order."),
+        'employee': fields.boolean('Employee', help="Check this box if this contact is an Employee."),
         'function': fields.char('Job Position', size=128),
         'type': fields.selection([('default', 'Default'), ('invoice', 'Invoice'),
                                    ('delivery', 'Delivery'), ('contact', 'Contact'),
@@ -184,7 +222,8 @@ class res_partner(osv.osv):
         'city': fields.char('City', size=128),
         'state_id': fields.many2one("res.country.state", 'State'),
         'country_id': fields.many2one('res.country', 'Country'),
-        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country'),   # for backward compatibility
+        'country': fields.related('country_id', type='many2one', relation='res.country', string='Country',
+                                  deprecated="This field will be removed as of OpenERP 7.1, use country_id instead"),
         'email': fields.char('Email', size=240),
         'phone': fields.char('Phone', size=64),
         'fax': fields.char('Fax', size=64),
@@ -194,13 +233,13 @@ class res_partner(osv.osv):
         'use_parent_address': fields.boolean('Use Company Address', help="Select this if you want to set company's address information  for this contact"),
         # image: all image fields are base64 encoded and PIL-supported
         'image': fields.binary("Image",
-            help="This field holds the image used as avatar for the partner, limited to 1024x1024px"),
+            help="This field holds the image used as avatar for this contact, limited to 1024x1024px"),
         'image_medium': fields.function(_get_image, fnct_inv=_set_image,
             string="Medium-sized image", type="binary", multi="_get_image",
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Medium-sized image of the partner. It is automatically "\
+            help="Medium-sized image of this contact. It is automatically "\
                  "resized as a 128x128px image, with aspect ratio preserved. "\
                  "Use this field in form views or some kanban views."),
         'image_small': fields.function(_get_image, fnct_inv=_set_image,
@@ -208,7 +247,7 @@ class res_partner(osv.osv):
             store={
                 'res.partner': (lambda self, cr, uid, ids, c={}: ids, ['image'], 10),
             },
-            help="Small-sized image of the partner. It is automatically "\
+            help="Small-sized image of this contact. It is automatically "\
                  "resized as a 64x64px image, with aspect ratio preserved. "\
                  "Use this field anywhere a small image is required."),
         'company_id': fields.many2one('res.company', 'Company', select=1),
@@ -230,6 +269,14 @@ class res_partner(osv.osv):
         else:
             image = tools.image_colorize(open(openerp.modules.get_module_resource('base', 'static/src/img', 'avatar.png')).read())
         return tools.image_resize_image_big(image.encode('base64'))
+
+    def fields_view_get(self, cr, user, view_id=None, view_type='form', context=None, toolbar=False, submenu=False):
+        if (not view_id) and (view_type=='form') and context and context.get('force_email', False):
+            view_id = self.pool.get('ir.model.data').get_object_reference(cr, user, 'base', 'view_partner_simple_form')[1]
+        res = super(res_partner,self).fields_view_get(cr, user, view_id, view_type, context, toolbar=toolbar, submenu=submenu)
+        if view_type == 'form':
+            res['arch'] = self.fields_view_get_address(cr, user, res['arch'], context=context)
+        return res
 
     _defaults = {
         'active': True,
@@ -350,7 +397,7 @@ class res_partner(osv.osv):
             - otherwise: default, everything is set as the name """
         match = re.search(r'([^\s,<@]+@[^>\s,]+)', text)
         if match:
-            email = match.group(1) 
+            email = match.group(1)
             name = text[:text.index(email)].replace('"','').replace('<','').strip()
         else:
             name, email = text, ''
@@ -398,7 +445,7 @@ class res_partner(osv.osv):
     def find_or_create(self, cr, uid, email, context=None):
         """ Find a partner with the given ``email`` or use :py:method:`~.name_create`
             to create one
-            
+
             :param str email: email-like string, which should contain at least one email,
                 e.g. ``"Raoul Grosbedon <r.g@grosbedon.fr>"``"""
         assert email, 'an email is required for find_or_create to work'
@@ -498,7 +545,7 @@ class res_partner(osv.osv):
         # get the information that will be injected into the display format
         # get the address format
         address_format = address.country_id and address.country_id.address_format or \
-                                         '%(company_name)s\n%(street)s\n%(street2)s\n%(city)s,%(state_code)s %(zip)s'
+              "%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s"
         args = {
             'state_code': address.state_id and address.state_id.code or '',
             'state_name': address.state_id and address.state_id.name or '',
@@ -511,9 +558,9 @@ class res_partner(osv.osv):
             args[field] = getattr(address, field) or ''
         if without_company:
             args['company_name'] = ''
+        elif address.parent_id:
+            address_format = '%(company_name)s\n' + address_format
         return address_format % args
-
-
 
 # res.partner.address is deprecated; it is still there for backward compability only and will be removed in next version
 class res_partner_address(osv.osv):

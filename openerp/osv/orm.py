@@ -896,8 +896,8 @@ class BaseModel(object):
                         for c in cls.__dict__.get(s, []):
                             exist = False
                             for c2 in range(len(new)):
-                                 #For _constraints, we should check field and methods as well
-                                 if new[c2][2]==c[2] and (new[c2][0] == c[0] \
+                                #For _constraints, we should check field and methods as well
+                                if new[c2][2]==c[2] and (new[c2][0] == c[0] \
                                         or getattr(new[c2][0],'__name__', True) == \
                                             getattr(c[0],'__name__', False)):
                                     # If new class defines a constraint with
@@ -1527,7 +1527,7 @@ class BaseModel(object):
 
     def _validate(self, cr, uid, ids, context=None):
         context = context or {}
-        lng = context.get('lang', False) or 'en_US'
+        lng = context.get('lang')
         trans = self.pool.get('ir.translation')
         error_msgs = []
         for constraint in self._constraints:
@@ -1543,7 +1543,7 @@ class BaseModel(object):
                     else:
                         translated_msg = tmp_msg
                 else:
-                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg) or msg
+                    translated_msg = trans._get_source(cr, uid, self._name, 'constraint', lng, msg)
                 error_msgs.append(
                         _("Error occurred while validating the field(s) %s: %s") % (','.join(fields), translated_msg)
                 )
@@ -2793,7 +2793,7 @@ class BaseModel(object):
                 # if val is a many2one, just write the ID
                 if type(val) == tuple:
                     val = val[0]
-                if (val<>False) or (type(val)<>bool):
+                if val is not False:
                     cr.execute(update_query, (ss[1](val), key))
 
     def _check_selection_field_value(self, cr, uid, field, value, context=None):
@@ -2817,7 +2817,7 @@ class BaseModel(object):
         elif val in dict(self._columns[field].selection(self, cr, uid, context=context)):
             return
         raise except_orm(_('ValidateError'),
-            _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
+                         _('The value "%s" for the field "%s.%s" is not in the selection') % (value, self._table, field))
 
     def _check_removed_columns(self, cr, log=False):
         # iterate on the database columns to drop the NOT NULL constraints
@@ -3129,11 +3129,11 @@ class BaseModel(object):
                                 cr.commit()
                                 if f._type == 'text':
                                     # FIXME: for fields.text columns we should try creating GIN indexes instead (seems most suitable for an ERP context)
-                                    msg = "Table '%s': Adding (b-tree) index for text column '%s'."\
+                                    msg = "Table '%s': Adding (b-tree) index for %s column '%s'."\
                                         "This is probably useless (does not work for fulltext search) and prevents INSERTs of long texts"\
                                         " because there is a length limit for indexable btree values!\n"\
                                         "Use a search view instead if you simply want to make the field searchable."
-                                    _schema.warning(msg, self._table, k, f._type)
+                                    _schema.warning(msg, self._table, f._type, k)
                             if res2 and not f.select:
                                 cr.execute('DROP INDEX "%s_%s_index"' % (self._table, k))
                                 cr.commit()
@@ -3496,7 +3496,8 @@ class BaseModel(object):
         if context is None:
             context = {}
 
-        write_access = self.check_access_rights(cr, user, 'write') or self.check_access_rights(cr, user, 'create')
+        write_access = self.check_access_rights(cr, user, 'write', raise_exception=False) \
+            or self.check_access_rights(cr, user, 'create', raise_exception=False)
 
         res = {}
 
@@ -3515,24 +3516,25 @@ class BaseModel(object):
                 res[f]['readonly'] = True
                 res[f]['states'] = {}
 
-            if 'string' in res[f]:
-                res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context.get('lang', False) or 'en_US')
-                if res_trans:
-                    res[f]['string'] = res_trans
-            if 'help' in res[f]:
-                help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context.get('lang', False) or 'en_US')
-                if help_trans:
-                    res[f]['help'] = help_trans
-            if 'selection' in res[f]:
-                if isinstance(field.selection, (tuple, list)):
-                    sel = field.selection
-                    sel2 = []
-                    for key, val in sel:
-                        val2 = None
-                        if val:
-                            val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection', context.get('lang', False) or 'en_US', val)
-                        sel2.append((key, val2 or val))
-                    res[f]['selection'] = sel2
+            if 'lang' in context:
+                if 'string' in res[f]:
+                    res_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'field', context['lang'])
+                    if res_trans:
+                        res[f]['string'] = res_trans
+                if 'help' in res[f]:
+                    help_trans = translation_obj._get_source(cr, user, self._name + ',' + f, 'help', context['lang'])
+                    if help_trans:
+                        res[f]['help'] = help_trans
+                if 'selection' in res[f]:
+                    if isinstance(field.selection, (tuple, list)):
+                        sel = field.selection
+                        sel2 = []
+                        for key, val in sel:
+                            val2 = None
+                            if val:
+                                val2 = translation_obj._get_source(cr, user, self._name + ',' + f, 'selection',  context['lang'], val)
+                            sel2.append((key, val2 or val))
+                        res[f]['selection'] = sel2
 
         return res
 
@@ -3873,6 +3875,12 @@ class BaseModel(object):
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
+
+    def _workflow_signal(self, cr, uid, ids, signal, context=None):
+        """Send given workflow signal""" 
+        wf_service = netsvc.LocalService("workflow")
+        for res_id in ids:
+            wf_service.trg_validate(uid, self._name, res_id, signal, cr)
 
     def unlink(self, cr, uid, ids, context=None):
         """
@@ -4357,9 +4365,9 @@ class BaseModel(object):
                     and vals[field]:
                 self._check_selection_field_value(cr, user, field, vals[field], context=context)
         if self._log_access:
-            upd0 += ',create_uid,create_date'
-            upd1 += ",%s,(now() at time zone 'UTC')"
-            upd2.append(user)
+            upd0 += ',create_uid,create_date,write_uid,write_date'
+            upd1 += ",%s,(now() at time zone 'UTC'),%s,(now() at time zone 'UTC')"
+            upd2.extend((user, user))
         cr.execute('insert into "'+self._table+'" (id'+upd0+") values ("+str(id_new)+upd1+')', tuple(upd2))
         self.check_access_rule(cr, user, [id_new], 'create', context=context)
         upd_todo.sort(lambda x, y: self._columns[x].priority-self._columns[y].priority)

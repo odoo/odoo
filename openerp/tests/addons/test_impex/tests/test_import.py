@@ -391,7 +391,7 @@ class test_selection(ImporterCase):
             'translatable': True,
             'date_format': '%d.%m.%Y',
             'decimal_point': ',',
-            'thousand_sep': ' ',
+            'thousands_sep': ' ',
         })
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:
@@ -458,7 +458,7 @@ class test_selection_function(ImporterCase):
             'translatable': True,
             'date_format': '%d.%m.%Y',
             'decimal_point': ',',
-            'thousand_sep': ' ',
+            'thousands_sep': ' ',
         })
         Translations = self.registry('ir.translation')
         for source, value in self.translations_fr:

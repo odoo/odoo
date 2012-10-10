@@ -328,7 +328,7 @@ class act_wizard(osv.osv):
 act_wizard()
 
 class act_url(osv.osv):
-    _name = 'ir.actions.url'
+    _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
     _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
@@ -574,7 +574,7 @@ class actions_server(osv.osv):
     #   ids : original ids
     #   id  : current id of the object
     # OUT:
-    #   False : Finnished correctly
+    #   False : Finished correctly
     #   ACTION_ID : Action to launch
 
     # FIXME: refactor all the eval() calls in run()!
@@ -771,7 +771,7 @@ class ir_actions_todo(osv.osv):
         'type': fields.selection(TODO_TYPES, 'Type', required=True,
             help="""Manual: Launched manually.
 Automatic: Runs whenever the system is reconfigured.
-Launch Manually Once: after hacing been launched manually, it sets automatically to Done."""),
+Launch Manually Once: after having been launched manually, it sets automatically to Done."""),
         'groups_id': fields.many2many('res.groups', 'res_groups_action_rel', 'uid', 'gid', 'Groups'),
         'note': fields.text('Text', translate=True),
     }

@@ -1552,23 +1552,15 @@ def field_to_dict(model, cr, user, field, context=None):
         res['fnct_search'] = field._fnct_search and field._fnct_search.func_name or False
         res['fnct_inv'] = field._fnct_inv and field._fnct_inv.func_name or False
         res['fnct_inv_arg'] = field._fnct_inv_arg or False
-        res['func_obj'] = field._obj or False
     if isinstance(field, many2many):
         (table, col1, col2) = field._sql_names(model)
-        res['related_columns'] = [col1, col2]
-        res['third_table'] = table
-    for arg in ('string', 'readonly', 'states', 'size', 'required', 'group_operator',
-            'change_default', 'translate', 'help', 'select', 'selectable', 'groups'):
-        if getattr(field, arg):
-            res[arg] = getattr(field, arg)
-    for arg in ('digits', 'invisible', 'filters'):
+        res['m2m_join_columns'] = [col1, col2]
+        res['m2m_join_table'] = table
+    for arg in ('string', 'readonly', 'states', 'size', 'group_operator', 'required',
+            'change_default', 'translate', 'help', 'select', 'selectable', 'groups',
+            'deprecated', 'digits', 'invisible', 'filters'):
         if getattr(field, arg, None):
             res[arg] = getattr(field, arg)
-
-    if field.string:
-        res['string'] = field.string
-    if field.help:
-        res['help'] = field.help
 
     if hasattr(field, 'selection'):
         if isinstance(field.selection, (tuple, list)):

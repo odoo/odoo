@@ -56,7 +56,7 @@ class report_printscreen_list(report_int):
     def _parse_string(self, view):
         try:
             dom = etree.XML(view.encode('utf-8'))
-        except:
+        except Exception:
             dom = etree.XML(view)
         return self._parse_node(dom)
 

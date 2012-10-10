@@ -53,6 +53,18 @@ class groups(osv.osv):
                 res[g.id] = g.name
         return res
 
+    def _search_group(self, cr, uid, obj, name, args, context=None):
+        operand = args[0][2]
+        operator = args[0][1]
+        values = operand.split('/')
+        group_name = values[0]
+        where = [('name', operator, group_name)]
+        if len(values) > 1:
+            application_name = values[0]
+            group_name = values[1]
+            where = ['|',('category_id.name', operator, application_name)] + where
+        return where
+
     _columns = {
         'name': fields.char('Name', size=64, required=True, translate=True),
         'users': fields.many2many('res.users', 'res_groups_users_rel', 'gid', 'uid', 'Users'),
@@ -62,7 +74,7 @@ class groups(osv.osv):
         'menu_access': fields.many2many('ir.ui.menu', 'ir_ui_menu_group_rel', 'gid', 'menu_id', 'Access Menu'),
         'comment' : fields.text('Comment', size=250, translate=True),
         'category_id': fields.many2one('ir.module.category', 'Application', select=True),
-        'full_name': fields.function(_get_full_name, type='char', string='Group Name'),
+        'full_name': fields.function(_get_full_name, type='char', string='Group Name', fnct_search=_search_group),
     }
 
     _sql_constraints = [
@@ -126,7 +138,7 @@ class res_users(osv.osv):
 
     def _get_password(self, cr, uid, ids, arg, karg, context=None):
         return dict.fromkeys(ids, '')
-    
+
     _columns = {
         'id': fields.integer('ID'),
         'login_date': fields.date('Latest connection', select=1),
@@ -180,21 +192,6 @@ class res_users(osv.osv):
         """
         partner_ids = [user.partner_id.id for user in self.browse(cr, uid, ids, context=context)]
         return self.pool.get('res.partner').onchange_address(cr, uid, partner_ids, use_parent_address, parent_id, context=context)
-
-    def read(self,cr, uid, ids, fields=None, context=None, load='_classic_read'):
-        def override_password(o):
-            if 'password' in o and ( 'id' not in o or o['id'] != uid ):
-                o['password'] = '********'
-            return o
-        result = super(res_users, self).read(cr, uid, ids, fields, context, load)
-        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
-        if not canwrite:
-            if isinstance(ids, (int, long)):
-                result = override_password(result)
-            else:
-                result = map(override_password, result)
-        return result
-
 
     def _check_company(self, cr, uid, ids, context=None):
         return all(((this.company_id in this.company_ids) or not this.company_ids) for this in self.browse(cr, uid, ids, context))
@@ -264,8 +261,34 @@ class res_users(osv.osv):
             return self.pool.get('res.partner').fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
         return super(res_users, self).fields_view_get(cr, uid, view_id, view_type, context, toolbar, submenu)
 
-    # User can write to a few of her own fields (but not her groups for example)
-    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small']
+    # User can write on a few of his own fields (but not his groups for example)
+    SELF_WRITEABLE_FIELDS = ['password', 'signature', 'action_id', 'company_id', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz']
+    # User can read a few of his own fields
+    SELF_READABLE_FIELDS = ['signature', 'company_id', 'login', 'email', 'name', 'image', 'image_medium', 'image_small', 'lang', 'tz', 'groups_id', 'partner_id', '__last_update']
+
+    def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
+        def override_password(o):
+            if 'password' in o and ('id' not in o or o['id'] != uid):
+                o['password'] = '********'
+            return o
+
+        if fields and (ids == [uid] or ids == uid):
+            for key in fields:
+                if not (key in self.SELF_READABLE_FIELDS or key.startswith('context_')):
+                    break
+            else:
+                # safe fields only, so we read as super-user to bypass access rights
+                uid = SUPERUSER_ID
+
+        result = super(res_users, self).read(cr, uid, ids, fields=fields, context=context, load=load)
+        canwrite = self.pool.get('ir.model.access').check(cr, uid, 'res.users', 'write', False)
+        if not canwrite:
+            if isinstance(ids, (int, long)):
+                result = override_password(result)
+            else:
+                result = map(override_password, result)
+
+        return result
 
     def write(self, cr, uid, ids, values, context=None):
         if not hasattr(ids, '__iter__'):
@@ -483,14 +506,14 @@ class res_users(osv.osv):
         """
         assert group_ext_id and '.' in group_ext_id, "External ID must be fully qualified"
         module, ext_id = group_ext_id.split('.')
-        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN 
+        cr.execute("""SELECT 1 FROM res_groups_users_rel WHERE uid=%s AND gid IN
                         (SELECT res_id FROM ir_model_data WHERE module=%s AND name=%s)""",
                    (uid, module, ext_id))
         return bool(cr.fetchone())
 
 
 #
-# Extension of res.groups and res.users with a relation for "implied" or 
+# Extension of res.groups and res.users with a relation for "implied" or
 # "inherited" groups.  Once a user belongs to a group, it automatically belongs
 # to the implied groups (transitively).
 #
@@ -806,7 +829,7 @@ class users_view(osv.osv):
         for app, kind, gs in self.pool.get('res.groups').get_groups_by_application(cr, uid, context):
             if kind == 'selection':
                 # selection group field
-                tips = ['%s: %s' % (g.name, g.comment or '') for g in gs]
+                tips = ['%s: %s' % (g.name, g.comment) for g in gs if g.comment]
                 res[name_selection_groups(map(int, gs))] = {
                     'type': 'selection',
                     'string': app and app.name or _('Other'),

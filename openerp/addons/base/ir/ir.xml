@@ -1170,9 +1170,9 @@
             <field name="model">ir.translation</field>
             <field name="arch" type="xml">
                 <form string="Translations" version="7.0">
-                   <header>
+                    <t t-call="ui.Header">
                         <field name="state" widget="statusbar" nolabel="1"/>
-                   </header>
+                    </t>
                    <sheet>
                     <group>
                         <group>
@@ -1442,6 +1442,7 @@
                         <field name="name"/>
                         <field name="model_id"/>
                         <field name="group_id"/>
+                        <field name="active"/>
                     </group>
                     <group string="Access" col="4">
                         <field name="perm_read"/>
@@ -1493,8 +1494,9 @@
                   <sheet>
                     <group>
                         <group string="General">
-                            <field colspan="4" name="name"/>
+                            <field name="name"/>
                             <field name="model_id"/>
+                            <field name="active"/>
                         </group>
                         <group col="4" string="Access Rights">
                             <field name="perm_read"/>
@@ -1731,26 +1733,30 @@
             <field name="name">Config Wizard Steps</field>
             <field name="arch" type="xml">
                 <form string="Config Wizard Steps" version="7.0">
-                  <header>
+                    <t t-call="ui.Header">
                         <button name="action_launch"
-                            states="open" string="Launch"
-                            type="object" icon="gtk-execute" class="oe_highlight" 
-                            help="Launch Configuration Wizard"/>
+                                states="open" string="Launch"
+                                type="object" icon="gtk-execute"
+                                class="oe_highlight"
+                                help="Launch Configuration Wizard"/>
                         <button name="action_open" states="done"
-                            string="Set as Todo" type="object"
-                            icon="gtk-convert" class="oe_highlight"/>
-                        <field name="state" widget="statusbar" statusbar_visible="open,done" nolabel="1" readonly="1" statusbar_colors='{"open":"red","done":"blue"}'/>
-                  </header>
-                  <sheet>
-                    <group col="4">
-                        <field name="action_id"/>
-                        <field name="type"/>
-                        <field name="sequence"/>
-                    </group>
-                    <group string="Groups">
-                        <field name="groups_id" nolabel="1" colspan="4"/>
-                    </group>
-                  </sheet>
+                                string="Set as Todo" type="object"
+                                icon="gtk-convert" class="oe_highlight"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="open,done" nolabel="1"
+                               readonly="1"
+                               statusbar_colors='{"open":"red","done":"blue"}'/>
+                    </t>
+                    <sheet>
+                        <group col="4">
+                            <field name="action_id"/>
+                            <field name="type"/>
+                            <field name="sequence"/>
+                        </group>
+                        <group string="Groups">
+                            <field name="groups_id" nolabel="1" colspan="4"/>
+                        </group>
+                    </sheet>
                 </form>
             </field>
         </record>
