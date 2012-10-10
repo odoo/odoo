@@ -80,12 +80,12 @@
                            </tree>
                        </field>
                    </field>
-                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='th_weight']" position="before">                   
+                   <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='type']" position="before">                   
                        <label for="delay"/>
                        <div>
                            <field name="delay" class="oe_inline"/> days
                        </div>
-                       <field name="type"/>
+                       
                    </xpath>
                    <xpath expr="//page[@string='Order Lines']/field[@name='order_line']/form[@string='Sales Order Lines']/group/group/field[@name='address_allotment_id']" position="after">
                        <field name="property_ids" widget="many2many_tags"

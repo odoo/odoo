@@ -123,7 +123,8 @@ class crm_claim(base_stage, osv.osv):
         'date': fields.datetime.now,
         'company_id': lambda s, cr, uid, c: s.pool.get('res.company')._company_default_get(cr, uid, 'crm.case', context=c),
         'priority': lambda *a: crm.AVAILABLE_PRIORITIES[2][0],
-        'active': lambda *a: 1
+        'active': lambda *a: 1,
+        'stage_id':lambda s, cr, uid, c: s._get_default_stage_id(cr, uid, c)
     }
 
     def stage_find(self, cr, uid, cases, section_id, domain=[], order='sequence', context=None):
