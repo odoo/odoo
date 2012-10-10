@@ -38,7 +38,7 @@ Allows to automatically select analytic accounts based on criterions:
     'author': 'OpenERP SA',
     'website': 'http://www.openerp.com',
     'images': ['images/analytic_defaults.jpeg'],
-    'depends': ['sale_  stock'],
+    'depends': ['sale_stock'],
     'data': [
         'security/ir.model.access.csv', 
         'security/account_analytic_default_security.xml', 
