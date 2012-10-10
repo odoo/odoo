@@ -25,8 +25,8 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
         }).bind('sortstop', self.do_save_dashboard);
 
         var old_title = this.__parentedParent.get('title');
-        this.__parentedParent.on('record_load', this, function(){
-            self.__parentedParent.set({ 'title' : old_title});
+        this.__parentedParent.on('load_record', self, function(){
+            self.__parentedParent.set({ 'title': old_title});
         })
         // Events
         this.$el.find('.oe_dashboard_link_reset').click(this.on_reset);
@@ -173,7 +173,7 @@ instance.web.form.DashBoard = instance.web.form.FormWidget.extend({
     },
     on_load_action: function(result, index, action_attrs) {
         var self = this,
-            action = result.result,
+            action = result,
             view_mode = action_attrs.view_mode;
 
         if (action_attrs.context && action_attrs.context['dashboard_merge_domains_contexts'] === false) {
