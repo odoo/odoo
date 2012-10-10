@@ -131,7 +131,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 e.preventDefault();
             }
         });
-        self.on("on_rec_save", self, self.on_saved);
     },
     destroy: function() {
         _.each(this.get_widgets(), function(w) {
@@ -869,7 +868,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     self.force_dirty = false;
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
-                        return self.trigger('on_rec_save', r);
+                        return self.record_saved(r);
                     }, null);
                 }
                 return save_deferral;
@@ -896,12 +895,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      *
      * @param {Object} r result of the write function.
      */
-    on_saved: function(r) {
+    record_saved: function(r) {
+        var self = this;
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
+            this.trigger('record_saved', r);
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
+                self.trigger('record_saved', r);
                 return r;
             });
         }
@@ -1629,7 +1631,7 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
         });
         this.form.appendTo(this.$el);
         this.form.on_created.add_last(this.on_form_dialog_saved);
-        this.form.on('on_rec_save', this, this.on_form_dialog_saved);
+        this.form.on('record_saved', this, this.on_form_dialog_saved);
         return this;
     },
     select_id: function(id) {

@@ -673,7 +673,7 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
         form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on('on_rec_save', self, function() {
+        form.on('record_saved', self, function() {
             am.dialog.on_close();
             self.view.do_reload();
         });
