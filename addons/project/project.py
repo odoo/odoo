@@ -1099,7 +1099,7 @@ class task(base_stage, osv.osv):
         task_record = self.browse(cr, uid, task_id, context=context)
         if task_record.project_id:
             project_follower_ids = [follower.id for follower in task_record.project_id.message_follower_ids]
-            self.message_subscribe(cr, uid, [task_id], project_follower_ids, 
+            self.message_subscribe(cr, uid, [task_id], project_follower_ids,
                 context=context)
         self._store_history(cr, uid, [task_id], context=context)
         self.create_send_note(cr, uid, [task_id], context=context)
@@ -1353,16 +1353,15 @@ class project_project(osv.osv):
         'use_tasks': True
     }
 
-
-#
-# Tasks History, used for cumulative flow charts (Lean/Agile)
-#
-
 class project_task_history(osv.osv):
+    """
+    Tasks History, used for cumulative flow charts (Lean/Agile)
+    """
     _name = 'project.task.history'
     _description = 'History of Tasks'
     _rec_name = 'task_id'
     _log_access = False
+
     def _get_date(self, cr, uid, ids, name, arg, context=None):
         result = {}
         for history in self.browse(cr, uid, ids, context=context):
@@ -1414,34 +1413,37 @@ class project_task_history(osv.osv):
         'date': fields.date.context_today,
     }
 
-
 class project_task_history_cumulative(osv.osv):
     _name = 'project.task.history.cumulative'
     _table = 'project_task_history_cumulative'
     _inherit = 'project.task.history'
     _auto = False
+
     _columns = {
         'end_date': fields.date('End Date'),
-        'project_id': fields.related('task_id', 'project_id', string='Project', type='many2one', relation='project.project')
+        'project_id': fields.many2one('project.project', 'Project'),
     }
+
     def init(self, cr):
         cr.execute(""" CREATE OR REPLACE VIEW project_task_history_cumulative AS (
             SELECT
-                history.date::varchar||'-'||history.history_id::varchar as id,
-                history.date as end_date,
+                history.date::varchar||'-'||history.history_id::varchar AS id,
+                history.date AS end_date,
                 *
             FROM (
                 SELECT
-                    id as history_id,
-                    date+generate_series(0, CAST((coalesce(end_date,DATE 'tomorrow')::date - date)AS integer)-1) as date,
-                    task_id, type_id, user_id, kanban_state, state,
-                    greatest(remaining_hours,1) as remaining_hours, greatest(planned_hours,1) as planned_hours
+                    h.id AS history_id,
+                    h.date+generate_series(0, CAST((coalesce(h.end_date, DATE 'tomorrow')::date - h.date) AS integer)-1) AS date,
+                    h.task_id, h.type_id, h.user_id, h.kanban_state, h.state,
+                    greatest(h.remaining_hours, 1) AS remaining_hours, greatest(h.planned_hours, 1) AS planned_hours,
+                    t.project_id
                 FROM
-                    project_task_history
-            ) as history
+                    project_task_history AS h
+                    JOIN project_task AS t ON (h.task_id = t.id)
+
+            ) AS history
         )
         """)
-
 
 class project_category(osv.osv):
     """ Category of project's task (or issue) """
