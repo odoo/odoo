@@ -3370,7 +3370,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
             }
             def.resolve();
         });
-        this.viewmanager.on("on_mode_switch", self, function(n_mode, b, c, d, e) {
+        this.viewmanager.on("switch_mode", self, function(n_mode, b, c, d, e) {
             $.when(self.save_any_view()).then(function() {
                 if (n_mode === "list") {
                     $.async_when().then(function() {
