@@ -23,16 +23,16 @@ from osv import fields, osv
 import tools
 
 class report_event_registration(osv.osv):
-
     _name = "report.event.registration"
     _description = "Events Analysis"
     _auto = False
     _columns = {
         'event_date': fields.char('Event Start Date', size=64, readonly=True),
         'year': fields.char('Year', size=4, readonly=True),
-        'month': fields.selection([('01','January'), ('02','February'), ('03','March'), ('04','April'),
-            ('05','May'), ('06','June'), ('07','July'), ('08','August'), ('09','September'),
-            ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
+        'month': fields.selection([
+            ('01','January'), ('02','February'), ('03','March'), ('04','April'),
+            ('05','May'), ('06','June'), ('07','July'), ('08','August'),
+            ('09','September'), ('10','October'), ('11','November'), ('12','December')], 'Month',readonly=True),
         'event_id': fields.many2one('event.event', 'Event', required=True),
         'draft_state': fields.integer(' # No of Draft Registrations', size=20),
         'confirm_state': fields.integer(' # No of Confirmed Registrations', size=20),
@@ -48,15 +48,14 @@ class report_event_registration(osv.osv):
         'company_id': fields.many2one('res.company', 'Company', readonly=True),
     }
     _order = 'event_date desc'
+
     def init(self, cr):
         """
-        initialize the sql view for the event registration
-        cr -- the cursor
+        Initialize the sql view for the event registration
         """
         tools.drop_view_if_exists(cr, 'report_event_registration')
-        cr.execute("""
-         CREATE OR REPLACE view report_event_registration AS (
-                SELECT
+        cr.execute(""" CREATE OR REPLACE view report_event_registration AS (
+            SELECT
                 event_id,
                 r.id,
                 e.user_id AS user_id,
@@ -72,24 +71,29 @@ class report_event_registration(osv.osv):
                 CASE WHEN r.state IN ('open','done') THEN r.nb_register ELSE 0 END AS confirm_state,
                 e.type AS event_type,
                 e.register_max AS register_max,
-                e.state AS  event_state,
-                r.state AS  registration_state
-                FROM
+                e.state AS event_state,
+                r.state AS registration_state
+            FROM
                 event_event e
+                LEFT JOIN event_registration r ON (e.id=r.event_id)
 
-                LEFT JOIN
-                    event_registration r ON (e.id=r.event_id)
-                    where r.id is not null
+            WHERE r.id IS NOT NULL
 
-               GROUP BY
+            GROUP BY
                 event_id,
                 user_id_registration,
                 e.id,
                 r.id,
                 registration_state,
                 r.nb_register,
-                event_type, e.id, e.date_begin, e.main_speaker_id,
-                e.register_max,event_id, e.user_id,e.company_id,
+                event_type,
+                e.id,
+                e.date_begin,
+                e.main_speaker_id,
+                e.register_max,
+                event_id,
+                e.user_id,
+                e.company_id,
                 e.user_id,
                 event_state,
                 e.company_id,
@@ -98,9 +102,8 @@ class report_event_registration(osv.osv):
                 month,
                 e.register_max,
                 name_registration
-
-              )
-                """)
+        )
+        """)
 
 report_event_registration()
 
