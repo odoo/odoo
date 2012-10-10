@@ -27,9 +27,7 @@ class base_language_install(osv.osv_memory):
     """ Install Language"""
 
     _name = "base.language.install"
-    _inherit = "ir.wizard.screen"
     _description = "Install Language"
-
     _columns = {
         'lang': fields.selection(tools.scan_languages(),'Language', required=True),
         'overwrite': fields.boolean('Overwrite Existing Terms', help="If you check this box, your customized translations will be overwritten and replaced by the official ones."),
@@ -63,6 +61,5 @@ class base_language_install(osv.osv_memory):
             'target': 'new',
             'res_id': ids and ids[0] or False,
         }
-base_language_install()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

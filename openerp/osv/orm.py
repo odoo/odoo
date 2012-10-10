@@ -42,6 +42,7 @@
 """
 
 import calendar
+import collections
 import copy
 import datetime
 import itertools
@@ -51,19 +52,24 @@ import pickle
 import re
 import simplejson
 import time
+import traceback
 import types
+
+import psycopg2
 from lxml import etree
+import warnings
 
 import fields
 import openerp
 import openerp.netsvc as netsvc
 import openerp.tools as tools
 from openerp.tools.config import config
+from openerp.tools.misc import CountingStream
 from openerp.tools.safe_eval import safe_eval as eval
+from ast import literal_eval
 from openerp.tools.translate import _
 from openerp import SUPERUSER_ID
 from query import Query
-from openerp import SUPERUSER_ID
 
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
@@ -371,8 +377,10 @@ class browse_record(object):
                 else:
                     return attr
             else:
-                error_msg = "Field '%s' does not exist in object '%s'" % (name, self) 
+                error_msg = "Field '%s' does not exist in object '%s'" % (name, self)
                 self.__logger.warning(error_msg)
+                if self.__logger.isEnabledFor(logging.DEBUG):
+                    self.__logger.debug(''.join(traceback.format_stack()))
                 raise KeyError(error_msg)
 
             # if the field is a classic one or a many2one, we'll fetch all classic and many2one fields
@@ -709,7 +717,7 @@ class BaseModel(object):
 
     def log(self, cr, uid, id, message, secondary=False, context=None):
         return _logger.warning("log() is deprecated. Please use OpenChatter notification system instead of the res.log mechanism.")
-    
+
     def view_init(self, cr, uid, fields_list, context=None):
         """Override this method to do specific things when a view on the object is opened."""
         pass
@@ -899,7 +907,7 @@ class BaseModel(object):
                                     # If new class defines a constraint with
                                     # same function name, we let it override
                                     # the old one.
-                                    
+
                                     new[c2] = c
                                     exist = True
                                     break
@@ -1214,7 +1222,11 @@ class BaseModel(object):
         return {'datas': datas}
 
     def import_data(self, cr, uid, fields, datas, mode='init', current_module='', noupdate=False, context=None, filename=None):
-        """Import given data in given module
+        """
+        .. deprecated:: 7.0
+            Use :meth:`~load` instead
+
+        Import given data in given module
 
         This method is used when importing data via client menu.
 
@@ -1242,7 +1254,7 @@ class BaseModel(object):
         * The last item is currently unused, with no specific semantics
 
         :param fields: list of fields to import
-        :param data: data to import
+        :param datas: data to import
         :param mode: 'init' or 'update' for record creation
         :param current_module: module name
         :param noupdate: flag for record creation
@@ -1250,193 +1262,264 @@ class BaseModel(object):
         :returns: 4-tuple in the form (return_code, errored_resource, error_message, unused)
         :rtype: (int, dict or 0, str or 0, str or 0)
         """
-        if not context:
-            context = {}
+        context = dict(context) if context is not None else {}
+        context['_import_current_module'] = current_module
+
         fields = map(fix_import_export_id_paths, fields)
         ir_model_data_obj = self.pool.get('ir.model.data')
 
-        # mode: id (XML id) or .id (database id) or False for name_get
-        def _get_id(model_name, id, current_module=False, mode='id'):
-            if mode=='.id':
-                id = int(id)
-                obj_model = self.pool.get(model_name)
-                ids = obj_model.search(cr, uid, [('id', '=', int(id))])
-                if not len(ids):
-                    raise Exception(_("Database ID doesn't exist: %s : %s") %(model_name, id))
-            elif mode=='id':
-                if '.' in id:
-                    module, xml_id = id.rsplit('.', 1)
-                else:
-                    module, xml_id = current_module, id
-                record_id = ir_model_data_obj._get_id(cr, uid, module, xml_id)
-                ir_model_data = ir_model_data_obj.read(cr, uid, [record_id], ['res_id'])
-                if not ir_model_data:
-                    raise ValueError('No references to %s.%s' % (module, xml_id))
-                id = ir_model_data[0]['res_id']
-            else:
-                obj_model = self.pool.get(model_name)
-                ids = obj_model.name_search(cr, uid, id, operator='=', context=context)
-                if not ids:
-                    raise ValueError('No record found for %s' % (id,))
-                id = ids[0][0]
-            return id
+        def log(m):
+            if m['type'] == 'error':
+                raise Exception(m['message'])
 
-        # IN:
-        #   datas: a list of records, each record is defined by a list of values
-        #   prefix: a list of prefix fields ['line_ids']
-        #   position: the line to process, skip is False if it's the first line of the current record
-        # OUT:
-        #   (res, position, warning, res_id) with
-        #     res: the record for the next line to process (including it's one2many)
-        #     position: the new position for the next line
-        #     res_id: the ID of the record if it's a modification
-        def process_liness(self, datas, prefix, current_module, model_name, fields_def, position=0, skip=0):
-            line = datas[position]
-            row = {}
-            warning = []
-            data_res_id = False
-            xml_id = False
-            nbrmax = position+1
-
-            done = {}
-            for i, field in enumerate(fields):
-                res = False
-                if i >= len(line):
-                    raise Exception(_('Please check that all your lines have %d columns.'
-                        'Stopped around line %d having %d columns.') % \
-                            (len(fields), position+2, len(line)))
-                if not line[i]:
-                    continue
-
-                if field[:len(prefix)] != prefix:
-                    if line[i] and skip:
-                        return False
-                    continue
-                field_name = field[len(prefix)]
-
-                #set the mode for m2o, o2m, m2m : xml_id/id/name
-                if len(field) == len(prefix)+1:
-                    mode = False
-                else:
-                    mode = field[len(prefix)+1]
-
-                # TODO: improve this by using csv.csv_reader
-                def many_ids(line, relation, current_module, mode):
-                    res = []
-                    for db_id in line.split(config.get('csv_internal_sep')):
-                        res.append(_get_id(relation, db_id, current_module, mode))
-                    return [(6,0,res)]
-
-                # ID of the record using a XML ID
-                if field_name == 'id':
-                    try:
-                        data_res_id = _get_id(model_name, line[i], current_module)
-                    except ValueError:
-                        pass
-                    xml_id = line[i]
-                    continue
-
-                # ID of the record using a database ID
-                elif field_name == '.id':
-                    data_res_id = _get_id(model_name, line[i], current_module, '.id')
-                    continue
-
-                field_type = fields_def[field_name]['type']
-                # recursive call for getting children and returning [(0,0,{})] or [(1,ID,{})]
-                if field_type == 'one2many':
-                    if field_name in done:
-                        continue
-                    done[field_name] = True
-                    relation = fields_def[field_name]['relation']
-                    relation_obj = self.pool.get(relation)
-                    newfd = relation_obj.fields_get( cr, uid, context=context )
-                    pos = position
-
-                    res = []
-
-                    first = 0
-                    while pos < len(datas):
-                        res2 = process_liness(self, datas, prefix + [field_name], current_module, relation_obj._name, newfd, pos, first)
-                        if not res2:
-                            break
-                        (newrow, pos, w2, data_res_id2, xml_id2) = res2
-                        nbrmax = max(nbrmax, pos)
-                        warning += w2
-                        first += 1
-
-                        if (not newrow) or not reduce(lambda x, y: x or y, newrow.values(), 0):
-                            break
-
-                        res.append( (data_res_id2 and 1 or 0, data_res_id2 or 0, newrow) )
-
-                elif field_type == 'many2one':
-                    relation = fields_def[field_name]['relation']
-                    res = _get_id(relation, line[i], current_module, mode)
-
-                elif field_type == 'many2many':
-                    relation = fields_def[field_name]['relation']
-                    res = many_ids(line[i], relation, current_module, mode)
-
-                elif field_type == 'integer':
-                    res = line[i] and int(line[i]) or 0
-                elif field_type == 'boolean':
-                    res = line[i].lower() not in ('0', 'false', 'off')
-                elif field_type == 'float':
-                    res = line[i] and float(line[i]) or 0.0
-                elif field_type == 'selection':
-                    for key, val in fields_def[field_name]['selection']:
-                        if tools.ustr(line[i]) in [tools.ustr(key), tools.ustr(val)]:
-                            res = key
-                            break
-                    if line[i] and not res:
-                        _logger.warning(
-                            _("key '%s' not found in selection field '%s'"),
-                            tools.ustr(line[i]), tools.ustr(field_name))
-                        warning.append(_("Key/value '%s' not found in selection field '%s'") % (
-                            tools.ustr(line[i]), tools.ustr(field_name)))
-
-                else:
-                    res = line[i]
-
-                row[field_name] = res or False
-
-            return row, nbrmax, warning, data_res_id, xml_id
-
-        fields_def = self.fields_get(cr, uid, context=context)
-
-        position = 0
         if config.get('import_partial') and filename:
             with open(config.get('import_partial'), 'rb') as partial_import_file:
                 data = pickle.load(partial_import_file)
                 position = data.get(filename, 0)
 
-        while position<len(datas):
-            (res, position, warning, res_id, xml_id) = \
-                    process_liness(self, datas, [], current_module, self._name, fields_def, position=position)
-            if len(warning):
-                cr.rollback()
-                return -1, res, 'Line ' + str(position) +' : ' + '!\n'.join(warning), ''
-
-            try:
+        position = 0
+        try:
+            for res_id, xml_id, res, info in self._convert_records(cr, uid,
+                            self._extract_records(cr, uid, fields, datas,
+                                                  context=context, log=log),
+                            context=context, log=log):
                 ir_model_data_obj._update(cr, uid, self._name,
                      current_module, res, mode=mode, xml_id=xml_id,
                      noupdate=noupdate, res_id=res_id, context=context)
-            except Exception, e:
-                return -1, res, 'Line ' + str(position) + ' : ' + tools.ustr(e), ''
-
-            if config.get('import_partial') and filename and (not (position%100)):
-                with open(config.get('import_partial'), 'rb') as partial_import:
-                    data = pickle.load(partial_import)
-                data[filename] = position
-                with open(config.get('import_partial'), 'wb') as partial_import:
-                    pickle.dump(data, partial_import)
-                if context.get('defer_parent_store_computation'):
-                    self._parent_store_compute(cr)
-                cr.commit()
+                position = info.get('rows', {}).get('to', 0) + 1
+                if config.get('import_partial') and filename and (not (position%100)):
+                    with open(config.get('import_partial'), 'rb') as partial_import:
+                        data = pickle.load(partial_import)
+                    data[filename] = position
+                    with open(config.get('import_partial'), 'wb') as partial_import:
+                        pickle.dump(data, partial_import)
+                    if context.get('defer_parent_store_computation'):
+                        self._parent_store_compute(cr)
+                    cr.commit()
+        except Exception, e:
+            cr.rollback()
+            return -1, {}, 'Line %d : %s' % (position + 1, tools.ustr(e)), ''
 
         if context.get('defer_parent_store_computation'):
             self._parent_store_compute(cr)
         return position, 0, 0, 0
+
+    def load(self, cr, uid, fields, data, context=None):
+        """
+        Attempts to load the data matrix, and returns a list of ids (or
+        ``False`` if there was an error and no id could be generated) and a
+        list of messages.
+
+        The ids are those of the records created and saved (in database), in
+        the same order they were extracted from the file. They can be passed
+        directly to :meth:`~read`
+
+        :param fields: list of fields to import, at the same index as the corresponding data
+        :type fields: list(str)
+        :param data: row-major matrix of data to import
+        :type data: list(list(str))
+        :param dict context:
+        :returns: {ids: list(int)|False, messages: [Message]}
+        """
+        cr.execute('SAVEPOINT model_load')
+        messages = []
+
+        fields = map(fix_import_export_id_paths, fields)
+        ModelData = self.pool['ir.model.data']
+        fg = self.fields_get(cr, uid, context=context)
+
+        mode = 'init'
+        current_module = ''
+        noupdate = False
+
+        ids = []
+        for id, xid, record, info in self._convert_records(cr, uid,
+                self._extract_records(cr, uid, fields, data,
+                                      context=context, log=messages.append),
+                context=context, log=messages.append):
+            try:
+                cr.execute('SAVEPOINT model_load_save')
+            except psycopg2.InternalError, e:
+                # broken transaction, exit and hope the source error was
+                # already logged
+                if not any(message['type'] == 'error' for message in messages):
+                    messages.append(dict(info, type='error',message=
+                        u"Unknown database error: '%s'" % e))
+                break
+            try:
+                ids.append(ModelData._update(cr, uid, self._name,
+                     current_module, record, mode=mode, xml_id=xid,
+                     noupdate=noupdate, res_id=id, context=context))
+                cr.execute('RELEASE SAVEPOINT model_load_save')
+            except psycopg2.Warning, e:
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                messages.append(dict(info, type='warning', message=str(e)))
+            except psycopg2.Error, e:
+                # Failed to write, log to messages, rollback savepoint (to
+                # avoid broken transaction) and keep going
+                cr.execute('ROLLBACK TO SAVEPOINT model_load_save')
+                messages.append(dict(
+                    info, type='error',
+                    **PGERROR_TO_OE[e.pgcode](self, fg, info, e)))
+        if any(message['type'] == 'error' for message in messages):
+            cr.execute('ROLLBACK TO SAVEPOINT model_load')
+            ids = False
+        return {'ids': ids, 'messages': messages}
+    def _extract_records(self, cr, uid, fields_, data,
+                         context=None, log=lambda a: None):
+        """ Generates record dicts from the data sequence.
+
+        The result is a generator of dicts mapping field names to raw
+        (unconverted, unvalidated) values.
+
+        For relational fields, if sub-fields were provided the value will be
+        a list of sub-records
+
+        The following sub-fields may be set on the record (by key):
+        * None is the name_get for the record (to use with name_create/name_search)
+        * "id" is the External ID for the record
+        * ".id" is the Database ID for the record
+        """
+        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
+        # Fake columns to avoid special cases in extractor
+        columns[None] = fields.char('rec_name')
+        columns['id'] = fields.char('External ID')
+        columns['.id'] = fields.integer('Database ID')
+
+        # m2o fields can't be on multiple lines so exclude them from the
+        # is_relational field rows filter, but special-case it later on to
+        # be handled with relational fields (as it can have subfields)
+        is_relational = lambda field: columns[field]._type in ('one2many', 'many2many', 'many2one')
+        get_o2m_values = itemgetter_tuple(
+            [index for index, field in enumerate(fields_)
+                  if columns[field[0]]._type == 'one2many'])
+        get_nono2m_values = itemgetter_tuple(
+            [index for index, field in enumerate(fields_)
+                  if columns[field[0]]._type != 'one2many'])
+        # Checks if the provided row has any non-empty non-relational field
+        def only_o2m_values(row, f=get_nono2m_values, g=get_o2m_values):
+            return any(g(row)) and not any(f(row))
+
+        index = 0
+        while True:
+            if index >= len(data): return
+
+            row = data[index]
+            # copy non-relational fields to record dict
+            record = dict((field[0], value)
+                for field, value in itertools.izip(fields_, row)
+                if not is_relational(field[0]))
+
+            # Get all following rows which have relational values attached to
+            # the current record (no non-relational values)
+            record_span = itertools.takewhile(
+                only_o2m_values, itertools.islice(data, index + 1, None))
+            # stitch record row back on for relational fields
+            record_span = list(itertools.chain([row], record_span))
+            for relfield in set(
+                    field[0] for field in fields_
+                             if is_relational(field[0])):
+                column = columns[relfield]
+                # FIXME: how to not use _obj without relying on fields_get?
+                Model = self.pool[column._obj]
+
+                # get only cells for this sub-field, should be strictly
+                # non-empty, field path [None] is for name_get column
+                indices, subfields = zip(*((index, field[1:] or [None])
+                                           for index, field in enumerate(fields_)
+                                           if field[0] == relfield))
+
+                # return all rows which have at least one value for the
+                # subfields of relfield
+                relfield_data = filter(any, map(itemgetter_tuple(indices), record_span))
+                record[relfield] = [subrecord
+                    for subrecord, _subinfo in Model._extract_records(
+                        cr, uid, subfields, relfield_data,
+                        context=context, log=log)]
+
+            yield record, {'rows': {
+                'from': index,
+                'to': index + len(record_span) - 1
+            }}
+            index += len(record_span)
+    def _convert_records(self, cr, uid, records,
+                         context=None, log=lambda a: None):
+        """ Converts records from the source iterable (recursive dicts of
+        strings) into forms which can be written to the database (via
+        self.create or (ir.model.data)._update)
+
+        :returns: a list of triplets of (id, xid, record)
+        :rtype: list((int|None, str|None, dict))
+        """
+        if context is None: context = {}
+        Converter = self.pool['ir.fields.converter']
+        columns = dict((k, v.column) for k, v in self._all_columns.iteritems())
+        Translation = self.pool['ir.translation']
+        field_names = dict(
+            (f, (Translation._get_source(cr, uid, self._name + ',' + f, 'field',
+                                         context.get('lang'))
+                 or column.string or f))
+            for f, column in columns.iteritems())
+        converters = dict(
+            (k, Converter.to_field(cr, uid, self, column, context=context))
+            for k, column in columns.iteritems())
+
+        def _log(base, field, exception):
+            type = 'warning' if isinstance(exception, Warning) else 'error'
+            record = dict(base, field=field, type=type,
+                          message=unicode(exception.args[0]) % base)
+            if len(exception.args) > 1 and exception.args[1]:
+                record.update(exception.args[1])
+            log(record)
+
+        stream = CountingStream(records)
+        for record, extras in stream:
+            dbid = False
+            xid = False
+            converted = {}
+            # name_get/name_create
+            if None in record: pass
+            # xid
+            if 'id' in record:
+                xid = record['id']
+            # dbid
+            if '.id' in record:
+                try:
+                    dbid = int(record['.id'])
+                except ValueError:
+                    # in case of overridden id column
+                    dbid = record['.id']
+                if not self.search(cr, uid, [('id', '=', dbid)], context=context):
+                    log(dict(extras,
+                        type='error',
+                        record=stream.index,
+                        field='.id',
+                        message=_(u"Unknown database identifier '%s'") % dbid))
+                    dbid = False
+
+            for field, strvalue in record.iteritems():
+                if field in (None, 'id', '.id'): continue
+                if not strvalue:
+                    converted[field] = False
+                    continue
+
+                # In warnings and error messages, use translated string as
+                # field name
+                message_base = dict(
+                    extras, record=stream.index, field=field_names[field])
+                try:
+                    converted[field], ws = converters[field](strvalue)
+
+                    for w in ws:
+                        if isinstance(w, basestring):
+                            # wrap warning string in an ImportWarning for
+                            # uniform handling
+                            w = ImportWarning(w)
+                        _log(message_base, field, w)
+                except ValueError, e:
+                    _log(message_base, field, e)
+
+            yield dbid, xid, converted, dict(extras, record=stream.index)
 
     def get_invalid_fields(self, cr, uid):
         return list(self._invalids)
@@ -1593,7 +1676,7 @@ class BaseModel(object):
     def user_has_groups(self, cr, uid, groups, context=None):
         """Return true if the user is at least member of one of the groups
            in groups_str. Typically used to resolve ``groups`` attribute
-           in view and model definitions. 
+           in view and model definitions.
 
            :param str groups: comma-separated list of fully-qualified group
                               external IDs, e.g.: ``base.group_user,base.group_system``
@@ -1636,7 +1719,7 @@ class BaseModel(object):
                  the field should be completely removed from the view, as it is
                  completely unavailable for non-members
 
-               :return: True if field should be included in the result of fields_view_get 
+               :return: True if field should be included in the result of fields_view_get
             """
             if node.tag == 'field' and node.get('name') in self._all_columns:
                 column = self._all_columns[node.get('name')].column
@@ -1729,7 +1812,13 @@ class BaseModel(object):
                 field = model_fields.get(node.get('name'))
                 if field:
                     transfer_field_to_modifiers(field, modifiers)
-
+                #evaluate the options as python code, but send it as json to the client
+                if node.get('options'):
+                    try:
+                        node.set('options', simplejson.dumps(literal_eval(node.get('options'))))
+                    except Exception, e:
+                        _logger.exception('Invalid `options´ attribute, should be a valid python expression: %r', node.get('options'))
+                        raise except_orm('Invalid options', 'Invalid options: %r %s' % (node.get('options'), e))
 
         elif node.tag in ('form', 'tree'):
             result = self.view_header_get(cr, user, False, node.tag, context)
@@ -1911,7 +2000,7 @@ class BaseModel(object):
     def _get_default_calendar_view(self, cr, user, context=None):
         """ Generates a default calendar view by trying to infer
         calendar fields from a number of pre-set attribute names
-        
+
         :param cr: database cursor
         :param int user: user id
         :param dict context: connection context
@@ -1990,7 +2079,7 @@ class BaseModel(object):
 
         def raise_view_error(error_msg, child_view_id):
             view, child_view = self.pool.get('ir.ui.view').browse(cr, user, [view_id, child_view_id], context)
-            error_msg = error_msg % {'parent_xml_id': view.xml_id} 
+            error_msg = error_msg % {'parent_xml_id': view.xml_id}
             raise AttributeError("View definition error for inherited view '%s' on model '%s': %s"
                                  %  (child_view.xml_id, self._name, error_msg))
 
@@ -2026,7 +2115,7 @@ class BaseModel(object):
                 if all(node.get(attr) == spec.get(attr) \
                         for attr in spec.attrib
                             if attr not in ('position','version')):
-                    # Version spec should match parent's root element's version 
+                    # Version spec should match parent's root element's version
                     if spec.get('version') and spec.get('version') != source.get('version'):
                         return None
                     return node
@@ -2100,7 +2189,7 @@ class BaseModel(object):
                         raise_view_error("Mismatching view API version for element '%s': %r vs %r in parent view '%%(parent_xml_id)s'" % \
                                             (tag, spec.get('version'), source.get('version')), inherit_id)
                     raise_view_error("Element '%s' not found in parent view '%%(parent_xml_id)s'" % tag, inherit_id)
-                    
+
             return source
 
         def apply_view_inheritance(cr, user, source, inherit_id):
@@ -2315,7 +2404,7 @@ class BaseModel(object):
                                 or ``'='``.
            :param int limit: optional max number of records to return
            :rtype: list
-           :return: list of pairs ``(id,text_repr)`` for all matching records. 
+           :return: list of pairs ``(id,text_repr)`` for all matching records.
         """
         return self._name_search(cr, user, name, args, operator, context, limit)
 
@@ -2445,7 +2534,7 @@ class BaseModel(object):
         # This is useful to implement kanban views for instance, where all columns
         # should be displayed even if they don't contain any record.
 
-        # Grab the list of all groups that should be displayed, including all present groups 
+        # Grab the list of all groups that should be displayed, including all present groups
         present_group_ids = [x[groupby][0] for x in read_group_result if x[groupby]]
         all_groups,folded = self._group_by_full[groupby](self, cr, uid, present_group_ids, domain,
                                                   read_group_order=read_group_order,
@@ -2821,28 +2910,28 @@ class BaseModel(object):
 
     def _m2o_fix_foreign_key(self, cr, source_table, source_field, dest_model, ondelete):
         # Find FK constraint(s) currently established for the m2o field,
-        # and see whether they are stale or not 
+        # and see whether they are stale or not
         cr.execute("""SELECT confdeltype as ondelete_rule, conname as constraint_name,
                              cl2.relname as foreign_table
                       FROM pg_constraint as con, pg_class as cl1, pg_class as cl2,
                            pg_attribute as att1, pg_attribute as att2
-                      WHERE con.conrelid = cl1.oid 
-                        AND cl1.relname = %s 
-                        AND con.confrelid = cl2.oid 
-                        AND array_lower(con.conkey, 1) = 1 
-                        AND con.conkey[1] = att1.attnum 
-                        AND att1.attrelid = cl1.oid 
-                        AND att1.attname = %s 
-                        AND array_lower(con.confkey, 1) = 1 
-                        AND con.confkey[1] = att2.attnum 
-                        AND att2.attrelid = cl2.oid 
-                        AND att2.attname = %s 
+                      WHERE con.conrelid = cl1.oid
+                        AND cl1.relname = %s
+                        AND con.confrelid = cl2.oid
+                        AND array_lower(con.conkey, 1) = 1
+                        AND con.conkey[1] = att1.attnum
+                        AND att1.attrelid = cl1.oid
+                        AND att1.attname = %s
+                        AND array_lower(con.confkey, 1) = 1
+                        AND con.confkey[1] = att2.attnum
+                        AND att2.attrelid = cl2.oid
+                        AND att2.attname = %s
                         AND con.contype = 'f'""", (source_table, source_field, 'id'))
         constraints = cr.dictfetchall()
         if constraints:
             if len(constraints) == 1:
                 # Is it the right constraint?
-                cons, = constraints 
+                cons, = constraints
                 if cons['ondelete_rule'] != POSTGRES_CONFDELTYPES.get((ondelete or 'set null').upper(), 'a')\
                     or cons['foreign_table'] != dest_model._table:
                     _schema.debug("Table '%s': dropping obsolete FK constraint: '%s'",
@@ -2964,14 +3053,14 @@ class BaseModel(object):
                                 ('numeric', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                                 ('float8', 'float', get_pg_type(f)[1], '::'+get_pg_type(f)[1]),
                             ]
-                            if f_pg_type == 'varchar' and f._type == 'char' and f_pg_size < f.size:
+                            if f_pg_type == 'varchar' and f._type == 'char' and ((f.size is None and f_pg_size) or f_pg_size < f.size):
                                 cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO temp_change_size' % (self._table, k))
                                 cr.execute('ALTER TABLE "%s" ADD COLUMN "%s" %s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('UPDATE "%s" SET "%s"=temp_change_size::%s' % (self._table, k, pg_varchar(f.size)))
                                 cr.execute('ALTER TABLE "%s" DROP COLUMN temp_change_size CASCADE' % (self._table,))
                                 cr.commit()
                                 _schema.debug("Table '%s': column '%s' (type varchar) changed size from %s to %s",
-                                    self._table, k, f_pg_size, f.size)
+                                    self._table, k, f_pg_size or 'unlimited', f.size or 'unlimited')
                             for c in casts:
                                 if (f_pg_type==c[0]) and (f._type==c[1]):
                                     if f_pg_type != f_obj_type:
@@ -3204,8 +3293,7 @@ class BaseModel(object):
         # attlen is the number of bytes necessary to represent the type when
         # the type has a fixed size. If the type has a varying size attlen is
         # -1 and atttypmod is the size limit + 4, or -1 if there is no limit.
-        # Thus the query can return a negative size for a unlimited varchar.
-        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN a.atttypmod-4 ELSE a.attlen END as size " \
+        cr.execute("SELECT c.relname,a.attname,a.attlen,a.atttypmod,a.attnotnull,a.atthasdef,t.typname,CASE WHEN a.attlen=-1 THEN (CASE WHEN a.atttypmod=-1 THEN 0 ELSE a.atttypmod-4 END) ELSE a.attlen END as size " \
            "FROM pg_class c,pg_attribute a,pg_type t " \
            "WHERE c.relname=%s " \
            "AND c.oid=a.attrelid " \
@@ -3215,7 +3303,7 @@ class BaseModel(object):
 
     def _o2m_raise_on_missing_reference(self, cr, f):
         # TODO this check should be a method on fields.one2many.
-        
+
         other = self.pool.get(f._obj)
         if other:
             # TODO the condition could use fields_get_keys().
@@ -3732,7 +3820,7 @@ class BaseModel(object):
            the length of `ids`, and raise an appropriate exception if it does not.
         """
         if cr.rowcount != len(ids):
-            # Attempt to distinguish record rule restriction vs deleted records, 
+            # Attempt to distinguish record rule restriction vs deleted records,
             # to provide a more specific error message
             cr.execute('SELECT id FROM ' + self._table + ' WHERE id IN %s', (tuple(ids),))
             if cr.rowcount != len(ids):
@@ -3787,13 +3875,13 @@ class BaseModel(object):
                     self._check_record_rules_result_count(cr, uid, sub_ids, operation, context=context)
 
     def _workflow_trigger(self, cr, uid, ids, trigger, context=None):
-        """Call given workflow trigger as a result of a CRUD operation""" 
+        """Call given workflow trigger as a result of a CRUD operation"""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             getattr(wf_service, trigger)(uid, self._name, res_id, cr)
 
     def _workflow_signal(self, cr, uid, ids, signal, context=None):
-        """Send given workflow signal""" 
+        """Send given workflow signal"""
         wf_service = netsvc.LocalService("workflow")
         for res_id in ids:
             wf_service.trg_validate(uid, self._name, res_id, signal, cr)
@@ -3824,7 +3912,7 @@ class BaseModel(object):
         self.check_access_rights(cr, uid, 'unlink')
 
         ir_property = self.pool.get('ir.property')
-        
+
         # Check if the records are used as default properties.
         domain = [('res_id', '=', False),
                   ('value_reference', 'in', ['%s,%s' % (self._name, i) for i in ids]),
@@ -4744,56 +4832,45 @@ class BaseModel(object):
         else:
             raise IndexError( _("Record #%d of %s not found, cannot copy!") %( id, self._name))
 
-        # TODO it seems fields_get can be replaced by _all_columns (no need for translation)
-        fields = self.fields_get(cr, uid, context=context)
-        for f in fields:
-            ftype = fields[f]['type']
+        # build a black list of fields that should not be copied
+        blacklist = set(MAGIC_COLUMNS + ['parent_left', 'parent_right'])
+        def blacklist_given_fields(obj):
+            # blacklist the fields that are given by inheritance
+            for other, field_to_other in obj._inherits.items():
+                blacklist.add(field_to_other)
+                if field_to_other in default:
+                    # all the fields of 'other' are given by the record: default[field_to_other],
+                    # except the ones redefined in self
+                    blacklist.update(set(self.pool.get(other)._all_columns) - set(self._columns))
+                else:
+                    blacklist_given_fields(self.pool.get(other))
+        blacklist_given_fields(self)
 
-            if self._log_access and f in LOG_ACCESS_COLUMNS:
-                del data[f]
-
+        res = dict(default)
+        for f, colinfo in self._all_columns.items():
+            field = colinfo.column
             if f in default:
-                data[f] = default[f]
-            elif 'function' in fields[f]:
-                del data[f]
-            elif ftype == 'many2one':
-                try:
-                    data[f] = data[f] and data[f][0]
-                except:
-                    pass
-            elif ftype == 'one2many':
-                res = []
-                rel = self.pool.get(fields[f]['relation'])
-                if data[f]:
-                    # duplicate following the order of the ids
-                    # because we'll rely on it later for copying
-                    # translations in copy_translation()!
-                    data[f].sort()
-                    for rel_id in data[f]:
-                        # the lines are first duplicated using the wrong (old)
-                        # parent but then are reassigned to the correct one thanks
-                        # to the (0, 0, ...)
-                        d = rel.copy_data(cr, uid, rel_id, context=context)
-                        if d:
-                            res.append((0, 0, d))
-                data[f] = res
-            elif ftype == 'many2many':
-                data[f] = [(6, 0, data[f])]
+                pass
+            elif f in blacklist:
+                pass
+            elif isinstance(field, fields.function):
+                pass
+            elif field._type == 'many2one':
+                res[f] = data[f] and data[f][0]
+            elif field._type == 'one2many':
+                other = self.pool.get(field._obj)
+                # duplicate following the order of the ids because we'll rely on
+                # it later for copying translations in copy_translation()!
+                lines = [other.copy_data(cr, uid, line_id, context=context) for line_id in sorted(data[f])]
+                # the lines are duplicated using the wrong (old) parent, but then
+                # are reassigned to the correct one thanks to the (0, 0, ...)
+                res[f] = [(0, 0, line) for line in lines if line]
+            elif field._type == 'many2many':
+                res[f] = [(6, 0, data[f])]
+            else:
+                res[f] = data[f]
 
-        del data['id']
-
-        # make sure we don't break the current parent_store structure and
-        # force a clean recompute!
-        for parent_column in ['parent_left', 'parent_right']:
-            data.pop(parent_column, None)
-        # Remove _inherits field's from data recursively, missing parents will
-        # be created by create() (so that copy() copy everything).
-        def remove_ids(inherits_dict):
-            for parent_table in inherits_dict:
-                del data[inherits_dict[parent_table]]
-                remove_ids(self.pool.get(parent_table)._inherits)
-        remove_ids(self._inherits)
-        return data
+        return res
 
     def copy_translations(self, cr, uid, old_id, new_id, context=None):
         if context is None:
@@ -4952,7 +5029,7 @@ class BaseModel(object):
 
         :return: map of ids to their fully qualified XML ID,
                  defaulting to an empty string when there's none
-                 (to be usable as a function field), 
+                 (to be usable as a function field),
                  e.g.::
 
                      { 'id': 'module.ext_id',
@@ -4974,7 +5051,7 @@ class BaseModel(object):
     def is_transient(self):
         """ Return whether the model is transient.
 
-        See TransientModel.
+        See :class:`TransientModel`.
 
         """
         return self._transient
@@ -5116,5 +5193,39 @@ class AbstractModel(BaseModel):
     _auto = False # don't create any database backend for AbstractModels
     _register = False # not visible in ORM registry, meant to be python-inherited only
 
+def itemgetter_tuple(items):
+    """ Fixes itemgetter inconsistency (useful in some cases) of not returning
+    a tuple if len(items) == 1: always returns an n-tuple where n = len(items)
+    """
+    if len(items) == 0:
+        return lambda a: ()
+    if len(items) == 1:
+        return lambda gettable: (gettable[items[0]],)
+    return operator.itemgetter(*items)
+class ImportWarning(Warning):
+    """ Used to send warnings upwards the stack during the import process
+    """
+    pass
 
+
+def convert_pgerror_23502(model, fields, info, e):
+    m = re.match(r'^null value in column "(?P<field>\w+)" violates '
+                 r'not-null constraint\n',
+                 str(e))
+    if not m or m.group('field') not in fields:
+        return {'message': unicode(e)}
+    field = fields[m.group('field')]
+    return {
+        'message': _(u"Missing required value for the field '%(field)s'") % {
+            'field': field['string']
+        },
+        'field': m.group('field'),
+    }
+
+PGERROR_TO_OE = collections.defaultdict(
+    # shape of mapped converters
+    lambda: (lambda model, fvg, info, pgerror: {'message': unicode(pgerror)}), {
+    # not_null_violation
+    '23502': convert_pgerror_23502,
+})
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

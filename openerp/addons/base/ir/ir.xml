@@ -1019,6 +1019,7 @@
                 <tree string="External Identifiers">
                     <field name="complete_name"/>
                     <field name="display_name"/>
+                    <field name="res_id"/>
                     <field name="model" groups="base.group_no_one"/>
                 </tree>
             </field>
@@ -1146,75 +1147,6 @@
         </record>
         <menuitem action="action_model_relation" id="ir_model_relation_menu" parent="base.next_id_9"
                   groups="base.group_no_one"/>
-
-        <!-- Translations -->
-
-        <record id="view_translation_search" model="ir.ui.view">
-            <field name="name">Translations</field>
-            <field name="model">ir.translation</field>
-            <field name="arch" type="xml">
-                <search string="Translations">
-                    <filter icon="terp-gdu-smart-failing"
-                        string="Untranslated"
-                        domain="['|',('value', '=', False),('value','=','')]"/>
-                    <field name="name" operator="="/>
-                    <field name="lang"/>
-                    <field name="src"/>
-                    <field name="value"/>
-                </search>
-            </field>
-        </record>
-
-        <record id="view_translation_form" model="ir.ui.view">
-            <field name="name">Translations</field>
-            <field name="model">ir.translation</field>
-            <field name="arch" type="xml">
-                <form string="Translations" version="7.0">
-                   <header>
-                        <field name="state" widget="statusbar" nolabel="1"/>
-                   </header>
-                   <sheet>
-                    <group>
-                        <group>
-                            <field name="name"/>
-                            <field name="lang"/>
-                        </group>
-                        <group>
-                            <field name="type"/>
-                            <field name="res_id"/>
-                        </group>
-                        <group string="Source Term">
-                           <field name="src" nolabel="1" height="400"/>
-                        </group>
-                        <group string="Translation">
-                           <field name="value" nolabel="1" height="400"/>
-                        </group>
-                    </group>
-                   </sheet>
-                </form>
-            </field>
-        </record>
-        <record id="view_translation_tree" model="ir.ui.view">
-            <field name="name">Translations</field>
-            <field name="model">ir.translation</field>
-            <field name="arch" type="xml">
-                <tree string="Translations" editable="bottom">
-                    <field name="src" readonly="True"/>
-                    <field name="value"/>
-                    <field name="name" readonly="True"/>
-                    <field name="lang" readonly="True"/>
-                    <field name="type" readonly="True"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="action_translation" model="ir.actions.act_window">
-            <field name="name">Translated Terms</field>
-            <field name="res_model">ir.translation</field>
-            <field name="view_type">form</field>
-            <field name="view_id" ref="view_translation_tree"/>
-        </record>
-        <menuitem action="action_translation" id="menu_action_translation" parent="base.menu_translation_app" />
 
         <!--
     =============================================================
