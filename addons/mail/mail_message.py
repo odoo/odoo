@@ -180,7 +180,6 @@ class mail_message(osv.Model):
             fields allow to have the foreign record name without having
             to check external access rights).
         """
-        child_nbr = len(msg.child_ids)
         has_voted = False
         vote_ids = self.pool.get('res.users').name_get(cr, SUPERUSER_ID, [user.id for user in msg.vote_user_ids], context=context)
         for vote in vote_ids:
@@ -194,7 +193,7 @@ class mail_message(osv.Model):
         try:
             author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
             is_author = uid == msg.author_id.user_ids[0].id
-        except (orm.except_orm, osv.except_osv):
+        except Exception:
             author_id = False
             is_author = False
         try:
@@ -502,9 +501,9 @@ class mail_message(osv.Model):
 
     def create(self, cr, uid, values, context=None):
         if not values.get('message_id') and values.get('res_id') and values.get('model'):
-            values['message_id'] = tools.generate_tracking_message_id('%(model)s-%(res_id)s' % values)
+            values['message_id'] = tools.generate_tracking_message_id('%(res_id)s-%(model)s' % values)
         newid = super(mail_message, self).create(cr, uid, values, context)
-        self._notify(cr, 1, newid, context=context)
+        self._notify(cr, SUPERUSER_ID, newid, context=context)
         return newid
 
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
