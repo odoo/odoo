@@ -121,6 +121,10 @@ openerp.web.corelib = function(instance) {
 
         // The dummy class constructor
         function Class() {
+            if(this.constructor !== instance.web.Class){
+                throw new Error("You need a 'new' to instanciate an object");
+                return null;
+            }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
