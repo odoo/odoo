@@ -629,7 +629,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         this.searchview = new instance.web.SearchView(this, this.dataset, view_id, search_defaults, this.flags.search_view === false);
 
-        this.searchview.on_search.add(this.do_searchview_search);
+        this.searchview.on('data_search', self, this.do_searchview_search);
         return this.searchview.appendTo(this.$el.find(".oe_view_manager_view_search"));
     },
     do_searchview_search: function(domains, contexts, groupbys) {
