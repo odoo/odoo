@@ -337,7 +337,7 @@
             <field name="arch" type="xml">
                 <search string="Search Sales Order">
                     <field name="name" string="Sales Order" filter_domain="['|',('name','ilike',self),('client_order_ref','ilike',self)]"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-document-new" string="Quotations" name="draft" domain="[('state','in',('draft','sent'))]" help="Sales Order that haven't yet been confirmed"/>
                     <filter icon="terp-check" string="Sales" name="sales" domain="[('state','in',('manual','progress'))]"/>
