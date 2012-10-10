@@ -322,7 +322,7 @@
                             <field string="Customer" name="partner_id"
                                 on_change="onchange_partner_id(type,partner_id,date_invoice,payment_term, partner_bank_id,company_id)"
                                 groups="base.group_user" context="{'search_default_customer':1, 'show_address': 1}"
-                                options='{"always_reload": true}'/>
+                                options='{"always_reload": True}'/>
                             <field name="fiscal_position" widget="selection" />
                         </group>
                         <group>
@@ -458,7 +458,6 @@
                     <filter domain="[('user_id','=',uid)]" help="My Invoices" icon="terp-personal"/>
                     <field name="partner_id"/>
                     <field name="user_id" string="Salesperson"/>
-                    <field name="journal_id"/>
                     <field name="period_id" string="Period"/>
                     <group expand="0" string="Group By...">
                         <filter string="Partner" icon="terp-partner" domain="[]" context="{'group_by':'partner_id'}"/>

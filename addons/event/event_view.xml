@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <openerp>
     <data>
-        
+
         <record id="act_event_list_register_event" model="ir.actions.act_window">
             <field name="res_model">event.registration</field>
             <field name="view_type">form</field>
@@ -126,20 +126,32 @@
                                         <field name="street2"/>
                                         <div class="address_format">
                                             <field name="city" placeholder="City" style="width: 40%%"/>
-                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": true}'/>
+                                            <field name="state_id" class="oe_no_button" placeholder="State" style="width: 37%%" options='{"no_open": True}'/>
                                             <field name="zip" placeholder="ZIP" style="width: 20%%"/>
                                         </div>
-                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": true}'/>
+                                        <field name="country_id" placeholder="Country" class="oe_no_button" options='{"no_open": True}'/>
                                     </div>
                                 </group>
                                 <group>
                                     <field name="type" on_change="onchange_event_type(type,context)"/>
                                     <field name="date_begin"/>
                                     <field name="date_end"/>
+                                    <field name="company_id" groups="base.group_multi_company"/>
                                 </group>
                             </group>
                         </div>
                         <notebook>
+                            <page string="Email Configuration" groups="base.group_no_one">
+                                <group>
+                                    <field name="reply_to"/>
+                                    <group>
+                                        <field name="email_registration_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="email_confirmation_id"/>
+                                    </group>
+                                </group>
+                            </page>
                             <page string="Event Description">
                                 <field name="note" colspan="4" nolabel="1"/>
                             </page>
@@ -217,7 +229,7 @@
                     <field name="register_current"/>
                     <field name="register_min"/>
                     <field name="register_max" invisible="1"/>
-                    <field name="main_speaker_id" groups="base.extended"/>
+                    <field name="main_speaker_id" groups="base.group_no_one"/>
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="message_unread" invisible="1"/>
@@ -327,7 +339,7 @@
             <field name="arch" type="xml">
                 <search string="Events">
                     <field name="name" string="Events"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Unconfirmed" name="draft" domain="[('state','=','draft')]" help="Events in New state"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','confirm')]" help="Confirmed events"/>
@@ -452,7 +464,7 @@
                     <sheet string="Registration">
                         <label for="event_id" class="oe_edit_only"/>
                         <h1>
-                            <field name="event_id" on_change="onchange_event(event_id, context)" domain="[('state','in',('draft','confirm'))]"/>
+                            <field name="event_id" domain="[('state','in',('draft','confirm'))]"/>
                         </h1>
                         <group>
                             <group>
@@ -517,7 +529,7 @@
             <field name="arch" type="xml">
                 <search string="Event Registration">
                     <field name="name" string="Participant" filter_domain="['|','|','|',('name','ilike',self),('partner_id','ilike',self),('email','ilike',self),('origin','ilike',self)]"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="New" name="draft" domain="[('state','=','draft')]" help="Registrations in unconfirmed state"/>
                     <filter icon="terp-camera_test" string="Confirmed" domain="[('state','=','open')]" help="Confirmed registrations"/>

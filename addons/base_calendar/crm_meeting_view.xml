@@ -15,9 +15,9 @@
     <record id="action_crm_meeting_read" model="ir.values">
         <field name="name">action_crm_meeting_read</field>
         <field name="action_id" ref="actions_server_crm_meeting_read"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_read'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model_id" ref="model_crm_meeting"/>
         <field name="model">crm.meeting</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -33,9 +33,9 @@
     <record id="action_crm_meeting_unread" model="ir.values">
         <field name="name">action_crm_meeting_unread</field>
         <field name="action_id" ref="actions_server_crm_meeting_unread"/>
-        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))" />
+        <field name="value" eval="'ir.actions.server,' + str(ref('actions_server_crm_meeting_unread'))"/>
         <field name="key">action</field>
-        <field name="model_id" ref="model_crm_meeting" />
+        <field name="model_id" ref="model_crm_meeting"/>
         <field name="model">crm.meeting</field>
         <field name="key2">client_action_multi</field>
     </record>
@@ -73,7 +73,7 @@
                 <sheet>
                     <div class="oe_title">
                         <div class="oe_edit_only">
-                            <label for="name"/> 
+                            <label for="name"/>
                         </div>
                         <h1>
                             <field name="name"/>
@@ -116,9 +116,49 @@
                     </page>
                     <page string="Options">
                         <group>
-                            <group>
-                                <field name="recurrency"
-                                    attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
+                            <group col="1">
+                                <group>
+                                    <field name="recurrency"
+                                        attrs="{'readonly': [('recurrent_uid','!=',False)]}"/>
+                                </group>
+                                <group attrs="{'invisible': [('recurrency','=',False)]}">
+                                    <label for="interval"/>
+                                    <div>
+                                        <field name="interval" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                        <field name="rrule_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                    </div>
+                                    <label string="Until" for="end_type"/>
+                                    <div>
+                                        <field name="end_type" attrs="{'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                        <field name="count" attrs="{'invisible': [('end_type', '!=', 'count')], 'required': [('recurrency','==',True)]}" class="oe_inline"/>
+                                        <field name="end_date" attrs="{'invisible': [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
+                                    </div>
+                                    <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
+                                    <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
+                                        <field name="mo"/>
+                                        <field name="tu"/>
+                                        <field name="we"/>
+                                        <field name="th"/>
+                                        <field name="fr"/>
+                                        <field name="sa"/>
+                                        <field name="su"/>
+                                    </group>
+
+                                    <label string="Day of Month"
+                                        attrs="{'invisible': [('rrule_type','!=','monthly')]}"/>
+
+                                    <div attrs="{'invisible': [('rrule_type','!=','monthly')]}">
+                                        <field name="select1"/>
+                                        <field name="day"
+                                            attrs="{'required': [('select1','=','date'), ('rrule_type','=','monthly')],
+                                                'invisible': [('select1','=','day')]}"/>
+                                        <field name="byday" string="The"
+                                            attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                        <field name="week_list" nolabel="1"
+                                            attrs="{'required': [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible': [('select1','=','date')]}"/>
+                                    </div>
+
+                                </group>
                             </group>
                             <group>
                                 <field name="alarm_id" widget="selection" groups="base.group_no_one"/>
@@ -127,44 +167,6 @@
                                 <field name="rrule" invisible="1" readonly="1"/>
                                 <field name="recurrent_id" invisible="1"/>
                                 <field name="recurrent_uid" invisible="1"/>
-                            </group>
-                            <group attrs="{'invisible': [('recurrency','=',False)]}">
-                                <label for="interval"/>
-                                <div>
-                                    <field name="interval" class="oe_inline"/>
-                                    <field name="rrule_type" class="oe_inline"/>
-                                </div>
-                                <label string="Until" for="end_type"/>
-                                <div>
-                                    <field name="end_type" class="oe_inline"/>
-                                    <field name="count" attrs="{'invisible' : [('end_type', '!=', 'count')] }" class="oe_inline"/>
-                                    <field name="end_date" attrs="{'invisible' : [('end_type', '!=', 'end_date')], 'required': [('end_type', '=', 'end_date')]}" class="oe_inline"/>
-                                </div>
-                                <label string="Select Weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}"/>
-                                <group col="2" colspan="1" name="weekdays" attrs="{'invisible' :[('rrule_type','not in', ['weekly'])]}">
-                                    <field name="mo" />
-                                    <field name="tu" />
-                                    <field name="we" />
-                                    <field name="th" />
-                                    <field name="fr" />
-                                    <field name="sa" />
-                                    <field name="su" />
-                                </group>
-
-                                <label string="Day of Month"
-                                    attrs="{'invisible' : [('rrule_type','!=','monthly')]}"/>
-
-                                <div attrs="{'invisible' : [('rrule_type','!=','monthly')]}">
-                                    <field name="select1" />
-                                    <field name="day"
-                                        attrs="{'required' : [('select1','=','date'), ('rrule_type','=','monthly')],
-                                            'invisible' : [('select1','=','day')]}" />
-                                    <field name="byday" string="The"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
-                                    <field name="week_list" nolabel="1"
-                                        attrs="{'required' : [('select1','=','day'), ('rrule_type','=','monthly')], 'invisible' : [('select1','=','date')]}" />
-                                </div>
-
                             </group>
                         </group>
                     </page>
@@ -178,12 +180,11 @@
                             <tree string="Invitation details" editable="top">
                                 <field name="partner_id"/>
                                 <field name="email" string="Mail To"/>
-                                <field name="state" />
+                                <field name="state"/>
                                 <button name="do_tentative"
                                     states="needs-action,declined,accepted"
                                     string="Uncertain" type="object"
-                                    icon="terp-crm"
-                                    />
+                                    icon="terp-crm"/>
                                 <button name="do_accept" string="Accept"
                                     states="needs-action,tentative,declined"
                                     type="object" icon="gtk-apply"/>
@@ -195,21 +196,21 @@
                                 <header>
                                     <button name="do_tentative" type="object"
                                         states="needs-action,declined,accepted"
-                                        string="Uncertain" />
+                                        string="Uncertain"/>
                                     <button name="do_accept" type="object"
                                         states="needs-action,tentative,declined"
-                                        string="Accept" />
+                                        string="Accept"/>
                                     <button name="do_decline" type="object"
                                         states="needs-action,tentative,accepted"
-                                        string="Decline" />
+                                        string="Decline"/>
                                     <field name="state" widget="statusbar" statusbar_visible="draft,open,done"/>
                                 </header>
                                 <group>
                                     <group>
-                                        <field name="email" />
-                                        <field name="rsvp" />
-                                        <field name="cutype" />
-                                        <field name="role" />
+                                        <field name="email"/>
+                                        <field name="rsvp"/>
+                                        <field name="cutype"/>
+                                        <field name="role"/>
                                     </group>
                                     <group>
                                         <field name="partner_id"/>
@@ -237,11 +238,11 @@
         <field name="model">crm.meeting</field>
         <field name="arch" type="xml">
             <tree string="Meetings" fonts="bold:message_unread==True">
-                <field name="name" string="Subject" />
+                <field name="name" string="Subject"/>
                 <field name="user_id"/>
                 <field name="date"/>
                 <field name="state" invisible="True"/>
-                <field name="duration" />
+                <field name="duration"/>
                 <field name="message_unread" invisible="1"/>
             </tree>
         </field>
@@ -279,7 +280,7 @@
         <field name="arch" type="xml">
             <search string="Search Meetings">
                 <field name="name" string="Meeting" filter_domain="[('name','ilike',self)]"/>
-                <filter string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <filter string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <separator/>
                 <filter string="My Meetings" help="My Meetings" domain="[('user_id','=',uid)]"/>
                 <field name="user_id"/>
@@ -299,7 +300,7 @@
         <field name="context">{"calendar_default_user_id": uid}</field>
         <field name="help" type="html">
           <p class="oe_view_nocontent_create">
-            Click to schedule a new meeting. 
+            Click to schedule a new meeting.
           </p><p>
             The calendar is shared between employees and fully integrated with
             other applications such as the employee holidays or the business
