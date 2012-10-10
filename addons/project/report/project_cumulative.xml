@@ -49,7 +49,7 @@
                     <filter string="My Tasks" domain="[('user_id','=',uid)]"/>
                     <filter string="Unassigned Tasks" domain="[('user_id','=',False)]"/>
                     <separator/>
-                    <filter string="My Projects" domain="[('project_id','=',uid)]"/>
+                    <filter string="My Projects" domain="[('project_id.user_id','=',uid)]"/>
                 </search>
             </field>
         </record>
