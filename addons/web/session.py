@@ -4,70 +4,58 @@ import babel
 import dateutil.relativedelta
 import logging
 import time
+import traceback
 import sys
+import xmlrpclib
 
-import openerplib
+import openerp
 
-from . import nonliterals
+import nonliterals
 
 _logger = logging.getLogger(__name__)
 
 #----------------------------------------------------------
-# openerplib local connector
-#----------------------------------------------------------
-class LibException(Exception):
-    """ Base of all client lib exceptions """
-    def __init__(self,code=None,message=None):
-        self.code = code
-        self.message = message
-
-class ApplicationError(LibException):
-    """ maps to code: 1, server side: Exception or openerp.exceptions.DeferredException"""
-
-class Warning(LibException):
-    """ maps to code: 2, server side: openerp.exceptions.Warning"""
-
-class AccessError(LibException):
-    """ maps to code: 3, server side:  openerp.exceptions.AccessError"""
-
-class AccessDenied(LibException):
-    """ maps to code: 4, server side: openerp.exceptions.AccessDenied"""
-
-class LocalConnector(openerplib.Connector):
-    """
-    A type of connector that uses the XMLRPC protocol.
-    """
-    PROTOCOL = 'local'
-
-    def __init__(self):
-        pass
-
-    def send(self, service_name, method, *args):
-        import openerp
-        import traceback
-        import xmlrpclib
-        code_string = "warning -- %s\n\n%s"
-        try:
-            return openerp.netsvc.dispatch_rpc(service_name, method, args)
-        except openerp.osv.osv.except_osv, e:
-        # TODO change the except to raise LibException instead of their emulated xmlrpc fault
-            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
-        except openerp.exceptions.Warning, e:
-            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
-        except openerp.exceptions.AccessError, e:
-            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
-        except openerp.exceptions.AccessDenied, e:
-            raise xmlrpclib.Fault('AccessDenied', str(e))
-        except openerp.exceptions.DeferredException, e:
-            formatted_info = "".join(traceback.format_exception(*e.traceback))
-            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
-        except Exception, e:
-            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
-            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
-
-#----------------------------------------------------------
 # OpenERPSession RPC openerp backend access
 #----------------------------------------------------------
+class AuthenticationError(Exception):
+    pass
+
+class Service(object):
+    def __init__(self, session, service_name):
+        self.session = session
+        self.service_name = service_name
+        
+    def __getattr__(self, method):
+        def proxy_method(*args):
+            result = self.session.send(self.service_name, method, *args)
+            return result
+        return proxy_method
+
+class Model(object):
+    def __init__(self, session, model):
+        self.session = session
+        self.model = model
+        self.proxy = self.session.proxy('object')
+
+    def __getattr__(self, method):
+        def proxy(*args, **kw):
+            result = self.proxy.execute_kw(self.session._db, self.session._uid, self.session._password, self.model, method, args, kw)
+            # reorder read
+            if method == "read":
+                if isinstance(result, list) and len(result) > 0 and "id" in result[0]:
+                    index = {}
+                    for r in result:
+                        index[r['id']] = r
+                    result = [index[x] for x in args[0] if x in index]
+            return result
+        return proxy
+
+    def search_read(self, domain=None, fields=None, offset=0, limit=None, order=None, context=None):
+        record_ids = self.search(domain or [], offset, limit or False, order or False, context or {})
+        if not record_ids: return []
+        records = self.read(record_ids, fields or [], context or {})
+        return records
+
 class OpenERPSession(object):
     """
     An OpenERP RPC session, a given user can own multiple such sessions
@@ -87,7 +75,6 @@ class OpenERPSession(object):
     """
     def __init__(self):
         self._creation_time = time.time()
-        self.config = None
         self._db = False
         self._uid = False
         self._login = False
@@ -98,19 +85,27 @@ class OpenERPSession(object):
         self.domains_store = {}
         self.jsonp_requests = {}     # FIXME use a LRU
         
-    def __getstate__(self):
-        state = dict(self.__dict__)
-        if "config" in state:
-            del state['config']
-        return state
-
-    def build_connection(self):
-        conn = openerplib.Connection(self.config.connector, database=self._db, login=self._login,
-                   user_id=self._uid, password=self._password)
-        return conn
+    def send(self, service_name, method, *args):
+        code_string = "warning -- %s\n\n%s"
+        try:
+            return openerp.netsvc.dispatch_rpc(service_name, method, args)
+        except openerp.osv.osv.except_osv, e:
+            raise xmlrpclib.Fault(code_string % (e.name, e.value), '')
+        except openerp.exceptions.Warning, e:
+            raise xmlrpclib.Fault(code_string % ("Warning", e), '')
+        except openerp.exceptions.AccessError, e:
+            raise xmlrpclib.Fault(code_string % ("AccessError", e), '')
+        except openerp.exceptions.AccessDenied, e:
+            raise xmlrpclib.Fault('AccessDenied', str(e))
+        except openerp.exceptions.DeferredException, e:
+            formatted_info = "".join(traceback.format_exception(*e.traceback))
+            raise xmlrpclib.Fault(openerp.tools.ustr(e.message), formatted_info)
+        except Exception, e:
+            formatted_info = "".join(traceback.format_exception(*(sys.exc_info())))
+            raise xmlrpclib.Fault(openerp.tools.exception_to_unicode(e), formatted_info)
 
     def proxy(self, service):
-        return self.build_connection().get_service(service)
+        return Service(self, service)
 
     def bind(self, db, uid, login, password):
         self._db = db
@@ -119,7 +114,6 @@ class OpenERPSession(object):
         self._password = password
 
     def authenticate(self, db, login, password, env=None):
-        # TODO use the openerplib API once it exposes authenticate()
         uid = self.proxy('common').authenticate(db, login, password, env)
         self.bind(db, uid, login, password)
         
@@ -130,7 +124,12 @@ class OpenERPSession(object):
         """
         Ensures this session is valid (logged into the openerp server)
         """
-        self.build_connection().check_login(force)
+        if self._uid and not force:
+            return
+        # TODO use authenticate instead of login
+        uid = self.proxy("common").login(self._db, self._login, self._password)
+        if not uid:
+            raise AuthenticationError("Authentication failure")
 
     def ensure_valid(self):
         if self._uid:
@@ -141,7 +140,7 @@ class OpenERPSession(object):
 
     def execute(self, model, func, *l, **d):
         self.assert_valid()
-        model = self.build_connection().get_model(model)
+        model = self.model(model)
         r = getattr(model, func)(*l, **d)
         return r
 
@@ -157,7 +156,8 @@ class OpenERPSession(object):
         :type model: str
         :rtype: a model object
         """
-        return self.build_connection().get_model(model)
+
+        return Model(self, model)
 
     def get_context(self):
         """ Re-initializes the current user's session context (based on
@@ -167,7 +167,7 @@ class OpenERPSession(object):
         :returns: the new context
         """
         assert self._uid, "The user needs to be logged-in to initialize his context"
-        self.context = self.build_connection().get_user_context() or {}
+        self.context = self.model('res.users').context_get() or {}
         self.context['uid'] = self._uid
         self._fix_lang(self.context)
         return self.context
