@@ -43,7 +43,7 @@ class OAuthController(openerpweb.Controller):
                 url = "/#action=login&oauth_error=1"
             except Exception,e:
                 # signup error
-                _logger.exception('oops')
+                _logger.exception("OAuth2: %s" % str(e))
                 url = "/#action=login&oauth_error=2"
         return openerp.addons.web.controllers.main.set_cookie_and_redirect(req, url)
 
