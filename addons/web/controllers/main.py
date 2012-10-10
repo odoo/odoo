@@ -27,6 +27,8 @@ try:
 except ImportError:
     xlwt = None
 
+import openerp
+
 from .. import common
 openerpweb = common.http
 
@@ -135,7 +137,7 @@ def db_list(req):
     dbs = proxy.list()
     h = req.httprequest.environ['HTTP_HOST'].split(':')[0]
     d = h.split('.')[0]
-    r = req.config.dbfilter.replace('%h', h).replace('%d', d)
+    r = openerp.tools.config['dbfilter'].replace('%h', h).replace('%d', d)
     dbs = [i for i in dbs if re.match(r, i)]
     return dbs
 
@@ -227,11 +229,12 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
-    return [m for m in req.config.server_wide_modules if m in openerpweb.addons_manifest]
+    server_wide_modules = openerp.conf.server_wide_modules or ['web']
+    return [m for m in server_wide_modules if m in openerpweb.addons_manifest]
     # TODO the following will be enabled once we separate the module code and translation loading
     serverside = []
     dbside = []
-    for i in req.config.server_wide_modules:
+    for i in server_wide_modules:
         if i in openerpweb.addons_manifest:
             serverside.append(i)
     # if only one db load every module at boot
@@ -507,7 +510,7 @@ def parse_domain(domain, session):
     :param domain: the domain to parse, if the domain is not a string it
                    is assumed to be a literal domain and is returned as-is
     :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
+    :type session: openerpweb.OpenERPSession
     """
     if not isinstance(domain, basestring):
         return domain
@@ -524,7 +527,7 @@ def parse_context(context, session):
     :param context: the context to parse, if the context is not a string it
            is assumed to be a literal domain and is returned as-is
     :param session: Current OpenERP session
-    :type session: openerpweb.openerpweb.OpenERPSession
+    :type session: openerpweb.OpenERPSession
     """
     if not isinstance(context, basestring):
         return context
@@ -611,7 +614,6 @@ class Home(openerpweb.Controller):
     @openerpweb.httprequest
     def login(self, req, db, login, key):
         return login_and_redirect(req, db, login, key)
-
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -746,7 +748,7 @@ class WebClient(openerpweb.Controller):
     @openerpweb.jsonrequest
     def version_info(self, req):
         return {
-            "version": common.release.version
+            "version": openerp.release.version
         }
 
 class Proxy(openerpweb.Controller):
@@ -862,12 +864,10 @@ class Session(openerpweb.Controller):
     @openerpweb.jsonrequest
     def authenticate(self, req, db, login, password, base_location=None):
         wsgienv = req.httprequest.environ
-        release = common.release
         env = dict(
             base_location=base_location,
             HTTP_HOST=wsgienv['HTTP_HOST'],
             REMOTE_ADDR=wsgienv['REMOTE_ADDR'],
-            user_agent="%s / %s" % (release.name, release.version),
         )
         req.session.authenticate(db, login, password, env)
 

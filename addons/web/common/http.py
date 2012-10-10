@@ -6,15 +6,18 @@ import ast
 import cgi
 import contextlib
 import functools
+import getpass
 import logging
 import mimetypes
 import os
 import pprint
 import sys
+import tempfile
 import threading
 import time
 import traceback
 import urllib
+import urlparse
 import uuid
 import xmlrpclib
 
@@ -26,10 +29,10 @@ import werkzeug.utils
 import werkzeug.wrappers
 import werkzeug.wsgi
 
-from . import nonliterals
-from . import session
-from . import openerplib
-import urlparse
+import openerp
+
+import nonliterals
+import session
 
 __all__ = ['Root', 'jsonrequest', 'httprequest', 'Controller',
            'WebRequest', 'JsonRequest', 'HttpRequest']
@@ -46,7 +49,6 @@ class WebRequest(object):
 
     :param request: a wrapped werkzeug Request object
     :type request: :class:`werkzeug.wrappers.BaseRequest`
-    :param config: configuration object
 
     .. attribute:: httprequest
 
@@ -57,10 +59,6 @@ class WebRequest(object):
 
         a :class:`~collections.Mapping` holding the HTTP session data for the
         current http session
-
-    .. attribute:: config
-
-        config parameter provided to the request object
 
     .. attribute:: params
 
@@ -85,11 +83,10 @@ class WebRequest(object):
 
         ``bool``, indicates whether the debug mode is active on the client
     """
-    def __init__(self, request, config):
+    def __init__(self, request):
         self.httprequest = request
         self.httpresponse = None
         self.httpsession = request.session
-        self.config = config
 
     def init(self, params):
         self.params = dict(params)
@@ -98,7 +95,6 @@ class WebRequest(object):
         self.session = self.httpsession.get(self.session_id)
         if not self.session:
             self.httpsession[self.session_id] = self.session = session.OpenERPSession()
-        self.session.config = self.config
         self.context = self.params.pop('context', None)
         self.debug = self.params.pop('debug', False) != False
 
@@ -180,7 +176,7 @@ class JsonRequest(WebRequest):
                 _logger.debug("--> %s.%s\n%s", controller.__class__.__name__, method.__name__, pprint.pformat(self.jsonrequest))
             response['id'] = self.jsonrequest.get('id')
             response["result"] = method(controller, self, **self.params)
-        except openerplib.AuthenticationError:
+        except session.AuthenticationError:
             error = {
                 'code': 100,
                 'message': "OpenERP Session Invalid",
@@ -238,8 +234,8 @@ def jsonrequest(f):
     beforehand)
     """
     @functools.wraps(f)
-    def json_handler(controller, request, config):
-        return JsonRequest(request, config).dispatch(controller, f)
+    def json_handler(controller, request):
+        return JsonRequest(request).dispatch(controller, f)
     json_handler.exposed = True
     return json_handler
 
@@ -325,8 +321,8 @@ def httprequest(f):
     and ``debug`` keys (which are stripped out beforehand)
     """
     @functools.wraps(f)
-    def http_handler(controller, request, config):
-        return HttpRequest(request, config).dispatch(controller, f)
+    def http_handler(controller, request):
+        return HttpRequest(request).dispatch(controller, f)
     http_handler.exposed = True
     return http_handler
 
@@ -425,6 +421,7 @@ def session_context(request, storage_path, session_cookie='httpsessionid'):
 mimetypes.add_type('application/font-woff', '.woff')
 mimetypes.add_type('application/vnd.ms-fontobject', '.eot')
 mimetypes.add_type('application/x-font-ttf', '.ttf')
+
 class DisableCacheMiddleware(object):
     def __init__(self, app):
         self.app = app
@@ -449,45 +446,23 @@ class DisableCacheMiddleware(object):
 
 class Root(object):
     """Root WSGI application for the OpenERP Web Client.
-
-    :param options: mandatory initialization options object, must provide
-                    the following attributes:
-
-                    ``server_host`` (``str``)
-                      hostname of the OpenERP server to dispatch RPC to
-                    ``server_port`` (``int``)
-                      RPC port of the OpenERP server
-                    ``serve_static`` (``bool | None``)
-                      whether this application should serve the various
-                      addons's static files
-                    ``storage_path`` (``str``)
-                      filesystem path where HTTP session data will be stored
-                    ``dbfilter`` (``str``)
-                      only used in case the list of databases is requested
-                      by the server, will be filtered by this pattern
     """
-    def __init__(self, options):
-        self.config = options
-
-        if not hasattr(self.config, 'connector'):
-            if self.config.backend == 'local':
-                self.config.connector = session.LocalConnector()
-            else:
-                self.config.connector = openerplib.get_connector(
-                    hostname=self.config.server_host, port=self.config.server_port)
-
+    def __init__(self):
         self.httpsession_cookie = 'httpsessionid'
         self.addons = {}
 
         static_dirs = self._load_addons()
-        if options.serve_static:
-            app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
-            self.dispatch = DisableCacheMiddleware(app)
+        app = werkzeug.wsgi.SharedDataMiddleware( self.dispatch, static_dirs)
+        self.dispatch = DisableCacheMiddleware(app)
 
-        if options.session_storage:
-            if not os.path.exists(options.session_storage):
-                os.mkdir(options.session_storage, 0700)
-            self.session_storage = options.session_storage
+        try:
+            username = getpass.getuser()
+        except Exception:
+            username = "unknown"
+        self.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
+
+        if not os.path.exists(self.session_storage):
+            os.mkdir(self.session_storage, 0700)
         _logger.debug('HTTP sessions stored in: %s', self.session_storage)
 
     def __call__(self, environ, start_response):
@@ -512,7 +487,7 @@ class Root(object):
             response = werkzeug.exceptions.NotFound()
         else:
             with session_context(request, self.session_storage, self.httpsession_cookie) as session:
-                result = handler( request, self.config)
+                result = handler( request)
 
                 if isinstance(result, basestring):
                     headers=[('Content-Type', 'text/html; charset=utf-8'), ('Content-Length', len(result))]
@@ -531,7 +506,7 @@ class Root(object):
         static URLs to the corresponding directories
         """
         statics = {}
-        for addons_path in self.config.addons_path:
+        for addons_path in openerp.modules.module.ad_paths:
             for module in os.listdir(addons_path):
                 if module not in addons_module:
                     manifest_path = os.path.join(addons_path, module, '__openerp__.py')
@@ -579,28 +554,8 @@ class Root(object):
                     ps = '/'
         return None
 
-class Options(object):
-    pass
-
 def wsgi_postload():
-    import openerp
-    import tempfile
-    import getpass
-    _logger.info("embedded mode")
-    o = Options()
-    o.dbfilter = openerp.tools.config['dbfilter']
-    o.server_wide_modules = openerp.conf.server_wide_modules or ['web']
-    try:
-        username = getpass.getuser()
-    except Exception:
-        username = "unknown"
-    o.session_storage = os.path.join(tempfile.gettempdir(), "oe-sessions-" + username)
-    o.addons_path = openerp.modules.module.ad_paths
-    o.serve_static = True
-    o.backend = 'local'
-
-    app = Root(o)
-    openerp.wsgi.register_wsgi_handler(app)
+    openerp.wsgi.register_wsgi_handler(Root())
 
 
 # vim:et:ts=4:sw=4:
