@@ -309,8 +309,14 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
                     ui.item.find('*').on('click.prevent', function(ev) {
                         return false;
                     });
+                    ui.placeholder.height(ui.item.height());
+                },
+                revert: 150,
+                beforeStop: function(event,ui){
+                    console.log('beforeStop:',ui);
                 },
                 stop: function(event, ui) {
+                    console.log('stop:',ui);
                     var record = ui.item.data('widget');
                     var old_index = self.currently_dragging.index;
                     var new_index = ui.item.index();
@@ -379,7 +385,7 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
             record.group = new_group;
             var data = {};
             data[this.group_by] = new_group.value;
-            this.dataset.write(record.id, data, {}, function() {
+            this.dataset.write(record.id, data, {}).then(function() {
                 record.do_reload();
                 new_group.do_save_sequences();
             }).fail(function(error, evt) {
@@ -877,7 +883,7 @@ instance.web_kanban.KanbanRecord = instance.web.Widget.extend({
                 var color_field = $(this).parents('.oe_kanban_colorpicker').first().data('field') || 'color';
                 var data = {};
                 data[color_field] = $(this).data('color');
-                self.view.dataset.write(self.id, data, {}, function() {
+                self.view.dataset.write(self.id, data, {}).then(function() {
                     self.record[color_field] = $(this).data('color');
                     self.do_reload();
                 });

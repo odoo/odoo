@@ -227,6 +227,8 @@ def module_installed_bypass_session(dbname):
     return sorted_modules
 
 def module_boot(req):
+    return [m for m in req.config.server_wide_modules if m in openerpweb.addons_manifest]
+    # TODO the following will be enabled once we separate the module code and translation loading
     serverside = []
     dbside = []
     for i in req.config.server_wide_modules:
@@ -531,6 +533,20 @@ def parse_context(context, session):
     except ValueError:
         return common.nonliterals.Context(session, context)
 
+
+def _local_web_translations(trans_file):
+    messages = []
+    try:
+        with open(trans_file) as t_file:
+            po = babel.messages.pofile.read_po(t_file)
+    except Exception:
+        return
+    for x in po:
+        if x.id and x.string and "openerp-web" in x.auto_comments:
+            messages.append({'id': x.id, 'string': x.string})
+    return messages
+
+
 #----------------------------------------------------------
 # OpenERP Web web Controllers
 #----------------------------------------------------------
@@ -552,7 +568,27 @@ html_template = """<!DOCTYPE html>
             });
         </script>
     </head>
-    <body></body>
+    <body>
+        <!--[if lte IE 8]>
+        <script type="text/javascript" 
+            src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+        <script>
+            var test = function() {
+                CFInstall.check({
+                    mode: "overlay"
+                });
+            };
+            if (window.localStorage && false) {
+                if (! localStorage.getItem("hasShownGFramePopup")) {
+                    test();
+                    localStorage.setItem("hasShownGFramePopup", true);
+                }
+            } else {
+                test();
+            }
+        </script>
+        <![endif]-->
+    </body>
 </html>
 """
 
@@ -575,6 +611,7 @@ class Home(openerpweb.Controller):
     @openerpweb.httprequest
     def login(self, req, db, login, key):
         return login_and_redirect(req, db, login, key)
+
 
 class WebClient(openerpweb.Controller):
     _cp_path = "/web/webclient"
@@ -658,41 +695,53 @@ class WebClient(openerpweb.Controller):
             last_modified, checksum)
 
     @openerpweb.jsonrequest
-    def translations(self, req, mods, lang):
-        lang_model = req.session.model('res.lang')
-        ids = lang_model.search([("code", "=", lang)])
-        if ids:
-            lang_obj = lang_model.read(ids[0], ["direction", "date_format", "time_format",
-                                                "grouping", "decimal_point", "thousands_sep"])
-        else:
-            lang_obj = None
+    def bootstrap_translations(self, req, mods):
+        """ Load local translations from *.po files, as a temporary solution
+            until we have established a valid session. This is meant only
+            for translating the login page and db management chrome, using
+            the browser's language. """
+        lang = req.httprequest.accept_languages.best or 'en'
+        # For performance reasons we only load a single translation, so for
+        # sub-languages (that should only be partially translated) we load the
+        # main language PO instead - that should be enough for the login screen.
+        if '-' in lang: # RFC2616 uses '-' separators for sublanguages
+            lang = lang.split('-')[0]
 
-        if "_" in lang:
-            separator = "_"
-        else:
-            separator = "@"
-        langs = lang.split(separator)
-        langs = [separator.join(langs[:x]) for x in range(1, len(langs) + 1)]
-
-        transs = {}
+        translations_per_module = {}
         for addon_name in mods:
-            transl = {"messages":[]}
-            transs[addon_name] = transl
             addons_path = openerpweb.addons_manifest[addon_name]['addons_path']
-            for l in langs:
-                f_name = os.path.join(addons_path, addon_name, "i18n", l + ".po")
-                if not os.path.exists(f_name):
-                    continue
-                try:
-                    with open(f_name) as t_file:
-                        po = babel.messages.pofile.read_po(t_file)
-                except Exception:
-                    continue
-                for x in po:
-                    if x.id and x.string and "openerp-web" in x.auto_comments:
-                        transl["messages"].append({'id': x.id, 'string': x.string})
-        return {"modules": transs,
-                "lang_parameters": lang_obj}
+            f_name = os.path.join(addons_path, addon_name, "i18n", lang + ".po")
+            if not os.path.exists(f_name):
+                continue
+            translations_per_module[addon_name] = {'messages': _local_web_translations(f_name)}
+            
+        return {"modules": translations_per_module,
+                "lang_parameters": None}
+
+    @openerpweb.jsonrequest
+    def translations(self, req, mods, lang):
+        res_lang = req.session.model('res.lang')
+        ids = res_lang.search([("code", "=", lang)])
+        lang_params = None
+        if ids:
+            lang_params = res_lang.read(ids[0], ["direction", "date_format", "time_format",
+                                                "grouping", "decimal_point", "thousands_sep"])
+
+        # Regional languages (ll_CC) must inherit/override their parent lang (ll), but this is
+        # done server-side when the language is loaded, so we only need to load the user's lang.
+        ir_translation = req.session.model('ir.translation')
+        translations_per_module = {}
+        messages = ir_translation.search_read([('module','in',mods),('lang','=',lang),
+                                               ('comments','like','openerp-web'),('value','!=',False),
+                                               ('value','!=','')],
+                                              ['module','src','value','lang'], order='module') 
+        for mod, msg_group in itertools.groupby(messages, key=operator.itemgetter('module')):
+            translations_per_module.setdefault(mod,{'messages':[]})
+            translations_per_module[mod]['messages'].extend({'id': m['src'],
+                                                             'string': m['value']} \
+                                                                for m in msg_group)
+        return {"modules": translations_per_module,
+                "lang_parameters": lang_params}
 
     @openerpweb.jsonrequest
     def version_info(self, req):
@@ -767,7 +816,7 @@ class Database(openerpweb.Controller):
                {'fileToken': int(token)}
             )
         except xmlrpclib.Fault, e:
-             return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
+            return simplejson.dumps([[],[{'error': e.faultCode, 'title': 'backup Database'}]])
 
     @openerpweb.httprequest
     def restore(self, req, db_file, restore_pwd, new_db):
@@ -1178,8 +1227,8 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            return {'result': clean_action(req, action)}
-        return {'result': False}
+            return clean_action(req, action)
+        return False
 
     @openerpweb.jsonrequest
     def exec_workflow(self, req, model, id, signal):
@@ -1565,13 +1614,6 @@ class Binary(openerpweb.Controller):
 class Action(openerpweb.Controller):
     _cp_path = "/web/action"
 
-    # For most actions, the type attribute and the model name are the same, but
-    # there are exceptions. This dict is used to remap action type attributes
-    # to the "real" model name when they differ.
-    action_mapping = {
-        "ir.actions.act_url": "ir.actions.url",
-    }
-
     @openerpweb.jsonrequest
     def load(self, req, action_id, do_not_eval=False):
         Actions = req.session.model('ir.actions.actions')
@@ -1595,11 +1637,10 @@ class Action(openerpweb.Controller):
             if action_type == 'ir.actions.report.xml':
                 ctx.update({'bin_size': True})
             ctx.update(context)
-            action_model = self.action_mapping.get(action_type, action_type)
-            action = req.session.model(action_model).read([action_id], False, ctx)
+            action = req.session.model(action_type).read([action_id], False, ctx)
             if action:
                 value = clean_action(req, action[0], do_not_eval)
-        return {'result': value}
+        return value
 
     @openerpweb.jsonrequest
     def run(self, req, action_id):

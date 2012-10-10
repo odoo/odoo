@@ -206,16 +206,12 @@ instance.web_gantt.GanttView = instance.web.View.extend({
         } else { // we assume date_duration is defined
             data[self.fields_view.arch.attrs.date_delay] = duration;
         }
-        this.dataset.write(itask.id, data).then(function() {
-            console.log("task edited");
-        });
+        this.dataset.write(itask.id, data);
     },
     on_task_display: function(task) {
         var self = this;
         var pop = new instance.web.form.FormOpenPopup(self);
-        pop.on_write_completed.add_last(function() {
-            self.reload();
-        });
+        pop.on('on_write_complete',self,self.reload);
         pop.show_element(
             self.dataset.model,
             task.id,

@@ -136,7 +136,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
         var model_dataset = new instance.web.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
-        field_dataset.call( 'fields_get', [],  function(fields) {
+        field_dataset.call( 'fields_get', []).then(function(fields) {
             _.each(['name', 'x_name'], function(value) {
                 if (_.include(_.keys(fields), value)) {
                     field_name = value;
@@ -456,11 +456,11 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var priority = _.detect(self.one_object['arch'], function(val) {return val.view_id == view_id;});
         var arch = _.str.sprintf("<?xml version='1.0'?>\n\t <field name='%s' position='after'> </field>", val[1]);
         var vals = {'model': self.model, 'name': view_name, 'priority': priority.priority + 1, 'type': "form", 'arch': arch,'inherit_id':self.main_view_id};
-        this.dataset.create(vals).then(function(suc) {
-            var arch_to_obj = self.parse_xml(arch,suc.result);
+        this.dataset.create(vals).then(function(id) {
+            var arch_to_obj = self.parse_xml(arch,id);
             obj.child_id.push(arch_to_obj[0]);
             self.one_object['parent_child_id'] = self.parent_child_list(self.one_object['main_object'],[]);
-            self.one_object['arch'].push({'view_id':suc.result,"arch":arch,'priority': priority.priority + 1});
+            self.one_object['arch'].push({'view_id':id,"arch":arch,'priority': priority.priority + 1});
             self.increase_level(arch_to_obj[0],obj.level+1);
             self.render_inherited_view(selected_row,arch_to_obj[0]);
         });
@@ -539,7 +539,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false; 
             property_to_check.push(value);
         });
-        field_dataset.call( 'fields_get', [],  function(result) {
+        field_dataset.call( 'fields_get', []).then(function(result) {
             var fields = _.keys(result);
             fields.push(" "),fields.sort();
             self.on_add_node(property_to_check, fields);
@@ -775,7 +775,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
                     convert_to_utf = convert_to_utf.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
                     convert_to_utf = '<?xml version="1.0"?>' + convert_to_utf;
                     arch.arch = convert_to_utf;
-                    this.dataset.write(this.one_object.clicked_tr_view[0] ,{"arch":convert_to_utf}, function(r) {});
+                    this.dataset.write(this.one_object.clicked_tr_view[0] ,{"arch":convert_to_utf});
                 } else {
                     this.dataset.unlink([this.one_object.clicked_tr_view[0]]);
                 }

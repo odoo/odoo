@@ -68,10 +68,13 @@
   background-color: #f0f0f0;
 }
 .openerp thead th {
-  border-right: 1px dotted #afafb6;
+  border-left: 1px solid #dfdfdf;
 }
-.openerp thead th:last-child {
-  border-right: none;
+.openerp thead th:first-child {
+  border-left: none;
+}
+.openerp thead th.null {
+  border-left: none;
 }
 .openerp th, .openerp td {
   padding: 0;
@@ -514,6 +517,12 @@
 }
 .openerp .oe_webclient .oe_star_on {
   color: gold;
+}
+.openerp p.oe_grey {
+  max-width: 650px;
+}
+.openerp .oe_grey {
+  color: #aaaaaa;
 }
 .openerp .oe_tag {
   border: 1px solid #afafb6;
@@ -1081,9 +1090,8 @@
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
 }
 .openerp .oe_menu > li > .oe_active {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.3);
   text-shadow: black 0px 0px 3px;
-  font-weight: bold;
   -moz-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4) inset;
@@ -1843,6 +1851,13 @@
   margin: 0;
   white-space: nowrap;
 }
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced li:first-child .searchview_extended_prop_or {
+  visibility: hidden;
+}
+.openerp .oe_searchview .oe_searchview_drawer .oe_searchview_advanced .searchview_extended_prop_or {
+  opacity: 0.5;
+  margin-left: -14px;
+}
 .openerp .oe_searchview .oe_searchview_drawer .oe_opened h4:before {
   content: "▾ ";
   position: relative;
@@ -2028,49 +2043,47 @@
   display: inline-block;
   float: right;
 }
-.openerp .oe_form header .oe_form_button {
+.openerp .oe_form header .oe_button {
   margin: 3px 2px 1px;
+}
+.openerp .oe_form header .oe_button:first-child {
+  margin-left: 6px;
 }
 .openerp .oe_form header .oe_tags {
   margin: 5px 0 0 5px;
   width: 400px;
   padding-bottom: 0;
 }
-.openerp .oe_form div.oe_chatter {
+.openerp .oe_form header .oe_tags div.oe_chatter {
   min-width: 650px;
   max-width: 860px;
   margin: 0 auto;
   padding: 16px 0 48px;
 }
-.openerp .oe_form .oe_grey {
-  color: #aaaaaa;
-  max-width: 650px;
-  margin: 0 0 10px 0;
-}
-.openerp .oe_form div.oe_form_configuration p, .openerp .oe_form div.oe_form_configuration ul, .openerp .oe_form div.oe_form_configuration ol {
+.openerp .oe_form header .oe_tags div.oe_form_configuration p, .openerp .oe_form header .oe_tags div.oe_form_configuration ul, .openerp .oe_form header .oe_tags div.oe_form_configuration ol {
   color: #aaaaaa;
   max-width: 650px;
 }
-.openerp .oe_form div.oe_form_configuration label {
+.openerp .oe_form header .oe_tags div.oe_form_configuration label {
   min-width: 150px;
 }
-.openerp .oe_form div.oe_form_configuration .oe_form_group_cell_label {
+.openerp .oe_form header .oe_tags div.oe_form_configuration .oe_form_group_cell_label {
   padding: 1px 0;
 }
-.openerp .oe_form div.oe_form_configuration .oe_form_group_cell div div {
+.openerp .oe_form header .oe_tags div.oe_form_configuration .oe_form_group_cell div div {
   padding: 1px 0;
 }
-.openerp .oe_form .oe_subtotal_footer {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer {
   width: 1% !important;
 }
-.openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer td.oe_form_group_cell {
   text-align: right;
   padding: 0 !important;
 }
-.openerp .oe_form .oe_subtotal_footer td.oe_form_group_cell_label {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer td.oe_form_group_cell_label {
   border-right: none;
 }
-.openerp .oe_form .oe_subtotal_footer .oe_subtotal_footer_separator {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer .oe_subtotal_footer_separator {
   width: 108px;
   border-top: 1px solid #cacaca;
   margin-top: 4px;
@@ -2078,14 +2091,14 @@
   font-weight: bold;
   font-size: 18px;
 }
-.openerp .oe_form .oe_subtotal_footer label:after {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer label:after {
   content: ":";
 }
-.openerp .oe_form .oe_subtotal_footer label.oe_subtotal_footer_separator {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer label.oe_subtotal_footer_separator {
   font-weight: bold !important;
   padding: 2px 11px 2px 0px !important;
 }
-.openerp .oe_form .oe_subtotal_footer label.oe_form_label_help {
+.openerp .oe_form header .oe_tags .oe_subtotal_footer label.oe_form_label_help {
   font-weight: normal;
 }
 .openerp .oe_form .oe_form_button {
@@ -2206,16 +2219,12 @@
   min-width: 60px;
   color: #1f1f1f;
 }
-.openerp .oe_form textarea {
-  height: 32px;
-}
 .openerp .oe_form input[readonly], .openerp .oe_form select[readonly], .openerp .oe_form textarea[readonly], .openerp .oe_form input[disabled], .openerp .oe_form select[disabled] {
   background: #e5e5e5 !important;
   color: #666666;
 }
 .openerp .oe_form textarea[disabled] {
   border: none;
-  border-left: 8px solid #eeeeee;
   padding-left: 8px;
   -moz-box-shadow: none;
   -webkit-box-shadow: none;
@@ -2223,6 +2232,9 @@
   -moz-border-radius: 0px;
   -webkit-border-radius: 0px;
   border-radius: 0px;
+}
+.openerp .oe_form textarea.oe_inline[disabled] {
+  border-left: 8px solid #eeeeee;
 }
 .openerp .oe_form .oe_form_field_url button img {
   vertical-align: top;
@@ -2241,7 +2253,7 @@
 .openerp .oe_form .oe_datepicker_root {
   display: inline-block;
 }
-.openerp .oe_form .oe_form_required input, .openerp .oe_form .oe_form_required select, .openerp .oe_form .oe_form_required textarea {
+.openerp .oe_form .oe_form_required input:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required select:not([disabled]):not([readonly]), .openerp .oe_form .oe_form_required textarea:not([disabled]):not([readonly]) {
   background-color: #d2d2ff !important;
 }
 .openerp .oe_form .oe_form_invalid input, .openerp .oe_form .oe_form_invalid select, .openerp .oe_form .oe_form_invalid textarea {
@@ -2279,7 +2291,7 @@
   position: relative;
   overflow: hidden;
 }
-.openerp .oe_form .oe_form_field_html {
+.openerp .oe_form .oe_form_embedded_html {
   position: relative;
   width: 600px;
   margin-left: 130px;
@@ -2287,16 +2299,16 @@
   margin-bottom: 32px;
   text-align: justify;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_integer {
+.openerp .oe_form_editable .oe_form .oe_form_field_integer input {
   width: 6em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_float {
+.openerp .oe_form_editable .oe_form .oe_form_field_float input {
   width: 7em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_date {
+.openerp .oe_form_editable .oe_form .oe_form_field_date input {
   width: 7.5em !important;
 }
-.openerp .oe_form_editable .oe_form .oe_form_field_datetime {
+.openerp .oe_form_editable .oe_form .oe_form_field_datetime input {
   width: 11.5em !important;
 }
 .openerp .oe_hidden_input_file {
