@@ -65,6 +65,7 @@ class hr_analytic_timesheet(osv.osv):
                 return False
 
 
+
     def on_change_account_id(self, cr, uid, ids, account_id, user_id, unit_amount=0):
         res = {}
         if not (account_id):
@@ -106,6 +107,7 @@ class hr_analytic_timesheet(osv.osv):
         return res
 
     def on_change_user_id(self, cr, uid, ids, user_id, account_id, unit_amount=0):
+        print "---------------onchageuser id",user_id
         res = {}
         if not (user_id):
             #avoid a useless call to super

@@ -155,6 +155,7 @@ class hr_timesheet_sheet(osv.osv):
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
+        print "------------vvvvvvvvvals",vals
         if 'employee_id' in vals:
             new_user_id = self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).user_id.id or False
             if not new_user_id:
@@ -308,6 +309,7 @@ hr_timesheet_sheet()
 class hr_timesheet_line(osv.osv):
     _inherit = "hr.analytic.timesheet"
 
+        
     def _get_default_date(self, cr, uid, context=None):
         if context is None:
             context = {}
@@ -404,6 +406,7 @@ class hr_attendance(osv.osv):
         return time.strftime('%Y-%m-%d %H:%M:%S')
 
     def _get_hr_timesheet_sheet(self, cr, uid, ids, context=None):
+        print "-----------get_hr_time sheet"
         attendance_ids = []
         for ts in self.browse(cr, uid, ids, context=context):
             cr.execute("""
@@ -470,6 +473,7 @@ class hr_attendance(osv.osv):
         return super(hr_attendance,self).unlink(cr, uid, ids,*args, **kwargs)
 
     def write(self, cr, uid, ids, vals, context=None):
+        print "------------write "
         if context is None:
             context = {}
         if isinstance(ids, (int, long)):
