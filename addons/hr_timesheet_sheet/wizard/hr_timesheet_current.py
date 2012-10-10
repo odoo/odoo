@@ -42,7 +42,6 @@ class hr_timesheet_current_open(osv.osv_memory):
             view_type = 'tree,form'
             domain = "[('id','in',["+','.join(map(str, ids))+"]),('user_id', '=', uid)]"
         elif len(ids)==1:
-            ts.write(cr, uid, ids, {'date_current': time.strftime('%Y-%m-%d')}, context=context)
             domain = "[('user_id', '=', uid)]"
         else:
             domain = "[('user_id', '=', uid)]"
