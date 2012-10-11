@@ -198,6 +198,7 @@ class survey_question_wiz(osv.osv_memory):
                             etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-edit", 'type' :'object', 'name':"action_edit_question", 'context' : tools.ustr(context)})
                             etree.SubElement(xml_group1, 'button', {'string':'','icon': "gtk-delete", 'type' :'object','name':"action_delete_question", 'context' : tools.ustr(context)})
                         else:
+                            etree.SubElement(xml_form, 'newline')
                             etree.SubElement(xml_form, 'separator', {'string': star+to_xml(separator_string)})
 
                         ans_ids = que_rec.answer_choice_ids
