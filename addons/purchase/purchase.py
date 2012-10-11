@@ -875,7 +875,12 @@ class purchase_order_line(osv.osv):
         """
         if context is None:
             context = {}
-
+        
+        # - check for the presence of partner_id and pricelist_id
+        if not pricelist_id:
+            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
+        if not partner_id:
+            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
         res = {'value': {'price_unit': price_unit or 0.0, 'name': name or '', 'product_uom' : uom_id or False}}
         if not product_id:
             return res
@@ -888,11 +893,7 @@ class purchase_order_line(osv.osv):
         account_fiscal_position = self.pool.get('account.fiscal.position')
         account_tax = self.pool.get('account.tax')
 
-        # - check for the presence of partner_id and pricelist_id
-        if not pricelist_id:
-            raise osv.except_osv(_('No Pricelist !'), _('Select a price list for a supplier in the purchase form to choose a product.'))
-        if not partner_id:
-            raise osv.except_osv(_('No Partner!'), _('Select a partner in purchase order to choose a product.'))
+        
 
         # - determine name and notes based on product in partner lang.
         lang = res_partner.browse(cr, uid, partner_id).lang
