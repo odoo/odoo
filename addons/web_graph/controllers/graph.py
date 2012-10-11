@@ -1,19 +1,12 @@
 # -*- coding: utf-8 -*-
-try:
-    # embedded
-    import openerp.addons.web.common.http as openerpweb
-    from openerp.addons.web.controllers.main import View
-except ImportError:
-    # standalone
-    import web.common.http as openerpweb
-    from web.controllers.main import View
+import openerp
 
 from lxml import etree
 
-class GraphView(View):
+class GraphView(openerp.addons.web.controllers.main.View):
     _cp_path = '/web_graph/graph'
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def data_get(self, req, model=None, domain=[], context={}, group_by=[], view_id=False, orientation=False, stacked=False, mode="bar", **kwargs):
         obj = req.session.model(model)
 

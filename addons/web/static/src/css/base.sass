@@ -180,9 +180,11 @@ $sheet-max-width: 860px
         font-weight: bold
         background-color: #f0f0f0
         th
-            border-right: 1px dotted $tag-border
-            &:last-child
-                border-right: none
+            border-left: 1px solid #dfdfdf
+            &:first-child
+                border-left: none
+            &.null
+                border-left: none
     th, td
         padding: 0
         text-align: left
@@ -455,21 +457,6 @@ $sheet-max-width: 860px
     .oe_grey
         color: #aaa
 
-    // }}}
-
-    // Generic blocks {{{
-    header
-        position: relative
-        border-bottom: 1px solid #cacaca
-        padding-left: 2px
-        @include vertical-gradient(#fcfcfc, #dedede)
-        > span
-            margin-left: 4px
-        ul
-            display: inline-block
-            float: right
-        .oe_button
-            margin: 3px 2px 1px
     // }}}
 
     // Tags (for many2many tags, among others) {{{
@@ -1618,6 +1605,22 @@ $sheet-max-width: 860px
             .oe_notebook_page
                 padding: 0 16px
     // }}}
+    // FormView.header {{{
+    .oe_form header
+        position: relative
+        border-bottom: 1px solid #cacaca
+        padding-left: 2px
+        @include vertical-gradient(#fcfcfc, #dedede)
+        > span
+            margin-left: 4px
+        ul
+            display: inline-block
+            float: right
+        .oe_button,
+            margin: 3px 2px 1px
+            &:first-child
+                margin-left: 6px
+    // }}}
     // FormView.custom tags and classes {{{
     .oe_form header .oe_tags
         margin: 5px 0 0 5px
@@ -1822,13 +1825,13 @@ $sheet-max-width: 860px
             
     .oe_form_editable
         .oe_form
-            .oe_form_field_integer
+            .oe_form_field_integer input
                 width: 6em !important
-            .oe_form_field_float
+            .oe_form_field_float input
                 width: 7em !important
-            .oe_form_field_date
+            .oe_form_field_date input
                 width: 7.5em !important
-            .oe_form_field_datetime
+            .oe_form_field_datetime input
                 width: 11.5em !important
     // }}}
     // FormView.fields_binary {{{
