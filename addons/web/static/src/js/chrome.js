@@ -154,6 +154,7 @@ instance.web.Dialog = instance.web.Widget.extend({
         this.$el.dialog('close');
     },
     on_close: function() {
+        this.trigger("dialog_close");
         if (this.__tmp_dialog_destroying)
             return;
         if (this.dialog_options.destroy_on_close) {
