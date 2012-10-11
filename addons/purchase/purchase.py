@@ -1089,7 +1089,7 @@ class procurement_order(osv.osv):
 
     def purchase_order_create_note(self, cr, uid, ids, context=None):
         for procurement in self.browse(cr, uid, ids, context=context):
-            body = "Draft Purchase Order <em>%s</em> created" % (procurement.purchase_id.name,)
+            body = _("Draft Purchase Order created")
             self.message_post(cr, uid, [procurement.id], body=body, context=context)
 
 procurement_order()
@@ -1105,5 +1105,17 @@ class mail_mail(osv.osv):
         return super(mail_mail, self)._postprocess_sent_message(cr, uid, mail=mail, context=context)
 
 mail_mail()
+
+class product_template(osv.osv):
+    _name = 'product.template'
+    _inherit = 'product.template'
+    _columns = {
+        'purchase_ok': fields.boolean('Can be Purchased', help="Determine if the product is visible in the list of products within a selection from a purchase order line."),
+    }
+    _defaults = {
+        'purchase_ok': 1,
+    }
+
+product_template()
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
