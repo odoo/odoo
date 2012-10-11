@@ -20,8 +20,8 @@
 ##############################################################################
 import logging
 
-import netsvc
 import openerp
+import openerp.netsvc as netsvc
 
 _logger = logging.getLogger(__name__)
 
@@ -34,10 +34,10 @@ class edi(netsvc.ExportService):
         try:
             registry = openerp.modules.registry.RegistryManager.get(db_name)
             assert registry, 'Unknown database %s' % db_name
-            edi_document = registry['edi.document']
+            edi = registry['edi.edi']
             cr = registry.db.cursor()
             res = None
-            res = getattr(edi_document, method_name)(cr, *method_args)
+            res = getattr(edi, method_name)(cr, *method_args)
             cr.commit()
         except Exception:
             _logger.exception('Failed to execute EDI method %s with args %r.', method_name, method_args)
@@ -45,9 +45,6 @@ class edi(netsvc.ExportService):
         finally:
             cr.close()
         return res
-
-    def exp_get_edi_document(self, db_name, edi_token):
-        return self._edi_dispatch(db_name, 'get_document', 1, edi_token)
 
     def exp_import_edi_document(self, db_name, uid, passwd, edi_document, context=None):
         return self._edi_dispatch(db_name, 'import_edi', uid, edi_document, None)
@@ -59,9 +56,6 @@ class edi(netsvc.ExportService):
         if method in ['import_edi_document',  'import_edi_url']:
             (db, uid, passwd ) = params[0:3]
             openerp.service.security.check(db, uid, passwd)
-        elif method in ['get_edi_document']:
-            # No security check for these methods
-            pass
         else:
             raise KeyError("Method not found: %s." % method)
         fn = getattr(self, 'exp_'+method)

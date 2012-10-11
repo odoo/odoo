@@ -83,6 +83,7 @@ class mail_compose_message(osv.osv_memory):
                     'datas_fname': attach_fname,
                     'res_model': model,
                     'res_id': res_id,
+                    'type': 'binary', # override default_type from context, possibly meant for another model!
                 }
                 values['attachment_ids'].append(ir_attach_obj.create(cr, uid, data_attach, context=context))
         else:

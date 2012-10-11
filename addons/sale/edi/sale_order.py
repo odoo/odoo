@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
-from edi.models import edi
-from tools import DEFAULT_SERVER_DATE_FORMAT
 
 SALE_ORDER_LINE_EDI_STRUCT = {
     'sequence': True,
@@ -65,15 +60,6 @@ SALE_ORDER_EDI_STRUCT = {
 class sale_order(osv.osv, EDIMixin):
     _inherit = 'sale.order'
 
-    def action_quotation_send(self, cr, uid, ids, context=None):
-        if context is None:
-            context = {}
-        sale_objs = self.browse(cr, uid, ids, context=context) 
-        edi_token = self.pool.get('edi.document').export_edi(cr, uid, sale_objs, context = context)[0]
-        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
-        return super(sale_order, self).action_quotation_send(cr, uid, ids, context=ctx)
-
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a Sale order"""
         edi_struct = dict(edi_struct or SALE_ORDER_EDI_STRUCT)
@@ -112,7 +98,7 @@ class sale_order(osv.osv, EDIMixin):
         res_partner_obj = self.pool.get('res.partner')
 
         # imported company_address = new partner address
-        src_company_id, src_company_name = edi_document.pop('company_id')
+        _, src_company_name = edi_document.pop('company_id')
 
         address_info = edi_document.pop('company_address')
         address_info['supplier'] = True
@@ -171,7 +157,6 @@ class sale_order(osv.osv, EDIMixin):
         currency_id = res_currency.edi_import(cr, uid, currency_info, context=context)
         order_currency = res_currency.browse(cr, uid, currency_id)
 
-        date_order = edi_document['date_order']
         partner_ref = edi_document.pop('partner_ref', False)
         edi_document['client_order_ref'] = edi_document['name']
         edi_document['name'] = partner_ref or edi_document['name']
@@ -185,7 +170,7 @@ class sale_order(osv.osv, EDIMixin):
 
         order_lines = edi_document['order_line']
         for order_line in order_lines:
-            self._edi_requires_attributes(( 'product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
+            self._edi_requires_attributes(('product_id', 'product_uom', 'product_qty', 'price_unit'), order_line)
             order_line['product_uom_qty'] = order_line['product_qty']
             del order_line['product_qty']
 

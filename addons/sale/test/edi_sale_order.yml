@@ -25,15 +25,16 @@
 -
   Then I export the sale order via EDI
 -
-  !python {model: edi.document}: |
+  !python {model: edi.edi}: |
+    import json
     sale_order = self.pool.get('sale.order')
     so = sale_order.browse(cr, uid, ref("sale_order_edi_1"))
-    token = self.export_edi(cr, uid, [so])
-    assert token, 'Invalid EDI Token'
+    edi_doc = self.generate_edi(cr, uid, [so])
+    assert isinstance(json.loads(edi_doc)[0], dict), 'EDI doc should be a JSON dict' 
 -
   Then I import a sample EDI document of a purchase order
 -
-  !python {model: edi.document}: |
+  !python {model: edi.edi}: |
     sale_order_pool = self.pool.get('sale.order')
     edi_document = {
         "__id": "purchase:5af1272e-dd26-11e0-b65e-701a04e25543.purchase_order_test",

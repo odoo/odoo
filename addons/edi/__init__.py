@@ -20,14 +20,14 @@
 ##############################################################################
 import logging
 
-import models
-import edi_service
-from models.edi import EDIMixin, edi_document
+from . import models
+from . import edi_service
+from models.edi import EDIMixin, edi
 _logger = logging.getLogger(__name__)
 
 # web
 try:
-    import controllers
+    import openerp.addons.web.controllers
 except ImportError:
     _logger.warn(
         """Could not load openerp-web section of EDI, EDI will not behave correctly

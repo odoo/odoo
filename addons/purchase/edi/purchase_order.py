@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,13 +19,8 @@
 #
 ##############################################################################
 
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-
-from osv import fields, osv, orm
+from openerp.osv import osv
 from edi import EDIMixin
-from edi.models import edi
-from tools import DEFAULT_SERVER_DATE_FORMAT
 from tools.translate import _
 
 PURCHASE_ORDER_LINE_EDI_STRUCT = {
@@ -61,16 +56,6 @@ PURCHASE_ORDER_EDI_STRUCT = {
 
 class purchase_order(osv.osv, EDIMixin):
     _inherit = 'purchase.order'
-
-    def wkf_send_rfq(self, cr, uid, ids, context=None):
-        """"Override this method to add a link to mail"""
-        if context is None:
-            context = {}
-        purchase_objs = self.browse(cr, uid, ids, context=context) 
-        edi_token = self.pool.get('edi.document').export_edi(cr, uid, purchase_objs, context = context)[0]
-        web_root_url = self.pool.get('ir.config_parameter').get_param(cr, uid, 'web.base.url')
-        ctx = dict(context, edi_web_url_view=edi.EDI_VIEW_WEB_URL % (web_root_url, cr.dbname, edi_token))
-        return super(purchase_order, self).wkf_send_rfq(cr, uid, ids, context=ctx)
 
     def edi_export(self, cr, uid, records, edi_struct=None, context=None):
         """Exports a purchase order"""
@@ -109,7 +94,7 @@ class purchase_order(osv.osv, EDIMixin):
         res_partner_obj = self.pool.get('res.partner')
 
         # imported company_address = new partner address
-        src_company_id, src_company_name = edi_document.pop('company_id')
+        _, src_company_name = edi_document.pop('company_id')
         address_info = edi_document.pop('company_address')
         address_info['customer'] = True
         if 'name' not in address_info:

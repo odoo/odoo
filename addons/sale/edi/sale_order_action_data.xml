@@ -1,7 +1,6 @@
 <?xml version="1.0" ?>
 <openerp>
     <data>
-
         <!-- EDI related Email Templates menu -->
         <record model="ir.actions.act_window" id="action_email_templates">
             <field name="name">Email Templates</field>
@@ -15,14 +14,13 @@
         <menuitem id="base.menu_sales_configuration_misc" name="Miscellaneous" parent="base.menu_base_config" sequence="75"/>
     </data>
 
-
     <!-- Mail template is done in a NOUPDATE block
          so users can freely customize/delete them -->
     <data noupdate="1">
 
         <!--Email template -->
         <record id="email_template_edi_sale" model="email.template">
-            <field name="name">Automated Sale Order Notification Mail</field>
+            <field name="name">Sale Order - Send by mail</field>
             <field name="email_from">${object.user_id.email or ''}</field>
             <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
             <field name="email_to">${object.partner_invoice_id.email}</field>
@@ -48,12 +46,6 @@
        % endif
        &nbsp;&nbsp;Your contact: <a href="mailto:${object.user_id.email or ''}?subject=Order%20${object.name}">${object.user_id.name}</a>
     </p>
-
-    <p>
-    You can view the ${object.state in ('draft', 'sent') and 'quotation' or 'order confirmation'} document, download it and pay online using the following link:
-    </p>
-            <a style="display:block; width: 150px; height:20px; margin-left: 120px; color: #FFF; font-family: 'Lucida Grande', Helvetica, Arial, sans-serif; font-size: 13px; font-weight: bold; text-align: center; text-decoration: none !important; line-height: 1; padding: 5px 0px 0px 0px; background-color: #8E0000; border-radius: 5px 5px; background-repeat: repeat no-repeat;"
-               href="${ctx.get('edi_web_url_view') or ''}">View Order</a>
 
     % if object.order_policy in ('prepaid','manual') and object.company_id.paypal_account and object.state not in ('draft', 'sent'):
     <%

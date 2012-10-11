@@ -2,7 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Business Applications
-#    Copyright (c) 2011 OpenERP S.A. <http://openerp.com>
+#    Copyright (c) 2011-2012 OpenERP S.A. <http://openerp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,10 +20,10 @@
 ##############################################################################
 import logging
 
-from osv import fields,osv
+from openerp.osv import osv
 from edi import EDIMixin
 from openerp import SUPERUSER_ID
-from tools.translate import _
+from openerp.tools.translate import _
 _logger = logging.getLogger(__name__)
 
 RES_PARTNER_EDI_STRUCT = {

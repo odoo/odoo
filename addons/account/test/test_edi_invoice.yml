@@ -38,11 +38,12 @@
 -
   Then I export the customer invoice
 -
-  !python {model: edi.document}: |
+  !python {model: edi.edi}: |
+    import json
     invoice_pool = self.pool.get('account.invoice')
     invoice = invoice_pool.browse(cr, uid, ref("invoice_edi_1"))
-    token = self.export_edi(cr, uid, [invoice])
-    assert token, 'Invalid EDI Token'
+    edi_doc = self.generate_edi(cr, uid, [invoice])
+    assert isinstance(json.loads(edi_doc)[0], dict), 'EDI doc should be a JSON dict' 
 -
   Then I import a sample EDI document of another customer invoice
 -
