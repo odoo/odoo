@@ -90,6 +90,7 @@ openerp.auth_signup = function(instance) {
                     name: name,
                     login: login,
                     password: password,
+                    state: $.param(this.params)
                 };
                 var url = "/auth_signup/signup?" + $.param(params);
                 window.location = url;
