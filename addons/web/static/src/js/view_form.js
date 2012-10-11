@@ -334,7 +334,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 });
             }
             self.on_form_changed();
-            this.rendering_engine.init_fields();
+            self.rendering_engine.init_fields();
             self.is_initialized.resolve();
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
@@ -2071,9 +2071,9 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         var tmp = this._super();
         this.on("change:value", this, function() {
             if (! this.no_rerender)
-                this.render();
+                this.render_value();
         });
-        this.render();
+        this.render_value();
     },
     /**
      * Private. Do not use.
@@ -2148,8 +2148,8 @@ instance.web.form.ReinitializeWidgetMixin =  {
      * Default implementation of start(), use it or call explicitly initialize_field().
      */
     start: function() {
-        this._super();
         this.initialize_field();
+        this._super();
     },
     initialize_field: function() {
         this.on("change:effective_readonly", this, this.reinitialize);
@@ -2571,7 +2571,6 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     template: 'FieldBoolean',
     start: function() {
         var self = this;
-        this._super.apply(this, arguments);
         this.$checkbox = $("input", this.$el);
         this.setupFocus(this.$checkbox);
         this.$el.click(_.bind(function() {
@@ -2582,6 +2581,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         };
         this.on("change:effective_readonly", this, check_readonly);
         check_readonly.call(this);
+        this._super.apply(this, arguments);
     },
     render_value: function() {
         this.$checkbox[0].checked = this.get('value');
@@ -4851,7 +4851,6 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this.selected_value = null;
     },
     start: function() {
-        this._super();
         // backward compatibility
         this.loaded = new $.Deferred();
         if (this.options.clickable) {
@@ -4861,18 +4860,13 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
         }
+        this._super();
     },
     set_value: function(value_) {
-        var self = this;
-        this._super(value_);
-        // find selected value:
-        // - many2one: [2, "New"] -> 2
-        // - selection: new -> new
-        if (this.field.type == "many2one") {
-            this.selected_value = value_[0];
-        } else {
-            this.selected_value = value_;
+        if (value_ instanceof Array) {
+            value_ = value_[0];
         }
+        this._super(value_);
         // trick to be sure all values are loaded in the form, therefore
         // enabling the evaluation of dynamic domains
         self.selection = [];
@@ -4880,6 +4874,9 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             self.get_selection();
         });
         return this.loaded;
+    },
+    render_value: function() {
+        this.get_selection();
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
