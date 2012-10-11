@@ -627,6 +627,7 @@ instance.web.Reload = function(parent, params) {
         hash = "#menu_id=" + menu_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+    window.onerror = function() {};
     window.location = url;
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
