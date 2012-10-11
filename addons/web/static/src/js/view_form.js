@@ -3608,7 +3608,12 @@ instance.web.form.One2ManyDataSet = instance.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context([this.o2m.name]);
         return this.context;
-    }
+    },
+	default_get: function(fields, options) {
+		if(!options) options = {}
+		_.extend(options, {'context':this.get_context()})
+		return this._super(fields, options).then(this.on_default_get);
+	},
 });
 
 instance.web.form.One2ManyListView = instance.web.ListView.extend({
