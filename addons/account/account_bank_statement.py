@@ -461,9 +461,10 @@ class account_bank_statement(osv.osv):
             return {}
         balance_start = self._compute_balance_end_real(cr, uid, journal_id, context=context)
 
-        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['company_id'], context=context)
+        journal_data = self.pool.get('account.journal').read(cr, uid, journal_id, ['company_id', 'currency'], context=context)
         company_id = journal_data['company_id']
-        return {'value': {'balance_start': balance_start, 'company_id': company_id}}
+        currency_id = journal_data['currency'] or self.pool.get('res.company').browse(cr, uid, company_id[0], context=context).currency_id.id
+        return {'value': {'balance_start': balance_start, 'company_id': company_id, 'currency': currency_id}}
 
     def unlink(self, cr, uid, ids, context=None):
         stat = self.read(cr, uid, ids, ['state'], context=context)
