@@ -3830,7 +3830,6 @@ instance.web.form.FieldMany2ManyTags = instance.web.form.AbstractField.extend(in
     start: function() {
         this._super();
         instance.web.form.ReinitializeFieldMixin.start.call(this);
-        this.on("change:value", this, this.render_value);
     },
     initialize_content: function() {
         if (this.get("effective_readonly"))
@@ -4624,10 +4623,6 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     is_false: function() {
         return typeof(this.get_value()) !== 'string';
     },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
-    },
     render_value: function() {
         this.reference_ready = false;
         var vals = [], sel_val, m2o_val;
@@ -4647,9 +4642,9 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
         var model = this.selection.get_value(),
             id = this.m2o.get_value();
         if (typeof(model) === 'string' && typeof(id) === 'number') {
-            this.set({'value': model + ',' + id});
+            this.internal_set_value(model + ',' + id);
         } else {
-            this.set({'value': false});
+            this.internal_set_value(false);
         }
     },
 });
@@ -4748,7 +4743,7 @@ instance.web.form.FieldBinary = instance.web.form.AbstractField.extend(instance.
     on_clear: function() {
         if (this.get('value') !== false) {
             this.binary_value = false;
-            this.set({'value': false});
+            this.internal_set_value(false);
         }
         return false;
     }
@@ -4767,10 +4762,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
                 return false;
             });
         }
-    },
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        this.render_value();
     },
     render_value: function() {
         if (!this.get("effective_readonly")) {
@@ -4793,7 +4784,7 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
         this.binary_value = true;
-        this.set({'value': file_base64});
+        this.internal_set_value(file_base64);
         var show_value = name + " (" + this.human_filesize(size) + ")";
         this.$el.find('input').eq(0).val(show_value);
         this.set_filename(name);
@@ -4807,10 +4798,6 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
 
 instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
     template: 'FieldBinaryImage',
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        this.render_value();
-    },
     render_value: function() {
         var self = this;
         var url;
@@ -4843,7 +4830,7 @@ instance.web.form.FieldBinaryImage = instance.web.form.FieldBinary.extend({
         this._super.apply(this, arguments);
     },
     on_file_uploaded_and_valid: function(size, name, content_type, file_base64) {
-        this.set({'value': file_base64});
+        this.internal_set_value(file_base64);
         this.binary_value = true;
         this.render_value();
         this.set_filename(name);
