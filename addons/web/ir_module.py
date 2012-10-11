@@ -1,7 +1,7 @@
 from openerp.osv import osv
 import openerp.service.wsgi_server as oewsgi
 
-from common.http import Root
+from .http import Root
 
 class ir_module(osv.Model):
     _inherit = 'ir.module.module'

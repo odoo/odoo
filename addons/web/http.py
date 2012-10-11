@@ -526,10 +526,7 @@ class Root(object):
                 if hasattr(o, '_cp_path'):
                     controllers_path[o._cp_path] = o
 
-        app = self._dispatch
-        if self.config.serve_static:
-            app = werkzeug.wsgi.SharedDataMiddleware(self._dispatch, self.statics)
-
+        app = werkzeug.wsgi.SharedDataMiddleware(self._dispatch, self.statics)
         self.dispatch = DisableCacheMiddleware(app)
 
     def find_handler(self, *l):
