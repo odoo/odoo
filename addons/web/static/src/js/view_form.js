@@ -2585,7 +2585,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
     },
     render_value: function() {
         this.$checkbox[0].checked = this.get('value');
-    }
+    },
     focus: function() {
         this.$checkbox.focus();
     }
