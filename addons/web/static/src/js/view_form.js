@@ -3284,7 +3284,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.dataset.o2m = this;
         this.dataset.parent_view = this.view;
         this.dataset.child_name = this.name;
-        this.dataset.on_change.add_last(function() {
+        this.dataset.on('dataset_on_change', this, function() {
             self.trigger_on_change();
         });
 
@@ -3581,7 +3581,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             create_function: function(data) {
                 return self.o2m.dataset.create(data).then(function(r) {
                     self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
-                    self.o2m.dataset.on_change();
+                    self.o2m.dataset.trigger("dataset_on_change");
                 });
             },
             write_function: function(id, data, options) {
@@ -3671,7 +3671,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                     create_function: function(data, callback, error_callback) {
                         return self.o2m.dataset.create(data).then(function(r) {
                             self.o2m.dataset.set_ids(self.o2m.dataset.ids.concat([r]));
-                            self.o2m.dataset.on_change();
+                            self.o2m.dataset.trigger("dataset_on_change");
                         }).then(callback, error_callback);
                     },
                     read_function: function() {
