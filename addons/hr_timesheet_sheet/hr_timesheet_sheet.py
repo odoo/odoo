@@ -151,7 +151,7 @@ class hr_timesheet_sheet(osv.osv):
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product, like \'Consultant\'.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal, like \'Timesheet\'.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee, like \'Timesheet Journal\'.'))
         return super(hr_timesheet_sheet, self).create(cr, uid, vals, *args, **argv)
 
     def write(self, cr, uid, ids, vals, *args, **argv):
@@ -164,7 +164,7 @@ class hr_timesheet_sheet(osv.osv):
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).product_id:
                 raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must link the employee to a product.'))
             if not self.pool.get('hr.employee').browse(cr, uid, vals['employee_id']).journal_id:
-                raise osv.except_osv(_('Error!'), _('In order to create a timesheet for this employee, you must assign the employee to an analytic journal.'))
+                raise osv.except_osv(_('Configuration Error!'), _('In order to create a timesheet for this employee, you must assign an analytic journal to the employee.'))
         return super(hr_timesheet_sheet, self).write(cr, uid, ids, vals, *args, **argv)
 
     def button_confirm(self, cr, uid, ids, context=None):
