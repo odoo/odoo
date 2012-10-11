@@ -2448,6 +2448,7 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
     on_change: function() {
+        this.trigger('datetime_on_change');
         if (this.is_valid_()) {
             this.set_value_from_ui_();
         }
@@ -2473,9 +2474,9 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     initialize_content: function() {
         if (!this.get("effective_readonly")) {
             this.datewidget = this.build_widget();
-            this.datewidget.on_change.add_last(_.bind(function() {
+            this.datewidget.on('datetime_on_change', this,_.bind(function() {
                 this.set({'value': this.datewidget.get_value()});
-            }, this));
+            }, this))
             this.datewidget.appendTo(this.$el);
             this.setupFocus(this.datewidget.$input);
         }
