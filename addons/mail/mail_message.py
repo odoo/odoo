@@ -163,7 +163,7 @@ class mail_message(osv.Model):
             mail.message not always granted. '''
         if not user_ids:
             user_ids = [uid]
-        for message in self.read(cr, uid, ids, ['vote_user_ids'], context=context):
+        for message in self.read(cr, SUPERUSER_ID, ids, ['vote_user_ids'], context=context):
             for user_id in user_ids:
                 has_voted = user_id in message.get('vote_user_ids')
                 if not has_voted:
@@ -189,17 +189,17 @@ class mail_message(osv.Model):
                 has_voted = True
                 break
         try:
-            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, uid, [x.id for x in msg.attachment_ids], context=context)]
+            attachment_ids = [{'id': attach[0], 'name': attach[1]} for attach in self.pool.get('ir.attachment').name_get(cr, SUPERUSER_ID, [x.id for x in msg.attachment_ids], context=context)]
         except (orm.except_orm, osv.except_osv):
             attachment_ids = []
         try:
-            author_id = self.pool.get('res.partner').name_get(cr, uid, [msg.author_id.id], context=context)[0]
+            author_id = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [msg.author_id.id], context=context)[0]
             is_author = uid == msg.author_id.user_ids[0].id
         except Exception:
             author_id = False
             is_author = False
         try:
-            partner_ids = self.pool.get('res.partner').name_get(cr, uid, [x.id for x in msg.partner_ids], context=context)
+            partner_ids = self.pool.get('res.partner').name_get(cr, SUPERUSER_ID, [x.id for x in msg.partner_ids], context=context)
         except (orm.except_orm, osv.except_osv):
             partner_ids = []
 
@@ -222,7 +222,7 @@ class mail_message(osv.Model):
             'unread': msg.unread and msg.unread['unread'] or False
         }
 
-    def _message_read_expandable(self, cr, uid, tree, result, message_loaded, domain, context, parent_id, limit):
+    def _message_read_expandable(self, cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit):
         """
         create the expandable message for all parent message read
         this function is used by message_read
@@ -230,28 +230,28 @@ class mail_message(osv.Model):
 
         tree_not = []   
         # expandable for not show message
-        for id_msg in tree:
+        for msg in tree:
             # get all childs
-            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',id_msg],['id','not in',message_loaded]], None, limit=1000)
+            not_loaded_ids = self.search(cr, SUPERUSER_ID, [['parent_id','=',msg.id],['id','not in',message_loaded_ids]], None, limit=1000)
             # group childs not read
             id_min=None
             id_max=None
             nb=0
-            for not_loaded_id in not_loaded_ids:
-                if not_loaded_id not in tree:
+            for not_loaded in self.browse(cr, SUPERUSER_ID, not_loaded_ids, context=context):
+                if not_loaded not in tree:
                     nb+=1
-                    if id_min==None or id_min>not_loaded_id:
-                        id_min=not_loaded_id
-                    if id_max==None or id_max<not_loaded_id:
-                        id_max=not_loaded_id
-                    tree_not.append(not_loaded_id)
+                    if id_min==None or id_min>not_loaded.id:
+                        id_min=not_loaded.id
+                    if id_max==None or id_max<not_loaded.id:
+                        id_max=not_loaded.id
+                    tree_not.append(not_loaded)
                 else:
                     if nb>0:
                         result.append({
-                            'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',id_msg]],
+                            'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',msg.id]],
                             'nb_messages': nb,
                             'type': 'expandable', 
-                            'parent_id': id_msg,
+                            'parent_id': msg.id,
                             'id':  id_min
                         })
                     id_min=None
@@ -259,16 +259,18 @@ class mail_message(osv.Model):
                     nb=0
             if nb>0:
                 result.append({
-                    'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',id_msg]],
+                    'domain': [['id','>=',id_min],['id','<=',id_max],['parent_id','=',msg.id]],
                     'nb_messages': nb,
                     'type': 'expandable', 
-                    'parent_id': id_msg, 
+                    'parent_id': msg.id, 
                     'id':  id_min
                 })
 
+        for msg in tree+tree_not:
+            message_loaded_ids.append( msg.id )
 
         # expandable for limit max
-        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded+tree+tree_not]], context=context, limit=1)
+        ids = self.search(cr, SUPERUSER_ID, domain+[['id','not in',message_loaded_ids]], context=context, limit=1)
         if len(ids) > 0:
             result.append(
             {
@@ -297,11 +299,11 @@ class mail_message(osv.Model):
                 further parents
             :return list: list of trees of messages
         """
-        message_loaded = context and context.get('message_loaded') or [0]
+        message_loaded_ids = context and context.get('message_loaded') or [0]
 
         # don't read the message display by .js, in context message_loaded list
         if context and context.get('message_loaded'):
-            domain += [ ['id','not in',message_loaded] ];
+            domain += [ ['id','not in',message_loaded_ids] ];
 
         limit = limit or self._message_read_limit
         context = context or {}
@@ -317,27 +319,27 @@ class mail_message(osv.Model):
             return result
 
         # key: ID, value: record
-        ids = self.search(cr, SUPERUSER_ID, domain, context=context, limit=limit)
+        ids = self.search(cr, uid, domain, context=context, limit=limit)
         for msg in self.browse(cr, uid, ids, context=context):
             # if not in record and not in message_loded list
-            if msg.id not in tree and msg.id not in message_loaded :
+            if msg not in tree and msg.id not in message_loaded_ids :
                 record = self._message_dict_get(cr, uid, msg, context=context)
-                tree.append(msg.id)
+                tree.append(msg)
                 result.append(record)
 
             while msg.parent_id and msg.parent_id.id != parent_id:
                 parent_id = msg.parent_id.id
                 if msg.parent_id.id not in tree:
                     msg = msg.parent_id
-                    tree.append(msg.id)
+                    tree.append(msg)
                     # if not in record and not in message_loded list
-                    if msg.id not in message_loaded :
+                    if msg.id not in message_loaded_ids :
                         record = self._message_dict_get(cr, uid, msg, context=context)
                         result.append(record)
 
         result = sorted(result, key=lambda k: k['id'])
 
-        result = self._message_read_expandable(cr, uid, tree, result, message_loaded, domain, context, parent_id, limit)
+        result = self._message_read_expandable(cr, uid, tree, result, message_loaded_ids, domain, context, parent_id, limit)
 
         return result
 
@@ -465,13 +467,14 @@ class mail_message(osv.Model):
     def read(self, cr, uid, ids, fields=None, context=None, load='_classic_read'):
         """ Override to explicitely call check_access_rule, that is not called
             by the ORM. It instead directly fetches ir.rules and apply them. """
-        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         self.check_access_rule(cr, uid, ids, 'read', context=context)
+        res = super(mail_message, self).read(cr, uid, ids, fields=fields, context=context, load=load)
         return res
 
     def unlink(self, cr, uid, ids, context=None):
         # cascade-delete attachments that are directly attached to the message (should only happen
         # for mail.messages that act as parent for a standalone mail.mail record).
+        self.check_access_rule(cr, uid, ids, 'unlink', context=context)
         attachments_to_delete = []
         for message in self.browse(cr, uid, ids, context=context):
             for attach in message.attachment_ids:
@@ -499,7 +502,6 @@ class mail_message(osv.Model):
             fol_objs = fol_obj.browse(cr, uid, fol_ids, context=context)
             extra_notified = set(fol.partner_id.id for fol in fol_objs)
             missing_notified = extra_notified - partners_to_notify
-            missing_notified = missing_notified
             if missing_notified:
                 self.write(cr, SUPERUSER_ID, [newid], {'partner_ids': [(4, p_id) for p_id in missing_notified]}, context=context)
             partners_to_notify |= extra_notified

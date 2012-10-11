@@ -3,7 +3,7 @@
     <data>
 
         <!-- Top menu item -->
-        <menuitem name="Home"
+        <menuitem name="Mails"
           id="mail_feeds_main"
           groups="base.group_user"
           sequence="10"/>
@@ -16,6 +16,12 @@
           <field name="name">Inbox</field>
           <field name="sequence" eval="10"/>
           <field name="action" ref="action_mail_inbox_feeds"/>
+          <field name="parent_id" ref="mail_feeds"/>
+        </record>
+        <record id="mail_tomefeeds" model="ir.ui.menu">
+          <field name="name">To: me</field>
+          <field name="sequence" eval="11"/>
+          <field name="action" ref="action_mail_to_me_feeds"/>
           <field name="parent_id" ref="mail_feeds"/>
         </record>
         <record id="mail_archivesfeeds" model="ir.ui.menu">

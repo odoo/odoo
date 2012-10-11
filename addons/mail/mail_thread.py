@@ -102,12 +102,12 @@ class mail_thread(osv.AbstractModel):
 
         # find the document followers, update the data
         fol_obj = self.pool.get('mail.followers')
-        fol_ids = fol_obj.search(cr, uid, [
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [
             ('partner_id', '=', user_pid),
             ('res_id', 'in', ids),
             ('res_model', '=', self._name),
         ], context=context)
-        for fol in fol_obj.browse(cr, uid, fol_ids, context=context):
+        for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids, context=context):
             thread_subtype_dict = res[fol.res_id]['message_subtype_data']
             res[fol.res_id]['message_is_follower'] = True
             for subtype in fol.subtype_ids:

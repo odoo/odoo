@@ -74,7 +74,7 @@ openerp_mail_followers = function(session, mail) {
                     target: 'new',
                     context: {
                         'default_res_model': self.view.dataset.model,
-                        'default_res_id': self.view.datarecord.id
+                        'default_res_id': self.view.dataset.ids[0]
                     },
                 }
                 self.do_action(action, function() { self.read_value(); });
@@ -83,7 +83,7 @@ openerp_mail_followers = function(session, mail) {
 
         read_value: function() {
             var self = this;
-            return this.ds_model.read_ids([this.view.datarecord.id], ['message_follower_ids']).pipe(function (results) {
+            return this.ds_model.read_ids([this.view.dataset.ids[0]], ['message_follower_ids']).pipe(function (results) {
                 self.set_value(results[0].message_follower_ids);
             });
         },
@@ -158,7 +158,7 @@ openerp_mail_followers = function(session, mail) {
 
         set_subtypes:function(data){
             var self = this;
-            var records = (data[this.view.datarecord.id] || data[null]).message_subtype_data;
+            var records = data[this.view.dataset.ids[0]].message_subtype_data;
 
             _(records).each(function (record, record_name) {
                 record.name = record_name;
@@ -168,14 +168,14 @@ openerp_mail_followers = function(session, mail) {
         },
 
         /** Display subtypes: {'name': default, followed} */
-        display_subtypes: function (visible) {
+        display_subtypes: function () {
             var self = this;
             var recthread_subtypes = self.$('.oe_recthread_subtypes');
             subtype_list_ul = self.$('ul.oe_subtypes');
 
             if(subtype_list_ul.is(":empty")) {
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                this.ds_model.call('get_message_subtypes',[[self.view.datarecord.id], context]).pipe(this.proxy('set_subtypes'));
+                this.ds_model.call('get_message_subtypes',[[self.view.dataset.ids[0]], context]).pipe(this.proxy('set_subtypes'));
             }
         },
         
@@ -191,7 +191,7 @@ openerp_mail_followers = function(session, mail) {
                 $(record).attr('checked',false);
             });
             var context = new session.web.CompoundContext(this.build_context(), {});
-            return this.ds_model.call('message_unsubscribe_users', [[this.view.datarecord.id], [this.session.uid], context]).pipe(this.proxy('read_value'));
+            return this.ds_model.call('message_unsubscribe_users', [[this.view.dataset.ids[0]], [this.session.uid], context]).pipe(this.proxy('read_value'));
         },
 
         do_update_subscription: function (event) {
@@ -207,9 +207,9 @@ openerp_mail_followers = function(session, mail) {
                 return this.do_unfollow();
             else{
                 var context = new session.web.CompoundContext(this.build_context(), {});
-                return this.ds_model.call('message_subscribe_users', [[this.view.datarecord.id], [this.session.uid], undefined, context]).pipe(function(value_){
-                        self.read_value(value_);
-                        self.display_subtypes(true);
+                return this.ds_model.call('message_subscribe_users', [[this.view.dataset.ids[0]], [this.session.uid], undefined, context]).pipe(function(){
+                        self.read_value();
+                        self.display_subtypes();
                     });
             }
 

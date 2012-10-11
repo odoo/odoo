@@ -1115,6 +1115,9 @@ openerp.mail = function(session) {
         
         /*  Send the records to his parent thread */
         switch_new_message: function(records) {
+
+            console.log(records);
+
             var self=this;
             _(records).each(function(record){
                 self.browse_thread({
