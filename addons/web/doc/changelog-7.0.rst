@@ -1,6 +1,16 @@
 API changes from OpenERP Web 6.1 to 7.0
 =======================================
 
+Supported browsers
+------------------
+
+The OpenERP Web Client supports the following web browsers:
+
+* Internet Explorer 9+
+* Google Chrome 22+
+* Firefox 13+
+* Any browser using the latest version of Chrome Frame
+
 DataSet -> Model
 ----------------
 

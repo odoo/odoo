@@ -121,6 +121,10 @@ openerp.web.corelib = function(instance) {
 
         // The dummy class constructor
         function Class() {
+            if(this.constructor !== instance.web.Class){
+                throw new Error("You can only instanciate objects with the 'new' operator");
+                return null;
+            }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
@@ -976,7 +980,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
-        'error': 'HTTP Error response or timeout received',
+        'response_failed': 'HTTP Error response or timeout received',
+        'error': 'The received response is an JSON-RPC error',
     },
     /**
      * @constructs instance.web.JsonRPC
@@ -1332,7 +1337,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 }
             },
             function(jqXHR, textStatus, errorThrown) {
-                self.trigger('error');
+                self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
@@ -1344,7 +1349,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
-                    self.on_rpc_error(error, event);
+                    self.trigger('error', error, event);
                 }
             });
         });
@@ -1429,8 +1434,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             $form.after($iframe);
             return deferred;
         }
-    },
-    on_rpc_error: function(error) {
     },
     get_url: function (file) {
         return this.prefix + file;
