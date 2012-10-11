@@ -615,7 +615,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
                 console.error(e);
-                instance.webclient.crashmanager.on_javascript_exception(e);
+                instance.webclient.crashmanager.show_message(e);
                 return $.Deferred().reject();
             }
         });
@@ -650,7 +650,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
-            instance.webclient.crashmanager.on_javascript_exception(e);
+            instance.webclient.crashmanager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -3316,11 +3316,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                try {
-                    throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
-                } catch(e) {
-                    instance.webclient.crashmanager.on_javascript_exception(e)
-                }
+                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
             }
             var view = {
                 view_id: false,

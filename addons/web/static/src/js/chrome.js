@@ -181,7 +181,7 @@ instance.web.Dialog = instance.web.Widget.extend({
 });
 
 instance.web.CrashManager = instance.web.CallbackEnabled.extend({
-    on_rpc_error: function(error) {
+    rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
@@ -190,12 +190,12 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             }
         }
         if (error.code === 200 && error.type) {
-            this.on_managed_error(error);
+            this.show_warning(error);
         } else {
-            this.on_traceback(error);
+            this.show_error(error);
         }
     },
-    on_managed_error: function(error) {
+    show_warning: function(error) {
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
@@ -203,7 +203,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             ]
         });
     },
-    on_traceback: function(error) {
+    show_error: function(error) {
         var self = this;
         var buttons = {};
         buttons[_t("Ok")] = function() {
@@ -219,8 +219,8 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
         }).open();
         dialog.$el.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
     },
-    on_javascript_exception: function(exception) {
-        this.on_traceback({
+    show_message: function(exception) {
+        this.show_error({
             type: _t("Client Error"),
             message: exception,
             data: {debug: ""}
@@ -236,7 +236,7 @@ instance.web.Loading = instance.web.Widget.extend({
         this.blocked_ui = false;
         this.session.on("request", this, this.request_call);
         this.session.on("response", this, this.response_call);
-        this.session.on("error", this, this.response_call);
+        this.session.on("response_failed", this, this.response_call);
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
@@ -957,7 +957,7 @@ instance.web.Client = instance.web.Widget.extend({
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
-        instance.session.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$el);
         self.loading = new instance.web.Loading(self);
@@ -1007,7 +1007,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this._super();
         window.onerror = function (message, file, line) {
-            self.crashmanager.on_traceback({
+            self.crashmanager.show_error({
                 type: _t("Client Error"),
                 message: message,
                 data: {debug: file + ':' + line}
