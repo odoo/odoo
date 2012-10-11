@@ -3372,7 +3372,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var def = $.Deferred().then(function() {
             self.initial_is_loaded.resolve();
         });
-        this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
+        this.viewmanager.on("controller_inited", self, function(view_type, controller) {
             controller.o2m = self;
             if (view_type == "list") {
                 if (self.get("effective_readonly")) {

@@ -409,6 +409,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.flags = flags || {};
         this.registry = instance.web.views;
         this.views_history = [];
+        this.on("controller_inited",this.on_controller_inited);
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -532,7 +533,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).then(function() {
-            self.on_controller_inited(view_type, controller);
+            self.trigger("controller_inited",view_type, controller);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
