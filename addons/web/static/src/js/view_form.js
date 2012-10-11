@@ -4456,12 +4456,12 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             self.view_form.do_show();
         });
     },
-    on_select_elements: function(element_ids) {
+    elements_selected: function(element_ids) {
         this.trigger("select_elements",element_ids);
     },
     check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
-            this.on_select_elements(this.created_elements);
+            this.elements_selected(this.created_elements);
             this.created_elements = [];
         }
         this.destroy();
@@ -4572,7 +4572,7 @@ instance.web.form.SelectCreatePopup = instance.web.form.AbstractFormPopup.extend
                 });
                 var $sbutton = self.$buttonpane.find(".oe_selectcreatepopup-search-select");
                 $sbutton.click(function() {
-                    self.on_select_elements(self.selected_ids);
+                    self.elements_selected(self.selected_ids);
                     self.destroy();
                 });
             });
@@ -4614,7 +4614,7 @@ instance.web.form.SelectCreateListView = instance.web.ListView.extend({
         this.popup.new_object();
     },
     select_record: function(index) {
-        this.popup.on_select_elements([this.dataset.ids[index]]);
+        this.popup.elements_selected([this.dataset.ids[index]]);
         this.popup.destroy();
     },
     do_select: function(ids, records) {
