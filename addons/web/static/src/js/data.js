@@ -61,8 +61,10 @@ instance.web.Query = instance.web.Class.extend({
         return instance.session.rpc('/web/dataset/search_read', {
             model: this._model.name,
             fields: this._fields || false,
-            domain: this._model.domain(this._filter),
-            context: this._model.context(this._context),
+            domain: instance.web.pyeval.eval('domains',
+                    [this._model.domain(this._filter)]),
+            context: instance.web.pyeval.eval('contexts',
+                    [this._model.context(this._context)]),
             offset: this._offset,
             limit: this._limit,
             sort: instance.web.serialize_sort(this._order_by)
@@ -280,6 +282,7 @@ instance.web.Model = instance.web.Class.extend({
             kwargs = args;
             args = [];
         }
+        instance.web.pyeval.ensure_evaluated(args, kwargs);
         return instance.session.rpc('/web/dataset/call_kw', {
             model: this.name,
             method: method,
@@ -291,7 +294,7 @@ instance.web.Model = instance.web.Class.extend({
      * Fetches a Query instance bound to this model, for searching
      *
      * @param {Array<String>} [fields] fields to ultimately fetch during the search
-     * @returns {openerp.web.Query}
+     * @returns {instance.web.Query}
      */
     query: function (fields) {
         return new instance.web.Query(this, fields);
@@ -339,9 +342,11 @@ instance.web.Model = instance.web.Class.extend({
      * FIXME: remove when evaluator integrated
      */
     call_button: function (method, args) {
+        instance.web.pyeval.ensure_evaluated(args, {});
         return instance.session.rpc('/web/dataset/call_button', {
             model: this.name,
             method: method,
+            // Should not be necessary anymore. Integrate remote in this?
             domain_id: null,
             context_id: args.length - 1,
             args: args || []
@@ -599,9 +604,12 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @returns {$.Deferred}
      */
     call_and_eval: function (method, args, domain_index, context_index) {
+        instance.web.pyeval.ensure_evaluated(args, {});
         return instance.session.rpc('/web/dataset/call', {
             model: this.model,
             method: method,
+            // Should not be necessary anymore as ensure_evaluated traverses
+            // all of the args array
             domain_id: domain_index == undefined ? null : domain_index,
             context_id: context_index == undefined ? null : context_index,
             args: args || []

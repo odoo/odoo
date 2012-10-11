@@ -2,6 +2,7 @@
  * py.js helpers and setup
  */
 openerp.web.pyeval = function (instance) {
+    var _t = instance.web._t;
     instance.web.pyeval = {};
 
     var obj = function () {};
@@ -317,4 +318,60 @@ openerp.web.pyeval = function (instance) {
         }
         throw new Error("Unknow evaluation type " + type)
     };
+
+    var eval_arg = function (arg) {
+        if (typeof arg !== 'object' || !arg.__ref) { return arg; }
+        switch(arg.__ref) {
+        case 'domain': case 'compound_domain':
+            return instance.web.pyeval.eval('domains', [arg]);
+        case 'context': case 'compound_context':
+            return instance.web.pyeval.eval('contexts', [arg]);
+        default:
+            throw new Error(_t("Unknown nonliteral type " + arg.__ref));
+        }
+    };
+    /**
+     * If args or kwargs are unevaluated contexts or domains (compound or not),
+     * evaluated them in-place.
+     *
+     * Potentially mutates both parameters.
+     *
+     * @param args
+     * @param kwargs
+     */
+    instance.web.pyeval.ensure_evaluated = function (args, kwargs) {
+        for (var i=0; i<args.length; ++i) {
+            args[i] = eval_arg(args[i]);
+        }
+        for (var k in kwargs) {
+            if (!kwargs.hasOwnProperty(k)) { continue; }
+            kwargs[k] = eval_arg(kwargs[k]);
+        }
+    };
+    instance.web.pyeval.eval_domains_and_contexts = function (source) {
+        var d = new $.Deferred();
+        setTimeout(function () {
+            try {
+                var contexts = ([instance.session.context] || []).concat(source.contexts);
+                // see Session.eval_context in Python
+                d.resolve({result: {
+                    context: instance.web.pyeval.eval('contexts', contexts),
+                    domain: instance.web.pyeval.eval('domains', source.domains),
+                    group_by: instance.web.pyeval.eval('groupbys', source.group_by_seq)
+                }}, 'success', {});
+            } catch (e) {
+                d.resolve({ error: {
+                    code: 400,
+                    message: _t("Evaluation Error"),
+                    data: {
+                        type: 'local_exception',
+                        debug: _.str.sprintf(
+                                _t("Local evaluation failure\n%s\n\n%s"),
+                                e.message, JSON.stringify(source))
+                    }
+                }});
+            }
+        }, 0);
+        return d;
+    }
 };

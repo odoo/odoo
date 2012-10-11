@@ -998,75 +998,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         this.rpc_function = (this.origin == window_origin) ? this.rpc_json : this.rpc_jsonp;
     },
     /**
-     * FIXME: Huge testing hack, especially the evaluation context, rewrite + test for real before switching
-     */
-    test_eval: function (source, expected) {
-        var match_template = '<ul>' +
-                '<li>Source: %(source)s</li>' +
-                '<li>Local: %(local)s</li>' +
-                '<li>Remote: %(remote)s</li>' +
-            '</ul>',
-            fail_template = '<ul>' +
-                '<li>Error: %(error)s</li>' +
-                '<li>Source: %(source)s</li>' +
-            '</ul>';
-        try {
-            // see Session.eval_context in Python
-            var ctx = instance.web.pyeval.eval('contexts',
-                    ([this.context] || []).concat(source.contexts));
-            if (!_.isEqual(ctx, expected.context)) {
-                instance.webclient.notification.warn('Context mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.contexts),
-                        local: JSON.stringify(ctx),
-                        remote: JSON.stringify(expected.context)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('Context fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.contexts)
-                }), true);
-        }
-
-        try {
-            var dom = instance.web.pyeval.eval('domains', source.domains);
-            if (!_.isEqual(dom, expected.domain)) {
-                instance.webclient.notification.warn('Domains mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.domains),
-                        local: JSON.stringify(dom),
-                        remote: JSON.stringify(expected.domain)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('Domain fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.domains)
-                }), true);
-        }
-
-        try {
-            var groups = instance.web.pyeval.eval('groupbys', source.group_by_seq);
-            if (!_.isEqual(groups, expected.group_by)) {
-                instance.webclient.notification.warn('GroupBy mismatch, report to xmo',
-                    _.str.sprintf(match_template, {
-                        source: JSON.stringify(source.group_by_seq),
-                        local: JSON.stringify(groups),
-                        remote: JSON.stringify(expected.group_by)
-                    }), true);
-            }
-        } catch (e) {
-            instance.webclient.notification.warn('GroupBy fail, report to xmo',
-                _.str.sprintf(fail_template, {
-                    error: e.message,
-                    source: JSON.stringify(source.group_by_seq)
-                }), true);
-        }
-    },
-    /**
      * Executes an RPC call, registering the provided callbacks.
      *
      * Registers a default error callback if none is provided, and handles
@@ -1098,13 +1029,17 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         this.trigger('request', url, payload);
         var aborter = params.aborter;
         delete params.aborter;
-        var request = this.rpc_function(url, payload).then(
-            function (response, textStatus, jqXHR) {
+        var request;
+        if (url.url === '/web/session/eval_domain_and_context') {
+            // intercept eval_domain_and_context
+            request = instance.web.pyeval.eval_domains_and_contexts(
+                params)
+        } else {
+            request = this.rpc_function(url, payload);
+        }
+        request.then(function (response, textStatus, jqXHR) {
                 self.trigger('response', response);
                 if (!response.error) {
-                    if (url.url === '/web/session/eval_domain_and_context') {
-                        self.test_eval(params, response.result);
-                    }
                     deferred.resolve(response["result"], textStatus, jqXHR);
                 } else if (response.error.data.type === "session_invalid") {
                     self.uid = false;
