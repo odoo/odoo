@@ -363,7 +363,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
         })
         raise osv.except_osv(error_type, error_msg)
 
-    def anonymize_database(self,cr, uid, ids, context=None):
+    def anonymize_database(self, cr, uid, ids, context=None):
         """Sets the 'anonymized' state to defined fields"""
 
         # create a new history record:
@@ -498,7 +498,7 @@ class ir_model_fields_anonymize_wizard(osv.osv_memory):
                 'target':'new',
         }
 
-    def reverse_anonymize_database(self,cr, uid, ids, context=None):
+    def reverse_anonymize_database(self, cr, uid, ids, context=None):
         """Set the 'clear' state to defined fields"""
 
         ir_model_fields_anonymization_model = self.pool.get('ir.model.fields.anonymization')

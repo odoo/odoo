@@ -125,7 +125,8 @@ class account_analytic_account(osv.osv):
             if account.company_id:
                 if account.company_id.currency_id.id != value:
                     raise osv.except_osv(_('Error!'), _("If you set a company, the currency selected has to be the same as it's currency. \nYou can remove the company belonging, and thus change the currency, only on analytic account of type 'view'. This can be really usefull for consolidation purposes of several companies charts with different currencies, for example."))
-        return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
+        if value:
+            return cr.execute("""update account_analytic_account set currency_id=%s where id=%s""", (value, account.id, ))
 
     def _currency(self, cr, uid, ids, field_name, arg, context=None):
         result = {}
@@ -163,7 +164,7 @@ class account_analytic_account(osv.osv):
         'date': fields.date('Date End', select=True),
         'company_id': fields.many2one('res.company', 'Company', required=False), #not required because we want to allow different companies to use the same chart of account, except for leaf accounts.
         'state': fields.selection([('template', 'Template'),('draft','New'),('open','In Progress'), ('cancelled', 'Cancelled'),('pending','To Renew'),('close','Closed')], 'Status', required=True,),
-        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency,
+        'currency_id': fields.function(_currency, fnct_inv=_set_company_currency, #the currency_id field is readonly except if it's a view account and if there is no company
             store = {
                 'res.company': (_get_analytic_account, ['currency_id'], 10),
             }, string='Currency', type='many2one', relation='res.currency'),
@@ -284,7 +285,8 @@ class account_analytic_account(osv.osv):
 
     def create_send_note(self, cr, uid, ids, context=None):
         for obj in self.browse(cr, uid, ids, context=context):
-            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name), context=context)
+            self.message_post(cr, uid, [obj.id], body=_("Contract for <em>%s</em> has been <b>created</b>.") % (obj.partner_id.name),
+                subtype="analytic.mt_account_status", context=context)
 
 account_analytic_account()
 

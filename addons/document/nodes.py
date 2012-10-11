@@ -103,7 +103,7 @@ class node_context(object):
     def get(self, name, default=None):
         return self.context.get(name, default)
 
-    def get_uri(self, cr,  uri):
+    def get_uri(self, cr, uri):
         """ Although this fn passes back to doc.dir, it is needed since
             it is a potential caching point.
         """
@@ -252,7 +252,7 @@ class node_class(object):
         print "node_class.children()"
         return [] #stub
 
-    def child(self,cr, name, domain=None):
+    def child(self, cr, name, domain=None):
         print "node_class.child()"
         return None
 
@@ -270,7 +270,7 @@ class node_class(object):
         print "node_class.path_get()"
         return False
 
-    def get_data(self,cr):
+    def get_data(self, cr):
         raise TypeError('No data for %s.'% self.type)
 
     def open_data(self, cr, mode):
@@ -287,10 +287,10 @@ class node_class(object):
         """
         raise TypeError('No data for %s.' % self.type)
 
-    def _get_storage(self,cr):
+    def _get_storage(self, cr):
         raise RuntimeError("No storage for base class.")
 
-    def get_etag(self,cr):
+    def get_etag(self, cr):
         """ Get a tag, unique per object + modification.
 
             see. http://tools.ietf.org/html/rfc2616#section-13.3.3 """
@@ -434,7 +434,9 @@ class node_database(node_class):
 
     """
     our_type = 'database'
-    def __init__(self, path=[], parent=False, context=None):
+    def __init__(self, path=None, parent=False, context=None):
+        if path is None:
+            path = []
         super(node_database,self).__init__(path, parent, context)
         self.unixperms = 040750
         self.uidperms = 5
@@ -477,11 +479,11 @@ class node_database(node_class):
 
         return res
 
-    def _file_get(self,cr, nodename=False):
+    def _file_get(self, cr, nodename=False):
         res = []
         return res
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'db-%s' % cr.dbname
 
 def mkdosname(company_name, default='noname'):
@@ -666,7 +668,6 @@ class node_dir(node_database):
 
         return dirobj.create(cr, uid, val)
 
-
     def create_child(self, cr, path, data=None):
         """ API function to create a child file object and node
             Return the node_* created
@@ -693,7 +694,7 @@ class node_dir(node_database):
             fnode.set_data(cr, data, fil)
         return fnode
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'dir-%d' % self.dir_id
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
@@ -802,7 +803,7 @@ class node_res_dir(node_class):
     def children(self, cr, domain=None):
         return self._child_get(cr, domain=domain)
 
-    def child(self,cr, name, domain=None):
+    def child(self, cr, name, domain=None):
         res = self._child_get(cr, name, domain=domain)
         if res:
             return res[0]
@@ -878,7 +879,7 @@ class node_res_dir(node_class):
             res.append(self.res_obj_class(res_name, self.dir_id, self, self.context, self.res_model, bo))
         return res
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'rdir-%d' % self.dir_id
 
 class node_res_obj(node_class):
@@ -889,7 +890,7 @@ class node_res_obj(node_class):
         node_dirs (with limited domain).
         """
     our_type = 'collection'
-    def __init__(self, path, dir_id, parent, context, res_model, res_bo, res_id = None):
+    def __init__(self, path, dir_id, parent, context, res_model, res_bo, res_id=None):
         super(node_res_obj,self).__init__(path, parent,context)
         assert parent
         #todo: more info from dirr
@@ -958,7 +959,7 @@ class node_res_obj(node_class):
             return res[0]
         return None
 
-    def _file_get(self,cr, nodename=False):
+    def _file_get(self, cr, nodename=False):
         res = []
         is_allowed = self.check_perms((nodename and 1) or 5)
         if not is_allowed:
@@ -1160,7 +1161,7 @@ class node_res_obj(node_class):
             fnode.set_data(cr, data, fil)
         return fnode
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'rodir-%d-%d' % (self.dir_id, self.res_id)
 
 node_res_dir.res_obj_class = node_res_obj
@@ -1209,7 +1210,6 @@ class node_file(node_class):
         if self.dctx != other.dctx:
             return False
         return self.file_id == other.file_id
-
 
     def open_data(self, cr, mode):
         stor = self.storage_id
@@ -1262,7 +1262,7 @@ class node_file(node_class):
         else:
             self.path = dirpath[0]
 
-    def get_data(self, cr, fil_obj = None):
+    def get_data(self, cr, fil_obj=None):
         """ Retrieve the data for some file.
             fil_obj may optionally be specified, and should be a browse object
             for the file. This is useful when the caller has already initiated
@@ -1278,14 +1278,14 @@ class node_file(node_class):
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.get_data(cr, self.context.uid,stor, self,self.context.context, fil_obj)
 
-    def get_data_len(self, cr, fil_obj = None):
+    def get_data_len(self, cr, fil_obj=None):
         # TODO: verify with the storage object!
         bin_size = self.context.context.get('bin_size', False)
         if bin_size and not self.content_length:
             self.content_length = fil_obj.db_datas
         return self.content_length
 
-    def set_data(self, cr, data, fil_obj = None):
+    def set_data(self, cr, data, fil_obj=None):
         """ Store data at some file.
             fil_obj may optionally be specified, and should be a browse object
             for the file. This is useful when the caller has already initiated
@@ -1299,7 +1299,7 @@ class node_file(node_class):
         stobj = self.context._dirobj.pool.get('document.storage')
         return stobj.set_data(cr, self.context.uid,stor, self, data, self.context.context, fil_obj)
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'file-%d' % self.file_id
 
     def move_to(self, cr, ndir_node, new_name=False, fil_obj=None, ndir_obj=None, in_write=False):
@@ -1362,7 +1362,7 @@ class node_file(node_class):
 
 class node_content(node_class):
     our_type = 'content'
-    def __init__(self, path, parent, context, cnt, dctx = None, act_id=None):
+    def __init__(self, path, parent, context, cnt, dctx=None, act_id=None):
         super(node_content,self).__init__(path, parent,context)
         self.cnt_id = cnt.id
         self.create_date = False
@@ -1382,7 +1382,7 @@ class node_content(node_class):
            self.dctx.update(dctx)
         self.act_id = act_id
 
-    def fill_fields(self, cr, dctx = None):
+    def fill_fields(self, cr, dctx=None):
         """ Try to read the object and fill missing fields, like mimetype,
             dates etc.
             This function must be different from the constructor, because
@@ -1395,8 +1395,7 @@ class node_content(node_class):
         if res and res[0][0]:
             self.mimetype = str(res[0][0])
 
-
-    def get_data(self, cr, fil_obj = None):
+    def get_data(self, cr, fil_obj=None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         if not self.check_perms(4):
             raise IOError(errno.EPERM, "Permission denied.")
@@ -1426,7 +1425,7 @@ class node_content(node_class):
 
         return nodefd_content(self, cr, mode, ctx)
 
-    def get_data_len(self, cr, fil_obj = None):
+    def get_data_len(self, cr, fil_obj=None):
         # FIXME : here, we actually generate the content twice!!
         # we should have cached the generated content, but it is
         # not advisable to do keep it in memory, until we have a cache
@@ -1435,7 +1434,7 @@ class node_content(node_class):
             self.get_data(cr,fil_obj)
         return self.content_length
 
-    def set_data(self, cr, data, fil_obj = None):
+    def set_data(self, cr, data, fil_obj=None):
         cntobj = self.context._dirobj.pool.get('document.directory.content')
         if not self.check_perms(2):
             raise IOError(errno.EPERM, "Permission denied.")
@@ -1444,7 +1443,7 @@ class node_content(node_class):
         ctx.update(self.dctx)
         return cntobj.process_write(cr, self.context.uid, self, data, ctx)
 
-    def _get_ttag(self,cr):
+    def _get_ttag(self, cr):
         return 'cnt-%d%s' % (self.cnt_id,(self.act_id and ('-' + str(self.act_id))) or '')
 
     def get_dav_resourcetype(self, cr):
@@ -1558,5 +1557,4 @@ class nodefd_static(StringIO, node_descriptor):
             cr.close()
         StringIO.close(self)
 
-#eof
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -16,13 +16,11 @@
                         <field name="partner_ids" widget="many2many_tags" placeholder="Add contacts to notify..."
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"/>
+                        <field name="is_private" help="If this message is not private, this message will send to all your followers or all followers of the parented message."/>
                     </group>
                     <notebook>
                         <page string="Body">
-                            <field name="body_text" nolabel="1"
-                                attrs="{'invisible':[('content_subtype', '=', 'html')]}"/>
-                            <field name="body" nolabel="1"
-                                attrs="{'invisible':[('content_subtype', '=', 'plain')]}"/>
+                            <field name="body" nolabel="1"/>
                         </page>
                         <page string="Attachments">
                             <field name="attachment_ids" colspan="4" nolabel="1"/>
@@ -32,10 +30,10 @@
                         <button string="Send" name="send_mail" type="object" class="oe_highlight"  />
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
-                        <div class="oe_right">
+                        <!--div class="oe_right">
                             <button string="" name="toggle_content_subtype" type="object" icon="/mail/static/src/img/formatting.png" 
                                 help="Toggle advanced formatting mode"/>
-                        </div>
+                        </div-->
                     </footer>
                 </form>
             </field>
@@ -68,6 +66,7 @@
                                 context="{'force_email':True}"
                                 on_change="onchange_partner_ids(partner_ids)"
                                 class="oe_mail_compose_message_partner_ids"/>
+                        <!--field name="is_private" help="If this message is not private, this message will send to all your followers or all followers of the parented message."/-->
                         <field name="attachment_ids" colspan="2" nolabel="1" widget="many2many_tags"
                                 placeholder="Add attachments..." invisible="1"
                                 class="oe_mail_compose_message_attachment_ids"/>
@@ -75,7 +74,7 @@
                         <div colspan="2" class="oe_mail_compose_message_attachments"/>
                         <!-- buttons, with as few Chatter logic as possible -->
                         <div>
-                            <button name="send_mail" string="Post" type="object"
+                            <button name="send_mail" string="Post message" type="object"
                                 class="oe_mail_compose_message_button_send"/>
                         </div>
                         <div class='oe_mail_compose_message_icons'>

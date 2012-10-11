@@ -19,6 +19,7 @@
 #
 ##############################################################################
 
+import mail_message_subtype
 import mail_alias
 import mail_followers
 import mail_message
@@ -32,6 +33,7 @@ import report
 import wizard
 import res_config
 import mail_group_menu
+import update
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
 

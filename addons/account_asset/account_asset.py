@@ -75,7 +75,7 @@ class account_asset_asset(osv.osv):
     _name = 'account.asset.asset'
     _description = 'Asset'
 
-    def _get_period(self, cr, uid, context={}):
+    def _get_period(self, cr, uid, context=None):
         periods = self.pool.get('account.period').find(cr, uid)
         if periods:
             return periods[0]
@@ -176,7 +176,9 @@ class account_asset_asset(osv.osv):
                 year = depreciation_date.year
         return True
 
-    def validate(self, cr, uid, ids, context={}):
+    def validate(self, cr, uid, ids, context=None):
+        if context is None:
+            context = {}
         return self.write(cr, uid, ids, {
             'state':'open'
         }, context)
@@ -304,7 +306,7 @@ class account_asset_asset(osv.osv):
         default.update({'depreciation_line_ids': [], 'state': 'draft'})
         return super(account_asset_asset, self).copy(cr, uid, id, default, context=context)
 
-    def _compute_entries(self, cr, uid, ids, period_id, context={}):
+    def _compute_entries(self, cr, uid, ids, period_id, context=None):
         result = []
         period_obj = self.pool.get('account.period')
         depreciation_obj = self.pool.get('account.asset.depreciation.line')
