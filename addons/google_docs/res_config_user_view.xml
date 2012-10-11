@@ -8,9 +8,10 @@
             <field name="name">google_docs.config.tree</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
-                <group name="default_filters" position="inside">
+                <tree string="Google Docs Configuration">
                     <field name="model_id"/>
-                </group>
+                    <field name="name_template"/>
+                </tree>
             </field>
         </record>
 
@@ -18,6 +19,7 @@
             <field name="name">google_docs.config.form</field>
             <field name="model">google.docs.config</field>
             <field name="arch" type="xml">
+                <form string="Google Docs Configuration" version="7.0">
                 <group>
                     <field name="model_id"/>
                     <label for='gdocs_resource_id'/>
@@ -35,6 +37,7 @@ This is the id of the template document, on google side. You can find it thanks 
                     </div>
                     <field name='name_template'/>
                 </group>
+                </form>
             </field>
         </record>
 
