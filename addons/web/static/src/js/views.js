@@ -409,7 +409,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.flags = flags || {};
         this.registry = instance.web.views;
         this.views_history = [];
-        this.on("controller_inited",this.on_controller_inited);
     },
     /**
      * @returns {jQuery.Deferred} initial view loading promise
@@ -533,7 +532,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).then(function() {
-            self.trigger("controller_inited",view_type, controller);
+            self.trigger("controller_inited",view_type,controller);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
@@ -652,14 +651,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
             controller.do_search(results.domain, results.context, groupby || []);
         });
-    },
-    /**
-     * Event launched when a controller has been inited.
-     *
-     * @param {String} view_type type of view
-     * @param {String} view the inited controller
-     */
-    on_controller_inited: function(view_type, view) {
     },
     /**
      * Called when one of the view want to execute an action
