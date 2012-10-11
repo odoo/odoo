@@ -1016,15 +1016,13 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         this.toggle_bars(false);
-        
+
+        var state = $.bbq.getState(true);
         var action = {
             'type': 'ir.actions.client',
-            'tag': 'login'
+            'tag': 'login',
+            'params': state
         };
-        var state = $.bbq.getState(true);
-        if (state.action === "login") {
-            action.params = state;
-        }
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
