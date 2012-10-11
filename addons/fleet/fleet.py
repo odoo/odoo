@@ -5,7 +5,6 @@ import tools
 import datetime
 from osv.orm import except_orm
 from tools.translate import _
-from import_base.mapper import *
 ############################
 ############################
 #Vehicle.cost class
