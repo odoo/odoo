@@ -2877,7 +2877,6 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.is_started = false;
     },
     start: function() {
-        this._super();
         instance.web.form.ReinitializeFieldMixin.start.call(this);
         this.is_started = true;
         instance.web.bus.on('click', this, function() {
@@ -2885,6 +2884,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 this.$input.autocomplete("close");
             }
         });
+        this._super();
     },
     reinit_value: function(val) {
         this.internal_set_value(val);
@@ -3213,20 +3213,22 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
+        this.is_started = false;
+        this.dataset = new instance.web.form.One2ManyDataSet(this, this.field.relation);
+        this.dataset.o2m = this;
+        this.dataset.parent_view = this.view;
+        this.dataset.child_name = this.name;
+        var self = this;
+        this.dataset.on_change.add_last(function() {
+            self.trigger_on_change();
+        });
+        this.set_value([]);
     },
     start: function() {
         this._super.apply(this, arguments);
         this.$el.addClass('oe_form_field oe_form_field_one2many');
 
         var self = this;
-
-        this.dataset = new instance.web.form.One2ManyDataSet(this, this.field.relation);
-        this.dataset.o2m = this;
-        this.dataset.parent_view = this.view;
-        this.dataset.child_name = this.name;
-        this.dataset.on_change.add_last(function() {
-            self.trigger_on_change();
-        });
 
         this.is_setted.then(function() {
             self.load_views();
@@ -3241,6 +3243,8 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 });
             });
         });
+        this.is_started = true;
+        this.reload_current_view();
     },
     trigger_on_change: function() {
         var tmp = this.doing_on_change;
@@ -3429,7 +3433,11 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         }
         self.is_setted.resolve();
         this.trigger_on_change();
-        return self.reload_current_view();
+        if (this.is_started) {
+            return self.reload_current_view();
+        } else {
+            return $.when();
+        }
     },
     get_value: function() {
         var self = this;
