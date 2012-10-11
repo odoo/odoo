@@ -83,6 +83,10 @@ class ir_import(orm.TransientModel):
         }]
         fields_got = self.pool[model].fields_get(cr, uid, context=context)
         for name, field in fields_got.iteritems():
+            # an empty string means the field is deprecated, @deprecated must
+            # be absent or False to mean not-deprecated
+            if field.get('deprecated', False) is not False:
+                continue
             if field.get('readonly'):
                 states = field.get('states')
                 if not states:
@@ -97,7 +101,7 @@ class ir_import(orm.TransientModel):
                 'id': name,
                 'name': name,
                 'string': field['string'],
-                # Y U NO ALWAYS HAVE REQUIRED
+                # Y U NO ALWAYS HAS REQUIRED
                 'required': bool(field.get('required')),
                 'fields': [],
             }
@@ -124,8 +128,8 @@ class ir_import(orm.TransientModel):
         """
         csv_iterator = csv.reader(
             StringIO(record.file),
-            quotechar=options['quoting'],
-            delimiter=options['separator'])
+            quotechar=str(options['quoting']),
+            delimiter=str(options['separator']))
         csv_nonempty = itertools.ifilter(None, csv_iterator)
         # TODO: guess encoding with chardet? Or https://github.com/aadsm/jschardet
         encoding = options.get('encoding', 'utf-8')
@@ -307,22 +311,14 @@ class ir_import(orm.TransientModel):
         except ValueError, e:
             return [{
                 'type': 'error',
-                'message': str(e),
+                'message': unicode(e),
                 'record': False,
             }]
 
-        try:
-            _logger.info('importing %d rows...', len(data))
-            (code, record, message, _wat) = self.pool[record.res_model].import_data(
-                cr, uid, import_fields, data, context=context)
-            _logger.info('done')
-
-        except Exception, e:
-            _logger.exception("Import failed")
-            # TODO: remove when exceptions stop being an "expected"
-            #       behavior of import_data on some (most) invalid
-            #       input.
-            code, record, message = -1, None, str(e)
+        _logger.info('importing %d rows...', len(data))
+        import_result = self.pool[record.res_model].load(
+            cr, uid, import_fields, data, context=context)
+        _logger.info('done')
 
         # If transaction aborted, RELEASE SAVEPOINT is going to raise
         # an InternalError (ROLLBACK should work, maybe). Ignore that.
@@ -339,14 +335,4 @@ class ir_import(orm.TransientModel):
         except psycopg2.InternalError:
             pass
 
-        if code != -1:
-            return []
-
-        # TODO: add key for error location?
-        # TODO: error not within normal preview, how to display? Re-preview
-        #       with higher ``count``?
-        return [{
-            'type': 'error',
-            'message': message,
-            'record': record or False
-        }]
+        return import_result['messages']
