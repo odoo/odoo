@@ -389,7 +389,7 @@ class hr_timesheet_line(osv.osv):
         return True
 
     def multi_on_change_account_id(self, cr, uid, ids, account_ids, context=None):
-        return dict([(el, self.on_change_account_id(cr, uid, ids, el)) for el in account_ids])
+        return dict([(el, self.on_change_account_id(cr, uid, ids, el, context.get('user_id', False) or uid)) for el in account_ids])
 
 
 hr_timesheet_line()
