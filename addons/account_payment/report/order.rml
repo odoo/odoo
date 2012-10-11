@@ -256,7 +256,7 @@
             <para style="terp_default_Centre_9">[[line.date=='False' and '-' or formatLang(line.date,date=True) ]]</para>
           </td>
           <td>
-            <para style="terp_default_Right_9">[[formatLang(line.amount, currency_obj= user.company_id and user.company_id.currency_id) or '-' ]] </para>
+            <para style="terp_default_Right_9">[[formatLang(line.amount, currency_obj= user.company_id.currency_id) or '-' ]] </para>
           </td>
           <td>
             <para style="terp_default_Right_9">[[ formatLang(line.amount_currency, currency_obj= line.currency)]]</para>
@@ -275,10 +275,10 @@
           <para style="terp_default_Bold_9">Total:</para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o), currency_obj= user.company_id and user.company_id.currency_id) or '' ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total(o), currency_obj= user.company_id.currency_id) or '' ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o), currency_obj= user.company_id and user.company_id.currency_id) or '' ]] </para>
+          <para style="terp_default_Right_9">[[ formatLang(get_amount_total_in_currency(o), currency_obj= user.company_id.currency_id) or '' ]] </para>
         </td>
       </tr>
     </blockTable>

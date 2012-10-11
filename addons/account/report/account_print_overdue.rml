@@ -236,7 +236,7 @@
           <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + ((y['account_id']['type'] == 'receivable' and y['credit'] or 0) or (y['account_id']['type'] == 'payable' and y['debit'] * -1 or 0)), getLines(o), 0))) ]] </para>
         </td>
         <td>
-          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0))) ]] [[ company.currency_id.symbol ]]</para>
+          <para style="terp_default_Right_9">[[ formatLang((reduce(lambda x, y: x + (y['debit'] - y['credit']), filter(lambda x: x['date_maturity'] &lt; time.strftime('%Y-%m-%d'), getLines(o)), 0)), currency_obj=company.currency_id) ]]</para>
         </td>
         <td>
           <para style="terp_default_9">
