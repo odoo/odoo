@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-24 05:57+0000\n"
-"X-Generator: Launchpad (build 15668)\n"
+"X-Launchpad-Export-Date: 2012-08-28 08:27+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_createlines.py:73
@@ -75,6 +75,8 @@ msgid ""
 "Planned Out in periods before calculated. Between start date of current "
 "period and one day before start of calculated period."
 msgstr ""
+"Gepland uitgaand in periodes voor de berekening. Tussen startdatum van de "
+"huidige periode en één dag voor de start van de berekende periode."
 
 #. module: stock_planning
 #: code:addons/stock_planning/wizard/stock_planning_forecast.py:60
@@ -88,6 +90,8 @@ msgid ""
 "Warehouse which forecasts will concern. If during stock planning you will "
 "need sales forecast for all warehouses choose any warehouse now."
 msgstr ""
+"Magazijn waarvoor de prognose geldt. Tijdens het plannen heeft u "
+"verkoopprognoses nodig van alle magazijnen. Kies een magazijn."
 
 #. module: stock_planning
 #: field:stock.planning,outgoing_left:0
@@ -277,6 +281,9 @@ msgid ""
 "Between start date of current period and one day before start of calculated "
 "period."
 msgstr ""
+"Bevestigde ontvangsten in de periode voor de berekening (inclusief wat al "
+"binnen is). Tussen de startdatum van de huidige periode en één dag voor de "
+"start van de berekende periode."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -380,7 +387,7 @@ msgstr "Status"
 #. module: stock_planning
 #: help:stock.sale.forecast.createlines,product_categ_id:0
 msgid "Product Category of products which created forecasts will concern."
-msgstr ""
+msgstr "Productcategorie van producten waarover de prognose gaat."
 
 #. module: stock_planning
 #: model:ir.model,name:stock_planning.model_stock_period
@@ -635,6 +642,9 @@ msgid ""
 "Planning will be created for products from Product Category selected by this "
 "field. This field is ignored when you check \"All Forecasted Product\" box."
 msgstr ""
+"De planning zal worden samengesteld van producten van de productcategorie, "
+"geselecteerd door dit veld. Dit veld wordt genegeerd, wanneer u de optie "
+"\"Alle geprognotiseerde producten\" aanvinkt."
 
 #. module: stock_planning
 #: field:stock.planning,planned_outgoing:0
@@ -692,6 +702,10 @@ msgid ""
 "Period of selected Product. To plan this value look at Confirmed Out or "
 "Sales Forecasts. This value should be equal or greater than Confirmed Out."
 msgstr ""
+"Geef de geplande hoeveelheid van het geselecteerde magazijn in voor de "
+"geselecteerde periode en producten. Om deze waarde te plannen, kijkt u naar "
+"de bevestigd uit of de verkoopprognose. deze waarde zou gelijk of groter "
+"moeten zijn dan bevestigd uit."
 
 #. module: stock_planning
 #: model:ir.module.module,description:stock_planning.module_meta_information
@@ -948,6 +962,8 @@ msgid ""
 "You must specify a Source Warehouse different than calculated (destination) "
 "Warehouse !"
 msgstr ""
+"U dient een bronlocatie aan te geven, welke anders is dan de berekende "
+"bestemmingslocatie."
 
 #. module: stock_planning
 #: model:ir.actions.act_window,name:stock_planning.action_stock_sale_forecast_createlines_form
@@ -1094,6 +1110,9 @@ msgid ""
 "Check this box to create planning for all products having any forecast for "
 "selected Warehouse and Period. Product Category field will be ignored."
 msgstr ""
+"Vink deze optie aan om een planning te maken voor alle producten met een "
+"prognose, voor het geselecteerde magazijn en periode. Het productcategorie "
+"veld wordt genegeerd."
 
 #. module: stock_planning
 #: field:stock.planning,already_in:0
@@ -1439,6 +1458,8 @@ msgid ""
 "Period for this planning. Requisition will be created for beginning of the "
 "period."
 msgstr ""
+"Periode voor deze planning. Bestellingen worden aangemaakt op het begin van "
+"de periode."
 
 #. module: stock_planning
 #: view:stock.sale.forecast:0
@@ -1456,6 +1477,8 @@ msgid ""
 "Check to take validated forecasts only. If not checked system takes "
 "validated and draft forecasts."
 msgstr ""
+"Vink aan om alleen bevestigde prognose mee te nemen. Indien niet aangevinkt, "
+"worden bevestigde en concept prognoses meegenomen."
 
 #. module: stock_planning
 #: field:stock.sale.forecast,analyzed_period5_id:0

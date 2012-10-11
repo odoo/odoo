@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-24 05:47+0000\n"
-"X-Generator: Launchpad (build 15668)\n"
+"X-Launchpad-Export-Date: 2012-08-28 08:14+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: product
 #: model:product.template,name:product.product_product_ram512_product_template
@@ -25,7 +25,7 @@ msgstr "DDR 512MB PC400"
 #. module: product
 #: field:product.packaging,rows:0
 msgid "Number of Layers"
-msgstr ""
+msgstr "Antall lag/nivåer"
 
 #. module: product
 #: constraint:product.pricelist.item:0
@@ -42,9 +42,11 @@ msgid ""
 "Set a template if this rule only apply to a template of product. Keep empty "
 "for all products"
 msgstr ""
+"Sett en mal hvis denne regelen bare gjelder en mal av produktet. Hold tom "
+"for alle produkter"
 
 #. module: product
-#: model:product.category,name:product.cat1
+#: model:product.category,name:product.product_category_1
 msgid "Sellable"
 msgstr "Salgbar"
 
@@ -56,7 +58,7 @@ msgstr "Mainboard ASUStek A7V8X-X"
 #. module: product
 #: help:product.template,seller_qty:0
 msgid "This is minimum quantity to purchase from Main Supplier."
-msgstr ""
+msgstr "Dette er minimumsantall som kjøpes fra hovedleverandør."
 
 #. module: product
 #: model:product.uom,name:product.uom_day
@@ -66,7 +68,7 @@ msgstr "Dag"
 #. module: product
 #: view:product.product:0
 msgid "UoM"
-msgstr "Måleenhet"
+msgstr "Enhet"
 
 #. module: product
 #: model:product.template,name:product.product_product_pc2_product_template
@@ -89,6 +91,8 @@ msgid ""
 "This pricelist will be used, instead of the default one, for sales to the "
 "current partner"
 msgstr ""
+"Denne prislisten vil bli benyttet for salg til partneren i stedet for "
+"standardprislisten."
 
 #. module: product
 #: constraint:product.supplierinfo:0
@@ -100,7 +104,7 @@ msgstr ""
 #. module: product
 #: field:product.template,seller_qty:0
 msgid "Supplier Quantity"
-msgstr ""
+msgstr "Leverandørs antall"
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -150,6 +154,8 @@ msgid ""
 "The minimal quantity to trigger this rule, expressed in the supplier UoM if "
 "any or in the default UoM of the product otherrwise."
 msgstr ""
+"Minimumsantallet for å utløse denne regelen, angitt i leverandørs enheter "
+"(hvis spesifisert) eller standard vareenhet."
 
 #. module: product
 #: model:product.template,name:product.product_product_24_product_template
@@ -176,7 +182,7 @@ msgstr "Gjennomsnittspris"
 #. module: product
 #: help:product.pricelist.item,name:0
 msgid "Explicit rule name for this pricelist line."
-msgstr ""
+msgstr "Eksplisitt regelnavn for denne prislistelinjen."
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_uom_categ_form_action
@@ -202,7 +208,7 @@ msgstr "Prisliste"
 #. module: product
 #: view:product.template:0
 msgid "UOM"
-msgstr "Måleenhet"
+msgstr "Enhet"
 
 #. module: product
 #: model:product.uom,name:product.product_uom_unit
@@ -253,7 +259,7 @@ msgstr "Produkttype"
 #. module: product
 #: view:product.uom:0
 msgid "  e.g: 1 * (this unit) = ratio * (reference unit)"
-msgstr ""
+msgstr "  f.eks.: 1 * (denne enhet) = faktor * (referanseenhet)"
 
 #. module: product
 #: code:addons/product/product.py:418
@@ -280,14 +286,13 @@ msgid ""
 "supplying. 'Make to Order': When needed, purchase or produce for the "
 "procurement request."
 msgstr ""
-"'Make to Stock': When needed, take from the stock or wait until re-"
-"supplying. 'Make to Order': When needed, purchase or produce for the "
-"procurement request."
+"'Produser til lager': Tas fra lager ved behov, må evt. avvente tilgang.\r\n"
+"'Produser til ordre': Anskaffes via innkjøp eller produksjon ved behov."
 
 #. module: product
 #: model:process.node,note:product.process_node_supplier0
 msgid "Supplier name, price, product code, ..."
-msgstr ""
+msgstr "Leverandørnavn, pris, produktkode, ..."
 
 #. module: product
 #: model:product.template,name:product.product_product_hdd3_product_template
@@ -367,7 +372,7 @@ msgstr "Utgående"
 #. module: product
 #: selection:product.uom,uom_type:0
 msgid "Reference UoM for this category"
-msgstr ""
+msgstr "Referanseenhet for denne kategorien"
 
 #. module: product
 #: model:product.price.type,name:product.list_price
@@ -407,12 +412,12 @@ msgid ""
 "products, consumables or services. The Product form contains detailed "
 "information about your products related to procurement logistics, sales "
 "price, product category, suppliers and so on."
-msgstr ""
+msgstr "Produkter"
 
 #. module: product
 #: view:product.pricelist:0
 msgid "Products Price Search"
-msgstr ""
+msgstr "Produkt pris søk"
 
 #. module: product
 #: view:product.product:0
@@ -456,10 +461,10 @@ msgstr "Høyde"
 #. module: product
 #: help:product.pricelist.version,date_end:0
 msgid "Ending date for this pricelist version to be valid."
-msgstr ""
+msgstr "Sluttdato for gyldighet på, denne prislisteversjonen."
 
 #. module: product
-#: model:product.category,name:product.cat0
+#: model:product.category,name:product.product_category_0
 msgid "All products"
 msgstr "Alle produkter"
 
@@ -539,7 +544,7 @@ msgstr ""
 #. module: product
 #: model:ir.model,name:product.model_product_uom_categ
 msgid "Product uom categ"
-msgstr "Måleenhet for produktgruppe"
+msgstr "Enhetskategori"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_box
@@ -574,6 +579,8 @@ msgid ""
 "Quantity conversions may happen automatically between Units of Measure in "
 "the same category, according to their respective ratios."
 msgstr ""
+"Antall konverteringer kan skje automatisk mellom måleenheter i samme "
+"kategori, ifølge deres respektive forholdstall."
 
 #. module: product
 #: help:product.packaging,width:0
@@ -588,7 +595,7 @@ msgstr "Virtual Stock"
 #. module: product
 #: selection:product.category,type:0
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #. module: product
 #: model:ir.actions.act_window,name:product.product_template_action_tree
@@ -598,7 +605,7 @@ msgstr "Produktmaler"
 #. module: product
 #: model:product.template,name:product.product_product_restaurantexpenses0_product_template
 msgid "Restaurant Expenses"
-msgstr ""
+msgstr "Restaurantutgifter"
 
 #. module: product
 #: constraint:product.packaging:0
@@ -692,7 +699,7 @@ msgstr "Leverandører"
 #. module: product
 #: view:product.product:0
 msgid "To Purchase"
-msgstr ""
+msgstr "Til innkjøp"
 
 #. module: product
 #: help:product.supplierinfo,min_qty:0
@@ -715,7 +722,7 @@ msgid ""
 msgstr ""
 
 #. module: product
-#: model:product.category,name:product.product_category_accessories
+#: model:product.category,name:product.product_category_5
 msgid "Accessories"
 msgstr "Tilbehør"
 
@@ -804,7 +811,7 @@ msgstr ""
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement & Locations"
-msgstr ""
+msgstr "Anskaffelse og lokasjoner"
 
 #. module: product
 #: model:product.template,name:product.product_product_kitchendesignproject0_product_template
@@ -839,7 +846,7 @@ msgstr "g"
 #. module: product
 #: model:product.category,name:product.product_category_11
 msgid "IT components kits"
-msgstr ""
+msgstr "Sett IT komponenter"
 
 #. module: product
 #: selection:product.category,type:0
@@ -1117,6 +1124,9 @@ msgid ""
 "at the end of the year), Average Price: the cost price is recomputed at each "
 "reception of products."
 msgstr ""
+"Standardpris: Kostprisen er fast og gjenberegnes periodisk (vanligvis ved "
+"årsskiftet).\r\n"
+"Gjennomsnittelig: Kostprisen gjenberegnes ved hvert mottak av produktet."
 
 #. module: product
 #: help:product.category,sequence:0
@@ -1152,17 +1162,17 @@ msgstr "Bredde"
 #. module: product
 #: help:product.price.type,field:0
 msgid "Associated field in the product form."
-msgstr ""
+msgstr "Tilknyttet feltet i produktskjemaet."
 
 #. module: product
 #: view:product.product:0
 msgid "Unit of Measure"
-msgstr "Måleenhet"
+msgstr "Enhet"
 
 #. module: product
 #: field:product.template,procure_method:0
 msgid "Procurement Method"
-msgstr "Innkjøpsmetode"
+msgstr "Anskaffelsesmetode"
 
 #. module: product
 #: report:product.pricelist:0
@@ -1215,7 +1225,7 @@ msgid "Main Supplier who has highest priority in Supplier List."
 msgstr "Hovedleverandør som har høyeste prioritet i leverandørlisten"
 
 #. module: product
-#: model:product.category,name:product.product_category_services
+#: model:product.category,name:product.product_category_6
 #: view:product.product:0
 msgid "Services"
 msgstr "Tjenester"
@@ -1289,7 +1299,7 @@ msgstr "Feil !"
 #: model:ir.ui.menu,name:product.next_id_16
 #: view:product.uom:0
 msgid "Units of Measure"
-msgstr "Måleenhet"
+msgstr "Enheter"
 
 #. module: product
 #: field:product.supplierinfo,min_qty:0
@@ -1297,7 +1307,7 @@ msgid "Minimal Quantity"
 msgstr "Minimum antall"
 
 #. module: product
-#: model:product.category,name:product.product_category_pc
+#: model:product.category,name:product.product_category_9
 msgid "PC"
 msgstr "PC"
 
@@ -1313,7 +1323,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Stock"
-msgstr "Produser til lager"
+msgstr "Anskaff til lager (Make To Stock)"
 
 #. module: product
 #: field:product.pricelist.item,price_version_id:0
@@ -1331,7 +1341,7 @@ msgstr ""
 #. module: product
 #: selection:product.template,type:0
 msgid "Consumable"
-msgstr "Forbruksartikkel"
+msgstr "Forbruksvare"
 
 #. module: product
 #: help:product.price.type,currency_id:0
@@ -1347,7 +1357,7 @@ msgstr "Bruttovekt i kg."
 #: view:product.product:0
 #: view:product.template:0
 msgid "Procurement"
-msgstr "Innkjøp"
+msgstr "Anskaffelse"
 
 #. module: product
 #: view:product.product:0
@@ -1358,7 +1368,7 @@ msgstr "Vekt"
 #. module: product
 #: field:product.uom,category_id:0
 msgid "UoM Category"
-msgstr "Måleenhet kategori"
+msgstr "Enhetskategori"
 
 #. module: product
 #: field:product.template,loc_rack:0
@@ -1373,7 +1383,7 @@ msgstr ""
 #. module: product
 #: field:product.template,supply_method:0
 msgid "Supply method"
-msgstr "Leveringsmåte"
+msgstr "Forsyningsmåte"
 
 #. module: product
 #: model:ir.actions.act_window,help:product.product_category_action
@@ -1447,7 +1457,7 @@ msgstr "cm"
 #. module: product
 #: model:ir.model,name:product.model_product_uom
 msgid "Product Unit of Measure"
-msgstr "Måleenhet for produkt"
+msgstr "Produktenhet"
 
 #. module: product
 #: constraint:product.template:0
@@ -1478,7 +1488,7 @@ msgstr "Kjøp"
 #. module: product
 #: view:product.uom.categ:0
 msgid "Units of Measure categories"
-msgstr "Måleenhet kategorier"
+msgstr "Enhetskategorier"
 
 #. module: product
 #: help:product.packaging,weight_ul:0
@@ -1587,7 +1597,7 @@ msgstr ""
 #. module: product
 #: view:product.product:0
 msgid "Default UOM"
-msgstr "Standard måleenhet"
+msgstr "Standard enhet"
 
 #. module: product
 #: selection:product.ul,type:0
@@ -1631,7 +1641,7 @@ msgstr "Produser"
 #. module: product
 #: selection:product.template,procure_method:0
 msgid "Make to Order"
-msgstr "Produser på bestilling(Make to order)"
+msgstr "Anskaff til ordre (Make To Order)"
 
 #. module: product
 #: help:product.packaging,qty:0
@@ -1688,7 +1698,7 @@ msgstr "Avrundingsmetode"
 #. module: product
 #: model:ir.actions.report.xml,name:product.report_product_label
 msgid "Products Labels"
-msgstr "Products Labels"
+msgstr "Produktetiketter"
 
 #. module: product
 #: model:product.ul,name:product.product_ul_big_box
@@ -1875,7 +1885,7 @@ msgstr "Prislistenavn"
 #. module: product
 #: field:product.supplierinfo,delay:0
 msgid "Delivery Lead Time"
-msgstr ""
+msgstr "Leveringstid"
 
 #. module: product
 #: help:product.uom,active:0
@@ -1969,6 +1979,8 @@ msgid ""
 "The computed quantity will be a multiple of this value. Use 1.0 for a UoM "
 "that cannot be further split, such as a piece."
 msgstr ""
+"Det beregnede kvantum vil være et multiplum av denne verdien. Bruk 1.0 for "
+"en enhet som ikke kan bli yttere splittet, som et stykke."
 
 #. module: product
 #: view:product.product:0
@@ -2034,6 +2046,8 @@ msgid ""
 "This supplier's product name will be used when printing a request for "
 "quotation. Keep empty to use the internal one."
 msgstr ""
+"Denne leverandørs produktnavn vil benyttes når det dannes forespørsel om "
+"tilbud. La stå blank for å benytte internt produktnavn."
 
 #. module: product
 #: selection:product.template,mes_type:0
@@ -2059,7 +2073,7 @@ msgstr "Min. prismargin"
 #. module: product
 #: field:product.template,weight:0
 msgid "Gross weight"
-msgstr "Brutto vekt"
+msgstr "Bruttovekt"
 
 #. module: product
 #: model:product.template,name:product.product_product_assemblysection0_product_template
@@ -2206,7 +2220,7 @@ msgstr "Produktmal"
 #. module: product
 #: field:product.template,cost_method:0
 msgid "Costing Method"
-msgstr ""
+msgstr "Kostmetode"
 
 #. module: product
 #: view:product.packaging:0
@@ -2252,7 +2266,7 @@ msgid "Category Type"
 msgstr "Kategoritype"
 
 #. module: product
-#: model:product.category,name:product.cat2
+#: model:product.category,name:product.product_category_2
 msgid "Private"
 msgstr "Privat"
 

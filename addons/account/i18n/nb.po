@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-24 05:17+0000\n"
-"X-Generator: Launchpad (build 15668)\n"
+"X-Launchpad-Export-Date: 2012-08-28 07:40+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -77,7 +77,7 @@ msgstr "Kontovaluta"
 #. module: account
 #: view:account.tax:0
 msgid "Children Definition"
-msgstr ""
+msgstr "barne Definisjon"
 
 #. module: account
 #: model:ir.model,name:account.model_report_aged_receivable
@@ -446,7 +446,7 @@ msgstr "Positiv"
 #. module: account
 #: view:account.move.line.unreconcile.select:0
 msgid "Open For Unreconciliation"
-msgstr ""
+msgstr "Åpen for Unreconciliation"
 
 #. module: account
 #: field:account.account.template,chart_template_id:0
@@ -468,6 +468,9 @@ msgid ""
 "it comes to 'Printed' state. When all transactions are done, it comes in "
 "'Done' state."
 msgstr ""
+"Når tidsskriftet periode er opprettet. Staten er \"Kladd\". Hvis en rapport "
+"skrives det kommer til \"Trykt \"tilstand. Når alle transaksjoner er gjort, "
+"kommer det i Ferdig tilstand"
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_account_tax_chart
@@ -663,7 +666,7 @@ msgstr "Lukk periode"
 #. module: account
 #: model:ir.model,name:account.model_account_common_partner_report
 msgid "Account Common Partner Report"
-msgstr ""
+msgstr "Konto Felles Partner Rapport"
 
 #. module: account
 #: field:account.fiscalyear.close,period_id:0
@@ -768,7 +771,7 @@ msgstr "Type"
 #. module: account
 #: model:ir.model,name:account.model_account_subscription_line
 msgid "Account Subscription Line"
-msgstr ""
+msgstr "Konto Abonnement Linje"
 
 #. module: account
 #: help:account.invoice,reference:0
@@ -830,6 +833,8 @@ msgid ""
 "Can not %s invoice which is already reconciled, invoice should be "
 "unreconciled first. You can only Refund this invoice"
 msgstr ""
+"Kan ikke% s faktura som allerede er forsonet, bør fakturaen ikke avstemte "
+"først. Du kan bare tilbakebetale denne fakturaen."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form_new
@@ -939,6 +944,9 @@ msgid ""
 "amount.If the tax account is base tax code, this field will contain the "
 "basic amount(without tax)."
 msgstr ""
+"Dersom Skatt kontoen er en skatt kode konto, vil dette feltet inneholde "
+"skattlagt beløp. Vis skatte kontoen er base skatt kode, dette feltet vil "
+"inneholde grunnbeløpet (uten skatt)."
 
 #. module: account
 #: view:account.analytic.line:0
@@ -1029,7 +1037,7 @@ msgstr ""
 #. module: account
 #: view:account.tax:0
 msgid "Applicability Options"
-msgstr ""
+msgstr "anvendbarhe Alternativer"
 
 #. module: account
 #: report:account.partner.balance:0
@@ -1081,7 +1089,7 @@ msgstr "Periodestart"
 #. module: account
 #: model:process.transition,name:account.process_transition_confirmstatementfromdraft0
 msgid "Confirm statement"
-msgstr ""
+msgstr "Bekreft kontoutdrag"
 
 #. module: account
 #: field:account.fiscal.position.tax,tax_dest_id:0
@@ -1102,6 +1110,10 @@ msgid ""
 "purchase orders or receipts. This way, you can control the invoice from your "
 "supplier according to what you purchased or received."
 msgstr ""
+"Med leverandørfakturaer kan du gå inn og administrere fakturaer utstedt av "
+"dine leverandører. OpenERP kan også generere utkast fakturaer automatisk fra "
+"innkjøpsordrer eller kvitteringer. På denne måten kan du kontrollere at "
+"fakturaen fra leverandøren i henhold til hva du har kjøpt eller mottatt."
 
 #. module: account
 #: view:account.invoice.cancel:0
@@ -1285,7 +1297,7 @@ msgstr "Innstillinger for rapporter"
 #. module: account
 #: model:ir.model,name:account.model_account_entries_report
 msgid "Journal Items Analysis"
-msgstr ""
+msgstr "Analyse av journaloppføringer"
 
 #. module: account
 #: model:ir.ui.menu,name:account.next_id_22
@@ -1385,6 +1397,10 @@ msgid ""
 "entry per accounting document: invoice, refund, supplier payment, bank "
 "statements, etc."
 msgstr ""
+"En bilagsregistrering består av flere journaler elementer, som hver er enten "
+"en debet eller kreditt transaksjon. OpenERP oppretter automatisk en "
+"bilagsregistrering per regnskap dokumentet: faktura, tilbakebetaling, "
+"leverandør betaling, kontoutskrifter, etc."
 
 #. module: account
 #: view:account.entries.report:0
@@ -1394,7 +1410,7 @@ msgstr "Antall registreringer "
 #. module: account
 #: model:ir.model,name:account.model_temp_range
 msgid "A Temporary table used for Dashboard view"
-msgstr ""
+msgstr "En midlertidig tabell for konsollvisning"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree4
@@ -1518,6 +1534,12 @@ msgid ""
 "the Payment column of a line, you can press F1 to open the reconciliation "
 "form."
 msgstr ""
+"En kontoutskrift er en oppsummering av alle finansielle transaksjoner det "
+"skjer over en gitt tidsperiode på en innskuddskonto, kredittkort eller en "
+"annen type økonomisk konto. Utgangspunktet balansen vil bli foreslått "
+"automatisk og utgående balanse er å finne på kontoutskriften din. Når du er "
+"i Betaling kolonne på en linje, kan du trykke F1 for å åpne forsoning "
+"skjemaet."
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -1555,7 +1577,7 @@ msgstr "Analytiske kostnader å fakturere"
 #. module: account
 #: view:ir.sequence:0
 msgid "Fiscal Year Sequence"
-msgstr ""
+msgstr "Regnskapsåret sekvens"
 
 #. module: account
 #: field:wizard.multi.charts.accounts,seq_journal:0
@@ -1583,6 +1605,8 @@ msgid ""
 "Cancel Invoice: Creates the refund invoice, validate and reconcile it to "
 "cancel the current invoice."
 msgstr ""
+"Avbryt Faktura: Oppretter tilbakebetalingen faktura, validere og forsone det "
+"å avbryte den aktuelle fakturaen."
 
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_invoicing
@@ -1617,6 +1641,8 @@ msgid ""
 "Have a complete tree view of all journal items per account code by clicking "
 "on an account."
 msgstr ""
+"Vis din bedrift kontoplan per regnskapsår og filtrere etter periode. Ha en "
+"komplett trevisning av alle journaler pr kontokode ved å klikke på en konto."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -1640,6 +1666,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the journal "
 "period without removing it."
 msgstr ""
+"Dersom det aktive feltet er satt til False, vil det tillate deg å skjule "
+"tidsskriftet perioden uten å fjerne det."
 
 #. module: account
 #: view:res.partner:0
@@ -1665,7 +1693,7 @@ msgstr "Du må angi en konto for nedskrivningsregistrering!"
 #. module: account
 #: model:ir.model,name:account.model_account_common_journal_report
 msgid "Account Common Journal Report"
-msgstr ""
+msgstr "Felles konto Journal Rapport"
 
 #. module: account
 #: selection:account.partner.balance,display_partner:0
@@ -1741,7 +1769,7 @@ msgstr ""
 #. module: account
 #: sql_constraint:account.move.line:0
 msgid "Wrong credit or debit value in accounting entry !"
-msgstr ""
+msgstr "Feil kredit eller debet beløp i regnskaps oppføringen !"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -1779,7 +1807,7 @@ msgstr "Journalregistrering"
 #. module: account
 #: view:account.tax:0
 msgid "Tax Declaration: Invoices"
-msgstr ""
+msgstr "Avgiftsoppgave: Fakturaer"
 
 #. module: account
 #: field:account.cashbox.line,subtotal:0
@@ -1821,7 +1849,7 @@ msgstr "Gyldig"
 #: model:ir.actions.act_window,name:account.action_account_print_journal
 #: model:ir.model,name:account.model_account_print_journal
 msgid "Account Print Journal"
-msgstr ""
+msgstr "Konto Print Journal"
 
 #. module: account
 #: model:ir.model,name:account.model_product_category
@@ -1847,7 +1875,7 @@ msgstr ""
 #: model:process.node,note:account.process_node_reconciliation0
 #: model:process.node,note:account.process_node_supplierreconciliation0
 msgid "Comparison between accounting and payment entries"
-msgstr ""
+msgstr "Sammenligning mellom regnskap og betaling oppføringer"
 
 #. module: account
 #: view:account.tax:0
@@ -1861,6 +1889,8 @@ msgid ""
 "Check this box if you want to use a different sequence for each created "
 "journal. Otherwise, all will use the same sequence."
 msgstr ""
+"Sjekk denne boksen hvis du ønsker å bruke en annen sekvens for hver "
+"opprettet journal. Ellers vil alle bruke samme sekvens."
 
 #. module: account
 #: help:account.partner.ledger,amount_currency:0
@@ -1869,6 +1899,8 @@ msgid ""
 "It adds the currency column if the currency is different then the company "
 "currency"
 msgstr ""
+"Det legger valutaen kolonne hvis valutaen er forskjellig enn selskapet "
+"valutaen"
 
 #. module: account
 #: help:account.journal,allow_date:0
@@ -1876,6 +1908,8 @@ msgid ""
 "If set to True then do not accept the entry if the entry date is not into "
 "the period dates"
 msgstr ""
+"Hvis den er satt til True ikke godta oppføringen hvis Påmeldingsfrist ikke "
+"er i perioden datoer."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_pl_report
@@ -1886,7 +1920,7 @@ msgstr "Resultatkonti"
 #: field:account.installer,config_logo:0
 #: field:wizard.multi.charts.accounts,config_logo:0
 msgid "Image"
-msgstr ""
+msgstr "Bilde"
 
 #. module: account
 #: view:account.invoice:0
@@ -1900,6 +1934,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the tax "
 "without removing it."
 msgstr ""
+"Dersom det aktive feltet er satt til False, vil det tillate deg å skjule "
+"skatt uten å fjerne det."
 
 #. module: account
 #: help:account.bank.statement,name:0
@@ -1941,7 +1977,7 @@ msgstr "Konto for avstemming"
 #. module: account
 #: model:process.transition,note:account.process_transition_filestatement0
 msgid "Import of the statement in the system from an electronic file"
-msgstr ""
+msgstr "Importer av uttalelsen i systemet fra en elektronisk fil"
 
 #. module: account
 #: model:process.node,name:account.process_node_importinvoice0
@@ -1970,7 +2006,7 @@ msgstr "Dette regnskapsår"
 #. module: account
 #: view:account.tax.chart:0
 msgid "Account tax charts"
-msgstr ""
+msgstr "Konto for avgifter"
 
 #. module: account
 #: constraint:account.period:0
@@ -1978,6 +2014,8 @@ msgid ""
 "Invalid period ! Some periods overlap or the date period is not in the scope "
 "of the fiscal year. "
 msgstr ""
+"Ugyldig periode! Enkelte perioder overlapper eller dato perioden er ikke i "
+"omfanget av regnskapsåret. "
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -2000,6 +2038,9 @@ msgid ""
 "There is no default default debit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Det er ingen standard. \n"
+"Standard belastningskonto definert\n"
+"på tidsskriftet \"% s\""
 
 #. module: account
 #: help:account.account.template,type:0
@@ -2011,6 +2052,11 @@ msgid ""
 "partners accounts (for debit/credit computations), closed for depreciated "
 "accounts."
 msgstr ""
+"Denne typen blir brukt til å differensiere typer med spesielle effekter i "
+"OpenERP: view kan ikke ha oppføringer, konsolidering er kontoer som kan få "
+"barne kontoer for flere firma konsolideringer, betales / mottas er for "
+"samarbeidspartnere kontoer (for debet / kreditt beregninger), stengt for "
+"nedskrevne kontoer."
 
 #. module: account
 #: view:account.chart.template:0
@@ -2024,6 +2070,9 @@ msgid ""
 "certified Chart of Accounts exists for your specified country, a generic one "
 "can be installed and will be selected by default."
 msgstr ""
+"Standardinnstillingen Kontoplan er tilsvarende ditt valg av land. Hvis ingen "
+"sertifisert Kontoplan finnes for ditt angitte landet, kan en generisk bli "
+"installert og vil bli valgt som standard."
 
 #. module: account
 #: view:account.account.type:0
@@ -2178,7 +2227,7 @@ msgstr "Betalingsbetingelser"
 #: model:ir.actions.act_window,name:account.action_account_fiscal_position_form
 #: model:ir.ui.menu,name:account.menu_action_account_fiscal_position_form
 msgid "Fiscal Positions"
-msgstr ""
+msgstr "skattemessige posisjoner"
 
 #. module: account
 #: field:account.period.close,sure:0
@@ -2220,7 +2269,7 @@ msgstr "Kryss av hvis bruker skal kunne avstemme posteringer på denne konto."
 #. module: account
 #: view:account.partner.reconcile.process:0
 msgid "Partner Reconciliation"
-msgstr ""
+msgstr "Avstemming av partner"
 
 #. module: account
 #: field:account.tax,tax_code_id:0
@@ -2237,6 +2286,9 @@ msgid ""
 "You can create one in the menu: \n"
 "Configuration\\Financial Accounting\\Accounts\\Journals."
 msgstr ""
+"Kan ikke finne noen konto journal av% s for denne bedriften.\n"
+"Du kan opprette en i menyen:\n"
+"Configuration \\ Financial Accounting \\ regnskap \\ Journals."
 
 #. module: account
 #: field:account.invoice.tax,base_code_id:0
@@ -2247,7 +2299,7 @@ msgstr "Basiskode"
 #. module: account
 #: help:account.invoice.tax,sequence:0
 msgid "Gives the sequence order when displaying a list of invoice tax."
-msgstr ""
+msgstr "Gir sekvensen ordre når det viser en liste over faktura skatt."
 
 #. module: account
 #: field:account.tax,base_sign:0
@@ -2267,11 +2319,18 @@ msgid ""
 "useful because it enables you to preview at any time the tax that you owe at "
 "the start and end of the month or quarter."
 msgstr ""
+"Denne menyen skriver en merverdiavgift erklæring basert på fakturaer eller "
+"betalinger. Velg en eller flere perioder av regnskapsåret. Informasjonen som "
+"kreves for en selvangivelse blir automatisk generert av OpenERP fra "
+"fakturaer (eller utbetalinger, i noen land). Disse dataene blir oppdatert i "
+"sanntid. Det er veldig nyttig fordi det lar deg forhåndsvise til enhver tid "
+"den skatten som du skylder på begynnelsen og slutten av måneden eller "
+"kvartalet."
 
 #. module: account
 #: selection:account.move.line,centralisation:0
 msgid "Debit Centralisation"
-msgstr ""
+msgstr "Debet Sentralisering"
 
 #. module: account
 #: view:account.invoice.confirm:0
@@ -2291,12 +2350,12 @@ msgstr "Dag"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_account_renew_view
 msgid "Accounts to Renew"
-msgstr ""
+msgstr "Kontoer for å fornye"
 
 #. module: account
 #: model:ir.model,name:account.model_account_model_line
 msgid "Account Model Entries"
-msgstr ""
+msgstr "Konto Modell oppføringer"
 
 #. module: account
 #: code:addons/account/account.py:3117
@@ -2344,12 +2403,16 @@ msgid ""
 "The fiscal position will determine taxes and the accounts used for the "
 "partner."
 msgstr ""
+"Den finanspolitiske stillingen vil bestemme skatter og regnskapet brukes for "
+"partneren."
 
 #. module: account
 #: view:account.print.journal:0
 msgid ""
 "This report gives you an overview of the situation of a specific journal"
 msgstr ""
+"Denne rapporten gir deg en oversikt over situasjonen til en bestemt "
+"tidsskrift"
 
 #. module: account
 #: constraint:product.category:0
@@ -2453,7 +2516,7 @@ msgstr "Ref"
 #. module: account
 #: help:account.move.line,tax_code_id:0
 msgid "The Account can either be a base tax code or a tax code account."
-msgstr ""
+msgstr "Kontoen kan enten være en base skatt kode eller en skatt kode konto"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_automatic_reconcile
@@ -2469,7 +2532,7 @@ msgstr "Betalt/avstemt"
 #: field:account.tax,ref_base_code_id:0
 #: field:account.tax.template,ref_base_code_id:0
 msgid "Refund Base Code"
-msgstr ""
+msgstr "Tilbakebetaling Base kode."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_bank_statement_periodic_tree
@@ -2504,6 +2567,8 @@ msgid ""
 "Automatically generate entries based on what has been entered in the  system "
 "before a specific date."
 msgstr ""
+"Automatisk genererer oppføringer basert på hva som har blitt lagt inn i "
+"systemet før en bestemt dato."
 
 #. module: account
 #: view:account.aged.trial.balance:0
@@ -2532,12 +2597,17 @@ msgid ""
 "Note that journal entries that are automatically created by the system are "
 "always skipping that state."
 msgstr ""
+"Merk denne boksen hvis du ikke vil at nye posteringer for å passere gjennom "
+"\"utkast\" staten og i stedet går direkte til \"postet statens uten manuell "
+"validering.\n"
+"Merk at posteringer som opprettes automatisk av systemet er alltid hopper "
+"over staten."
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_actions_server_action_wizard_multi_chart
 #: model:ir.ui.menu,name:account.menu_act_ir_actions_bleble
 msgid "New Company Financial Setting"
-msgstr ""
+msgstr "Ny selskap finansiell innstilling"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_report_account_sales_tree_all
@@ -2549,7 +2619,7 @@ msgstr "Salg pr. konto"
 #. module: account
 #: view:account.use.model:0
 msgid "This wizard will create recurring accounting entries"
-msgstr ""
+msgstr "Denne veiviseren vil skape gjentakende regnskapspostene."
 
 #. module: account
 #: code:addons/account/account.py:1321
@@ -2563,7 +2633,7 @@ msgstr "Ingen sekvens angitt i journal !"
 #: code:addons/account/account_move_line.py:173
 #, python-format
 msgid "You have to define an analytic journal on the '%s' journal!"
-msgstr ""
+msgstr "Du må definere en analytisk journal på '% s' dagbok!"
 
 #. module: account
 #: view:account.invoice.tax:0
@@ -2604,7 +2674,7 @@ msgstr "Forventet balanse (%.2f) avviker fra beregnet balanse. (%.2f)"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentreconcile0
 msgid "Payment entries are the second input of the reconciliation."
-msgstr ""
+msgstr "Betaling oppføringer er den andre inngangen på forsoning."
 
 #. module: account
 #: selection:account.print.journal,sort_selection:0
@@ -2626,6 +2696,9 @@ msgid ""
 "The optional quantity expressed by this line, eg: number of product sold. "
 "The quantity is not a legal requirement but is very useful for some reports."
 msgstr ""
+"Den optimale mengden uttrykt denne linjen, for eksempel: antall solgte "
+"produkt. Mengden er ikke et juridisk krav, men er svært nyttig for noen "
+"rapporter."
 
 #. module: account
 #: view:account.payment.term.line:0
@@ -2654,6 +2727,7 @@ msgstr "La stå blank for å benytte samme periode bekreftelses(faktura)dato."
 msgid ""
 "used in statement reconciliation domain, but shouldn't be used elswhere."
 msgstr ""
+"Brukt i setningen forsoning domene, men bør ikke brukes andre steder."
 
 #. module: account
 #: field:account.invoice.tax,base_amount:0
@@ -2672,6 +2746,9 @@ msgid ""
 "between the creation date or the creation date of the entries plus the "
 "partner payment terms."
 msgstr ""
+"Forfallsdatoen for genererte oppføringer for denne modellen. Du kan velge "
+"mellom opprettelsesdatoen eller opprettelsesdatoen av oppføringene pluss "
+"samarbeidslandene betalingsvilkårene."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_accounting
@@ -2733,6 +2810,8 @@ msgid ""
 "Set if the amount of tax must be included in the base amount before "
 "computing the next taxes."
 msgstr ""
+"Still hvis mengden av skatt må inkluderes i grunnbeløpet før du kan regne de "
+"neste skattene."
 
 #. module: account
 #: help:account.journal,user_id:0
@@ -2825,7 +2904,7 @@ msgstr "Modell"
 #. module: account
 #: help:account.invoice.tax,base_code_id:0
 msgid "The account basis of the tax declaration."
-msgstr ""
+msgstr "Basiskonto for avgiftsberegning."
 
 #. module: account
 #: selection:account.account,type:0
@@ -2870,12 +2949,12 @@ msgstr "Starter på"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_ledger
 msgid "Account Partner Ledger"
-msgstr ""
+msgstr "Konto Partner ledger"
 
 #. module: account
 #: help:account.journal.column,sequence:0
 msgid "Gives the sequence order to journal column."
-msgstr ""
+msgstr "Gir sekvensen for å merke kolonne."
 
 #. module: account
 #: view:account.tax.template:0
@@ -2888,6 +2967,7 @@ msgstr "Avgiftsoppgjør"
 #: help:account.bank.accounts.wizard,currency_id:0
 msgid "Forces all moves for this account to have this secondary currency."
 msgstr ""
+"Tvinger alle trekk for denne kontoen til å ha denne sekundære valuta."
 
 #. module: account
 #: model:ir.actions.act_window,help:account.action_validate_account_move_line
@@ -2895,6 +2975,8 @@ msgid ""
 "This wizard will validate all journal entries of a particular journal and "
 "period. Once journal entries are validated, you can not update them anymore."
 msgstr ""
+"Denne veiviseren vil validere alle posteringer på en bestemt journal og "
+"periode. Når bilag er validert, kan du ikke oppdatere dem lenger."
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_chart_template_form
@@ -2999,7 +3081,7 @@ msgstr "Innkjøp"
 #: view:account.installer:0
 #: view:wizard.multi.charts.accounts:0
 msgid "Accounting Application Configuration"
-msgstr ""
+msgstr "Regnskap programkonfigurasjon"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.open_board_account
@@ -3042,6 +3124,8 @@ msgid ""
 "The amount expressed in the related account currency if not equal to the "
 "company one."
 msgstr ""
+"Beløpet uttrykt i den tilknyttede kontoen valuta hvis ikke lik den selskapet "
+"en."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -3065,7 +3149,7 @@ msgstr "Kontokonfigurasjon"
 #: field:account.tax.code,notprintable:0
 #: field:account.tax.code.template,notprintable:0
 msgid "Not Printable in Invoice"
-msgstr ""
+msgstr "Ikke til utskrift på faktura"
 
 #. module: account
 #: report:account.vat.declaration:0
@@ -3076,7 +3160,7 @@ msgstr "Avgiftsplan"
 #. module: account
 #: view:account.journal:0
 msgid "Search Account Journal"
-msgstr ""
+msgstr "Søk Konto Journal"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_invoice_tree_pending_invoice
@@ -3096,6 +3180,8 @@ msgid ""
 "All selected journal entries will be validated and posted. It means you "
 "won't be able to modify their accounting fields anymore."
 msgstr ""
+"Alle valgte posteringer blir validert og postet. Det betyr at du ikke kunne "
+"endre sine regnskapsprinsipper felt lenger."
 
 #. module: account
 #: code:addons/account/invoice.py:370
@@ -3138,13 +3224,13 @@ msgstr "Dine bank og kontantkonti"
 #. module: account
 #: view:account.move:0
 msgid "Search Move"
-msgstr ""
+msgstr "Søk bevegelse"
 
 #. module: account
 #: field:account.tax.code,name:0
 #: field:account.tax.code.template,name:0
 msgid "Tax Case Name"
-msgstr ""
+msgstr "Skatt saksnavnet"
 
 #. module: account
 #: report:account.invoice:0
@@ -3159,6 +3245,8 @@ msgid ""
 "Selected Invoice(s) cannot be cancelled as they are already in 'Cancelled' "
 "or 'Done' state!"
 msgstr ""
+"Valgte fakturaer) kan ikke kanselleres som de er allerede i \"Avlyst\" eller "
+"\"ferdig\" stat!"
 
 #. module: account
 #: code:addons/account/account.py:522
@@ -3209,7 +3297,7 @@ msgstr "Opprett konto"
 #. module: account
 #: model:ir.model,name:account.model_report_account_type_sales
 msgid "Report of the Sales by Account Type"
-msgstr ""
+msgstr "Salgsrapport etter kontotype"
 
 #. module: account
 #: selection:account.account.type,close_method:0
@@ -3252,7 +3340,7 @@ msgstr "Centralised counterpart"
 #. module: account
 #: model:ir.model,name:account.model_account_partner_reconcile_process
 msgid "Reconcilation Process partner by partner"
-msgstr ""
+msgstr "Forsoningsprosess partner med partner"
 
 #. module: account
 #: selection:account.automatic.reconcile,power:0
@@ -3396,7 +3484,7 @@ msgstr ""
 #: view:account.tax:0
 #: view:account.tax.template:0
 msgid "Applicable Code (if type=code)"
-msgstr ""
+msgstr "Gjelder kode (hvis type = kode)"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3440,6 +3528,8 @@ msgstr "Betalingsoppdrag"
 msgid ""
 "Check this option if you want the user to reconcile entries in this account."
 msgstr ""
+"Sjekk dette alternativet hvis du vil at brukeren skal avstemme oppføringer i "
+"denne kontoen."
 
 #. module: account
 #: model:ir.actions.report.xml,name:account.account_account_balance_landscape
@@ -3473,7 +3563,7 @@ msgstr "Antall posteringer"
 #, python-format
 msgid ""
 "You selected an Unit of Measure which is not compatible with the product."
-msgstr ""
+msgstr "Du valgte en enhetstype som ikke er gjeldende for produktet."
 
 #. module: account
 #: code:addons/account/account_invoice.py:484
@@ -3491,7 +3581,7 @@ msgstr "Åpne faktura"
 #. module: account
 #: field:account.invoice.tax,factor_tax:0
 msgid "Multipication factor Tax code"
-msgstr ""
+msgstr "Multiplikasjonsfaktor Skatt kode"
 
 #. module: account
 #: view:account.fiscal.position:0
@@ -3514,7 +3604,7 @@ msgstr "Navn"
 #. module: account
 #: model:ir.model,name:account.model_account_aged_trial_balance
 msgid "Account Aged Trial balance Report"
-msgstr ""
+msgstr "Konto Aldret saldobalansen Rapport"
 
 #. module: account
 #: field:account.move.line,date:0
@@ -3525,7 +3615,7 @@ msgstr "Effektiv dato"
 #: code:addons/account/wizard/account_move_bank_reconcile.py:53
 #, python-format
 msgid "Standard Encoding"
-msgstr ""
+msgstr "Standardkoder"
 
 #. module: account
 #: help:account.journal,analytic_journal_id:0
@@ -3552,6 +3642,8 @@ msgid ""
 "Print Report with the currency column if the currency is different then the "
 "company currency"
 msgstr ""
+"Skriv rapport med valutaen kolonne hvis valutaen er forskjellig enn "
+"selskapet valutaen"
 
 #. module: account
 #: view:account.analytic.line:0
@@ -3571,6 +3663,10 @@ msgid ""
 "debit/credit accounts, of type 'situation' and with a centralized "
 "counterpart."
 msgstr ""
+"Det beste praksis her er å bruke et tidsskrift dedikert til inneholde de "
+"første oppføringene i alle regnskapsår. Merk at du bør definere det med "
+"standard debet / kreditt-kontoer, av typen \"situasjon\" og med en "
+"sentralisert motpart."
 
 #. module: account
 #: view:account.installer:0
@@ -3588,7 +3684,7 @@ msgstr "Sett som utkast"
 #. module: account
 #: model:ir.actions.act_window,name:account.action_subscription_form
 msgid "Recurring Lines"
-msgstr ""
+msgstr "Repeterende linjer"
 
 #. module: account
 #: field:account.partner.balance,display_partner:0
@@ -3671,6 +3767,8 @@ msgid ""
 "If the active field is set to False, it will allow you to hide the account "
 "without removing it."
 msgstr ""
+"Dersom det aktive feltet er satt til False, vil det tillate deg å skjule "
+"kontoen uten å fjerne det."
 
 #. module: account
 #: view:account.tax.template:0
@@ -3680,7 +3778,7 @@ msgstr "Søk avgiftsmaler"
 #. module: account
 #: model:ir.ui.menu,name:account.periodical_processing_journal_entries_validation
 msgid "Draft Entries"
-msgstr ""
+msgstr "utkastene"
 
 #. module: account
 #: field:account.account,shortcut:0
@@ -3739,11 +3837,13 @@ msgid ""
 "Analytic costs (timesheets, some purchased products, ...) come from analytic "
 "accounts. These generate draft supplier invoices."
 msgstr ""
+"Analytiske kostnader (timelister, noen kjøpte produkter, ...) kommer fra "
+"analytiske kontoer. Disse genererer utkast leverandørfakturaer."
 
 #. module: account
 #: view:account.bank.statement:0
 msgid "Close CashBox"
-msgstr ""
+msgstr "Lukk Cash Box"
 
 #. module: account
 #: view:account.invoice.report:0
@@ -3787,7 +3887,7 @@ msgstr "Notat"
 #. module: account
 #: view:account.analytic.account:0
 msgid "Overdue Account"
-msgstr ""
+msgstr "forfalt konto"
 
 #. module: account
 #: selection:account.invoice,state:0
@@ -3803,7 +3903,7 @@ msgstr "Avgiftslinjer"
 #. module: account
 #: field:account.tax,base_code_id:0
 msgid "Account Base Code"
-msgstr ""
+msgstr "Konto Base kode"
 
 #. module: account
 #: help:account.move,state:0
@@ -3859,7 +3959,7 @@ msgstr "Alle posteringer"
 #: code:addons/account/account_bank_statement.py:367
 #, python-format
 msgid "Statement %s is confirmed, journal items are created."
-msgstr ""
+msgstr "Uttalelse% s er bekreftet, er tidsskriftet elementer opprettet."
 
 #. module: account
 #: constraint:account.fiscalyear:0
@@ -3874,12 +3974,12 @@ msgstr "Måned periode"
 #. module: account
 #: help:account.analytic.balance,empty_acc:0
 msgid "Check if you want to display Accounts with 0 balance too."
-msgstr ""
+msgstr "Sjekk om du vil vise regnskap med 0 balanse også."
 
 #. module: account
 #: view:account.tax:0
 msgid "Compute Code"
-msgstr ""
+msgstr "Beregningskode"
 
 #. module: account
 #: view:account.account.template:0
@@ -3903,6 +4003,8 @@ msgid ""
 "When new move line is created the state will be 'Draft'.\n"
 "* When all the payments are done it will be in 'Valid' state."
 msgstr ""
+"Når den nye trekk linjen opprettes staten vil være \"kladd\".\n"
+"* Når alle betalingene er gjort vil det være i \"Gyldig\" tilstand."
 
 #. module: account
 #: field:account.journal,view_id:0
@@ -4293,7 +4395,7 @@ msgstr "Angi blankt for å benytte dagens dato"
 #. module: account
 #: selection:account.journal,type:0
 msgid "Bank and Cheques"
-msgstr ""
+msgstr "Bank og sjekker"
 
 #. module: account
 #: view:account.period.close:0
@@ -4607,7 +4709,7 @@ msgstr "Avgiftskonto"
 #. module: account
 #: view:account.automatic.reconcile:0
 msgid "Reconciliation result"
-msgstr ""
+msgstr "Resultat av avstemminger"
 
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_balancesheet0
@@ -4680,7 +4782,7 @@ msgstr "Sum"
 #: code:addons/account/wizard/account_fiscalyear_close.py:41
 #, python-format
 msgid "End of Fiscal Year Entry"
-msgstr ""
+msgstr "Slutt av regnskapsåret oppføring."
 
 #. module: account
 #: model:process.transition,name:account.process_transition_customerinvoice0
@@ -4715,7 +4817,7 @@ msgstr "Ingen periode funnet !"
 #. module: account
 #: field:account.journal,update_posted:0
 msgid "Allow Cancelling Entries"
-msgstr ""
+msgstr "Tillat kansellering av registreringer"
 
 #. module: account
 #: field:account.tax.code,sign:0
@@ -4954,6 +5056,8 @@ msgid ""
 "There is no default default credit account defined \n"
 "on journal \"%s\""
 msgstr ""
+"Det er ingen standard.\n"
+"Standard kreditt konto definert på tidsskriftet \"% s\""
 
 #. module: account
 #: field:account.analytic.line,amount_currency:0
@@ -4974,7 +5078,7 @@ msgstr ""
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_move_line
 msgid "Lines to reconcile"
-msgstr ""
+msgstr "Linjer til avstemming"
 
 #. module: account
 #: report:account.analytic.account.balance:0
@@ -5052,12 +5156,12 @@ msgstr "Med valuta"
 #. module: account
 #: view:account.bank.statement:0
 msgid "Open CashBox"
-msgstr ""
+msgstr "Åpen kasse"
 
 #. module: account
 #: view:account.move.line.reconcile:0
 msgid "Reconcile With Write-Off"
-msgstr ""
+msgstr "Avstem med nedskriving"
 
 #. module: account
 #: selection:account.payment.term.line,value:0
@@ -5208,7 +5312,7 @@ msgstr "Avgiftskartlegging"
 #: model:ir.actions.act_window,name:account.action_account_state_open
 #: model:ir.model,name:account.model_account_state_open
 msgid "Account State Open"
-msgstr ""
+msgstr "Kontostatus åpen"
 
 #. module: account
 #: report:account.analytic.account.quantity_cost_ledger:0
@@ -5441,7 +5545,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_analytic_entries_report
 #: model:ir.ui.menu,name:account.menu_action_analytic_entries_report
 msgid "Analytic Entries Analysis"
-msgstr ""
+msgstr "Ananlyse av analytiske registreringer"
 
 #. module: account
 #: selection:account.aged.trial.balance,direction_selection:0
@@ -5555,7 +5659,7 @@ msgstr "Kontomaler"
 #. module: account
 #: report:account.vat.declaration:0
 msgid "Tax Statement"
-msgstr ""
+msgstr "Avgiftsbekreftelse"
 
 #. module: account
 #: model:ir.model,name:account.model_res_company
@@ -6149,7 +6253,7 @@ msgstr ""
 #: view:account.move:0
 #: field:account.move,to_check:0
 msgid "To Review"
-msgstr ""
+msgstr "Til gjennomgang"
 
 #. module: account
 #: view:account.bank.statement:0
@@ -6171,7 +6275,7 @@ msgstr ""
 #: report:account.third_party_ledger:0
 #: report:account.third_party_ledger_other:0
 msgid "JRNL"
-msgstr ""
+msgstr "JRNL"
 
 #. module: account
 #: view:account.partner.balance:0
@@ -6252,7 +6356,7 @@ msgstr "Hovedbok"
 #. module: account
 #: model:process.transition,note:account.process_transition_paymentorderbank0
 msgid "The payment order is sent to the bank."
-msgstr ""
+msgstr "Betalingsoppdrag er sendt banken"
 
 #. module: account
 #: view:account.balance.report:0
@@ -6284,7 +6388,7 @@ msgstr "Egenskaper"
 #. module: account
 #: model:ir.model,name:account.model_account_tax_chart
 msgid "Account tax chart"
-msgstr ""
+msgstr "Avgiftskontoplan"
 
 #. module: account
 #: report:account.analytic.account.cost_ledger:0
@@ -6664,7 +6768,7 @@ msgstr ""
 #: code:addons/account/account.py:1088
 #, python-format
 msgid "You should have chosen periods that belongs to the same company"
-msgstr ""
+msgstr "Du skulle valgt perioder son tilhører samme firma"
 
 #. module: account
 #: field:account.fiscalyear.close,report_name:0
@@ -6940,7 +7044,7 @@ msgstr "Maler for kontoplan"
 #: field:account.tax.code,code:0
 #: field:account.tax.code.template,code:0
 msgid "Case Code"
-msgstr ""
+msgstr "Kontantkode"
 
 #. module: account
 #: view:validate.account.move:0
@@ -7045,7 +7149,7 @@ msgstr "    7 dager    "
 #. module: account
 #: field:account.partner.reconcile.process,progress:0
 msgid "Progress"
-msgstr ""
+msgstr "Fremdrift"
 
 #. module: account
 #: field:account.account,parent_id:0
@@ -7343,7 +7447,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_analytic_cost
 #: model:ir.actions.report.xml,name:account.account_analytic_account_cost_ledger
 msgid "Cost Ledger"
-msgstr ""
+msgstr "Kostnad merker"
 
 #. module: account
 #: view:account.invoice:0
@@ -7549,7 +7653,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,name:account.process_transition_filestatement0
 msgid "Automatic import of the bank sta"
-msgstr ""
+msgstr "Autom.import av bankustkrift"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_view
@@ -7746,7 +7850,7 @@ msgstr "Regnskapsår som skal avsluttes"
 #. module: account
 #: sql_constraint:account.account:0
 msgid "The code of the account must be unique per company !"
-msgstr ""
+msgstr "Kontokoden må være unik pr. firma!"
 
 #. module: account
 #: view:account.invoice:0
@@ -9699,7 +9803,7 @@ msgstr ""
 #. module: account
 #: model:account.financial.report,name:account.account_financial_report_assets0
 msgid "Assets"
-msgstr ""
+msgstr "Eiendeler"
 
 #. module: account
 #: model:account.account.template,name:0

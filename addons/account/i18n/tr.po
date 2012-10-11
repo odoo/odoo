@@ -13,19 +13,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-30 05:02+0000\n"
-"X-Generator: Launchpad (build 15702)\n"
-
-#. module: account
-#: model:ir.actions.todo.category,name:account.category_accounting_configuration
-#: model:ir.ui.menu,name:account.menu_finance
-#: model:process.node,name:account.process_node_accountingentries0
-#: model:process.node,name:account.process_node_supplieraccountingentries0
-#: view:product.product:0
-#: view:product.template:0
-#: view:res.partner:0
-msgid "Accounting"
-msgstr "Muhasebe"
+"X-Launchpad-Export-Date: 2012-08-28 07:42+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: account
 #: model:process.transition,name:account.process_transition_supplierreconcilepaid0
@@ -35,7 +24,7 @@ msgstr "Sistem ödemesi"
 #. module: account
 #: view:account.journal:0
 msgid "Other Configuration"
-msgstr "Diğer Ayarlar"
+msgstr "Diğer Yapılandırmalar"
 
 #. module: account
 #: code:addons/account/account.py:506
@@ -50,7 +39,7 @@ msgstr ""
 #. module: account
 #: view:account.move.reconcile:0
 msgid "Journal Entry Reconcile"
-msgstr "Yevmiye Kaydını Uzlaştır"
+msgstr "Günlük Girişini Uzlaştır"
 
 #. module: account
 #: field:account.installer.modules,account_voucher:0
@@ -113,7 +102,7 @@ msgstr ""
 #. module: account
 #: model:process.transition,name:account.process_transition_invoiceimport0
 msgid "Import from invoice or payment"
-msgstr "Fatura ya da ödemeden içe aktar"
+msgstr "Fatura ya da ödemeden içeaktar"
 
 #. module: account
 #: model:ir.model,name:account.model_wizard_multi_charts_accounts
@@ -132,7 +121,7 @@ msgid ""
 "that are linked to those transactions because they will not be disabled"
 msgstr ""
 "Bir işlemin uzlaşmasını kaldırdığınızda, o işleme bağlı eylemler devre dışı "
-"bırakılmayacağı için o işleme bağlı bütün eylemleri de kontrol etmelisiniz."
+"bırakılmayacağı için o işleme bağlı bütün eylemleri de doğrulamalısınız."
 
 #. module: account
 #: report:account.tax.code.entries:0
@@ -149,7 +138,7 @@ msgstr "İşlenmiş hareketleri silemezsiniz: \"%s\"!"
 #: report:account.invoice:0
 #: field:account.invoice.line,origin:0
 msgid "Origin"
-msgstr "Menşei"
+msgstr "Köken"
 
 #. module: account
 #: view:account.account:0
@@ -158,7 +147,7 @@ msgstr "Menşei"
 #: view:account.move.line.reconcile:0
 #: view:account.move.line.reconcile.writeoff:0
 msgid "Reconcile"
-msgstr "Uzlaşı"
+msgstr "Uzlaşma"
 
 #. module: account
 #: field:account.bank.statement.line,ref:0
@@ -180,7 +169,9 @@ msgstr "Mali Yılı Seçin "
 msgid ""
 "If the active field is set to False, it will allow you to hide the payment "
 "term without removing it."
-msgstr "Aktif seçeneği seçili değilse, Ödeme şartları silmeden gizlenir."
+msgstr ""
+"Eğer etkin alan Yanlış olarak ayarlıysa, ödeme koşulunu kaldırmadan "
+"saklamanızı sağlayacaktır."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1428
@@ -197,7 +188,7 @@ msgstr "Hesap Kaynağı"
 #. module: account
 #: model:ir.actions.act_window,name:account.act_acc_analytic_acc_5_report_hr_timesheet_invoice_journal
 msgid "All Analytic Entries"
-msgstr "Bütün Analitik hareketler"
+msgstr "Bütün Analiz Girişleri"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_view_created_invoice_dashboard
@@ -213,7 +204,7 @@ msgstr "Negatif"
 #: code:addons/account/wizard/account_move_journal.py:95
 #, python-format
 msgid "Journal: %s"
-msgstr "Yevmiye: %s"
+msgstr "Günlük: %s"
 
 #. module: account
 #: help:account.analytic.journal,type:0
@@ -222,7 +213,7 @@ msgid ""
 "invoice) to create analytic entries, OpenERP will look for a matching "
 "journal of the same type."
 msgstr ""
-"Analitik yevmiye defterinin tipini belirtir. Bir belge için (ör: fatura) "
+"Analitik yevmiye günlüğünün türünü belirtir. Bir belge için (ör: fatura) "
 "analitik giriş oluşturmak gerektiğinde OpenERP aynı tipe uyan yevmiye "
 "defteri arayacaktır."
 
@@ -230,7 +221,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_account_tax_template_form
 #: model:ir.ui.menu,name:account.menu_action_account_tax_template_form
 msgid "Tax Templates"
-msgstr "Vergi Şablonu"
+msgstr "Vergi Şablonları"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax
@@ -250,7 +241,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_account_move_line_reconcile_select
 msgid "Move line reconcile select"
-msgstr "Seçilen mutabakat satırını taşı"
+msgstr "Seçilen uzlaşma satırını taşı"
 
 #. module: account
 #: help:account.model.line,sequence:0
@@ -267,8 +258,8 @@ msgid ""
 "Check this box if you don't want any VAT related to this Tax Code to appear "
 "on invoices"
 msgstr ""
-"Faturalarda bu Vergi Koduyla ilintili KDV görünmesini istemiyorsanız bu "
-"kutuyu işaretleyin."
+"Faturalarda bu Vergi Koduyla ilintili herhangi bir KDV görünmesini "
+"istemiyorsanız bu kutuyu işaretleyin."
 
 #. module: account
 #: code:addons/account/account_invoice.py:1241
@@ -279,7 +270,7 @@ msgstr "'%s' nolu fatura kısmen ödendi: (Ödenen %s%s Toplam %s%s Kalan %s%s)"
 #. module: account
 #: model:process.transition,note:account.process_transition_supplierentriesreconcile0
 msgid "Accounting entries are an input of the reconciliation."
-msgstr "Muhasebe hareketleri uzlaşıların girdileridir."
+msgstr "Muhasebe girişleri uzlaştırmanın girdileridir."
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_management_belgian_reports
@@ -290,7 +281,7 @@ msgstr "Belçika Raporları"
 #: code:addons/account/account_move_line.py:1200
 #, python-format
 msgid "You can not add/modify entries in a closed journal."
-msgstr "Kapanmış bir yevmiyeye ekleme yapamaz ya da değiştiremezsiniz."
+msgstr "Kapanmış bir günlükte ekleme/değiştirme  yapamazsınız."
 
 #. module: account
 #: view:account.bank.statement:0
@@ -322,13 +313,13 @@ msgstr "Analiz için dönem seçin"
 #. module: account
 #: view:account.move.line:0
 msgid "St."
-msgstr "Ara Toplam"
+msgstr "Ara Top."
 
 #. module: account
 #: code:addons/account/account_invoice.py:551
 #, python-format
 msgid "Invoice line account company does not match with invoice company."
-msgstr "Fatura kalemindeki hesap şirketi ile fatura şirketi eşleşmiyor."
+msgstr "Fatura satırındaki hesap firması ile fatura firması eşleşmiyor."
 
 #. module: account
 #: field:account.journal.column,field:0
@@ -3662,6 +3653,17 @@ msgstr "Standard Encoding"
 #: help:account.journal,analytic_journal_id:0
 msgid "Journal for analytic entries"
 msgstr "Journal for analytic entries"
+
+#. module: account
+#: model:ir.actions.todo.category,name:account.category_accounting_configuration
+#: model:ir.ui.menu,name:account.menu_finance
+#: model:process.node,name:account.process_node_accountingentries0
+#: model:process.node,name:account.process_node_supplieraccountingentries0
+#: view:product.product:0
+#: view:product.template:0
+#: view:res.partner:0
+msgid "Accounting"
+msgstr "Muhasebe"
 
 #. module: account
 #: help:account.central.journal,amount_currency:0

@@ -14,8 +14,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-07-24 05:38+0000\n"
-"X-Generator: Launchpad (build 15668)\n"
+"X-Launchpad-Export-Date: 2012-08-28 08:04+0000\n"
+"X-Generator: Launchpad (build 15864)\n"
 
 #. module: hr_payroll
 #: report:employees.salary:0
@@ -534,8 +534,11 @@ msgid "#"
 msgstr "#"
 
 #. module: hr_payroll
-#: code:addons/hr_payroll/hr_payroll.py:469
-#: code:addons/hr_payroll/hr_payroll.py:1225
+#: code:addons/hr_payroll/hr_payroll.py:861
+#: code:addons/hr_payroll/hr_payroll.py:866
+#: code:addons/hr_payroll/hr_payroll.py:872
+#: code:addons/hr_payroll/hr_payroll.py:889
+#: code:addons/hr_payroll/hr_payroll.py:895
 #, python-format
 msgid "Error !"
 msgstr "Fel!"
@@ -695,7 +698,7 @@ msgstr ""
 #. module: hr_payroll
 #: constraint:hr.contract:0
 msgid "Error! contract start-date must be lower then contract end-date."
-msgstr ""
+msgstr "Fel! avtalsstartdatum måste komma före avtalsslutdatum."
 
 #. module: hr_payroll
 #: selection:hr.allounce.deduction.categoty,type:0
@@ -802,7 +805,7 @@ msgstr ""
 #: field:hr.payslip.line,category_id:0 view:hr.salary.rule:0
 #: field:hr.salary.rule,category_id:0
 msgid "Category"
-msgstr ""
+msgstr "Kategori"
 
 #. module: hr_payroll
 #: view:hr.salary.rule:0
@@ -863,7 +866,7 @@ msgstr ""
 #: field:hr.salary.rule,amount_percentage:0
 #: selection:hr.salary.rule,amount_select:0
 msgid "Percentage (%)"
-msgstr ""
+msgstr "Procent (%)"
 
 #. module: hr_payroll
 #: field:hr.payroll.advice,register_id:0
@@ -956,7 +959,7 @@ msgstr ""
 #. module: hr_payroll
 #: constraint:hr.employee:0
 msgid "Error ! You cannot create recursive Hierarchy of Employees."
-msgstr ""
+msgstr "Fel! Du kan inte skapa rekursiva hierarkier av anställda."
 
 #. module: hr_payroll
 #: field:hr.allounce.deduction.categoty,condition:0
@@ -1011,7 +1014,7 @@ msgstr ""
 #. module: hr_payroll
 #: view:hr.payslip:0
 msgid "Companies"
-msgstr ""
+msgstr "Bolag"
 
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
@@ -1024,7 +1027,7 @@ msgstr ""
 #: field:hr.payslip.worked_days,contract_id:0
 #: model:ir.model,name:hr_payroll.model_hr_contract
 msgid "Contract"
-msgstr ""
+msgstr "Avtal"
 
 #. module: hr_payroll
 #: selection:hr.payroll.advice,state:0
@@ -1039,7 +1042,7 @@ msgstr ""
 #. module: hr_payroll
 #: field:hr.payslip.line,active:0 field:hr.salary.rule,active:0
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #. module: hr_payroll
 #: field:hr.contract,visa_expire:0
@@ -1085,7 +1088,7 @@ msgstr ""
 #: field:hr.salary.rule.category,code:0 report:paylip.details:0
 #: report:payslip:0
 msgid "Code"
-msgstr ""
+msgstr "Kod"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_bank_advice_tree
@@ -1128,7 +1131,7 @@ msgstr ""
 #: view:hr.payslip.line:0
 #: model:ir.model,name:hr_payroll.model_hr_payroll_structure
 msgid "Salary Structure"
-msgstr ""
+msgstr "Lönestruktur"
 
 #. module: hr_payroll
 #: field:hr.contribution.register,register_line_ids:0
@@ -1139,12 +1142,12 @@ msgstr ""
 #: view:hr.payslip:0 view:hr.payslip.employees:0
 #: view:payslip.lines.contribution.register:0
 msgid "Cancel"
-msgstr ""
+msgstr "Avbryt"
 
 #. module: hr_payroll
 #: view:hr.payslip.run:0 selection:hr.payslip.run,state:0
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #. module: hr_payroll
 #: field:hr.payslip.line,amount:0
@@ -1288,7 +1291,7 @@ msgstr ""
 #: view:hr.salary.rule:0 field:hr.salary.rule,note:0
 #: field:hr.salary.rule.category,note:0
 msgid "Description"
-msgstr ""
+msgstr "Beskrivning"
 
 #. module: hr_payroll
 #: field:hr.payroll.employees.detail,date_from:0
@@ -1305,7 +1308,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid ")"
-msgstr ""
+msgstr ")"
 
 #. module: hr_payroll
 #: view:hr.contribution.register:0
@@ -1344,7 +1347,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Address"
-msgstr ""
+msgstr "Adress"
 
 #. module: hr_payroll
 #: field:hr.payslip.line.line,slipline_id:0
@@ -1387,7 +1390,7 @@ msgstr ""
 #: field:hr.salary.rule.category,name:0 report:paylip.details:0
 #: report:payslip:0
 msgid "Name"
-msgstr ""
+msgstr "Namn"
 
 #. module: hr_payroll
 #: report:payslip.pdf:0
@@ -1408,7 +1411,7 @@ msgstr ""
 #. module: hr_payroll
 #: report:paylip.details:0 report:payslip:0
 msgid "Bank Account"
-msgstr ""
+msgstr "Bankkonto"
 
 #. module: hr_payroll
 #: help:company.contribution,register_id:0
@@ -1490,7 +1493,7 @@ msgstr ""
 #: field:hr.payslip.input,sequence:0 field:hr.payslip.line,sequence:0
 #: field:hr.payslip.worked_days,sequence:0 field:hr.salary.rule,sequence:0
 msgid "Sequence"
-msgstr ""
+msgstr "Sekvens"
 
 #. module: hr_payroll
 #: model:ir.actions.act_window,name:hr_payroll.action_view_hr_payslip_form
@@ -1528,7 +1531,7 @@ msgstr ""
 #: report:contribution.register.lines:0 field:hr.payslip.line,total:0
 #: report:paylip.details:0 report:payslip:0
 msgid "Total"
-msgstr ""
+msgstr "Total"
 
 #. module: hr_payroll
 #: view:company.contribution:0
