@@ -21,7 +21,7 @@ class res_users(osv.Model):
     }
 
     _sql_constraints = [
-        ('uniq_users_oauth_provider_oauht_uid', 'unique(auth_provider_id, auth_uid)', 'OAuth UID must be unique per provider'),
+        ('uniq_users_oauth_provider_oauht_uid', 'unique(oauth_provider_id, oauth_uid)', 'OAuth UID must be unique per provider'),
     ]
 
     def auth_oauth_rpc(self, cr, uid, endpoint, access_token, context=None):
