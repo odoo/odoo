@@ -7,14 +7,14 @@ msgstr ""
 "Project-Id-Version: OpenERP Server 6.0dev\n"
 "Report-Msgid-Bugs-To: support@openerp.com\n"
 "POT-Creation-Date: 2012-10-08 12:28+0000\n"
-"PO-Revision-Date: 2012-10-03 09:25+0000\n"
+"PO-Revision-Date: 2012-10-10 14:08+0000\n"
 "Last-Translator: Chertykov Denis <chertykov@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-10-09 05:28+0000\n"
-"X-Generator: Launchpad (build 16112)\n"
+"X-Launchpad-Export-Date: 2012-10-11 05:39+0000\n"
+"X-Generator: Launchpad (build 16118)\n"
 
 #. module: stock
 #: field:product.product,track_outgoing:0
@@ -2496,13 +2496,13 @@ msgstr "Место хранения, где система будет храни
 #. module: stock
 #: view:stock.move:0
 msgid "Stock to be delivered (Available or not)"
-msgstr ""
+msgstr "Товар для доставки (доступный или нет)"
 
 #. module: stock
 #: view:board.board:0
 #: model:ir.actions.act_window,name:stock.action_stock_outgoing_product_delay
 msgid "Outgoing Products"
-msgstr "Изделия к отправке"
+msgstr "Исходящие ТМЦ"
 
 #. module: stock
 #: model:ir.actions.act_window,help:stock.action_reception_picking_move
@@ -2514,10 +2514,10 @@ msgid ""
 "products received using the buttons on the right of each line."
 msgstr ""
 "Здесь вы можете принимать отдельные ТМЦ, независимо от того откуда они "
-"взялись, из заказа на закупку или на комплектование. Вы найдете список всех "
-"ТМЦ, которые вы ждете. При получении заказа, вы можете фильтровать по "
-"названию поставщика или по описанию заказа на закупку. Затем, вы можете "
-"подтвердить получение всех ТМЦ с помощью кнопок справа в каждой строке."
+"взялись, из заказа закупки или  комплектования. Вы найдете список всех ТМЦ, "
+"которые вы ждете. При получении заказа, вы можете фильтровать по названию "
+"поставщика или по описанию заказа закупки. Затем, вы можете подтвердить "
+"получение всех ТМЦ с помощью кнопок справа в каждой строке."
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move
@@ -2544,17 +2544,17 @@ msgstr "Ожидаемая дата обработки комплектован�
 #: code:addons/stock/product.py:439
 #, python-format
 msgid "P&L Qty"
-msgstr ""
+msgstr "Кол-во п/у"
 
 #. module: stock
 #: view:stock.picking:0
 msgid "Internal Pickings to invoice"
-msgstr ""
+msgstr "Внутренние комплектования для счёта"
 
 #. module: stock
 #: xsl:stock.move.label:0
 msgid "Tracking:"
-msgstr ""
+msgstr "Отслеживание:"
 
 #. module: stock
 #: view:stock.production.lot:0
@@ -2696,7 +2696,7 @@ msgstr "Определенное место хранения"
 #: code:addons/stock/stock.py:2492
 #, python-format
 msgid "Product  '%s' is consumed with '%s' quantity."
-msgstr ""
+msgstr "Товар  '%s' израсходован в количестве '%s'."
 
 #. module: stock
 #: model:product.template,description:stock.product_icecream_product_template
@@ -2707,6 +2707,12 @@ msgid ""
 "ice cream shops, convenience stores, and milk bars, and in individual "
 "servings from small carts or vans at public events."
 msgstr ""
+"Мороженое может быть массово произведено и таким образом широко доступно в "
+"развитых частях мира. Мороженое может быть поставлено в больших коробках "
+"(баках и брикетах) из супермаркетов и продуктовых магазинов, в меньших "
+"количествах из магазинов мороженого, палаток и молочных баров, а в "
+"индивидуальном обслуживании из малых пакетов или стаканчиков на публичных "
+"мероприятиях."
 
 #. module: stock
 #: selection:report.stock.inventory,month:0
@@ -2763,14 +2769,14 @@ msgstr "Снабжение"
 #. module: stock
 #: model:stock.location,name:stock.stock_location_4
 msgid "Maxtor Suppliers"
-msgstr ""
+msgstr "Поставщики Maxtor"
 
 #. module: stock
 #: code:addons/stock/wizard/stock_change_product_qty.py:78
 #: code:addons/stock/wizard/stock_change_standard_price.py:107
 #, python-format
 msgid "Active ID is not set in Context"
-msgstr ""
+msgstr "Действующий ID не задан в контексте"
 
 #. module: stock
 #: view:stock.picking:0
@@ -2903,13 +2909,13 @@ msgstr "Полная инвентаризация"
 msgid ""
 "Error: The default UOM and the purchase UOM must be in the same category."
 msgstr ""
-"Ошибка. ед.изм. по умолчанию и закупочные ед.изм. должны иметь одинаковую "
+"Ошибка: ед.изм. по умолчанию и закупочные ед.изм. должны иметь одинаковую "
 "категорию."
 
 #. module: stock
 #: model:stock.location,name:stock.location_delivery_counter
 msgid "Delivery Counter"
-msgstr ""
+msgstr "Счётчик доставки"
 
 #. module: stock
 #: view:report.stock.inventory:0
@@ -2928,7 +2934,7 @@ msgstr "Номер партии изделий"
 #: code:addons/stock/stock.py:2709
 #, python-format
 msgid "Inventory '%s' is done."
-msgstr ""
+msgstr "Инвентаризация '%s' сделана."
 
 #. module: stock
 #: field:stock.move,product_uos_qty:0
@@ -2956,7 +2962,7 @@ msgstr "Адрес контакта :"
 #. module: stock
 #: field:stock.move,backorder_id:0
 msgid "Back Order"
-msgstr ""
+msgstr "Дозаказ"
 
 #. module: stock
 #: field:stock.incoterms,active:0
@@ -2981,7 +2987,7 @@ msgstr "Ошибка, нет партнера !"
 #: field:stock.inventory.line.split.lines,wizard_id:0
 #: field:stock.move.split.lines,wizard_id:0
 msgid "Parent Wizard"
-msgstr ""
+msgstr "Родительский мастер"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_incoterms_tree
@@ -2994,7 +3000,7 @@ msgstr "Инкотермс"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_partial_picking_line
 msgid "stock.partial.picking.line"
-msgstr ""
+msgstr "stock.partial.picking.line"
 
 #. module: stock
 #: report:lot.stock.overview:0
@@ -3055,7 +3061,7 @@ msgstr "Обработать"
 #. module: stock
 #: field:stock.production.lot.revision,name:0
 msgid "Revision Name"
-msgstr "Наименование ревизии"
+msgstr "Название ревизии"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse
@@ -3121,7 +3127,7 @@ msgstr "Дата выполнения"
 msgid ""
 "Please put a partner on the picking list if you want to generate invoice."
 msgstr ""
-"Пожалуйста установите партнера на комплектовочный лист, если вы хотите "
+"Пожалуйста установите партнера в комплектовочном листе, если вы хотите "
 "создать счет."
 
 #. module: stock
@@ -3150,7 +3156,7 @@ msgstr "Анализ ТМЦ"
 #. module: stock
 #: field:stock.invoice.onshipping,journal_id:0
 msgid "Destination Journal"
-msgstr "Журнал"
+msgstr "Журнал назначения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_tracking_lot_2_stock_report_tracklots
@@ -3182,7 +3188,7 @@ msgstr "Запасы"
 #: field:stock.report.tracklots,product_id:0
 #: field:stock.return.picking.memory,product_id:0
 msgid "Product"
-msgstr "Продукция"
+msgstr "Товар"
 
 #. module: stock
 #: view:stock.return.picking:0
@@ -3210,12 +3216,12 @@ msgstr "Пожалуйста, предоставьте правильное ко
 #. module: stock
 #: field:stock.move,product_uos:0
 msgid "Product UOS"
-msgstr "Вторая ед. изм."
+msgstr "Единица продажи"
 
 #. module: stock
 #: field:stock.location,posz:0
 msgid "Height (Z)"
-msgstr "Высота"
+msgstr "Высота (Z)"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_move_consume
@@ -3232,7 +3238,7 @@ msgstr "Недостаточно ТМЦ в партии !"
 #. module: stock
 #: field:stock.location,parent_right:0
 msgid "Right Parent"
-msgstr ""
+msgstr "Правый источник"
 
 #. module: stock
 #: field:stock.picking,address_id:0
@@ -3248,7 +3254,7 @@ msgstr "Варианты"
 #. module: stock
 #: field:stock.location,posx:0
 msgid "Corridor (X)"
-msgstr "Ряд ({)"
+msgstr "Ряд (X)"
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_suppliers
@@ -3286,7 +3292,7 @@ msgstr "Мастер"
 #. module: stock
 #: view:report.stock.move:0
 msgid "Completed Stock-Moves"
-msgstr "Вычисленные перемещения"
+msgstr "Выполненные перемещения"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_view_stock_location_product
@@ -3314,6 +3320,13 @@ msgid ""
 "preconfigured logistics rules, but you can also record manual stock "
 "operations."
 msgstr ""
+"Внутренние перемещения отображают все операции инвентаризации, которые вы "
+"должны выполнить на вашем складе. Все операции могут быть категоризированы в "
+"журналах запаса, так что каждый работник имеет свой собственный список "
+"операций для выполнения в своём собственном журнале. Большинство операций "
+"подготавливается автоматически OpenERP согласно вашим предварительно "
+"настроенным правилам логистики, но вы можете также записать ручные операции "
+"с запасом."
 
 #. module: stock
 #: view:stock.move:0
@@ -3411,7 +3424,7 @@ msgstr ""
 #: code:addons/stock/product.py:449
 #, python-format
 msgid "Future Productions"
-msgstr ""
+msgstr "Будущие производства"
 
 #. module: stock
 #: view:stock.picking:0
@@ -3421,7 +3434,7 @@ msgstr "В счет"
 #. module: stock
 #: view:stock.return.picking:0
 msgid "Return lines"
-msgstr "Позиции для возврата"
+msgstr "Позиции возврата"
 
 #. module: stock
 #: model:ir.model,name:stock.model_report_stock_lines_date
@@ -3480,6 +3493,12 @@ msgid ""
 "'Available' button to get all the lots you produced, received or delivered "
 "to customers."
 msgstr ""
+"Это список всех партий производства (серийных номеров) записанных вами. "
+"Когда вы выбираете партию, вы можете получить восходящий или нисходящий учет "
+"движения продуктов содержащихся в партии. По умолчанию, список отфильтрован "
+"по серийным номерам, которые доступны на вашем складе, но вы можете "
+"отключить кнопку 'Доступные' для получения всех партий произведённых вами, "
+"полученных или поставленных покупателям."
 
 #. module: stock
 #: field:stock.location,icon:0
@@ -3519,6 +3538,10 @@ msgid ""
 "default value for all products in this category. It can also directly be set "
 "on each product"
 msgstr ""
+"При проведении оценки инвентаризации в реальном времени, корреспондирующие "
+"пункты журнала для всех входящих перемещений запасов будут отправлены на "
+"этот счёт, если нет конкретного счёта заданного по месту назначения. Его "
+"также можно установить непосредственно для каждого продукта."
 
 #. module: stock
 #: model:stock.location,name:stock.stock_location_8
@@ -3563,7 +3586,7 @@ msgstr "Отменено"
 #. module: stock
 #: view:stock.picking:0
 msgid "Confirmed Delivery Orders"
-msgstr ""
+msgstr "Подтверждённые заказы доставки"
 
 #. module: stock
 #: view:stock.move:0
