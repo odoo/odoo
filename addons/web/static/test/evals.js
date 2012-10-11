@@ -12,15 +12,15 @@ $(document).ready(function () {
         var context = openerp.web.pyeval.context();
         strictEqual(
             py.eval("time.strftime('%Y')", context),
-            String(d.getUTCFullYear()));
+            String(d.getFullYear()));
         strictEqual(
             py.eval("time.strftime('%Y')+'-01-30'", context),
-            String(d.getUTCFullYear()) + '-01-30');
+            String(d.getFullYear()) + '-01-30');
         strictEqual(
             py.eval("time.strftime('%Y-%m-%d %H:%M:%S')", context),
             _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
-                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds()));
+                d.getFullYear(), d.getMonth() + 1, d.getDate(),
+                d.getHours(), d.getMinutes(), d.getSeconds()));
     });
 
     module("eval.contexts", {
