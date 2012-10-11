@@ -784,7 +784,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                return self.record_created({ result : new_id });
+                return self.record_created(new_id);
             }).then(function() {
                 return self.to_edit_mode();
             }).then(function() {
