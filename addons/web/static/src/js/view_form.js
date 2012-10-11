@@ -4848,15 +4848,12 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
         this._super(field_manager, node);
         this.options.clickable = this.options.clickable || (this.node.attrs || {}).clickable || false;
         this.options.visible = this.options.visible || (this.node.attrs || {}).statusbar_visible || false;
-        this.selected_value = null;
+        this.set({value: false});
     },
     start: function() {
-        // backward compatibility
-        this.loaded = new $.Deferred();
         if (this.options.clickable) {
             this.$el.on('click','li',this.on_click_stage);
         }
-        // TODO move the following into css :after
         if (this.$el.parent().is('header')) {
             this.$el.after('<div class="oe_clear"/>');
         }
@@ -4867,16 +4864,18 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
             value_ = value_[0];
         }
         this._super(value_);
-        // trick to be sure all values are loaded in the form, therefore
-        // enabling the evaluation of dynamic domains
-        self.selection = [];
-        $.async_when().then(function() {
-            self.get_selection();
-        });
-        return this.loaded;
     },
     render_value: function() {
-        this.get_selection();
+        var self = this;
+        self.get_selection().then(function() {
+            var content = QWeb.render("FieldStatus.content", {widget: self});
+            self.$el.html(content);
+            var colors = JSON.parse((self.node.attrs || {}).statusbar_colors || "{}");
+            var color = colors[self.get('value')];
+            if (color) {
+                self.$("oe_active").css("color", color);
+            }
+        });
     },
     /** Get the selection and render it
      *  selection: [[identifier, value_to_display], ...]
@@ -4885,53 +4884,37 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     get_selection: function() {
         var self = this;
+        self.selection = [];
         if (this.field.type == "many2one") {
             var domain = [];
             if(!_.isEmpty(this.field.domain) || !_.isEmpty(this.node.attrs.domain)) {
-                domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.selected_value]]);
+                domain = new instance.web.CompoundDomain(['|'], self.build_domain(), [['id', '=', self.get('value')]]);
             }
             var ds = new instance.web.DataSetSearch(this, this.field.relation, self.build_context(), domain);
-            ds.read_slice(['name'], {}).done( function (records) {
+            return ds.read_slice(['name'], {}).pipe(function (records) {
                 for(var i = 0; i < records.length; i++) {
                     self.selection.push([records[i].id, records[i].name]);
                 }
-                self.render_elements();
-                self.loaded.resolve();
             });
         } else {
-            this.loaded.resolve();
             // For field type selection filter values according to
             // statusbar_visible attribute of the field. For example:
             // statusbar_visible="draft,open".
             var selection = this.field.selection;
-            for(var i=0; i< selection.length; i++) {
+            for(var i=0; i < selection.length; i++) {
                 var key = selection[i][0];
-                if(key == this.selected_value || !this.options.visible || this.options.visible.indexOf(key) != -1) {
+                if(key == this.get('value') || !this.options.visible || this.options.visible.indexOf(key) != -1) {
                     this.selection.push(selection[i]);
                 }
             }
-            this.render_elements();
-        }
-    },
-    /** Renders the widget. This function also checks for statusbar_colors='{"pending": "blue"}'
-     *  attribute in the widget. This allows to set a given color to a given
-     *  state (given by the key of (key, label)).
-     */
-    render_elements: function () {
-        var self = this;
-        var content = QWeb.render("FieldStatus.content", {widget: this});
-        this.$el.html(content);
-        var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
-        var color = colors[this.selected_value];
-        if (color) {
-            this.$("oe_active").css("color", color);
+            return $.when();
         }
     },
     on_click_stage: function (ev) {
         var self = this;
         var $li = $(ev.currentTarget);
         var val = parseInt($li.data("id"));
-        if (val != self.selected_value) {
+        if (val != self.get('value')) {
             this.view.recursive_save().then(function() {
                 var change = {};
                 change[self.name] = val;
