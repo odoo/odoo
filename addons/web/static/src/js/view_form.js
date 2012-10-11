@@ -615,7 +615,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 return self.on_processed_onchange(response, processed);
             } catch(e) {
                 console.error(e);
-                instance.webclient.crashmanager.on_javascript_exception(e);
+                instance.webclient.crashmanager.show_message(e);
                 return $.Deferred().reject();
             }
         });
@@ -650,7 +650,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return $.Deferred().resolve();
         } catch(e) {
             console.error(e);
-            instance.webclient.crashmanager.on_javascript_exception(e);
+            instance.webclient.crashmanager.show_message(e);
             return $.Deferred().reject();
         }
     },
@@ -784,7 +784,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         var def = $.Deferred();
         $.when(this.has_been_loaded).then(function() {
             self.dataset.call('copy', [self.datarecord.id, {}, self.dataset.context]).then(function(new_id) {
-                return self.on_created({ result : new_id });
+                return self.record_created({ result : new_id });
             }).then(function() {
                 return self.to_edit_mode();
             }).then(function() {
@@ -861,7 +861,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 if (!self.datarecord.id) {
                     // Creation save
                     save_deferral = self.dataset.create(values).pipe(function(r) {
-                        return self.on_created(r, prepend_on_create);
+                        return self.record_created(r, prepend_on_create);
                     }, null);
                 } else if (_.isEmpty(values) && ! self.force_dirty) {
                     // Not dirty, noop save
@@ -870,7 +870,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     self.force_dirty = false;
                     // Write save
                     save_deferral = self.dataset.write(self.datarecord.id, values, {}).pipe(function(r) {
-                        return self.on_saved(r);
+                        return self.record_saved(r);
                     }, null);
                 }
                 return save_deferral;
@@ -897,12 +897,15 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      *
      * @param {Object} r result of the write function.
      */
-    on_saved: function(r) {
+    record_saved: function(r) {
+        var self = this;
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
+            this.trigger('record_saved', r);
             return $.Deferred().reject();
         } else {
             return $.when(this.reload()).pipe(function () {
+                self.trigger('record_saved', r);
                 return r;
             });
         }
@@ -920,9 +923,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * @param {Boolean} [prepend_on_create=false] adds the newly created record
      * at the beginning of the dataset instead of the end
      */
-    on_created: function(r, prepend_on_create) {
+    record_created: function(r, prepend_on_create) {
+        var self = this;
         if (!r) {
             // should not happen in the server, but may happen for internal purpose
+            this.trigger('record_created', r);
             return $.Deferred().reject();
         } else {
             this.datarecord.id = r;
@@ -936,9 +941,10 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
             this.do_update_pager();
             if (this.sidebar) {
                 this.sidebar.do_attachement_update(this.dataset, this.datarecord.id);
-            }
+            }            
             //openerp.log("The record has been created with id #" + this.datarecord.id);
             return $.when(this.reload()).pipe(function () {
+                self.trigger('record_created', r);
                 return _.extend(r, {created: true});
             });
         }
@@ -1630,13 +1636,14 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
         return this;
     },
     start: function() {
+        var self = this;
         this._super();
         this.form = new instance.web.FormView(this, this.dataset, this.view_id, {
             pager: false
         });
         this.form.appendTo(this.$el);
-        this.form.on_created.add_last(this.on_form_dialog_saved);
-        this.form.on_saved.add_last(this.on_form_dialog_saved);
+        this.form.on('record_created', self, this.on_form_dialog_saved);
+        this.form.on('record_saved', this, this.on_form_dialog_saved);
         return this;
     },
     select_id: function(id) {
@@ -3309,11 +3316,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var views = [];
         _.each(modes, function(mode) {
             if (! _.include(["list", "tree", "graph", "kanban"], mode)) {
-                try {
-                    throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
-                } catch(e) {
-                    instance.webclient.crashmanager.on_javascript_exception(e)
-                }
+                throw new Error(_.str.sprintf("View type '%s' is not supported in One2Many.", mode));
             }
             var view = {
                 view_id: false,
@@ -3820,7 +3823,7 @@ instance.web.form.One2ManyList = instance.web.ListView.List.extend({
             colspan: columns,
             'class': 'oe_form_field_one2many_list_row_add'
         }).append(
-            $('<a>', {href: '#'}).text(_t("Add a row"))
+            $('<a>', {href: '#'}).text(_t("Add an item"))
                 .mousedown(function () {
                     // FIXME: needs to be an official API somehow
                     if (self.view.editor.is_editing()) {
@@ -4023,7 +4026,7 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
 
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
-        this.dataset.on_unlink.add_last(function(ids) {
+        this.dataset.on('unlink', self, function(ids) {
             self.dataset_changed();
         });
 
@@ -4156,7 +4159,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
 
         this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
         this.dataset.m2m = this;
-        this.dataset.on_unlink.add_last(function(ids) {
+        this.dataset.on('unlink', self, function(ids) {
             self.dataset_changed();
         });
 
@@ -4817,9 +4820,9 @@ instance.web.form.FieldBinaryFile = instance.web.form.FieldBinary.extend({
         this._super();
         if (this.get("effective_readonly")) {
             var self = this;
-            this.$el.find('a').click(function() {
+            this.$el.find('a').click(function(ev) {
                 if (self.get('value')) {
-                    self.on_save_as();
+                    self.on_save_as(ev);
                 }
                 return false;
             });
