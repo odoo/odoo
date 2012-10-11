@@ -708,7 +708,7 @@ class mail_thread(osv.AbstractModel):
         attachment_ids=[]
         if attachments:
             ir_attachment = self.pool.get('ir.attachment')
-            attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', ""), ('res_id', '=', ""), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
+            attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', False), ('res_id', '=', False), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
             if attachment_ids:
                 self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
                 self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
