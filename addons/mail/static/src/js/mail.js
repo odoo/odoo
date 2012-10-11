@@ -1110,7 +1110,7 @@ openerp.mail = function(session) {
             var self = this;
             this.searchview = new session.web.SearchView(this, this.ds_msg, false, defaults || {}, hidden || false);
             return this.searchview.appendTo(this.$('.oe_view_manager_view_search')).then(function () {
-                self.searchview.on_search.add(self.do_searchview_search);
+                self.searchview.on('data_search', self, self.do_searchview_search);
             });
         },
 
