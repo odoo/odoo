@@ -42,7 +42,7 @@ class Controller(openerp.addons.web.http.Controller):
         return user_info
 
     @openerp.addons.web.http.httprequest
-    def signup(self, req, dbname, token, name, login, password):
+    def signup(self, req, dbname, token, name, login, password, state=''):
         """ sign up a user (new or existing), and log it in """
         url = '/'
         registry = RegistryManager.get(dbname)
@@ -52,7 +52,7 @@ class Controller(openerp.addons.web.http.Controller):
                 values = {'name': name, 'login': login, 'password': password}
                 credentials = res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
                 cr.commit()
-                return login_and_redirect(req, *credentials)
+                return login_and_redirect(req, *credentials, redirect_url='/#%s'%state)
             except Exception as e:
                 # signup error
                 _logger.exception('error when signup')
