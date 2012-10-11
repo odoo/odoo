@@ -172,7 +172,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     state['action'] = this.inner_action.id;
                 } else if (this.inner_action.type == 'ir.actions.client') {
                     state['action'] = this.inner_action.tag;
-                    //state = _.extend(this.inner_action.params || {}, state);
+                    state = _.extend(this.inner_action.params || {}, state);
                 }
             }
             if(!this.dialog) {
