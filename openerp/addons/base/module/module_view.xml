@@ -39,7 +39,7 @@
             <field name="arch" type="xml">
                 <search string="Search modules">
                     <field name="name" filter_domain="['|', '|', ('summary', 'ilike', self), ('shortdesc', 'ilike', self), ('name',
-                        'ilike', self)]"/>
+                        'ilike', self)]" string="Module"/>
                     <filter name="app" icon="terp-check" string="Apps" domain="[('application', '=', 1)]"/>
                     <filter name="extra" icon="terp-check" string="Extra" domain="[('application', '=', 0)]"/>
                     <separator/>

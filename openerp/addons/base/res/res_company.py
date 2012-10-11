@@ -291,6 +291,7 @@ class res_company(osv.osv):
         <frame id="first" x1="1.3cm" y1="3.0cm" height="%s" width="19.0cm"/>
          <stylesheet>
             <paraStyle name="main_footer"  fontName="DejaVu Sans" fontSize="8.0" alignment="CENTER"/>
+            <paraStyle name="main_header"  fontName="DejaVu Sans" fontSize="8.0" leading="10" alignment="LEFT" spaceBefore="0.0" spaceAfter="0.0"/>            
          </stylesheet>
         <pageGraphics>
             <!-- You Logo - Change X,Y,Width and Height -->
@@ -303,8 +304,9 @@ class res_company(osv.osv):
             <lines>1.3cm %s 20cm %s</lines>
             <drawRightString x="20cm" y="%s">[[ company.rml_header1 ]]</drawRightString>
             <drawString x="1.3cm" y="%s">[[ company.partner_id.name ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.street or  '' ]]</drawString>
-            <drawString x="1.3cm" y="%s">[[ company.partner_id.city or '' ]] - [[ company.partner_id.country_id and company.partner_id.country_id.name  or '']]</drawString>
+            <place x="1.3cm" y="%s" height="1.55cm" width="15.0cm">
+                <para style="main_header">[[ display_address(company.partner_id) or  '' ]]</para>
+            </place>
             <drawString x="1.3cm" y="%s">Phone:</drawString>
             <drawRightString x="7cm" y="%s">[[ company.partner_id.phone or '' ]]</drawRightString>
             <drawString x="1.3cm" y="%s">Mail:</drawString>
@@ -328,8 +330,8 @@ class res_company(osv.osv):
     </pageTemplate>
 </header>"""
 
-    _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.2cm', '26.8cm', '26.4cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
-    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.5cm', '25.1cm', '24.7cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
+    _header_a4 = _header_main % ('23.0cm', '27.6cm', '27.7cm', '27.7cm', '27.8cm', '27.4cm', '25.8cm', '26.0cm', '26.0cm', '25.6cm', '25.6cm', '25.5cm', '25.5cm')
+    _header_letter = _header_main % ('21.3cm', '25.9cm', '26.0cm', '26.0cm', '26.1cm', '25.5cm', '25.1cm', '24.3cm', '24.3cm', '23.9cm', '23.9cm', '23.8cm', '23.8cm')
 
     def onchange_paper_format(self, cr, uid, ids, paper_format, context=None):
         if paper_format == 'us_letter':
