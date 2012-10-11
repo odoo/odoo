@@ -2873,26 +2873,28 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
         this.display_value = {};
         this.last_search = [];
         this.floating = false;
-        this.inhibit_on_change = false;
         this.current_display = null;
+        this.is_started = false;
     },
     start: function() {
         this._super();
         instance.web.form.ReinitializeFieldMixin.start.call(this);
-        this.on("change:value", this, function() {
-            this.floating = false;
-            this.render_value();
-        });
+        this.is_started = true;
         instance.web.bus.on('click', this, function() {
             if (!this.get("effective_readonly") && this.$input && this.$input.autocomplete('widget').is(':visible')) {
                 this.$input.autocomplete("close");
             }
         });
     },
+    reinit_value: function(val) {
+        this.internal_set_value(val);
+        this.floating = false;
+        if (this.is_started)
+            this.render_value();
+    },
     initialize_content: function() {
         if (!this.get("effective_readonly"))
             this.render_editable();
-        this.render_value();
     },
     init_error_displayer: function() {
         // nothing
@@ -2943,7 +2945,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             if (self.current_display !== self.$input.val()) {
                 self.current_display = self.$input.val();
                 if (self.$input.val() === "") {
-                    self.set({value: false});
+                    self.internal_set_value(false);
                     self.floating = false;
                 } else {
                     self.floating = true;
@@ -2975,15 +2977,14 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                     if (self.last_search[0][0] != self.get("value")) {
                         self.display_value = {};
                         self.display_value["" + self.last_search[0][0]] = self.last_search[0][1];
-                        self.set({value: self.last_search[0][0]});
+                        self.reinit_value(self.last_search[0][0]);
                     } else {
                         used = true;
                         self.render_value();
                     }
                 } else {
                     used = true;
-                    self.set({value: false});
-                    self.render_value();
+                    self.reinit_value(false);
                 }
                 self.floating = false;
             }
@@ -3038,7 +3039,7 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
                 if (item.id) {
                     self.display_value = {};
                     self.display_value["" + item.id] = item.name;
-                    self.set({value: item.id});
+                    self.reinit_value(item.id);
                 } else if (item.action) {
                     item.action();
                     // Cancel widget blurring, to avoid form blur event
@@ -3129,16 +3130,14 @@ instance.web.form.FieldMany2One = instance.web.form.AbstractField.extend(instanc
             value_ = value_[0];
         }
         value_ = value_ || false;
-        this.inhibit_on_change = true;
-        this._super(value_);
-        this.inhibit_on_change = false;
+        this.reinit_value(value_);
     },
     get_displayed: function() {
         return this.display_value["" + this.get("value")];
     },
     add_id: function(id) {
         this.display_value = {};
-        this.set({value: id});
+        this.reinit_value(id);
     },
     is_false: function() {
         return ! this.get("value");
