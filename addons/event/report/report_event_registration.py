@@ -56,10 +56,10 @@ class report_event_registration(osv.osv):
         tools.drop_view_if_exists(cr, 'report_event_registration')
 
         # TOFIX this request won't select events that have no registration
-        cr.execute(""" CREATE OR REPLACE view report_event_registration AS (
+        cr.execute(""" CREATE VIEW report_event_registration AS (
             SELECT
-                event_id,
-                r.id,
+                e.id::char || '/' || coalesce(r.id::char,'') AS id,
+                e.id AS event_id,
                 e.user_id AS user_id,
                 r.user_id AS user_id_registration,
                 r.name AS name_registration,
@@ -78,8 +78,6 @@ class report_event_registration(osv.osv):
             FROM
                 event_event e
                 LEFT JOIN event_registration r ON (e.id=r.event_id)
-
-            WHERE r.id IS NOT NULL
 
             GROUP BY
                 event_id,
