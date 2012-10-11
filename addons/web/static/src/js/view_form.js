@@ -2877,7 +2877,7 @@ instance.web.form.CompletionFieldMixin = {
             self.build_domain(),
             new instance.web.CompoundContext(self.build_context(), context || {})
         );
-        pop.on_select_elements.add(function(element_ids) {
+        pop.on("select_elements",self,function(element_ids) {
             self.add_id(element_ids[0]);
             self.focus();
         });
@@ -3598,7 +3598,7 @@ instance.web.form.One2ManyViewManager = instance.web.ViewManager.extend({
             form_view_options: {'not_interactible_on_create':true},
             readonly: self.o2m.get("effective_readonly")
         });
-        pop.on_select_elements.add_last(function() {
+        pop.on("select_elements", self, function() {
             self.o2m.reload_current_view();
         });
     },
@@ -3684,7 +3684,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
                 self.o2m.build_domain(),
                 self.o2m.build_context()
             );
-            pop.on_select_elements.add_last(function() {
+            pop.on("select_elements", self, function() {
                 self.o2m.reload_current_view();
             });
         }
@@ -4121,7 +4121,7 @@ instance.web.form.Many2ManyListView = instance.web.ListView.extend(/** @lends in
             this.m2m_field.build_context()
         );
         var self = this;
-        pop.on_select_elements.add(function(element_ids) {
+        pop.on("select_elements", self, function(element_ids) {
             _.each(element_ids, function(one_id) {
                 if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
                     self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
@@ -4236,7 +4236,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                 new instance.web.CompoundDomain(this.build_domain(), ["!", ["id", "in", this.dataset.ids]]),
                 this.build_context()
             );
-            pop.on_select_elements.add(function(element_ids) {
+            pop.on("select_elements", self, function(element_ids) {
                 _.each(element_ids, function(one_id) {
                     if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
                         self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
@@ -4457,6 +4457,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
         });
     },
     on_select_elements: function(element_ids) {
+        this.trigger("select_elements",element_ids);
     },
     check_exit: function(no_destroy) {
         if (this.created_elements.length > 0) {
