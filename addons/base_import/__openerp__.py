@@ -30,13 +30,13 @@ Re-implement openerp's file import system:
     'data': [
         'security/ir.model.access.csv',
     ],
-    
     'css': [
         'static/lib/select2/select2.css',
         'static/src/css/import.css',
     ],
     'js': [
         'static/lib/select2/select2.js',
+        'static/lib/javascript-state-machine/state-machine.js',
         'static/src/js/import.js',
     ],
     'qweb': ['static/src/xml/import.xml'],

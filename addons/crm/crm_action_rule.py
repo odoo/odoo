@@ -93,6 +93,9 @@ class base_action_rule(osv.osv):
                     write['email_cc'] = obj.email_cc + ',' + obj.act_email_cc
             else:
                 write['email_cc'] = obj.act_email_cc
+        
+        if hasattr(obj, 'categ_ids') and action.act_categ_id:
+            write['categ_ids'] = [4, action.act_categ_id.id]
 
         # Put state change by rule in communication history
         if hasattr(obj, 'state') and hasattr(obj, 'message_post') and action.act_state:
