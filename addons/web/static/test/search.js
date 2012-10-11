@@ -652,7 +652,7 @@ $(document).ready(function () {
             }
         });
         var ds, cs, gs;
-        view.on_search.add(function (d, c, g) {
+        view.on('data_search', this, function (d, c, g) {
             ds = d, cs = c, gs = g;
         });
         view.appendTo($fix)
@@ -690,7 +690,7 @@ $(document).ready(function () {
             }
         }, {dummy: 42});
         var ds, cs, gs;
-        view.on_search.add(function (d, c, g) {
+        view.on('data_search', this, function (d, c, g) {
             ds = d, cs = c, gs = g;
         });
         view.appendTo($fix)
@@ -718,7 +718,7 @@ $(document).ready(function () {
             }
         }, {dummy: 42});
         var ds;
-        view.on_search.add(function (d) { ds = d; });
+        view.on('data_search', this, function (d) { ds = d; });
         view.appendTo($fix)
             .always(start)
             .fail(function (error) { ok(false, error.message); })

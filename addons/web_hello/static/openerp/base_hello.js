@@ -7,7 +7,7 @@ openerp.web_hello = function(instance) {
 instance.web.SearchView = instance.web.SearchView.extend({
     init:function() {
         this._super.apply(this,arguments);
-        this.on_search.add(function(){console.log('hello');});
+        this.on('data_search', this, function(){console.log('hello');});
     }
 });
 

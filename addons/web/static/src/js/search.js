@@ -786,22 +786,6 @@ instance.web.SearchView = instance.web.Widget.extend(/** @lends instance.web.Sea
         return this.trigger('data_search', search.domains, search.contexts, search.groupbys);
     },
     /**
-     * Triggered after the SearchView has collected all relevant domains and
-     * contexts.
-     *
-     * It is provided with an Array of domains and an Array of contexts, which
-     * may or may not be evaluated (each item can be either a valid domain or
-     * context, or a string to evaluate in order in the sequence)
-     *
-     * It is also passed an array of contexts used for group_by (they are in
-     * the correct order for group_by evaluation, which contexts may not be)
-     *
-     * @event
-     * @param {Array} domains an array of literal domains or domain references
-     * @param {Array} contexts an array of literal contexts or context refs
-     * @param {Array} groupbys ordered contexts which may or may not have group_by keys
-     */
-    /**
      * Triggered after a validation error in the SearchView fields.
      *
      * Error objects have three keys:
