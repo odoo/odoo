@@ -159,7 +159,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.rendering_engine.set_fields_view(data);
         var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
         this.rendering_engine.render_to($dest);
-        this.rendering_engine.init_fields();
 
         this.$el.on('mousedown.formBlur', function () {
             self.__clicked_inside = true;
@@ -335,6 +334,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                 });
             }
             self.on_form_changed();
+            this.rendering_engine.init_fields();
             self.is_initialized.resolve();
             self.do_update_pager(record.id == null);
             if (self.sidebar) {
@@ -1204,6 +1204,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
         _.each(this.to_replace, function(el) {
             defs.push(el[0].replace(el[1]));
         });
+        this.to_replace = [];
         return $.when.apply($, defs);
     },
     render_element: function(template /* dictionaries */) {
@@ -2066,6 +2067,14 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
         this.field_manager.on("change:display_invalid_fields", this, this._check_css_flags);
         this._check_css_flags();
     },
+    start: function() {
+        var tmp = this._super();
+        this.on("change:value", this, function() {
+            if (! this.no_rerender)
+                this.render();
+        });
+        this.render();
+    },
     /**
      * Private. Do not use.
      */
@@ -2078,6 +2087,20 @@ instance.web.form.AbstractField = instance.web.form.FormWidget.extend(instance.w
     get_value: function() {
         return this.get('value');
     },
+    /**
+        Utility method that all implementations should use to change the
+        value without triggering a re-rendering.
+    */
+    internal_set_value: function(value_) {
+        var tmp = this.no_render;
+        this.no_rerender = true;
+        this.set({'value': value_});
+        this.no_rerender = tmp;
+    },
+    /**
+        This method is called each time the value is modified.
+    */
+    render_value: function() {},
     is_valid: function() {
         return this.is_syntax_valid() && !(this.get('required') && this.is_false());
     },
@@ -2161,10 +2184,6 @@ instance.web.form.ReinitializeFieldMixin =  _.extend({}, instance.web.form.Reini
         instance.web.form.ReinitializeWidgetMixin.reinitialize.call(this);
         this.render_value();
     },
-    /**
-     * Called to render the value. Should also be explicitly called at the end of a set_value().
-     */
-    render_value: function() {},
 });
 
 instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.web.form.ReinitializeFieldMixin, {
@@ -2178,13 +2197,9 @@ instance.web.form.FieldChar = instance.web.form.AbstractField.extend(instance.we
         var self = this;
         var $input = this.$el.find('input');
         $input.change(function() {
-            self.set({'value': self.parse_value($input.val())});
+            self.internal_set_value(self.parse_value($input.val()));
         });
         this.setupFocus($input);
-    },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
     },
     render_value: function() {
         var show_value = this.format_value(this.get('value'), '');
@@ -2289,7 +2304,7 @@ instance.web.form.FieldFloat = instance.web.form.FieldChar.extend({
     widget_class: 'oe_form_field_float',
     init: function (field_manager, node) {
         this._super(field_manager, node);
-        this.set({'value': 0});
+        this.internal_set_value(0);
         if (this.node.attrs.digits) {
             this.digits = this.node.attrs.digits;
         } else {
@@ -2415,15 +2430,11 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
         if (!this.get("effective_readonly")) {
             this.datewidget = this.build_widget();
             this.datewidget.on_change.add_last(_.bind(function() {
-                this.set({'value': this.datewidget.get_value()});
+                this.internal_set_value(this.datewidget.get_value());
             }, this));
             this.datewidget.appendTo(this.$el);
             this.setupFocus(this.datewidget.$input);
         }
-    },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
     },
     render_value: function() {
         if (!this.get("effective_readonly")) {
@@ -2466,7 +2477,7 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         this.default_height = this.$textarea.css('height');
         if (!this.get("effective_readonly")) {
             this.$textarea.change(_.bind(function() {
-                self.set({'value': instance.web.parse_value(self.$textarea.val(), self)});
+                self.internal_set_value(instance.web.parse_value(self.$textarea.val(), self));
             }, this));
         } else {
             this.$textarea.attr('disabled', 'disabled');
@@ -2478,12 +2489,8 @@ instance.web.form.FieldText = instance.web.form.AbstractField.extend(instance.we
         });
         this.setupFocus(this.$textarea);
     },
-    set_value: function(value_) {
-        this._super(value_);
-        this.render_value();
-        $(window).resize();
-    },
     render_value: function() {
+        $(window).resize();
         var show_value = instance.web.format_value(this.get('value'), this, '');
         if (show_value === '') {
             this.$textarea.css('height', parseInt(this.default_height)+"px");
@@ -2543,14 +2550,10 @@ instance.web.form.FieldTextHtml = instance.web.form.AbstractField.extend(instanc
             this.$cleditor.change(function() {
                 if (! self._updating_editor) {
                     self.$cleditor.updateTextArea();
-                    self.set({'value': self.$textarea.val()});
+                    self.internal_set_value(self.$textarea.val());
                 }
             });
         }
-    },
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        this.render_value();
     },
     render_value: function() {
         if (! this.get("effective_readonly")) {
@@ -2572,7 +2575,7 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.$checkbox = $("input", this.$el);
         this.setupFocus(this.$checkbox);
         this.$el.click(_.bind(function() {
-            this.set({'value': this.$checkbox.is(':checked')});
+            this.internal_set_value(this.$checkbox.is(':checked'));
         }, this));
         var check_readonly = function() {
             self.$checkbox.prop('disabled', self.get("effective_readonly"));
@@ -2580,10 +2583,9 @@ instance.web.form.FieldBoolean = instance.web.form.AbstractField.extend({
         this.on("change:effective_readonly", this, check_readonly);
         check_readonly.call(this);
     },
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        this.$checkbox[0].checked = value_;
-    },
+    render_value: function() {
+        this.$checkbox[0].checked = this.get('value');
+    }
     focus: function() {
         this.$checkbox.focus();
     }
@@ -2598,9 +2600,8 @@ instance.web.form.FieldProgressBar = instance.web.form.AbstractField.extend({
             disabled: this.get("effective_readonly")
         });
     },
-    set_value: function(value_) {
-        this._super.apply(this, arguments);
-        var show_value = Number(value_);
+    render_value: function() {
+        var show_value = Number(this.get('value'));
         if (isNaN(show_value)) {
             show_value = 0;
         }
@@ -2638,7 +2639,7 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         var ischanging = false;
         var $select = this.$el.find('select')
             .change(_.bind(function() {
-                this.set({'value': this.values[this.$el.find('select')[0].selectedIndex][0]});
+                this.internal_set_value(this.values[this.$el.find('select')[0].selectedIndex][0]);
             }, this))
             .change(function () { ischanging = true; })
             .click(function () { ischanging = false; })
@@ -2653,7 +2654,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
         value_ = value_ === null ? false : value_;
         value_ = value_ instanceof Array ? value_[0] : value_;
         this._super(value_);
-        this.render_value();
     },
     render_value: function() {
         if (!this.get("effective_readonly")) {
