@@ -362,11 +362,10 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
-        message = _('From stock: products assigned.')
+        message = _('Products reserved from stock.')
         self.write(cr, uid, ids, {'state': 'running',
                 'message': message}, context=context)
         self.message_post(cr, uid, ids, body=message, context=context)
-        self.running_send_note(cr, uid, ids, context=context)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -390,8 +389,6 @@ class procurement_order(osv.osv):
                 order_point_id = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [('product_id', '=', procurement.product_id.id)], context=context)
                 if not order_point_id and not ok:
                     message = _("Not enough stock and no minimum orderpoint rule defined.")
-                elif not order_point_id:
-                    message = _("No minimum orderpoint rule defined.")
                 elif not ok:
                     message = _("Not enough stock.")
 
@@ -407,7 +404,6 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context=None):
@@ -469,7 +465,6 @@ class procurement_order(osv.osv):
         @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
-        self.ready_send_note(cr, uid, ids, context=None)
         return res
 
     def action_done(self, cr, uid, ids):
@@ -502,12 +497,6 @@ class procurement_order(osv.osv):
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
-
-    def running_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement set to <b>running</b>."), context=context)
-
-    def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
