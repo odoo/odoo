@@ -106,13 +106,15 @@ class product_uom(osv.osv):
                 data['factor'] = self._compute_factor_inv(data['factor_inv'])
             del(data['factor_inv'])
         return super(product_uom, self).create(cr, uid, data, context)
-
-    def _product_uom_name(self, cr, uid, ids, name, arg, context=None):
+        
+    def _reference_uom(self, cr, uid, ids, field, arg, context=None):
         res = {}
-        if context is None:
-            context = {}
-        for p in self.browse(cr, uid, ids, context=context):
-            res[p.id] = p.name
+        for uom in self.browse(cr, uid, ids, context):
+            uom_ids = []
+            if uom.category_id and uom.category_id.id:
+                uom_ids = self.search(cr, uid, [('category_id', '=', uom.category_id.id), ('uom_type', '=', 'reference')], context=context)
+            if uom_ids:
+                res[uom.id] = uom_ids[0]
         return res
 
     _order = "name"
@@ -135,8 +137,7 @@ class product_uom(osv.osv):
         'uom_type': fields.selection([('bigger','Bigger than the reference Unit of Measure'),
                                       ('reference','Reference Unit of Measure for this category'),
                                       ('smaller','Smaller than the reference Unit of Measure')],'Type', required=1),
-        'reference_uom_id': fields.many2one('product.uom', 'Reference UoM', readonly=True, help='Reference unit'),
-        'name_ref': fields.function(_product_uom_name, type='char', string='Name'),
+        'reference_uom_id': fields.function(_reference_uom, type='many2one', relation="product.uom"),
     }
 
     _defaults = {
@@ -148,7 +149,7 @@ class product_uom(osv.osv):
     _sql_constraints = [
         ('factor_gt_zero', 'CHECK (factor!=0)', 'The conversion ratio for a unit of measure cannot be 0!')
     ]
-    
+
     def onchange_category_id(self, cr, uid, ids, category_id):
         reference_uom = False
         if category_id:
