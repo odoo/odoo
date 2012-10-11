@@ -311,7 +311,7 @@
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id" options='{"no_open": true}'/>
+                        <field name="user_id" options='{"no_open": True}'/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -401,7 +401,7 @@
                     <group>
                         <group>
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
-                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": true}'/>
+                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": True}'/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>

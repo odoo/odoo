@@ -138,6 +138,8 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _set_followers(self, cr, uid, id, name, value, arg, context=None):
+        if not value:
+            return
         partner_obj = self.pool.get('res.partner')
         fol_obj = self.pool.get('mail.followers')
 
