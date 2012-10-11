@@ -189,7 +189,7 @@ class res_partner(osv.osv, format_address):
         'parent_id': fields.many2one('res.partner', 'Company'),
         'child_ids': fields.one2many('res.partner', 'parent_id', 'Contacts'),
         'ref': fields.char('Reference', size=64, select=1),
-        'lang': fields.selection(_lang_get, 'Language',
+        'lang': fields.selection(_lang_get, 'Language', required=True,
             help="If the selected language is loaded in the system, all documents related to this contact will be printed in this language. If not, it will be English."),
         'tz': fields.selection(_tz_get,  'Timezone', size=64,
             help="The partner's timezone, used to output proper date and time values inside printed reports. "
