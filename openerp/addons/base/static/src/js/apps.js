@@ -31,8 +31,8 @@ openerp.base = function(instance) {
                 var host = _.str.sprintf('%s//%s', link.protocol, link.host);
                 var dbname = link.pathname.substr(1);
 
-                var login = (sessionStorage ? sessionStorage.getItem('loempia.login') : null) || 'anonymous';
-                var passwd = (sessionStorage ? sessionStorage.getItem('loempia.passwd') : null) || 'anonymous';
+                var login = (sessionStorage ? sessionStorage.getItem('apps.login') : null) || 'anonymous';
+                var passwd = (sessionStorage ? sessionStorage.getItem('apps.access_token') : null) || 'anonymous';
 
                 if (_.isNull(instance.base.apps.remote_instance)) {
                     instance.base.apps.remote_instance = new openerp.init();
@@ -56,6 +56,14 @@ openerp.base = function(instance) {
 
         init: function(parent, options) {
             this._super(parent);
+            
+            if (options.apps_user) {
+                sessionStorage.setItem('apps.login', options.apps_user);
+            }
+            if (options.apps_access_token) {
+                sessionStorage.setItem('apps.access_token', options.apps_access_token);
+            }
+
             this.params = options;      // NOTE read by embedded client action
         },
 
