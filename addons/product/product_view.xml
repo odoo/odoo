@@ -468,7 +468,7 @@
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
                             <label string="Computation" for="factor" attrs="{'invisible':[('uom_type','=','reference')]}" style="margin: 9px 0 9px 0;"/>
                             <group col="5" attrs="{'invisible':[('uom_type','=','reference')]}">
-                            <div class="oe_moveleft">
+                            <div style="margin-left: -12px;">
                                 <field name="factor_inv" class="oe_inline" attrs="{'invisible':[('uom_type','!=','bigger')]}" String="Computation" nolabel="1"/>
                                 <label string="1" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
                                 <field class="oe_inline" name="reference_uom_id" attrs="{'invisible':[('uom_type','=','reference')]}" nolabel="1"/>
