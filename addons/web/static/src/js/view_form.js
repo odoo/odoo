@@ -830,6 +830,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      */
     do_save: function(prepend_on_create) {
         var self = this;
+        this.trigger("form_save");
         return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
             var form_invalid = false,

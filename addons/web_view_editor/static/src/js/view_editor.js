@@ -1017,7 +1017,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             controller.on("on_button_cancel", self, function(){
                 action_manager.destroy();
             });
-            controller.do_save.add_last(function(){
+            controller.on("form_save", self, function(){
                 action_manager.destroy();
                 var value =controller.fields.name.get('value');
                 self.add_node_dialog.$el.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));
