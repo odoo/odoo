@@ -2476,7 +2476,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
             this.datewidget = this.build_widget();
             this.datewidget.on('datetime_on_change', this,_.bind(function() {
                 this.set({'value': this.datewidget.get_value()});
-            }, this))
+            }, this));
             this.datewidget.appendTo(this.$el);
             this.setupFocus(this.datewidget.$input);
         }
