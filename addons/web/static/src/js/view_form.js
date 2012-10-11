@@ -118,7 +118,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.__clicked_inside = false;
         this.__blur_timeout = null;
         this.rendering_engine = new instance.web.form.FormRenderingEngine(this);
-        this.qweb = null; // A QWeb instance will be created if the view is a QWeb template
         self.set({actual_mode: self.options.initial_mode});
         this.has_been_loaded.then(function() {
             self.on("change:actual_mode", self, self.check_actual_mode);
@@ -157,11 +156,12 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.rendering_engine.set_fields_registry(this.fields_registry);
         this.rendering_engine.set_tags_registry(this.tags_registry);
         this.rendering_engine.set_widgets_registry(this.widgets_registry);
-        if (!this.extract_qweb_template(data)) {
-            this.rendering_engine.set_fields_view(data);
-            var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
-            this.rendering_engine.render_to($dest);
-        }
+        this.rendering_engine.set_fields_view(data);
+        var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
+        var rendering_result = this.rendering_engine.render_to($dest);
+        _.each(rendering_result.to_replace, function(el) {
+            el[0].replace(el[1]);
+        });
 
         this.$el.on('mousedown.formBlur', function () {
             self.__clicked_inside = true;
@@ -214,57 +214,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
 
         return $.when();
     },
-    extract_qweb_template: function(fvg) {
-        for (var i=0, ii=fvg.arch.children.length; i < ii; i++) {
-            var child = fvg.arch.children[i];
-            if (child.tag === "templates") {
-                this.qweb = new QWeb2.Engine();
-                this.qweb.add_template(instance.web.json_node_to_xml(child));
-                if (!this.qweb.has_template('form')) {
-                    throw new Error("No QWeb template found for form view");
-                }
-                return true;
-            }
-        }
-        this.qweb = null;
-        return false;
-    },
-    get_fvg_from_qweb: function(record) {
-        var view = this.qweb.render('form', this.get_qweb_context(record));
-        var fvg = _.clone(this.fields_view);
-        fvg.arch = instance.web.xml_to_json(instance.web.str_to_xml(view).firstChild);
-        return fvg;
-    },
-    get_qweb_context: function(record) {
-        var self = this,
-            new_record = {};
-        _.each(record, function(value_, name) {
-            var r = _.clone(self.fields_view.fields[name] || {});
-            if ((r.type === 'date' || r.type === 'datetime') && value_) {
-                r.raw_value = instance.web.auto_str_to_date(value_);
-            } else {
-                r.raw_value = value_;
-            }
-            r.value = instance.web.format_value(value_, r);
-            new_record[name] = r;
-        });
-        return {
-            record : new_record,
-            new_record : !record.id
-        };
-    },
-    kill_current_form: function() {
-        _.each(this.getChildren(), function(el) {
-            el.destroy();
-        });
-        this.fields = {};
-        this.fields_order = [];
-        this.default_focus_field = null;
-        this.default_focus_button = null;
-        this.translatable_fields = [];
-        this.$el.find('.oe_form_container').empty();
-    },
-
     widgetFocused: function() {
         // Clear click flag if used to focus a widget
         this.__clicked_inside = false;
@@ -367,13 +316,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.datarecord = record;
         this._actualize_mode();
         this.set({ 'title' : record.id ? record.display_name : "New" });
-
-        if (this.qweb) {
-            this.kill_current_form();
-            this.rendering_engine.set_fields_view(this.get_fvg_from_qweb(record));
-            var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
-            this.rendering_engine.render_to($dest);
-        }
 
         _(this.fields).each(function (field, f) {
             field._dirty_flag = false;
@@ -1226,7 +1168,12 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         this.$form.appendTo(this.$target);
 
-        var ws = _.map(this.fields_to_init, function($elem) {
+        var res = {
+            target: $target,
+            to_replace: [],
+        };
+
+        _.each(this.fields_to_init, function($elem) {
             var name = $elem.attr("name");
             if (!self.fvg.fields[name]) {
                 throw new Error("Field '" + name + "' specified in view could not be found.");
@@ -1242,24 +1189,21 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             }
             self.alter_field(w);
             self.view.register_field(w, $elem.attr("name"));
-            return [w, $elem];
-        });
-        _.each(ws, function(w) {
-            w[0].replace(w[1]);
+            res.to_replace.push([w, $elem]);
         });
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
             var obj = self.tags_registry.get_object(tag_name);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
-            w.replace($elem);
+            res.to_replace.push([w, $elem]);
         });
         _.each(this.widgets_to_init, function($elem) {
             var widget_type = $elem.attr("type");
             var obj = self.widgets_registry.get_object(widget_type);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
-            w.replace($elem);
+            res.to_replace.push([w, $elem]);
         });
-        // TODO: return a deferred
+        return res;
     },
     render_element: function(template /* dictionaries */) {
         var dicts = [].slice.call(arguments).slice(1);
@@ -4991,7 +4935,7 @@ instance.web.form.FieldStatus = instance.web.form.AbstractField.extend({
      */
     render_elements: function () {
         var self = this;
-        var content = instance.web.qweb.render("FieldStatus.content", {widget: this});
+        var content = QWeb.render("FieldStatus.content", {widget: this});
         this.$el.html(content);
         var colors = JSON.parse((this.node.attrs || {}).statusbar_colors || "{}");
         var color = colors[this.selected_value];
