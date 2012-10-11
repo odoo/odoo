@@ -94,8 +94,8 @@
             <field name="state">open</field>
             <field name="partner_id" ref="base.res_partner_19"/>
         </record>
-        <record id="analytic_magasin_bml_1" model="account.analytic.account">
-            <field name="name">Magasin BML 1</field>
+        <record id="analytic_millennium_industries" model="account.analytic.account">
+            <field name="name">Millennium Industries </field>
             <field name="parent_id" ref="analytic_integration"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_15"/>
@@ -121,8 +121,8 @@
             <field name="parent_id" ref="analytic_customers"/>
             <field name="partner_id" ref="base.res_partner_1"/>
         </record>
-        <record id="analytic_distripc" model="account.analytic.account">
-            <field name="name">DistriPC</field>
+        <record id="analytic_deltapc" model="account.analytic.account">
+            <field name="name">Delta PC</field>
             <field name="parent_id" ref="analytic_customers"/>
             <field name="type">normal</field>
             <field name="partner_id" ref="base.res_partner_4"/>
@@ -145,8 +145,8 @@
             <field name="partner_id" ref="base.res_partner_17"/>
             <field name="state">open</field>
         </record>
-        <record id="analytic_leclerc" model="account.analytic.account">
-            <field name="name">Leclerc</field>
+        <record id="analytic_luminous_technologies" model="account.analytic.account">
+            <field name="name">Luminous Technologies</field>
             <field eval="time.strftime('%Y-04-24')" name="date_start"/>
             <field eval="str(time.localtime()[0] + 1) + '-04-24'" name="date"/>
             <field name="type">normal</field>
@@ -161,8 +161,8 @@
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_12"/>
         </record>
-        <record id="analytic_tiny_at_work" model="account.analytic.account">
-            <field name="name">OpenERP SA AT Work</field>
+        <record id="analytic_think_big_systems" model="account.analytic.account">
+            <field name="name"> Think Big Systems</field>
             <field name="type">normal</field>
             <field name="parent_id" ref="analytic_partners"/>
             <field name="partner_id" ref="base.res_partner_18"/>
