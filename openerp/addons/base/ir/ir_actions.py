@@ -19,14 +19,11 @@
 #
 ##############################################################################
 
-import ast
-import copy
 import logging
 import os
 import re
 import time
 import tools
-from xml import dom
 
 import netsvc
 from osv import fields,osv
@@ -47,6 +44,9 @@ class actions(osv.osv):
         'name': fields.char('Name', size=64, required=True),
         'type': fields.char('Action Type', required=True, size=32,readonly=True),
         'usage': fields.char('Action Usage', size=32),
+        'help': fields.text('Action description',
+            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
+            translate=True),
     }
     _defaults = {
         'usage': lambda *a: False,
@@ -107,6 +107,7 @@ class report_xml(osv.osv):
                         r['report_xsl'] and opj('addons',r['report_xsl']))
 
     _name = 'ir.actions.report.xml'
+    _inherit = 'ir.actions.actions'
     _table = 'ir_act_report_xml'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
@@ -155,6 +156,7 @@ report_xml()
 class act_window(osv.osv):
     _name = 'ir.actions.act_window'
     _table = 'ir_act_window'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
 
@@ -245,9 +247,6 @@ class act_window(osv.osv):
         'filter': fields.boolean('Filter'),
         'auto_search':fields.boolean('Auto Search'),
         'search_view' : fields.function(_search_view, type='text', string='Search View'),
-        'help': fields.text('Action description',
-            help='Optional help text for the users with a description of the target view, such as its usage and purpose.',
-            translate=True),
         'multi': fields.boolean('Action on Multiple Doc.', help="If set to true, the action will not be displayed on the right toolbar of a form view"),
     }
 
@@ -331,6 +330,7 @@ act_wizard()
 class act_url(osv.osv):
     _name = 'ir.actions.act_url'
     _table = 'ir_act_url'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'name'
     _columns = {
@@ -432,6 +432,7 @@ class actions_server(osv.osv):
 
     _name = 'ir.actions.server'
     _table = 'ir_act_server'
+    _inherit = 'ir.actions.actions'
     _sequence = 'ir_actions_id_seq'
     _order = 'sequence,name'
     _columns = {
