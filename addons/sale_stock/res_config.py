@@ -27,6 +27,9 @@ class sale_configuration(osv.osv_memory):
     _inherit = 'sale.config.settings'
 
     _columns = {
+        'group_sale_delivery_address': fields.boolean("Allow a different address for delivery and invoicing ",
+            implied_group='sale.group_delivery_invoice_address',
+            help="Allows you to specify different delivery and invoice addresses on a sale order."),
         'group_invoice_deli_orders': fields.boolean('Generate invoices after and based on delivery orders',
             implied_group='sale_stock.group_invoice_deli_orders',
             help="To allow your salesman to make invoices for Delivery Orders using the menu 'Deliveries to Invoice'."),
