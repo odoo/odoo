@@ -5,7 +5,6 @@
              <field name="name">sale.report.tree.sale.stock</field>
              <field name="model">sale.report</field>
              <field name="inherit_id" ref="sale.view_order_product_tree"/>
-             <field name="type">tree</field>
              <field name="arch" type="xml">
                  <field name="product_uom_qty" position="after">
                      <field name="shipped_qty_1" sum="Shipped"/>

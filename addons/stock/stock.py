@@ -2138,7 +2138,7 @@ class stock_move(osv.osv):
                 new_id = move_obj.copy(cr, uid, move.id, {
                     'location_id': move.location_dest_id.id,
                     'location_dest_id': loc.id,
-                    'date_moved': time.strftime('%Y-%m-%d'),
+                    'date': time.strftime('%Y-%m-%d'),
                     'picking_id': pickid,
                     'state': 'waiting',
                     'company_id': company_id or res_obj._company_default_get(cr, uid, 'stock.company', context=context)  ,

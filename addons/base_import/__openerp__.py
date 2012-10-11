@@ -26,7 +26,10 @@ Re-implement openerp's file import system:
     'author': 'OpenERP SA',
     'depends': ['base'],
     'installable': True,
-    'auto_install': True,
+    'auto_install': False, # set to true and allow uninstall?
+    'data': [
+        'security/ir.model.access.csv',
+    ],
     'css': [
         'static/lib/select2/select2.css',
         'static/src/css/import.css',
