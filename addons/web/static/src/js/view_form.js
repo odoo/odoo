@@ -158,10 +158,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         this.rendering_engine.set_widgets_registry(this.widgets_registry);
         this.rendering_engine.set_fields_view(data);
         var $dest = this.$el.hasClass("oe_form_container") ? this.$el : this.$el.find('.oe_form_container');
-        var rendering_result = this.rendering_engine.render_to($dest);
-        _.each(rendering_result.to_replace, function(el) {
-            el[0].replace(el[1]);
-        });
+        this.rendering_engine.render_to($dest);
+        this.rendering_engine.init_fields();
 
         this.$el.on('mousedown.formBlur', function () {
             self.__clicked_inside = true;
@@ -1168,10 +1166,7 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
 
         this.$form.appendTo(this.$target);
 
-        var res = {
-            target: $target,
-            to_replace: [],
-        };
+        this.to_replace = [];
 
         _.each(this.fields_to_init, function($elem) {
             var name = $elem.attr("name");
@@ -1189,21 +1184,27 @@ instance.web.form.FormRenderingEngine = instance.web.form.FormRenderingEngineInt
             }
             self.alter_field(w);
             self.view.register_field(w, $elem.attr("name"));
-            res.to_replace.push([w, $elem]);
+            self.to_replace.push([w, $elem]);
         });
         _.each(this.tags_to_init, function($elem) {
             var tag_name = $elem[0].tagName.toLowerCase();
             var obj = self.tags_registry.get_object(tag_name);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
-            res.to_replace.push([w, $elem]);
+            self.to_replace.push([w, $elem]);
         });
         _.each(this.widgets_to_init, function($elem) {
             var widget_type = $elem.attr("type");
             var obj = self.widgets_registry.get_object(widget_type);
             var w = new (obj)(self.view, instance.web.xml_to_json($elem[0]));
-            res.to_replace.push([w, $elem]);
+            self.to_replace.push([w, $elem]);
         });
-        return res;
+    },
+    init_fields: function() {
+        var defs = [];
+        _.each(this.to_replace, function(el) {
+            defs.push(el[0].replace(el[1]));
+        });
+        return $.when.apply($, defs);
     },
     render_element: function(template /* dictionaries */) {
         var dicts = [].slice.call(arguments).slice(1);
