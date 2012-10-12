@@ -748,7 +748,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function(result) {
+        return this.save().then(function(result) {
+            self.trigger("save");
             self.to_view_mode();
         });
     },
@@ -825,11 +826,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new
+     * @param {Boolean} [prepend_on_create=false] if ``save`` creates a new
      * record, should that record be inserted at the start of the dataset (by
      * default, records are added at the end)
      */
-    do_save: function(prepend_on_create) {
+    save: function(prepend_on_create) {
         var self = this;
         return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
@@ -1001,7 +1002,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     recursive_save: function() {
         var self = this;
-        return $.when(this.do_save()).pipe(function(res) {
+        return $.when(this.save()).pipe(function(res) {
             if (self.dataset.parent_view)
                 return self.dataset.parent_view.recursive_save();
         });
@@ -1032,7 +1033,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return true;
     },
     sidebar_context: function () {
-        return this.do_save().pipe(_.bind(function() {return this.get_fields_values();}, this));
+        return this.save().pipe(_.bind(function() {return this.get_fields_values();}, this));
     },
     open_defaults_dialog: function () {
         var self = this;
@@ -3525,7 +3526,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     if (!view.is_initialized.isResolved()) {
                         return false;
                     }
-                    var res = $.when(view.do_save());
+                    var res = $.when(view.save());
                     if (!res.isResolved() && !res.isRejected()) {
                         console.warn("Asynchronous get_value() is not supported in form view.");
                     }
@@ -3721,7 +3722,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var self = this;
         this.ensure_saved().pipe(function () {
             if (parent_form)
-                return parent_form.do_save();
+                return parent_form.save();
             else
                 return $.when();
         }).then(function () {
@@ -3860,7 +3861,7 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
         this._super(data);
         var self = this;
         this.$buttons.find('button.oe_form_button_create').click(function() {
-            self.do_save().then(self.on_button_new);
+            self.save().then(self.on_button_new);
         });
     },
     do_notify_change: function() {
@@ -4436,7 +4437,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             }));
             var $snbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save-new");
             $snbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
+                $.when(self.view_form.save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
                         self.view_form.on_button_new();
                     });
@@ -4444,7 +4445,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             });
             var $sbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save");
             $sbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
+                $.when(self.view_form.save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
                         self.check_exit();
                     });
