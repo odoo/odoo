@@ -102,7 +102,6 @@ class procurement_order(osv.osv):
         'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', states={'draft':[('readonly',False)], 'confirmed':[('readonly',False)]},
             readonly=True, required=True, help="If you encode manually a Procurement, you probably want to use" \
             " a make to order method."),
-
         'note': fields.text('Note'),
         'message': fields.char('Latest error', size=124, help="Exception occurred while computing procurement orders."),
         'state': fields.selection([
@@ -362,11 +361,10 @@ class procurement_order(osv.osv):
         """ Changes procurement state to Running and writes message.
         @return: True
         """
-        message = _('From stock: products assigned.')
+        message = _('Products reserved from stock.')
         self.write(cr, uid, ids, {'state': 'running',
                 'message': message}, context=context)
         self.message_post(cr, uid, ids, body=message, context=context)
-        self.running_send_note(cr, uid, ids, context=context)
         return True
 
     def _check_make_to_stock_service(self, cr, uid, procurement, context=None):
@@ -390,8 +388,6 @@ class procurement_order(osv.osv):
                 order_point_id = self.pool.get('stock.warehouse.orderpoint').search(cr, uid, [('product_id', '=', procurement.product_id.id)], context=context)
                 if not order_point_id and not ok:
                     message = _("Not enough stock and no minimum orderpoint rule defined.")
-                elif not order_point_id:
-                    message = _("No minimum orderpoint rule defined.")
                 elif not ok:
                     message = _("Not enough stock.")
 
@@ -407,7 +403,6 @@ class procurement_order(osv.osv):
         """
         for procurement in self.browse(cr, uid, ids, context=context):
             self.write(cr, uid, [procurement.id], {'state': 'running'})
-        self.running_send_note(cr, uid, ids, context=None)
         return True
 
     def action_produce_assign_product(self, cr, uid, ids, context=None):
@@ -469,7 +464,6 @@ class procurement_order(osv.osv):
         @return: True
         """
         res = self.write(cr, uid, ids, {'state': 'ready'})
-        self.ready_send_note(cr, uid, ids, context=None)
         return res
 
     def action_done(self, cr, uid, ids):
@@ -502,12 +496,6 @@ class procurement_order(osv.osv):
 
     def confirm_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Procurement <b>confirmed</b>."), context=context)
-
-    def running_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement set to <b>running</b>."), context=context)
-
-    def ready_send_note(self, cr, uid, ids, context=None):
-        self.message_post(cr, uid, ids, body=_("Procurement set to <b>ready</b>."), context=context)
 
     def cancel_send_note(self, cr, uid, ids, context=None):
         self.message_post(cr, uid, ids, body=_("Procurement <b>cancelled</b>."), context=context)
@@ -641,7 +629,18 @@ class stock_warehouse_orderpoint(osv.osv):
         })
         return super(stock_warehouse_orderpoint, self).copy(cr, uid, id, default, context=context)
 
-stock_warehouse_orderpoint()
+class product_template(osv.osv):
+    _inherit="product.template"
+
+    _columns = {
+        'type': fields.selection([('product','Stockable Product'),('consu', 'Consumable'),('service','Service')], 'Product Type', required=True, help="Will change the way procurements are processed. Consumable are product where you don't manage stock, a service is a non-material product provided by a company or an individual."),
+        'procure_method': fields.selection([('make_to_stock','Make to Stock'),('make_to_order','Make to Order')], 'Procurement Method', required=True, help="'Make to Stock': When needed, take from the stock or wait until re-supplying. 'Make to Order': When needed, purchase or produce for the procurement request."),
+        'supply_method': fields.selection([('produce','Manufacture'),('buy','Buy')], 'Supply Method', required=True, help="Produce will generate production order or tasks, according to the product type. Buy will trigger purchase orders when requested."),
+    }
+    _defaults = {
+        'procure_method': 'make_to_stock',
+        'supply_method': 'buy',
+    }
 
 class product_product(osv.osv):
     _inherit="product.product"
@@ -649,6 +648,6 @@ class product_product(osv.osv):
         'orderpoint_ids': fields.one2many('stock.warehouse.orderpoint', 'product_id', 'Minimum Stock Rules'),
     }
 
-product_product()
+
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
