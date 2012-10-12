@@ -2452,8 +2452,8 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     datetime_changed: function() {
         if (this.is_valid_()) {
             this.set_value_from_ui_();
+            this.trigger("datetime_changed");
         }
-        this.trigger("datetime_changed");
     }
 });
 
