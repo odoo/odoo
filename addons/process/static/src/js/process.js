@@ -6,7 +6,6 @@ instance.web.ViewManager.include({
         var self = this;
         var _super = this._super();
         this.process_help = this.action ? this.action.help : '';
-        self.process_help = $(this.process_help).text();
         if(this.action) {
             this.process_model = this.action.res_model;
         } else {
@@ -240,9 +239,7 @@ instance.web.ViewManager.include({
                 title: _t('Process')
             });
         var form_controller = pop.view_form;
-        pop.on_write_completed.add_last(function() {
-                self.initialize_process_view();
-        });
+        pop.on('write_completed', self, self.initialize_process_view);
     }
 });
 };

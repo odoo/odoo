@@ -39,63 +39,6 @@ _logger = logging.getLogger(__name__)
 def decode_header(message, header, separator=' '):
     return separator.join(map(decode, message.get_all(header, [])))
 
-class many2many_reference(fields.many2many):
-    """ many2many_reference manages many2many fields where one id is found
-        by a reference-like key (a char column in addition to the foreign id).
-        The reference_column attribute on the many2many fields is used;
-        if not defined, ``res_model`` is used. """
-
-    def _get_query_and_where_params(self, cr, model, ids, values, where_params):
-        """ Add in where condition like mail_followers.res_model = 'crm.lead' """
-        reference_column = self.reference_column if self.reference_column else 'res_model'
-        values.update(reference_column=reference_column, reference_value=model._name)
-        query = 'SELECT %(rel)s.%(id2)s, %(rel)s.%(id1)s \
-                    FROM %(rel)s, %(from_c)s \
-                    WHERE %(rel)s.%(id1)s IN %%s \
-                    AND %(rel)s.%(id2)s = %(tbl)s.id \
-                    AND %(rel)s.%(reference_column)s = \'%(reference_value)s\' \
-                    %(where_c)s  \
-                    %(order_by)s \
-                    %(limit)s \
-                    OFFSET %(offset)d' \
-                % values
-        return query, where_params
-
-    def set(self, cr, model, id, name, values, user=None, context=None):
-        """ Override to add the reference field in queries. """
-        if not values: return
-        rel, id1, id2 = self._sql_names(model)
-        obj = model.pool.get(self._obj)
-        # reference column name: given by attribute or res_model
-        reference_column = self.reference_column if self.reference_column else 'res_model'
-        for act in values:
-            if not (isinstance(act, list) or isinstance(act, tuple)) or not act:
-                continue
-            if act[0] == 0:
-                idnew = obj.create(cr, user, act[2], context=context)
-                cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, idnew, model._name))
-            elif act[0] == 3:
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+reference_column+'=%s', (id, act[1], model._name))
-            elif act[0] == 4:
-                # following queries are in the same transaction - so should be relatively safe
-                cr.execute('SELECT 1 FROM '+rel+' WHERE '+id1+'=%s AND '+id2+'=%s AND '+reference_column+'=%s', (id, act[1], model._name))
-                if not cr.fetchone():
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, act[1], model._name))
-            elif act[0] == 5:
-                cr.execute('delete from '+rel+' where '+id1+' = %s AND '+reference_column+'=%s', (id, model._name))
-            elif act[0] == 6:
-                d1, d2,tables = obj.pool.get('ir.rule').domain_get(cr, user, obj._name, context=context)
-                if d1:
-                    d1 = ' and ' + ' and '.join(d1)
-                else:
-                    d1 = ''
-                cr.execute('DELETE FROM '+rel+' WHERE '+id1+'=%s AND '+reference_column+'=%s AND '+id2+' IN (SELECT '+rel+'.'+id2+' FROM '+rel+', '+','.join(tables)+' WHERE '+rel+'.'+id1+'=%s AND '+rel+'.'+id2+' = '+obj._table+'.id '+ d1 +')', [id, model._name, id]+d2)
-                for act_nbr in act[2]:
-                    cr.execute('INSERT INTO '+rel+' ('+id1+','+id2+','+reference_column+') VALUES (%s,%s,%s)', (id, act_nbr, model._name))
-            # cases 1, 2: performs write and unlink -> default implementation is ok
-            else:
-                return super(many2many_reference, self).set(cr, model, id, name, values, user, context)
-
 
 class mail_thread(osv.AbstractModel):
     ''' mail_thread model is meant to be inherited by any model that needs to
@@ -186,6 +129,64 @@ class mail_thread(osv.AbstractModel):
             res[notif.message_id.res_id] = True
         return [('id', 'in', res.keys())]
 
+    def _get_followers(self, cr, uid, ids, name, arg, context=None):
+        fol_obj = self.pool.get('mail.followers')
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', 'in', ids)])
+        res = dict((res_id, []) for res_id in ids)
+        for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids):
+            res[fol.res_id].append(fol.partner_id.id)
+        return res
+
+    def _set_followers(self, cr, uid, id, name, value, arg, context=None):
+        if not value:
+            return
+        partner_obj = self.pool.get('res.partner')
+        fol_obj = self.pool.get('mail.followers')
+
+        # read the old set of followers, and determine the new set of followers
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('res_id', '=', id)])
+        old = set(fol.partner_id.id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids))
+        new = set(old)
+
+        for command in value:
+            if isinstance(command, (int, long)):
+                new.add(command)
+            elif command[0] == 0:
+                new.add(partner_obj.create(cr, uid, command[2], context=context))
+            elif command[0] == 1:
+                partner_obj.write(cr, uid, [command[1]], command[2], context=context)
+                new.add(command[1])
+            elif command[0] == 2:
+                partner_obj.unlink(cr, uid, [command[1]], context=context)
+                new.discard(command[1])
+            elif command[0] == 3:
+                new.discard(command[1])
+            elif command[0] == 4:
+                new.add(command[1])
+            elif command[0] == 5:
+                new.clear()
+            elif command[0] == 6:
+                new = set(command[2])
+
+        # remove partners that are no longer followers
+        fol_ids = fol_obj.search(cr, SUPERUSER_ID,
+            [('res_model', '=', self._name), ('res_id', '=', id), ('partner_id', 'not in', list(new))])
+        fol_obj.unlink(cr, SUPERUSER_ID, fol_ids)
+
+        # add new followers
+        for partner_id in new - old:
+            fol_obj.create(cr, SUPERUSER_ID, {'res_model': self._name, 'res_id': id, 'partner_id': partner_id})
+
+    def _search_followers(self, cr, uid, obj, name, args, context):
+        fol_obj = self.pool.get('mail.followers')
+        res = []
+        for field, operator, value in args:
+            assert field == name
+            fol_ids = fol_obj.search(cr, SUPERUSER_ID, [('res_model', '=', self._name), ('partner_id', operator, value)])
+            res_ids = [fol.res_id for fol in fol_obj.browse(cr, SUPERUSER_ID, fol_ids)]
+            res.append(('id', 'in', res_ids))
+        return res
+
     _columns = {
         'message_is_follower': fields.function(_get_subscription_data,
             type='boolean', string='Is a Follower', multi='_get_subscription_data,'),
@@ -194,9 +195,8 @@ class mail_thread(osv.AbstractModel):
             help="Holds data about the subtypes. The content of this field "\
                   "is a structure holding the current model subtypes, and the "\
                   "current document followed subtypes."),
-        'message_follower_ids': many2many_reference('res.partner',
-            'mail_followers', 'res_id', 'partner_id',
-            reference_column='res_model', string='Followers'),
+        'message_follower_ids': fields.function(_get_followers, fnct_inv=_set_followers,
+                fnct_search=_search_followers, type='many2many', obj='res.partner', string='Followers'),
         'message_comment_ids': fields.one2many('mail.message', 'res_id',
             domain=lambda self: [('model', '=', self._name), ('type', 'in', ('comment', 'email'))],
             string='Comments and emails',
@@ -422,12 +422,12 @@ class mail_thread(osv.AbstractModel):
             model_pool = self.pool.get(model)
             assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                 "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                    (msg['message-id'], model)
+                    (msg['message_id'], model)
             if thread_id and hasattr(model_pool, 'message_update'):
                 model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            self.message_post(cr, uid, [thread_id], context=context, **msg)
+            model_pool.message_post(cr, uid, [thread_id], context=context, **msg)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -538,7 +538,7 @@ class mail_thread(osv.AbstractModel):
                     field may not be present if missing in original
                     message::
 
-                    { 'message-id': msg_id,
+                    { 'message_id': msg_id,
                       'subject': subject,
                       'from': from,
                       'to': to,
@@ -623,11 +623,10 @@ class mail_thread(osv.AbstractModel):
             :param str subject: optional subject
             :param str type: mail_message.type
             :param int parent_id: optional ID of parent message in this thread
-            :param tuple(str,str) attachments: list of attachment tuples in the form
+            :param tuple(str,str) attachments or list id: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
-
         context = context or {}
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
@@ -635,7 +634,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
-        attachment_ids = []
+        attachment_ids=[]
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -679,6 +678,13 @@ class mail_thread(osv.AbstractModel):
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
         })
+
+        # if the parent is private, the message must be private
+        if parent_id:
+            msg = messages.browse(cr, uid, parent_id, context=context)
+            if msg.is_private:
+                values["is_private"] = msg.is_private
+
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
@@ -691,10 +697,23 @@ class mail_thread(osv.AbstractModel):
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
-                        subtype=subtype, parent_id=parent_id, attachments=attachments, context=context)
-        added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
+        # if the user write on his wall
+        if self._name=='res.partner' and not thread_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            thread_id = user.partner_id.id
 
+        added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
+                        subtype=subtype, parent_id=parent_id, context=context)
+
+        attachment_ids=[]
+        if attachments:
+            ir_attachment = self.pool.get('ir.attachment')
+            attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', ""), ('res_id', '=', ""), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
+            if attachment_ids:
+                self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
+                self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
+          
+        added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
         return added_message
 
     def get_message_subtypes(self, cr, uid, ids, context=None):
