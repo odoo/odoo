@@ -510,8 +510,7 @@ def Project():
                           model_name=vals.get('alias_model', 'project.task'),
                           context=context)
             vals['alias_id'] = alias_id
-        if vals.get('partner_id', False):
-            vals['type'] = 'contract'
+        vals['type'] = 'contract'
         project_id = super(project, self).create(cr, uid, vals, context)
         mail_alias.write(cr, uid, [vals['alias_id']], {'alias_defaults': {'project_id': project_id} }, context)
         self.create_send_note(cr, uid, [project_id], context=context)
@@ -1426,7 +1425,9 @@ class project_task_history_cumulative(osv.osv):
     }
 
     def init(self, cr):
-        cr.execute(""" CREATE OR REPLACE VIEW project_task_history_cumulative AS (
+        tools.drop_view_if_exists(cr, 'report_event_registration')
+
+        cr.execute(""" CREATE VIEW project_task_history_cumulative AS (
             SELECT
                 history.date::varchar||'-'||history.history_id::varchar AS id,
                 history.date AS end_date,
