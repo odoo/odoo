@@ -1067,7 +1067,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
             [],
             {"default_name": self.$input.val()}
         );
-        pop.on("select_elements", self, function(element_ids) {
+        pop.on("elements_selected", self, function(element_ids) {
             self.$input.val("");
             self.trigger('added', element_ids[0]);
         });
