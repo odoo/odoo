@@ -834,7 +834,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         }
         $.extend(cached.values, record.values);
         if (dirty)
-            this.trigger("dataset_on_change");
+            this.trigger("dataset_changed", id);
         return $.Deferred().resolve(true).promise();
     },
     unlink: function(ids, callback, error_callback) {
@@ -848,7 +848,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
         this.to_write = _.reject(this.to_write, function(x) { return _.include(ids, x.id);});
         this.cache = _.reject(this.cache, function(x) { return _.include(ids, x.id);});
         this.set_ids(_.without.apply(_, [this.ids].concat(ids)));
-        this.trigger("dataset_on_change");
+        this.trigger("dataset_changed", ids);
         return $.async_when({result: true}).then(callback);
     },
     reset_ids: function(ids) {
@@ -945,7 +945,7 @@ instance.web.BufferedDataSet = instance.web.DataSetStatic.extend({
     },
     alter_ids: function(n_ids) {
         this._super(n_ids);
-        this.trigger("dataset_on_change");
+        this.trigger("dataset_changed", n_ids);
     },
 });
 instance.web.BufferedDataSet.virtual_id_regex = /^one2many_v_id_.*$/;
