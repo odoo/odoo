@@ -877,8 +877,6 @@ instance.web.UserMenu =  instance.web.Widget.extend({
         };
         this.update_promise = this.update_promise.pipe(fct, fct);
     },
-    on_action: function() {
-    },
     on_menu_logout: function() {
         this.trigger('user_logout');
     },
@@ -897,8 +895,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
             var $help = $(QWeb.render("UserMenu.about", {version_info: res}));
             $help.find('a.oe_activate_debug_mode').click(function (e) {
                 e.preventDefault();
-                window.location = $.param.querystring(
-                        window.location.href, 'debug');
+                window.location = $.param.querystring( window.location.href, 'debug');
             });
             instance.web.dialog($help, {autoOpen: true,
                 modal: true, width: 507, height: 290, resizable: false, title: _t("About")});
@@ -1037,8 +1034,7 @@ instance.web.WebClient = instance.web.Client.extend({
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
         self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
-        self.user_menu.on('user_logout', self, this.proxy('on_logout'));
-        self.user_menu.on_action.add(this.proxy('on_menu_action'));
+        self.user_menu.on('user_logout', self, self.on_logout);
         self.user_menu.do_update();
         self.bind_hashchange();
         self.set_title();
