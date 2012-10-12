@@ -348,7 +348,7 @@ instance.web.DiagramView = instance.web.View.extend({
        });
     },
 
-    on_pager_action: function(action) {
+    execute_pager_action: function(action) {
         switch (action) {
             case 'first':
                 this.dataset.index = 0;
@@ -381,7 +381,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
     do_show: function() {
         this.do_push_state({});
-        return $.when(this._super(), this.on_pager_action('reload'));
+        return $.when(this._super(), this.execute_pager_action('reload'));
     }
 });
 };

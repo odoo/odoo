@@ -433,7 +433,6 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     execute_pager_action: function(action) {
         if (this.can_be_discarded()) {
-            this.trigger('pager_action_executed');
             switch (action) {
                 case 'first':
                     this.dataset.index = 0;
@@ -449,6 +448,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     break;
             }
             this.reload();
+            this.trigger('pager_action_executed');
         }
     },
     init_pager: function() {
