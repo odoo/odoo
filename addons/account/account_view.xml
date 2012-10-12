@@ -633,13 +633,10 @@
                                 <field name="period_id" class="oe_inline"/>
                             </div>
                             <field name='company_id' widget="selection" groups="base.group_multi_company" />
+                            <field name="currency" invisible="1"/>
                         </group><group>
-                            <label for="balance_start"/>
-                            <div>
-                                <field name="balance_start" class="oe_inline"/>
-                                <field name="currency" class="oe_inline"/>
-                            </div>
-                            <field name="balance_end_real"/>
+                            <field name="balance_start" widget="monetary" options='{"currency_field" : "currency"}'/>
+                            <field name="balance_end_real" widget="monetary" options='{"currency_field" : "currency"}'/>
                         </group>
                     </group>
 
@@ -1130,8 +1127,8 @@
                                         <field name="account_tax_id" domain="[('parent_id','=',False)]"/>
                                     </group>
                                     <group attrs="{'readonly':[('state','=','valid')]}" string="Currency" groups="base.group_multi_currency">
-                                        <field name="currency_id"/>
-                                        <field name="amount_currency"/>
+                                        <field name="currency_id" invisible="1"/>
+                                        <field name="amount_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                     </group>
                                     <group string="Reconciliation">
                                         <field name="reconcile_id"/>
@@ -1177,8 +1174,8 @@
                                 <field name="credit"/>
 
                                 <separator colspan="4" string="Optional Information"/>
-                                <field name="currency_id" groups="base.group_multi_currency"/>
-                                <field name="amount_currency" groups="base.group_multi_currency"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="amount_currency" groups="base.group_multi_currency" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="quantity"/>
                                 <field name="move_id" required="False"/>
                                 <newline/>
@@ -2567,7 +2564,7 @@ action = pool.get('res.config').next(cr, uid, [], context)
                             <field name="date" attrs="{'readonly':[('state','!=','draft')]}"  on_change="onchange_date(date, company_id)"/>
                             <field name="closing_date" readonly="1"/>
                             <field name="period_id" class="oe_inline"/>
-                            <field name="currency" invisible="1" groups="base.group_multi_currency"/>
+                            <field name="currency" invisible="1"/>
                         </group>
                     </group>
                     <notebook>
@@ -2629,12 +2626,12 @@ action = pool.get('res.config').next(cr, uid, [], context)
                     <group col="6" colspan="4">
                         <group col="2" colspan="2">
                             <separator string="Opening Balance" colspan="4"/>
-                            <field name="balance_start" readonly="1" string="Opening Cash Control"/>
-                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" />
-                            <field name="total_entry_encoding" />
+                            <field name="balance_start" readonly="1" string="Opening Cash Control" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="last_closing_balance" readonly="1" string="Last Closing Balance" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                            <field name="total_entry_encoding" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                         <group string="Closing Balance">
-                            <field name="balance_end"/>
+                            <field name="balance_end" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                         </group>
                     </group>
                 </sheet>
