@@ -2671,13 +2671,6 @@ instance.web.form.FieldSelection = instance.web.form.AbstractField.extend(instan
             this.$el.text(option ? option[1] : this.values[0][1]);
         }
     },
-    is_syntax_valid: function() {
-        if (this.get("effective_readonly")) {
-            return true;
-        }
-        var value_ = this.values[this.$el.find('select')[0].selectedIndex];
-        return !! value_;
-    },
     focus: function() {
         this.$el.find('select:first').focus();
     }
@@ -4086,28 +4079,26 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         m2m_kanban_lazy_init();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
-        this.is_setted = $.Deferred();
+
+        var self = this;
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset.m2m = this;
+        this.dataset.on('unlink', self, function(ids) {
+            self.dataset_changed();
+        });
     },
     start: function() {
         this._super.apply(this, arguments);
 
         var self = this;
 
-        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
-        this.dataset.m2m = this;
-        this.dataset.on('unlink', self, function(ids) {
-            self.dataset_changed();
-        });
-
-        this.is_setted.then(function() {
-            self.load_view();
-        });
+        self.load_view();
         this.is_loaded.then(function() {
             self.on("change:effective_readonly", self, function() {
                 self.is_loaded = self.is_loaded.pipe(function() {
                     self.kanban_view.destroy();
                     return $.when(self.load_view()).then(function() {
-                        self.reload_content();
+                        self.render_value();
                     });
                 });
             });
@@ -4119,10 +4110,6 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
             value_ = value_[0][2];
         }
         this._super(value_);
-        this.dataset.set_ids(value_);
-        var self = this;
-        self.reload_content();
-        this.is_setted.resolve();
     },
     load_view: function() {
         var self = this;
@@ -4149,8 +4136,9 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
         });
         return loaded;
     },
-    reload_content: function() {
+    render_value: function() {
         var self = this;
+        this.dataset.set_ids(this.get("value"));
         this.is_loaded = this.is_loaded.pipe(function() {
             return self.kanban_view.do_search(self.build_domain(), self.dataset.get_context(), []);
         });
@@ -4177,7 +4165,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                     if(! _.detect(self.dataset.ids, function(x) {return x == one_id;})) {
                         self.dataset.set_ids([].concat(self.dataset.ids, [one_id]));
                         self.dataset_changed();
-                        self.reload_content();
+                        self.render_value();
                     }
                 });
             });
@@ -4188,7 +4176,7 @@ instance.web.form.FieldMany2ManyKanban = instance.web.form.AbstractField.extend(
                 title: _t("Open: ") + self.string,
                 write_function: function(id, data, options) {
                     return self.dataset.write(id, data, {}).then(function() {
-                        self.reload_content();
+                        self.render_value();
                     });
                 },
                 alternative_form_view: self.field.views ? self.field.views["form"] : undefined,
