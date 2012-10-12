@@ -164,6 +164,10 @@ instance.web.ActionManager = instance.web.Widget.extend({
         state = state || {};
         if (this.getParent() && this.getParent().do_push_state) {
             if (this.inner_action) {
+                if (this.inner_action._push_me === false) {
+                    // this action has been explicitly marked as not pushable
+                    return;
+                }
                 state['title'] = this.inner_action.name;
                 if(this.inner_action.type == 'ir.actions.act_window') {
                     state['model'] = this.inner_action.res_model;
@@ -172,7 +176,7 @@ instance.web.ActionManager = instance.web.Widget.extend({
                     state['action'] = this.inner_action.id;
                 } else if (this.inner_action.type == 'ir.actions.client') {
                     state['action'] = this.inner_action.tag;
-                    //state = _.extend(this.inner_action.params || {}, state);
+                    state = _.extend(this.inner_action.params || {}, state);
                 }
             }
             if(!this.dialog) {
