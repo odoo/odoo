@@ -371,7 +371,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     do_notify_change: function() {
         this.$el.add(this.$buttons).addClass('oe_form_dirty');
     },
-    on_pager_action: function(action) {
+    execute_pager_action: function(action) {
         if (this.can_be_discarded()) {
             switch (action) {
                 case 'first':
@@ -388,6 +388,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
                     break;
             }
             this.reload();
+            this.trigger('pager_action_executed');
         }
     },
     init_pager: function() {
@@ -404,7 +405,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.$pager.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
-            self.on_pager_action(action);
+            self.execute_pager_action(action);
         });
         this.do_update_pager();
     },
@@ -687,7 +688,8 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     on_button_save: function() {
         var self = this;
-        return this.do_save().then(function(result) {
+        return this.save().then(function(result) {
+            self.trigger("save");
             self.to_view_mode();
         });
     },
@@ -739,7 +741,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         $.when(this.has_been_loaded).then(function() {
             if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
                 self.dataset.unlink([self.datarecord.id]).then(function() {
-                    self.on_pager_action('next');
+                    self.execute_pager_action('next');
                     def.resolve();
                 });
             } else {
@@ -764,11 +766,11 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
      * record or saving an existing one depending on whether the record
      * already has an id property.
      *
-     * @param {Boolean} [prepend_on_create=false] if ``do_save`` creates a new
+     * @param {Boolean} [prepend_on_create=false] if ``save`` creates a new
      * record, should that record be inserted at the start of the dataset (by
      * default, records are added at the end)
      */
-    do_save: function(prepend_on_create) {
+    save: function(prepend_on_create) {
         var self = this;
         return this.mutating_mutex.exec(function() { return self.is_initialized.pipe(function() {
             try {
@@ -940,7 +942,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     },
     recursive_save: function() {
         var self = this;
-        return $.when(this.do_save()).pipe(function(res) {
+        return $.when(this.save()).pipe(function(res) {
             if (self.dataset.parent_view)
                 return self.dataset.parent_view.recursive_save();
         });
@@ -971,7 +973,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         return true;
     },
     sidebar_context: function () {
-        return this.do_save().pipe(_.bind(function() {return this.get_fields_values();}, this));
+        return this.save().pipe(_.bind(function() {return this.get_fields_values();}, this));
     },
     open_defaults_dialog: function () {
         var self = this;
@@ -2330,7 +2332,10 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
         var self = this;
         this.$input = this.$el.find('input.oe_datepicker_master');
         this.$input_picker = this.$el.find('input.oe_datepicker_container');
-        this.$input.change(this.on_change);
+        this.$input.change(function(){
+            self.change_datetime();
+        });
+        
         this.picker({
             onClose: this.on_picker_select,
             onSelect: this.on_picker_select,
@@ -2398,9 +2403,10 @@ instance.web.DateTimeWidget = instance.web.Widget.extend({
     format_client: function(v) {
         return instance.web.format_value(v, {"widget": this.type_of_date});
     },
-    on_change: function() {
+    change_datetime: function() {
         if (this.is_valid_()) {
             this.set_value_from_ui_();
+            this.trigger("datetime_changed");
         }
     }
 });
@@ -2424,7 +2430,7 @@ instance.web.form.FieldDatetime = instance.web.form.AbstractField.extend(instanc
     initialize_content: function() {
         if (!this.get("effective_readonly")) {
             this.datewidget = this.build_widget();
-            this.datewidget.on_change.add_last(_.bind(function() {
+            this.datewidget.on('datetime_changed', this, _.bind(function() {
                 this.internal_set_value(this.datewidget.get_value());
             }, this));
             this.datewidget.appendTo(this.$el);
@@ -3300,7 +3306,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         var def = $.Deferred().then(function() {
             self.initial_is_loaded.resolve();
         });
-        this.viewmanager.on_controller_inited.add_last(function(view_type, controller) {
+        this.viewmanager.on("controller_inited", self, function(view_type, controller) {
             controller.o2m = self;
             if (view_type == "list") {
                 if (self.get("effective_readonly")) {
@@ -3315,9 +3321,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 controller.on("load_record", self, function(){
                      once.resolve();
                  });
-                controller.on_pager_action.add_first(function() {
-                    self.save_any_view();
-                });
+                controller.on('pager_action_executed',self,self.save_any_view);
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }
@@ -3453,7 +3457,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                     if (!view.is_initialized.isResolved()) {
                         return false;
                     }
-                    var res = $.when(view.do_save());
+                    var res = $.when(view.save());
                     if (!res.isResolved() && !res.isRejected()) {
                         console.warn("Asynchronous get_value() is not supported in form view.");
                     }
@@ -3649,7 +3653,7 @@ instance.web.form.One2ManyListView = instance.web.ListView.extend({
         var self = this;
         this.ensure_saved().pipe(function () {
             if (parent_form)
-                return parent_form.do_save();
+                return parent_form.save();
             else
                 return $.when();
         }).then(function () {
@@ -3788,7 +3792,7 @@ instance.web.form.One2ManyFormView = instance.web.FormView.extend({
         this._super(data);
         var self = this;
         this.$buttons.find('button.oe_form_button_create').click(function() {
-            self.do_save().then(self.on_button_new);
+            self.save().then(self.on_button_new);
         });
     },
     do_notify_change: function() {
@@ -4347,7 +4351,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             }));
             var $snbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save-new");
             $snbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
+                $.when(self.view_form.save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
                         self.view_form.on_button_new();
                     });
@@ -4355,7 +4359,7 @@ instance.web.form.AbstractFormPopup = instance.web.Widget.extend({
             });
             var $sbutton = self.$buttonpane.find(".oe_abstractformpopup-form-save");
             $sbutton.click(function() {
-                $.when(self.view_form.do_save()).then(function() {
+                $.when(self.view_form.save()).then(function() {
                     self.view_form.reload_mutex.exec(function() {
                         self.check_exit();
                     });
