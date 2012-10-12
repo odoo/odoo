@@ -302,9 +302,18 @@ class account_analytic_line(osv.osv):
             return employee.product_id.uom_id.id
         return False
 
+   def _default_invoice(self, cr, uid, context=None):
+        proxy = self.pool.get('hr_timesheet_invoice.factor')
+        record_ids = proxy.search(cr, uid, [('customer_name', '=', '100%')], context=context)
+        invoice = proxy.browse(cr, uid, record_ids[0], context=context)
+        if invoice:
+            return invoice.id
+        return False
+
    _defaults = {
         'product_id': _default_product,
         'product_uom_id': _default_product_uom,
+        'to_invoice': _default_invoice
         }
 
 account_analytic_line()
