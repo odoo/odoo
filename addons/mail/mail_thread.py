@@ -138,6 +138,8 @@ class mail_thread(osv.AbstractModel):
         return res
 
     def _set_followers(self, cr, uid, id, name, value, arg, context=None):
+        if not value:
+            return
         partner_obj = self.pool.get('res.partner')
         fol_obj = self.pool.get('mail.followers')
 
@@ -420,12 +422,12 @@ class mail_thread(osv.AbstractModel):
             model_pool = self.pool.get(model)
             assert thread_id and hasattr(model_pool, 'message_update') or hasattr(model_pool, 'message_new'), \
                 "Undeliverable mail with Message-Id %s, model %s does not accept incoming emails" % \
-                    (msg['message-id'], model)
+                    (msg['message_id'], model)
             if thread_id and hasattr(model_pool, 'message_update'):
                 model_pool.message_update(cr, user_id, [thread_id], msg, context=context)
             else:
                 thread_id = model_pool.message_new(cr, user_id, msg, custom_values, context=context)
-            self.message_post(cr, uid, [thread_id], context=context, **msg)
+            model_pool.message_post(cr, uid, [thread_id], context=context, **msg)
         return thread_id
 
     def message_new(self, cr, uid, msg_dict, custom_values=None, context=None):
@@ -536,7 +538,7 @@ class mail_thread(osv.AbstractModel):
                     field may not be present if missing in original
                     message::
 
-                    { 'message-id': msg_id,
+                    { 'message_id': msg_id,
                       'subject': subject,
                       'from': from,
                       'to': to,
@@ -621,11 +623,10 @@ class mail_thread(osv.AbstractModel):
             :param str subject: optional subject
             :param str type: mail_message.type
             :param int parent_id: optional ID of parent message in this thread
-            :param tuple(str,str) attachments: list of attachment tuples in the form
+            :param tuple(str,str) attachments or list id: list of attachment tuples in the form
                 ``(name,content)``, where content is NOT base64 encoded
             :return: ID of newly created mail.message
         """
-
         context = context or {}
         attachments = attachments or []
         assert (not thread_id) or isinstance(thread_id, (int, long)) or \
@@ -633,7 +634,7 @@ class mail_thread(osv.AbstractModel):
         if isinstance(thread_id, (list, tuple)):
             thread_id = thread_id and thread_id[0]
 
-        attachment_ids = []
+        attachment_ids=[]
         for name, content in attachments:
             if isinstance(content, unicode):
                 content = content.encode('utf-8')
@@ -677,6 +678,13 @@ class mail_thread(osv.AbstractModel):
             'attachment_ids': attachment_ids,
             'subtype_id': subtype_id,
         })
+
+        # if the parent is private, the message must be private
+        if parent_id:
+            msg = messages.browse(cr, uid, parent_id, context=context)
+            if msg.is_private:
+                values["is_private"] = msg.is_private
+
         # Avoid warnings about non-existing fields
         for x in ('from', 'to', 'cc'):
             values.pop(x, None)
@@ -689,10 +697,23 @@ class mail_thread(osv.AbstractModel):
 
     def message_post_api(self, cr, uid, thread_id, body='', subject=False, type='notification',
                         subtype=None, parent_id=False, attachments=None, context=None, **kwargs):
-        added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
-                        subtype=subtype, parent_id=parent_id, attachments=attachments, context=context)
-        added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
+        # if the user write on his wall
+        if self._name=='res.partner' and not thread_id:
+            user = self.pool.get('res.users').browse(cr, uid, uid, context=context)
+            thread_id = user.partner_id.id
 
+        added_message_id = self.message_post(cr, uid, thread_id=thread_id, body=body, subject=subject, type=type,
+                        subtype=subtype, parent_id=parent_id, context=context)
+
+        attachment_ids=[]
+        if attachments:
+            ir_attachment = self.pool.get('ir.attachment')
+            attachment_ids = ir_attachment.search(cr, 1, [('res_model', '=', ""), ('res_id', '=', ""), ('user_id', '=', uid), ('id', 'in', attachments)], context=context)
+            if attachment_ids:
+                self.pool.get('ir.attachment').write(cr, 1, attachment_ids, { 'res_model': self._name, 'res_id': thread_id }, context=context)
+                self.pool.get('mail.message').write(cr, 1, [added_message_id], {'attachment_ids': [(6, 0, [pid for pid in attachment_ids])]} )
+          
+        added_message = self.pool.get('mail.message').message_read(cr, uid, [added_message_id])
         return added_message
 
     def get_message_subtypes(self, cr, uid, ids, context=None):

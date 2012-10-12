@@ -18,32 +18,31 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>
 #
 ##############################################################################
-
-from openerp import SUPERUSER_ID
-from openerp.modules.registry import RegistryManager
-from openerp.addons.web.controllers.main import login_and_redirect
-import openerp.addons.web.common.http as openerpweb
+import logging
 
 import werkzeug
 
-import logging
+import openerp
+from openerp.modules.registry import RegistryManager
+from openerp.addons.web.controllers.main import login_and_redirect
+
 _logger = logging.getLogger(__name__)
 
-class Controller(openerpweb.Controller):
+class Controller(openerp.addons.web.http.Controller):
     _cp_path = '/auth_signup'
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def retrieve(self, req, dbname, token):
         """ retrieve the user info (name, login or email) corresponding to a signup token """
         registry = RegistryManager.get(dbname)
         user_info = None
         with registry.cursor() as cr:
             res_partner = registry.get('res.partner')
-            user_info = res_partner.signup_retrieve_info(cr, SUPERUSER_ID, token)
+            user_info = res_partner.signup_retrieve_info(cr, openerp.SUPERUSER_ID, token)
         return user_info
 
-    @openerpweb.httprequest
-    def signup(self, req, dbname, token, name, login, password):
+    @openerp.addons.web.http.httprequest
+    def signup(self, req, dbname, token, name, login, password, state=''):
         """ sign up a user (new or existing), and log it in """
         url = '/'
         registry = RegistryManager.get(dbname)
@@ -51,9 +50,9 @@ class Controller(openerpweb.Controller):
             try:
                 res_users = registry.get('res.users')
                 values = {'name': name, 'login': login, 'password': password}
-                credentials = res_users.signup(cr, SUPERUSER_ID, values, token)
+                credentials = res_users.signup(cr, openerp.SUPERUSER_ID, values, token)
                 cr.commit()
-                return login_and_redirect(req, *credentials)
+                return login_and_redirect(req, *credentials, redirect_url='/#%s'%state)
             except Exception as e:
                 # signup error
                 _logger.exception('error when signup')

@@ -952,6 +952,7 @@
             <data>
                 <xpath expr="//field[@name='move_id']" position="before">
                     <field name="bom_id" domain="[('product_id','=',product_id),('bom_id','=',False)]"/>
+                    <field name="production_id" attrs="{'invisible': [('production_id','=',False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='close_move']" position="after">
                     <group colspan="4"  groups="product.group_mrp_properties">
@@ -961,10 +962,10 @@
                </data>
             </field>
         </record>
-        <record id="product.product_normal_form_supply_view" model="ir.ui.view">
+        <record id="product_product_normal_form_supply_view" model="ir.ui.view">
             <field name="name">product.normal.form.mrp.inherit</field>
             <field name="model">product.product</field>
-            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='supply_method']" position="attributes">
                     <attribute name="invisible">False</attribute>
@@ -975,7 +976,7 @@
                         order</b> using the bill of materials assigned to this product.
                         The delivery order will be ready once the production is done.
                     </p>
-</group>
+                </group>
             </field>
         </record>
 
@@ -1050,7 +1051,5 @@
                 </xpath>
             </field>
         </record>
-
-
     </data>
 </openerp>
