@@ -412,7 +412,6 @@
                 <tree string="Units of Measure">
                     <field name="name"/>
                     <field name="category_id"/>
-                    <field name="factor"/>
                 </tree>
             </field>
         </record>
@@ -425,20 +424,23 @@
                     <group>
                         <group>
                             <field name="name"/>
-                            <field name="category_id"/>
+                            <field name="category_id" on_change="onchange_category_id(category_id)"/>
                             <field name="active"/>
                         </group>
                         <group>
                             <field name="uom_type" on_change="onchange_type(uom_type)"/>
-                            <p attrs="{'invisible':[('uom_type','!=','smaller')]}" colspan="2">
-                                e.g: 1 * (reference unit) = ratio * (this unit)
-                            </p>
-                            <p attrs="{'invisible':[('uom_type','!=','bigger')]}" colspan="2">
-                                e.g: 1 * (this unit) = ratio * (reference unit)
-                            </p>
+                            <label string="Computation" for="factor" attrs="{'invisible':[('uom_type','=','reference')]}" style="margin: 9px 0 9px 0;"/>
+                            <group col="5" attrs="{'invisible':[('uom_type','=','reference')]}">
+                            <div style="margin-left: -12px;">
+                                <field name="factor_inv" class="oe_inline" attrs="{'invisible':[('uom_type','!=','bigger')]}" String="Computation" nolabel="1"/>
+                                <label string="1" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
+                                <field class="oe_inline" name="reference_uom_id" attrs="{'invisible':[('uom_type','=','reference')]}" nolabel="1"/>
+                                <label string="="/>
+                                <field class="oe_inline" name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}" String="Computation" nolabel="1"/>
+                                <label string="1" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
+                            </div>
+                            </group>                            
                             <field name="rounding"/>
-                            <field name="factor" attrs="{'invisible':[('uom_type','!=','smaller')]}"/>
-                            <field name="factor_inv" attrs="{'invisible':[('uom_type','!=','bigger')]}"/>
                         </group>
                     </group>
                 </form>
