@@ -97,24 +97,10 @@
                </search>
             </field>
         </record>
-        <record id="action_view_attendee_form" model="ir.actions.act_window">
-             <field name="name">Event Invitations</field>
-             <field name="type">ir.actions.act_window</field>
-             <field name="res_model">calendar.attendee</field>
-             <field name="view_type">form</field>
-             <field name="view_mode">tree,form</field>
-             <field name="view_id" ref="base_calendar.base_calendar_attendee_tree_view"/>
-             <field name="context">{'default_sent_by_uid': uid}</field>
-         </record>
 
         <!-- Calendar's menu -->
         <menuitem id="base.menu_calendar_configuration" name="Calendar"
             parent="base.menu_base_config" sequence="50" groups="base.group_no_one"/>
-
-        <!-- Invitation menu -->
-         <menuitem id="menu_attendee_invitations"
-            parent="base.menu_calendar_configuration"
-            sequence="10" action="action_view_attendee_form"/>
 
         <!-- Alarm form view -->
         <record id="res_alarm_form_view" model="ir.ui.view">
@@ -380,22 +366,6 @@
                 </search>
             </field>
         </record>
-
-
-        <!-- Event action -->
-        <record id="action_view_event" model="ir.actions.act_window">
-                <field name="name">Events</field>
-                <field name="type">ir.actions.act_window</field>
-                <field name="res_model">calendar.event</field>
-                <field name="view_type">form</field>
-                <field name="view_mode">calendar,tree,form</field>
-                <field name="search_view_id" ref="view_calendar_event_filter"/>
-            </record>
-
-        <!-- Event menu -->
-        <menuitem id="menu_events"
-                name="Events" parent="base.menu_calendar_configuration"
-                sequence="15" action="action_view_event"/>
 
      </data>
  </openerp>
