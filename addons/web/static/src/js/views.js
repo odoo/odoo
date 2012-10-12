@@ -532,12 +532,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).then(function() {
-            self.trigger("controller_inited",view_type,controller);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.then(self.searchview.do_search);
             }
+            self.trigger("controller_inited",view_type,controller);
         });
     },
     set_title: function(title) {
