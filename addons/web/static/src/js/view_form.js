@@ -1954,12 +1954,9 @@ instance.web.form.FieldInterface = {
     /**
      * Called by the form view to indicate the value of the field.
      *
-     * set_value() may return an object that can be passed to $.when() that represents the moment when
-     * the field has finished all operations necessary before the user can effectively use the widget.
-     *
      * Multiple calls to set_value() can occur at any time and must be handled correctly by the implementation,
-     * regardless of any asynchronous operation currently running and the status of any promise that a
-     * previous call to set_value() could have returned.
+     * regardless of any asynchronous operation currently running. Calls to set_value() can and will also occur
+     * before the widget is inserted into the DOM.
      *
      * set_value() must be able, at any moment, to handle the syntax returned by the "read" method of the
      * osv class in the OpenERP server as well as the syntax used by the set_value() (see below). It must
