@@ -3210,7 +3210,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         lazy_build_o2m_kanban_view();
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
-        this.is_setted = $.Deferred();
         this.form_last_update = $.Deferred();
         this.init_form_last_update = this.form_last_update;
         this.is_started = false;
@@ -3230,9 +3229,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
 
         var self = this;
 
-        this.is_setted.then(function() {
-            self.load_views();
-        });
+        self.load_views();
         this.is_loaded.then(function() {
             self.on("change:effective_readonly", self, function() {
                 self.is_loaded = self.is_loaded.pipe(function() {
@@ -3348,10 +3345,8 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 }
             });
         });
-        this.is_setted.then(function() {
-            $.async_when().then(function () {
-                self.viewmanager.appendTo(self.$el);
-            });
+        $.async_when().then(function () {
+            self.viewmanager.appendTo(self.$el);
         });
         return def;
     },
@@ -3431,7 +3426,6 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
         if (this.dataset.index === null && this.dataset.ids.length > 0) {
             this.dataset.index = 0;
         }
-        self.is_setted.resolve();
         this.trigger_on_change();
         if (this.is_started) {
             return self.reload_current_view();
@@ -3960,36 +3954,33 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
     disable_utility_classes: true,
     init: function(field_manager, node) {
         this._super(field_manager, node);
-        this.set({"value": []});
         this.is_loaded = $.Deferred();
         this.initial_is_loaded = this.is_loaded;
-        this.is_setted = $.Deferred();
+        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
+        this.dataset.m2m = this;
+        var self = this;
+        this.dataset.on('unlink', self, function(ids) {
+            self.dataset_changed();
+        });
+        this.set_value([]);
     },
     start: function() {
-        this._super.apply(this, arguments);
         this.$el.addClass('oe_form_field oe_form_field_many2many');
 
         var self = this;
 
-        this.dataset = new instance.web.form.Many2ManyDataSet(this, this.field.relation);
-        this.dataset.m2m = this;
-        this.dataset.on('unlink', self, function(ids) {
-            self.dataset_changed();
-        });
-
-        this.is_setted.then(function() {
-            self.load_view();
-        });
+        self.load_view();
         this.is_loaded.then(function() {
             self.on("change:effective_readonly", self, function() {
                 self.is_loaded = self.is_loaded.pipe(function() {
                     self.list_view.destroy();
                     return $.when(self.load_view()).then(function() {
-                        self.reload_content();
+                        self.render_value();
                     });
                 });
             });
         });
+        this._super.apply(this, arguments);
     },
     set_value: function(value_) {
         value_ = value_ || [];
@@ -3997,17 +3988,12 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
             value_ = value_[0][2];
         }
         this._super(value_);
-        this.dataset.set_ids(value_);
-        var self = this;
-        self.reload_content();
-        this.is_setted.resolve();
     },
     get_value: function() {
         return [commands.replace_with(this.get('value'))];
     },
-
     is_false: function () {
-        return _(this.dataset.ids).isEmpty();
+        return _(this.get("value")).isEmpty();
     },
     load_view: function() {
         var self = this;
@@ -4034,14 +4020,15 @@ instance.web.form.FieldMany2Many = instance.web.form.AbstractField.extend({
         });
         return loaded;
     },
-    reload_content: function() {
+    render_value: function() {
         var self = this;
+        this.dataset.set_ids(this.get("value"));
         this.is_loaded = this.is_loaded.pipe(function() {
             return self.list_view.reload_content();
         });
     },
     dataset_changed: function() {
-        this.set({'value': this.dataset.ids});
+        this.internal_set_value(this.dataset.ids);
     },
 });
 
