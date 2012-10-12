@@ -76,6 +76,16 @@
             </field>
         </record>
         
+    <record id="view_tree_partner_id" model="ir.ui.view">
+        <field name="name">- Add partner on tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="country_id" position="after">
+                <field name="parent_id" invisible="1"/>
+            </field>
+        </field>
+    </record>
 
 
     </data>
