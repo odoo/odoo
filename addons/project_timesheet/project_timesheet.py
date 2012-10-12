@@ -293,8 +293,18 @@ class account_analytic_line(osv.osv):
             return employee.product_id.id
         return False
 
+   def _default_product_uom(self, cr, uid, context=None):
+        proxy = self.pool.get('hr.employee')
+        record_ids = proxy.search(cr, uid, [('user_id', '=', uid)], context=context)
+        print "record_ids",record_ids
+        employee = proxy.browse(cr, uid, record_ids[0], context=context)
+        if employee.product_id and employee.product_id.uom_id:
+            return employee.product_id.uom_id.id
+        return False
+
    _defaults = {
         'product_id': _default_product,
+        'product_uom_id': _default_product_uom,
         }
 
 account_analytic_line()
