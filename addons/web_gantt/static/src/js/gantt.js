@@ -211,9 +211,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_task_display: function(task) {
         var self = this;
         var pop = new instance.web.form.FormOpenPopup(self);
-        pop.on_write_completed.add_last(function() {
-            self.reload();
-        });
+        pop.on('write_completed',self,self.reload);
         pop.show_element(
             self.dataset.model,
             task.id,
@@ -224,7 +222,7 @@ instance.web_gantt.GanttView = instance.web.View.extend({
     on_task_create: function() {
         var self = this;
         var pop = new instance.web.form.SelectCreatePopup(this);
-        pop.on_select_elements.add_last(function() {
+        pop.on("select_elements", self, function() {
             self.reload();
         });
         pop.select_element(

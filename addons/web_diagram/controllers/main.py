@@ -1,21 +1,14 @@
-try:
-    # embedded
-    import openerp.addons.web.common.http as openerpweb
-    from openerp.addons.web.controllers.main import View
-except ImportError:
-    # standalone
-    import web.common.http as openerpweb
-    from web.controllers.main import View
+import openerp
 
-class DiagramView(View):
+class DiagramView(openerp.addons.web.controllers.main.View):
     _cp_path = "/web_diagram/diagram"
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def load(self, req, model, view_id):
         fields_view = self.fields_view_get(req, model, view_id, 'diagram')
         return {'fields_view': fields_view}
 
-    @openerpweb.jsonrequest
+    @openerp.addons.web.http.jsonrequest
     def get_diagram_info(self, req, id, model, node, connector,
                          src_node, des_node, label, **kw):
 

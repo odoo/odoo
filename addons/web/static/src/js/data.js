@@ -575,6 +575,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Number|String} ids identifier of the record to delete
      */
     unlink: function(ids) {
+        this.trigger('unlink', ids);
         return this._model.call('unlink', [ids], {context: this._model.context()});
     },
     /**
@@ -586,26 +587,8 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback
      * @returns {$.Deferred}
      */
-    call: function (method, args, callback, error_callback) {
-        return this._model.call(method, args).then(callback, error_callback);
-    },
-    /**
-     * Calls an arbitrary method, with more crazy
-     *
-     * @param {String} method
-     * @param {Array} [args]
-     * @param {Number} [domain_index] index of a domain to evaluate in the args array
-     * @param {Number} [context_index] index of a context to evaluate in the args array
-     * @returns {$.Deferred}
-     */
-    call_and_eval: function (method, args, domain_index, context_index) {
-        return instance.session.rpc('/web/dataset/call', {
-            model: this.model,
-            method: method,
-            domain_id: domain_index == undefined ? null : domain_index,
-            context_id: context_index == undefined ? null : context_index,
-            args: args || []
-        });
+    call: function (method, args) {
+        return this._model.call(method, args);
     },
     /**
      * Calls a button method, usually returning some sort of action
@@ -708,6 +691,7 @@ instance.web.DataSet =  instance.web.CallbackEnabled.extend({
 
 instance.web.DataSetStatic =  instance.web.DataSet.extend({
     init: function(parent, model, context, ids) {
+        var self = this;
         this._super(parent, model, context);
         // all local records
         this.ids = ids || [];
@@ -729,12 +713,10 @@ instance.web.DataSetStatic =  instance.web.DataSet.extend({
         }
     },
     unlink: function(ids) {
-        this.on_unlink(ids);
+        this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
+        this.trigger('unlink', ids);
         return $.Deferred().resolve({result: true});
     },
-    on_unlink: function(ids) {
-        this.set_ids(_.without.apply(null, [this.ids].concat(ids)));
-    }
 });
 
 instance.web.DataSetSearch =  instance.web.DataSet.extend({

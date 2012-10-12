@@ -417,7 +417,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         this._super();
         var self = this;
         this.$el.find('.oe_view_manager_switch a').click(function() {
-            self.on_mode_switch($(this).data('view-type'));
+            self.switch_mode($(this).data('view-type'));
         }).tipsy();
         var views_ids = {};
         _.each(this.views_src, function(view) {
@@ -439,24 +439,17 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         }
         // If no default view defined, switch to the first one in sequence
         var default_view = this.flags.default_view || this.views_src[0].view_type;
-        return this.on_mode_switch(default_view);
+        return this.switch_mode(default_view);
     },
-    /**
-     * Asks the view manager to switch visualization mode.
-     *
-     * @param {String} view_type type of view to display
-     * @param {Boolean} [no_store=false] don't store the view being switched to on the switch stack
-     * @returns {jQuery.Deferred} new view loading promise
-     */
-    on_mode_switch: function(view_type, no_store, view_options) {
+    switch_mode: function(view_type, no_store, view_options) {
         var self = this;
         var view = this.views[view_type];
         var view_promise;
         var form = this.views['form'];
         if (!view || (form && form.controller && !form.controller.can_be_discarded())) {
+            self.trigger('switch_mode', view_type, no_store, view_options);
             return $.Deferred().reject();
         }
-
         if (!no_store) {
             this.views_history.push(view_type);
         }
@@ -474,13 +467,12 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             this.searchview[(view.controller.searchable === false || this.searchview.hidden) ? 'hide' : 'show']();
         }
 
-        this.$el
-            .find('.oe_view_manager_switch a').parent().removeClass('active');
+        this.$el.find('.oe_view_manager_switch a').parent().removeClass('active');
         this.$el
             .find('.oe_view_manager_switch a').filter('[data-view-type="' + view_type + '"]')
             .parent().addClass('active');
 
-        return $.when(view_promise).then(function () {
+        r = $.when(view_promise).then(function () {
             _.each(_.keys(self.views), function(view_name) {
                 var controller = self.views[view_name].controller;
                 if (controller) {
@@ -501,7 +493,9 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                     }
                 }
             });
+            self.trigger('switch_mode', view_type, no_store, view_options);
         });
+        return r;
     },
     do_create_view: function(view_type) {
         // Lazy loading of views
@@ -530,20 +524,20 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         if (view.embedded_view) {
             controller.set_embedded_view(view.embedded_view);
         }
-        controller.do_switch_view.add_last(_.bind(this.switch_view, this));
-
-        controller.do_prev_view.add_last(this.on_prev_view);
+        controller.on('switch_mode', self, this.switch_mode);
+        controller.on('previous_view', self, this.prev_view);
+        
         var container = this.$el.find(".oe_view_manager_view_" + view_type);
         var view_promise = controller.appendTo(container);
         this.views[view_type].controller = controller;
         this.views[view_type].deferred.resolve(view_type);
         return $.when(view_promise).then(function() {
-            self.on_controller_inited(view_type, controller);
             if (self.searchview
                     && self.flags.auto_search
                     && view.controller.searchable !== false) {
                 self.searchview.ready.then(self.searchview.do_search);
             }
+            self.trigger("controller_inited",view_type,controller);
         });
     },
     set_title: function(title) {
@@ -552,7 +546,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
     add_breadcrumb: function(on_reverse_breadcrumb) {
         var self = this;
         var views = [this.active_view || this.views_src[0].view_type];
-        this.on_mode_switch.add(function(mode) {
+        this.on('switch_mode', self, function(mode) {
             var last = views.slice(-1)[0];
             if (mode !== last) {
                 if (mode !== 'form') {
@@ -568,7 +562,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
                 var view_to_select = views[index];
                 self.$el.show();
                 if (self.active_view !== view_to_select) {
-                    self.on_mode_switch(view_to_select);
+                    self.switch_mode(view_to_select);
                 }
             },
             get_title: function() {
@@ -599,36 +593,28 @@ instance.web.ViewManager =  instance.web.Widget.extend({
         });
     },
     /**
-     * Method used internally when a view asks to switch view. This method is meant
-     * to be extended by child classes to change the default behavior, which simply
-     * consist to switch to the asked view.
-     */
-    switch_view: function(view_type, no_store, options) {
-        return this.on_mode_switch(view_type, no_store, options);
-    },
-    /**
      * Returns to the view preceding the caller view in this manager's
      * navigation history (the navigation history is appended to via
-     * on_mode_switch)
+     * switch_mode)
      *
      * @param {Object} [options]
      * @param {Boolean} [options.created=false] resource was created
      * @param {String} [options.default=null] view to switch to if no previous view
      * @returns {$.Deferred} switching end signal
      */
-    on_prev_view: function (options) {
+    prev_view: function (options) {
         options = options || {};
         var current_view = this.views_history.pop();
         var previous_view = this.views_history[this.views_history.length - 1] || options['default'];
         if (options.created && current_view === 'form' && previous_view === 'list') {
             // APR special case: "If creation mode from list (and only from a list),
             // after saving, go to page view (don't come back in list)"
-            return this.on_mode_switch('form');
+            return this.switch_mode('form');
         } else if (options.created && !previous_view && this.action && this.action.flags.default_view === 'form') {
             // APR special case: "If creation from dashboard, we have no previous view
-            return this.on_mode_switch('form');
+            return this.switch_mode('form');
         }
-        return this.on_mode_switch(previous_view, true);
+        return this.switch_mode(previous_view, true);
     },
     /**
      * Sets up the current viewmanager's search view.
@@ -654,7 +640,7 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             domains: [this.action.domain || []].concat(domains || []),
             contexts: [action_context].concat(contexts || []),
             group_by_seq: groupbys || []
-        }, function (results) {
+        }).then(function (results) {
             self.dataset._model = new instance.web.Model(
                 self.dataset.model, results.context, results.domain);
             var groupby = results.group_by.length
@@ -665,14 +651,6 @@ instance.web.ViewManager =  instance.web.Widget.extend({
             }
             controller.do_search(results.domain, results.context, groupby || []);
         });
-    },
-    /**
-     * Event launched when a controller has been inited.
-     *
-     * @param {String} view_type type of view
-     * @param {String} view the inited controller
-     */
-    on_controller_inited: function(view_type, view) {
     },
     /**
      * Called when one of the view want to execute an action
@@ -813,13 +791,11 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
                 });
                 break;
             case 'fields':
-                this.dataset.call_and_eval(
-                        'fields_get', [false, {}], null, 1).then(function (fields) {
+                this.dataset.call('fields_get', [false, {}]).then(function (fields) {
                     var $root = $('<dl>');
                     _(fields).each(function (attributes, name) {
                         $root.append($('<dt>').append($('<h4>').text(name)));
-                        var $attrs = $('<dl>').appendTo(
-                                $('<dd>').appendTo($root));
+                        var $attrs = $('<dl>').appendTo($('<dd>').appendTo($root));
                         _(attributes).each(function (def, name) {
                             if (def instanceof Object) {
                                 def = JSON.stringify(def);
@@ -899,7 +875,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         }, action || {});
         this.do_action(action);
     },
-    on_mode_switch: function (view_type, no_store, options) {
+    switch_mode: function (view_type, no_store, options) {
         var self = this;
 
         return $.when(this._super.apply(this, arguments)).then(function () {
@@ -934,7 +910,7 @@ instance.web.ViewManagerAction = instance.web.ViewManager.extend({
         if (state.view_type && state.view_type !== this.active_view) {
             defs.push(
                 this.views[this.active_view].deferred.pipe(function() {
-                    return self.on_mode_switch(state.view_type, true);
+                    return self.switch_mode(state.view_type, true);
                 })
             );
         } 
@@ -1060,12 +1036,12 @@ instance.web.Sidebar = instance.web.Widget.extend({
             self.rpc("/web/action/load", {
                 action_id: item.action.id,
                 context: additional_context
-            }, function(result) {
-                result.result.context = _.extend(result.result.context || {},
+            }).then(function(result) {
+                result.context = _.extend(result.context || {},
                     additional_context);
-                result.result.flags = result.result.flags || {};
-                result.result.flags.new_window = true;
-                self.do_action(result.result, function () {
+                result.flags = result.flags || {};
+                result.flags.new_window = true;
+                self.do_action(result, function () {
                     // reload view
                     self.getParent().reload();
                 });
@@ -1239,7 +1215,7 @@ instance.web.View = instance.web.Widget.extend({
             args.push(context);
             return dataset.call_button(action_data.name, args).then(handler);
         } else if (action_data.type=="action") {
-            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}, handler);
+            return this.rpc('/web/action/load', { action_id: action_data.name, context: context, do_not_eval: true}).then(handler);
         } else  {
             return dataset.exec_workflow(record_id, action_data.name).then(handler);
         }
@@ -1273,6 +1249,7 @@ instance.web.View = instance.web.Widget.extend({
      * @param {String} view view type to switch to
      */
     do_switch_view: function(view) { 
+        this.trigger('switch_mode',view);
     },
     /**
      * Cancels the switch to the current view, switches to the previous one
@@ -1281,8 +1258,7 @@ instance.web.View = instance.web.Widget.extend({
      * @param {Boolean} [options.created=false] resource was created
      * @param {String} [options.default=null] view to switch to if no previous view
      */
-    do_prev_view: function (options) {
-    },
+
     do_search: function(view) {
     },
     on_sidebar_export: function() {

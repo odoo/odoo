@@ -51,7 +51,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
             self.rpc("/web/export/get_fields", {
                 model: self.dataset.model,
                 import_compat: Boolean(import_comp)
-            }, function (records) {
+            }).then(function (records) {
                 got_fields.resolve();
                 self.on_show_data(records);
             });
@@ -59,7 +59,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
 
         return $.when(
             got_fields,
-            this.rpc('/web/export/formats', {}, this.do_setup_export_formats),
+            this.rpc('/web/export/formats', {}).then(this.do_setup_export_formats),
             this.show_exports_list());
     },
     do_setup_export_formats: function (formats) {
@@ -93,7 +93,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 self.$el.find('#fields_list option').remove();
                 var export_id = self.$el.find('#saved_export_list option:selected').val();
                 if (export_id) {
-                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}, self.do_load_export_field);
+                    self.rpc('/web/export/namelist', {'model': self.dataset.model, export_id: parseInt(export_id)}).then(self.do_load_export_field);
                 }
             });
             self.$el.find('#delete_export_list').click(function() {
@@ -183,7 +183,7 @@ instance.web.DataExport = instance.web.Dialog.extend({
                 import_compat: Boolean(import_comp),
                 parent_field_type : record['field_type'],
                 exclude: exclude_fields
-            }, function(results) {
+            }).then(function(results) {
                 record.loaded = true;
                 self.on_show_data(results, record.id);
             });

@@ -194,9 +194,9 @@ instance.web_kanban.KanbanView = instance.web.View.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on_created.add_last(function(r) {
-            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r.result]).then(function(new_record) {
+        form.on("on_button_cancel", self, am.dialog.on_close);
+        form.on('record_created', self, function(r) {
+            (new instance.web.DataSet(self, self.group_by_field.relation)).name_get([r]).then(function(new_record) {
                 am.dialog.on_close();
                 var domain = self.dataset.domain.slice(0);
                 domain.push([self.group_by, '=', new_record[0][0]]);
@@ -672,8 +672,8 @@ instance.web_kanban.KanbanGroup = instance.web.Widget.extend({
         });
         var am = instance.webclient.action_manager;
         var form = am.dialog_widget.views.form.controller;
-        form.on_button_cancel.add_last(am.dialog.on_close);
-        form.on_saved.add_last(function() {
+        form.on("on_button_cancel", self, am.dialog.on_close);
+        form.on('record_saved', self, function() {
             am.dialog.on_close();
             self.view.do_reload();
         });
@@ -1067,7 +1067,7 @@ instance.web_kanban.QuickCreate = instance.web.Widget.extend({
             [],
             {"default_name": self.$input.val()}
         );
-        pop.on_select_elements.add(function(element_ids) {
+        pop.on("select_elements", self, function(element_ids) {
             self.$input.val("");
             self.trigger('added', element_ids[0]);
         });

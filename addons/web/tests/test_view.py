@@ -6,7 +6,7 @@ import unittest2
 import simplejson
 
 import web.controllers.main
-from ..common import nonliterals, session as s
+from .. import nonliterals, session as s
 
 def field_attrs(fields_view_get, fieldname):
     (field,) =  filter(lambda f: f['attrs'].get('name') == fieldname,

@@ -136,7 +136,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var field_dataset = new instance.web.DataSetSearch(this, this.model, null, null);
         var model_dataset = new instance.web.DataSetSearch(this, 'ir.model', null, null);
         var view_string = "", field_name = false, self = this;
-        field_dataset.call( 'fields_get', [],  function(fields) {
+        field_dataset.call( 'fields_get', []).then(function(fields) {
             _.each(['name', 'x_name'], function(value) {
                 if (_.include(_.keys(fields), value)) {
                     field_name = value;
@@ -539,7 +539,7 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
             var value = _.has(_CHILDREN, element) ? element : _.str.include(html_tag, element)?"html_tag":false; 
             property_to_check.push(value);
         });
-        field_dataset.call( 'fields_get', [],  function(result) {
+        field_dataset.call( 'fields_get', []).then(function(result) {
             var fields = _.keys(result);
             fields.push(" "),fields.sort();
             self.on_add_node(property_to_check, fields);
@@ -1014,10 +1014,10 @@ instance.web_view_editor.ViewEditor =   instance.web.Widget.extend({
         var action_manager = new instance.web.ActionManager(self);
         $.when(action_manager.do_action(action)).then(function() {
             var controller = action_manager.dialog_widget.views['form'].controller;
-            controller.on_button_cancel.add_last(function(){
-                action_manager.destroy()
+            controller.on("on_button_cancel", self, function(){
+                action_manager.destroy();
             });
-            controller.do_save.add_last(function(){
+            controller.on("save", self, function(){
                 action_manager.destroy();
                 var value =controller.fields.name.get('value');
                 self.add_node_dialog.$el.find('select[id=field_value]').append($("<option selected></option>").attr("value",value).text(value));

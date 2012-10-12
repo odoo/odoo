@@ -482,7 +482,7 @@ instance.web.ListView = instance.web.View.extend( /** @lends instance.web.ListVi
                 view_type: "tree",
                 context: this.dataset.get_context(context),
                 toolbar: !!this.options.$sidebar
-            }, callback);
+            }).then(callback);
         }
     },
     /**

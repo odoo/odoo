@@ -121,6 +121,10 @@ openerp.web.corelib = function(instance) {
 
         // The dummy class constructor
         function Class() {
+            if(this.constructor !== instance.web.Class){
+                throw new Error("You can only instanciate objects with the 'new' operator");
+                return null;
+            }
             // All construction is actually done in the init method
             if (!initializing && this.init) {
                 var ret = this.init.apply(this, arguments);
@@ -842,7 +846,7 @@ instance.web.Widget = instance.web.Class.extend(instance.web.WidgetMixin, {
     rpc: function(url, data, success, error) {
         var def = $.Deferred().then(success, error);
         var self = this;
-        instance.session.rpc(url, data). then(function() {
+        instance.session.rpc(url, data).then(function() {
             if (!self.isDestroyed())
                 def.resolve.apply(def, arguments);
         }, function() {
@@ -976,7 +980,8 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
     triggers: {
         'request': 'Request sent',
         'response': 'Response received',
-        'error': 'HTTP Error response or timeout received',
+        'response_failed': 'HTTP Error response or timeout received',
+        'error': 'The received response is an JSON-RPC error',
     },
     /**
      * @constructs instance.web.JsonRPC
@@ -1300,7 +1305,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
      * @param {Function} error_callback function to execute on RPC call failure
      * @returns {jQuery.Deferred} jquery-provided ajax deferred
      */
-    rpc: function(url, params, success_callback, error_callback) {
+    rpc: function(url, params) {
         var self = this;
         // url can be an $.ajax option object
         if (_.isString(url)) {
@@ -1317,8 +1322,6 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
         };
         var deferred = $.Deferred();
         this.trigger('request', url, payload);
-        var aborter = params.aborter;
-        delete params.aborter;
         var request = this.rpc_function(url, payload).then(
             function (response, textStatus, jqXHR) {
                 self.trigger('response', response);
@@ -1334,7 +1337,7 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 }
             },
             function(jqXHR, textStatus, errorThrown) {
-                self.trigger('error');
+                self.trigger('response_failed', jqXHR);
                 var error = {
                     code: -32098,
                     message: "XmlHttpRequestError " + errorThrown,
@@ -1342,24 +1345,14 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
                 };
                 deferred.reject(error, $.Event());
             });
-        if (aborter) {
-            aborter.abort_last = function () {
-                if (!(request.isResolved() || request.isRejected())) {
-                    deferred.fail(function (error, event) {
-                        event.preventDefault();
-                    });
-                    request.abort();
-                }
-            };
-        }
         // Allow deferred user to disable on_rpc_error in fail
         deferred.fail(function() {
             deferred.fail(function(error, event) {
                 if (!event.isDefaultPrevented()) {
-                    self.on_rpc_error(error, event);
+                    self.trigger('error', error, event);
                 }
             });
-        }).then(success_callback, error_callback).promise();
+        });
         return deferred;
     },
     /**
@@ -1442,12 +1435,14 @@ instance.web.JsonRPC = instance.web.CallbackEnabled.extend({
             return deferred;
         }
     },
-    on_rpc_error: function(error) {
-    },
     get_url: function (file) {
         return this.prefix + file;
     },
 });
+
+instance.web.py_eval = function(expr, context) {
+    return py.eval(expr, _.extend({}, context || {}, {"true": true, "false": false, "null": null}));
+};
 
 }
 

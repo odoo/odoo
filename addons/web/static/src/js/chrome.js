@@ -181,7 +181,7 @@ instance.web.Dialog = instance.web.Widget.extend({
 });
 
 instance.web.CrashManager = instance.web.CallbackEnabled.extend({
-    on_rpc_error: function(error) {
+    rpc_error: function(error) {
         if (error.data.fault_code) {
             var split = ("" + error.data.fault_code).split('\n')[0].split(' -- ');
             if (split.length > 1) {
@@ -190,12 +190,12 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             }
         }
         if (error.code === 200 && error.type) {
-            this.on_managed_error(error);
+            this.show_warning(error);
         } else {
-            this.on_traceback(error);
+            this.show_error(error);
         }
     },
-    on_managed_error: function(error) {
+    show_warning: function(error) {
         instance.web.dialog($('<div>' + QWeb.render('CrashManager.warning', {error: error}) + '</div>'), {
             title: "OpenERP " + _.str.capitalize(error.type),
             buttons: [
@@ -203,7 +203,7 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
             ]
         });
     },
-    on_traceback: function(error) {
+    show_error: function(error) {
         var self = this;
         var buttons = {};
         buttons[_t("Ok")] = function() {
@@ -219,8 +219,8 @@ instance.web.CrashManager = instance.web.CallbackEnabled.extend({
         }).open();
         dialog.$el.html(QWeb.render('CrashManager.error', {session: instance.session, error: error}));
     },
-    on_javascript_exception: function(exception) {
-        this.on_traceback({
+    show_message: function(exception) {
+        this.show_error({
             type: _t("Client Error"),
             message: exception,
             data: {debug: ""}
@@ -236,7 +236,7 @@ instance.web.Loading = instance.web.Widget.extend({
         this.blocked_ui = false;
         this.session.on("request", this, this.request_call);
         this.session.on("response", this, this.response_call);
-        this.session.on("error", this, this.response_call);
+        this.session.on("response_failed", this, this.response_call);
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
@@ -392,7 +392,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
     do_create: function(form) {
         var self = this;
         var fields = $(form).serializeArray();
-        self.rpc("/web/database/create", {'fields': fields}, function(result) {
+        self.rpc("/web/database/create", {'fields': fields}).then(function(result) {
             var form_obj = self.to_object(fields);
             var client_action = {
                 type: 'ir.actions.client',
@@ -418,7 +418,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         if (!db || !confirm("Do you really want to delete the database: " + db + " ?")) {
             return;
         }
-        self.rpc("/web/database/drop", {'fields': fields}, function(result) {
+        self.rpc("/web/database/drop", {'fields': fields}).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -481,7 +481,7 @@ instance.web.DatabaseManager = instance.web.Widget.extend({
         var self = this;
         self.rpc("/web/database/change_password", {
             'fields': $(form).serializeArray()
-        }, function(result) {
+        }).then(function(result) {
             if (result.error) {
                 self.display_error(result);
                 return;
@@ -627,6 +627,7 @@ instance.web.Reload = function(parent, params) {
         hash = "#menu_id=" + menu_id;
     }
     var url = l.protocol + "//" + l.host + l.pathname + search + hash;
+    window.onerror = function() {};
     window.location = url;
 };
 instance.web.client_actions.add("reload", "instance.web.Reload");
@@ -660,7 +661,7 @@ instance.web.ChangePassword =  instance.web.Widget.extend({
             submitHandler: function (form) {
                 self.rpc("/web/session/change_password",{
                     'fields': $(form).serializeArray()
-                }, function(result) {
+                }).then(function(result) {
                     if (result.error) {
                         self.display_error(result);
                         return;
@@ -881,6 +882,7 @@ instance.web.UserMenu =  instance.web.Widget.extend({
     on_action: function() {
     },
     on_menu_logout: function() {
+        this.trigger('user_logout');
     },
     on_menu_settings: function() {
         var self = this;
@@ -957,7 +959,7 @@ instance.web.Client = instance.web.Widget.extend({
     show_common: function() {
         var self = this;
         this.crashmanager =  new instance.web.CrashManager();
-        instance.session.on_rpc_error.add(this.crashmanager.on_rpc_error);
+        instance.session.on('error', this.crashmanager, this.crashmanager.rpc_error);
         self.notification = new instance.web.Notification(this);
         self.notification.appendTo(self.$el);
         self.loading = new instance.web.Loading(self);
@@ -1007,7 +1009,7 @@ instance.web.WebClient = instance.web.Client.extend({
         var self = this;
         this._super();
         window.onerror = function (message, file, line) {
-            self.crashmanager.on_traceback({
+            self.crashmanager.show_error({
                 type: _t("Client Error"),
                 message: message,
                 data: {debug: file + ':' + line}
@@ -1016,15 +1018,13 @@ instance.web.WebClient = instance.web.Client.extend({
     },
     show_login: function() {
         this.toggle_bars(false);
-        
+
+        var state = $.bbq.getState(true);
         var action = {
             'type': 'ir.actions.client',
-            'tag': 'login'
+            'tag': 'login',
+            'params': state
         };
-        var state = $.bbq.getState(true);
-        if (state.action === "login") {
-            action.params = state;
-        }
 
         this.action_manager.do_action(action);
         this.action_manager.inner_widget.on('login_successful', this, function() {
@@ -1041,7 +1041,7 @@ instance.web.WebClient = instance.web.Client.extend({
         self.menu.on('menu_click', this, this.on_menu_action);
         self.user_menu = new instance.web.UserMenu(self);
         self.user_menu.replace(this.$el.find('.oe_user_menu_placeholder'));
-        self.user_menu.on_menu_logout.add(this.proxy('on_logout'));
+        self.user_menu.on('user_logout', self, this.proxy('on_logout'));
         self.user_menu.on_action.add(this.proxy('on_menu_action'));
         self.user_menu.do_update();
         self.bind_hashchange();
@@ -1165,7 +1165,7 @@ instance.web.EmbeddedClient = instance.web.Client.extend({
         var self = this;
         return $.when(this._super()).pipe(function() {
             return instance.session.session_authenticate(self.dbname, self.login, self.key, true).pipe(function() {
-                return self.rpc("/web/action/load", { action_id: self.action_id }, function(result) {
+                return self.rpc("/web/action/load", { action_id: self.action_id }).then(function(result) {
                     var action = result;
                     action.flags = _.extend({
                         //views_switcher : false,

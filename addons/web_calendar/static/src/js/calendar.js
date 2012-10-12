@@ -41,7 +41,7 @@ instance.web_calendar.CalendarView = instance.web.View.extend({
     },
     start: function() {
         this._super();
-        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}, this.on_loaded);
+        return this.rpc("/web/view/load", {"model": this.model, "view_id": this.view_id, "view_type":"calendar", 'toolbar': false}).then(this.on_loaded);
     },
     destroy: function() {
         scheduler.clearAll();
@@ -458,8 +458,8 @@ instance.web_calendar.CalendarFormDialog = instance.web.Dialog.extend({
             pager: false
         });
         var def = this.form.appendTo(this.$el);
-        this.form.on_created.add_last(this.on_form_dialog_saved);
-        this.form.on_saved.add_last(this.on_form_dialog_saved);
+        this.form.on('record_created', self, this.on_form_dialog_saved);
+        this.form.on('record_saved', self, this.on_form_dialog_saved);
         this.form.on_button_cancel = function() {
             self.close();
         }
