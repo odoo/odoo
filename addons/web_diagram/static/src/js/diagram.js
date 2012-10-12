@@ -57,7 +57,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
         this.$el.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
-            self.on_pager_action(action);
+            self.execute_pager_action(action);
         });
 
         this.do_update_pager();
@@ -347,7 +347,7 @@ instance.web.DiagramView = instance.web.View.extend({
        });
     },
 
-    on_pager_action: function(action) {
+    execute_pager_action: function(action) {
         switch (action) {
             case 'first':
                 this.dataset.index = 0;
@@ -380,7 +380,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
     do_show: function() {
         this.do_push_state({});
-        return $.when(this._super(), this.on_pager_action('reload'));
+        return $.when(this._super(), this.execute_pager_action('reload'));
     }
 });
 };
