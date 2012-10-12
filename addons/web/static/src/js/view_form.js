@@ -1660,6 +1660,8 @@ instance.web.form.FormDialog = instance.web.Dialog.extend({
 });
 
 instance.web.form.compute_domain = function(expr, fields) {
+    if (! (expr instanceof Array))
+        return !! expr;
     var stack = [];
     for (var i = expr.length - 1; i >= 0; i--) {
         var ex = expr[i];
@@ -4638,6 +4640,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
     destroy_content: function() {
         if (this.fm) {
             this.fm.destroy();
+            this.fm = undefined;
         }
     },
     initialize_content: function() {
@@ -4659,9 +4662,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.selection.on("change:value", this, this.on_selection_changed);
-        this.selection.setElement(this.$(".oe_form_view_reference_selection"));
-        this.selection.renderElement();
-        this.selection.start();
+        this.selection.appendTo(this.$(".oe_form_view_reference_selection"));
         this.selection
             .on('focused', null, function () {self.trigger('focused')})
             .on('blurred', null, function () {self.trigger('blurred')});
@@ -4671,9 +4672,7 @@ instance.web.form.FieldReference = instance.web.form.AbstractField.extend(instan
             modifiers: JSON.stringify({readonly: this.get('effective_readonly')}),
         }});
         this.m2o.on("change:value", this, this.data_changed);
-        this.m2o.setElement(this.$(".oe_form_view_reference_m2o"));
-        this.m2o.renderElement();
-        this.m2o.start();
+        this.m2o.appendTo(this.$(".oe_form_view_reference_m2o"));
         this.m2o
             .on('focused', null, function () {self.trigger('focused')})
             .on('blurred', null, function () {self.trigger('blurred')});
