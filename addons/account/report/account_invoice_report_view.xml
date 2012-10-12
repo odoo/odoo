@@ -5,7 +5,7 @@
         <field name="name">account.invoice.report.tree</field>
         <field name="model">account.invoice.report</field>
         <field name="arch" type="xml">
-            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')"  string="Invoices Analysis">
+            <tree colors="blue:state == 'draft';gray:state in ('cancel','paid');black:state in ('proforma','proforma2')" create="false" string="Invoices Analysis">
                 <field name="date" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="year" invisible="1"/>
