@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 import simplejson
 
-try:
-    import openerp.addons.web.common.http as openerpweb
-except ImportError:
-    import web.common.http as openerpweb
+import openerp
 
-class ImportController(openerpweb.Controller):
+class ImportController(openerp.addons.web.http.Controller):
     _cp_path = '/base_import'
 
-    @openerpweb.httprequest
+    @openerp.addons.web.http.httprequest
     def set_file(self, req, file, import_id, jsonp='callback'):
         import_id = int(import_id)
 
