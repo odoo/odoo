@@ -431,8 +431,9 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
     do_notify_change: function() {
         this.$el.add(this.$buttons).addClass('oe_form_dirty');
     },
-    on_pager_action: function(action) {
+    execute_pager_action: function(action) {
         if (this.can_be_discarded()) {
+            this.trigger('pager_action_executed');
             switch (action) {
                 case 'first':
                     this.dataset.index = 0;
@@ -464,7 +465,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         }
         this.$pager.on('click','a[data-pager-action]',function() {
             var action = $(this).data('pager-action');
-            self.trigger('pager_action',self.on_pager_action(action));
+            self.execute_pager_action(action);
         });
         this.do_update_pager();
     },
@@ -799,7 +800,7 @@ instance.web.FormView = instance.web.View.extend(instance.web.form.FieldManagerM
         $.when(this.has_been_loaded).then(function() {
             if (self.datarecord.id && confirm(_t("Do you really want to delete this record?"))) {
                 self.dataset.unlink([self.datarecord.id]).then(function() {
-                    self.on_pager_action('next');
+                    self.execute_pager_action('next');
                     def.resolve();
                 });
             } else {
@@ -3387,7 +3388,7 @@ instance.web.form.FieldOne2Many = instance.web.form.AbstractField.extend({
                 controller.on("load_record", self, function(){
                      once.resolve();
                  });
-                controller.on('pager_action',self,self.save_any_view);
+                controller.on('pager_action_executed',self,self.save_any_view);
             } else if (view_type == "graph") {
                 self.reload_current_view()
             }

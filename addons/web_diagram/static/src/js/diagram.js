@@ -57,7 +57,7 @@ instance.web.DiagramView = instance.web.View.extend({
 
         this.$el.find('div.oe_diagram_pager button[data-pager-action]').click(function() {
             var action = $(this).data('pager-action');
-            self.on_pager_action(action);
+            self.execute_pager_action(action);
         });
 
         this.do_update_pager();
