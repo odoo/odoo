@@ -155,6 +155,7 @@ class account_account_type(osv.osv):
         return res
 
     def _save_report_type(self, cr, uid, account_type_id, field_name, field_value, arg, context=None):
+        field_value = field_value or 'none'
         obj_data = self.pool.get('ir.model.data')
         obj_financial_report = self.pool.get('account.financial.report')
         #unlink if it exists somewhere in the financial reports related to BS or PL
@@ -299,7 +300,6 @@ class account_account(osv.osv):
             if aml_query.strip():
                 wheres.append(aml_query.strip())
             filters = " AND ".join(wheres)
-            _logger.debug('Filters: %s',(filters))
             # IN might not work ideally in case there are too many
             # children_and_consolidated, in that case join on a
             # values() e.g.:
@@ -315,7 +315,6 @@ class account_account(osv.osv):
                        " GROUP BY l.account_id")
             params = (tuple(children_and_consolidated),) + query_params
             cr.execute(request, params)
-            _logger.debug('Status: %s',(cr.statusmessage))
 
             for row in cr.dictfetchall():
                 accounts[row['id']] = row
@@ -596,10 +595,7 @@ class account_account(osv.osv):
         return res
 
     def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
-        if default is None:
-            default = {}
-        else:
-            default = default.copy()
+        default = {} if default is None else default.copy()
         if done_list is None:
             done_list = []
         account = self.browse(cr, uid, id, context=context)
@@ -781,10 +777,7 @@ class account_journal(osv.osv):
     ]
 
     def copy(self, cr, uid, id, default=None, context=None, done_list=None, local=False):
-        if default is None:
-            default = {}
-        else:
-            default = default.copy()
+        default = {} if default is None else default.copy()
         if done_list is None:
             done_list = []
         journal = self.browse(cr, uid, id, context=context)
@@ -1185,6 +1178,7 @@ class account_fiscalyear(osv.osv):
     }
 
     def copy(self, cr, uid, id, default=None, context=None):
+        default = {} if default is None else default.copy()
         default.update({
             'period_ids': [],
             'end_journal_period_id': False
@@ -1444,14 +1438,8 @@ class account_move(osv.osv):
         return result
 
     def copy(self, cr, uid, id, default=None, context=None):
-        if context is None:
-            default = {}
-        else:
-            default = default.copy()
-        if context is None:
-            context = {}
-        else:
-            context = context.copy()
+        default = {} if default is None else default.copy()
+        context = {} if context is None else context.copy()
         default.update({
             'state':'draft',
             'name':'/',

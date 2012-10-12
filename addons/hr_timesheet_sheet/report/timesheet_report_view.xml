@@ -17,7 +17,6 @@
             <field name="model">timesheet.report</field>
             <field name="arch" type="xml">
                 <tree colors="blue:state == 'draft';black:state in ('confirm','new');gray:state == 'cancel'" string="Timesheet">
-                    <field name="date_current" invisible="1"/>
                     <field name="name" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                     <field name="date_from" invisible="1"/>
@@ -56,7 +55,6 @@
                         <field name="product_id"/>
                         <field name="department_id"/>
                         <field name="company_id" groups="base.group_multi_company"/>
-                        <field name="date_current"/>
                         <field name="date_to"/>
                         <field name="date_from"/>
                     </group>

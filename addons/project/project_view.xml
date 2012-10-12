@@ -63,7 +63,7 @@
             <field name="arch" type="xml">
                 <form string="Project" version="7.0">
                 <header>
-                    <button name="set_done" string="Done" type="object" states="open,pending"/>
+                    <button name="set_done" string="Close Project" type="object" states="open,pending"/>
                     <button name="set_open" string="Re-open project" type="object" states="pending" class="oe_highlight"/>
                     <button name="set_open" string="Re-open project" type="object" states="cancelled,close"/>
                     <button name="set_pending" string="Pending" type="object" states="open"/>
@@ -163,7 +163,7 @@
             <field name="arch" type="xml">
                 <search string="Search Project">
                     <field name="complete_name" string="Project Name"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter icon="terp-check" string="Open" name="Current" domain="[('state', '=','open')]" help="Open Projects"/>
                     <filter icon="gtk-media-pause" string="Pending" name="Pending" domain="[('state', '=','pending')]" help="Pending Projects"/>
@@ -311,7 +311,7 @@
                         <field colspan="4" name="name"/>
                         <field name="hours" widget="float_time"/>
                         <field name="date"/>
-                        <field name="user_id" options='{"no_open": true}'/>
+                        <field name="user_id" options='{"no_open": True}'/>
                         <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                     </group>
                 </form>
@@ -401,7 +401,7 @@
                     <group>
                         <group>
                             <field name="project_id"  on_change="onchange_project(project_id)" context="{'default_use_tasks':1}"/>
-                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": true}'/>
+                            <field name="user_id" attrs="{'readonly':[('state','in',['done', 'cancelled'])]}" options='{"no_open": True}'/>
                             <field name="company_id" groups="base.group_multi_company" widget="selection"/>
                         </group>
                         <group>
@@ -619,7 +619,7 @@
             <field name="arch" type="xml">
                <search string="Tasks">
                     <field name="name" string="Tasks"/>
-                    <filter icon="terp-mail-message-new" string="Inbox" help="Unread messages" name="message_unread" domain="[('message_unread','=',True)]"/>
+                    <filter icon="terp-mail-message-new" string="Unread Messages" name="message_unread" domain="[('message_unread','=',True)]"/>
                     <separator/>
                     <filter name="draft" string="New" domain="[('state','=','draft')]" help="New Tasks" icon="terp-check"/>
                     <filter name="open" string="In Progress" domain="[('state','=','open')]" help="In Progress Tasks" icon="terp-camera_test"/>

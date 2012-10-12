@@ -201,6 +201,7 @@ class sale_order(osv.osv):
             help="""This field controls how invoice and delivery operations are synchronized.
   - With 'Before Delivery', a draft invoice is created, and it must be paid before delivery."""),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', required=True, readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="Pricelist for current sales order."),
+        'currency_id': fields.related('pricelist_id', 'currency_id', type="many2one", relation="res.currency", readonly=True, required=True),
         'project_id': fields.many2one('account.analytic.account', 'Contract/Analytic Account', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, help="The analytic account related to a sales order."),
 
         'order_line': fields.one2many('sale.order.line', 'order_id', 'Order Lines', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
@@ -264,13 +265,18 @@ class sale_order(osv.osv):
         return osv.osv.unlink(self, cr, uid, unlink_ids, context=context)
 
     def onchange_pricelist_id(self, cr, uid, ids, pricelist_id, order_lines, context=None):
-        if (not pricelist_id) or (not order_lines):
+        if not pricelist_id:
             return {}
+        value = {
+            'currency_id': self.pool.get('product.pricelist').browse(cr, uid, pricelist_id, context=context).currency_id.id
+        }
+        if not order_lines:
+            return {'value': value}
         warning = {
             'title': _('Pricelist Warning!'),
             'message' : _('If you change the pricelist of this order (and eventually the currency), prices of existing order lines will not be updated.')
         }
-        return {'warning': warning}
+        return {'warning': warning, 'value': value}
 
     def onchange_partner_id(self, cr, uid, ids, part):
         if not part:
@@ -745,13 +751,13 @@ class sale_order_line(osv.osv):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos_qty or 0.0
-            return line.product_uom_qty
+        return line.product_uom_qty
 
     def _get_line_uom(self, cr, uid, line, context=None):
         if (line.order_id.invoice_quantity=='order'):
             if line.product_uos:
                 return line.product_uos.id
-            return line.product_uom.id
+        return line.product_uom.id
 
     def _prepare_order_line_invoice_line(self, cr, uid, line, account_id=False, context=None):
         """Prepare the dict of values to create the new invoice line for a

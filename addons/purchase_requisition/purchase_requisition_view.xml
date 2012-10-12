@@ -180,7 +180,7 @@
     <record model="ir.ui.view" id="product_normal_form_view_inherit">
         <field name="name">product.form.inherit</field>
         <field name="model">product.product</field>
-        <field name="inherit_id" ref="product.product_normal_form_view"/>
+        <field name="inherit_id" ref="procurement.product_form_view_procurement_button"/>
         <field name="arch" type="xml">
             <field name="procure_method" position="before">
                 <field name="purchase_requisition"/>
