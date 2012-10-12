@@ -1088,7 +1088,7 @@ class test_datetime(ImporterCase):
             ['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', '=', result['ids'])])),
+            values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 01:11:11'])
 
     def test_notz(self):
@@ -1098,5 +1098,5 @@ class test_datetime(ImporterCase):
         result = self.import_(['value'], [['2012-02-03 11:11:11']])
         self.assertFalse(result['messages'])
         self.assertEqual(
-            values(self.read(domain=[('id', '=', result['ids'])])),
+            values(self.read(domain=[('id', 'in', result['ids'])])),
             ['2012-02-03 11:11:11'])
