@@ -483,7 +483,7 @@
                     </header>
                     <sheet>
                     <label for="order_id" class="oe_edit_only"/>
-                    <h1><field name="order_id"/></h1>
+                    <h1><field name="order_id" domain="[('state','!=','done')]"/></h1>
                     <label for="order_partner_id" class="oe_edit_only"/>
                     <h2><field name="order_partner_id"/></h2>
                     <group>
