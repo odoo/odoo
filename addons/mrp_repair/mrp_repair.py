@@ -140,7 +140,7 @@ class mrp_repair(osv.osv):
         'location_id': fields.many2one('stock.location', 'Current Location', select=True, readonly=True, states={'draft':[('readonly',False)]}),
         'location_dest_id': fields.many2one('stock.location', 'Delivery Location', readonly=True, states={'draft':[('readonly',False)]}),
         'move_id': fields.many2one('stock.move', 'Move',required=True, domain="[('product_id','=',product_id)]", readonly=True, states={'draft':[('readonly',False)]}),
-        'guarantee_limit': fields.date('Guarantee limit', help="The guarantee limit is computed as: last move date + warranty defined on selected product. If the current date is below the guarantee limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
+        'guarantee_limit': fields.date('Warranty Expiration Limit', help="The warranty expiration limit is computed as: last move date + warranty defined on selected product. If the current date is below the warranty expiration limit, each operation and fee you will add will be set as 'not to invoiced' by default. Note that you can change manually afterwards."),
         'operations' : fields.one2many('mrp.repair.line', 'repair_id', 'Operation Lines', readonly=True, states={'draft':[('readonly',False)]}),
         'pricelist_id': fields.many2one('product.pricelist', 'Pricelist', help='Pricelist of the selected partner.'),
         'partner_invoice_id':fields.many2one('res.partner', 'Invoicing Address'),
