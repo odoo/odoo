@@ -102,22 +102,20 @@
             <field name="arch" type="xml">
                 <form string="Claim" version="7.0">
                 <header>
-                    <span groups="base.group_user">
                         <button name="case_open" string="Open" type="object" class="oe_highlight"
-                                states="draft,pending" />
+                                states="draft,pending" groups="base.group_user"/>
                         <button name="case_close" string="Done" type="object" class="oe_highlight"
-                                states="open,pending"/>
+                                states="open,pending" groups="base.group_user"/>
                         <button name="case_refuse" string="Refuse" type="object" class="oe_highlight"
-                                states="draft,open,pending"/>
-                        <button name="stage_previous" string="Previous Stage" type="object"
+                                states="draft,open,pending" groups="base.group_user"/>
+                        <button name="stage_previous" string="Previous Stage" type="object" groups="base.group_user" 
                                 states="open,pending" icon="gtk-go-back" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="stage_next" string="Next Stage" type="object"
+                        <button name="stage_next" string="Next Stage" type="object" groups="base.group_user"
                                 states="open,pending" icon="gtk-go-forward" attrs="{'invisible': [('stage_id','=', False)]}"/>
-                        <button name="case_reset" string="Reset to Draft" type="object" 
+                        <button name="case_reset" string="Reset to Draft" type="object" groups="base.group_user"
                                 states="cancel,done"/>
-                        <button name="case_cancel" string="Cancel" type="object" 
+                        <button name="case_cancel" string="Cancel" type="object"  groups="base.group_user"
                                 states="draft,open,pending"/>
-                    </span>
                     <field name="stage_id" widget="statusbar"
                             on_change="onchange_stage_id(stage_id)"/>
                 </header>
